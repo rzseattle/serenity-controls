@@ -33,7 +33,7 @@ module.exports = function (env = {}) {
 
                     //loader: 'babel-loader',
                     //dodatkowe ustawienia potrzebne aby babel działał out of home dir ( inaczej nie parsował plików z zewnątrz)
-                    loader: 'babel-loader?babelrc=false&extends=' + require('path').join(__dirname, '/.babelrc') + "&retainLines=true"
+                    loader: 'babel-loader'
 
 
                 },
@@ -163,7 +163,7 @@ module.exports = function (env = {}) {
             conf.plugins.push(new webpack.optimize.UglifyJsPlugin({comments: false, minimize: true, sourceMap: true}))
 
         conf.module.loaders.push(
-            {test: [/\.sass/, /\.scss/], loader: ExtractTextPlugin.extract('css-loader?soudMap!sass-loader?sourceMap')} //postcss-loader!
+            {test: [/\.sass/, /\.scss/], loader: ExtractTextPlugin.extract('css-loader?sourceMap!sass-loader?sourceMap')} //postcss-loader!
         );
 
 
