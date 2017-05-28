@@ -37,7 +37,6 @@ ReactHelper.register('Table', Table);
 ReactHelper.register('Button', Button);
 ReactHelper.register('PanelComponentLoader', PanelComponentLoader);
 
-require ("components.include");
 
 ReactHelper.initComponents();
 
