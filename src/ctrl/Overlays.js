@@ -52,10 +52,8 @@ class ShadowBody extends Component {
     }
 
     render() {
+        return <div className="w-shadow"/>
 
-        return (<div className="w-shadow">
-            <h1>This is shadow</h1>
-        </div>)
     }
 
 }
