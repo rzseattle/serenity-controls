@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "webpack-dev-server -d ",
     "build": "webpack --env.production --display-error-details",
-    "watch": "webpack --watch --env.watch --display-error-details"
+    "watch": "webpack --watch --env.watch --display-error-details",
+    "install": "node_modules\\.bin\\babel.cmd ./src -d ./lib & node_modules\\.bin\\node-sass.cmd ./sass/App.sass ./css/lib.css",
+    "install2": ""
   },
   "keywords": [],
   "author": "",
@@ -22,7 +24,7 @@
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.5.1",
-    "babel-cli": "^6.23.0",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.3.2",
