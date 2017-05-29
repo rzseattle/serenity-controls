@@ -8,21 +8,24 @@
     "build": "webpack --env.production --display-error-details",
     "watch": "webpack --watch --env.watch --display-error-details",
     "install": "node_modules\\.bin\\babel.cmd ./src -d ./lib & node_modules\\.bin\\node-sass.cmd ./sass/App.sass ./css/lib.css",
-    "install2": ""
+    "install2": "",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.24.1",
-    "node-sass": "^4.5.2",
     "moment": "^2.18.1",
+    "node-sass": "^4.5.2",
     "react-addons-shallow-compare": "^15.4.2",
     "react-dates": "^10.0.0",
     "react-dom": "^15.4.2",
     "rxjs": "^5.3.0"
   },
   "devDependencies": {
+    "@storybook/react": "^2.21.0",
     "assets-webpack-plugin": "^3.5.1",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
@@ -51,7 +54,7 @@
     "react": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-redux": "^5.0.3",
-    "sass-loader": "^6.0.3",
+    "sass-loader": "^6.0.5",
     "style-loader": "^0.13.2",
     "url-loader": "^0.5.8",
     "webpack": "^2.2.1",
