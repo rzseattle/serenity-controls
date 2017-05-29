@@ -1,5 +1,5 @@
 import React, {Children} from "react"
-import {Text, Select, Switch, CheckboxGroup, Textarea} from "ctrl/Fields"
+import {Text, Select, Switch, CheckboxGroup, Textarea} from "../ctrl/Fields"
 import PropTypes from 'prop-types';
 
 const withBootstrapFormField = (Field) => {

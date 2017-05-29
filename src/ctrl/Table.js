@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {DateFilter, SelectFilter, NumericFilter, SwitchFilter, TextFilter, MultiFilter, filtersMapping, withFilterOpenLayer} from './Filters'
 
-import {Button as MyButton} from 'Button'
+import {Button as MyButton} from './Button'
 
 class Table extends Component {
 
