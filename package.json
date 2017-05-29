@@ -14,17 +14,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-cli": "^6.24.1",
+    "node-sass": "^4.5.2",
     "moment": "^2.18.1",
-    "rc-time-picker": "^2.3.3",
     "react-addons-shallow-compare": "^15.4.2",
     "react-dates": "^10.0.0",
     "react-dom": "^15.4.2",
-    "redux": "^3.6.0",
     "rxjs": "^5.3.0"
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.5.1",
-    "babel-cli": "^6.24.1",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.3.2",
@@ -48,7 +47,6 @@
     "image-webpack-loader": "^3.2.0",
     "install": "^0.8.7",
     "jquery": "^3.1.1",
-    "node-sass": "^4.5.2",
     "npm": "^4.4.1",
     "react": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.6",
