@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-export default Navbar = (props) => {
+const Navbar = (props) => {
 
     let children = Array.isArray(props.children) ? props.children : [props.children];
 
@@ -41,3 +41,4 @@ Navbar.propTypes = {
     children: PropTypes.node.isRequired
 }
 
+export {Navbar as default};
