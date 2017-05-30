@@ -3,17 +3,17 @@ import {storiesOf, action, linkTo} from '@kadira/storybook';
 import Button from './Button';
 import Welcome from './Welcome';
 import {TabPane, Tabs} from '../src/ctrl/Tabs';
-import {Timeline, TimelineItem} from "../src/ctrl/Timeline";
+import {Timeline, TimelineItem} from '../src/ctrl/Timeline';
 import {Modal} from "../src/ctrl/Overlays";
 
 
-require('./../styles/App.sass');
+
+require('./Stories.sass');
 
 storiesOf('Welcome', module)
     .add('to Storybook', () => (
         <Welcome showApp={linkTo('Button')}/>
     ));
-
 storiesOf('Button', module)
     .add('with text', () => (
         <Button onClick={action('clicked')}>Hello Button</Button>
@@ -22,11 +22,10 @@ storiesOf('Button', module)
         <Button onClick={action('clicked')}>😀 😎 👍 💯</Button>
     ));
 
-
 storiesOf('Tab', module)
     .add('Podstawka', () => (
         <Tabs>
-            <TabPane tab="Tab1">
+            <TabPane tab="Tab11">
 
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum. Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
                 placerat convallis vel id velit. Mauris placerat lacus ex, vel tincidunt mauris aliquet ut. Etiam molestie imperdiet est at hendrerit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed vitae orci euismod, rhoncus libero nec, sollicitudin orci.
@@ -39,6 +38,7 @@ storiesOf('Tab', module)
     ))
     .add('Ikony', () => (
         <Tabs>
+
             <TabPane tab="Tab1" icon="check">
 
 
@@ -68,9 +68,20 @@ storiesOf('Tab', module)
 
 storiesOf('Timeline', module)
     .add('Podstawka', () => (
-        <Timeline>
-            <TimelineItem head="2017-01-02">Tutaj treść</TimelineItem>
-            <TimelineItem head="2017-01-02">Tutaj treść</TimelineItem>
-        </Timeline>
+        <div style={{padding: '10px'}}>
+            <Timeline>
+                <TimelineItem head="2017-01-02">Tutaj treść</TimelineItem>
+                <TimelineItem head="2017-01-02">Tutaj treść</TimelineItem>
+            </Timeline>
+        </div>
+
+    ))
+    .add('Kolory', () => (
+        <div style={{padding: '10px'}}>
+            <Timeline>
+                <TimelineItem color="red" head="2017-01-02 [admin@admin.com]">Tutaj treść 1</TimelineItem>
+                <TimelineItem color="green" head="2017-01-02">Tutaj treść</TimelineItem>
+            </Timeline>
+        </div>
 
     ))
