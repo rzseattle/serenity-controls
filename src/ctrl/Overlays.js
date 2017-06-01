@@ -74,22 +74,33 @@ class ModalBody extends Component {
         let s = this.state;
         let p = this.props;
         return (<div className="w-modal" ref="body" style={{display: p.visible ? 'block' : 'none'}}>
-            {p.visible ? <Shadow /> : null}
+            {p.visible ? <Shadow/> : null}
             {p.children}
         </div>)
     }
 
     componentDidUpdate() {
-        const container = window.document.getElementsByTagName('body')[0];
+
+        // vanilla JS window width and height
+        let w = window,
+            d = document,
+            e = d.documentElement,
+            g = d.getElementsByTagName('body')[0],
+            x = w.innerWidth || e.clientWidth || g.clientWidth,
+            y = w.innerHeight || e.clientHeight || g.clientHeight;
+
+
+        //const container = window.document.getElementsByTagName('body')[0];
         const body = ReactDOM.findDOMNode(this.refs.body);
         const dimentions = body.getBoundingClientRect();
-        const containerDimentions = container.getBoundingClientRect();
+        //const containerDimentions = container.getBoundingClientRect();
 
         const styles = {
-            top: ((containerDimentions.height - dimentions.height) / 2 ) + 'px',
-            left: ((containerDimentions.width - dimentions.width) / 2) + 'px',
+            top: ((y - dimentions.height) / 2 ) + 'px',
+            left: ((x - dimentions.width) / 2) + 'px',
 
         }
+        console.log(styles);
         for (let i in styles) {
             body.style[i] = styles[i];
         }
