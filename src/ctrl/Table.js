@@ -26,6 +26,14 @@ class Table extends Component {
         super(props);
 
 
+        let columns = props.columns || [];
+        for(let i in columns){
+            columns[i] = this.returnColumnData(columns[i]);
+        }
+
+        //console.log(columns);
+
+
         this.state = {
             loading: false,
             firstLoaded: false,
@@ -38,7 +46,7 @@ class Table extends Component {
             currentPage: 1,
             countAll: 0,
             fixedLayout: false, // props.fixedLayout,
-            columns: this.props.columns,
+            columns: columns,
             bodyHeight: this.props.initHeight,
             allChecked: false,
             selection: []
@@ -74,6 +82,7 @@ class Table extends Component {
     getDataFromChildren() {
         let loader = new MarkupLoader(this.props.children);
         this.state.columns = loader.getConfig();
+        console.log(this.state.columns);
 
     }
 
@@ -289,13 +298,52 @@ class Table extends Component {
 
     }
 
+    returnColumnData( inData ) {
+        if(typeof inData.field != "string" || inData.field.length == 0 ){
+            console.error(  "Field is required property of columns" );
+            //throw  "Field is required property of columns" ;
+            return;
+        }
+
+        let data = {
+            "field": null,
+            "caption": "",
+            "isSortable": true,
+            "display": true,
+            "toolTip": null,
+            "width": null,
+            "class": [],
+            "type": "Simple",
+            "orderField": null,
+            "icon": null,
+            "append": null,
+            "prepend": null,
+            "classTemplate": [],
+            "template": null,
+            "default": "",
+            "events": {
+                "click": [],
+                "enter": [],
+                "leave": []
+            },
+            "filter": {
+                "type": "TextFilter",
+                "field": inData.field
+            }
+        }
+        data = { ...data, ...inData };
+        data.orderField = data.orderField || data.field;
+        return data;
+    }
+
 
     render() {
+
+        const columns = this.state.columns;
 
         if (this.props.children !== undefined) {
             this.getDataFromChildren();
         }
-        const columns = this.state.columns;
 
 
         return (
@@ -344,9 +392,9 @@ class Table extends Component {
                     </thead>
 
 
-                    {this.state.dataSourceError && <Error colspan={columns.length+1} error={this.state.dataSourceError}/>}
-                    {!this.state.loading && this.state.data.length + 1 == 0 && <EmptyResult colspan={columns.length+1}/>}
-                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length+1}/>}
+                    {this.state.dataSourceError && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
+                    {!this.state.loading && this.state.data.length + 1 == 0 && <EmptyResult colspan={columns.length + 1}/>}
+                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
                     {this.state.firstLoaded && this.state.data.length > 0 && <Rows
                         selection={this.state.selection}
                         onCheck={this.handleCheckClicked.bind(this)}
@@ -432,11 +480,12 @@ function Loading(props) {
         </tbody>
     )
 }
+
 function EmptyResult(props) {
     return (
         <tbody>
         <tr>
-            <td className="w-table-center" colSpan={props.colspan}><h4 >Brak danych</h4></td>
+            <td className="w-table-center" colSpan={props.colspan}><h4>Brak danych</h4></td>
         </tr>
         </tbody>
     )
@@ -462,7 +511,7 @@ function Footer(props) {
 
     const from = Math.max(1, Math.min(pages - leftRightCount * 2, Math.max(1, props.currentPage - leftRightCount)));
     var arr = (function (a, b) {
-        while (a--)b[a] = a + from;
+        while (a--) b[a] = a + from;
         return b
     })(Math.min(leftRightCount * 2 + 1, pages > 0 ? pages : 1), []);
     const table = props.parent;
@@ -609,7 +658,7 @@ function Rows(props) {
                                     })
                                 } : function () {
                                 }}
-                                className={cache[index2].classes.concat(column.classDecorator[row[column.field]]).join(' ')}
+                                className={cache[index2].classes.concat(column.classTemplate[row[column.field]]).join(' ')}
                         >
                             <Component column={column} row={row} cells={cells} packValue={packValue}/>
                         </td>
@@ -657,10 +706,10 @@ function ColumnMulti(props) {
             {props.column.columns.map((column) => {
                 const Component = column.type ? props.cells[column.type] : props.cells["Simple"];
                 let classes = ['w-table-cell-multi']
-                if (column.classDecorator[props.row[column.field]])
-                    classes.push(column.classDecorator[props.row[column.field]]);
-                if (column.classDecorator[props.row[column.field]])
-                    classes.push(column.classDecorator[props.row[column.field]]);
+                if (column.classTemplate[props.row[column.field]])
+                    classes.push(column.classTemplate[props.row[column.field]]);
+                if (column.classTemplate[props.row[column.field]])
+                    classes.push(column.classTemplate[props.row[column.field]]);
                 if (column.class)
                     classes = classes.concat(column.class);
 
@@ -687,7 +736,7 @@ const defaultColumnData = {
     icon: null,
     append: null,
     prepend: null,
-    classDecorator: [],
+    classTemplate: [],
     template: null,
     default: ""
 };
@@ -804,6 +853,7 @@ class MarkupLoader {
     }
 
 }
+
 const Column = () => null
 const Filter = () => null
 const Sorter = () => null
