@@ -143,7 +143,7 @@ class Table extends Component {
 
     handleStateRemove() {
         delete  window.localStorage[this.hashCode];
-        if (confirm("Wyczyszczono dane tabelki, czy chcesz odświeżyć stronę?")) {
+        if (confirm('Wyczyszczono dane tabelki, czy chcesz odświeżyć stronę?')) {
             window.location.reload();
         }
     }
