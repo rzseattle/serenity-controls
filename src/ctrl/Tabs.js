@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 class Tabs extends Component {
 
 
-
     static propTypes = {
         children: PropTypes.node.isRequired,
+        /**
+         * Default tab that will be activate
+         */
         defaultActiveTab: PropTypes.number
     }
 
@@ -26,13 +28,13 @@ class Tabs extends Component {
             <div className="w-tabs">
                 <div className="tabs-links">
                     {p.children.map((child, index) =>
-                        <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' +(child.props.badge ? 'with-badge' : '')} onClick={e => this.setState({currentTab: index})}>
+                        <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' + (child.props.badge ? 'with-badge' : '')} onClick={e => this.setState({currentTab: index})}>
                             {child.props.icon ?
                                 <i className={'fa fa-' + child.props.icon}></i>
                                 : null}
-                            {child.props.tab}
+                            {child.props.title}
                             {child.props.badge != undefined ?
-                                <div className="w-tabs-badge" >{child.props.badge}</div>
+                                <div className="w-tabs-badge">{child.props.badge}</div>
                                 : null}
                         </div>
                     )}
@@ -52,6 +54,14 @@ const TabPane = (props) => {
             {props.children}
         </div>
     )
+}
+
+TabPane.propTypes = {
+    title: PropTypes.string,
+    badge: PropTypes.string,
+    icon: PropTypes.string,
+    children: PropTypes.node
+
 }
 
 export {Tabs, TabPane}

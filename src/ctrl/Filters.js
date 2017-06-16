@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {LazilyLoad, importLazy} from "../lib/LazilyLoad"
+import {LazilyLoad, importLazy} from '../lib/LazilyLoad'
 /*import {DateRangePicker} from 'react-dates';
  import 'react-dates/lib/css/_datepicker.css';
  import 'rc-time-picker/assets/index.css';
@@ -78,14 +78,14 @@ class DateFilter extends Filter {
             label = `${dateStart} ${separatorI} ${dateStop}`;
 
 
-        console.log("here");
+        console.log('here');
         if (this.props.onChange) {
-            if(this.state.choiceType == "range") {
+            if(this.state.choiceType == 'range') {
                 this.props.onChange(this.props.field, val, '<x<in', this.props.caption, ':', label);
-            }else if(this.state.choiceType == "exists"){
-                this.props.onChange(this.props.field, '0000-00-00 00:00:00', '>', this.props.caption, ':', "Data ustalona");
-            }else if(this.state.choiceType == "not-exists"){
-                this.props.onChange(this.props.field, ['0000-00-00 00:00:00', null, ""], 'IN', this.props.caption, ':', "Data nie ustalona");
+            }else if(this.state.choiceType == 'exists'){
+                this.props.onChange(this.props.field, '0000-00-00 00:00:00', '>', this.props.caption, ':', 'Data ustalona');
+            }else if(this.state.choiceType == 'not-exists'){
+                this.props.onChange(this.props.field, ['0000-00-00 00:00:00', null, ''], 'IN', this.props.caption, ':', 'Data nie ustalona');
             }
         } else {
             let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
@@ -108,7 +108,7 @@ class DateFilter extends Filter {
         return (
             <div className={'w-filter w-filter-date' }>
 
-                <div style={{display: (s.choiceType != "range"?'none':'block')}}>
+                <div style={{display: (s.choiceType != 'range'?'none':'block')}}>
                     <i className="fa fa-calendar-o"></i>
                     <datePicker.DateRangePicker
                         startDate={this.state.startDate} // momentPropTypes.momentObj or null,
@@ -142,18 +142,18 @@ class DateFilter extends Filter {
                 <div className="w-filter-date-exists">
                     <div>
                         <label>
-                            <input checked={s.choiceType == "range"} onChange={e => this.setState({choiceType: "range"})} type="checkbox"/><i className="fa fa-arrows-h"></i> Według wybou
+                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'})} type="checkbox"/><i className="fa fa-arrows-h"></i> Według wybou
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input checked={s.choiceType == "exists"} onChange={e => this.setState({choiceType: "exists"})} type="checkbox"/><i className="fa fa-check"></i> Data ustalona
+                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'})} type="checkbox"/><i className="fa fa-check"></i> Data ustalona
                         </label>
                     </div>
 
                     <div>
                         <label>
-                            <input checked={s.choiceType == "not-exists"} onChange={e => this.setState({choiceType: "not-exists"})} type="checkbox"/><i className="fa fa-times"></i> Brak daty
+                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'})} type="checkbox"/><i className="fa fa-times"></i> Brak daty
                         </label>
                     </div>
                 </div>
@@ -226,10 +226,10 @@ class SelectFilter extends Filter {
 
 
         if (this.props.onChange) {
-            this.props.onChange(this.props.field, values, 'IN', this.props.caption, ':', labels.join(", "));
+            this.props.onChange(this.props.field, values, 'IN', this.props.caption, ':', labels.join(', '));
         } else {
             let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
-            table.data.addFilter(this.props.field, values, 'IN', this.props.caption, ':', labels.join(", "));
+            table.data.addFilter(this.props.field, values, 'IN', this.props.caption, ':', labels.join(', '));
             table.refresh();
         }
 
@@ -382,17 +382,17 @@ class NumericFilter extends Filter {
         };
         return (
             <div className={'w-filter w-filter-numeric'} ref="body">
-                {this.state.option == "<x<" ?
+                {this.state.option == '<x<' ?
                     <div className="w-filter-label">Od</div>
                     : ''}
 
-                {this.state.option != "IN" ?
+                {this.state.option != 'IN' ?
                     <input type="" autoFocus ref="input1" onKeyPress={this._handleKeyPress.bind(this)}/>
                     :
                     <textarea type="" autoFocus ref="input3"/>
                 }
 
-                {this.state.option == "<x<" ?
+                {this.state.option == '<x<' ?
                     <div className="w-filter-label">Do
                         <input type="" ref="input2" onKeyPress={this._handleKeyPress.bind(this)}/></div>
                     : ''}
@@ -435,10 +435,10 @@ class TextFilter extends Filter {
         if (value) {
 
             if (this.props.onChange) {
-                this.props.onChange(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + " :", this.refs.input.value);
+                this.props.onChange(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + ' :', this.refs.input.value);
             } else {
                 let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
-                table.data.addFilter(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + " :", this.refs.input.value);
+                table.data.addFilter(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + ' :', this.refs.input.value);
                 table.refresh();
             }
 

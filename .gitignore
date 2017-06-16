@@ -30,3 +30,4 @@ node_modules
 /css/
 .idea/
 dist/
+storybook-static/

@@ -11,21 +11,40 @@ module.exports = {
     plugins: [
         // your custom plugins
     ],
+    devServer: {
+        publicPath: "/",
+    },
     resolve: {
         modules: [path.resolve(__dirname, '../node_modules')]
     },
     module: {
-        loaders: [
-            {test: /\.css$/, loader: "style-loader!css-loader?importLoaders=1"},
- {
-        loader: 'style-loader!css-loader!sass-loader',
-        test: /\.scss$/,
-        include: path.resolve(__dirname, '../'),
-        exclude: path.resolve(__dirname, '../node_modules')
-      },
+        rules: [
+            {
+                test: /\.css/,
+                loaders: [
+                    "style-loader",
+                    { loader: "css-loader", query: { sourceMap: true } },
+                ]
+            },
+            {
+                test: /\.sass/,
+                loaders: [
+                    "style-loader",
+                    { loader: "css-loader", query: { sourceMap: true } },
+                    'resolve-url-loader',
+                    {
+                        loader: "sass-loader",
+                        query: {
+                            sourceMap: true,
+                            includePaths: [path.resolve(__dirname, '../node_modules')]
+                        }
+                    }
+                ],
+                include: path.resolve(__dirname, '../')
+            },
 
-            {test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff&name=/cache/[hash].[ext]'},
-            {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader?name=/cache/[hash].[ext]'}
+            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
+            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
         ],
     },
 };

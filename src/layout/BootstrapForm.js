@@ -1,5 +1,5 @@
-import React, {Children} from "react"
-import {Text, Select, Switch, CheckboxGroup, Textarea} from "../ctrl/Fields"
+import React, { Children } from 'react'
+import { Text, Select, Switch, CheckboxGroup, Textarea, Date } from '../ctrl/Fields'
 import PropTypes from 'prop-types';
 
 const withBootstrapFormField = (Field) => {
@@ -7,10 +7,10 @@ const withBootstrapFormField = (Field) => {
 
     return class BootstrapFieldContainer extends React.Component {
 
-        static propsTypes = {
+        static propTypes = {
             label: PropTypes.string,
             help: PropTypes.string,
-            form: PropTypes.obj
+            form: PropTypes.object
         }
 
         render() {
@@ -27,15 +27,15 @@ const withBootstrapFormField = (Field) => {
                 return (
                     <div className={classes.join(' ')}>
                         <label className="col-sm-2 control-label">{props.label}</label>
-                        <div className="col-sm-10"><Field {...props} className="form-control"/></div>
+                        <div className="col-sm-10"><Field {...props} className="form-control" /></div>
                     </div>
                 )
             }
             if (props.layoutType == 'default' || props.layoutType == 'inline' || !props.layoutType) {
                 return (
                     <div className={classes.join(' ')}>
-                        <label >{this.props.label}</label>
-                        <Field {...this.props} className="form-control"/>
+                        <label>{this.props.label}</label>
+                        <Field {...this.props} className="form-control" />
 
                         {props.help ?
                             <span class="help-block">{props.help} </span>
@@ -54,24 +54,62 @@ const withBootstrapFormField = (Field) => {
 
 class BForm extends React.Component {
 
-    static defaultProps = {
-        layoutType: "default",
 
-        data: {},
 
+    static propTypes = {
+        /**
+         * ( default | inline | horizontal )
+         */
+        layoutType: PropTypes.oneOf(['default', 'inline', 'horizontal']),
+        /**
+         * This callback is fired when form input is changed
+         * @callback 
+         * @param {object} keys: inputEvent, form
+         */
+        onChange: PropTypes.func,
+        /**
+         * This callback is fired when form input is submited preventin "action send"
+         * @callback 
+         * @param {object} keys: inputEvent, form
+         */
+        onSubmit: PropTypes.func,
+        /**
+         * This callback is fired to prepare data to sends
+         * @callback 
+         * @param {object} keys: inputEvent, form
+         */
+        onBeforeSend: PropTypes.func,
+        /**
+         * This callback is fired when validation error occured
+         * @callback 
+         * @param {object} keys: response, form
+         */
+        onValidatorError: PropTypes.func,
+        /**
+         * This callback is fired when server error occured
+         * @callback 
+         * @param {object} keys: response, form
+         */
+        onError: PropTypes.func,
+        /**
+         * This callback is fired after from submited with success
+         * @callback 
+         * @param {object} keys: response, form
+         */
+        onSuccess: PropTypes.func,
+        /**
+         * Input data for form inputs ( key = input name )
+         */
+        data: PropTypes.object,
+        /**
+         * Form target action
+         */
+        action: PropTypes.string,
     }
 
-    static propsTypes = {
-        layoutType: PropTypes.oneOf(['default', 'inline', 'horizontal']),
-        onChange: PropTypes.fun,
-        onSubmit: PropTypes.fun,
-        onBeforeSend: PropTypes.fun,
-        onValidatorError: PropTypes.fun,
-        onError: PropTypes.fun,
-        onSuccess: PropTypes.fun,
-        data: PropTypes.obj,
-        action: PropTypes.string,
-
+    static defaultProps = {
+        layoutType: 'default',
+        data: {},
     }
 
     constructor(props) {
@@ -85,15 +123,22 @@ class BForm extends React.Component {
         };
     }
 
+    /**
+     * Return form input data
+     */
     getData() {
         return this.state.data;
     }
 
+    /**
+     * Handle validation error
+     * @param {object} response 
+     */
     handleValidatorError(response) {
         if (this.props.onValidatorError) {
-            this.props.onValidatorError(e);
+            this.props.onValidatorError({ form: this, response: response });
         }
-        console
+
         this.setState({
             fieldErrors: response.fieldErrors,
             formErrors: response.errors,
@@ -106,20 +151,20 @@ class BForm extends React.Component {
         e.preventDefault();
 
         if (this.props.onSubmit) {
-            this.props.onSubmit(e);
+            this.props.onSubmit({ inputEvent: e, form: this });
         } else {
             if (this.props.action) {
 
                 if (this.props.onBeforeSend) {
                     this.props.onBeforeSend(e);
                 }
-                $.post(this.props.action, {data: this.getData()}, (response) => {
+                $.post(this.props.action, { data: this.getData() }, (response) => {
                     try {
                         let data = JSON.parse(response)
                         if (data.errors === undefined) {
 
                             if (this.props.onSuccess) {
-                                this.props.onSuccess(e);
+                                this.props.onSuccess({ form: this, response: response });
 
                                 this.setState({
                                     fieldErrors: {},
@@ -131,9 +176,9 @@ class BForm extends React.Component {
                             this.handleValidatorError(data)
                         }
                     } catch (e) {
-                        this.debugError(e.message + "<hr />" + response);
+                        this.debugError(e.message + '<hr />' + response);
                         if (this.props.error) {
-                            this.props.onError(e);
+                            this.props.onError({ form: this, response: response });
                         }
                     }
                 });
@@ -143,7 +188,7 @@ class BForm extends React.Component {
     }
 
     debugError(error) {
-        let errorWindow = window.open("", "", "width=800,height=600");
+        let errorWindow = window.open('', '', 'width=800,height=600');
         errorWindow.document.write(error);
         errorWindow.focus();
     }
@@ -152,7 +197,7 @@ class BForm extends React.Component {
         let name = e.target.getAttribute('name');
         let type = e.target.getAttribute('type')
 
-        if (type == "checkbox") {
+        if (type == 'checkbox') {
             let checked = e.target.checked;
 
             if (!Array.isArray(this.state.data[name])) {
@@ -174,10 +219,10 @@ class BForm extends React.Component {
         } else {
             this.state.data[name] = e.target.value;
         }
-        this.setState({data: this.state.data, isDirty: true});
+        this.setState({ data: this.state.data, isDirty: true });
 
         if (this.props.onChange) {
-            this.props.onChange(e);
+            this.props.onChange({ form: this, inputEvent: e });
         }
 
     }
@@ -185,7 +230,7 @@ class BForm extends React.Component {
     renderChildren(children) {
         return React.Children.map(children, child => {
 
-            if (child.type.name == "BootstrapFieldContainer") {
+            if (child.type && child.type.name == 'BootstrapFieldContainer') {
 
                 if (this.state.data[child.props.name] === undefined) {
                     this.state.data[child.props.name] = null;
@@ -193,6 +238,8 @@ class BForm extends React.Component {
                 if (this.state.fieldErrors[child.props.name] === undefined) {
                     this.state.fieldErrors[child.props.name] = null;
                 }
+                this.props.data[child.props.name] = this.props.data[child.props.name] || undefined;
+
                 return React.cloneElement(child, {
                     value: this.props.data[child.props.name],
                     layoutType: this.props.layoutType,
@@ -230,9 +277,9 @@ class BForm extends React.Component {
         const layoutType = this.props.layoutType;
 
         let classes = [];
-        if (layoutType == "horizontal") {
+        if (layoutType == 'horizontal') {
             classes.push('form-horizontal');
-        } else if (layoutType == "inline") {
+        } else if (layoutType == 'inline') {
             classes.push('form-inline');
         }
 
@@ -246,22 +293,27 @@ class BForm extends React.Component {
                     ''
                 }
 
-                {typeof this.props.children == "function" ?
+                {typeof this.props.children == 'function' ?
                     this.props.children(this.applyToField.bind(this))
                     :
                     this.renderChildren(this.props.children)
                 }
 
-                {layoutType == 'horizontal' ?
-                    <div className="form-group">
-                        <div className="col-sm-10 col-sm-offset-2">
-                            <button className="btn btn-white" type="submit">Anuluj</button>
-                            <button className="btn btn-primary" type="submit">Zapisz</button>
-                        </div>
-                    </div> : ''}
             </form>
         )
     }
+}
+
+
+const BButtonsBar = props => {
+    return (<div className="row form-group">
+        <div className="col-sm-10 col-sm-offset-2">
+            {props.children}
+        </div>
+    </div>)
+}
+BButtonsBar.propTypes = {
+    children: PropTypes.any.isRequired
 }
 
 const BText = withBootstrapFormField(Text);
@@ -269,4 +321,5 @@ const BTextarea = withBootstrapFormField(Textarea);
 const BSelect = withBootstrapFormField(Select);
 const BSwitch = withBootstrapFormField(Switch);
 const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
-export{BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea};
+const BDate = withBootstrapFormField(Date);
+export { BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate };

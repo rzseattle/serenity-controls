@@ -7,6 +7,8 @@ export default class Panel extends Component {
         title: PropTypes.string,
         noPadding: PropTypes.bool,
         noBottomMargin: PropTypes.bool,
+        toolbar: PropTypes.arrayOf(PropTypes.node),
+        children: PropTypes.node
     };
     static defaultProps = {
         noPadding: false,
@@ -15,7 +17,7 @@ export default class Panel extends Component {
 
     render() {
         const props = this.props
-        let classes = ['panel']
+        let classes = ['w-panel']
         if (this.props.noPadding) {
             classes.push('panel-no-padding')
         }
@@ -23,7 +25,7 @@ export default class Panel extends Component {
             classes.push('panel-no-bottom-margin')
         }
         return (
-            <div className={classes.join(" ")}>
+            <div className={classes.join(' ')}>
                 <div className="panel-body">
                     {props.title ? <div className="title">{props.title}
                         <div className="panel-toolbar">{props.toolbar}</div>

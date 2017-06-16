@@ -25,7 +25,7 @@ class AjaxForm {
 
     init(context) {
 
-        let result = context.querySelectorAll(".ajax-form");
+        let result = context.querySelectorAll('.ajax-form');
         result.forEach(form => {
 
             Observable.fromEvent(form.querySelectorAll('.ajax-form-submit'), 'click')
@@ -39,24 +39,24 @@ class AjaxForm {
     }
 
     resetValidationErrors() {
-        $(this.element).find(".field-error").removeClass('field-error');
-        $(".field-error-addon").remove();
+        $(this.element).find('.field-error').removeClass('field-error');
+        $('.field-error-addon').remove();
     }
 
     displayValidationErrors(data) {
 
         let first = true;
         Object.entries(data.fieldErrors).map(([name, errors]) => {
-            let field = $(this.element).find("[name=\'" + name + "\']");
+            let field = $(this.element).find('[name=\'' + name + '\']');
             if (field.length == 0) {
-                field = $(this.element).find("[name=*\'[" + name + "]\']");
+                field = $(this.element).find('[name=*\'[' + name + ']\']');
             }
 
             field.addClass('field-error');
 
             let position = field[0].getBoundingClientRect();
-            $("<div></div>")
-                .text(errors.join(", "))
+            $('<div></div>')
+                .text(errors.join(', '))
                 .addClass('field-error-addon')
                 .css({
                     position: 'fixed',
@@ -64,7 +64,7 @@ class AjaxForm {
                     left: position.left,
                 })
                 .width(position.width)
-                .appendTo($("body"));
+                .appendTo($('body'));
             if (first) {
                 field.focus();
                 first = false;
@@ -94,14 +94,14 @@ class AjaxForm {
     }
 
     debugError(error) {
-        let errorWindow = window.open("", "", "width=800,height=600");
+        let errorWindow = window.open('', '', 'width=800,height=600');
         errorWindow.document.write(error);
         errorWindow.focus();
     }
 
     submit() {
         this.runEvent('beforeSerialize', {});
-        let inData = $(this.element).find("input,select,textarea").serialize();
+        let inData = $(this.element).find('input,select,textarea').serialize();
         this.runEvent('beforeSend', {serialized: inData});
         $.post(this.action, inData)
             .done((data) => {
@@ -113,7 +113,7 @@ class AjaxForm {
                         this.runEvent('validationError', data);
                     }
                 } catch (e) {
-                    this.debugError(e.message + "<hr />" + data);
+                    this.debugError(e.message + '<hr />' + data);
                     this.runEvent('error', data)
                 }
             })
@@ -130,7 +130,7 @@ class AjaxForm {
 }
 
 window.AjaxForm = AjaxForm;
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
     //window.AjaxForm  = new AjaxForm();
     //window.AjaxForm.init(document);
 

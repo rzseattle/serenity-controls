@@ -62,7 +62,7 @@ class Table extends Component {
 
 
         let hashCode = function (s) {
-            return s.split("").reduce(function (a, b) {
+            return s.split('').reduce(function (a, b) {
                 a = ((a << 5) - a) + b.charCodeAt(0);
                 return a & a
             }, 0);
@@ -204,7 +204,7 @@ class Table extends Component {
             }
         }
 
-        field = {...field, dir: field.dir == "asc" ? "desc" : "asc"};
+        field = {...field, dir: field.dir == 'asc' ? 'desc' : 'asc'};
 
         this.state.order[_field] = field;
 
@@ -299,36 +299,36 @@ class Table extends Component {
     }
 
     returnColumnData( inData ) {
-        if(typeof inData.field != "string" || inData.field.length == 0 ){
-            console.error(  "Field is required property of columns" );
+        if(typeof inData.field != 'string' || inData.field.length == 0 ){
+            console.error(  'Field is required property of columns' );
             //throw  "Field is required property of columns" ;
             return;
         }
 
         let data = {
-            "field": null,
-            "caption": "",
-            "isSortable": true,
-            "display": true,
-            "toolTip": null,
-            "width": null,
-            "class": [],
-            "type": "Simple",
-            "orderField": null,
-            "icon": null,
-            "append": null,
-            "prepend": null,
-            "classTemplate": [],
-            "template": null,
-            "default": "",
-            "events": {
-                "click": [],
-                "enter": [],
-                "leave": []
+            'field': null,
+            'caption': '',
+            'isSortable': true,
+            'display': true,
+            'toolTip': null,
+            'width': null,
+            'class': [],
+            'type': 'Simple',
+            'orderField': null,
+            'icon': null,
+            'append': null,
+            'prepend': null,
+            'classTemplate': [],
+            'template': null,
+            'default': '',
+            'events': {
+                'click': [],
+                'enter': [],
+                'leave': []
             },
-            "filter": {
-                "type": "TextFilter",
-                "field": inData.field
+            'filter': {
+                'type': 'TextFilter',
+                'field': inData.field
             }
         }
         data = { ...data, ...inData };
@@ -595,7 +595,7 @@ function Rows(props) {
             <div>
                 {props.column.icon ? <i className={'w-table-prepend-icon fa ' + props.column.icon}></i> : ''}
                 {props.column.prepend ? props.column.prepend : ''}
-                {templateResult ? (typeof templateResult == "string" ? <span dangerouslySetInnerHTML={{__html: (props.column.template(val, props.row))}}></span> : templateResult) : (val ? val : props.column.default)}
+                {templateResult ? (typeof templateResult == 'string' ? <span dangerouslySetInnerHTML={{__html: (props.column.template(val, props.row))}}></span> : templateResult) : (val ? val : props.column.default)}
                 {props.column.append ? props.column.append : ''}
             </div>
         )
@@ -704,7 +704,7 @@ function ColumnMulti(props) {
             {/*{JSON.stringify(props.column.columns)}*/}
 
             {props.column.columns.map((column) => {
-                const Component = column.type ? props.cells[column.type] : props.cells["Simple"];
+                const Component = column.type ? props.cells[column.type] : props.cells['Simple'];
                 let classes = ['w-table-cell-multi']
                 if (column.classTemplate[props.row[column.field]])
                     classes.push(column.classTemplate[props.row[column.field]]);
@@ -724,21 +724,21 @@ function ColumnMulti(props) {
 
 
 const defaultColumnData = {
-    field: "",
-    caption: "",
+    field: '',
+    caption: '',
     isSortable: true,
     display: true,
     toolTip: null,
     width: null,
     class: [],
-    type: "Simple",
-    orderField: "id",
+    type: 'Simple',
+    orderField: 'id',
     icon: null,
     append: null,
     prepend: null,
     classTemplate: [],
     template: null,
-    default: ""
+    default: ''
 };
 
 class MarkupLoader {
@@ -749,12 +749,12 @@ class MarkupLoader {
         columns.map(column => {
 
 
-            if (column.type.name == "Column") {
+            if (column.type.name == 'Column') {
                 let data = this.getPropsAsData(column.props);
                 data.orderField = data.orderField || data.field;
-                data.type = data.type || "Simple";
+                data.type = data.type || 'Simple';
                 data.isSortable = data.isSortable || true;
-                data.default = data.default || "";
+                data.default = data.default || '';
                 data.events = {
                     click: [], enter: [], leave: []
                 };
@@ -787,10 +787,10 @@ class MarkupLoader {
 
 
                     children.map((child) => {
-                        if (child.type.name == "Filter") {
+                        if (child.type.name == 'Filter') {
                             filters.push(this.getFilterConf(this.getPropsAsData(child.props), data))
                         }
-                        if (child.type.name == "Sorter") {
+                        if (child.type.name == 'Sorter') {
                             sorters.push(this.getSorterConf(this.getPropsAsData(child.props), data));
                         }
 
@@ -803,10 +803,10 @@ class MarkupLoader {
                     config.filter = filters[0];
                 } else if (filters.length > 1) {
                     config.filter = {
-                        "type": "MultiFilter",
-                        "field": "id",
-                        "title": "Id",
-                        "caption": "Id",
+                        'type': 'MultiFilter',
+                        'field': 'id',
+                        'title': 'Id',
+                        'caption': 'Id',
                         filters: filters
                     }
                 }
@@ -820,7 +820,7 @@ class MarkupLoader {
     getFilterConf(data, column) {
         return {
             ...data, ...{
-                type: data.type[0].toUpperCase() + data.type.slice(1) + "Filter",
+                type: data.type[0].toUpperCase() + data.type.slice(1) + 'Filter',
                 field: data.field || column.field,
                 title: data.caption || column.caption,
                 caption: data.caption || column.caption,
@@ -831,7 +831,7 @@ class MarkupLoader {
 
     getColumnDefaultFilter(column) {
         return {
-            type: "TextFilter",
+            type: 'TextFilter',
             field: column.field,
             title: column.caption,
             caption: column.caption,
@@ -841,7 +841,7 @@ class MarkupLoader {
     getPropsAsData(props) {
         let data = {};
         for (let i in props) {
-            if (i != "children") {
+            if (i != 'children') {
                 data[i] = props[i];
             }
         }

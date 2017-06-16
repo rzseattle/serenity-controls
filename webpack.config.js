@@ -9,7 +9,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // One-liner for current directory, ignores .dotfiles
 module.exports = function (env = {}) {
-    env.production = typeof(env.production) != "undefined" ? env.production : false;
+    env.production = typeof(env.production) != 'undefined' ? env.production : false;
 
     var conf = {
 
@@ -22,7 +22,7 @@ module.exports = function (env = {}) {
         },
 
         //devtool: env.production ? 'source-map' : 'source-map', //
-        devtool: "#cheap-module-eval-source-map",
+        devtool: '#cheap-module-eval-source-map',
 
 
         module: {
@@ -83,7 +83,7 @@ module.exports = function (env = {}) {
             port: 3000,
             publicPath: '/',
             headers: {
-                "Access-Control-Allow-Origin": "*",
+                'Access-Control-Allow-Origin': '*',
             },
         };
         conf.entry = [
@@ -129,7 +129,7 @@ module.exports = function (env = {}) {
         conf.output = {
             filename: 'bundle-[hash].min.js',
             path: path.resolve(__dirname, env.production ? 'dist/' : 'public/'),
-            publicPath: env.production ? publicPath : ""
+            publicPath: env.production ? publicPath : ''
         };
         conf.plugins = [
             new ExtractTextPlugin({filename: 'bundle-[hash].css', allChunks: true}),

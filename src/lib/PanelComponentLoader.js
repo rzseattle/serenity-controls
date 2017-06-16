@@ -23,7 +23,7 @@ export default class PanelComponentLoader extends Component {
     }
 
     handleResolveComponent(path) {
-        alert("Resolving component " + path);
+        alert('Resolving component ' + path);
 
     }
 

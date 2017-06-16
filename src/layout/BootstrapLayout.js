@@ -46,7 +46,7 @@ const Row = (props) => {
     return (
         <div className="row">
             {children.map((child, key) =>
-                <div key={key} style={style} className={"col-md-" + colsMd[key]}>{child}</div>
+                <div key={key} style={style} className={'col-md-' + colsMd[key]}>{child}</div>
             )}
         </div>
     )

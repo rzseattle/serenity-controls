@@ -1,14 +1,26 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
+import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import 'react-dates/lib/css/_datepicker.css';
 
 const Select = (props) => {
     return (
-        <select className={props.className}>
-            <option>1243</option>
-            <option>12434</option>
+        <select className={props.className} name={props.name} onChange={props.onChange} defaultValue={props.value}>
+            {Object.entries(props.options).map(([value, label]) => {
+                return <option key={value} value={value}  >{value}  {label}</option>
+            })}
         </select>
     )
 }
+
+Select.propTypes = {
+    options: PropTypes.object.isRequired,
+    className: PropTypes.string,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+};
 
 
 const Text = (props) => {
@@ -17,12 +29,25 @@ const Text = (props) => {
             className={props.className}
             name={props.name}
             type={props.type}
-            value={props.value || ''}
+            value={props.value}
             onChange={props.onChange}
             placeholder={props.placeholder}
         />
 
     )
+}
+
+Text.propTypes = {
+    className: PropTypes.string,
+    name: PropTypes.string,
+    type: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string,
+
+};
+Text.defaultProps = {
+    value: ''
 }
 
 const Textarea = (props) => {
@@ -33,20 +58,36 @@ const Textarea = (props) => {
             type={props.type}
             onChange={props.onChange}
             placeholder={props.placeholder}
-        >{props.value || ''}</textarea>
+            value={props.value}
+        />
 
     )
 }
+
+
+Textarea.propTypes = {
+    className: PropTypes.string,
+    name: PropTypes.string,
+    type: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string,
+};
+Textarea.defaultProps = {
+    value: ''
+}
+
+
 
 
 const Switch = (props) => {
 
     let gen = (value, label) => {
         let field = <input type="radio"
-                           name={props.name}
-                           value={value}
-                           checked={props.value == value}
-                           onChange={props.onChange}
+            name={props.name}
+            value={value}
+            checked={props.value == value}
+            onChange={props.onChange}
         />;
         if (props.inline == true) {
             return <label className="radio-inline" key={value}>{field}{label}</label>
@@ -61,16 +102,22 @@ const Switch = (props) => {
     )
 }
 
-const CheckboxGroup = (props) => {
-    let values = props.value || [];
+Switch.propTypes = {
+    options: PropTypes.object.isRequired,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    inline: PropTypes.bool
+}
 
+const CheckboxGroup = (props) => {
 
     let gen = (value, label) => {
         let field = <input type="checkbox"
-                           name={props.name}
-                           value={value}
-                           checked={values.indexOf(value) > -1}
-                           onChange={props.onChange}
+            name={props.name}
+            value={value}
+            checked={props.value.includes(value)}
+            onChange={props.onChange}
         />;
         if (props.inline == true) {
             return <label className="checkbox-inline" key={value}> {field}{label}</label>
@@ -85,50 +132,65 @@ const CheckboxGroup = (props) => {
     )
 }
 
-/*
- *
- * <div class="checkbox">
- <label>
- <input type="checkbox"> Check me out
- </label>
- </div>
+CheckboxGroup.propTypes = {
+    options: PropTypes.object.isRequired,
+    name: PropTypes.string,
+    value: PropTypes.array,
+    onChange: PropTypes.func,
+    inline: PropTypes.bool
+}
+
+CheckboxGroup.defaultProps = {
+    value: []
+}
 
 
- <div class="checkbox">
- <label>
- <input type="checkbox" value="">
- Option one is this and that&mdash;be sure to include why it's great
- </label>
- </div>
- <div class="checkbox disabled">
- <label>
- <input type="checkbox" value="" disabled>
- Option two is disabled
- </label>
- </div>
+class Date extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: null
+            
+        };
+    }
+    handleOnChange(date) {
+        this.setState({ date, value: date });
+        console.log(this.state);
+        
+        //this.refs.hidden.value = date;
+        //this.props.onChange(date);
+    }
+    render() {
+        const props = this.props;
+        return (
+            <span>
+                <SingleDatePicker
+                    date={this.state.date}
+                    onDateChange={date => this.handleOnChange(date)} // PropTypes.func.isRequired
+                    focused={this.state.focused} // PropTypes.bool
+                    onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+                />
+                <input
+                    name={props.name}
+                    type="text"
+                    value={this.state.value}
+                    onChange={props.onChange}
+                    ref="hidden"
+                />
+            </span>
+        )
+    }
+}
 
- <div class="radio">
- <label>
- <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
- Option one is this and that&mdash;be sure to include why it's great
- </label>
- </div>
- <div class="radio">
- <label>
- <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
- Option two can be something else and selecting it will deselect option one
- </label>
- </div>
- <div class="radio disabled">
- <label>
- <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3" disabled>
- Option three is disabled
- </label>
- </div>
+Date.propTypes = {
+    className: PropTypes.string,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string,
+
+};
 
 
-
- * */
-
-export {Text, Select, Switch, CheckboxGroup, Textarea};
+export { Text, Select, Switch, CheckboxGroup, Textarea, Date };
 

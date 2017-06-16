@@ -20,8 +20,8 @@ export class Button extends Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (
-            ( nextState.ajaxState == "FETCHED" ||
-            nextState.ajaxState == "ERROR" )
+            ( nextState.ajaxState == 'FETCHED' ||
+            nextState.ajaxState == 'ERROR' )
             && this.state.disabled == false
         ) {
             if (this.props.ajaxBehavior == 'BACK_TO_INIT') {
@@ -45,7 +45,7 @@ export class Button extends Component {
         }
     }
 
-    xhr(url, data, method = "POST", datatype = "json") {
+    xhr(url, data, method = 'POST', datatype = 'json') {
 
         this.setState({ajaxState: 'FETCHING'});
 
