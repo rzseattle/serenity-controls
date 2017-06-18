@@ -1,5 +1,5 @@
 import React, {Children} from 'react'
-import {Text, Select, Switch, CheckboxGroup, Textarea, Date} from '../ctrl/Fields'
+import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File} from '../ctrl/Fields'
 import PropTypes from 'prop-types';
 
 const withBootstrapFormField = (Field) => {
@@ -338,4 +338,5 @@ const BSelect = withBootstrapFormField(Select);
 const BSwitch = withBootstrapFormField(Switch);
 const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
 const BDate = withBootstrapFormField(Date);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate};
+const BFile = withBootstrapFormField(File);
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile};

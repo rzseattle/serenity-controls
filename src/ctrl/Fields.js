@@ -194,5 +194,26 @@ Date.propTypes = {
 };
 
 
-export {Text, Select, Switch, CheckboxGroup, Textarea, Date};
+const File = (props) => {
+    return (
+        <input
+
+            name={props.name}
+            type="file"
+            onChange={props.onChange}
+
+        />
+
+    )
+}
+
+File.propTypes = {
+    className: PropTypes.string,
+    name: PropTypes.string,
+    type: PropTypes.string,
+    onChange: PropTypes.func,
+};
+
+
+export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File};
 
