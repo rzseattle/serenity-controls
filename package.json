@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server -d ",
     "build": "webpack --env.production --display-error-details",
     "watch": "webpack --watch --env.watch --display-error-details",
-    "install": "node_modules\\.bin\\babel.cmd ./src -d ./lib & node_modules\\.bin\\node-sass.cmd --include-path ./node_modules,../ --output-style compressed ./sass/App.sass ./css/lib.css ",
+    "install": "node_modules\\.bin\\babel.cmd ./src -d ./lib & node_modules\\.bin\\node-sass.cmd --include-path ../ --output-style compressed ./sass/App.sass ./css/lib.css ",
     "install2": "node_modules\\.bin\\node-sass.cmd --include-path node_modules/ ./sass/App.sass ",
     "storybook": "start-storybook -p 6006   -s ./node_modules/font-awesome/fonts",
     "build-storybook": "build-storybook"
