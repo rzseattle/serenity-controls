@@ -25,8 +25,10 @@ storiesOf('Bootstrap Forms', module)
             <Panel key="1">
                 <BForm>
                     <BSelect name="select" label="Select" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
-                    <BCheckboxGroup name="checkboxGroup" label="Checkbox group" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
-                    <BTextarea name="textarea" label="Checkbox group" />
+                    <BCheckboxGroup inline name="checkboxGroup" label="Checkbox group" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
+                    <BSwitch inline name="radioGroup" label="Radio group" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
+                    <BTextarea name="textarea" label="Textarea" />
+                    <BDate name="date" label="Date" />
                     <input type="submit" value="submit" className="btn btn-primary" />
                 </BForm>
             </Panel>
@@ -34,7 +36,8 @@ storiesOf('Bootstrap Forms', module)
                 <BForm layoutType="horizontal">
                     <BSelect name="select" label="Select" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
                     <BCheckboxGroup name="checkboxGroup" label="Checkbox group" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
-                    <BTextarea name="textarea" label="Checkbox group" />
+                    <BTextarea name="textarea" label="Textarea" />
+                    <BDate name="date" label="Date" />
                     <BButtonsBar>
                         <input type="submit" value="submit" className="btn btn-primary" />
                     </BButtonsBar>

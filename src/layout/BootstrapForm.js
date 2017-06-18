@@ -1,5 +1,5 @@
-import React, { Children } from 'react'
-import { Text, Select, Switch, CheckboxGroup, Textarea, Date } from '../ctrl/Fields'
+import React, {Children} from 'react'
+import {Text, Select, Switch, CheckboxGroup, Textarea, Date} from '../ctrl/Fields'
 import PropTypes from 'prop-types';
 
 const withBootstrapFormField = (Field) => {
@@ -27,7 +27,7 @@ const withBootstrapFormField = (Field) => {
                 return (
                     <div className={classes.join(' ')}>
                         <label className="col-sm-2 control-label">{props.label}</label>
-                        <div className="col-sm-10"><Field {...props} className="form-control" /></div>
+                        <div className="col-sm-10"><Field {...props} className="form-control"/></div>
                     </div>
                 )
             }
@@ -35,7 +35,7 @@ const withBootstrapFormField = (Field) => {
                 return (
                     <div className={classes.join(' ')}>
                         <label>{this.props.label}</label>
-                        <Field {...this.props} className="form-control" />
+                        <Field {...this.props} className="form-control"/>
 
                         {props.help ?
                             <span class="help-block">{props.help} </span>
@@ -55,7 +55,6 @@ const withBootstrapFormField = (Field) => {
 class BForm extends React.Component {
 
 
-
     static propTypes = {
         /**
          * ( default | inline | horizontal )
@@ -63,37 +62,37 @@ class BForm extends React.Component {
         layoutType: PropTypes.oneOf(['default', 'inline', 'horizontal']),
         /**
          * This callback is fired when form input is changed
-         * @callback 
+         * @callback
          * @param {object} keys: inputEvent, form
          */
         onChange: PropTypes.func,
         /**
          * This callback is fired when form input is submited preventin "action send"
-         * @callback 
+         * @callback
          * @param {object} keys: inputEvent, form
          */
         onSubmit: PropTypes.func,
         /**
          * This callback is fired to prepare data to sends
-         * @callback 
+         * @callback
          * @param {object} keys: inputEvent, form
          */
         onBeforeSend: PropTypes.func,
         /**
          * This callback is fired when validation error occured
-         * @callback 
+         * @callback
          * @param {object} keys: response, form
          */
         onValidatorError: PropTypes.func,
         /**
          * This callback is fired when server error occured
-         * @callback 
+         * @callback
          * @param {object} keys: response, form
          */
         onError: PropTypes.func,
         /**
          * This callback is fired after from submited with success
-         * @callback 
+         * @callback
          * @param {object} keys: response, form
          */
         onSuccess: PropTypes.func,
@@ -132,11 +131,11 @@ class BForm extends React.Component {
 
     /**
      * Handle validation error
-     * @param {object} response 
+     * @param {object} response
      */
     handleValidatorError(response) {
         if (this.props.onValidatorError) {
-            this.props.onValidatorError({ form: this, response: response });
+            this.props.onValidatorError({form: this, response: response});
         }
 
         this.setState({
@@ -151,20 +150,20 @@ class BForm extends React.Component {
         e.preventDefault();
 
         if (this.props.onSubmit) {
-            this.props.onSubmit({ inputEvent: e, form: this });
+            this.props.onSubmit({inputEvent: e, form: this});
         } else {
             if (this.props.action) {
 
                 if (this.props.onBeforeSend) {
                     this.props.onBeforeSend(e);
                 }
-                $.post(this.props.action, { data: this.getData() }, (response) => {
+                $.post(this.props.action, {data: this.getData()}, (response) => {
                     try {
                         let data = JSON.parse(response)
                         if (data.errors === undefined) {
 
                             if (this.props.onSuccess) {
-                                this.props.onSuccess({ form: this, response: response });
+                                this.props.onSuccess({form: this, response: response});
 
                                 this.setState({
                                     fieldErrors: {},
@@ -178,7 +177,7 @@ class BForm extends React.Component {
                     } catch (e) {
                         this.debugError(e.message + '<hr />' + response);
                         if (this.props.error) {
-                            this.props.onError({ form: this, response: response });
+                            this.props.onError({form: this, response: response});
                         }
                     }
                 });
@@ -194,8 +193,21 @@ class BForm extends React.Component {
     }
 
     handleInputChange(e) {
-        let name = e.target.getAttribute('name');
-        let type = e.target.getAttribute('type')
+        let name, type, value;
+        //custom event data
+        if (e.name !== undefined) {
+            name = e.name
+            value = e.value
+            type = e.type
+        } else {
+            name = e.target.getAttribute('name');
+            type = e.target.getAttribute('type');
+            value = e.target.value;
+        }
+
+        console.log(name + " " + value);
+
+
 
         if (type == 'checkbox') {
             let checked = e.target.checked;
@@ -204,25 +216,24 @@ class BForm extends React.Component {
                 if (!checked) {
                     this.state.data[name] = [];
                 } else {
-                    this.state.data[name] = [e.target.value];
+                    this.state.data[name] = [value];
                 }
             } else {
                 if (checked) {
-                    this.state.data[name].push(e.target.value);
+                    this.state.data[name].push(value);
                 } else {
-                    let index = this.state.data[name].indexOf(e.target.value);
+                    let index = this.state.data[name].indexOf(value);
                     this.state.data[name].splice(index, 1);
                 }
-
             }
 
         } else {
-            this.state.data[name] = e.target.value;
+            this.state.data[name] = value;
         }
-        this.setState({ data: this.state.data, isDirty: true });
+        this.setState({data: this.state.data, isDirty: true});
 
         if (this.props.onChange) {
-            this.props.onChange({ form: this, inputEvent: e });
+            this.props.onChange({form: this, inputEvent: e});
         }
 
     }
@@ -322,4 +333,4 @@ const BSelect = withBootstrapFormField(Select);
 const BSwitch = withBootstrapFormField(Switch);
 const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
 const BDate = withBootstrapFormField(Date);
-export { BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate };
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate};

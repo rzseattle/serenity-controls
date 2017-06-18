@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {LazilyLoad, importLazy} from '../lib/LazilyLoad'
-/*import {DateRangePicker} from 'react-dates';
- import 'react-dates/lib/css/_datepicker.css';
- import 'rc-time-picker/assets/index.css';
- import TimePicker from 'rc-time-picker';
- import moment from 'moment'
- require( 'moment/locale/pl' )
- moment.locale('pl');*/
+
+
 let moment;
 let locale;
 let datePicker;
-let timePicker;
+
 
 
 class Filter extends Component {
@@ -78,7 +72,7 @@ class DateFilter extends Filter {
             label = `${dateStart} ${separatorI} ${dateStop}`;
 
 
-        console.log('here');
+
         if (this.props.onChange) {
             if(this.state.choiceType == 'range') {
                 this.props.onChange(this.props.field, val, '<x<in', this.props.caption, ':', label);

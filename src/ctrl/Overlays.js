@@ -5,22 +5,32 @@ import PropTypes from 'prop-types';
 const withPortal = (ComponentToRender, styles = {}) => {
 
     return class Portal extends Component {
-        portalElement = null
+        portalElement = null;
+        targetElement = null;
+        static propTypes = {
+            container: PropTypes.any
+        }
 
         constructor(props) {
             super(props);
             this.state = {}
+
+            this.targetElement = document.querySelector(props.container) || document.body;
+            console.log(this.targetElement);
+
         }
 
         componentDidMount() {
             this.portalElement = document.createElement('div');
             //this.portalElement.classList.add('w-overlay')
-            document.body.appendChild(this.portalElement);
+
+            this.targetElement.appendChild(this.portalElement);
             this.componentDidUpdate();
         }
 
         componentWillUnmount() {
-            document.body.removeChild(this.portalElement);
+
+            this.targetElement.removeChild(this.portalElement);
         }
 
 
@@ -28,7 +38,11 @@ const withPortal = (ComponentToRender, styles = {}) => {
 
             ReactDOM.render(
                 <div className="w-overlay">
-                    <ComponentToRender {...this.props} overlayClose={this.handleClose.bind(this)}/>
+                    <ComponentToRender
+                        {...this.props}
+                        overlayClose={this.handleClose.bind(this)}
+                        containerElement={this.targetElement}
+                    />
                 </div>
 
                 , this.portalElement);
@@ -62,45 +76,49 @@ const Shadow = withPortal(ShadowBody,);
 
 
 class ModalBody extends Component {
+
+    static propTypes = {
+        visible: PropTypes.bool,
+        container: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+        containerElement: PropTypes.node
+    }
+    static defaultProps = {
+        visible: false
+    }
+
     constructor(props) {
         super(props);
-        this.state = {
-            visible: false
-        }
+        this.state = {}
     }
 
     render() {
 
-        let s = this.state;
+
         let p = this.props;
         return (<div className="w-modal" ref="body" style={{display: p.visible ? 'block' : 'none'}}>
-            {p.visible ? <Shadow/> : null}
+            {p.visible ? <Shadow container={this.props.container}/> : null}
             {p.children}
         </div>)
     }
 
     componentDidUpdate() {
 
-        // vanilla JS window width and height
-        let w = window,
-            d = document,
-            e = d.documentElement,
-            g = d.getElementsByTagName('body')[0],
-            x = w.innerWidth || e.clientWidth || g.clientWidth,
-            y = w.innerHeight || e.clientHeight || g.clientHeight;
 
+        let dim = this.props.containerElement.getBoundingClientRect();
+        let x = dim.width;
+        let y = dim.height;
+        console.log(this.props.containerElement);
+        console.log(dim);
 
-        //const container = window.document.getElementsByTagName('body')[0];
         const body = ReactDOM.findDOMNode(this.refs.body);
         const dimentions = body.getBoundingClientRect();
-        //const containerDimentions = container.getBoundingClientRect();
 
         const styles = {
             top: ((y - dimentions.height) / 2 ) + 'px',
             left: ((x - dimentions.width) / 2) + 'px',
 
         }
-        console.log(styles);
+
         for (let i in styles) {
             body.style[i] = styles[i];
         }

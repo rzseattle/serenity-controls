@@ -9,6 +9,7 @@ require('./form/')
 require('./panel/')
 require('./tabs/')
 require('./timeline/')
+require('./overlays/')
 
 
 
