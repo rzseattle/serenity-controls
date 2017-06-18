@@ -27,7 +27,13 @@ const withBootstrapFormField = (Field) => {
                 return (
                     <div className={classes.join(' ')}>
                         <label className="col-sm-2 control-label">{props.label}</label>
-                        <div className="col-sm-10"><Field {...props} className="form-control"/></div>
+                        <div className="col-sm-10">
+                            <Field {...props} className="form-control"/>
+                            {props.errors ?
+                                <span className="help-block">{props.errors.join(', ')} </span>
+
+                                : ''}
+                        </div>
                     </div>
                 )
             }
@@ -206,7 +212,6 @@ class BForm extends React.Component {
         }
 
         console.log(name + " " + value);
-
 
 
         if (type == 'checkbox') {
