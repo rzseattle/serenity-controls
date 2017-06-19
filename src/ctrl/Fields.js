@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
+import Inputmask from 'inputmask';
 import moment from 'moment';
 
 import( 'moment/locale/pl' );
@@ -27,32 +28,41 @@ Select.propTypes = {
 };
 
 
-const Text = (props) => {
-    return (
-        <input
-            className={props.className}
-            name={props.name}
-            type={props.type}
-            value={props.value}
-            onChange={props.onChange}
-            placeholder={props.placeholder}
-        />
+class Text extends Component {
+    static propTypes = {
+        className: PropTypes.string,
+        name: PropTypes.string,
+        type: PropTypes.string,
+        value: PropTypes.string,
+        onChange: PropTypes.func,
+        placeholder: PropTypes.string,
 
-    )
+    };
+    static defaultProps = {
+        value: ''
+    }
+
+    componentDidMount() {
+        //const $input_elem = ReactDOM.findDOMNode(this.refs.field);
+        //Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
+    }
+
+    render() {
+        return (
+            <input
+                ref="field"
+                className={props.className}
+                name={props.name}
+                type={props.type}
+                value={props.value}
+                onChange={props.onChange}
+                placeholder={props.placeholder}
+            />
+
+        )
+    }
 }
 
-Text.propTypes = {
-    className: PropTypes.string,
-    name: PropTypes.string,
-    type: PropTypes.string,
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    placeholder: PropTypes.string,
-
-};
-Text.defaultProps = {
-    value: ''
-}
 
 const Textarea = (props) => {
     return (
@@ -152,7 +162,7 @@ class Date extends React.Component {
         super(props);
         this.state = {
             value: null,
-            date: props.value?moment(props.value, 'YYYY-MM-DD'):moment()
+            date: props.value ? moment(props.value, 'YYYY-MM-DD') : moment()
 
         };
     }
@@ -162,7 +172,7 @@ class Date extends React.Component {
 
 
         //this.refs.hidden.value = date;
-        if(this.props.onChange) {
+        if (this.props.onChange) {
             this.props.onChange({name: this.props.name, type: 'date', value: date.format('YYYY-MM-DD')});
         }
     }
