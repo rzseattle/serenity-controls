@@ -253,7 +253,7 @@ class SelectFilter extends Filter {
                             onMouseDown={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
-                                $(e.currentTarget).prop('selected', $(e.currentTarget).prop('selected') ? false : true);
+                                e.currentTarget.selected = e.currentTarget.selected ? false : true;
                                 return false;
                             }}
                         >{el[1]}</option>

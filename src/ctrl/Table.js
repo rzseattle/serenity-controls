@@ -10,8 +10,9 @@ class Table extends Component {
     static propsTypes = {
         data: PropTypes.array,
         remoteURL: PropTypes.string,
-        selectable: PropTypes.bool,
-        onSelectionChange: PropTypes.func
+        selectable: PropTypes.boolean,
+        onSelectionChange: PropTypes.func,
+        remoteURL: PropTypes.string.isRequired
     }
 
     static defaultProps = {
@@ -20,14 +21,13 @@ class Table extends Component {
         buttons: [],
     }
 
-
     constructor(props) {
 
         super(props);
 
 
         let columns = props.columns || [];
-        for(let i in columns){
+        for (let i in columns) {
             columns[i] = this.returnColumnData(columns[i]);
         }
 
@@ -298,16 +298,18 @@ class Table extends Component {
 
     }
 
-    returnColumnData( inData ) {
-        if(typeof inData.field != 'string' || inData.field.length == 0 ){
-            console.error(  'Field is required property of columns' );
+    returnColumnData(inData) {
+        if (typeof inData.field != 'string' || inData.field.length == 0) {
+            console.error('Field is required property of columns');
             //throw  "Field is required property of columns" ;
             return;
         }
+        /*              config.filter = */
+
 
         let data = {
             'field': null,
-            'caption': '',
+            'caption': inData.caption == undefined ? inData.field : inData.caption,
             'isSortable': true,
             'display': true,
             'toolTip': null,
@@ -331,8 +333,24 @@ class Table extends Component {
                 'field': inData.field
             }
         }
-        data = { ...data, ...inData };
+        data = {...data, ...inData};
         data.orderField = data.orderField || data.field;
+
+
+        if (Array.isArray(data.filter)) {
+            if(data.filter.length > 0) {
+                data.filter = {
+                    'type': 'MultiFilter',
+                    'field': 'id',
+                    'title': 'Id',
+                    'caption': 'Id',
+                    filters: data.filter
+                }
+            }else{
+                data.filter = null;
+            }
+        }
+
         return data;
     }
 
@@ -642,19 +660,19 @@ function Rows(props) {
                                 onClick={column.events.click ? (event) => {
 
                                     column.events.click.map((callback) => {
-                                        callback.bind(this)(row, event);
+                                        callback.bind(this)(row, column, event);
                                     })
                                 } : function () {
                                 }}
                                 onMouseEnter={column.events.enter ? (event) => {
                                     column.events.enter.map((callback) => {
-                                        callback.bind(this)(row, event);
+                                        callback.bind(this)(row, column, event);
                                     })
                                 } : function () {
                                 }}
                                 onMouseLeave={column.events.leave ? (event) => {
                                     column.events.leave.map((callback) => {
-                                        callback.bind(this)(row, event);
+                                        callback.bind(this)(row, column, event);
                                     })
                                 } : function () {
                                 }}

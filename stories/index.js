@@ -10,6 +10,7 @@ require('./panel/')
 require('./tabs/')
 require('./timeline/')
 require('./overlays/')
+require('./table/')
 
 
 
