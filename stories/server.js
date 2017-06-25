@@ -1,6 +1,6 @@
 let express = require('express');
 let app = express();
-require('babel-polyfill');
+//require('babel-polyfill');
 var fs = require('fs');
 const path = require('path');
 var bodyParser = require('body-parser');
