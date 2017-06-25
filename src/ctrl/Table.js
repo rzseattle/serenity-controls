@@ -12,7 +12,11 @@ class Table extends Component {
         remoteURL: PropTypes.string,
         selectable: PropTypes.boolean,
         onSelectionChange: PropTypes.func,
-        remoteURL: PropTypes.string.isRequired
+        remoteURL: PropTypes.string.isRequired,
+        controlKey: PropTypes.string,
+        onPage: PropTypes.integer,
+        selectable: PropTypes.boolean
+
     }
 
     static defaultProps = {
@@ -320,7 +324,8 @@ class Table extends Component {
             'icon': null,
             'append': null,
             'prepend': null,
-            'classTemplate': [],
+            'classTemplate': () => [],
+            'styleTemplate': () => [],
             'template': null,
             'default': '',
             'events': {
@@ -338,7 +343,7 @@ class Table extends Component {
 
 
         if (Array.isArray(data.filter)) {
-            if(data.filter.length > 0) {
+            if (data.filter.length > 0) {
                 data.filter = {
                     'type': 'MultiFilter',
                     'field': 'id',
@@ -346,7 +351,7 @@ class Table extends Component {
                     'caption': 'Id',
                     filters: data.filter
                 }
-            }else{
+            } else {
                 data.filter = null;
             }
         }
@@ -656,7 +661,7 @@ function Rows(props) {
                 {columns.map((column, index2) => {
                     const Component = column.type ? cells[column.type] : cells['Simple'];
                     return (<td key={'cell' + index2}
-                                style={{width: column.width}}
+                                style={{width: column.width, ...column.styleTemplate(row, column)}}
                                 onClick={column.events.click ? (event) => {
 
                                     column.events.click.map((callback) => {
@@ -676,7 +681,7 @@ function Rows(props) {
                                     })
                                 } : function () {
                                 }}
-                                className={cache[index2].classes.concat(column.classTemplate[row[column.field]]).join(' ')}
+                                className={cache[index2].classes.concat(column.classTemplate(row, column)).join(' ')}
                         >
                             <Component column={column} row={row} cells={cells} packValue={packValue}/>
                         </td>
