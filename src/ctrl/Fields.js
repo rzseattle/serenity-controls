@@ -20,7 +20,7 @@ const Select = (props) => {
 }
 
 Select.propTypes = {
-    options: PropTypes.object.isRequired,
+    options: PropTypes.array.isRequired,
     className: PropTypes.string,
     name: PropTypes.string,
     value: PropTypes.string,
