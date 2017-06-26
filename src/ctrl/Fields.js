@@ -48,6 +48,7 @@ class Text extends Component {
     }
 
     render() {
+        const props = this.props;
         return (
             <input
                 ref="field"

@@ -24,6 +24,7 @@ storiesOf('Bootstrap Forms', module)
         <div style={{ maxWidth: '800px' }}>
             <Panel key="1">
                 <BForm>
+                    <BText label="Text" name="text"/>
                     <BSelect name="select" label="Select" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
                     <BCheckboxGroup inline name="checkboxGroup" label="Checkbox group" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
                     <BSwitch inline name="radioGroup" label="Radio group" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
@@ -35,6 +36,7 @@ storiesOf('Bootstrap Forms', module)
             </Panel>
             <Panel key="2">
                 <BForm layoutType="horizontal">
+                    <BText label="Text" name="text"/>
                     <BSelect name="select" label="Select" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
                     <BCheckboxGroup name="checkboxGroup" label="Checkbox group" options={{ 1: 'One', 2: 'Two', 3: 'Three' }} />
                     <BTextarea name="textarea" label="Textarea" />
