@@ -177,7 +177,6 @@ class BForm extends React.Component {
                                 })
                             }
                         } else {
-                            alertify.error('Popraw formularz');
                             this.handleValidatorError(data)
                         }
                     } catch (e) {
