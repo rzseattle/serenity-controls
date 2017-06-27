@@ -152,6 +152,13 @@ class BForm extends React.Component {
         this.forceUpdate();
     }
 
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.data) {
+            this.setState({data: nextProps.data});
+        }
+    }
+
     handleSubmit(e) {
         e.preventDefault();
 
@@ -209,8 +216,6 @@ class BForm extends React.Component {
             type = e.target.getAttribute('type');
             value = e.target.value;
         }
-
-        console.log(name + " " + value);
 
 
         if (type == 'checkbox') {
