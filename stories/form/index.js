@@ -24,7 +24,7 @@ class FormsDemo1 extends React.Component {
             <BForm
                 data={this.state.data}
                 onChange={(data) => {
-                    this.setState({data: {...this.state.data, ...data.form.getData()}});
+                    this.setState({data: data.form.getData()});
                 }}
                 ref="form"
             >
