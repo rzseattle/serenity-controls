@@ -37,10 +37,15 @@ window.ReactHelper = {
 
 
     register: function (name, constructor) {
+
+
         registry[name] = {_obj: constructor};
     },
 
     get: function (name) {
+        if(registry[name] == undefined){
+            console.error('[React-helper] Cannot find `' + name+'` registred object');
+        }
         return  registry[name]['_obj'];
     },
 
