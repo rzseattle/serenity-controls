@@ -45,6 +45,8 @@ window.ReactHelper = {
     get: function (name) {
         if(registry[name] == undefined){
             console.error('[React-helper] Cannot find `' + name+'` registred object');
+            console.log('Registred components');
+            console.log(registry);
         }
         return  registry[name]['_obj'];
     },
