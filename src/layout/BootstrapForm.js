@@ -23,21 +23,26 @@ const withBootstrapFormField = (Field) => {
                 classes.push('has-error')
             }
 
-            if (props.layoutType == 'horizontal') {
-
-                return (
-                    <div className={classes.join(' ')}>
-                        <label className="col-sm-2 control-label">{props.label}</label>
-                        <div className="col-sm-10">
-                            <Field {...props} className="form-control"/>
-                            {props.errors ?
-                                <span className="help-block">{props.errors.join(', ')} </span>
-
-                                : ''}
-                        </div>
-                    </div>
-                )
+            let className = 'form-control';
+            if (props.className){
+                className+= ' ' + props.className;
             }
+
+                if (props.layoutType == 'horizontal') {
+
+                    return (
+                        <div className={classes.join(' ')}>
+                            <label className="col-sm-2 control-label">{props.label}</label>
+                            <div className="col-sm-10">
+                                <Field {...props} className={className}/>
+                                {props.errors ?
+                                    <span className="help-block">{props.errors.join(', ')} </span>
+
+                                    : ''}
+                            </div>
+                        </div>
+                    )
+                }
             if (props.layoutType == 'default' || props.layoutType == 'inline' || !props.layoutType) {
                 return (
                     <div className={classes.join(' ')}>
