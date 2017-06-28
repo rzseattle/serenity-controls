@@ -204,7 +204,6 @@ class BForm extends React.Component {
                 let data = {};
                 if (this.props.namespace) {
                     data[this.props.namespace] = formData;
-                    appendFormData(formData, this.getData());
                 } else {
                     data = this.getData();
                 }
