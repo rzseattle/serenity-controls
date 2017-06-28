@@ -10,7 +10,8 @@ const withBootstrapFormField = (Field) => {
         static propTypes = {
             label: PropTypes.string,
             help: PropTypes.string,
-            form: PropTypes.object
+            form: PropTypes.object,
+            files: []
         }
 
         render() {
@@ -110,6 +111,10 @@ class BForm extends React.Component {
          * Form target action
          */
         action: PropTypes.string,
+        /**
+         * Namespace for all fields in form
+         */
+        namespace: PropTypes.string,
     }
 
     static defaultProps = {
@@ -154,7 +159,7 @@ class BForm extends React.Component {
 
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.data) {
+        if (nextProps.data) {
             this.setState({data: nextProps.data});
         }
     }
@@ -170,7 +175,78 @@ class BForm extends React.Component {
                 if (this.props.onBeforeSend) {
                     this.props.onBeforeSend(e);
                 }
-                $.post(this.props.action, {data: this.getData()}, (response) => {
+
+
+                const appendFormData = (FormData, data, name = '') => {
+
+                    if (typeof data === 'object') {
+
+                        Object.entries(data).map(function ([index, value]) {
+                            if (name == '') {
+                                appendFormData(FormData, value, index);
+                            } else {
+                                appendFormData(FormData, value, name + '[' + index + ']');
+                            }
+                        })
+                    } else {
+                        if (data) {
+                            FormData.append(name, data);
+                        }
+                    }
+                }
+
+
+                let data = {};
+                if (this.props.namespace) {
+                    data[this.props.namespace] = formData;
+                    appendFormData(formData, this.getData());
+                } else {
+                    data = this.getData();
+                }
+
+                const formData = new FormData();
+                appendFormData(formData, data);
+
+                let xhr = new XMLHttpRequest();
+
+
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                let data = JSON.parse(xhr.response);
+                                if (data.errors === undefined) {
+
+                                    if (this.props.onSuccess) {
+                                        this.props.onSuccess({form: this, response: response});
+
+                                        this.setState({
+                                            fieldErrors: {},
+                                            formErrors: [],
+                                        })
+                                    }
+                                } else {
+                                    this.handleValidatorError(data)
+                                }
+
+                            } catch (e) {
+                                this.debugError(e.message + '<hr />' + response);
+                                if (this.props.error) {
+                                    this.props.onError({form: this, response: response});
+                                }
+                            }
+                        } else {
+                            observer.error(xhr.response);
+                        }
+                    }
+                };
+                xhr.open('POST', this.props.action, true);
+
+
+                xhr.send(formData);
+
+
+                /*$.post(this.props.action, {data: this.getData()}, (response) => {
                     try {
                         let data = JSON.parse(response)
                         if (data.errors === undefined) {
@@ -192,7 +268,7 @@ class BForm extends React.Component {
                             this.props.onError({form: this, response: response});
                         }
                     }
-                });
+                });*/
             }
         }
         return false;
