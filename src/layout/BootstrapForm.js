@@ -193,7 +193,9 @@ class BForm extends React.Component {
                             // get item
                             let file = data.item(i);
                             formData.append(name + '[]', file);
+
                         }
+                        return;
                     }
 
                     if (typeof data === 'object') {

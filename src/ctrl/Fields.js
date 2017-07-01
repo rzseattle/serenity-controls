@@ -13,7 +13,7 @@ const Select = (props) => {
     return (
         <select className={props.className} name={props.name} onChange={props.onChange} defaultValue={props.value}>
             {Object.entries(props.options).map(([value, label]) => {
-                return <option key={value} value={value}>{value} {label}</option>
+                return <option key={value} value={value}> {label}</option>
             })}
         </select>
     )
