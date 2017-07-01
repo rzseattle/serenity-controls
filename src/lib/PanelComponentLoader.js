@@ -15,10 +15,13 @@ export default class PanelComponentLoader extends Component {
         }
     }
 
-    handleReloadProps(input = {}) {
+    handleReloadProps(input = {}, callback = false) {
         this.setState({propsLoading: true});
         $.get(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}, (data) => {
             this.setState({propsLoading: false, loadedProps: data});
+            if(callback){
+                callback();
+            }
         });
     }
 

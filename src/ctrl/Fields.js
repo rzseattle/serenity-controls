@@ -189,6 +189,7 @@ class Date extends React.Component {
                     onDateChange={date => this.handleOnChange(date)} // PropTypes.func.isRequired
                     focused={this.state.focused} // PropTypes.bool
                     onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
+                    isOutsideRange={() => true}
                 />
             </div>
         )
