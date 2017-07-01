@@ -9,13 +9,17 @@ export default class FileUpload extends React.Component {
             data: {
             },
             submit: {},
-            files: []
+            response: {}
+
         };
     }
 
     handleFileChange(e) {
 
-        this.setState({files: [e.target.files]});
+        this.state.data.files = e.target.files
+        this.setState({});
+
+
     }
 
     render() {
@@ -26,9 +30,12 @@ export default class FileUpload extends React.Component {
             <BForm
                 action={server + '/form/fileUpload'}
                 data={this.state.data}
-                files={this.state.files}
+
                 onChange={(data) => {
                     this.setState({data: data.form.getData()});
+                }}
+                onSuccess={(data) => {
+                    this.setState({response: data.response});
                 }}
                 ref="form"
             >
@@ -49,6 +56,10 @@ export default class FileUpload extends React.Component {
                 <h5>Submited data</h5>
                 <pre>
                     {JSON.stringify(this.state.submit, null, 2)}
+                </pre>
+                <h5>Response data</h5>
+                <pre>
+                    {JSON.stringify(this.state.response, null, 2)}
                 </pre>
             </BForm>
         )

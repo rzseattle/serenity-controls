@@ -24,25 +24,25 @@ const withBootstrapFormField = (Field) => {
             }
 
             let className = 'form-control';
-            if (props.className){
-                className+= ' ' + props.className;
+            if (props.className) {
+                className += ' ' + props.className;
             }
 
-                if (props.layoutType == 'horizontal') {
+            if (props.layoutType == 'horizontal') {
 
-                    return (
-                        <div className={classes.join(' ')}>
-                            <label className="col-sm-2 control-label">{props.label}</label>
-                            <div className="col-sm-10">
-                                <Field {...props} className={className}/>
-                                {props.errors ?
-                                    <span className="help-block">{props.errors.join(', ')} </span>
+                return (
+                    <div className={classes.join(' ')}>
+                        <label className="col-sm-2 control-label">{props.label}</label>
+                        <div className="col-sm-10">
+                            <Field {...props} className={className}/>
+                            {props.errors ?
+                                <span className="help-block">{props.errors.join(', ')} </span>
 
-                                    : ''}
-                            </div>
+                                : ''}
                         </div>
-                    )
-                }
+                    </div>
+                )
+            }
             if (props.layoutType == 'default' || props.layoutType == 'inline' || !props.layoutType) {
                 return (
                     <div className={classes.join(' ')}>
@@ -136,7 +136,10 @@ class BForm extends React.Component {
             isDirty: false,
             loading: false,
         };
+
+
     }
+
 
     /**
      * Return form input data
@@ -183,6 +186,15 @@ class BForm extends React.Component {
 
 
                 const appendFormData = (FormData, data, name = '') => {
+
+                    if (data instanceof FileList) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            // get item
+                            let file = data.item(i);
+                            formData.append(name + '[]', file);
+                        }
+                    }
 
                     if (typeof data === 'object') {
 
@@ -240,12 +252,11 @@ class BForm extends React.Component {
                                 }
                             }
                         } else {
-                            this.debugError(xhr.status + '<hr />' );
+                            this.debugError(xhr.status + '<hr />');
                         }
                     }
                 };
                 xhr.open('POST', this.props.action, true);
-
 
 
                 xhr.send(formData);

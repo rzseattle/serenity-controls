@@ -4,8 +4,10 @@ let app = express();
 var fs = require('fs');
 const path = require('path');
 var bodyParser = require('body-parser');
+var busboy = require('connect-busboy');
 
 app.use(bodyParser.json());
+app.use(busboy());
 
 app.use(function (req, res, next) {
     res.set('Access-Control-Allow-Origin', '*');
@@ -28,6 +30,12 @@ function fieldSorter(fields) {
         return a[o] > b[o] ? dir : a[o] < b[o] ? -(dir) : 0;
     }).reduce((p,n) => p ? p : n, 0);
 }
+
+
+app.all('/form/fileUpload', function (req, res) {
+    //console.log(req.files)
+    res.send(req);
+})
 
 app.all('/table/base', function (req, res) {
 
