@@ -357,7 +357,10 @@ class BForm extends React.Component {
                     layoutType: this.props.layoutType,
                     errors: this.state.fieldErrors[child.props.name],
                     onChange: (e) => {
+                        if(child.props.onChange()){
+                            child.props.onChange();
 
+                        }
                         this.handleInputChange(e);
                     }
                 })

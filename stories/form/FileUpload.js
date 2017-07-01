@@ -43,6 +43,7 @@ export default class FileUpload extends React.Component {
                 <BText label="Text" name="text[xxx]"/>
                 <p>
                     <input type="file" onChange={this.handleFileChange.bind(this)}/>
+                    <BFile label="Plik 1" name="file1" onChange={this.handleFileChange.bind(this)}/>
 
                 </p>
 
