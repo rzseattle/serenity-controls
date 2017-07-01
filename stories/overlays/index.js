@@ -21,9 +21,12 @@ class Base extends React.Component {
 
     render() {
         return (
-            <Modal visible={this.state.visible} >
+            <Modal visible={this.state.visible} closeLink={true}>
+                <a className="w-modal-close" style={{}} onClick={(e) => this.setState({statusChangeOn: !this.state.statusChangeOn})}> <i className="fa fa-close"></i></a>
+                <div style={{padding: '20px'}}>
                 Content
                 <button onClick={() => this.setState({visible: false})}>hide</button>
+                </div>
             </Modal>
         )
     }
@@ -42,6 +45,6 @@ storiesOf('Overlays', module)
 
                 </div>
                 <br/><br/><br/><br/>
-                <Base/>
+                <Base />
             </Panel>
         ))
