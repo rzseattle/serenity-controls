@@ -203,7 +203,7 @@ class BForm extends React.Component {
 
                 let data = {};
                 if (this.props.namespace) {
-                    data[this.props.namespace] = formData;
+                    data[this.props.namespace] = this.getData();
                 } else {
                     data = this.getData();
                 }
@@ -222,7 +222,7 @@ class BForm extends React.Component {
                                 if (data.errors === undefined) {
 
                                     if (this.props.onSuccess) {
-                                        this.props.onSuccess({form: this, response: response});
+                                        this.props.onSuccess({form: this, response: data});
 
                                         this.setState({
                                             fieldErrors: {},
@@ -234,17 +234,18 @@ class BForm extends React.Component {
                                 }
 
                             } catch (e) {
-                                this.debugError(e.message + '<hr />' + response);
+                                this.debugError(e.message + '<hr />' + xhr.response);
                                 if (this.props.error) {
-                                    this.props.onError({form: this, response: response});
+                                    this.props.onError({form: this, response: xhr.response});
                                 }
                             }
                         } else {
-                            observer.error(xhr.response);
+                            this.debugError(xhr.status + '<hr />' );
                         }
                     }
                 };
                 xhr.open('POST', this.props.action, true);
+
 
 
                 xhr.send(formData);

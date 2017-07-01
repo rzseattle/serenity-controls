@@ -16,7 +16,7 @@ const withPortal = (ComponentToRender, styles = {}) => {
             this.state = {}
 
             this.targetElement = document.querySelector(props.container) || document.body;
-            console.log(this.targetElement);
+            //console.log(this.targetElement);
 
         }
 
@@ -79,8 +79,8 @@ class ModalBody extends Component {
 
     static propTypes = {
         visible: PropTypes.bool,
-        container: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-        containerElement: PropTypes.node
+        //container: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+        //containerElement: PropTypes.node
     }
     static defaultProps = {
         visible: false
@@ -107,11 +107,16 @@ class ModalBody extends Component {
         let dim = this.props.containerElement.getBoundingClientRect();
         let x = dim.width;
         let y = dim.height;
-        console.log(this.props.containerElement);
-        console.log(dim);
+        /*console.log(this.props.containerElement);*/
+
+
 
         const body = ReactDOM.findDOMNode(this.refs.body);
         const dimentions = body.getBoundingClientRect();
+
+        /*console.log(x, 'dim');
+        console.log(dimentions.width, 'dim2');
+        console.log(((x - dimentions.width) / 2) + 'px', 'left');*/
 
         const styles = {
             top: ((y - dimentions.height) / 2 ) + 'px',
@@ -122,6 +127,8 @@ class ModalBody extends Component {
         for (let i in styles) {
             body.style[i] = styles[i];
         }
+
+
     }
 
     componentDidMount() {

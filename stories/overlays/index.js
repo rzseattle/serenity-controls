@@ -11,6 +11,24 @@ const formImport = `
         ~~~
         `;
 
+class Base extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            visible: true
+        }
+    }
+
+    render() {
+        return (
+            <Modal visible={this.state.visible} >
+                Content
+                <button onClick={() => this.setState({visible: false})}>hide</button>
+            </Modal>
+        )
+    }
+}
+
 let modalVisible = true;
 storiesOf('Overlays', module)
     .addWithInfo(
@@ -19,14 +37,11 @@ storiesOf('Overlays', module)
         () => (
             <Panel>
                 Some content
-                <br /><br /><br /><br />
+                <br/><br/><br/><br/>
                 <div style={{width: '500px', height: '500px', position: 'relative'}} className="modal-container">
 
                 </div>
-                <br /><br /><br /><br />
-                <Modal visible={modalVisible} container={'.modal-container'}>
-                    Content
-                    <button onClick={() => modalVisible = false}>hide</button>
-                </Modal>
+                <br/><br/><br/><br/>
+                <Base/>
             </Panel>
         ))
