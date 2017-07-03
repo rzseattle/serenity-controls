@@ -175,6 +175,12 @@ class BForm extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.onChange) {
+            this.props.onChange({form: this, inputEvent: null});
+        }
+    }
+
     handleSubmit(e) {
         e.preventDefault();
 
@@ -372,7 +378,10 @@ class BForm extends React.Component {
             } else {
                 return child
             }
-        })
+        });
+        //this.setState({data: this.state.data});
+
+
     }
 
     applyToField(name) {
