@@ -35,6 +35,9 @@ const withBootstrapFormField = (Field) => {
                         <label className="col-sm-2 control-label">{props.label}</label>
                         <div className="col-sm-10">
                             <Field {...props} className={className}/>
+                            {props.help ?
+                                <span class="help-block">{props.help} </span>
+                                : ''}
                             {props.errors ?
                                 <span className="help-block">{props.errors.join(', ')} </span>
 
@@ -359,7 +362,7 @@ class BForm extends React.Component {
                     layoutType: this.props.layoutType,
                     errors: this.state.fieldErrors[child.props.name],
                     onChange: (e) => {
-                        if(child.props.onChange){
+                        if (child.props.onChange) {
                             child.props.onChange(e);
 
                         }
