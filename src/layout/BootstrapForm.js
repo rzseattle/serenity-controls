@@ -356,6 +356,7 @@ class BForm extends React.Component {
 
     applyToField(name) {
 
+
         if (this.state.data[name] === undefined) {
             this.state.data[name] = null;
         }
@@ -381,6 +382,7 @@ class BForm extends React.Component {
         } else if (layoutType == 'inline') {
             classes.push('form-inline');
         }
+
 
         return (
             <form className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)}>

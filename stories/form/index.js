@@ -4,6 +4,7 @@ import {action, decorateAction} from '@storybook/addon-actions';
 import Panel from '../../src/ctrl/Panel';
 import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile} from '../../src/layout/BootstrapForm'
 import {DataBinding} from './DataBinding'
+import {FunctionRender} from './FunctionRender'
 import FileUpload from './FileUpload'
 
 
@@ -67,6 +68,18 @@ storiesOf('Bootstrap Forms', module)
             <div style={{maxWidth: '800px'}}>
                 <Panel>
                     <FileUpload/>
+                </Panel>
+
+            </div>
+        ))
+    .addWithInfo(
+        'FunctionRender',
+        formImport
+        ,
+        () => (
+            <div style={{maxWidth: '800px'}}>
+                <Panel>
+                    <FunctionRender/>
                 </Panel>
 
             </div>
