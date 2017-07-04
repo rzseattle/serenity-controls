@@ -7,7 +7,8 @@ import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, 
         super(props);
         this.state = {
             data: {
-                textarea: 'initial data'
+                textarea: 'initial data',
+                other: 'static value'
             },
             submit: {}
         };
@@ -20,11 +21,14 @@ import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, 
             <BForm
                 data={this.state.data}
                 onChange={(data) => {
-                    this.setState({data: data.form.getData()});
+                    let d = data.form.getData();
+                    this.setState({data: {...d, 'textarea': d.text + ' x1' }});
+
+
                 }}
                 ref="form"
             >
-                <BText label="Text" name="text"/>
+                <BText label="Text" name="text"  />
                 <BSelect name="select" label="Select" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
                 <BCheckboxGroup name="checkboxGroup" label="Checkbox group" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
                 <BTextarea name="textarea" label="Checkbox group"/>

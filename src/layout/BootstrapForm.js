@@ -176,9 +176,7 @@ class BForm extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.onChange) {
-            this.props.onChange({form: this, inputEvent: null});
-        }
+
     }
 
     handleSubmit(e) {
@@ -268,34 +266,8 @@ class BForm extends React.Component {
                     }
                 };
                 xhr.open('POST', this.props.action, true);
-
-
                 xhr.send(formData);
 
-
-                /*$.post(this.props.action, {data: this.getData()}, (response) => {
-                    try {
-                        let data = JSON.parse(response)
-                        if (data.errors === undefined) {
-
-                            if (this.props.onSuccess) {
-                                this.props.onSuccess({form: this, response: response});
-
-                                this.setState({
-                                    fieldErrors: {},
-                                    formErrors: [],
-                                })
-                            }
-                        } else {
-                            this.handleValidatorError(data)
-                        }
-                    } catch (e) {
-                        this.debugError(e.message + '<hr />' + response);
-                        if (this.props.error) {
-                            this.props.onError({form: this, response: response});
-                        }
-                    }
-                });*/
             }
         }
         return false;
@@ -355,13 +327,11 @@ class BForm extends React.Component {
 
             if (child.type && child.type.name == 'BootstrapFieldContainer') {
 
-                if (this.state.data[child.props.name] === undefined) {
-                    this.state.data[child.props.name] = null;
-                }
+
                 if (this.state.fieldErrors[child.props.name] === undefined) {
                     this.state.fieldErrors[child.props.name] = null;
                 }
-                this.props.data[child.props.name] = this.props.data[child.props.name] || undefined;
+                this.props.data[child.props.name] = this.props.data[child.props.name] || null;
 
                 return React.cloneElement(child, {
                     value: this.props.data[child.props.name],

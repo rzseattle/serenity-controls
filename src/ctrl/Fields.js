@@ -129,7 +129,7 @@ const CheckboxGroup = (props) => {
         let field = <input type="checkbox"
                            name={props.name}
                            value={value}
-                           checked={props.value.includes(value)}
+                           checked={props.value && props.value.includes(value)}
                            onChange={props.onChange}
         />;
         if (props.inline == true) {
