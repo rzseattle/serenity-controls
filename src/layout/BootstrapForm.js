@@ -205,7 +205,7 @@ class BForm extends React.Component {
                         return;
                     }
 
-                    if (typeof data === 'object') {
+                    if (typeof data === 'object' && data != null) {
 
                         Object.entries(data).map(function ([index, value]) {
                             if (name == '') {
@@ -215,7 +215,7 @@ class BForm extends React.Component {
                             }
                         })
                     } else {
-                        if (data) {
+                        if (data && data != null) {
                             FormData.append(name, data);
                         }
                     }
