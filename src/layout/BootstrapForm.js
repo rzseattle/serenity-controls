@@ -365,6 +365,7 @@ class BForm extends React.Component {
         }
         return {
             value: this.props.data[name],
+            name: name,
             layoutType: this.props.layoutType,
             errors: this.state.fieldErrors[name],
             onChange: (e) => {
