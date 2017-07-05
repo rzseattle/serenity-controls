@@ -11,7 +11,13 @@ import 'react-dates/lib/css/_datepicker.css';
 
 const Select = (props) => {
     return (
-        <select className={props.className} name={props.name} onChange={props.onChange} defaultValue={props.value}>
+        <select
+            className={props.className}
+            name={props.name}
+            onChange={props.onChange}
+            defaultValue={props.value}
+            disabled={props.disabled}
+        >
             {Object.entries(props.options).map(([value, label]) => {
                 return <option key={value} value={value}> {label}</option>
             })}
@@ -25,6 +31,7 @@ Select.propTypes = {
     name: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func,
+    disabled: PropTypes.bool,
 };
 
 
@@ -36,6 +43,7 @@ class Text extends Component {
         value: PropTypes.string,
         onChange: PropTypes.func,
         placeholder: PropTypes.string,
+        disabled: PropTypes.bool
 
     };
     static defaultProps = {
@@ -58,6 +66,7 @@ class Text extends Component {
                 value={props.value}
                 onChange={props.onChange}
                 placeholder={props.placeholder}
+                disabled={props.disabled}
             />
 
         )
@@ -74,6 +83,7 @@ const Textarea = (props) => {
             onChange={props.onChange}
             placeholder={props.placeholder}
             value={props.value}
+            disabled={props.disabled}
         />
 
     )
@@ -87,6 +97,7 @@ Textarea.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
     placeholder: PropTypes.string,
+    disabled: PropTypes.bool
 };
 Textarea.defaultProps = {
     value: ''
@@ -120,7 +131,9 @@ Switch.propTypes = {
     name: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func,
-    inline: PropTypes.bool
+    inline: PropTypes.bool,
+    disabled: PropTypes.bool
+
 }
 
 const CheckboxGroup = (props) => {
@@ -131,6 +144,7 @@ const CheckboxGroup = (props) => {
                            value={value}
                            checked={props.value && props.value.includes(value)}
                            onChange={props.onChange}
+                           disabled={props.disabled}
         />;
         if (props.inline == true) {
             return <label className="checkbox-inline" key={value}> {field}{label}</label>
@@ -150,7 +164,8 @@ CheckboxGroup.propTypes = {
     name: PropTypes.string,
     value: PropTypes.array,
     onChange: PropTypes.func,
-    inline: PropTypes.bool
+    inline: PropTypes.bool,
+    disabled: PropTypes.bool
 }
 
 CheckboxGroup.defaultProps = {
@@ -190,6 +205,7 @@ class Date extends React.Component {
                     focused={this.state.focused} // PropTypes.bool
                     onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
                     isOutsideRange={() => false}
+                    disabled={props.disabled}
                 />
             </div>
         )
@@ -202,6 +218,7 @@ Date.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
     placeholder: PropTypes.string,
+    disabled: PropTypes.bool
 
 };
 
@@ -213,6 +230,7 @@ const File = (props) => {
             name={props.name}
             type="file"
             onChange={props.onChange}
+            disabled={props.disabled}
 
         />
 
@@ -224,6 +242,7 @@ File.propTypes = {
     name: PropTypes.string,
     type: PropTypes.string,
     onChange: PropTypes.func,
+    disabled: PropTypes.bool
 };
 
 

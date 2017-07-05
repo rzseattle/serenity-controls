@@ -28,7 +28,7 @@ import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, 
                 }}
                 ref="form"
             >
-                <BText label="Text" name="text"  />
+                <BText label="Text" name="text"  disabled={true} />
                 <BSelect name="select" label="Select" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
                 <BCheckboxGroup name="checkboxGroup" label="Checkbox group" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
                 <BTextarea name="textarea" label="Checkbox group"/>
