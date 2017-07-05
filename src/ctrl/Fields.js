@@ -178,7 +178,8 @@ class Date extends React.Component {
         super(props);
         this.state = {
             value: null,
-            date: props.value ? moment(props.value, 'YYYY-MM-DD') : moment()
+            date: props.value //? moment(props.value, 'YYYY-MM-DD') : moment()
+
 
         };
     }
@@ -206,6 +207,7 @@ class Date extends React.Component {
                     onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
                     isOutsideRange={() => false}
                     disabled={props.disabled}
+                    placeholder={props.placeholder}
                 />
             </div>
         )
