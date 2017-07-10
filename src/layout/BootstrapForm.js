@@ -205,7 +205,7 @@ class BForm extends React.Component {
                         return;
                     }
 
-                    if (data instanceof File) {
+                    if (Object.prototype.toString.call(data) == '[object File]') {
                         formData.append(name, data);
                         return;
                     }
