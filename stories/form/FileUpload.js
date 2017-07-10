@@ -6,8 +6,7 @@ export default class FileUpload extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: {
-            },
+            data: {},
             submit: {},
             response: {}
 
@@ -17,6 +16,7 @@ export default class FileUpload extends React.Component {
     handleFileChange(e) {
 
         this.state.data.files = e.target.files
+
         this.setState({});
 
 
@@ -41,11 +41,9 @@ export default class FileUpload extends React.Component {
             >
                 <BText label="Text" name="text"/>
                 <BText label="Text" name="text[xxx]"/>
-                <p>
-                    <input type="file" onChange={this.handleFileChange.bind(this)}/>
-                    <BFile label="Plik 1" name="file1" onChange={this.handleFileChange.bind(this)}/>
 
-                </p>
+                <input type="file" onChange={this.handleFileChange.bind(this)}/>
+                <BFile label="Plik 1" name="file"/>{/*onChange={this.handleFileChange.bind(this)}*/}
 
 
                 <input type="submit" value="submit" className="btn btn-primary" onClick={(e) => this.setState({submit: this.refs.form.getData()})}/>

@@ -286,10 +286,16 @@ class BForm extends React.Component {
             name = e.name
             value = e.value
             type = e.type
+
+
         } else {
             name = e.target.getAttribute('name');
             type = e.target.getAttribute('type');
             value = e.target.value;
+
+            if (e.target.type == 'file') {
+                value = e.target.files[0];
+            }
         }
 
 
