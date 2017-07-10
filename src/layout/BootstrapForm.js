@@ -205,6 +205,11 @@ class BForm extends React.Component {
                         return;
                     }
 
+                    if (data instanceof File) {
+                        formData.append(name, data);
+                        return;
+                    }
+
                     if (typeof data === 'object' && data != null) {
 
                         Object.entries(data).map(function ([index, value]) {
