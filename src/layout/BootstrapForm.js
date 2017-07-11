@@ -436,4 +436,4 @@ const BSwitch = withBootstrapFormField(Switch);
 const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
 const BDate = withBootstrapFormField(Date);
 const BFile = withBootstrapFormField(File);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile};
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, withBootstrapFormField};
