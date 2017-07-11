@@ -2,7 +2,7 @@ import React, {Children} from 'react'
 import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File} from '../ctrl/Fields'
 import PropTypes from 'prop-types';
 
-const withBootstrapFormField = (Field) => {
+const withBootstrapFormField = (Field, addInputClass = true) => {
 
 
     return class BootstrapFieldContainer extends React.Component {
@@ -23,7 +23,7 @@ const withBootstrapFormField = (Field) => {
                 classes.push('has-error')
             }
 
-            let className = 'form-control';
+            let className = addInputClass?'form-control':'';
             if (props.className) {
                 className += ' ' + props.className;
             }
