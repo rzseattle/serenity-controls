@@ -34,6 +34,10 @@ Select.propTypes = {
     disabled: PropTypes.bool,
 };
 
+Select.defaultProps = {
+    options: {}
+}
+
 
 class Text extends Component {
     static propTypes = {

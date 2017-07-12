@@ -6,6 +6,7 @@ import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, 
 import {DataBinding} from './DataBinding'
 import {FunctionRender} from './FunctionRender'
 import FileUpload from './FileUpload'
+import SurroundElements from './SurroundElements'
 
 
 const formImport = `
@@ -80,6 +81,18 @@ storiesOf('Bootstrap Forms', module)
             <div style={{maxWidth: '800px'}}>
                 <Panel>
                     <FunctionRender/>
+                </Panel>
+
+            </div>
+        ))
+    .addWithInfo(
+        'Surround elements',
+        formImport
+        ,
+        () => (
+            <div style={{maxWidth: '800px'}}>
+                <Panel>
+                    <SurroundElements/>
                 </Panel>
 
             </div>

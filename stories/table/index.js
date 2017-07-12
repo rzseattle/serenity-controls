@@ -2,6 +2,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react'
 import Panel from '../../src/ctrl/Panel';
 import {Table} from '../../src/ctrl/Table';
+import {Tooltip} from '../../src/ctrl/Overlays';
 
 const columnOptions = {
     'field': null,
@@ -120,21 +121,45 @@ const importInfo = `
 
 const server = 'http://localhost:3001';
 
+
+class BaseTable extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            tooltipTrigger: null,
+            tooltipContent: ''
+        };
+
+        baseColumns[1].events = {
+            enter: [(row, column, event) => {
+                this.setState({
+                    tooltipTrigger: event.target,
+                    tooltipContent: row.ip_address
+                })
+            }]
+        };
+    }
+
+    render() {
+        return <Panel>
+            <Table
+                remoteURL={server + '/table/base'}
+                columns={baseColumns}
+            >
+
+            </Table>
+            <Tooltip placement="top" target={this.state.tooltipTrigger}>
+                {this.state.tooltipContent}
+            </Tooltip>
+
+        </Panel>
+    }
+}
+
 storiesOf('Table', module)
     .addWithInfo(
         'Base', importInfo,
 
-        () => {
-
-
-            return <Panel>
-                <Table
-                    remoteURL={server + '/table/base'}
-                    columns={baseColumns}
-                >
-
-                </Table>
-
-            </Panel>
-        }
+        () => <BaseTable/>
     )

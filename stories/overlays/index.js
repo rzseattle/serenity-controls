@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {storiesOf} from '@storybook/react';
 
 import Panel from '../../src/ctrl/Panel';
+import {Row} from '../../src/layout/BootstrapLayout';
 import {Modal, Shadow, Tooltip, withPortal} from '../../src/ctrl/Overlays'
 
 
@@ -72,44 +73,107 @@ class TooltipExample extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            opened: false
+            opened: false,
+            tooltipTrigger: null,
+            position: 'center',
+            tooltipLoading: true
         }
 
+        this.tootlipTimeout = null;
+
+    }
+
+    handleHover(e) {
+        clearTimeout(this.tootlipTimeout);
+        this.setState({
+            tooltipTrigger: e.target,
+            content: (new Date().getTime() ) + '',
+            position: e.target.innerHTML,
+            tooltipLoading: true
+        });
+        this.tootlipTimeout = setTimeout(() => this.setState({tooltipLoading: false}), 1000)
+
+    }
+
+    handleOut(e) {
+        //this.setState({tooltipTrigger: null});
     }
 
     render() {
         let style = {
             border: 'solid 1px black',
             padding: '20px',
+            margin: '30px auto',
             width: '200px',
             textAlign: 'center',
             backgroundColor: 'rgb(245,245,245)'
         };
+        const s = this.state;
         return ( <div>
-            <div style={style} ref="top">Top</div>
-            <Tooltip placement="top"  target={() => this.refs.top} >
-                tooltip text
-            </Tooltip>
-
-            <div style={style} ref="bottom">Bottom</div>
-            <Tooltip placement="bottom"  target={() => this.refs.bottom} >
-                tooltip text
-            </Tooltip>
 
 
-            <div style={style} ref="left">left</div>
-            <Tooltip placement="left"  target={() => this.refs.left} >
-                tooltip text
+            <Row>
+
+                <div
+                    style={style}
+                    onMouseEnter={this.handleHover.bind(this)}
+                    onMouseOut={this.handleOut.bind(this)}
+                >
+                    top
+                </div>
+                <div
+                    style={style}
+                    onMouseEnter={this.handleHover.bind(this)}
+                    onMouseOut={this.handleOut.bind(this)}
+                >bottom
+                </div>
+            </Row>
+            <Row>
+                <div
+                    style={style}
+                    onMouseEnter={this.handleHover.bind(this)}
+                    onMouseOut={this.handleOut.bind(this)}
+                >left
+                </div>
+                <div
+                    style={style}
+                    onMouseEnter={this.handleHover.bind(this)}
+                    onMouseOut={this.handleOut.bind(this)}
+                >right
+                </div>
+            </Row>
+
+            <Row>
+                <div
+                    style={style}
+                    onMouseEnter={this.handleHover.bind(this)}
+                    onMouseOut={this.handleOut.bind(this)}
+                >right bottom
+                </div>
+                <div
+                    style={style}
+                    onMouseEnter={this.handleHover.bind(this)}
+                    onMouseOut={this.handleOut.bind(this)}
+                >left top
+                </div>
+
+            </Row>
+
+            <Tooltip placement={this.state.position} ref="tooltip" target={this.state.tooltipTrigger}>
+                {s.tooltipLoading ?
+                    <div><i className="fa fa-spin fa-spinner"></i></div>
+                    :
+                    <div>
+                        <h5>Tutaj treść</h5>
+                        <p>{s.content}</p>
+                    </div>
+                }
             </Tooltip>
-            <div style={style} ref="right">left</div>
-            <Tooltip placement="right"  target={() => this.refs.right} >
-                tooltip text
-            </Tooltip>
+
+
         </div>)
     }
 }
-
-
 
 
 storiesOf('Overlays', module)
@@ -137,6 +201,14 @@ storiesOf('Overlays', module)
         ))
     .addWithInfo(
         'Tooltip',
+        'Tutaj opis',
+        () => (
+            <Panel>
+                <TooltipExample/>
+            </Panel>
+        ))
+    .addWithInfo(
+        'Tooltip2',
         'Tutaj opis',
         () => (
             <Panel>
