@@ -98,7 +98,6 @@ const baseColumns = [
         field: 'date',
 
         filter: {
-            field: 'active',
             type: 'SwitchFilter',
             content: {0: 'Nie', 1: 'Tak'}
         }

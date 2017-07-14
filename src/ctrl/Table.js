@@ -339,11 +339,19 @@ class Table extends Component {
             }
         }
         data = {...data, ...inData};
+
+
         data.orderField = data.orderField || data.field;
 
 
         if (Array.isArray(data.filter)) {
             if (data.filter.length > 0) {
+                for( let i = 0; i < data.filter.length; i ++ ){
+                    if( data.filter[i].field == undefined ){
+                        data.filter[i].field = inData.field;
+                    }
+                }
+
                 data.filter = {
                     'type': 'MultiFilter',
                     'field': 'id',
@@ -354,7 +362,10 @@ class Table extends Component {
             } else {
                 data.filter = null;
             }
+        }else if( data.filter !== null && data.filter.field == undefined ){
+            data.filter.field = inData.field;
         }
+        console.log(data);
 
         return data;
     }
