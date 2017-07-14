@@ -109,9 +109,16 @@ class Table extends Component {
     }
 
     getRequestData() {
+        let trimmedData = [...this.state.columns];
+
+        for(let i = 0; i<trimmedData.length; i++){
+            trimmedData[i].filter = {};
+            trimmedData[i].events = {};
+        }
+
         return {
             //need to deep clone and events remove
-            columns: JSON.parse(JSON.stringify(this.state.columns)),
+            columns: JSON.parse(JSON.stringify(trimmedData)),
             filters: this.state.filters,
             order: this.state.order,
             onPage: this.state.onPage,
@@ -365,7 +372,7 @@ class Table extends Component {
         }else if( data.filter !== null && data.filter.field == undefined ){
             data.filter.field = inData.field;
         }
-        console.log(data);
+
 
         return data;
     }
