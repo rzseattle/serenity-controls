@@ -17,6 +17,7 @@ const Select = (props) => {
             onChange={props.onChange}
             defaultValue={props.value}
             disabled={props.disabled}
+            style={props.style}
         >
             {Object.entries(props.options).map(([value, label]) => {
                 return <option key={value} value={value}> {label}</option>
@@ -71,6 +72,7 @@ class Text extends Component {
                 onChange={props.onChange}
                 placeholder={props.placeholder}
                 disabled={props.disabled}
+                style={props.style}
             />
 
         )
@@ -88,6 +90,7 @@ const Textarea = (props) => {
             placeholder={props.placeholder}
             value={props.value}
             disabled={props.disabled}
+            style={props.style}
         />
 
     )
