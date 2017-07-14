@@ -112,6 +112,7 @@ class Table extends Component {
         let trimmedData = [...this.state.columns];
 
         for(let i = 0; i<trimmedData.length; i++){
+            trimmedData[i] = {...trimmedData[i]};
             trimmedData[i].filter = {};
             trimmedData[i].events = {};
         }
