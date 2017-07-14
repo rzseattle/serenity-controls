@@ -7,7 +7,6 @@ let locale;
 let datePicker;
 
 
-
 class Filter extends Component {
 
 }
@@ -72,13 +71,12 @@ class DateFilter extends Filter {
             label = `${dateStart} ${separatorI} ${dateStop}`;
 
 
-
         if (this.props.onChange) {
-            if(this.state.choiceType == 'range') {
+            if (this.state.choiceType == 'range') {
                 this.props.onChange(this.props.field, val, '<x<in', this.props.caption, ':', label);
-            }else if(this.state.choiceType == 'exists'){
+            } else if (this.state.choiceType == 'exists') {
                 this.props.onChange(this.props.field, '0000-00-00 00:00:00', '>', this.props.caption, ':', 'Data ustalona');
-            }else if(this.state.choiceType == 'not-exists'){
+            } else if (this.state.choiceType == 'not-exists') {
                 this.props.onChange(this.props.field, ['0000-00-00 00:00:00', null, ''], 'IN', this.props.caption, ':', 'Data nie ustalona');
             }
         } else {
@@ -92,7 +90,7 @@ class DateFilter extends Filter {
     render() {
 
         if (this.state.libsLoaded == false) {
-            return <div className={'w-filter w-filter-date' }>
+            return <div className={'w-filter w-filter-date'}>
                 <div><i className="fa fa-cog fa-spin"></i></div>
             </div>
         }
@@ -100,9 +98,9 @@ class DateFilter extends Filter {
 
         let s = this.state;
         return (
-            <div className={'w-filter w-filter-date' }>
+            <div className={'w-filter w-filter-date'}>
 
-                <div style={{display: (s.choiceType != 'range'?'none':'block')}}>
+                <div style={{display: (s.choiceType != 'range' ? 'none' : 'block')}}>
                     <i className="fa fa-calendar-o"></i>
                     <datePicker.DateRangePicker
                         startDate={this.state.startDate} // momentPropTypes.momentObj or null,
@@ -124,11 +122,15 @@ class DateFilter extends Filter {
                         onPrevMonthClick={(e) => {
                             e.preventDefault();
                             this.props.container.focus();
-                            setTimeout(() => { this.props.container.focus(); }, 250)
+                            setTimeout(() => {
+                                this.props.container.focus();
+                            }, 250)
                         }}
-                        onNextMonthClick={() =>{
+                        onNextMonthClick={() => {
                             this.props.container.focus();
-                            setTimeout(() => { this.props.container.focus(); }, 250)
+                            setTimeout(() => {
+                                this.props.container.focus();
+                            }, 250)
                         }}
                         renderCalendarInfo={() => false}
                     />
@@ -199,6 +201,7 @@ class DateFilter extends Filter {
     }
 
 }
+
 class SelectFilter extends Filter {
 
     handleApply(e) {
@@ -279,12 +282,16 @@ SelectFilter.defaultProps = {
 class SwitchFilter extends Filter {
 
 
+    constructor(props) {
+        super(props);
+        this.state = {value: null};
+    }
+
     handleApply() {
         this.setState({show: false});
-        let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
-        table.data.addFilter(this.props.field, val, '<x<in', this.props.caption, ':', label);
-        table.refresh();
-
+        if (this.state.value) {
+            this.props.onChange(this.props.field, this.state.value, '==', this.props.caption,  ' :', this.props.content[this.state.value]);
+        }
     }
 
     render() {
@@ -302,11 +309,8 @@ class SwitchFilter extends Filter {
                                 key={el[0]}
                                 id={el[0]}
                                 value={el[0]}
-                                onMouseDown={(e) => {
-                                    e.preventDefault();
-                                    $(e.currentTarget).prop('selected', $(e.currentTarget).prop('selected') ? false : true);
-                                    return false;
-                                }}
+                                onChange={(e) => this.setState({value: el[0]})}
+                                checked={(el[0] == this.state.value)}
                             /> {el[1]}</label>
                     </div>
                 )}
@@ -321,6 +325,7 @@ class SwitchFilter extends Filter {
     }
 
 }
+
 class NumericFilter extends Filter {
 
     constructor(props) {
@@ -450,7 +455,7 @@ class TextFilter extends Filter {
 
         return (
 
-            <div className={'w-filter w-filter-text ' } ref="body">
+            <div className={'w-filter w-filter-text '} ref="body">
 
                 <input type="" autoFocus onKeyPress={this._handleKeyPress.bind(this)} ref="input"/>
 
@@ -556,7 +561,7 @@ const withFilterOpenLayer = (Filter) => {
 
         render() {
             return (
-                <div className={'w-filter-openable ' + (this.state.show ? 'w-filter-openable-opened ' : '') }
+                <div className={'w-filter-openable ' + (this.state.show ? 'w-filter-openable-opened ' : '')}
                      onBlur={this.onBlur.bind(this)}
                      onFocus={this.onFocus.bind(this)}
                      onFocusCapture={this.onFocus.bind(this)}
