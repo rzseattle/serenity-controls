@@ -202,43 +202,36 @@ class TooltipBody extends React.Component {
     }
 
 
-}
-
-
-componentDidUpdate()
-{
-    if (this.state.opened) {
-        ReactDOM.findDOMNode(this.refs.body).focus();
+    componentDidUpdate() {
+        if (this.state.opened) {
+            ReactDOM.findDOMNode(this.refs.body).focus();
+        }
     }
-}
 
-handleBlur()
-{
-    this.setState({opened: false});
-}
+    handleBlur() {
+        this.setState({opened: false});
+    }
 
-render()
-{
-    let p = this.props;
-    return (
-        <div
-            tabIndex={1}
-            style={{display: this.state.opened ? 'block' : 'none'}}
-            className="w-tooltip"
-            autoFocus={true}
-            onBlur={this.handleBlur.bind(this)}
-            ref="body"
-        >
-            {this.props.children}
-        </div>
-:
-    null
-)
+    render() {
+        let p = this.props;
+        return (
+            <div
+                tabIndex={1}
+                style={{display: this.state.opened ? 'block' : 'none'}}
+                className="w-tooltip"
+                autoFocus={true}
+                onBlur={this.handleBlur.bind(this)}
+                ref="body"
+            >
+                {this.props.children}
+            </div>
+    :
+        null
+    )
 
-}
+    }
 }
 
 const Modal = withPortal(ModalBody);
 const Tooltip = withPortal(TooltipBody);
 export {Modal, Shadow, Tooltip, withPortal}
-T
