@@ -2,7 +2,7 @@ import React, {Children} from 'react'
 import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File} from '../ctrl/Fields'
 import PropTypes from 'prop-types';
 
-const withBootstrapFormField = (Field) => {
+const withBootstrapFormField = (Field, addInputClass = true) => {
 
 
     return class BootstrapFieldContainer extends React.Component {
@@ -23,7 +23,7 @@ const withBootstrapFormField = (Field) => {
                 classes.push('has-error')
             }
 
-            let className = 'form-control';
+            let className = addInputClass?'form-control':'';
             if (props.className) {
                 className += ' ' + props.className;
             }
@@ -205,6 +205,11 @@ class BForm extends React.Component {
                         return;
                     }
 
+                    if (Object.prototype.toString.call(data) == '[object File]') {
+                        formData.append(name, data);
+                        return;
+                    }
+
                     if (typeof data === 'object' && data != null) {
 
                         Object.entries(data).map(function ([index, value]) {
@@ -286,10 +291,16 @@ class BForm extends React.Component {
             name = e.name
             value = e.value
             type = e.type
+
+
         } else {
             name = e.target.getAttribute('name');
             type = e.target.getAttribute('type');
             value = e.target.value;
+
+            if (e.target.type == 'file') {
+                value = e.target.files[0];
+            }
         }
 
 
@@ -425,4 +436,4 @@ const BSwitch = withBootstrapFormField(Switch);
 const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
 const BDate = withBootstrapFormField(Date);
 const BFile = withBootstrapFormField(File);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile};
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, withBootstrapFormField};

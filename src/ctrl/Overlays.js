@@ -22,6 +22,7 @@ const withPortal = (ComponentToRender, styles = {}) => {
             this.targetElement = document.querySelector(props.container) || document.body;
 
 
+
         }
 
         componentDidMount() {
@@ -71,39 +72,21 @@ const withPortal = (ComponentToRender, styles = {}) => {
                 let element = document.getElementById('w-overlay-' + Portal.counter);
                 let elementPos = element.firstChild.getBoundingClientRect();
 
-                let offset = 0;
-
-                let top = targetPos.top + ( (targetPos.height - elementPos.height) / 2);
-                if (this.props.placement.indexOf('top') != -1) {
-                    top = targetPos.top - elementPos.height - offset;
-                }
-                if (this.props.placement.indexOf('bottom') != -1) {
-                    top = targetPos.top + targetPos.height + offset;
-                }
-
-                let left = targetPos.left + (targetPos.width - elementPos.width) / 2;
-                if (this.props.placement.indexOf('left') != -1) {
-                    left = targetPos.left - elementPos.width - offset;
-                }
-
-                if (this.props.placement.indexOf('right') != -1) {
-                    left = targetPos.left + targetPos.width + offset;
-                }
-
-                let styles = {
-                    top: top + 'px',
-                    left: left + 'px',
+                console.log('w-overlay-' + Portal.counter);
+                const styles = {
+                    top: ((targetPos.top + targetPos.height  + 5)  ) + 'px',
+                    left: ( targetPos.left  + (targetPos.width - elementPos.width) / 2) + 'px',
                     position: 'absolute',
-                    display: 'block',
+                    display: 'block'
                 }
+                console.log(styles);
+
 
                 for (let i in styles) {
                     element.style[i] = styles[i];
                 }
 
-
             }, 30);
-
 
         }
 
@@ -218,6 +201,7 @@ class TooltipBody extends React.Component {
         this.state = {
             opened: false
         }
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -230,6 +214,18 @@ class TooltipBody extends React.Component {
         if (nextProps.opened) {
             this.setState({opened: nextProps.opened});
         }
+    }
+
+
+class TooltipBody extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            opened: false
+        }
+    }
+
+
     }
 
 
