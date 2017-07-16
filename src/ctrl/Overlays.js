@@ -22,7 +22,6 @@ const withPortal = (ComponentToRender, styles = {}) => {
             this.targetElement = document.querySelector(props.container) || document.body;
 
 
-
         }
 
         componentDidMount() {
@@ -74,8 +73,8 @@ const withPortal = (ComponentToRender, styles = {}) => {
 
                 console.log('w-overlay-' + Portal.counter);
                 const styles = {
-                    top: ((targetPos.top + targetPos.height  + 5)  ) + 'px',
-                    left: ( targetPos.left  + (targetPos.width - elementPos.width) / 2) + 'px',
+                    top: ((targetPos.top + targetPos.height + 5)  ) + 'px',
+                    left: ( targetPos.left + (targetPos.width - elementPos.width) / 2) + 'px',
                     position: 'absolute',
                     display: 'block'
                 }
@@ -190,32 +189,9 @@ class ModalBody extends Component {
 
     }
 
+
 }
 
-class TooltipBody extends React.Component {
-
-    static propTypes = {}
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            opened: false
-        }
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-        if (nextProps.target) {
-            this.setState({opened: true});
-        } else {
-            this.setState({opened: false});
-        }
-        if (nextProps.opened) {
-            this.setState({opened: nextProps.opened});
-        }
-    }
-
 
 class TooltipBody extends React.Component {
     constructor(props) {
@@ -226,39 +202,43 @@ class TooltipBody extends React.Component {
     }
 
 
+}
+
+
+componentDidUpdate()
+{
+    if (this.state.opened) {
+        ReactDOM.findDOMNode(this.refs.body).focus();
     }
+}
 
+handleBlur()
+{
+    this.setState({opened: false});
+}
 
-    componentDidUpdate() {
-        if (this.state.opened) {
-            ReactDOM.findDOMNode(this.refs.body).focus();
-        }
-    }
+render()
+{
+    let p = this.props;
+    return (
+        <div
+            tabIndex={1}
+            style={{display: this.state.opened ? 'block' : 'none'}}
+            className="w-tooltip"
+            autoFocus={true}
+            onBlur={this.handleBlur.bind(this)}
+            ref="body"
+        >
+            {this.props.children}
+        </div>
+:
+    null
+)
 
-    handleBlur() {
-        this.setState({opened: false});
-    }
-
-    render() {
-        let p = this.props;
-        return (
-            <div
-                tabIndex={1}
-                style={{display: this.state.opened ? 'block' : 'none'}}
-                className="w-tooltip"
-                autoFocus={true}
-                onBlur={this.handleBlur.bind(this)}
-                ref="body"
-            >
-                {this.props.children}
-            </div>
-    :
-        null
-    )
-
-    }
+}
 }
 
 const Modal = withPortal(ModalBody);
 const Tooltip = withPortal(TooltipBody);
-export {Modal, Shadow, Tooltip, withPortal}T
+export {Modal, Shadow, Tooltip, withPortal}
+T
