@@ -71,21 +71,39 @@ const withPortal = (ComponentToRender, styles = {}) => {
                 let element = document.getElementById('w-overlay-' + Portal.counter);
                 let elementPos = element.firstChild.getBoundingClientRect();
 
-                console.log('w-overlay-' + Portal.counter);
-                const styles = {
-                    top: ((targetPos.top + targetPos.height + 5)  ) + 'px',
-                    left: ( targetPos.left + (targetPos.width - elementPos.width) / 2) + 'px',
-                    position: 'absolute',
-                    display: 'block'
-                }
-                console.log(styles);
+                let offset = 0;
 
+                let top = targetPos.top + ( (targetPos.height - elementPos.height) / 2);
+                if (this.props.placement.indexOf('top') != -1) {
+                    top = targetPos.top - elementPos.height - offset;
+                }
+                if (this.props.placement.indexOf('bottom') != -1) {
+                    top = targetPos.top + targetPos.height + offset;
+                }
+
+                let left = targetPos.left + (targetPos.width - elementPos.width) / 2;
+                if (this.props.placement.indexOf('left') != -1) {
+                    left = targetPos.left - elementPos.width - offset;
+                }
+
+                if (this.props.placement.indexOf('right') != -1) {
+                    left = targetPos.left + targetPos.width + offset;
+                }
+
+                let styles = {
+                    top: top + 'px',
+                    left: left + 'px',
+                    position: 'absolute',
+                    display: 'block',
+                }
 
                 for (let i in styles) {
                     element.style[i] = styles[i];
                 }
 
+
             }, 30);
+
 
         }
 
@@ -189,15 +207,28 @@ class ModalBody extends Component {
 
     }
 
-
 }
 
-
 class TooltipBody extends React.Component {
+
+    static propTypes = {}
+
     constructor(props) {
         super(props);
         this.state = {
             opened: false
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        if (nextProps.target) {
+            this.setState({opened: true});
+        } else {
+            this.setState({opened: false});
+        }
+        if (nextProps.opened) {
+            this.setState({opened: nextProps.opened});
         }
     }
 
