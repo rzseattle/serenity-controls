@@ -10,6 +10,9 @@ const withPortal = (ComponentToRender, styles = {}) => {
         static propTypes = {
             container: PropTypes.any
         }
+        static defaultProps = {
+            placement: 'center'
+        }
         static counter = 0;
 
         constructor(props) {
@@ -17,7 +20,6 @@ const withPortal = (ComponentToRender, styles = {}) => {
             this.state = {}
 
             this.targetElement = document.querySelector(props.container) || document.body;
-            //console.log(this.targetElement);
 
 
         }
@@ -29,6 +31,7 @@ const withPortal = (ComponentToRender, styles = {}) => {
 
             this.targetElement.appendChild(this.portalElement);
             this.componentDidUpdate();
+            Portal.counter = Portal.counter + 1;
         }
 
         componentWillUnmount() {
@@ -39,40 +42,67 @@ const withPortal = (ComponentToRender, styles = {}) => {
 
         componentDidUpdate() {
 
-            Portal.counter = Portal.counter + 1;
-            let pass = {...this.props, target: null};
-            ReactDOM.render(
-                <div className="w-overlay" id={'w-overlay-' + Portal.counter}>
-                    <ComponentToRender
-                        {...pass}
-                        overlayClose={this.handleClose.bind(this)}
-                        containerElement={this.targetElement}
-                    />
-                </div>
 
-                , this.portalElement);
-            if (this.props.target) {
+            var tid = setInterval(() => {
+                if (document.readyState !== 'complete') return;
+                clearInterval(tid);
 
-                let targetPos = this.props.target().getBoundingClientRect();
-                //console.log(targetPos, "to jest to");
-                let element = document.getElementById('w-overlay-' + Portal.counter);
-                let elementPos = element.getBoundingClientRect();
-                //console.log(elementPos, "to jest to");
 
-                console.log('w-overlay-' + Portal.counter);
-                const styles = {
-                    top: ((targetPos.top + targetPos.height  + 5)  ) + 'px',
-                    left: ( targetPos.left  + (targetPos.width - elementPos.width) / 2) + 'px',
-                    position: 'absolute',
-                    display: 'block'
+                let pass = {...this.props};
+                ReactDOM.render(
+                    <div className="w-overlay" id={'w-overlay-' + Portal.counter}>
+                        <ComponentToRender
+                            {...pass}
+                            overlayClose={this.handleClose.bind(this)}
+                            containerElement={this.targetElement}
+                        />
+                    </div>
+                    , this.portalElement);
+
+                let target = this.props.target || document.body;
+
+
+                let targetPos;
+                if (typeof target == 'function') {
+                    targetPos = target().getBoundingClientRect();
+                } else {
+                    targetPos = target.getBoundingClientRect();
                 }
-                console.log(styles);
+                let element = document.getElementById('w-overlay-' + Portal.counter);
+                let elementPos = element.firstChild.getBoundingClientRect();
 
+                let offset = 0;
+
+                let top = targetPos.top + ( (targetPos.height - elementPos.height) / 2);
+                if (this.props.placement.indexOf('top') != -1) {
+                    top = targetPos.top - elementPos.height - offset;
+                }
+                if (this.props.placement.indexOf('bottom') != -1) {
+                    top = targetPos.top + targetPos.height + offset;
+                }
+
+                let left = targetPos.left + (targetPos.width - elementPos.width) / 2;
+                if (this.props.placement.indexOf('left') != -1) {
+                    left = targetPos.left - elementPos.width - offset;
+                }
+
+                if (this.props.placement.indexOf('right') != -1) {
+                    left = targetPos.left + targetPos.width + offset;
+                }
+
+                let styles = {
+                    top: top + 'px',
+                    left: left + 'px',
+                    position: 'absolute',
+                    display: 'block',
+                }
 
                 for (let i in styles) {
                     element.style[i] = styles[i];
                 }
-            }
+
+
+            }, 30);
 
 
         }
@@ -127,20 +157,35 @@ class ModalBody extends Component {
     }
 
     componentWillReceiveProps(props) {
-
+        if (props.opened === false && this.state.opened == true) {
+            this.handleClose()
+        }
+        if (props.opened === true && this.state.opened == false) {
+            this.handleOpen();
+        }
         this.setState({
             opened: props.opened
         });
     }
 
+    handleOpen() {
+        this.setState({opened: true});
+
+    }
+
+    handleClose() {
+        this.setState({opened: false});
+
+    }
+
     render() {
 
         if (!this.state.opened) {
-            return null;
+            return <div></div>;
         }
         let p = this.props;
         return (<div className="w-modal" ref="body">
-            {p.showClose && <a className="w-modal-close" style={{}} onClick={(e) => this.setState({opened: !this.state.opened})}> <i className="fa fa-close"></i></a>}
+            {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
             {p.opened && <Shadow container={this.props.container}/>}
             {p.title && <div className="w-modal-title">{p.title}</div>}
             {p.children}
@@ -148,63 +193,76 @@ class ModalBody extends Component {
         </div>)
     }
 
-
-    componentDidUpdate() {
-
-        if (!this.state.opened) {
+    componentWillUpdate(nextProps, nextState) {
+        if (this.state.opened == true && nextState.opened == false) {
             if (this.props.onClose) {
-                this.props.onClose()
+                this.props.onClose();
             }
-            return null;
-        } else {
+        }
+        else if (this.state.opened == false && nextState.opened == true) {
             if (this.props.onOpen) {
                 this.props.onOpen()
             }
         }
-
-
-        let dim = this.props.containerElement.getBoundingClientRect();
-        let x = dim.width;
-        let y = dim.height;
-
-        const body = ReactDOM.findDOMNode(this.refs.body);
-        const dimentions = body.getBoundingClientRect();
-
-        const styles = {
-            top: ((y - dimentions.height) / 2 ) + 'px',
-            left: ((x - dimentions.width) / 2) + 'px',
-        }
-
-        for (let i in styles) {
-            body.style[i] = styles[i];
-        }
-
-    }
-
-    componentDidMount() {
 
     }
 
 }
 
 class TooltipBody extends React.Component {
+
+    static propTypes = {}
+
     constructor(props) {
         super(props);
         this.state = {
             opened: false
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        if (nextProps.target) {
+            this.setState({opened: true});
+        } else {
+            this.setState({opened: false});
+        }
+        if (nextProps.opened) {
+            this.setState({opened: nextProps.opened});
+        }
+    }
 
 
+    componentDidUpdate() {
+        if (this.state.opened) {
+            ReactDOM.findDOMNode(this.refs.body).focus();
+        }
+    }
+
+    handleBlur() {
+        this.setState({opened: false});
     }
 
     render() {
+        let p = this.props;
         return (
-            <div className="w-tooltip">{this.props.children}</div>
-        )
+            <div
+                tabIndex={1}
+                style={{display: this.state.opened ? 'block' : 'none'}}
+                className="w-tooltip"
+                autoFocus={true}
+                onBlur={this.handleBlur.bind(this)}
+                ref="body"
+            >
+                {this.props.children}
+            </div>
+    :
+        null
+    )
 
     }
 }
 
 const Modal = withPortal(ModalBody);
 const Tooltip = withPortal(TooltipBody);
-export {Modal, Shadow, Tooltip, withPortal}
+export {Modal, Shadow, Tooltip, withPortal}T

@@ -12,7 +12,6 @@ class Table extends Component {
         remoteURL: PropTypes.string,
         selectable: PropTypes.boolean,
         onSelectionChange: PropTypes.func,
-        remoteURL: PropTypes.string.isRequired,
         controlKey: PropTypes.string,
         onPage: PropTypes.integer,
         selectable: PropTypes.boolean
@@ -108,10 +107,25 @@ class Table extends Component {
         this.load();
     }
 
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.remoteURL != this.props.remoteURL) {
+            this.load();
+        }
+    }
+
     getRequestData() {
+        let trimmedData = [...this.state.columns];
+
+        for (let i = 0; i < trimmedData.length; i++) {
+            trimmedData[i] = {...trimmedData[i]};
+            trimmedData[i].filter = {};
+            trimmedData[i].events = {};
+        }
+
         return {
             //need to deep clone and events remove
-            columns: JSON.parse(JSON.stringify(this.state.columns)),
+            columns: JSON.parse(JSON.stringify(trimmedData)),
             filters: this.state.filters,
             order: this.state.order,
             onPage: this.state.onPage,
@@ -144,7 +158,7 @@ class Table extends Component {
                         allChecked: false
                     });
                 } catch (e) {
-                    this.setState({dataSourceError: xhr.responseText})
+                    this.setState({dataSourceError: xhr.responseText, loading: false})
                 }
             }
         }
@@ -303,13 +317,6 @@ class Table extends Component {
     }
 
     returnColumnData(inData) {
-        if (typeof inData.field != 'string' || inData.field.length == 0) {
-            console.error('Field is required property of columns');
-            //throw  "Field is required property of columns" ;
-            return;
-        }
-        /*              config.filter = */
-
 
         let data = {
             'field': null,
@@ -338,12 +345,21 @@ class Table extends Component {
                 'field': inData.field
             }
         }
+        data.filter = inData.field ? data.filter : null;
         data = {...data, ...inData};
+
+
         data.orderField = data.orderField || data.field;
 
 
         if (Array.isArray(data.filter)) {
             if (data.filter.length > 0) {
+                for (let i = 0; i < data.filter.length; i++) {
+                    if (data.filter[i].field == undefined) {
+                        data.filter[i].field = inData.field;
+                    }
+                }
+
                 data.filter = {
                     'type': 'MultiFilter',
                     'field': 'id',
@@ -354,7 +370,10 @@ class Table extends Component {
             } else {
                 data.filter = null;
             }
+        } else if (data.filter !== null && data.filter.field == undefined) {
+            data.filter.field = inData.field;
         }
+
 
         return data;
     }
