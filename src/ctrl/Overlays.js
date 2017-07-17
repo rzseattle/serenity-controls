@@ -1,19 +1,20 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
-
+global.__portalCounter = 0;
 const withPortal = (ComponentToRender, styles = {}) => {
 
     return class Portal extends Component {
         portalElement = null;
         targetElement = null;
+        portalId: null;
         static propTypes = {
             container: PropTypes.any
         }
         static defaultProps = {
             placement: 'center'
         }
-        static counter = 0;
+        //static counter = 0;
 
         constructor(props) {
             super(props);
@@ -22,8 +23,16 @@ const withPortal = (ComponentToRender, styles = {}) => {
             this.targetElement = document.querySelector(props.container) || document.body;
 
 
+            //Portal.counter = Portal.counter + 1;
+            global.__portalCounter++;
+            this.portalId = global.__portalCounter;
+
         }
 
+
+        componentWillMount(){
+
+        }
         componentDidMount() {
 
             this.portalElement = document.createElement('div');
@@ -31,7 +40,7 @@ const withPortal = (ComponentToRender, styles = {}) => {
 
             this.targetElement.appendChild(this.portalElement);
             this.componentDidUpdate();
-            Portal.counter = Portal.counter + 1;
+
         }
 
         componentWillUnmount() {
@@ -39,9 +48,11 @@ const withPortal = (ComponentToRender, styles = {}) => {
             this.targetElement.removeChild(this.portalElement);
         }
 
+        componentWillUpdate(){
+
+        }
 
         componentDidUpdate() {
-
 
             var tid = setInterval(() => {
                 if (document.readyState !== 'complete') return;
@@ -50,7 +61,7 @@ const withPortal = (ComponentToRender, styles = {}) => {
 
                 let pass = {...this.props};
                 ReactDOM.render(
-                    <div className="w-overlay" id={'w-overlay-' + Portal.counter}>
+                    <div className="w-overlay" id={'w-overlay-' + this.portalId}>
                         <ComponentToRender
                             {...pass}
                             overlayClose={this.handleClose.bind(this)}
@@ -68,7 +79,7 @@ const withPortal = (ComponentToRender, styles = {}) => {
                 } else {
                     targetPos = target.getBoundingClientRect();
                 }
-                let element = document.getElementById('w-overlay-' + Portal.counter);
+                let element = document.getElementById('w-overlay-' + this.portalId);
                 let elementPos = element.firstChild.getBoundingClientRect();
 
                 let offset = 0;
@@ -90,9 +101,12 @@ const withPortal = (ComponentToRender, styles = {}) => {
                     left = targetPos.left + targetPos.width + offset;
                 }
 
+
+
+                console.trace();
                 let styles = {
-                    top: top + 'px',
-                    left: left + 'px',
+                    top: (this.props.top || top) + 'px',
+                    left: (this.props.left || left) + 'px',
                     position: 'absolute',
                     display: 'block',
                 }
@@ -184,9 +198,10 @@ class ModalBody extends Component {
             return <div></div>;
         }
         let p = this.props;
+        let s = this.state;
         return (<div className="w-modal" ref="body">
             {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
-            {p.opened && <Shadow container={this.props.container}/>}
+            {s.opened && <Shadow container={this.props.container}/>}
             {p.title && <div className="w-modal-title">{p.title}</div>}
             {p.children}
 
