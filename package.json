@@ -6,9 +6,6 @@
   "scripts": {
     "dev": "webpack-dev-server -d ",
     "build": "webpack --env.production --display-error-details",
-    "watch": "webpack --watch --env.watch --display-error-details",
-    "install": "node_modules\\.bin\\babel.cmd ./src -d ./lib & node_modules\\.bin\\node-sass.cmd --include-path ../ --output-style compressed ./sass/App.sass ./css/lib.css",
-    "install-watch": "node_modules\\.bin\\babel.cmd -w ./src -d ./lib ",
     "storybook": "start-storybook -p 6006 ",
     "server": "nodemon ./stories/server.js",
     "build-storybook": "build-storybook"
@@ -29,6 +26,7 @@
     "react-dates": "^12.2.4",
     "react-docgen": "^2.16.0",
     "react-dom": "^15.6.1",
+    "react-sortable-hoc": "^0.6.5",
     "uuid": "^3.1.0"
   },
   "devDependencies": {

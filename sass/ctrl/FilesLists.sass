@@ -1,0 +1,85 @@
+.w-gallery
+    .w-gallery-list
+        +clearfix
+        > div
+            position: relative
+            float: left
+            margin: 5px
+            width: 120px
+            height: 100px
+            text-align: center
+            background-color: lightgrey
+            padding: 5px
+            white-space: nowrap
+
+            > a
+                cursor: pointer
+                > span
+                    display: inline-block
+                    height: 100%
+                    vertical-align: middle
+                > img
+                    max-width: 100%
+                    max-height: 100%
+                    vertical-align: middle
+
+                > .w-gallery-on-hover
+                    display: none
+                    position: absolute
+                    top: 0
+                    left: 0
+                    height: 100%
+                    width: 100%
+                    background-color: rgba(100, 100, 100, 0.3)
+
+                    div
+                        position: absolute
+                        bottom: 0
+                        left: 0
+                        background-color: rgb(220, 220, 220)
+                        color: black
+                        width: 100%
+                        text-align: center
+                        padding: 2px
+
+                    .w-gallery-delete, .w-gallery-drag
+                        position: absolute
+                        top: 0
+                        font-size: 14px
+
+                        background-color: rgb(220, 220, 220)
+                        color: black
+
+                        width: 20px
+                        height: 20px
+                        &:hover
+                            background-color: white
+
+                    .w-gallery-delete
+                        right: 0
+                        border-radius: 0 0 0 3px
+                        cursor: pointer
+                    .w-gallery-drag
+                        left: 0
+                        border-radius: 0 0 3px 0
+                        cursor: move
+            &:hover
+                .w-gallery-on-hover
+                    display: block
+
+.w-gallery-dragging
+
+    width: 120px
+    height: 100px
+    text-align: center
+    background-color: lightgrey
+    span
+        display: inline-block
+        height: 100%
+        vertical-align: middle
+    img
+        max-width: 100%
+        max-height: 100%
+        vertical-align: middle
+    .w-gallery-on-hover
+        display: none

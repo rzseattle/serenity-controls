@@ -19,4 +19,5 @@ require('./tabs/')
 require('./timeline/')
 require('./overlays/')
 require('./table/')
+require('./filesLists/')
 

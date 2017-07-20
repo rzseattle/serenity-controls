@@ -1,29 +1,23 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
-<<<<<<< Updated upstream
-global.__portalCounter = 0;
-const withPortal = (ComponentToRender, styles = {}) => {
-=======
+
 
 global.__portalCounter = 0;
 const withPortal = (ComponentToRender, settings = {}) => {
->>>>>>> Stashed changes
+
 
     return class Portal extends Component {
         portalElement = null;
         targetElement = null;
-        portalId: null;
+        portalId = null;
         static propTypes = {
             container: PropTypes.any
         }
         static defaultProps = {
             placement: 'center'
         }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
         //static counter = 0;
 
         constructor(props) {
@@ -36,21 +30,14 @@ const withPortal = (ComponentToRender, settings = {}) => {
             //Portal.counter = Portal.counter + 1;
             global.__portalCounter++;
             this.portalId = global.__portalCounter;
-<<<<<<< Updated upstream
-=======
 
         }
 
 
         componentWillMount() {
->>>>>>> Stashed changes
 
         }
 
-
-        componentWillMount(){
-
-        }
         componentDidMount() {
 
             this.portalElement = document.createElement('div');
@@ -66,11 +53,7 @@ const withPortal = (ComponentToRender, settings = {}) => {
             this.targetElement.removeChild(this.portalElement);
         }
 
-<<<<<<< Updated upstream
-        componentWillUpdate(){
-=======
         componentWillUpdate() {
->>>>>>> Stashed changes
 
         }
 
@@ -95,61 +78,19 @@ const withPortal = (ComponentToRender, settings = {}) => {
                 let target = this.props.target || document.body;
 
 
-<<<<<<< Updated upstream
-=======
                 let placement = settings.placement || this.props.placement;
 
-                if(placement == "none"){
+                if (placement == "none") {
                     return;
                 }
 
-                let target = this.props.target || document.body;
-
-
->>>>>>> Stashed changes
                 let targetPos;
                 if (typeof target == 'function') {
                     targetPos = target().getBoundingClientRect();
                 } else {
                     targetPos = target.getBoundingClientRect();
-<<<<<<< Updated upstream
-=======
-                }
-                let element = document.getElementById('w-overlay-' + this.portalId);
-                let elementPos = element.firstChild.getBoundingClientRect();
-
-                let offset = 0;
-
-                let top = targetPos.top + ( (targetPos.height - elementPos.height) / 2);
-                if (placement.indexOf('top') != -1) {
-                    top = targetPos.top - elementPos.height - offset;
-                }
-                if (placement.indexOf('bottom') != -1) {
-                    top = targetPos.top + targetPos.height + offset;
                 }
 
-                let left = targetPos.left + (targetPos.width - elementPos.width) / 2;
-                if (placement.indexOf('left') != -1) {
-                    left = targetPos.left - elementPos.width - offset;
-                }
-
-                if (placement.indexOf('right') != -1) {
-                    left = targetPos.left + targetPos.width + offset;
-                }
-
-
-
-                let styles = {
-                    top: (this.props.top || top) + 'px',
-                    left: (this.props.left || left) + 'px',
-                    position: 'absolute',
-                    display: 'block',
-                }
-
-                for (let i in styles) {
-                    element.style[i] = styles[i];
->>>>>>> Stashed changes
-                }
                 let element = document.getElementById('w-overlay-' + this.portalId);
                 let elementPos = element.firstChild.getBoundingClientRect();
 
@@ -173,8 +114,6 @@ const withPortal = (ComponentToRender, settings = {}) => {
                 }
 
 
-
-                console.trace();
                 let styles = {
                     top: (this.props.top || top) + 'px',
                     left: (this.props.left || left) + 'px',
@@ -185,7 +124,6 @@ const withPortal = (ComponentToRender, settings = {}) => {
                 for (let i in styles) {
                     element.style[i] = styles[i];
                 }
-
 
 
             }, 30);
@@ -210,7 +148,6 @@ class ShadowBody extends Component {
     static defaultProps = {
         placement: 'none'
     }
-
 
 
     constructor(props) {
@@ -350,9 +287,8 @@ class TooltipBody extends React.Component {
             >
                 {this.props.children}
             </div>
-    :
-        null
-    )
+
+        )
 
     }
 }
