@@ -186,7 +186,7 @@ class Date extends React.Component {
         super(props);
         this.state = {
             value: null,
-            date: props.value //? moment(props.value, 'YYYY-MM-DD') : moment()
+            date: props.value ? moment(props.value, 'YYYY-MM-DD') : null
 
 
         };
