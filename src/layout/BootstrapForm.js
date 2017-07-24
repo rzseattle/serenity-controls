@@ -37,7 +37,7 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
                         <div className="col-sm-10">
                             <Field {...props} className={className}/>
                             {props.help ?
-                                <span class="help-block">{props.help} </span>
+                                <span className="help-block">{props.help} </span>
                                 : ''}
                             {props.errors ?
                                 <span className="help-block">{props.errors.join(', ')} </span>
@@ -423,7 +423,7 @@ class BForm extends React.Component {
                     :
                     this.renderChildren(this.props.children)
                 }
-                <Shadow visible={this.state.loading} loader container={() => this.refs.form}/>}
+                <Shadow visible={this.state.loading} loader container={() => this.refs.form}/>
             </form>
         )
     }
