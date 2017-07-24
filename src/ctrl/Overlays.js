@@ -3,14 +3,12 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
 
 
-global.__portalCounter = 0;
 const withPortal = (ComponentToRender, settings = {}) => {
 
 
+
     return class Portal extends Component {
-        portalElement = null;
-        targetElement = null;
-        portalId = null;
+
         static propTypes = {
             container: PropTypes.any
         }
@@ -18,19 +16,18 @@ const withPortal = (ComponentToRender, settings = {}) => {
             placement: 'center'
         }
 
-        //static counter = 0;
 
         constructor(props) {
             super(props);
             this.state = {}
+            this.portalElement = null;
+            this.containerElement = null;
 
-            this.targetElement = document.querySelector(props.container) || document.body;
+        }
 
-
-            //Portal.counter = Portal.counter + 1;
-            global.__portalCounter++;
-            this.portalId = global.__portalCounter;
-
+        getContainer(container) {
+            container = typeof container === 'function' ? container() : container;
+            return ReactDOM.findDOMNode(container) || document.body;
         }
 
 
@@ -39,18 +36,14 @@ const withPortal = (ComponentToRender, settings = {}) => {
         }
 
         componentDidMount() {
-
-            this.portalElement = document.createElement('div');
-            //this.portalElement.classList.add('w-overlay')
-
-            this.targetElement.appendChild(this.portalElement);
             this.componentDidUpdate();
-
+        }
+        componentWillReceiveProps(nextProps) {
+            this.componentDidUpdate();
         }
 
         componentWillUnmount() {
-
-            this.targetElement.removeChild(this.portalElement);
+            this.containerElement.removeChild(this.portalElement);
         }
 
         componentWillUpdate() {
@@ -59,24 +52,42 @@ const withPortal = (ComponentToRender, settings = {}) => {
 
         componentDidUpdate() {
 
+            console.log(this.props.container, "tutaj 11");
+            console.log(this.containerElement, "tutaj 11");
+             if(this.props.container && this.containerElement && this.containerElement.tagName == "BODY"){
+                this.containerElement = this.getContainer(this.props.container);
+                this.containerElement.appendChild(this.portalElement)
+                console.log("tutaj");
+                console.log(this.containerElement);
+            }
+
+            if (!this.portalElement  ) {
+                this.containerElement = this.getContainer(this.props.container);
+                console.log(this.containerElement);
+                this.portalElement = document.createElement('div');
+                this.containerElement.appendChild(this.portalElement);
+            }
+
+
+
+
             var tid = setInterval(() => {
                 if (document.readyState !== 'complete') return;
                 clearInterval(tid);
 
 
                 let pass = {...this.props};
-                ReactDOM.render(
-                    <div className="w-overlay" id={'w-overlay-' + this.portalId}>
+                ReactDOM.unstable_renderSubtreeIntoContainer(this, <div className="w-overlay" >
                         <ComponentToRender
                             {...pass}
                             overlayClose={this.handleClose.bind(this)}
-                            containerElement={this.targetElement}
+                            containerElement={this.containerElement}
                         />
                     </div>
                     , this.portalElement);
 
-                let target = this.props.target || document.body;
 
+                let target = this.props.target || document.body;
 
                 let placement = settings.placement || this.props.placement;
 
@@ -91,7 +102,7 @@ const withPortal = (ComponentToRender, settings = {}) => {
                     targetPos = target.getBoundingClientRect();
                 }
 
-                let element = document.getElementById('w-overlay-' + this.portalId);
+                let element = this.portalElement;
                 let elementPos = element.firstChild.getBoundingClientRect();
 
                 let offset = 0;
@@ -122,7 +133,7 @@ const withPortal = (ComponentToRender, settings = {}) => {
                 }
 
                 for (let i in styles) {
-                    element.style[i] = styles[i];
+                    this.portalElement.style[i] = styles[i];
                 }
 
 
@@ -217,7 +228,7 @@ class ModalBody extends Component {
         let s = this.state;
         return (<div className="w-modal" ref="body">
             {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
-            {s.opened && <Shadow container={this.props.container}/>}
+            {s.opened && <Shadow />} {/*container={this.props.container}*/}
             {p.title && <div className="w-modal-title">{p.title}</div>}
             {p.children}
 

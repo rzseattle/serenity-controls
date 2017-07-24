@@ -1,5 +1,6 @@
 import React, {Children} from 'react'
 import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File} from '../ctrl/Fields'
+import {Shadow} from "../ctrl/Overlays"
 import PropTypes from 'prop-types';
 
 const withBootstrapFormField = (Field, addInputClass = true) => {
@@ -23,7 +24,7 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
                 classes.push('has-error')
             }
 
-            let className = addInputClass?'form-control':'';
+            let className = addInputClass ? 'form-control' : '';
             if (props.className) {
                 className += ' ' + props.className;
             }
@@ -397,7 +398,8 @@ class BForm extends React.Component {
 
 
         return (
-            <form className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)}>
+            <form ref="form" className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position:'relative'}}>
+
                 {this.state.formErrors.length > 0 ?
                     <ul className="bg-danger ">
                         {this.state.formErrors.map(el => <li>{el}</li>)}
@@ -411,7 +413,7 @@ class BForm extends React.Component {
                     :
                     this.renderChildren(this.props.children)
                 }
-
+                <Shadow container={() => this.refs.form}/>
             </form>
         )
     }

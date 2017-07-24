@@ -30,4 +30,5 @@ node_modules
 /css/
 .idea/
 dist/
+/stories/form/uploaded/
 storybook-static/
