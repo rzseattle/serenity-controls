@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react';
 
 import Panel from '../../src/ctrl/Panel';
 import {Row} from '../../src/layout/BootstrapLayout';
-import {Modal, Shadow, Tooltip, withPortal} from '../../src/ctrl/Overlays'
+import {Modal, Shadow, Tooltip} from '../../src/ctrl/Overlays'
 
 
 const formImport = `
@@ -17,10 +17,10 @@ class Base extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: false
+            visible: true
         }
 
-        setTimeout(() => this.setState({visible: true}), 500)
+        //setTimeout(() => this.setState({visible: true}), 500)
     }
 
     render() {
@@ -42,10 +42,10 @@ class All extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            opened: false
+            opened: true
         }
 
-        setTimeout(() => this.setState({opened: true}), 500)
+
     }
 
     render() {

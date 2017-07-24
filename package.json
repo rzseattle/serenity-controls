@@ -26,6 +26,7 @@
     "react-docgen": "^2.17.0",
     "react-dom": "^15.6.1",
     "react-dropzone": "^3.13.3",
+    "react-overlays": "^0.7.0",
     "react-sortable-hoc": "^0.6.5",
     "uuid": "^3.1.0"
   },

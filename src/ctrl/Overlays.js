@@ -1,156 +1,10 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
+import Modal from 'react-overlays/lib/Modal';
 
 
-const withPortal = (ComponentToRender, settings = {}) => {
-
-
-    return class Portal extends Component {
-
-        static propTypes = {
-            container: PropTypes.any
-        }
-        static defaultProps = {
-            placement: 'center'
-        }
-
-
-        constructor(props) {
-            super(props);
-            this.state = {}
-            this.portalElement = null;
-            this.containerElement = null;
-
-        }
-
-        getContainer(container) {
-            container = typeof container === 'function' ? container() : container;
-            if(typeof container == "string"){
-                return document.querySelector(container);
-            }
-            return ReactDOM.findDOMNode(container) || document.body;
-        }
-
-
-        componentWillMount() {
-
-        }
-
-        componentDidMount() {
-            this.componentDidUpdate();
-        }
-
-        componentWillReceiveProps(nextProps) {
-            this.componentDidUpdate();
-        }
-
-        componentWillUnmount() {
-            this.containerElement.removeChild(this.portalElement);
-        }
-
-        componentWillUpdate() {
-
-        }
-
-        renderOverlay() {
-            this.containerElement = this.getContainer(this.props.container);
-            this.portalElement = document.createElement('div');
-            this.containerElement.appendChild(this.portalElement);
-        }
-
-        componentDidUpdate() {
-
-            var tid = setInterval(() => {
-                if (document.readyState !== 'complete') return;
-                clearInterval(tid);
-
-                if (!this.portalElement) {
-                    this.renderOverlay()
-                }
-
-
-                let pass = {...this.props};
-                ReactDOM.unstable_renderSubtreeIntoContainer(this, <div className="w-overlay">
-                        <ComponentToRender
-                            {...pass}
-                            overlayClose={this.handleClose.bind(this)}
-                            containerElement={this.containerElement}
-                        />
-                    </div>
-                    , this.portalElement);
-
-
-                let target = this.props.target || document.body;
-
-                let placement = settings.placement || this.props.placement;
-
-                if (placement == "none") {
-                    return;
-                }
-
-                let targetPos;
-                if (typeof target == 'function') {
-                    targetPos = target().getBoundingClientRect();
-                } else {
-                    targetPos = target.getBoundingClientRect();
-                }
-
-                let element = this.portalElement;
-                let elementPos = element.firstChild.getBoundingClientRect();
-
-                let offset = 0;
-
-                let top = targetPos.top + ( (targetPos.height - elementPos.height) / 2);
-                if (this.props.placement.indexOf('top') != -1) {
-                    top = targetPos.top - elementPos.height - offset;
-                }
-                if (this.props.placement.indexOf('bottom') != -1) {
-                    top = targetPos.top + targetPos.height + offset;
-                }
-
-                let left = targetPos.left + (targetPos.width - elementPos.width) / 2;
-                if (this.props.placement.indexOf('left') != -1) {
-                    left = targetPos.left - elementPos.width - offset;
-                }
-
-                if (this.props.placement.indexOf('right') != -1) {
-                    left = targetPos.left + targetPos.width + offset;
-                }
-
-
-                let styles = {
-                    top: (this.props.top || top) + 'px',
-                    left: (this.props.left || left) + 'px',
-                    position: 'absolute',
-                    display: 'block',
-                }
-
-                for (let i in styles) {
-                    this.portalElement.style[i] = styles[i];
-                }
-
-                this.containerElement.style.overflow = 'none';
-
-
-            }, 30);
-
-
-        }
-
-        handleClose() {
-            ReactDOM.unmountComponentAtNode(this.portalElement);
-        }
-
-        render() {
-            return null
-        }
-    }
-
-}
-
-
-class ShadowBody extends Component {
+class Shadow extends Component {
     static defaultProps = {
         visible: true
     }
@@ -174,10 +28,39 @@ class ShadowBody extends Component {
 
 }
 
-const Shadow = withPortal(ShadowBody, {placement: 'none'});
+
+const modalStyle = {
+    position: 'fixed',
+    zIndex: 1040,
+    top: 0, bottom: 0, left: 0, right: 0
+};
+
+const backdropStyle = {
+    ...modalStyle,
+    zIndex: 'auto',
+    backgroundColor: '#000',
+    opacity: 0.15
+};
+
+const dialogStyle = function () {
+    // we use some psuedo random coords so nested modals
+    // don't sit right on top of each other.
+    let top = 50;
+    let left = 50;
+
+    return {
+        position: 'absolute',
+        top: top + '%', left: left + '%',
+        transform: `translate(-${top}%, -${left}%)`,
+        border: '1px solid #e5e5e5',
+        backgroundColor: 'white',
+
+        padding: 20
+    };
+};
 
 
-class ModalBody extends Component {
+class MyModal extends Component {
 
     static propTypes = {
         opened: PropTypes.bool,
@@ -221,26 +104,6 @@ class ModalBody extends Component {
 
     }
 
-    handleKeyDown(e) {
-        if (e.keyCode == 27) {
-            this.handleClose();
-        }
-    }
-
-    componentDidMount() {
-        this.focusDiv();
-    }
-
-    componentDidUpdate() {
-        this.focusDiv();
-    }
-
-    focusDiv() {
-        if (this.refs.modal) {
-            ReactDOM.findDOMNode(this.refs.modal).focus();
-        }
-    }
-
     render() {
 
         if (!this.state.opened) {
@@ -248,15 +111,26 @@ class ModalBody extends Component {
         }
         let p = this.props;
         let s = this.state;
-        return (
-            <div tabIndex={1} autoFocus onKeyDown={this.handleKeyDown.bind(this)} ref="modal">
-                {s.opened && <div className="w-shadow w-shadow-fixed"></div>}
+
+        return (<Modal
+            aria-labelledby='modal-label'
+            style={modalStyle}
+            backdropStyle={backdropStyle}
+            show={this.state.opened}
+            onHide={this.handleClose.bind(this)}
+        >
+            <div style={dialogStyle()}>
                 <div className="w-modal">
                     {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
                     {p.title && <div className="w-modal-title">{p.title}</div>}
                     {p.children}
                 </div>
-            </div>)
+
+
+            </div>
+        </Modal>)
+
+
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -275,7 +149,7 @@ class ModalBody extends Component {
 
 }
 
-class TooltipBody extends React.Component {
+class Tooltip extends React.Component {
 
     static propTypes = {}
 
@@ -328,6 +202,5 @@ class TooltipBody extends React.Component {
     }
 }
 
-const Modal = withPortal(ModalBody);
-const Tooltip = withPortal(TooltipBody);
-export {Modal, Shadow, Tooltip, withPortal}
+
+export {MyModal as Modal, Shadow, Tooltip}
