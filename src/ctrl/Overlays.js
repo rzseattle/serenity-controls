@@ -46,7 +46,6 @@ const withPortal = (ComponentToRender, settings = {}) => {
         }
 
         componentWillUnmount() {
-            console.log(ComponentToRender.name, "odmontowuje");
             this.containerElement.removeChild(this.portalElement);
         }
 
@@ -58,7 +57,6 @@ const withPortal = (ComponentToRender, settings = {}) => {
             this.containerElement = this.getContainer(this.props.container);
             this.portalElement = document.createElement('div');
             this.containerElement.appendChild(this.portalElement);
-            console.log(ComponentToRender.name, "montuje");
         }
 
         componentDidUpdate() {
@@ -131,6 +129,8 @@ const withPortal = (ComponentToRender, settings = {}) => {
                 for (let i in styles) {
                     this.portalElement.style[i] = styles[i];
                 }
+
+                this.containerElement.style.overflow = 'none';
 
 
             }, 30);
