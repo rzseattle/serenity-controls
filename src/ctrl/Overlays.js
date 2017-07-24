@@ -72,48 +72,29 @@ class MyModal extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
-        if (props.opened === false && this.state.opened == true) {
-            this.handleClose()
-        }
-        if (props.opened === true && this.state.opened == false) {
-            this.handleOpen();
-        }
-        this.setState({
-            opened: props.opened
-        });
-    }
-
-    handleOpen() {
-        this.setState({opened: true});
-
-    }
 
     handleClose() {
-        this.setState({opened: false});
+        if (this.props.onHide) {
+            this.props.onHide();
+        }
 
     }
 
     render() {
-
-        if (!this.state.opened) {
-            return <div></div>;
-        }
         let p = this.props;
-        let s = this.state;
+
 
         return (<Modal
             {...p}
+
             aria-labelledby='modal-label'
             style={modalStyle}
             backdropStyle={backdropStyle}
-            show={this.state.opened}
             onHide={this.handleClose.bind(this)}
-
         >
             <div className="w-modal" style={dialogStyle()}>
 
-                {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
+                {p.showHideLink && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
                 {p.children}
 

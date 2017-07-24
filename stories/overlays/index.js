@@ -27,7 +27,10 @@ class Base extends React.Component {
         return (
             <div>
 
-                <Modal opened={this.state.visible} showClose={false}>
+                <Modal
+                    show={this.state.visible}
+                    showHideLink={false}
+                >
                     <div style={{padding: '20px'}}>
                         Content
                         <button onClick={() => this.setState({visible: false})}>hide</button>
@@ -42,7 +45,7 @@ class All extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            opened: true
+            show: true
         }
 
 
@@ -51,11 +54,12 @@ class All extends React.Component {
     render() {
         return (
             <div>
+                <button onClick={(e) => this.setState({show: true})} >Open modal</button>
 
                 <Modal
-                    opened={this.state.opened}
-
-                    closeLink={true}
+                    show={this.state.show}
+                    showHideLink={true}
+                    onHide={(e) => this.setState({show: false})}
                     title="Modal test title"
                 >
 
@@ -225,7 +229,6 @@ storiesOf('Overlays', module)
         'Tutaj opis',
         () => (
             <Panel>
-                All
                 <All/>
                 <div style={{width: '500px', height: '500px', position: 'relative'}} className="modal-container">
                 </div>
