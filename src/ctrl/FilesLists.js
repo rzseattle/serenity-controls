@@ -4,8 +4,19 @@ import {SortableContainer, SortableElement, arrayMove, SortableHandle} from 'rea
 import {Modal, Shadow} from './Overlays'
 import {BForm} from '../layout/BootstrapForm'
 import Dropzone from 'react-dropzone'
+import Comm from '../lib/Comm';
 
 const DragHandle = SortableHandle(() => <a className="w-gallery-drag"><i className="fa fa-arrows"></i></a>); //
+
+
+const Progress = function (props) {
+
+
+    return (<diiv style={{height: 10, width: '100%', backgroundColor: 'yellow', position: 'absolute', left: 0, top: 'calc( 50% - 10px )'}}>
+        <div style={{height: 10, position: 'absolute', left: 0, top: 0, width: props.percent + "%", backgroundColor: 'red'}}></div>
+
+    </diiv>)
+}
 
 const ImageBox = SortableElement((props) => {
     const file = props.file;
@@ -15,12 +26,16 @@ const ImageBox = SortableElement((props) => {
 
     return ( <div>
         <a onClick={props.onClick}>
-            <span></span>{isImage?<img src={file.path} alt=""/>:<i className="fa fa-file"></i>}
-            <div className="w-gallery-on-hover">
-                <div>{file.name}</div>
-                <a onClick={props.onDelete} className="w-gallery-delete"><i className="fa fa-times"></i></a>
-                <DragHandle/>
-            </div>
+            {file.uploaded == undefined && <span>
+                <span></span>{isImage ? <img src={file.path} alt=""/> : <i className="fa fa-file"></i>}
+
+                <div className="w-gallery-on-hover">
+                    <div>{file.name}</div>
+                    <a onClick={props.onDelete} className="w-gallery-delete"><i className="fa fa-times"></i></a>
+                    <DragHandle/>
+                </div>
+            </span>}
+            {file.uploaded != undefined ? <Progress percent={file.uploaded}/> : null}
         </a>
     </div>)
 });
@@ -63,6 +78,8 @@ class Gallery extends Component {
         this.state = {
             files: props.files
         }
+
+        this.uploadCount = 0;
     }
 
 
@@ -71,8 +88,28 @@ class Gallery extends Component {
     }
 
     handleFileAdd(files) {
-        console.log(files)
-        files.map( el => this.state.files.push({ path: el.preview, key: -1, name: el.name }))
+
+        this.uploadCount += files.length;
+
+
+        files.map(el => {
+            let file = {path: el.preview, key: -1, name: el.name, uploaded: 0};
+
+            this.state.files.push(file);
+            let comm = new Comm(this.props.endpoint);
+            comm.setData({file: el});
+            comm.on("progress", (data) => {
+                file.uploaded = data.percent;
+                this.forceUpdate();
+            });
+            comm.on("success", () => {
+                this.uploadCount--;
+                if (this.uploadCount == 0) {
+                    alert('all finiesh');
+                }
+            })
+            comm.send();
+        })
         this.forceUpdate();
 
     }
@@ -128,16 +165,13 @@ class Gallery extends Component {
                     helperClass="w-gallery-dragging"
                 />
                 {this.state.filePreview && <Modal
-                    opened={this.state.filePreview != false}
-                    onClose={(e) => this.setState({filePreview: false})}
-                    showClose={true}
+                    show={this.state.filePreview != false}
+                    onHide={(e) => this.setState({filePreview: false})}
+                    showHideLink={true}
                     top={100}
                 >
                     <img style={{maxWidth: '800px'}} src={this.state.filePreview.path} alt=""/>
                 </Modal>}
-                <BForm data={this.state.uploadData} >
-                    <input type="submit" value="ok"/>
-                </BForm>
             </div>
         )
     }

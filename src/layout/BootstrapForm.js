@@ -289,11 +289,7 @@ class BForm extends React.Component {
         return false;
     }
 
-    debugError(error) {
-        let errorWindow = window.open('', '', 'width=800,height=600');
-        errorWindow.document.write(error);
-        errorWindow.focus();
-    }
+
 
     handleInputChange(e) {
         let name, type, value;
