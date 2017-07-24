@@ -5,6 +5,7 @@ var fs = require('fs');
 const path = require('path');
 var bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const timeout = require('connect-timeout');
 
 
 app.use(bodyParser.json());
@@ -35,6 +36,12 @@ function fieldSorter(fields) {
     }).reduce((p, n) => p ? p : n, 0);
 }
 
+app.all('/form/fileUpload', function(req, res, next) {
+
+    setTimeout(function() {
+        next();
+    }, 400);
+});
 
 app.all('/form/fileUpload', function (req, res) {
 
@@ -44,7 +51,6 @@ app.all('/form/fileUpload', function (req, res) {
         let f = req.files[i];
         files.push({uploadName: i, fileName: f.name, mimetype: f.mimetype});
         f.mv("./stories/form/uploaded/" + f.name, (err) => {
-        console.log("uploaded")
             if (err) {
                 errors.push(err);
             }

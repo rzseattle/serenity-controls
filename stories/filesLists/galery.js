@@ -3,7 +3,7 @@ import {Gallery} from '../../src/ctrl/FilesLists';
 
 class GalleryBase extends React.Component {
 
-    render(){
+    render() {
         let files = [
             {
                 key: 1,
@@ -33,9 +33,13 @@ class GalleryBase extends React.Component {
         ];
 
 
+        let endpoint = 'http://localhost:3001/form/fileUpload';
+
+
         return (
             <div><Gallery
                 files={files}
+                endpoint={endpoint}
                 onDragEnd={(e) => alert("drag")}
                 /*onClick={(e) => alert("click")}*/
                 onDelete={(e) => alert("delete")}

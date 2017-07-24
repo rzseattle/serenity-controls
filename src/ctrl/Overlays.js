@@ -1,181 +1,56 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
+import Modal from 'react-overlays/lib/Modal';
 
 
-const withPortal = (ComponentToRender, settings = {}) => {
-
-
-
-    return class Portal extends Component {
-
-        static propTypes = {
-            container: PropTypes.any
-        }
-        static defaultProps = {
-            placement: 'center'
-        }
-
-
-        constructor(props) {
-            super(props);
-            this.state = {}
-            this.portalElement = null;
-            this.containerElement = null;
-
-        }
-
-        getContainer(container) {
-            container = typeof container === 'function' ? container() : container;
-            return ReactDOM.findDOMNode(container) || document.body;
-        }
-
-
-        componentWillMount() {
-
-        }
-
-        componentDidMount() {
-            this.componentDidUpdate();
-        }
-        componentWillReceiveProps(nextProps) {
-            this.componentDidUpdate();
-        }
-
-        componentWillUnmount() {
-            this.containerElement.removeChild(this.portalElement);
-        }
-
-        componentWillUpdate() {
-
-        }
-
-        componentDidUpdate() {
-
-            console.log(this.props.container, "tutaj 11");
-            console.log(this.containerElement, "tutaj 11");
-             if(this.props.container && this.containerElement && this.containerElement.tagName == "BODY"){
-                this.containerElement = this.getContainer(this.props.container);
-                this.containerElement.appendChild(this.portalElement)
-                console.log("tutaj");
-                console.log(this.containerElement);
-            }
-
-            if (!this.portalElement  ) {
-                this.containerElement = this.getContainer(this.props.container);
-                console.log(this.containerElement);
-                this.portalElement = document.createElement('div');
-                this.containerElement.appendChild(this.portalElement);
-            }
-
-
-
-
-            var tid = setInterval(() => {
-                if (document.readyState !== 'complete') return;
-                clearInterval(tid);
-
-
-                let pass = {...this.props};
-                ReactDOM.unstable_renderSubtreeIntoContainer(this, <div className="w-overlay" >
-                        <ComponentToRender
-                            {...pass}
-                            overlayClose={this.handleClose.bind(this)}
-                            containerElement={this.containerElement}
-                        />
-                    </div>
-                    , this.portalElement);
-
-
-                let target = this.props.target || document.body;
-
-                let placement = settings.placement || this.props.placement;
-
-                if (placement == "none") {
-                    return;
-                }
-
-                let targetPos;
-                if (typeof target == 'function') {
-                    targetPos = target().getBoundingClientRect();
-                } else {
-                    targetPos = target.getBoundingClientRect();
-                }
-
-                let element = this.portalElement;
-                let elementPos = element.firstChild.getBoundingClientRect();
-
-                let offset = 0;
-
-                let top = targetPos.top + ( (targetPos.height - elementPos.height) / 2);
-                if (this.props.placement.indexOf('top') != -1) {
-                    top = targetPos.top - elementPos.height - offset;
-                }
-                if (this.props.placement.indexOf('bottom') != -1) {
-                    top = targetPos.top + targetPos.height + offset;
-                }
-
-                let left = targetPos.left + (targetPos.width - elementPos.width) / 2;
-                if (this.props.placement.indexOf('left') != -1) {
-                    left = targetPos.left - elementPos.width - offset;
-                }
-
-                if (this.props.placement.indexOf('right') != -1) {
-                    left = targetPos.left + targetPos.width + offset;
-                }
-
-
-                let styles = {
-                    top: (this.props.top || top) + 'px',
-                    left: (this.props.left || left) + 'px',
-                    position: 'absolute',
-                    display: 'block',
-                }
-
-                for (let i in styles) {
-                    this.portalElement.style[i] = styles[i];
-                }
-
-
-            }, 30);
-
-
-        }
-
-        handleClose() {
-            ReactDOM.unmountComponentAtNode(this.portalElement);
-        }
-
-        render() {
-            return null
-        }
-    }
-
-}
-
-
-class ShadowBody extends Component {
-
+class Shadow extends Component {
     static defaultProps = {
-        placement: 'none'
+        visible: true
     }
-
 
     constructor(props) {
         super(props);
     }
 
     render() {
-        return <div className="w-shadow"/>
-
+        return <div>
+            {this.props.visible && <div className="w-shadow">
+                {this.props.loader && <span className="loader">
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>}
+            </div>}
+        </div>
     }
 
 }
 
-const Shadow = withPortal(ShadowBody, {placement: 'none'});
+
+const modalStyle = {
+    position: 'fixed',
+    zIndex: 1040,
+    top: 0, bottom: 0, left: 0, right: 0
+};
+
+const backdropStyle = {
+    ...modalStyle,
+    zIndex: 'auto',
+    backgroundColor: '#000',
+    opacity: 0.15
+};
+
+const dialogStyle = function () {
+    return {
+        top: 50 + '%', left: 50 + '%',
+        transform: `translate(-50%, -50%)`,
+    };
+};
 
 
-class ModalBody extends Component {
+class MyModal extends Component {
 
     static propTypes = {
         opened: PropTypes.bool,
@@ -197,42 +72,37 @@ class ModalBody extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
-        if (props.opened === false && this.state.opened == true) {
-            this.handleClose()
-        }
-        if (props.opened === true && this.state.opened == false) {
-            this.handleOpen();
-        }
-        this.setState({
-            opened: props.opened
-        });
-    }
-
-    handleOpen() {
-        this.setState({opened: true});
-
-    }
 
     handleClose() {
-        this.setState({opened: false});
+        if (this.props.onHide) {
+            this.props.onHide();
+        }
 
     }
 
     render() {
-
-        if (!this.state.opened) {
-            return <div></div>;
-        }
         let p = this.props;
-        let s = this.state;
-        return (<div className="w-modal" ref="body">
-            {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
-            {s.opened && <Shadow />} {/*container={this.props.container}*/}
-            {p.title && <div className="w-modal-title">{p.title}</div>}
-            {p.children}
 
-        </div>)
+
+        return (<Modal
+            {...p}
+
+            aria-labelledby='modal-label'
+            style={modalStyle}
+            backdropStyle={backdropStyle}
+            onHide={this.handleClose.bind(this)}
+        >
+            <div className="w-modal" style={dialogStyle()}>
+
+                {p.showHideLink && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
+                {p.title && <div className="w-modal-title">{p.title}</div>}
+                {p.children}
+
+
+            </div>
+        </Modal>)
+
+
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -251,7 +121,7 @@ class ModalBody extends Component {
 
 }
 
-class TooltipBody extends React.Component {
+class Tooltip extends React.Component {
 
     static propTypes = {}
 
@@ -304,6 +174,5 @@ class TooltipBody extends React.Component {
     }
 }
 
-const Modal = withPortal(ModalBody);
-const Tooltip = withPortal(TooltipBody);
-export {Modal, Shadow, Tooltip, withPortal}
+
+export {MyModal as Modal, Shadow, Tooltip}

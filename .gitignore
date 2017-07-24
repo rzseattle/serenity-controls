@@ -32,3 +32,5 @@ node_modules
 dist/
 /stories/form/uploaded/
 storybook-static/
+
+stories/form/uploaded/

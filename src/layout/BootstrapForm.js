@@ -37,7 +37,7 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
                         <div className="col-sm-10">
                             <Field {...props} className={className}/>
                             {props.help ?
-                                <span class="help-block">{props.help} </span>
+                                <span className="help-block">{props.help} </span>
                                 : ''}
                             {props.errors ?
                                 <span className="help-block">{props.errors.join(', ')} </span>
@@ -254,13 +254,22 @@ class BForm extends React.Component {
                                         this.setState({
                                             fieldErrors: {},
                                             formErrors: [],
+                                            loading: false,
                                         })
                                     }
                                 } else {
+                                    this.setState({
+                                        loading: false,
+                                    })
                                     this.handleValidatorError(data)
                                 }
 
                             } catch (e) {
+                                this.setState({
+                                    fieldErrors: {},
+                                    formErrors: [],
+                                    loading: false,
+                                })
                                 this.debugError(e.message + '<hr />' + xhr.response);
                                 if (this.props.error) {
                                     this.props.onError({form: this, response: xhr.response});
@@ -271,6 +280,7 @@ class BForm extends React.Component {
                         }
                     }
                 };
+                this.setState({loading: true});
                 xhr.open('POST', this.props.action, true);
                 xhr.send(formData);
 
@@ -279,11 +289,7 @@ class BForm extends React.Component {
         return false;
     }
 
-    debugError(error) {
-        let errorWindow = window.open('', '', 'width=800,height=600');
-        errorWindow.document.write(error);
-        errorWindow.focus();
-    }
+
 
     handleInputChange(e) {
         let name, type, value;
@@ -398,7 +404,7 @@ class BForm extends React.Component {
 
 
         return (
-            <form ref="form" className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position:'relative'}}>
+            <form ref="form" className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
 
                 {this.state.formErrors.length > 0 ?
                     <ul className="bg-danger ">
@@ -413,7 +419,7 @@ class BForm extends React.Component {
                     :
                     this.renderChildren(this.props.children)
                 }
-                <Shadow container={() => this.refs.form}/>
+                <Shadow visible={this.state.loading} loader container={() => this.refs.form}/>
             </form>
         )
     }

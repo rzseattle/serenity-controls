@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react';
 
 import Panel from '../../src/ctrl/Panel';
 import {Row} from '../../src/layout/BootstrapLayout';
-import {Modal, Shadow, Tooltip, withPortal} from '../../src/ctrl/Overlays'
+import {Modal, Shadow, Tooltip} from '../../src/ctrl/Overlays'
 
 
 const formImport = `
@@ -17,17 +17,20 @@ class Base extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: false
+            visible: true
         }
 
-        setTimeout(() => this.setState({visible: true}), 500)
+        //setTimeout(() => this.setState({visible: true}), 500)
     }
 
     render() {
         return (
             <div>
 
-                <Modal opened={this.state.visible} showClose={false}>
+                <Modal
+                    show={this.state.visible}
+                    showHideLink={false}
+                >
                     <div style={{padding: '20px'}}>
                         Content
                         <button onClick={() => this.setState({visible: false})}>hide</button>
@@ -42,20 +45,21 @@ class All extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            opened: false
+            show: true
         }
 
-        setTimeout(() => this.setState({opened: true}), 500)
+
     }
 
     render() {
         return (
             <div>
+                <button onClick={(e) => this.setState({show: true})} >Open modal</button>
 
                 <Modal
-                    opened={this.state.opened}
-
-                    closeLink={true}
+                    show={this.state.show}
+                    showHideLink={true}
+                    onHide={(e) => this.setState({show: false})}
                     title="Modal test title"
                 >
 
@@ -176,6 +180,38 @@ class TooltipExample extends React.Component {
 }
 
 
+class ContainerExample extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            opened: false
+        }
+
+        setTimeout(() => this.setState({opened: true}), 500)
+    }
+
+    render() {
+        return (
+            <div>
+                <div
+                    style={{position: 'relative', height: '200px', width: '200px', border: 'dashed 1px grey', margin: '30px'}}
+                    ref="container1"
+                >
+                    <Shadow container={() => this.refs.container1}/>
+
+                </div>
+                <div
+                    style={{position: 'relative', height: '200px', width: '200px', border: 'dashed 1px grey', margin: '30px'}}
+                    ref="container2"
+                >
+                    <Shadow container={() => this.refs.container2}/>
+                </div>
+
+            </div>
+        )
+    }
+}
+
 storiesOf('Overlays', module)
     .addWithInfo(
         'Modal naked',
@@ -193,7 +229,6 @@ storiesOf('Overlays', module)
         'Tutaj opis',
         () => (
             <Panel>
-                All
                 <All/>
                 <div style={{width: '500px', height: '500px', position: 'relative'}} className="modal-container">
                 </div>
@@ -208,10 +243,10 @@ storiesOf('Overlays', module)
             </Panel>
         ))
     .addWithInfo(
-        'Tooltip2',
+        'Container',
         'Tutaj opis',
         () => (
             <Panel>
-                <TooltipExample/>
+                <ContainerExample/>
             </Panel>
         ))
