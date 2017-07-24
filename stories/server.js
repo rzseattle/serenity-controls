@@ -4,10 +4,11 @@ let app = express();
 var fs = require('fs');
 const path = require('path');
 var bodyParser = require('body-parser');
-var busboy = require('connect-busboy');
+const fileUpload = require('express-fileupload');
+const timeout = require('connect-timeout');
 
 app.use(bodyParser.json());
-app.use(busboy());
+app.use(fileUpload());
 
 app.use(function (req, res, next) {
     res.set('Access-Control-Allow-Origin', '*');
@@ -26,15 +27,41 @@ let paginate = (array, page_size, page_number) => {
 function fieldSorter(fields) {
     return (a, b) => fields.map(o => {
         let dir = 1;
-        if (o[0] === '-') { dir = -1; o=o.substring(1); }
+        if (o[0] === '-') {
+            dir = -1;
+            o = o.substring(1);
+        }
         return a[o] > b[o] ? dir : a[o] < b[o] ? -(dir) : 0;
-    }).reduce((p,n) => p ? p : n, 0);
+    }).reduce((p, n) => p ? p : n, 0);
 }
 
+app.all('/form/fileUpload', function(req, res, next) {
+
+    setTimeout(function() {
+        next();
+    }, 400);
+});
 
 app.all('/form/fileUpload', function (req, res) {
-    //console.log(req.files)
-    res.send(req);
+
+    let files = [];
+    let errors = [];
+    for (let i in req.files) {
+        let f = req.files[i];
+        files.push({uploadName: i, fileName: f.name, mimetype: f.mimetype});
+        f.mv("./stories/form/uploaded/" + f.name, (err) => {
+            if (err) {
+                errors.push(err);
+            }
+        })
+    }
+    let response = req.body
+    response.files = files;
+
+    if (errors.length > 0)
+        res.status(500).send(errors);
+    else
+        res.send(req.body);
 })
 
 app.all('/table/base', function (req, res) {
@@ -47,14 +74,13 @@ app.all('/table/base', function (req, res) {
         let col = req.body.order[i];
     }
 
-    var sorterData  = [];
+    var sorterData = [];
     for (let i in req.body.order) {
         let col = req.body.order[i];
-        sorterData.push( (col.dir=='desc'?'-':'')+col.field )
+        sorterData.push((col.dir == 'desc' ? '-' : '') + col.field)
     }
-    if(sorterData.length > 0)
+    if (sorterData.length > 0)
         data = data.sort(fieldSorter(sorterData));
-
 
 
     data = paginate(data, req.body.onPage, req.body.currentPage);

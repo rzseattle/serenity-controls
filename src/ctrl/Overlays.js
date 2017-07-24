@@ -3,14 +3,11 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
 
 
-global.__portalCounter = 0;
 const withPortal = (ComponentToRender, settings = {}) => {
 
 
     return class Portal extends Component {
-        portalElement = null;
-        targetElement = null;
-        portalId = null;
+
         static propTypes = {
             container: PropTypes.any
         }
@@ -18,19 +15,18 @@ const withPortal = (ComponentToRender, settings = {}) => {
             placement: 'center'
         }
 
-        //static counter = 0;
 
         constructor(props) {
             super(props);
             this.state = {}
+            this.portalElement = null;
+            this.containerElement = null;
 
-            this.targetElement = document.querySelector(props.container) || document.body;
+        }
 
-
-            //Portal.counter = Portal.counter + 1;
-            global.__portalCounter++;
-            this.portalId = global.__portalCounter;
-
+        getContainer(container) {
+            container = typeof container === 'function' ? container() : container;
+            return ReactDOM.findDOMNode(container) || document.body;
         }
 
 
@@ -39,22 +35,27 @@ const withPortal = (ComponentToRender, settings = {}) => {
         }
 
         componentDidMount() {
-
-            this.portalElement = document.createElement('div');
-            //this.portalElement.classList.add('w-overlay')
-
-            this.targetElement.appendChild(this.portalElement);
             this.componentDidUpdate();
+        }
 
+        componentWillReceiveProps(nextProps) {
+            this.componentDidUpdate();
         }
 
         componentWillUnmount() {
-
-            this.targetElement.removeChild(this.portalElement);
+            console.log(ComponentToRender.name, "odmontowuje");
+            this.containerElement.removeChild(this.portalElement);
         }
 
         componentWillUpdate() {
 
+        }
+
+        renderOverlay() {
+            this.containerElement = this.getContainer(this.props.container);
+            this.portalElement = document.createElement('div');
+            this.containerElement.appendChild(this.portalElement);
+            console.log(ComponentToRender.name, "montuje");
         }
 
         componentDidUpdate() {
@@ -63,20 +64,23 @@ const withPortal = (ComponentToRender, settings = {}) => {
                 if (document.readyState !== 'complete') return;
                 clearInterval(tid);
 
+                if (!this.portalElement) {
+                    this.renderOverlay()
+                }
+
 
                 let pass = {...this.props};
-                ReactDOM.render(
-                    <div className="w-overlay" id={'w-overlay-' + this.portalId}>
+                ReactDOM.unstable_renderSubtreeIntoContainer(this, <div className="w-overlay">
                         <ComponentToRender
                             {...pass}
                             overlayClose={this.handleClose.bind(this)}
-                            containerElement={this.targetElement}
+                            containerElement={this.containerElement}
                         />
                     </div>
                     , this.portalElement);
 
-                let target = this.props.target || document.body;
 
+                let target = this.props.target || document.body;
 
                 let placement = settings.placement || this.props.placement;
 
@@ -91,7 +95,7 @@ const withPortal = (ComponentToRender, settings = {}) => {
                     targetPos = target.getBoundingClientRect();
                 }
 
-                let element = document.getElementById('w-overlay-' + this.portalId);
+                let element = this.portalElement;
                 let elementPos = element.firstChild.getBoundingClientRect();
 
                 let offset = 0;
@@ -122,7 +126,7 @@ const withPortal = (ComponentToRender, settings = {}) => {
                 }
 
                 for (let i in styles) {
-                    element.style[i] = styles[i];
+                    this.portalElement.style[i] = styles[i];
                 }
 
 
@@ -144,19 +148,25 @@ const withPortal = (ComponentToRender, settings = {}) => {
 
 
 class ShadowBody extends Component {
-
     static defaultProps = {
-        placement: 'none'
+        visible: true
     }
-
 
     constructor(props) {
         super(props);
     }
 
     render() {
-        return <div className="w-shadow"/>
-
+        return <div>
+            {this.props.visible && <div className="w-shadow">
+                {this.props.loader && <span className="loader">
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>}
+            </div>}
+        </div>
     }
 
 }
@@ -208,6 +218,26 @@ class ModalBody extends Component {
 
     }
 
+    handleKeyDown(e) {
+        if (e.keyCode == 27) {
+            this.handleClose();
+        }
+    }
+
+    componentDidMount() {
+        this.focusDiv();
+    }
+
+    componentDidUpdate() {
+        this.focusDiv();
+    }
+
+    focusDiv() {
+        if (this.refs.modal) {
+            ReactDOM.findDOMNode(this.refs.modal).focus();
+        }
+    }
+
     render() {
 
         if (!this.state.opened) {
@@ -215,13 +245,15 @@ class ModalBody extends Component {
         }
         let p = this.props;
         let s = this.state;
-        return (<div className="w-modal" ref="body">
-            {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
-            {s.opened && <Shadow container={this.props.container}/>}
-            {p.title && <div className="w-modal-title">{p.title}</div>}
-            {p.children}
-
-        </div>)
+        return (
+            <div tabIndex={1} autoFocus onKeyDown={this.handleKeyDown.bind(this)} ref="modal">
+                {s.opened && <div className="w-shadow w-shadow-fixed"></div>}
+                <div className="w-modal">
+                    {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
+                    {p.title && <div className="w-modal-title">{p.title}</div>}
+                    {p.children}
+                </div>
+            </div>)
     }
 
     componentWillUpdate(nextProps, nextState) {

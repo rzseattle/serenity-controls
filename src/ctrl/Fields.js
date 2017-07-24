@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Inputmask from 'inputmask';
 import moment from 'moment';
+import Dropzone from 'react-dropzone'
 
 import( 'moment/locale/pl' );
 moment.locale('pl');
@@ -232,22 +233,64 @@ Date.propTypes = {
 };
 
 
-const File = (props) => {
-    return (
-        <input
+class File extends React.Component {
 
-            name={props.name}
-            type="file"
-            onChange={props.onChange}
-            disabled={props.disabled}
+    constructor(props){
+        super(props);
+    }
 
-        />
+    handleFileAdd(e) {
+        if (this.props.onChange) {
+            console.log(e);
+            this.props.onChange({name: this.props.name, value: e});
+        }
+    }
 
-    )
+    render() {
+        let props = this.props;
+        return (
+            <div className="w-file-upload">
+                <Dropzone
+                    style={{}}
+                    className="w-file-dropzone"
+                    activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd.bind(this)}>
+                    <span>
+                        <i className="fa fa-plus-circle"></i>
+                        Kliknij lub przeciągnij tu plik
+                    </span>
+
+                </Dropzone>
+                {props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
+                    <div>
+                        <a href={el.preview||el.path} target="_blank">
+                            <div className="w-file-dropzone-up-list-icon">
+                                {el.type.indexOf('image') != -1 && <img src={el.preview||el.path} alt=""/>}
+                                {el.type.indexOf('image') == -1 && <i className="fa fa-file"/>}
+                            </div>
+                            <div className="w-file-dropzone-up-list-name">{el.name}</div>
+                            <div className="w-file-dropzone-up-list-status"><i className={'fa fa-' + (el.preview?'upload':'check')}></i></div>
+                        </a>
+                    </div>
+                </div>)}</div>}
+
+            </div>
+        )
+    }
 }
 
+
+/*<input
+
+                    name={props.name}
+                    type="file"
+                    onChange={props.onChange}
+                    disabled={props.disabled}
+
+                />*/
+
+
 File.propTypes = {
-    className: PropTypes.string,
+
     name: PropTypes.string,
     type: PropTypes.string,
     onChange: PropTypes.func,

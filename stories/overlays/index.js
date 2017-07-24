@@ -176,6 +176,38 @@ class TooltipExample extends React.Component {
 }
 
 
+class ContainerExample extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            opened: false
+        }
+
+        setTimeout(() => this.setState({opened: true}), 500)
+    }
+
+    render() {
+        return (
+            <div>
+                <div
+                    style={{position: 'relative', height: '200px', width: '200px', border: 'dashed 1px grey', margin: '30px'}}
+                    ref="container1"
+                >
+                    <Shadow container={() => this.refs.container1}/>
+
+                </div>
+                <div
+                    style={{position: 'relative', height: '200px', width: '200px', border: 'dashed 1px grey', margin: '30px'}}
+                    ref="container2"
+                >
+                    <Shadow container={() => this.refs.container2}/>
+                </div>
+
+            </div>
+        )
+    }
+}
+
 storiesOf('Overlays', module)
     .addWithInfo(
         'Modal naked',
@@ -208,10 +240,10 @@ storiesOf('Overlays', module)
             </Panel>
         ))
     .addWithInfo(
-        'Tooltip2',
+        'Container',
         'Tutaj opis',
         () => (
             <Panel>
-                <TooltipExample/>
+                <ContainerExample/>
             </Panel>
         ))

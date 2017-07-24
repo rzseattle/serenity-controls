@@ -3,3 +3,51 @@
 
 .DateInput__display-text--focused
     border-radius: 0px !important
+
+.w-file-upload
+    .w-file-dropzone
+        border: solid 1px grey
+        padding: 5px
+        padding-left: 20px
+        cursor: pointer
+        span
+            i
+                margin-right: 5px
+        &:hover
+            background-color: rgb( 230, 230, 230 )
+
+    .w-file-dropzone-up-list
+        >div
+            +clearfix
+            padding: 5px
+            &:nth-child(even)
+                background-color: rgb( 230, 230, 230 )
+
+            border: dashed 1px transparent
+            &:hover
+                border: dashed 1px grey
+            a
+                display: block
+                +clearfix()
+            .w-file-dropzone-up-list-icon
+                float: left
+
+                margin-right: 10px
+                img
+                    max-width: 120px
+                    max-height: 120px
+                i
+                    font-size: 20px
+                    color: darkgreen
+
+            .w-file-dropzone-up-list-name
+
+                float: left
+                color: darkgreen
+
+            .w-file-dropzone-up-list-status
+                float: right
+                i
+                    font-size: 12px
+                    vertical-align: text-bottom
+                    color: darkgreen

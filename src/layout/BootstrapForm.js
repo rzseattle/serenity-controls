@@ -1,5 +1,6 @@
 import React, {Children} from 'react'
 import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File} from '../ctrl/Fields'
+import {Shadow} from "../ctrl/Overlays"
 import PropTypes from 'prop-types';
 
 const withBootstrapFormField = (Field, addInputClass = true) => {
@@ -23,7 +24,7 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
                 classes.push('has-error')
             }
 
-            let className = addInputClass?'form-control':'';
+            let className = addInputClass ? 'form-control' : '';
             if (props.className) {
                 className += ' ' + props.className;
             }
@@ -253,13 +254,22 @@ class BForm extends React.Component {
                                         this.setState({
                                             fieldErrors: {},
                                             formErrors: [],
+                                            loading: false,
                                         })
                                     }
                                 } else {
+                                    this.setState({
+                                        loading: false,
+                                    })
                                     this.handleValidatorError(data)
                                 }
 
                             } catch (e) {
+                                this.setState({
+                                    fieldErrors: {},
+                                    formErrors: [],
+                                    loading: false,
+                                })
                                 this.debugError(e.message + '<hr />' + xhr.response);
                                 if (this.props.error) {
                                     this.props.onError({form: this, response: xhr.response});
@@ -270,6 +280,7 @@ class BForm extends React.Component {
                         }
                     }
                 };
+                this.setState({loading: true});
                 xhr.open('POST', this.props.action, true);
                 xhr.send(formData);
 
@@ -397,7 +408,8 @@ class BForm extends React.Component {
 
 
         return (
-            <form className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)}>
+            <form ref="form" className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
+
                 {this.state.formErrors.length > 0 ?
                     <ul className="bg-danger ">
                         {this.state.formErrors.map(el => <li>{el}</li>)}
@@ -411,7 +423,7 @@ class BForm extends React.Component {
                     :
                     this.renderChildren(this.props.children)
                 }
-
+                <Shadow visible={this.state.loading} loader container={() => this.refs.form}/>}
             </form>
         )
     }
