@@ -43,19 +43,9 @@ const backdropStyle = {
 };
 
 const dialogStyle = function () {
-    // we use some psuedo random coords so nested modals
-    // don't sit right on top of each other.
-    let top = 50;
-    let left = 50;
-
     return {
-        position: 'absolute',
-        top: top + '%', left: left + '%',
-        transform: `translate(-${top}%, -${left}%)`,
-        border: '1px solid #e5e5e5',
-        backgroundColor: 'white',
-
-        padding: 20
+        top: 50 + '%', left: 50 + '%',
+        transform: `translate(-50%, -50%)`,
     };
 };
 
@@ -113,18 +103,19 @@ class MyModal extends Component {
         let s = this.state;
 
         return (<Modal
+            {...p}
             aria-labelledby='modal-label'
             style={modalStyle}
             backdropStyle={backdropStyle}
             show={this.state.opened}
             onHide={this.handleClose.bind(this)}
+
         >
-            <div style={dialogStyle()}>
-                <div className="w-modal">
-                    {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
-                    {p.title && <div className="w-modal-title">{p.title}</div>}
-                    {p.children}
-                </div>
+            <div className="w-modal" style={dialogStyle()}>
+
+                {p.showClose && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
+                {p.title && <div className="w-modal-title">{p.title}</div>}
+                {p.children}
 
 
             </div>

@@ -2,33 +2,39 @@
     display: inline-block
 
 .w-modal
-    z-index: 100
+
     position: absolute
     background: white
-    border: solid 1px lightgrey
-    border-radius: 3px
-    box-shadow: 0 0px 20px rgba(0, 0, 0, 0.19), 0 0px 0px rgba(0, 0, 0, 0.23)
 
-    top: 50% !important
-    left: 50% !important
-    transform: translate(-50%, -50%) !important
-    position: fixed
+    border-radius: 10px
+    border: 1px solid rgba(0, 0, 0, 0.3)
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
+    -webkit-background-clip: padding-box
+
+    background-clip: padding-box
+
+    &:focus
+        outline: none
 
     .w-modal-close
         position: absolute
-        right: 5px
-        top: 5px
+        right: 8px
+        top: 6px
         display: block
         cursor: pointer
         color: black
-        font-size: 16px
+        font-size: 20px
+        &:hover
+            color: darkred
 
     .w-modal-title
         padding: 10px 50px 10px 10px
         font-size: 15px
-        border-bottom: solid 1px lightgrey
+        border-bottom: solid 1px grey
 
-    .w-modal-body
+
 
 .w-shadow
     z-index: 90
@@ -42,8 +48,8 @@
 
     .loader
         position: absolute
-        top: calc( 50% - 10px )
-        left: calc( 50% - 10px )
+        top: calc(50% - 10px)
+        left: calc(50% - 10px)
 
 .w-shadow-fixed
     position: fixed
@@ -54,7 +60,6 @@ span.loader
     height: 20px
     animation: rotate 1.2s infinite linear
     transform: rotate(45deg)
-
 
     i
         width: 9px
@@ -82,7 +87,6 @@ span.loader
             left: 0
             bottom: 0
             animation-delay: 1.2s
-
 
 //element.style
 
