@@ -26,6 +26,9 @@ const withPortal = (ComponentToRender, settings = {}) => {
 
         getContainer(container) {
             container = typeof container === 'function' ? container() : container;
+            if(typeof container == "string"){
+                return document.querySelector(container);
+            }
             return ReactDOM.findDOMNode(container) || document.body;
         }
 
