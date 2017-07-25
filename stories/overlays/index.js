@@ -54,7 +54,7 @@ class All extends React.Component {
     render() {
         return (
             <div>
-                <button onClick={(e) => this.setState({show: true})} >Open modal</button>
+                <button onClick={(e) => this.setState({show: true})}>Open modal</button>
 
                 <Modal
                     show={this.state.show}
@@ -63,7 +63,7 @@ class All extends React.Component {
                     title="Modal test title"
                 >
 
-                    <div style={{padding: '20px'}}>
+                    <div style={{padding: '20px', width: 200, height: 100}}>
                         Content
 
                     </div>
@@ -95,7 +95,7 @@ class TooltipExample extends React.Component {
             position: e.target.innerHTML,
             tooltipLoading: true
         });
-        this.tootlipTimeout = setTimeout(() => this.setState({tooltipLoading: false}), 1000)
+        this.tootlipTimeout = setTimeout(() => this.setState({tooltipLoading: false}), 200)
 
     }
 
@@ -104,46 +104,56 @@ class TooltipExample extends React.Component {
     }
 
     render() {
+        let margin = {
+            margin: '30px'
+        }
         let style = {
             border: 'solid 1px black',
             padding: '20px',
-            margin: '30px auto',
+            //margin: '30px auto',
             width: '200px',
             textAlign: 'center',
             backgroundColor: 'rgb(245,245,245)'
         };
         const s = this.state;
-        return ( <div>
+        return ( <div style={{position: 'relative'}}>
 
 
             <Row>
-
-                <div
-                    style={style}
-                    onMouseEnter={this.handleHover.bind(this)}
-                    onMouseOut={this.handleOut.bind(this)}
-                >
-                    top
+                <div style={margin}>
+                    <div
+                        style={style}
+                        onMouseEnter={this.handleHover.bind(this)}
+                        onMouseOut={this.handleOut.bind(this)}
+                    >
+                        top
+                    </div>
                 </div>
-                <div
-                    style={style}
-                    onMouseEnter={this.handleHover.bind(this)}
-                    onMouseOut={this.handleOut.bind(this)}
-                >bottom
+                <div style={margin}>
+                    <div
+                        style={style}
+                        onMouseEnter={this.handleHover.bind(this)}
+                        onMouseOut={this.handleOut.bind(this)}
+                    >bottom
+                    </div>
                 </div>
             </Row>
             <Row>
-                <div
-                    style={style}
-                    onMouseEnter={this.handleHover.bind(this)}
-                    onMouseOut={this.handleOut.bind(this)}
-                >left
+                <div style={margin}>
+                    <div
+                        style={style}
+                        onMouseEnter={this.handleHover.bind(this)}
+                        onMouseOut={this.handleOut.bind(this)}
+                    >left
+                    </div>
                 </div>
-                <div
-                    style={style}
-                    onMouseEnter={this.handleHover.bind(this)}
-                    onMouseOut={this.handleOut.bind(this)}
-                >right
+                <div style={margin}>
+                    <div
+                        style={style}
+                        onMouseEnter={this.handleHover.bind(this)}
+                        onMouseOut={this.handleOut.bind(this)}
+                    >right
+                    </div>
                 </div>
             </Row>
 
@@ -163,7 +173,8 @@ class TooltipExample extends React.Component {
 
             </Row>
 
-            <Tooltip placement={this.state.position} ref="tooltip" target={this.state.tooltipTrigger}>
+
+            <Tooltip placement={this.state.position} ref="tooltip" target={this.state.tooltipTrigger} container={this}>
                 {s.tooltipLoading ?
                     <div><i className="fa fa-spin fa-spinner"></i></div>
                     :

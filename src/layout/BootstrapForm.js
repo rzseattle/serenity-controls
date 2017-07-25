@@ -1,6 +1,7 @@
 import React, {Children} from 'react'
 import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File} from '../ctrl/Fields'
 import {Shadow} from "../ctrl/Overlays"
+import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
 
 const withBootstrapFormField = (Field, addInputClass = true) => {
@@ -185,110 +186,41 @@ class BForm extends React.Component {
 
         if (this.props.onSubmit) {
             this.props.onSubmit({inputEvent: e, form: this});
-        } else {
-            if (this.props.action) {
+        } else if (this.props.action) {
+            const comm = new Comm(this.props.action);
 
-                if (this.props.onBeforeSend) {
-                    this.props.onBeforeSend(e);
-                }
-
-
-                const appendFormData = (FormData, data, name = '') => {
-
-                    if (data instanceof FileList) {
-
-                        for (var i = 0; i < data.length; i++) {
-                            // get item
-                            let file = data.item(i);
-                            formData.append(name + '[]', file);
-
-                        }
-                        return;
-                    }
-
-                    if (Object.prototype.toString.call(data) == '[object File]') {
-                        formData.append(name, data);
-                        return;
-                    }
-
-                    if (typeof data === 'object' && data != null) {
-
-                        Object.entries(data).map(function ([index, value]) {
-                            if (name == '') {
-                                appendFormData(FormData, value, index);
-                            } else {
-                                appendFormData(FormData, value, name + '[' + index + ']');
-                            }
-                        })
-                    } else {
-                        if (data && data != null) {
-                            FormData.append(name, data);
-                        }
-                    }
-                }
-
-
-                let data = {};
-                if (this.props.namespace) {
-                    data[this.props.namespace] = this.getData();
-                } else {
-                    data = this.getData();
-                }
-
-                const formData = new FormData();
-                appendFormData(formData, data);
-
-                let xhr = new XMLHttpRequest();
-
-
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            try {
-                                let data = JSON.parse(xhr.response);
-                                if (data.errors === undefined) {
-
-                                    if (this.props.onSuccess) {
-                                        this.props.onSuccess({form: this, response: data});
-
-                                        this.setState({
-                                            fieldErrors: {},
-                                            formErrors: [],
-                                            loading: false,
-                                        })
-                                    }
-                                } else {
-                                    this.setState({
-                                        loading: false,
-                                    })
-                                    this.handleValidatorError(data)
-                                }
-
-                            } catch (e) {
-                                this.setState({
-                                    fieldErrors: {},
-                                    formErrors: [],
-                                    loading: false,
-                                })
-                                this.debugError(e.message + '<hr />' + xhr.response);
-                                if (this.props.error) {
-                                    this.props.onError({form: this, response: xhr.response});
-                                }
-                            }
-                        } else {
-                            this.debugError(xhr.status + '<hr />');
-                        }
-                    }
-                };
-                this.setState({loading: true});
-                xhr.open('POST', this.props.action, true);
-                xhr.send(formData);
-
+            let data = {};
+            if (this.props.namespace) {
+                data[this.props.namespace] = this.getData();
+            } else {
+                data = this.getData();
             }
+
+            comm.on("finish", () => this.setState({loading: false}));
+            comm.on("success", response => {
+                if (this.props.onSuccess) {
+                    this.props.onSuccess({form: this, response: response});
+                }
+                this.setState({
+                    fieldErrors: {},
+                    formErrors: [],
+                })
+            });
+            comm.on("validationErrors", response => {
+                this.handleValidatorError(response)
+            });
+            comm.on("error", response => {
+                if (this.props.error) {
+                    this.props.onError({form: this, response: response});
+                }
+            });
+            comm.setData(data);
+            this.setState({loading: true});
+            comm.send();
         }
+
         return false;
     }
-
 
 
     handleInputChange(e) {

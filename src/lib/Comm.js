@@ -15,6 +15,7 @@ export default class {
             connectionError: [],
             success: [],
             validationErrors: [],
+            finish: [],
         };
 
     }
@@ -127,6 +128,7 @@ export default class {
                     this.debugError(xhr.status + '<hr />');
                     this.callEvent('connectionError', xhr.response);
                 }
+                this.callEvent('finish', xhr);
             }
         };
 

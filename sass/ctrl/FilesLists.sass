@@ -17,7 +17,6 @@
         &:hover
             color: darkred
 
-
     .w-gallery-add-active
         background-color: red
     .w-gallery-list
@@ -33,9 +32,35 @@
             padding: 5px
             white-space: nowrap
 
+            .w-gallery-loader
+                height: 12px
+                border: solid 1px grey
+                border-radius: 5px
+
+                position: absolute
+                left: 10px
+                right: 10px
+                top: calc(50% - 10px)
+                > div
+                    height: 10px
+                    position: absolute
+                    left: 0px
+                    top: 0
+                    background-color: #119fff
+                    border-radius: 5px
+            .w-gallery-upload-name
+                bottom: 3px
+                left: 3px
+                width: calc( 100% - 6px )
+                overflow: hidden
+                position: absolute
+                text-overflow: ellipsis
+
+
+
             > a
                 cursor: pointer
-                >span
+                > span
 
                     > span
                         display: inline-block
@@ -46,7 +71,7 @@
                         max-height: 100%
                         vertical-align: middle
 
-                    .fa-file
+                    .fa-icon
                         font-size: 30px
                         vertical-align: text-bottom
 
@@ -68,6 +93,11 @@
                             width: 100%
                             text-align: center
                             padding: 2px
+                            //text-overflow: ellipsis
+                            //overflow: hidden
+                            word-wrap: break-word
+
+
 
                         .w-gallery-delete, .w-gallery-drag
                             position: absolute

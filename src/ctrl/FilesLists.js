@@ -12,22 +12,34 @@ const DragHandle = SortableHandle(() => <a className="w-gallery-drag"><i classNa
 const Progress = function (props) {
 
 
-    return (<diiv style={{height: 10, width: '100%', backgroundColor: 'yellow', position: 'absolute', left: 0, top: 'calc( 50% - 10px )'}}>
-        <div style={{height: 10, position: 'absolute', left: 0, top: 0, width: props.percent + "%", backgroundColor: 'red'}}></div>
-
-    </diiv>)
+    return (
+        <div className="w-gallery-loader">
+            <div style={{width: props.percent + "%"}}></div>
+        </div>
+    )
 }
 
 const ImageBox = SortableElement((props) => {
     const file = props.file;
-    let isImage = true;
-    if (!file.path.match(/.(jpg|jpeg|png|gif)$/i))
-        isImage = false;
+    let isImage = false;
+    if (file.path.match(/.(jpg|jpeg|png|gif)$/i))
+        isImage = true;
+    if(file.type && file.type.indexOf('image') != -1)
+        isImage = true;
+
+
+    let icon = "fa-file";
+    if(!isImage){
+
+        if(file.path.indexOf(".pdf") != -1 || file.type == "application/pdf"){
+            icon = 'fa-file-pdf-o'
+        }
+    }
 
     return ( <div>
         <a onClick={props.onClick}>
             {file.uploaded == undefined && <span>
-                <span></span>{isImage ? <img src={file.path} alt=""/> : <i className="fa fa-file"></i>}
+                <span></span>{isImage ? <img src={file.path} alt=""/> : <i className={'fa fa-icon ' + icon}></i>}
 
                 <div className="w-gallery-on-hover">
                     <div>{file.name}</div>
@@ -35,7 +47,10 @@ const ImageBox = SortableElement((props) => {
                     <DragHandle/>
                 </div>
             </span>}
-            {file.uploaded != undefined ? <Progress percent={file.uploaded}/> : null}
+            {file.uploaded != undefined && <div>
+                <Progress percent={file.uploaded}/>
+                <div className="w-gallery-upload-name">{file.name}</div>
+            </div> }
         </a>
     </div>)
 });
@@ -63,6 +78,7 @@ class Gallery extends Component {
 
     static propsType = {
         files: PropTypes.array.isRequired,
+        endpoint: PropTypes.string,
         onDelete: PropTypes.func,
         onSortEnd: PropTypes.func,
         onClick: PropTypes.func
@@ -93,7 +109,7 @@ class Gallery extends Component {
 
 
         files.map(el => {
-            let file = {path: el.preview, key: -1, name: el.name, uploaded: 0};
+            let file = {path: el.preview, key: -1, name: el.name, uploaded: 0, type: el.type};
 
             this.state.files.push(file);
             let comm = new Comm(this.props.endpoint);
@@ -104,9 +120,14 @@ class Gallery extends Component {
             });
             comm.on("success", () => {
                 this.uploadCount--;
+                delete file.uploaded
                 if (this.uploadCount == 0) {
                     alert('all finiesh');
+                    if (this.props.onSortEnd) {
+                        this.props.onSortEnd(this.state.files, oldIndex, newIndex)
+                    }
                 }
+                this.forceUpdate();
             })
             comm.send();
         })

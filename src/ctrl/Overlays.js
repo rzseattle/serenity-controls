@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
 import Modal from 'react-overlays/lib/Modal';
+import Overlay from 'react-overlays/lib/Overlay';
 
 
 class Shadow extends Component {
@@ -29,27 +30,6 @@ class Shadow extends Component {
 }
 
 
-const modalStyle = {
-    position: 'fixed',
-    zIndex: 1040,
-    top: 0, bottom: 0, left: 0, right: 0
-};
-
-const backdropStyle = {
-    ...modalStyle,
-    zIndex: 'auto',
-    backgroundColor: '#000',
-    opacity: 0.15
-};
-
-const dialogStyle = function () {
-    return {
-        top: 50 + '%', left: 50 + '%',
-        transform: `translate(-50%, -50%)`,
-    };
-};
-
-
 class MyModal extends Component {
 
     static propTypes = {
@@ -72,51 +52,27 @@ class MyModal extends Component {
         }
     }
 
-
     handleClose() {
         if (this.props.onHide) {
             this.props.onHide();
         }
-
     }
 
     render() {
         let p = this.props;
-
-
         return (<Modal
             {...p}
-
             aria-labelledby='modal-label'
-            style={modalStyle}
-            backdropStyle={backdropStyle}
+            className="w-modal-container"
+            backdropClassName="w-modal-shadow"
             onHide={this.handleClose.bind(this)}
         >
-            <div className="w-modal" style={dialogStyle()}>
-
+            <div className="w-modal">
                 {p.showHideLink && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
                 {p.children}
-
-
             </div>
         </Modal>)
-
-
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-        if (this.state.opened == true && nextState.opened == false) {
-            if (this.props.onClose) {
-                this.props.onClose();
-            }
-        }
-        else if (this.state.opened == false && nextState.opened == true) {
-            if (this.props.onOpen) {
-                this.props.onOpen()
-            }
-        }
-
     }
 
 }
@@ -147,7 +103,7 @@ class Tooltip extends React.Component {
 
     componentDidUpdate() {
         if (this.state.opened) {
-            ReactDOM.findDOMNode(this.refs.body).focus();
+            //ReactDOM.findDOMNode(this.refs.body).focus();
         }
     }
 
@@ -158,17 +114,27 @@ class Tooltip extends React.Component {
     render() {
         let p = this.props;
         return (
-            <div
-                tabIndex={1}
-                style={{display: this.state.opened ? 'block' : 'none'}}
-                className="w-tooltip"
-                autoFocus={true}
-                onBlur={this.handleBlur.bind(this)}
-                ref="body"
+            <Overlay
+                show={this.state.opened}
+                onHide={() => this.setState({show: false})}
+                placement={p.placement}
+                container={p.container}
+                shouldUpdatePosition={true}
+                target={props => {
+                    return ReactDOM.findDOMNode(p.target);
+                }}
             >
-                {this.props.children}
-            </div>
-
+                <div
+                    tabIndex={1}
+                    style={{display: this.state.opened ? 'block' : 'none', position: 'absolute'}}
+                    className="w-tooltip"
+                    autoFocus={true}
+                    /*onBlur={this.handleBlur.bind(this)}*/
+                    ref="body"
+                >
+                    {this.props.children}
+                </div>
+            </Overlay>
         )
 
     }

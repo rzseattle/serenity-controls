@@ -93,11 +93,6 @@ class AjaxForm {
         })
     }
 
-    debugError(error) {
-        let errorWindow = window.open('', '', 'width=800,height=600');
-        errorWindow.document.write(error);
-        errorWindow.focus();
-    }
 
     submit() {
         this.runEvent('beforeSerialize', {});
