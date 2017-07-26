@@ -95,7 +95,7 @@ class MyModal extends Component {
         return (<Modal
             {...p}
             aria-labelledby='modal-label'
-            className="w-modal-container"
+            className="w-modal-container w-modal-confirm"
             backdropClassName="w-modal-shadow"
             onHide={this.handleClose.bind(this)}
         >
