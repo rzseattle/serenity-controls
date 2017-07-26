@@ -95,7 +95,7 @@ class MyModal extends Component {
         return (<Modal
             {...p}
             aria-labelledby='modal-label'
-            className="w-modal-container w-modal-confirm"
+            className={'w-modal-container ' + p.className }
             backdropClassName="w-modal-shadow"
             onHide={this.handleClose.bind(this)}
         >
@@ -130,7 +130,7 @@ class ConfirmModal extends Component {
     }
 
     render() {
-        return <MyModal {...this.props} show={true}>
+        return <MyModal {...this.props} className="w-modal-confirm" show={true}>
             <p style={{padding: 15, paddingBottom: 0}}>{this.props.children}</p>
             <div style={{padding: 10, paddingTop: 0, textAlign: 'right'}}>
                 <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok</button>
