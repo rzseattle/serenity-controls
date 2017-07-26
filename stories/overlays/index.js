@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react';
 
 import Panel from '../../src/ctrl/Panel';
 import {Row} from '../../src/layout/BootstrapLayout';
-import {Modal, Shadow, Tooltip} from '../../src/ctrl/Overlays'
+import {Modal, Shadow, Tooltip, confirm} from '../../src/ctrl/Overlays'
 
 
 const formImport = `
@@ -45,25 +45,35 @@ class All extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: true
+            show: false
         }
 
 
     }
 
+    handleConfirm(e){
+        confirm("Czy na pewno to zrobić?", {target: () => e.target}).then(()=>{
+            alert("confirmed")
+        }).catch( () =>{
+          alert("unconfirmed");
+        })
+    }
+
     render() {
         return (
             <div>
-                <button onClick={(e) => this.setState({show: true})}>Open modal</button>
+                <button onClick={(e) => this.setState({show: true})} ref="button">Open modal</button>
+                <button onClick={this.handleConfirm.bind(this)} ref="confirmbutton">Open confirm</button>
 
                 <Modal
                     show={this.state.show}
                     showHideLink={true}
                     onHide={(e) => this.setState({show: false})}
                     title="Modal test title"
+                    target={() => this.refs.button}
                 >
 
-                    <div style={{padding: '20px', width: 200, height: 100}}>
+                    <div style={{padding: '20px'}}>
                         Content
 
                     </div>

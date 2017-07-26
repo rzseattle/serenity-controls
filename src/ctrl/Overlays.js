@@ -39,22 +39,54 @@ class MyModal extends Component {
         showClose: PropTypes.bool,
         container: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
         //containerElement: PropTypes.node
+        positionOffset: PropTypes.integer
     }
     static defaultProps = {
         opened: false,
         showClose: true,
+        positionOffset: 5
     }
 
     constructor(props) {
         super(props);
         this.state = {
-            opened: props.opened
+            opened: props.opened,
+            modalStyle: {}
         }
     }
 
     handleClose() {
         if (this.props.onHide) {
             this.props.onHide();
+        }
+    }
+
+    componentDidMount() {
+        this.calculatePos();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        this.calculatePos();
+    }
+
+    calculatePos() {
+        const node = ReactDOM.findDOMNode(this.refs.modalBody);
+        if (node) {
+            let data = node.getBoundingClientRect();
+
+            if (this.props.target) {
+                const target = ReactDOM.findDOMNode(this.props.target())
+                let targetData = target.getBoundingClientRect();
+                node.style['top'] = targetData.top + targetData.height + this.props.positionOffset + "px";
+                node.style['left'] = targetData.left + "px"
+            } else {
+                console.log("here");
+                let x = Math.round(data.width / 2);
+                let y = Math.round(data.height / 2);
+                node.style['transform'] = `translate(-${x}px, -${y}px)`;
+                node.style['top'] = "50%";
+                node.style['left'] = "50%";
+            }
         }
     }
 
@@ -67,7 +99,7 @@ class MyModal extends Component {
             backdropClassName="w-modal-shadow"
             onHide={this.handleClose.bind(this)}
         >
-            <div className="w-modal">
+            <div className="w-modal" ref="modalBody">
                 {p.showHideLink && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
                 {p.children}
@@ -76,6 +108,59 @@ class MyModal extends Component {
     }
 
 }
+
+class ConfirmModal extends Component {
+    constructor(props) {
+        super(props);
+        this.promiseResolve = this.promiseReject = null;
+        this.promise = new Promise((resolve, reject) => {
+            this.promiseResolve = resolve;
+            this.promiseReject = reject;
+        });
+    }
+
+    handleAbort() {
+        this.promiseReject()
+        this.props.cleanup();
+    }
+
+    handleConfirm() {
+        this.promiseResolve();
+        this.props.cleanup();
+    }
+
+    render() {
+        return <MyModal {...this.props} show={true}>
+            <p style={{padding: 15, paddingBottom: 0}}>{this.props.children}</p>
+            <div style={{padding: 10, paddingTop: 0, textAlign: 'right'}}>
+                <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok</button>
+                <button onClick={this.handleAbort.bind(this)} className="btn btn-default">anuluj</button>
+            </div>
+        </MyModal>
+    }
+
+}
+
+
+const confirm = (message, options = {}) => {
+    let props = {...options}
+
+    const wrapper = document.body.appendChild(document.createElement('div'));
+    let cleanup = () => {
+        ReactDOM.unmountComponentAtNode(wrapper)
+        setTimeout(wrapper.remove);
+    }
+
+    const component = ReactDOM.render(<ConfirmModal {...props} cleanup={cleanup}>
+        <div>
+            {message}
+        </div>
+    </ConfirmModal>, wrapper);
+
+
+    return component.promise
+}
+
 
 class Tooltip extends React.Component {
 
@@ -141,4 +226,4 @@ class Tooltip extends React.Component {
 }
 
 
-export {MyModal as Modal, Shadow, Tooltip}
+export {MyModal as Modal, Shadow, Tooltip, confirm}
