@@ -19,9 +19,10 @@ class Table extends Component {
     }
 
     static defaultProps = {
-        onPage: 20,
+        onPage: 25,
         columns: [],
         buttons: [],
+        showFooter: true
     }
 
     constructor(props) {
@@ -82,6 +83,10 @@ class Table extends Component {
         }
     }
 
+    getData(){
+        return this.state.data;
+    }
+
     getDataFromChildren() {
         let loader = new MarkupLoader(this.props.children);
         this.state.columns = loader.getConfig();
@@ -117,7 +122,7 @@ class Table extends Component {
     getRequestData() {
         let trimmedData = [...this.state.columns];
 
-        for(let i = 0; i<trimmedData.length; i++){
+        for (let i = 0; i < trimmedData.length; i++) {
             trimmedData[i] = {...trimmedData[i]};
             trimmedData[i].filter = {};
             trimmedData[i].events = {};
@@ -441,7 +446,7 @@ class Table extends Component {
                         data={this.state.data}
                     />}
 
-                    <tfoot>
+                    {this.props.showFooter && <tfoot>
                     {this.state.firstLoaded && this.state.data.length > 0 &&
                     <Footer
                         columns={columns}
@@ -455,7 +460,7 @@ class Table extends Component {
                         bodyResizeEnd={this.handleBodyResizeEnd.bind(this)}
                         parent={this}
                     />}
-                    </tfoot>
+                    </tfoot>}
                 </table>
 
                 {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
@@ -573,7 +578,7 @@ function Footer(props) {
 
                 <div className="w-table-footer-onpage-select">
                     <span>Na stronie: </span>
-                    <select defaultValue={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
+                    <select defaultValue={props.onPage} value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
                         {([10, 25, 50, 100, 500]).map((x, i) =>
                             <option key={'onpageval' + x} value={x}>{x}</option>
                         )}
