@@ -275,7 +275,7 @@ class BForm extends React.Component {
     renderChildren(children) {
         return React.Children.map(children, child => {
 
-            if (child.type && child.type.name == 'BootstrapFieldContainer') {
+            if (child != null && child.type && child.type.name == 'BootstrapFieldContainer') {
 
 
                 if (this.state.fieldErrors[child.props.name] === undefined) {
