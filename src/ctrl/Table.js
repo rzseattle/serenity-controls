@@ -364,6 +364,8 @@ class Table extends Component {
             } else {
                 data.filter = null;
             }
+        } else if (data.filter != null) {
+            data.filter.field = data.filter.field || inData.field;
         }
 
 
