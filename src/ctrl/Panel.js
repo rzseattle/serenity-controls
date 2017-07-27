@@ -27,7 +27,9 @@ export default class Panel extends Component {
         return (
             <div className={classes.join(' ')}>
                 <div className="panel-body">
-                    {props.title ? <div className="title">{props.title}
+                    {props.title ? <div className="title">
+                        {props.icon && <i className={'fa fa-' + props.icon}></i>}
+                        {props.title}
                         <div className="panel-toolbar">{props.toolbar}</div>
                     </div> : ''}
                     {props.children}
