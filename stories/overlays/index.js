@@ -63,7 +63,7 @@ class All extends React.Component {
         return (
             <div>
                 <button onClick={(e) => this.setState({show: true})} ref="button">Open modal</button>
-                <button onClick={this.handleConfirm.bind(this)} ref="confirmbutton">Open confirm</button>
+                <button onClick={this.handleConfirm.bind(this)} ref="confirmbutton" className="pull-right">Open confirm</button>
 
                 <Modal
                     show={this.state.show}

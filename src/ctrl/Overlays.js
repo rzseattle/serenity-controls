@@ -70,6 +70,11 @@ class MyModal extends Component {
     }
 
     calculatePos() {
+
+
+        let container = this.props.container ? this.props.container() : document.body;
+        let containerSize = container.getBoundingClientRect();
+
         const node = ReactDOM.findDOMNode(this.refs.modalBody);
         if (node) {
             let data = node.getBoundingClientRect();
@@ -77,10 +82,19 @@ class MyModal extends Component {
             if (this.props.target) {
                 const target = ReactDOM.findDOMNode(this.props.target())
                 let targetData = target.getBoundingClientRect();
-                node.style['top'] = targetData.top + targetData.height + this.props.positionOffset + "px";
-                node.style['left'] = targetData.left + "px"
+                let left = targetData.left;
+                if (left + data.width > containerSize.width) {
+                    left = containerSize.width - data.width;
+                }
+                let top = targetData.top + targetData.height + this.props.positionOffset;
+                if (top + data.height > containerSize.height) {
+                    top = containerSize.height - data.height;
+                }
+
+                node.style['top'] = top + "px";
+                node.style['left'] = left + "px"
             } else {
-                console.log("here");
+
                 let x = Math.round(data.width / 2);
                 let y = Math.round(data.height / 2);
                 node.style['transform'] = `translate(-${x}px, -${y}px)`;
@@ -95,10 +109,11 @@ class MyModal extends Component {
         return (<Modal
             {...p}
             aria-labelledby='modal-label'
-            className={'w-modal-container ' + p.className }
+            className={'w-modal-container ' + p.className}
             backdropClassName="w-modal-shadow"
             onHide={this.handleClose.bind(this)}
         >
+
             <div className="w-modal" ref="modalBody">
                 {p.showHideLink && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
