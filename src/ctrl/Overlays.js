@@ -84,11 +84,11 @@ class MyModal extends Component {
                 let targetData = target.getBoundingClientRect();
                 let left = targetData.left;
                 if (left + data.width > containerSize.width) {
-                    left = containerSize.width - data.width;
+                    left = containerSize.width - data.width - this.props.positionOffset;
                 }
                 let top = targetData.top + targetData.height + this.props.positionOffset;
                 if (top + data.height > containerSize.height) {
-                    top = containerSize.height - data.height;
+                    top = containerSize.height - data.height - this.props.positionOffset;
                 }
 
                 node.style['top'] = top + "px";

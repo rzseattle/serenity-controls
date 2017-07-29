@@ -20,9 +20,15 @@ const Select = (props) => {
             disabled={props.disabled}
             style={props.style}
         >
-            {Object.entries(props.options).map(([value, label]) => {
-                return <option key={value} value={value}> {label}</option>
-            })}
+            {Array.isArray(props.options) ?
+                props.options.map(option => {
+                    return <option key={option.value} value={option.value}> {option.label}</option>
+                })
+                :
+                Object.entries(props.options).map(([value, label]) => {
+                    return <option key={value} value={value}> {label}</option>
+                })
+            }
         </select>
     )
 }
@@ -235,7 +241,7 @@ Date.propTypes = {
 
 class File extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
@@ -262,13 +268,13 @@ class File extends React.Component {
                 </Dropzone>
                 {props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
                     <div>
-                        <a href={el.preview||el.path} target="_blank">
+                        <a href={el.preview || el.path} target="_blank">
                             <div className="w-file-dropzone-up-list-icon">
-                                {el.type.indexOf('image') != -1 && <img src={el.preview||el.path} alt=""/>}
+                                {el.type.indexOf('image') != -1 && <img src={el.preview || el.path} alt=""/>}
                                 {el.type.indexOf('image') == -1 && <i className="fa fa-file"/>}
                             </div>
                             <div className="w-file-dropzone-up-list-name">{el.name}</div>
-                            <div className="w-file-dropzone-up-list-status"><i className={'fa fa-' + (el.preview?'upload':'check')}></i></div>
+                            <div className="w-file-dropzone-up-list-status"><i className={'fa fa-' + (el.preview ? 'upload' : 'check')}></i></div>
                         </a>
                     </div>
                 </div>)}</div>}
