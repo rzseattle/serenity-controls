@@ -83,7 +83,7 @@ class Table extends Component {
         }
     }
 
-    getData(){
+    getData() {
         return this.state.data;
     }
 
@@ -117,6 +117,15 @@ class Table extends Component {
         if (prevProps.remoteURL != this.props.remoteURL) {
             this.load();
         }
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+        let columns = nextProps.columns || [];
+        for (let i in columns) {
+            columns[i] = this.returnColumnData(columns[i]);
+        }
+        this.setState({columns, columns});
     }
 
     getRequestData() {
