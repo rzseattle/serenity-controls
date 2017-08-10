@@ -675,7 +675,7 @@ function Rows(props) {
                     <td className="w-table-selection-cell" onClick={(e) => props.onCheck(index, e)}>
                         <input type="checkbox" checked={props.selection.indexOf(index) != -1}/>
                     </td>
-                    : ''}
+                    : null }
                 {columns.map((column, index2) => {
                     const Component = column.type ? cells[column.type] : cells['Simple'];
                     return (<td key={'cell' + index2}
