@@ -587,7 +587,7 @@ function Footer(props) {
 
                 <div className="w-table-footer-onpage-select">
                     <span>Na stronie: </span>
-                    <select defaultValue={props.onPage} value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
+                    <select  value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
                         {([10, 25, 50, 100, 500]).map((x, i) =>
                             <option key={'onpageval' + x} value={x}>{x}</option>
                         )}

@@ -1,4 +1,4 @@
-export default class {
+class Comm {
 
 
     constructor(url) {
@@ -102,7 +102,7 @@ export default class {
 
         xhr.upload.onprogress = (event) => {
             this.callEvent('progress', {
-                loaded: event.loaded ,
+                loaded: event.loaded,
                 percent: Math.round(event.loaded / event.total * 100)
             });
         }
@@ -133,11 +133,20 @@ export default class {
         };
 
 
-
-
         xhr.open('POST', this.url, true);
         xhr.send(formData);
 
     }
 
+
+    static _post(url, data, callback) {
+        let comm = new Comm(url);
+        comm.on('success', callback);
+        comm.setData(data);
+        comm.send();
+        return comm;
+    }
+
 }
+
+export default Comm;

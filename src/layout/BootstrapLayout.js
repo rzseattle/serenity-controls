@@ -27,7 +27,7 @@ const Row = (props) => {
         }
         //calculating width for rest of columns
         colMd = (12 - sum) / (children.length - props.md.length );
-        colsMd = props.md;
+        colsMd = Object.assign({},props.md);
     } else {
         //equal width for each element
         colMd = 12 / children.length;

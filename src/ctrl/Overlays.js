@@ -17,7 +17,7 @@ class Shadow extends Component {
     render() {
         return <div>
             {this.props.visible && <div className="w-shadow">
-                {this.props.loader && <span className="loader">
+                {this.props.loader && <span className="loader loader-x3">
                 <i></i>
                 <i></i>
                 <i></i>

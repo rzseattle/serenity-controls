@@ -16,7 +16,7 @@ const Select = (props) => {
             className={props.className}
             name={props.name}
             onChange={props.onChange}
-            defaultValue={props.value}
+            value={props.value === null ? '' : props.value}
             disabled={props.disabled}
             style={props.style}
         >
@@ -75,7 +75,7 @@ class Text extends Component {
                 className={props.className}
                 name={props.name}
                 type={props.type}
-                value={props.value}
+                value={props.value === null ? '' : props.value}
                 onChange={props.onChange}
                 placeholder={props.placeholder}
                 disabled={props.disabled}
@@ -95,7 +95,7 @@ const Textarea = (props) => {
             type={props.type}
             onChange={props.onChange}
             placeholder={props.placeholder}
-            value={props.value}
+            value={props.value === null ? '' : props.value}
             disabled={props.disabled}
             style={props.style}
         />
@@ -118,37 +118,56 @@ Textarea.defaultProps = {
 }
 
 
-const Switch = (props) => {
+class Switch extends React.Component {
 
-    let gen = (value, label) => {
-        let field = <input type="radio"
-                           name={props.name}
-                           value={value}
-                           checked={props.value == value}
-                           onChange={props.onChange}
-        />;
-        if (props.inline == true) {
-            return <label className="radio-inline" key={value}>{field}{label}</label>
-        } else {
-            return <div className="radio" key={value}><label>{field}{label}</label></div>
+    static propTypes = {
+        options: PropTypes.object.isRequired,
+        name: PropTypes.string,
+        value: PropTypes.string,
+        onChange: PropTypes.func,
+        disabled: PropTypes.bool
+    }
+
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: props.value
+        };
+    }
+
+    handleOnChange(value) {
+        this.setState({value: value});
+
+        //this.refs.hidden.value = date;
+        if (this.props.onChange) {
+            this.props.onChange({name: this.props.name, type: 'switch', value: value});
         }
-    };
-    return (
-        <div>
-            {Object.entries(props.options).map(([value, label]) => gen(value, label))}
-        </div>
-    )
+    }
+
+    render() {
+        const props = this.props;
+
+        let gen = (value, label) => {
+            return <div key={value}>
+                <div
+                    className={'w-switch-label ' + (props.value == value ? 'w-switch-active' : '')}
+                    onClick={this.handleOnChange.bind(this, value)}
+                >
+                    {label}
+                </div>
+            </div>
+
+
+        };
+        return (
+            <div className="w-switch">
+                {Object.entries(props.options).map(([value, label]) => gen(value, label))}
+            </div>
+        )
+    }
 }
 
-Switch.propTypes = {
-    options: PropTypes.object.isRequired,
-    name: PropTypes.string,
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    inline: PropTypes.bool,
-    disabled: PropTypes.bool
-
-}
 
 const CheckboxGroup = (props) => {
 

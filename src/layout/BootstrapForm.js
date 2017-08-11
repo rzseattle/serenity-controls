@@ -13,7 +13,6 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
             label: PropTypes.string,
             help: PropTypes.string,
             form: PropTypes.object,
-            files: []
         }
 
         render() {
@@ -30,13 +29,26 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
                 className += ' ' + props.className;
             }
 
+            let field;
+            if (this.props.suffix || this.props.prefix) {
+                field =
+                    <div className="input-group">
+                        {this.props.prefix&&<div className="input-group-addon">{this.props.prefix}</div>}
+                        <Field {...this.props} className="form-control"/>
+                        {this.props.suffix&&<div className="input-group-addon">{this.props.suffix}</div>}
+                    </div>
+
+            } else {
+                field = <Field {...props} className={className}/>;
+            }
+
             if (props.layoutType == 'horizontal') {
 
                 return (
                     <div className={classes.join(' ')}>
-                        <label className="col-sm-2 control-label">{props.label}</label>
+                        {this.props.label&&<label className="col-sm-2 control-label">{props.label}</label>}
                         <div className="col-sm-10">
-                            <Field {...props} className={className}/>
+                            {field}
                             {props.help ?
                                 <span className="help-block">{props.help} </span>
                                 : ''}
@@ -51,11 +63,11 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
             if (props.layoutType == 'default' || props.layoutType == 'inline' || !props.layoutType) {
                 return (
                     <div className={classes.join(' ')}>
-                        <label>{this.props.label}</label>
-                        <Field {...this.props} className="form-control"/>
+                        {this.props.label&&<label>{this.props.label}</label>}
+                        {field}
 
                         {props.help ?
-                            <span class="help-block">{props.help} </span>
+                            <span className="help-block">{props.help} </span>
                             : ''}
                         {props.errors ?
                             <span className="help-block">{props.errors.join(', ')} </span>
@@ -139,7 +151,7 @@ class BForm extends React.Component {
             fieldErrors: {},
             formErrors: {},
             isDirty: false,
-            loading: false,
+            loading: props.loading || false,
         };
 
 
@@ -174,6 +186,10 @@ class BForm extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
             this.setState({data: nextProps.data});
+        }
+
+        if (nextProps.loading != undefined) {
+            this.setState({loading: nextProps.loading});
         }
     }
 
