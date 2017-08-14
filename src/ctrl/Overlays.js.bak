@@ -146,16 +146,12 @@ class ConfirmModal extends Component {
 
     handleConfirm() {
         this.promiseResolve();
-
         this.props.cleanup();
     }
 
     render() {
-        let modalProps = Object.assign({}, this.props);
-        delete modalProps.cleanup;
-
-        return <MyModal {...modalProps} className="w-modal-confirm" show={true}>
-            <div style={{padding: 15, paddingBottom: 0}}>{this.props.children}</div>
+        return <MyModal {...this.props} className="w-modal-confirm" show={true}>
+            <p style={{padding: 15, paddingBottom: 0}}>{this.props.children}</p>
             <div style={{padding: 10, paddingTop: 0, textAlign: 'right'}}>
                 <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok</button>
                 <button onClick={this.handleAbort.bind(this)} className="btn btn-default">anuluj</button>
@@ -169,12 +165,10 @@ class ConfirmModal extends Component {
 const confirm = (message, options = {}) => {
     let props = {...options}
 
-    let parent = options.container ? options.container() : document.body;
-
-    const wrapper = parent.appendChild(document.createElement('div'));
+    const wrapper = document.body.appendChild(document.createElement('div'));
     let cleanup = () => {
         ReactDOM.unmountComponentAtNode(wrapper)
-        wrapper.remove();
+        setTimeout(wrapper.remove);
     }
 
     const component = ReactDOM.render(<ConfirmModal {...props} cleanup={cleanup}>

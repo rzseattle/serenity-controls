@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-var NotificationSystem = require('react-notification-system');
-
 
 export default class PanelComponentLoader extends Component {
 
@@ -21,7 +19,7 @@ export default class PanelComponentLoader extends Component {
         this.setState({propsLoading: true});
         $.get(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}, (data) => {
             this.setState({propsLoading: false, loadedProps: data});
-            if (callback) {
+            if(callback){
                 callback();
             }
         });
@@ -43,18 +41,14 @@ export default class PanelComponentLoader extends Component {
         const s = this.state;
         const p = s.loadedProps || this.props;
         let Component = s.currComponent;
-        return <div><Component
+        return <Component
             {...p}
-
             reloadProps={this.handleReloadProps.bind(this)}
-            _notifications={this._notificationSystem}
             _reloadProps={this.handleReloadProps.bind(this)}
             _goto={this.handleGoTo.bind(this)}
             _resolveComponent={this.handleReloadProps.bind(this)}
-
+            
         />
-            <NotificationSystem ref={(ns) => this._notificationSystem = ns}/>
-        </div>
 
     }
 }

@@ -1,8 +1,41 @@
 .DateInput
     padding: 0 !important
+    font-size: 16px
+    line-height: 18px
 
 .DateInput__display-text--focused
     border-radius: 0px !important
+
+.SingleDatePicker__picker
+    top: 33px
+    z-index: 200
+
+.DateInput--with-caret::before, .DateInput--with-caret::after
+    display: none
+
+.w-switch
+    > div
+        display: inline-block
+        input
+            display: none
+
+        &:first-child
+            .w-switch-label
+                border-radius: 5px 0 0 5px
+
+        &:last-child
+            .w-switch-label
+                border-radius: 0 5px 5px 0
+
+        .w-switch-label
+            cursor: pointer
+            height: 28px
+            padding: 4px 8px
+            background-color: #f3f3f3
+            color: rgb(140, 140, 140)
+            &.w-switch-active
+                background-color: #108EE9
+                color: white
 
 .w-file-upload
     .w-file-dropzone
@@ -14,14 +47,14 @@
             i
                 margin-right: 5px
         &:hover
-            background-color: rgb( 230, 230, 230 )
+            background-color: rgb(230, 230, 230)
 
     .w-file-dropzone-up-list
-        >div
+        > div
             +clearfix
             padding: 5px
             &:nth-child(even)
-                background-color: rgb( 230, 230, 230 )
+                background-color: rgb(230, 230, 230)
 
             border: dashed 1px transparent
             &:hover
