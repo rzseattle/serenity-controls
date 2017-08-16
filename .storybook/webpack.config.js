@@ -14,9 +14,10 @@ module.exports = {
     devServer: {
         publicPath: "/",
     },
-    resolve: {
+    devtool: '#cheap-module-eval-source-map',
+    /*resolve: {
         modules: [path.resolve(__dirname, '../node_modules')]
-    },
+    },*/
     module: {
         rules: [
             {

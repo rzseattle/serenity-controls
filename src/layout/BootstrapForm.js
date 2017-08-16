@@ -34,12 +34,12 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
                 field =
                     <div className="input-group">
                         {this.props.prefix&&<div className="input-group-addon">{this.props.prefix}</div>}
-                        <Field {...this.props} className="form-control"/>
+                        <Field {...this.props}  className="form-control"/>
                         {this.props.suffix&&<div className="input-group-addon">{this.props.suffix}</div>}
                     </div>
 
             } else {
-                field = <Field {...props} className={className}/>;
+                field = <Field {...props}  className={className}/>;
             }
 
             if (props.layoutType == 'horizontal') {
@@ -137,10 +137,13 @@ class BForm extends React.Component {
          * Namespace for all fields in form
          */
         namespace: PropTypes.string,
+
+        editable: PropTypes.bool,
     }
 
     static defaultProps = {
         layoutType: 'default',
+        editable: true,
         data: {},
     }
 
@@ -212,8 +215,8 @@ class BForm extends React.Component {
                 data = this.getData();
             }
 
-            comm.on("finish", () => this.setState({loading: false}));
-            comm.on("success", response => {
+            comm.on('finish', () => this.setState({loading: false}));
+            comm.on('success', response => {
                 if (this.props.onSuccess) {
                     this.props.onSuccess({form: this, response: response});
                 }
@@ -222,10 +225,10 @@ class BForm extends React.Component {
                     formErrors: [],
                 })
             });
-            comm.on("validationErrors", response => {
+            comm.on('validationErrors', response => {
                 this.handleValidatorError(response)
             });
-            comm.on("error", response => {
+            comm.on('error', response => {
                 if (this.props.error) {
                     this.props.onError({form: this, response: response});
                 }
@@ -302,6 +305,7 @@ class BForm extends React.Component {
                 return React.cloneElement(child, {
                     value: this.props.data[child.props.name],
                     layoutType: this.props.layoutType,
+                    editable: this.props.editable,
                     errors: this.state.fieldErrors[child.props.name],
                     onChange: (e) => {
                         if (child.props.onChange) {

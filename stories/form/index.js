@@ -23,19 +23,43 @@ storiesOf('Bootstrap Forms', module)
         () => (
             <div style={{maxWidth: '800px'}}>
                 <Panel key="1">
-                    <BForm>
+                    <BForm
+                        editable={true}
+                        data={{
+                            text: 'xxx',
+                            select: '2',
+                            switch: '2',
+                            checkboxGroup: [2, 3],
+                            textarea: 'Some lorem ipsum text',
+                            date: '2008-11-11'
+                        }}
+                    >
                         <BText label="Text" name="text"/>
                         <BSelect name="select" label="Select" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
                         <BCheckboxGroup inline name="checkboxGroup" label="Checkbox group" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
-                        <BSwitch inline name="radioGroup" label="Radio group" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
+                        <BSwitch inline name="switch" label="Radio group" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
                         <BTextarea name="textarea" label="Textarea"/>
                         <BDate name="date" label="Date"/>
                         <BFile name="file" label="File"/>
                         <input type="submit" value="submit" className="btn btn-primary"/>
                     </BForm>
                 </Panel>
-                <Panel key="2">
-                    <BForm layoutType="horizontal">
+                <Panel key="2"
+
+
+                >
+                    <BForm layoutType="horizontal"
+
+                           editable={false}
+                           data={{
+                               text: 'xxx',
+                               select: '2',
+                               switch: '2',
+                               checkboxGroup: [2, 3],
+                               textarea: 'Some lorem ipsum text',
+                               date: '2008-11-11'
+                           }}
+                    >
                         <BText label="Text" name="text"/>
                         <BSelect name="select" label="Select" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
                         <BCheckboxGroup name="checkboxGroup" label="Checkbox group" options={{1: 'One', 2: 'Two', 3: 'Three'}}/>
