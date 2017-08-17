@@ -62,7 +62,13 @@ class Comm {
                 if (name == '') {
                     this.appendFormData(FormData, value, index);
                 } else {
-                    this.appendFormData(FormData, value, name + '[' + index + ']');
+                    //test for array in field name
+                    let openBracket = index.indexOf("[");
+                    let newName = name + '[' + index + ']';
+                    if (openBracket != -1) {
+                        newName = name + '[' + index.slice(0, openBracket) + "]" + index.slice(openBracket);
+                    }
+                    this.appendFormData(FormData, value, newName);
                 }
             })
         } else {
@@ -84,7 +90,7 @@ class Comm {
 
     debugError(error) {
         let errorWindow = window.open('', '', 'width=800,height=600');
-        errorWindow.document.write(error);
+        errorWindow.document.write("<pre>" + error + "</pre>");
         errorWindow.focus();
     }
 
@@ -110,20 +116,26 @@ class Comm {
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
+                    let exceptionOccured = false;
+                    let data;
                     try {
                         this.callEvent('response', xhr.response);
-                        let data = JSON.parse(xhr.response);
+                        data = JSON.parse(xhr.response);
+                    } catch (e) {
+                        exceptionOccured = true;
+                        this.debugError(e.message + '<hr />' + xhr.response);
+                        this.callEvent('error', xhr.response);
+                    }
+ 
+                    if (!exceptionOccured) {
                         if (data.errors === undefined) {
                             this.callEvent('success', data);
                         } else {
                             this.callEvent('validationErrors', data);
                         }
-
-                    } catch (e) {
-                        this.debugError(e.message + '<hr />' + xhr.response);
-                        this.callEvent('error', xhr.response);
-
                     }
+
+
                 } else {
                     this.debugError(xhr.status + '<hr />');
                     this.callEvent('connectionError', xhr.response);

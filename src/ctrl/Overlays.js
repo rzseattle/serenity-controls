@@ -40,11 +40,13 @@ class MyModal extends Component {
         container: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
         //containerElement: PropTypes.node
         positionOffset: PropTypes.number,
-        container: PropTypes.func
+        container: PropTypes.func,
+        recalculatePosition: PropTypes.bool
     }
     static defaultProps = {
         show: false,
-        positionOffset: 5
+        positionOffset: 5,
+        recalculatePosition: true,
     }
 
     constructor(props) {
@@ -61,12 +63,17 @@ class MyModal extends Component {
         }
     }
 
-    componentDidMount() {
+    handleShow() {
         this.calculatePos();
+        if (this.props.onShow) {
+            this.props.onShow();
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        this.calculatePos();
+        if (this.props.recalculatePosition) {
+            this.calculatePos();
+        }
     }
 
     calculatePos() {
@@ -110,6 +117,7 @@ class MyModal extends Component {
         let modalProps = Object.assign({}, p);
         delete modalProps.showHideLink;
         delete modalProps.positionOffset;
+        delete modalProps.recalculatePosition;
 
         return (<Modal
             {...modalProps}
@@ -117,6 +125,8 @@ class MyModal extends Component {
             className={'w-modal-container ' + p.className}
             backdropClassName="w-modal-shadow"
             onHide={this.handleClose.bind(this)}
+            onShow={this.handleShow.bind(this)}
+            onEntered={() => console.log('entered')}
         >
 
             <div className="w-modal" ref="modalBody">

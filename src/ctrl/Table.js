@@ -14,7 +14,8 @@ class Table extends Component {
         onSelectionChange: PropTypes.func,
         controlKey: PropTypes.string,
         onPage: PropTypes.integer,
-        selectable: PropTypes.boolean
+        selectable: PropTypes.boolean,
+        rememberState: PropTypes.boolean
 
     }
 
@@ -22,7 +23,8 @@ class Table extends Component {
         onPage: 25,
         columns: [],
         buttons: [],
-        showFooter: true
+        showFooter: true,
+        rememberState: false
     }
 
     constructor(props) {
@@ -77,7 +79,7 @@ class Table extends Component {
 
     componentWillMount() {
 
-        if (window.localStorage[this.hashCode]) {
+        if (this.props.rememberState && window.localStorage[this.hashCode]) {
             this.state = {...this.state, ...JSON.parse(window.localStorage[this.hashCode])};
             this.state.firstLoaded = false;
         }
@@ -90,35 +92,31 @@ class Table extends Component {
     getDataFromChildren() {
         let loader = new MarkupLoader(this.props.children);
         this.state.columns = loader.getConfig();
-        console.log(this.state.columns);
 
-    }
-
-
-    componentDidUpdate() {
-        let state = this.state;
-        window.localStorage[this.hashCode] = JSON.stringify({
-            onPage: state.onPage,
-            currentPage: state.currentPage,
-            bodyHeight: state.bodyHeight,
-            filters: state.filters,
-            order: state.order,
-            fixedLayout: state.fixedLayout
-
-        });
-    }
-
-    componentDidMount() {
-        this.load();
     }
 
 
     componentDidUpdate(prevProps) {
+        let state = this.state;
+        if (this.props.rememberState) {
+            window.localStorage[this.hashCode] = JSON.stringify({
+                onPage: state.onPage,
+                currentPage: state.currentPage,
+                bodyHeight: state.bodyHeight,
+                filters: state.filters,
+                order: state.order,
+                fixedLayout: state.fixedLayout
+
+            });
+        }
         if (prevProps.remoteURL != this.props.remoteURL) {
             this.load();
         }
     }
 
+    componentDidMount() {
+        this.load();
+    }
 
     componentWillReceiveProps(nextProps) {
         let columns = nextProps.columns || [];
@@ -933,10 +931,37 @@ class Column {
 
     }
 
+    static number(field, caption) {
+        return new Column({
+            field: field,
+            caption: caption,
+            filter: {
+                type: 'NumericFilter',
+            }
+        }).className('right')
+
+    }
+
+    static map(field, caption, options) {
+
+        return new Column({
+            field: field,
+            caption: caption,
+            template: value => options[value],
+            filter: {
+                type: 'SelectFilter',
+                content: options
+            }
+        });
+    }
+
     static text(field, caption) {
         return new Column({
             field: field,
             caption: caption,
+            filter: {
+                type: 'TextFilter',
+            }
         })
     }
 
@@ -984,15 +1009,15 @@ class Column {
         })
     }
 
-    static hidden(field){
+    static hidden(field) {
         return new Column({
             field: field,
             display: false
         });
     }
 
-    static custom() {
-
+    static custom(data) {
+        return new Column(data);
     }
 
     className(className) {
@@ -1005,14 +1030,21 @@ class Column {
         return this;
     }
 
-    append(x){
+    append(x) {
         this.data.append = x;
         return this;
     }
-    prepend(x){
+
+    prepend(x) {
         this.data.prepend = x;
         return this;
     }
+
+    width(x) {
+        this.data.width = x;
+        return this;
+    }
+
 
     /*filter(type, field, conf) {
         if(Array.isArray(this.data.filter)){

@@ -58,7 +58,7 @@ const TabPane = (props) => {
 
 TabPane.propTypes = {
     title: PropTypes.string,
-    badge: PropTypes.string,
+    badge: PropTypes.oneOfType( [PropTypes.string, PropTypes.number ]),
     icon: PropTypes.string,
     children: PropTypes.node
 

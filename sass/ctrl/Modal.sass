@@ -72,16 +72,17 @@
 .w-shadow-fixed
     position: fixed
 
+$loader-size: 1
 span.loader
     display: block
-    width: 20px
-    height: 20px
+    width: (20*$loader-size)+px
+    height: (20*$loader-size)+px
     animation: rotate 1.2s infinite linear
     transform: rotate(45deg)
 
     i
-        width: 9px
-        height: 9px
+        width: (9*$loader-size)+px
+        height: (9*$loader-size)+px
         border-radius: 100%
         background-color: #d40000
         transform: scale(.75)
@@ -106,5 +107,12 @@ span.loader
             bottom: 0
             animation-delay: 1.2s
 
-//element.style
+
+@for $loaderSize from 1 through 4
+    span.loader-x#{$loaderSize}
+        width: (20*$loaderSize)+px
+        height: (20*$loaderSize)+px
+        i
+            width: (9*$loaderSize)+px
+            height: (9*$loaderSize)+px
 

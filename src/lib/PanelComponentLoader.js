@@ -8,6 +8,8 @@ export default class PanelComponentLoader extends Component {
 
     //propTypes = {}
 
+    _notificationSystem: null;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -39,21 +41,29 @@ export default class PanelComponentLoader extends Component {
         });
     }
 
+    handleNotifycation(message, title = '', options = {}) { 
+        let data =  { title: title, message: message,  ...{ level:'success', ...options} }
+        console.log(data);
+        this._notificationSystem.addNotification(data);
+
+    }
+
     render() {
         const s = this.state;
         const p = s.loadedProps || this.props;
         let Component = s.currComponent;
-        return <div><Component
-            {...p}
-
-            reloadProps={this.handleReloadProps.bind(this)}
-            _notifications={this._notificationSystem}
-            _reloadProps={this.handleReloadProps.bind(this)}
-            _goto={this.handleGoTo.bind(this)}
-            _resolveComponent={this.handleReloadProps.bind(this)}
-
-        />
+        return <div>
             <NotificationSystem ref={(ns) => this._notificationSystem = ns}/>
+
+            <Component
+                {...p}
+                reloadProps={this.handleReloadProps.bind(this)}
+                _notification={this.handleNotifycation.bind(this)}
+                _reloadProps={this.handleReloadProps.bind(this)}
+                _goto={this.handleGoTo.bind(this)}
+                _resolveComponent={this.handleReloadProps.bind(this)}
+            />
+
         </div>
 
     }
