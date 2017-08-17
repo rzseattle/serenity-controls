@@ -1,7 +1,7 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react'
 import Panel from '../../src/ctrl/Panel';
-import {Table} from '../../src/ctrl/Table';
+import {Table, Column as Col} from '../../src/ctrl/Table';
 import {Tooltip} from '../../src/ctrl/Overlays';
 
 const columnOptions = {
@@ -34,86 +34,49 @@ const columnOptions = {
 
 
 const baseColumns = [
-    {
-        field: 'id',
-        filter: {
-            type: 'NumericFilter',
-        }
-    },
-    {field: 'email'},
-    {
-        field: 'first_name',
-        template: (field, row) => <div>{row.first_name} {row.last_name}</div>,
-        events: {
-            click: [(row, column, event) => {
-                alert(row[column.field] + ' Cell:' + event.target)
-            }],
-        },
-        filter: [
+    Col.id('id', 'Id').get(),
+    Col.email('email', 'Email').get(),
+    Col.text('first_name', 'Name')
+        .template((field, row) => <div>{row.first_name} {row.last_name}</div>)
+        .onClick((row, column, event) => {
+            alert(row[column.field] + ' Cell:' + event.target)
+        }).set({filter: [
             {
                 type: 'TextFilter',
                 field: 'first_name',
                 caption: 'First name',
-                title: 'First name'
             },
             {
                 type: 'TextFilter',
                 field: 'last_name',
                 caption: 'Last name',
-                title: 'Last name'
             }
-        ]
-
-
-    },
-    {
-        field: 'last_name',
-        display: false
-    },
-    {
-        field: 'gender',
-        filter: {
-            type: 'SelectFilter',
-            field: 'gender',
-            content: {
-                '0': 'All',
-                'Female': 'Female',
-                'Male': 'Male',
-            },
-            multiselect: true
-        }
-    },
-    {
-        field: 'ip_address',
-        class: 'right'
-    },
-    {
-        field: 'date',
-        icon: 'fa-calendar',
-        filter: {
-            type: 'DateFilter',
-        }
-    },
-    {
-        field: 'date',
-
-        filter: {
-            type: 'SwitchFilter',
-            content: {0: 'Nie', 1: 'Tak'}
-        }
-    },
-    {
-        field: 'price',
-        class: 'right',
-        prepend: ' - ',
-        append: ' $',
+        ]}).get(),
+    Col.hidden('last_name').get(),
+    Col.text('gender', 'Gender')
+        .set({
+            filter: {
+                type: 'SelectFilter',
+                field: 'gender',
+                content: {
+                    '0': 'All',
+                    'Female': 'Female',
+                    'Male': 'Male',
+                },
+                multiselect: true
+            }
+        })
+        .get(),
+    Col.text('ip_address', 'Ip').className('right').get(),
+    Col.date('date', 'Date').get(),
+    Col.money('price', 'Price')
+        .append(' $')
+        .prepend(' - ')
+        .set({
         classTemplate: (row, column) => [parseFloat(row.price) < 100 ? 'darkgreen' : 'darkred'],
         styleTemplate: (row, column) => parseFloat(row.price) < 100 ? {fontSize: '10px'} : {fontSize: '15px'},
-        filter: {
-            type: 'NumericFilter',
-        }
-
-    },
+    }).get(),
+    ,
 ]
 
 const importInfo = `

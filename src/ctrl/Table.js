@@ -587,7 +587,7 @@ function Footer(props) {
 
                 <div className="w-table-footer-onpage-select">
                     <span>Na stronie: </span>
-                    <select  value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
+                    <select value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
                         {([10, 25, 50, 100, 500]).map((x, i) =>
                             <option key={'onpageval' + x} value={x}>{x}</option>
                         )}
@@ -684,7 +684,7 @@ function Rows(props) {
                     <td className="w-table-selection-cell" onClick={(e) => props.onCheck(index, e)}>
                         <input type="checkbox" checked={props.selection.indexOf(index) != -1}/>
                     </td>
-                    : null }
+                    : null}
                 {columns.map((column, index2) => {
                     const Component = column.type ? cells[column.type] : cells['Simple'];
                     return (<td key={'cell' + index2}
@@ -904,9 +904,148 @@ class MarkupLoader {
 
 }
 
-const Column = () => null
+
 const Filter = () => null
 const Sorter = () => null
+
+
+class Column {
+    constructor(initData) {
+        this.data = {
+            events: {
+                'click': [],
+                'enter': [],
+                'leave': []
+            },
+            filter: {},
+            ...initData
+        };
+    }
+
+    static id(field, caption) {
+        return new Column({
+            field: field,
+            caption: caption,
+            filter: {
+                type: 'NumericFilter',
+            }
+        }).className('right')
+
+    }
+
+    static text(field, caption) {
+        return new Column({
+            field: field,
+            caption: caption,
+        })
+    }
+
+    static money(field, caption) {
+        return new Column({
+            field: field,
+            caption: caption,
+            template: (val, row) => parseFloat(val).toFixed(2),
+            filter: {
+                type: 'NumericFilter',
+            }
+        }).className('right');
+    }
+
+    static email(field, caption) {
+        return new Column({
+            field: field,
+            caption: caption,
+            template: (val, row) => <a href={'mailto:' + val}>{val}</a>
+        })
+    }
+
+    static date(field, caption) {
+        return new Column({
+            field: field,
+            caption: caption,
+            icon: 'fa-calendar',
+            filter: {
+                type: 'DateFilter',
+            }
+        });
+    }
+
+    static bool(field, caption) {
+        return new Column({
+            field: field,
+            caption: caption,
+            classTemplate: (row, column) => ['center', (row[column.field] == '1' ? 'darkgreen' : 'darkred')],
+            template: value => <i className={'fa fa-' + (value == 1 ? 'check' : 'times')}></i>,
+            filter: {
+                type: 'SwitchFilter',
+                content: {0: 'Nie', 1: 'Tak'},
+            }
+
+        })
+    }
+
+    static hidden(field){
+        return new Column({
+            field: field,
+            display: false
+        });
+    }
+
+    static custom() {
+
+    }
+
+    className(className) {
+        this.data.class = className;
+        return this;
+    }
+
+    template(fn) {
+        this.data.template = fn;
+        return this;
+    }
+
+    append(x){
+        this.data.append = x;
+        return this;
+    }
+    prepend(x){
+        this.data.prepend = x;
+        return this;
+    }
+
+    /*filter(type, field, conf) {
+        if(Array.isArray(this.data.filter)){
+
+        }else{
+
+        }
+    }*/
+
+    onClick(fn) {
+        this.data.events.click.push(fn);
+        return this;
+    }
+
+    onEnter(fn) {
+        this.data.events.enter.push(fn);
+        return this;
+    }
+
+    onLeave(fn) {
+        this.data.events.leave.push(fn);
+        return this;
+    }
+
+    set(el) {
+        this.data = {...this.data, ...el};
+        return this;
+    }
+
+    get() {
+        return this.data;
+    }
+}
 
 
 export {Table, Column, Filter, Sorter}

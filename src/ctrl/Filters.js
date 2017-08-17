@@ -490,7 +490,7 @@ class MultiFilter extends Filter {
                     let Component = filtersMapping[el.type]
                     return (
                         <div key={'multi_' + index}>
-                            <div className="w-filter-multi-title">{el.title}</div>
+                            <div className="w-filter-multi-title">{el.caption}</div>
                             <Component  {...this.props} {...el} showCaption={true}/>
                         </div>
                     )
