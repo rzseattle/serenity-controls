@@ -447,8 +447,6 @@ class Table extends Component {
                     {!this.state.loading && this.state.data.length + 1 == 0 && <EmptyResult colspan={columns.length + 1}/>}
                     {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
                     {this.state.firstLoaded && this.state.data.length > 0 && <Rows
-                        rowClassTemplate={this.props.rowClassTemplate}
-                        rowStyleTemplate={this.props.rowStyleTemplate}
                         selection={this.state.selection}
                         onCheck={this.handleCheckClicked.bind(this)}
                         selectable={this.props.selectable}
@@ -682,10 +680,7 @@ function Rows(props) {
 
 
         {props.data.map((row, index) =>
-            <tr key={'row' + index}
-                className={props.rowClassTemplate?props.rowClassTemplate(row, index):''}
-                style={props.rowStyleTemplate?props.rowStyleTemplate(row, index):{}}
-            >
+            <tr key={'row' + index}>
                 {props.selectable ?
                     <td className="w-table-selection-cell" onClick={(e) => props.onCheck(index, e)}>
                         <input type="checkbox" checked={props.selection.indexOf(index) != -1}/>
