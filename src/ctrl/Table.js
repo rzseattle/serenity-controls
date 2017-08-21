@@ -668,7 +668,10 @@ function Rows(props) {
         if (props.filters[column.field] !== undefined) {
             cache[index].classes.push('w-table-filtered')
         }
-        if (column.events.click && column.events.click.length > 0) {
+        if (
+            column.events.click && column.events.click.length > 0 ||
+            column.events.mouseUp && column.events.mouseUp.length > 0
+        ) {
             cache[index].classes.push('w-table-cell-clickable');
         }
         cache[index].classes = cache[index].classes.concat(column.class);
@@ -683,8 +686,8 @@ function Rows(props) {
 
         {props.data.map((row, index) =>
             <tr key={'row' + index}
-                className={props.rowClassTemplate?props.rowClassTemplate(row, index):''}
-                style={props.rowStyleTemplate?props.rowStyleTemplate(row, index):{}}
+                className={props.rowClassTemplate ? props.rowClassTemplate(row, index) : ''}
+                style={props.rowStyleTemplate ? props.rowStyleTemplate(row, index) : {}}
             >
                 {props.selectable ?
                     <td className="w-table-selection-cell" onClick={(e) => props.onCheck(index, e)}>
@@ -698,6 +701,12 @@ function Rows(props) {
                                 onClick={column.events.click ? (event) => {
 
                                     column.events.click.map((callback) => {
+                                        callback.bind(this)(row, column, event);
+                                    })
+                                } : function () {
+                                }}
+                                onMouseUp={column.events.mouseUp ? (event) => {
+                                    column.events.mouseUp.map((callback) => {
                                         callback.bind(this)(row, column, event);
                                     })
                                 } : function () {
@@ -921,7 +930,8 @@ class Column {
             events: {
                 'click': [],
                 'enter': [],
-                'leave': []
+                'leave': [],
+                'mouseUp': [],
             },
             filter: {},
             ...initData
@@ -971,6 +981,21 @@ class Column {
                 type: 'TextFilter',
             }
         })
+    }
+
+    static link(field, caption, urlResolver) {
+
+        return Column.text('id', '')
+            .onMouseUp((row, column, e) => {
+                    let url = urlResolver(row, column, event);
+                    if (e.button == 1) {
+                        window.open(url);
+                    } else {
+                        window.location.href = url;
+                    }
+                }
+            )
+
     }
 
     static money(field, caption) {
@@ -1053,6 +1078,11 @@ class Column {
         return this;
     }
 
+    noFilter() {
+        this.data.filter = null;
+        return this;
+    }
+
 
     /*filter(type, field, conf) {
         if(Array.isArray(this.data.filter)){
@@ -1064,6 +1094,11 @@ class Column {
 
     onClick(fn) {
         this.data.events.click.push(fn);
+        return this;
+    }
+
+    onMouseUp(fn) {
+        this.data.events.mouseUp.push(fn);
         return this;
     }
 

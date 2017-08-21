@@ -37,13 +37,16 @@ export default class PanelComponentLoader extends Component {
     handleGoTo(path, input = {}) {
         this.setState({propsLoading: true});
         $.get(path, {...input, __PROPS_REQUEST__: 1}, (data) => {
+            var stateObj = {  };
+            let urlParameters = Object.keys(input).map((i) => i+'='+input[i]).join('&');
+            history.pushState(stateObj, "", path +  (urlParameters?"?":'') + urlParameters  );
             this.setState({propsLoading: false, loadedProps: data, currComponent: ReactHelper.get(data.component)});
         });
     }
 
     handleNotifycation(message, title = '', options = {}) { 
         let data =  { title: title, message: message,  ...{ level:'success', ...options} }
-        console.log(data);
+
         this._notificationSystem.addNotification(data);
 
     }
