@@ -18,7 +18,7 @@ class Table extends Component {
         selectable: PropTypes.bool,
         rememberState: PropTypes.bool,
         rowClassTemplate: PropTypes.func,
-        rowStyleTemplate: PropTypes.func
+        rowStyleTemplate: PropTypes.func,
         columns: PropTypes.array,
         onPage: PropTypes.number,
         showFooter: PropTypes.bool
