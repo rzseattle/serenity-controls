@@ -17,7 +17,7 @@ class Comm {
             validationErrors: [],
             finish: [],
         };
-
+        this.method = 'POST';
     }
 
 
@@ -97,10 +97,11 @@ class Comm {
 
     send() {
 
-
-        const formData = new FormData();
         let data = this.prepareData();
-        this.appendFormData(formData, data);
+        const formData = new FormData();
+        if(this.method == 'POST') {
+            this.appendFormData(formData, data);
+        }
 
         this.callEvent('beforeSend', data);
 
@@ -126,7 +127,7 @@ class Comm {
                         this.debugError(e.message + '<hr />' + xhr.response);
                         this.callEvent('error', xhr.response);
                     }
- 
+
                     if (!exceptionOccured) {
                         if (data.errors === undefined) {
                             this.callEvent('success', data);
@@ -144,9 +145,16 @@ class Comm {
             }
         };
 
+        xhr.open(this.method, this.url, true);
 
-        xhr.open('POST', this.url, true);
-        xhr.send(formData);
+        if (this.method == 'POST'){
+            xhr.send(formData);
+        }else if(this.method == 'GET') {
+            xhr.send();
+        }else if(this.method == 'PUT') {
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+        }
 
     }
 

@@ -18,6 +18,7 @@ class Table extends Component {
         rememberState: PropTypes.boolean,
         rowClassTemplate: PropTypes.func,
         rowStyleTemplate: PropTypes.func,
+        //data: PropTypes.func,
 
 
     }
@@ -156,31 +157,63 @@ class Table extends Component {
         this.state.dataSourceError = false;
         //this.state.dataSourceDebug = false;
         this.setState({loading: true});
-        let xhr = new XMLHttpRequest();
-        xhr.onload = (e) => {
-            let parsed;
-            if (xhr.status === 200) {
-                //parsed = {data: [], countAll: 0};
-                try {
-                    let parsed = JSON.parse(xhr.responseText)
+
+        if (this.props.remoteURL) {
+
+            let xhr = new XMLHttpRequest();
+            xhr.onload = (e) => {
+                let parsed;
+                if (xhr.status === 200) {
+                    //parsed = {data: [], countAll: 0};
+                    try {
+                        let parsed = JSON.parse(xhr.responseText)
+                        this.setState({
+                            data: parsed.data.slice(0),
+                            countAll: 0 + parseInt(parsed.countAll),
+                            loading: false,
+                            dataSourceDebug: parsed.debug ? parsed.debug : false,
+                            firstLoaded: true,
+                            selection: [],
+                            allChecked: false
+                        });
+                    } catch (e) {
+                        this.setState({dataSourceError: xhr.responseText, loading: false})
+                    }
+                }
+            }
+            xhr.open('PUT', this.props.remoteURL + '?' + new Date().getTime(), true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(this.getRequestData()));
+            this.xhrConnection = xhr;
+
+        } else if (this.props.dataProvider) {
+            let result = this.props.dataProvider(this.getRequestData());
+
+            if (result instanceof Promise) {
+
+                result.then((data) => {
                     this.setState({
-                        data: parsed.data.slice(0),
-                        countAll: 0 + parseInt(parsed.countAll),
+                        data: data.data.slice(0),
+                        countAll: 0 + parseInt(data.countAll),
                         loading: false,
-                        dataSourceDebug: parsed.debug ? parsed.debug : false,
+                        dataSourceDebug: data.debug ? data.debug : false,
                         firstLoaded: true,
                         selection: [],
                         allChecked: false
                     });
-                } catch (e) {
-                    this.setState({dataSourceError: xhr.responseText, loading: false})
-                }
+                })
+            } else {
+                this.setState({
+                    data: result.data.slice(0),
+                    countAll: 0 + parseInt(result.countAll),
+                    loading: false,
+                    dataSourceDebug: result.debug ? result.debug : false,
+                    firstLoaded: true,
+                    selection: [],
+                    allChecked: false
+                });
             }
         }
-        xhr.open('PUT', this.props.remoteURL + '?' + new Date().getTime(), true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(this.getRequestData()));
-        this.xhrConnection = xhr;
     }
 
     handleStateRemove() {
