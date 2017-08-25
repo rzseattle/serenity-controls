@@ -99,7 +99,7 @@ class Comm {
 
         let data = this.prepareData();
         const formData = new FormData();
-        if(this.method == 'POST') {
+        if (this.method == 'POST') {
             this.appendFormData(formData, data);
         }
 
@@ -151,7 +151,7 @@ class Comm {
             xhr.send(formData);
         }else if(this.method == 'GET') {
             xhr.send();
-        }else if(this.method == 'PUT') {
+        } else if (this.method == 'PUT') {
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify(data));
         }
@@ -159,14 +159,37 @@ class Comm {
     }
 
 
-    static _post(url, data, callback) {
-        let comm = new Comm(url);
-        comm.on('success', callback);
-        comm.setData(data);
-        comm.send();
-        return comm;
+    static __preparePromise(method, url, data, callback) {
+        return new Promise((resolve, reject) => {
+            let comm = new Comm(url);
+            comm.method = method;
+            if(callback) {
+                comm.on('success', callback);
+            }
+            comm.on('success', (data) => resolve(data));
+
+            comm.on('validationErrors', (data) => reject(data));
+            comm.on('connectionError', (data) => reject(data));
+            comm.on('error', (data) => reject(data));
+
+            comm.setData(data);
+            comm.send();
+
+        });
     }
 
+
+    static _post(url, data, callback = null) {
+        return Comm.__preparePromise('POST', url, data, callback);
+    }
+
+    static _get(url, data, callback = null) {
+        return Comm.__preparePromise('GET', url, data, callback);
+    }
+
+    static _put(url, data, callback = null) {
+        return Comm.__preparePromise('PUT', url, data, callback);
+    }
 }
 
 export default Comm;
