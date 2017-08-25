@@ -1,0 +1,172 @@
+class Comm {
+
+
+    constructor(url) {
+
+        this.url = url;
+        this.data = {};
+        this.namespace = null;
+
+        this.events = {
+            beforeSend: [],
+            progress: [],
+            response: [],
+            error: [],
+            connectionError: [],
+            success: [],
+            validationErrors: [],
+            finish: [],
+        };
+        this.method = 'POST';
+    }
+
+
+    on(event, callback) {
+        if (!Array.isArray(this.events[event])) {
+            console.error("Unknow event: " + event)
+            console.log(this.events);
+        } else {
+            this.events[event].push(callback);
+        }
+    }
+
+    callEvent(event, data) {
+        this.events[event].map(el => el(data));
+    }
+
+    setData(data) {
+        this.data = data;
+    }
+
+    appendFormData(FormData, data, name = '') {
+
+        if (data instanceof FileList) {
+
+            for (var i = 0; i < data.length; i++) {
+                // get item
+                let file = data.item(i);
+                formData.append(name + '[]', file);
+
+            }
+            return;
+        }
+
+        if (Object.prototype.toString.call(data) == '[object File]') {
+            FormData.append(name, data);
+            return;
+        }
+
+        if (typeof data === 'object' && data != null) {
+
+            Object.entries(data).map(([index, value]) => {
+                if (name == '') {
+                    this.appendFormData(FormData, value, index);
+                } else {
+                    //test for array in field name
+                    let openBracket = index.indexOf("[");
+                    let newName = name + '[' + index + ']';
+                    if (openBracket != -1) {
+                        newName = name + '[' + index.slice(0, openBracket) + "]" + index.slice(openBracket);
+                    }
+                    this.appendFormData(FormData, value, newName);
+                }
+            })
+        } else {
+            if (data && data != null) {
+                FormData.append(name, data);
+            }
+        }
+    }
+
+    prepareData() {
+        let data = {};
+        if (this.namespace) {
+            data[this.namespace] = this.data;
+        } else {
+            data = this.data;
+        }
+        return data;
+    }
+
+    debugError(error) {
+        let errorWindow = window.open('', '', 'width=800,height=600');
+        errorWindow.document.write("<pre>" + error + "</pre>");
+        errorWindow.focus();
+    }
+
+
+    send() {
+
+        let data = this.prepareData();
+        const formData = new FormData();
+        if(this.method == 'POST') {
+            this.appendFormData(formData, data);
+        }
+
+        this.callEvent('beforeSend', data);
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.upload.onprogress = (event) => {
+            this.callEvent('progress', {
+                loaded: event.loaded,
+                percent: Math.round(event.loaded / event.total * 100)
+            });
+        }
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    let exceptionOccured = false;
+                    let data;
+                    try {
+                        this.callEvent('response', xhr.response);
+                        data = JSON.parse(xhr.response);
+                    } catch (e) {
+                        exceptionOccured = true;
+                        this.debugError(e.message + '<hr />' + xhr.response);
+                        this.callEvent('error', xhr.response);
+                    }
+
+                    if (!exceptionOccured) {
+                        if (data.errors === undefined) {
+                            this.callEvent('success', data);
+                        } else {
+                            this.callEvent('validationErrors', data);
+                        }
+                    }
+
+
+                } else {
+                    this.debugError(xhr.status + '<hr />');
+                    this.callEvent('connectionError', xhr.response);
+                }
+                this.callEvent('finish', xhr);
+            }
+        };
+
+        xhr.open(this.method, this.url, true);
+
+        if (this.method == 'POST'){
+            xhr.send(formData);
+        }else if(this.method == 'GET') {
+            xhr.send();
+        }else if(this.method == 'PUT') {
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(data));
+        }
+
+    }
+
+
+    static _post(url, data, callback) {
+        let comm = new Comm(url);
+        comm.on('success', callback);
+        comm.setData(data);
+        comm.send();
+        return comm;
+    }
+
+}
+
+export default Comm;

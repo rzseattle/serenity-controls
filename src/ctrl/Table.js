@@ -7,21 +7,24 @@ import {Button as MyButton} from './Button'
 
 class Table extends Component {
 
-    static propsTypes = {
+
+    static propTypes = {
         data: PropTypes.array,
         remoteURL: PropTypes.string,
-        selectable: PropTypes.boolean,
+        selectable: PropTypes.bool,
         onSelectionChange: PropTypes.func,
         controlKey: PropTypes.string,
-        onPage: PropTypes.integer,
-        selectable: PropTypes.boolean,
-        rememberState: PropTypes.boolean,
+        onPage: PropTypes.number,
+        selectable: PropTypes.bool,
+        rememberState: PropTypes.bool,
         rowClassTemplate: PropTypes.func,
-        rowStyleTemplate: PropTypes.func,
-        //data: PropTypes.func,
-
+        rowStyleTemplate: PropTypes.func
+        columns: PropTypes.array,
+        onPage: PropTypes.number,
+        showFooter: PropTypes.bool
 
     }
+
 
     static defaultProps = {
         onPage: 25,
