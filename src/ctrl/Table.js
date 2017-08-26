@@ -368,6 +368,9 @@ class Table extends Component {
     }
 
     returnColumnData(inData) {
+        if(inData === null){
+            return null;
+        }
 
         let data = {
             'field': null,
@@ -456,7 +459,7 @@ class Table extends Component {
                             </th>
                             : null
                         }
-                        {columns.filter(el => el.display === true).map((el, index) => {
+                        {columns.filter(el => el !== null &&el.display === true).map((el, index) => {
                             const Component = el.filter ? withFilterOpenLayer(filtersMapping[el.filter.type]) : null;
                             let classes = []
                             if (this.state.order[el.field] !== undefined) {
@@ -690,7 +693,7 @@ function Rows(props) {
         )
     };
 
-    const columns = props.columns.filter(el => el.display === true);
+    const columns = props.columns.filter(el => el !== null && el.display === true);
 
     let cache = {};
 
