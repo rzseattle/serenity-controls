@@ -33,15 +33,16 @@ class Shadow extends Component {
 class MyModal extends Component {
 
     static propTypes = {
+
         show: PropTypes.bool,
-        onOpen: PropTypes.func,
-        onClose: PropTypes.func,
-        showClose: PropTypes.bool,
+        onShow: PropTypes.func,
+        onHide: PropTypes.func,
         container: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
         //containerElement: PropTypes.node
         positionOffset: PropTypes.number,
         container: PropTypes.func,
-        recalculatePosition: PropTypes.bool
+        recalculatePosition: PropTypes.bool,
+        showHideLink: PropTypes.bool,
     }
     static defaultProps = {
         show: false,
