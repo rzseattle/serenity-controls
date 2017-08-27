@@ -166,7 +166,7 @@ class ConfirmModal extends Component {
         delete modalProps.cleanup;
 
         return <MyModal {...modalProps} className="w-modal-confirm" show={true}>
-            <div style={{padding: 15, paddingBottom: 0}}>{this.props.children}</div>
+            <div style={{padding: 15}}>{this.props.children}</div>
             <div style={{padding: 10, paddingTop: 0, textAlign: 'right'}}>
                 <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok</button>
                 <button onClick={this.handleAbort.bind(this)} className="btn btn-default">anuluj</button>

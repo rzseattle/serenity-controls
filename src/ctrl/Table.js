@@ -368,8 +368,12 @@ class Table extends Component {
     }
 
     returnColumnData(inData) {
-        if(inData === null){
+        if (inData === null) {
             return null;
+        }
+
+        if (inData instanceof Column) {
+            inData = inData.get();
         }
 
         let data = {
@@ -459,7 +463,7 @@ class Table extends Component {
                             </th>
                             : null
                         }
-                        {columns.filter(el => el !== null &&el.display === true).map((el, index) => {
+                        {columns.filter(el => el !== null && el.display === true).map((el, index) => {
                             const Component = el.filter ? withFilterOpenLayer(filtersMapping[el.filter.type]) : null;
                             let classes = []
                             if (this.state.order[el.field] !== undefined) {
@@ -1086,6 +1090,12 @@ class Column {
             field: field,
             display: false
         });
+    }
+
+    static template(caption, template) {
+        return new Column({
+            template: template
+        }).noFilter();
     }
 
     static custom(data) {
