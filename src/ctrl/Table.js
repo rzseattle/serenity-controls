@@ -21,7 +21,9 @@ class Table extends Component {
         rowStyleTemplate: PropTypes.func,
         columns: PropTypes.array,
         onPage: PropTypes.number,
-        showFooter: PropTypes.bool
+        showFooter: PropTypes.bool,
+        dataProvider: PropTypes.oneOfType([ PropTypes.object, PropTypes.func])
+
 
     }
 
