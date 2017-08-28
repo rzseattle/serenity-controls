@@ -2,7 +2,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action, decorateAction} from '@storybook/addon-actions';
 import Panel from '../../src/ctrl/Panel';
-import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile} from '../../src/layout/BootstrapForm'
+import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig} from '../../src/layout/BootstrapForm'
 import {DataBinding} from './DataBinding'
 import {FunctionRender} from './FunctionRender'
 import FileUpload from './FileUpload'
@@ -41,6 +41,7 @@ storiesOf('Bootstrap Forms', module)
                         <BTextarea name="textarea" label="Textarea"/>
                         <BDate name="date" label="Date"/>
                         <BFile name="file" label="File"/>
+                        <BWysiwig name="wysiwig" label="Wysiwig"/>
                         <input type="submit" value="submit" className="btn btn-primary"/>
                     </BForm>
                 </Panel>

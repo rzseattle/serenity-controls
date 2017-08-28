@@ -1,5 +1,5 @@
 import React, {Children} from 'react'
-import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File} from '../ctrl/Fields'
+import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg} from '../ctrl/Fields'
 import {Shadow} from "../ctrl/Overlays"
 import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
@@ -396,4 +396,5 @@ const BSwitch = withBootstrapFormField(Switch);
 const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
 const BDate = withBootstrapFormField(Date);
 const BFile = withBootstrapFormField(File);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, withBootstrapFormField};
+const BWysiwig = withBootstrapFormField(Wysiwyg);
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile,BWysiwig, withBootstrapFormField};
