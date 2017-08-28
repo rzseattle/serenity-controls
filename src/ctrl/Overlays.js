@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Modal from 'react-overlays/lib/Modal';
 import Overlay from 'react-overlays/lib/Overlay';
@@ -8,7 +8,7 @@ import Overlay from 'react-overlays/lib/Overlay';
 class Shadow extends Component {
     static defaultProps = {
         visible: true
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -24,7 +24,7 @@ class Shadow extends Component {
                 <i></i>
             </span>}
             </div>}
-        </div>
+        </div>;
     }
 
 }
@@ -42,20 +42,20 @@ class MyModal extends Component {
         positionOffset: PropTypes.number,
         container: PropTypes.func,
         recalculatePosition: PropTypes.bool,
-        showHideLink: PropTypes.bool,
-    }
+        showHideLink: PropTypes.bool
+    };
     static defaultProps = {
         show: false,
         positionOffset: 5,
-        recalculatePosition: true,
-    }
+        recalculatePosition: true
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             opened: props.opened,
             modalStyle: {}
-        }
+        };
     }
 
     handleClose() {
@@ -77,6 +77,9 @@ class MyModal extends Component {
         }
     }
 
+    calculatePosition(){
+        this.calculatePos();
+    }
     calculatePos() {
 
 
@@ -88,7 +91,7 @@ class MyModal extends Component {
             let data = node.getBoundingClientRect();
 
             if (this.props.target) {
-                const target = ReactDOM.findDOMNode(this.props.target())
+                const target = ReactDOM.findDOMNode(this.props.target());
                 let targetData = target.getBoundingClientRect();
                 let left = targetData.left;
                 if (left + data.width > containerSize.width) {
@@ -99,15 +102,15 @@ class MyModal extends Component {
                     top = containerSize.height - data.height - this.props.positionOffset;
                 }
 
-                node.style['top'] = top + "px";
-                node.style['left'] = left + "px"
+                node.style['top'] = top + 'px';
+                node.style['left'] = left + 'px';
             } else {
 
-                let x = Math.round(data.width / 2);
-                let y = Math.round(data.height / 2);
+                let x = Math.min(Math.round(data.width / 2), (window.innerWidth) / 2 - 5);
+                let y = Math.min(Math.round(data.height / 2), (window.innerHeight / 2) - 5);
                 node.style['transform'] = `translate(-${x}px, -${y}px)`;
-                node.style['top'] = "50%";
-                node.style['left'] = "50%";
+                node.style['top'] = '50%';
+                node.style['left'] = '50%';
             }
         }
     }
@@ -121,21 +124,23 @@ class MyModal extends Component {
         delete modalProps.recalculatePosition;
 
         return (<Modal
-            {...modalProps}
-            aria-labelledby='modal-label'
-            className={'w-modal-container ' + p.className}
-            backdropClassName="w-modal-shadow"
-            onHide={this.handleClose.bind(this)}
-            onShow={this.handleShow.bind(this)}
-            onEntered={() => console.log('entered')}
+          {...modalProps}
+          aria-labelledby='modal-label'
+          className={'w-modal-container ' + p.className}
+          backdropClassName="w-modal-shadow"
+          onHide={this.handleClose.bind(this)}
+          onShow={this.handleShow.bind(this)}
+          onEntered={() => console.log('entered')}
         >
 
             <div className="w-modal" ref="modalBody">
-                {p.showHideLink && <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i className="fa fa-close"></i></a>}
+                {p.showHideLink &&
+                <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i
+                  className="fa fa-close"></i></a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
                 {p.children}
             </div>
-        </Modal>)
+        </Modal>);
     }
 
 }
@@ -151,7 +156,7 @@ class ConfirmModal extends Component {
     }
 
     handleAbort() {
-        this.promiseReject()
+        this.promiseReject();
         this.props.cleanup();
     }
 
@@ -168,25 +173,27 @@ class ConfirmModal extends Component {
         return <MyModal {...modalProps} className="w-modal-confirm" show={true}>
             <div style={{padding: 15}}>{this.props.children}</div>
             <div style={{padding: 10, paddingTop: 0, textAlign: 'right'}}>
-                <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok</button>
-                <button onClick={this.handleAbort.bind(this)} className="btn btn-default">anuluj</button>
+                <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok
+                </button>
+                <button onClick={this.handleAbort.bind(this)} className="btn btn-default">anuluj
+                </button>
             </div>
-        </MyModal>
+        </MyModal>;
     }
 
 }
 
 
 const confirm = (message, options = {}) => {
-    let props = {...options}
+    let props = {...options};
 
     let parent = options.container ? options.container() : document.body;
 
     const wrapper = parent.appendChild(document.createElement('div'));
     let cleanup = () => {
-        ReactDOM.unmountComponentAtNode(wrapper)
+        ReactDOM.unmountComponentAtNode(wrapper);
         wrapper.remove();
-    }
+    };
 
     const component = ReactDOM.render(<ConfirmModal {...props} cleanup={cleanup}>
         <div>
@@ -195,19 +202,19 @@ const confirm = (message, options = {}) => {
     </ConfirmModal>, wrapper);
 
 
-    return component.promise
-}
+    return component.promise;
+};
 
 
 class Tooltip extends React.Component {
 
-    static propTypes = {}
+    static propTypes = {};
 
     constructor(props) {
         super(props);
         this.state = {
             opened: false
-        }
+        };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -236,31 +243,31 @@ class Tooltip extends React.Component {
     render() {
         let p = this.props;
         return (
-            <Overlay
-                show={this.state.opened}
-                onHide={() => this.setState({show: false})}
-                placement={p.placement}
-                container={p.container}
-                shouldUpdatePosition={true}
-                target={props => {
-                    return ReactDOM.findDOMNode(p.target);
-                }}
-            >
-                <div
-                    tabIndex={1}
-                    style={{display: this.state.opened ? 'block' : 'none', position: 'absolute'}}
-                    className="w-tooltip"
-                    autoFocus={true}
-                    /*onBlur={this.handleBlur.bind(this)}*/
-                    ref="body"
-                >
-                    {this.props.children}
-                </div>
-            </Overlay>
-        )
+          <Overlay
+            show={this.state.opened}
+            onHide={() => this.setState({show: false})}
+            placement={p.placement}
+            container={p.container}
+            shouldUpdatePosition={true}
+            target={props => {
+                return ReactDOM.findDOMNode(p.target);
+            }}
+          >
+              <div
+                tabIndex={1}
+                style={{display: this.state.opened ? 'block' : 'none', position: 'absolute'}}
+                className="w-tooltip"
+                autoFocus={true}
+                /*onBlur={this.handleBlur.bind(this)}*/
+                ref="body"
+              >
+                  {this.props.children}
+              </div>
+          </Overlay>
+        );
 
     }
 }
 
 
-export {MyModal as Modal, Shadow, Tooltip, confirm}
+export {MyModal as Modal, Shadow, Tooltip, confirm};

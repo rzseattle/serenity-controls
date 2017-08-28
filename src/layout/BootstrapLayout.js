@@ -15,7 +15,8 @@ Container.propTypes = {
 
 const Row = (props) => {
 
-    const children = Array.isArray(props.children) ? props.children : [props.children];
+    let children = Array.isArray(props.children) ? props.children : [props.children];
+    children = children.filter((el) => el != null && el);
 
     let colMd = 0
     let colsMd = [];

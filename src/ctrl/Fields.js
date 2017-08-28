@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Inputmask from 'inputmask';
-import Dropzone from 'react-dropzone'
+import Dropzone from 'react-dropzone';
 
 
 let checkIncludes = (options, value) => {
@@ -14,7 +14,7 @@ let checkIncludes = (options, value) => {
         }
     });
     return element.length > 0;
-}
+};
 
 
 class Select extends Component {
@@ -27,12 +27,12 @@ class Select extends Component {
         value: PropTypes.string,
         onChange: PropTypes.func,
         disabled: PropTypes.bool,
-        editable: PropTypes.bool,
+        editable: PropTypes.bool
     };
     static defaultProps = {
         options: [],
         editable: true
-    }
+    };
 
     render() {
         const props = this.props;
@@ -43,32 +43,34 @@ class Select extends Component {
                         return <div>{props.options[i].label}</div>;
                     }
                 }
-                return <div className="w-field-presentation w-field-presentation-select">{props.value}</div>
+                return <div
+                  className="w-field-presentation w-field-presentation-select">{props.value}</div>;
             } else {
-                return <div className="w-field-presentation w-field-presentation-select">{props.options[props.value]}</div>;
+                return <div
+                  className="w-field-presentation w-field-presentation-select">{props.options[props.value]}</div>;
             }
         }
 
         return (
-            <select
-                className={props.className}
-                name={props.name}
-                onChange={props.onChange}
-                value={props.value === null ? '' : props.value}
-                disabled={props.disabled}
-                style={props.style}
-            >
-                {Array.isArray(props.options) ?
-                    props.options.map(option => {
-                        return <option key={option.value} value={option.value}> {option.label}</option>
-                    })
-                    :
-                    Object.entries(props.options).map(([value, label]) => {
-                        return <option key={value} value={value}> {label}</option>
-                    })
-                }
-            </select>
-        )
+          <select
+            className={props.className}
+            name={props.name}
+            onChange={props.onChange}
+            value={props.value === null ? '' : props.value}
+            disabled={props.disabled}
+            style={props.style}
+          >
+              {Array.isArray(props.options) ?
+                props.options.map(option => {
+                    return <option key={option.value} value={option.value}> {option.label}</option>;
+                })
+                :
+                Object.entries(props.options).map(([value, label]) => {
+                    return <option key={value} value={value}> {label}</option>;
+                })
+              }
+          </select>
+        );
     }
 }
 
@@ -82,13 +84,13 @@ class Text extends Component {
         onChange: PropTypes.func,
         placeholder: PropTypes.string,
         disabled: PropTypes.bool,
-        editable: PropTypes.bool,
+        editable: PropTypes.bool
 
     };
     static defaultProps = {
         value: '',
         editable: true
-    }
+    };
 
     componentDidMount() {
         //const $input_elem = ReactDOM.findDOMNode(this.refs.field);
@@ -98,23 +100,24 @@ class Text extends Component {
     render() {
         const props = this.props;
         if (!props.editable) {
-            return <div className="w-field-presentation w-field-presentation-text">{props.value}</div>;
+            return <div
+              className="w-field-presentation w-field-presentation-text">{props.value}</div>;
         }
 
         return (
-            <input
-                ref="field"
-                className={props.className}
-                name={props.name}
-                type={props.type}
-                value={props.value === null ? '' : props.value}
-                onChange={props.onChange}
-                placeholder={props.placeholder}
-                disabled={props.disabled}
-                style={props.style}
-            />
+          <input
+            ref="field"
+            className={props.className}
+            name={props.name}
+            type={props.type}
+            value={props.value === null ? '' : props.value}
+            onChange={props.onChange}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            style={props.style}
+          />
 
-        )
+        );
     }
 }
 
@@ -129,30 +132,31 @@ class Textarea extends React.Component {
         onChange: PropTypes.func,
         placeholder: PropTypes.string,
         disabled: PropTypes.bool,
-        editable: PropTypes.bool,
+        editable: PropTypes.bool
     };
     static defaultProps = {
         value: '',
         editable: true
-    }
+    };
 
     render() {
         let props = this.props;
         if (!props.editable) {
-            return <div className="w-field-presentation w-field-presentation-textarea">{props.value}</div>
+            return <div
+              className="w-field-presentation w-field-presentation-textarea">{props.value}</div>;
         }
         return (
-            <textarea
-                className={props.className}
-                name={props.name}
-                onChange={props.onChange}
-                placeholder={props.placeholder}
-                value={props.value === null ? '' : props.value}
-                disabled={props.disabled}
-                style={props.style}
-            />
+          <textarea
+            className={props.className}
+            name={props.name}
+            onChange={props.onChange}
+            placeholder={props.placeholder}
+            value={props.value === null ? '' : props.value}
+            disabled={props.disabled}
+            style={props.style}
+          />
 
-        )
+        );
     }
 }
 
@@ -164,14 +168,17 @@ class Wysiwyg extends React.Component {
         name: PropTypes.string,
         value: PropTypes.string,
         onChange: PropTypes.func,
+        onLoad: PropTypes.func,
         disabled: PropTypes.bool,
         editable: PropTypes.bool,
+        style: PropTypes.object
     };
     static defaultProps = {
         value: '',
         editable: true,
+        style: {}
 
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -187,17 +194,33 @@ class Wysiwyg extends React.Component {
         }
     }
 
+    handleOnLoad() {
+        if (this.props.onLoad) {
+            this.props.onLoad();
+        }
+    }
+
     componentDidMount() {
         Promise.all([
             import( 'scriptjs')
         ]).then(imported => {
             imported[0]('https://cdn.ckeditor.com/4.7.2/standard/ckeditor.js', () => {
                 this.setState({libsLoaded: true});
-                CKEDITOR.replace(this.id);
+                let config = {};
+                if(this.props.style.height){
+                    config.height = this.props.style.height;
+                }
+                CKEDITOR.replace(this.id, config);
+                config.width = 500;
                 CKEDITOR.instances[this.id].on('change', () => {
                     let data = CKEDITOR.instances[this.id].getData();
                     this.handleOnChange(data);
                 });
+
+
+                CKEDITOR.on('instanceReady', () => this.handleOnLoad());
+
+
             });
         });
     }
@@ -209,28 +232,29 @@ class Wysiwyg extends React.Component {
     render() {
         let props = this.props;
         if (!props.editable) {
-            return <div className="w-field-presentation w-field-presentation-wysiwyg">{props.value}</div>
+            return <div
+              className="w-field-presentation w-field-presentation-wysiwyg">{props.value}</div>;
         }
 
         if (this.state.libsLoaded == false) {
             return <div className={'w-filter w-filter-date'}>
                 <div><i className="fa fa-cog fa-spin"></i></div>
-            </div>
+            </div>;
         }
 
         return (
-            <textarea
-                id={this.id}
-                className={props.className}
-                name={props.name}
-                onChange={props.onChange}
-                placeholder={props.placeholder}
-                value={props.value === null ? '' : props.value}
-                disabled={props.disabled}
-                style={props.style}
-            />
+          <textarea
+            id={this.id}
+            className={props.className}
+            name={props.name}
+            onChange={props.onChange}
+            placeholder={props.placeholder}
+            value={props.value === null ? '' : props.value}
+            disabled={props.disabled}
+            style={props.style}
+          />
 
-        )
+        );
     }
 }
 
@@ -243,12 +267,12 @@ class Switch extends React.Component {
         value: PropTypes.string,
         onChange: PropTypes.func,
         disabled: PropTypes.bool,
-        editable: PropTypes.bool,
-    }
+        editable: PropTypes.bool
+    };
 
     static defaultProps = {
         editable: true
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -276,7 +300,7 @@ class Switch extends React.Component {
                         return <div>{props.options[i].label}</div>;
                     }
                 }
-                return <div>{props.value}</div>
+                return <div>{props.value}</div>;
             } else {
                 return <div>{props.options[props.value]}</div>;
             }
@@ -286,23 +310,23 @@ class Switch extends React.Component {
         let gen = (value, label) => {
             return <div key={value}>
                 <div
-                    className={'w-switch-label ' + (props.value == value ? 'w-switch-active' : '')}
-                    onClick={this.handleOnChange.bind(this, value)}
+                  className={'w-switch-label ' + (props.value == value ? 'w-switch-active' : '')}
+                  onClick={this.handleOnChange.bind(this, value)}
                 >
                     {label}
                 </div>
-            </div>
+            </div>;
 
 
         };
         return (
-            <div className="w-switch">
-                {Array.isArray(props.options) ?
-                    props.options.map(el => gen(el.value, el.label))
-                    :
-                    Object.entries(props.options).map(([value, label]) => gen(value, label))}
-            </div>
-        )
+          <div className="w-switch">
+              {Array.isArray(props.options) ?
+                props.options.map(el => gen(el.value, el.label))
+                :
+                Object.entries(props.options).map(([value, label]) => gen(value, label))}
+          </div>
+        );
     }
 }
 
@@ -316,14 +340,14 @@ class CheckboxGroup extends React.Component {
         onChange: PropTypes.func,
         inline: PropTypes.bool,
         disabled: PropTypes.bool,
-        editable: PropTypes.bool,
+        editable: PropTypes.bool
 
-    }
+    };
 
     static defaultProps = {
         value: [],
         editable: true
-    }
+    };
 
 
     constructor(props) {
@@ -342,14 +366,16 @@ class CheckboxGroup extends React.Component {
                     var element = props.options.filter(function (v, index) {
                         return v.value == props.value[i];
                     });
-                    elements.push(<li key={element[0].value}>{element[0].label}</li>)
+                    elements.push(<li key={element[0].value}>{element[0].label}</li>);
                 }
 
                 if (elements.length > 0) {
-                    return <ul className="w-field-presentation w-field-presentation-checkboxgroup">{elements}</ul>
+                    return <ul
+                      className="w-field-presentation w-field-presentation-checkboxgroup">{elements}</ul>;
                 }
 
-                return <div className="w-field-presentation w-field-presentation-checkboxgroup">{props.value.join(',')}</div>
+                return <div
+                  className="w-field-presentation w-field-presentation-checkboxgroup">{props.value.join(',')}</div>;
             } else {
                 return <ul className="w-field-presentation w-field-presentation-checkboxgroup">
                     {props.value && props.value.map(val => <li key={val}>{props.options[val]}</li>)}
@@ -367,19 +393,19 @@ class CheckboxGroup extends React.Component {
                                disabled={props.disabled}
             />;
             if (props.inline == true) {
-                return <label className="checkbox-inline" key={value}> {field}{label}</label>
+                return <label className="checkbox-inline" key={value}> {field}{label}</label>;
             } else {
-                return <div className="checkbox" key={value}><label> {field}{label} </label></div>
+                return <div className="checkbox" key={value}><label> {field}{label} </label></div>;
             }
         };
         return (
-            <div>
-                {Array.isArray(props.options) ?
-                    props.options.map(el => gen(el.value, el.label))
-                    :
-                    Object.entries(props.options).map(([value, label]) => gen(value, label))}
-            </div>
-        )
+          <div>
+              {Array.isArray(props.options) ?
+                props.options.map(el => gen(el.value, el.label))
+                :
+                Object.entries(props.options).map(([value, label]) => gen(value, label))}
+          </div>
+        );
     }
 }
 
@@ -401,7 +427,7 @@ class Date extends React.Component {
 
     static defaultProps = {
         editable: true
-    }
+    };
 
 
     constructor(props) {
@@ -419,7 +445,7 @@ class Date extends React.Component {
             import( 'moment'),
             import( 'moment/locale/pl' ),
             import( 'react-dates' ),
-            import( 'react-dates/lib/css/_datepicker.css' ),
+            import( 'react-dates/lib/css/_datepicker.css' )
         ]).then(imported => {
             [moment, locale, datePicker] = imported;
             this.setState({
@@ -437,7 +463,11 @@ class Date extends React.Component {
 
         //this.refs.hidden.value = date;
         if (this.props.onChange) {
-            this.props.onChange({name: this.props.name, type: 'date', value: date.format('YYYY-MM-DD')});
+            this.props.onChange({
+                name: this.props.name,
+                type: 'date',
+                value: date.format('YYYY-MM-DD')
+            });
         }
     }
 
@@ -445,29 +475,30 @@ class Date extends React.Component {
         const props = this.props;
 
         if (!props.editable) {
-            return <div className="w-field-presentation w-field-presentation-date">{props.value}</div>
+            return <div
+              className="w-field-presentation w-field-presentation-date">{props.value}</div>;
         }
         if (this.state.libsLoaded == false) {
             return <div className={'w-filter w-filter-date'}>
                 <div><i className="fa fa-cog fa-spin"></i></div>
-            </div>
+            </div>;
         }
 
         return (
-            <div>
-                <datePicker.SingleDatePicker
-                    numberOfMonths={1}
-                    displayFormat="YYYY-MM-DD"
-                    date={this.state.date}
-                    onDateChange={date => this.handleOnChange(date)} // PropTypes.func.isRequired
-                    focused={this.state.focused} // PropTypes.bool
-                    onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
-                    isOutsideRange={() => false}
-                    disabled={props.disabled}
-                    placeholder={props.placeholder}
-                />
-            </div>
-        )
+          <div>
+              <datePicker.SingleDatePicker
+                numberOfMonths={1}
+                displayFormat="YYYY-MM-DD"
+                date={this.state.date}
+                onDateChange={date => this.handleOnChange(date)} // PropTypes.func.isRequired
+                focused={this.state.focused} // PropTypes.bool
+                onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
+                isOutsideRange={() => false}
+                disabled={props.disabled}
+                placeholder={props.placeholder}
+              />
+          </div>
+        );
     }
 }
 
@@ -488,32 +519,34 @@ class File extends React.Component {
     render() {
         let props = this.props;
         return (
-            <div className="w-file-upload">
-                <Dropzone
-                    style={{}}
-                    className="w-file-dropzone"
-                    activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd.bind(this)}>
+          <div className="w-file-upload">
+              <Dropzone
+                style={{}}
+                className="w-file-dropzone"
+                activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd.bind(this)}>
                     <span>
                         <i className="fa fa-plus-circle"></i>
                         Kliknij lub przeciągnij tu plik
                     </span>
 
-                </Dropzone>
-                {props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
-                    <div>
-                        <a href={el.preview || el.path} target="_blank">
-                            <div className="w-file-dropzone-up-list-icon">
-                                {el.type.indexOf('image') != -1 && <img src={el.preview || el.path} alt=""/>}
-                                {el.type.indexOf('image') == -1 && <i className="fa fa-file"/>}
-                            </div>
-                            <div className="w-file-dropzone-up-list-name">{el.name}</div>
-                            <div className="w-file-dropzone-up-list-status"><i className={'fa fa-' + (el.preview ? 'upload' : 'check')}></i></div>
-                        </a>
-                    </div>
-                </div>)}</div>}
+              </Dropzone>
+              {props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
+                  <div>
+                      <a href={el.preview || el.path} target="_blank">
+                          <div className="w-file-dropzone-up-list-icon">
+                              {el.type.indexOf('image') != -1 &&
+                              <img src={el.preview || el.path} alt=""/>}
+                              {el.type.indexOf('image') == -1 && <i className="fa fa-file"/>}
+                          </div>
+                          <div className="w-file-dropzone-up-list-name">{el.name}</div>
+                          <div className="w-file-dropzone-up-list-status"><i
+                            className={'fa fa-' + (el.preview ? 'upload' : 'check')}></i></div>
+                      </a>
+                  </div>
+              </div>)}</div>}
 
-            </div>
-        )
+          </div>
+        );
     }
 }
 
