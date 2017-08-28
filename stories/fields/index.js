@@ -3,7 +3,7 @@ import {storiesOf} from '@storybook/react';
 import {action, decorateAction} from '@storybook/addon-actions';
 import Panel from '../../src/ctrl/Panel';
 import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar} from '../../src/layout/BootstrapForm'
-import {Text, Switch, Select, CheckboxGroup, Textarea, Date} from '../../src/ctrl/Fields'
+import {Text, Switch, Select, CheckboxGroup, Textarea, Date, Wysiwyg} from '../../src/ctrl/Fields'
 
 
 const formImport = `
@@ -61,6 +61,10 @@ storiesOf('Fields', module)
                     <tr>
                         <td>Date</td>
                         <td><Date value="2008-11-11"/></td>
+                    </tr>
+                    <tr>
+                        <td>Wysiwyg</td>
+                        <td><Wysiwyg value="2008-11-11"/></td>
                     </tr>
                     </tbody>
                 </table>

@@ -2,13 +2,8 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Inputmask from 'inputmask';
-import moment from 'moment';
 import Dropzone from 'react-dropzone'
 
-import( 'moment/locale/pl' );
-moment.locale('pl');
-import {DateRangePicker, SingleDatePicker, DayPickerRangeController} from 'react-dates';
-import 'react-dates/lib/css/_datepicker.css';
 
 let checkIncludes = (options, value) => {
     let element = options.filter((element) => {
@@ -130,7 +125,6 @@ class Textarea extends React.Component {
     static propTypes = {
         className: PropTypes.string,
         name: PropTypes.string,
-        type: PropTypes.string,
         value: PropTypes.string,
         onChange: PropTypes.func,
         placeholder: PropTypes.string,
@@ -151,7 +145,84 @@ class Textarea extends React.Component {
             <textarea
                 className={props.className}
                 name={props.name}
-                type={props.type}
+                onChange={props.onChange}
+                placeholder={props.placeholder}
+                value={props.value === null ? '' : props.value}
+                disabled={props.disabled}
+                style={props.style}
+            />
+
+        )
+    }
+}
+
+class Wysiwyg extends React.Component {
+
+
+    static propTypes = {
+        className: PropTypes.string,
+        name: PropTypes.string,
+        value: PropTypes.string,
+        onChange: PropTypes.func,
+        disabled: PropTypes.bool,
+        editable: PropTypes.bool,
+    };
+    static defaultProps = {
+        value: '',
+        editable: true,
+
+    }
+
+    constructor(props) {
+        super(props);
+        this.id = 'fields-wysiwyg-' + (Math.random() * 10000000).toFixed(0);
+        this.state = {libsLoaded: false};
+
+    }
+
+    handleOnChange(value) {
+        this.setState({value: value});
+        if (this.props.onChange) {
+            this.props.onChange({name: this.props.name, type: 'wysiwyg', value: value});
+        }
+    }
+
+    componentDidMount() {
+        Promise.all([
+            import( 'scriptjs')
+        ]).then(imported => {
+            imported[0]('https://cdn.ckeditor.com/4.7.2/standard/ckeditor.js', () => {
+                this.setState({libsLoaded: true});
+                CKEDITOR.replace(this.id);
+                CKEDITOR.instances[this.id].on('change', () => {
+                    let data = CKEDITOR.instances[this.id].getData();
+                    this.handleOnChange(data);
+                });
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        CKEDITOR.instances[this.id].destroy();
+    }
+
+    render() {
+        let props = this.props;
+        if (!props.editable) {
+            return <div className="w-field-presentation w-field-presentation-wysiwyg">{props.value}</div>
+        }
+
+        if (this.state.libsLoaded == false) {
+            return <div className={'w-filter w-filter-date'}>
+                <div><i className="fa fa-cog fa-spin"></i></div>
+            </div>
+        }
+
+        return (
+            <textarea
+                id={this.id}
+                className={props.className}
+                name={props.name}
                 onChange={props.onChange}
                 placeholder={props.placeholder}
                 value={props.value === null ? '' : props.value}
@@ -281,7 +352,7 @@ class CheckboxGroup extends React.Component {
                 return <div className="w-field-presentation w-field-presentation-checkboxgroup">{props.value.join(',')}</div>
             } else {
                 return <ul className="w-field-presentation w-field-presentation-checkboxgroup">
-                    {props.value&&props.value.map(val => <li key={val}>{props.options[val]}</li>)}
+                    {props.value && props.value.map(val => <li key={val}>{props.options[val]}</li>)}
                 </ul>;
             }
         }
@@ -312,6 +383,9 @@ class CheckboxGroup extends React.Component {
     }
 }
 
+let moment;
+let locale;
+let datePicker;
 
 class Date extends React.Component {
 
@@ -334,8 +408,27 @@ class Date extends React.Component {
         super(props);
         this.state = {
             value: null,
-            date: props.value ? moment(props.value, 'YYYY-MM-DD') : null
+            date: null,
+            libsLoaded: false
         };
+    }
+
+    componentWillMount() {
+
+        Promise.all([
+            import( 'moment'),
+            import( 'moment/locale/pl' ),
+            import( 'react-dates' ),
+            import( 'react-dates/lib/css/_datepicker.css' ),
+        ]).then(imported => {
+            [moment, locale, datePicker] = imported;
+            this.setState({
+                date: this.props.value ? moment(this.props.value, 'YYYY-MM-DD') : null,
+                libsLoaded: true
+            });
+        });
+
+
     }
 
     handleOnChange(date) {
@@ -354,9 +447,15 @@ class Date extends React.Component {
         if (!props.editable) {
             return <div className="w-field-presentation w-field-presentation-date">{props.value}</div>
         }
+        if (this.state.libsLoaded == false) {
+            return <div className={'w-filter w-filter-date'}>
+                <div><i className="fa fa-cog fa-spin"></i></div>
+            </div>
+        }
+
         return (
             <div>
-                <SingleDatePicker
+                <datePicker.SingleDatePicker
                     numberOfMonths={1}
                     displayFormat="YYYY-MM-DD"
                     date={this.state.date}
@@ -438,5 +537,5 @@ File.propTypes = {
 };
 
 
-export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File};
+export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg};
 
