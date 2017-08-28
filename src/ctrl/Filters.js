@@ -35,10 +35,7 @@ class DateFilter extends Filter {
             import( 'moment'),
             import( 'moment/locale/pl' ),
             import( 'react-dates' ),
-            //import( 'rc-time-picker' ),
             import( 'react-dates/lib/css/_datepicker.css' ),
-            //import( 'rc-time-picker/assets/index.css' )
-
         ]).then(imported => {
             [moment, locale, datePicker/*, timePicker*/] = imported;
             this.setState({
