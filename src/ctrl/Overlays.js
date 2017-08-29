@@ -42,7 +42,8 @@ class MyModal extends Component {
         positionOffset: PropTypes.number,
         container: PropTypes.func,
         recalculatePosition: PropTypes.bool,
-        showHideLink: PropTypes.bool
+        showHideLink: PropTypes.bool,
+        title: PropTypes.string
     };
     static defaultProps = {
         show: false,
