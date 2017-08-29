@@ -1,6 +1,6 @@
-import React, {Children} from 'react'
-import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg} from '../ctrl/Fields'
-import {Shadow} from "../ctrl/Overlays"
+import React, {Children} from 'react';
+import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg} from '../ctrl/Fields';
+import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
 
@@ -12,8 +12,8 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
         static propTypes = {
             label: PropTypes.string,
             help: PropTypes.string,
-            form: PropTypes.object,
-        }
+            form: PropTypes.object
+        };
 
         render() {
             let props = this.props;
@@ -21,7 +21,7 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
             let classes = ['form-group'];
 
             if (this.props.errors) {
-                classes.push('has-error')
+                classes.push('has-error');
             }
 
             let className = addInputClass ? 'form-control' : '';
@@ -32,14 +32,14 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
             let field;
             if (this.props.suffix || this.props.prefix) {
                 field =
-                    <div className="input-group">
-                        {this.props.prefix&&<div className="input-group-addon">{this.props.prefix}</div>}
-                        <Field {...this.props}  className="form-control"/>
-                        {this.props.suffix&&<div className="input-group-addon">{this.props.suffix}</div>}
-                    </div>
+                  <div className="input-group">
+                      {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
+                      <Field {...this.props} className="form-control"/>
+                      {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
+                  </div>;
 
             } else {
-                field = <Field {...props}  className={className}/>;
+                field = <Field {...props} className={className}/>;
             }
 
             if (props.layoutType == 'horizontal') {
@@ -139,13 +139,16 @@ class BForm extends React.Component {
         namespace: PropTypes.string,
 
         editable: PropTypes.bool,
-    }
+
+        loading: PropTypes.bool
+    };
 
     static defaultProps = {
         layoutType: 'default',
         editable: true,
         data: {},
-    }
+        loading: false
+    };
 
     constructor(props) {
         super(props);
@@ -154,10 +157,12 @@ class BForm extends React.Component {
             fieldErrors: {},
             formErrors: {},
             isDirty: false,
-            loading: props.loading || false,
+            loading: props.loading || false
         };
 
 
+        //used to setup base data
+        this.fieldsValues = {};
     }
 
 
@@ -165,7 +170,15 @@ class BForm extends React.Component {
      * Return form input data
      */
     getData() {
-        return this.state.data;
+        let data = Object.assign(this.state.data, {});
+        let fields = Object.assign(this.fieldsValues, {});
+
+        for (let i in data) {
+            if (data[i] == undefined && fields[i] !== undefined) {
+                data[i] = fields[i];
+            }
+        }
+        return data;
     }
 
     /**
@@ -179,8 +192,8 @@ class BForm extends React.Component {
 
         this.setState({
             fieldErrors: response.fieldErrors,
-            formErrors: response.errors,
-        })
+            formErrors: response.errors
+        });
 
         this.forceUpdate();
     }
@@ -222,11 +235,11 @@ class BForm extends React.Component {
                 }
                 this.setState({
                     fieldErrors: {},
-                    formErrors: [],
-                })
+                    formErrors: []
+                });
             });
             comm.on('validationErrors', response => {
-                this.handleValidatorError(response)
+                this.handleValidatorError(response);
             });
             comm.on('error', response => {
                 if (this.props.error) {
@@ -246,9 +259,9 @@ class BForm extends React.Component {
         let name, type, value;
         //custom event data
         if (e.name !== undefined) {
-            name = e.name
-            value = e.value
-            type = e.type
+            name = e.name;
+            value = e.value;
+            type = e.type;
 
 
         } else {
@@ -283,6 +296,8 @@ class BForm extends React.Component {
         } else {
             this.state.data[name] = value;
         }
+        this.fieldsValues[name] = this.state.data[name];
+
         this.setState({data: this.state.data, isDirty: true});
 
         if (this.props.onChange) {
@@ -300,7 +315,8 @@ class BForm extends React.Component {
                 if (this.state.fieldErrors[child.props.name] === undefined) {
                     this.state.fieldErrors[child.props.name] = null;
                 }
-                this.props.data[child.props.name] = this.props.data[child.props.name] || null;
+                this.state.data[child.props.name] = this.props.data[child.props.name] || null;
+                this.fieldsValues[child.props.name] = this.props.data[child.props.name] || null;
 
                 return React.cloneElement(child, {
                     value: this.props.data[child.props.name],
@@ -314,9 +330,9 @@ class BForm extends React.Component {
                         }
                         this.handleInputChange(e);
                     }
-                })
+                });
             } else {
-                return child
+                return child;
             }
         });
         //this.setState({data: this.state.data});
@@ -324,15 +340,20 @@ class BForm extends React.Component {
 
     }
 
-    applyToField(name) {
+    applyToField(name, defaultValue = null) {
 
 
-        if (this.state.data[name] === undefined) {
-            this.state.data[name] = null;
+        if (this.state.data[name] === undefined && defaultValue !== false ) {
+            this.state.data[name] = defaultValue;
         }
         if (this.state.fieldErrors[name] === undefined) {
             this.state.fieldErrors[name] = null;
         }
+        //false - dont track
+        if(defaultValue !== false) {
+            this.fieldsValues[name] = this.props.data[name] || defaultValue;
+        }
+
         return {
             value: this.props.data[name],
             name: name,
@@ -341,7 +362,7 @@ class BForm extends React.Component {
             onChange: (e) => {
                 this.handleInputChange(e);
             }
-        }
+        };
     }
 
     render() {
@@ -397,4 +418,4 @@ const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
 const BDate = withBootstrapFormField(Date);
 const BFile = withBootstrapFormField(File);
 const BWysiwig = withBootstrapFormField(Wysiwyg);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile,BWysiwig, withBootstrapFormField};
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig, withBootstrapFormField};
