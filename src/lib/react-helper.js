@@ -47,6 +47,7 @@ window.ReactHelper = {
             console.error('[React-helper] Cannot find `' + name+'` registred object');
             console.log('Registred components');
             console.log(registry);
+            return;
         }
         return  registry[name]['_obj'];
     },
