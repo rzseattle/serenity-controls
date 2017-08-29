@@ -15,7 +15,7 @@ class Comm {
             connectionError: [],
             success: [],
             validationErrors: [],
-            finish: [],
+            finish: []
         };
         this.method = 'POST';
     }
@@ -23,7 +23,7 @@ class Comm {
 
     on(event, callback) {
         if (!Array.isArray(this.events[event])) {
-            console.error("Unknow event: " + event)
+            console.error('Unknow event: ' + event);
             console.log(this.events);
         } else {
             this.events[event].push(callback);
@@ -63,18 +63,18 @@ class Comm {
                     this.appendFormData(FormData, value, index);
                 } else {
                     //test for array in field name
-                    let openBracket = index.indexOf("[");
+                    let openBracket = index.indexOf('[');
                     let newName = name + '[' + index + ']';
                     if (openBracket != -1) {
-                        newName = name + '[' + index.slice(0, openBracket) + "]" + index.slice(openBracket);
+                        newName = name + '[' + index.slice(0, openBracket) + ']' + index.slice(openBracket);
                     }
                     this.appendFormData(FormData, value, newName);
                 }
-            })
+            });
         } else {
-            if (data && data != null) {
-                FormData.append(name, data);
-            }
+            //if (data && data != null) {
+            FormData.append(name, data == null ? '' : data);
+            //}
         }
     }
 
@@ -90,7 +90,7 @@ class Comm {
 
     debugError(error) {
         let errorWindow = window.open('', '', 'width=800,height=600');
-        errorWindow.document.write("<pre>" + error + "</pre>");
+        errorWindow.document.write('<pre>' + error + '</pre>');
         errorWindow.focus();
     }
 
@@ -112,7 +112,7 @@ class Comm {
                 loaded: event.loaded,
                 percent: Math.round(event.loaded / event.total * 100)
             });
-        }
+        };
 
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
@@ -147,9 +147,9 @@ class Comm {
 
         xhr.open(this.method, this.url, true);
 
-        if (this.method == 'POST'){
+        if (this.method == 'POST') {
             xhr.send(formData);
-        }else if(this.method == 'GET') {
+        } else if (this.method == 'GET') {
             xhr.send();
         } else if (this.method == 'PUT') {
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -163,7 +163,7 @@ class Comm {
         return new Promise((resolve, reject) => {
             let comm = new Comm(url);
             comm.method = method;
-            if(callback) {
+            if (callback) {
                 comm.on('success', callback);
             }
             comm.on('success', (data) => resolve(data));
