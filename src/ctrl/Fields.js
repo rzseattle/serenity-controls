@@ -214,7 +214,9 @@ class Wysiwyg extends React.Component {
                 config.width = 500;
                 CKEDITOR.instances[this.id].on('change', () => {
                     let data = CKEDITOR.instances[this.id].getData();
-                    this.handleOnChange(data);
+                    if (data != this.props.data) {
+                        this.handleOnChange(data);
+                    }
                 });
 
 
@@ -224,6 +226,13 @@ class Wysiwyg extends React.Component {
             });
         });
     }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.values) {
+            CKEDITOR.instances[this.id].setData(nextProps.values);
+        }
+    }
+
 
     componentWillUnmount() {
         CKEDITOR.instances[this.id].destroy();
