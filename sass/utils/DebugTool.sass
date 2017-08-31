@@ -1,0 +1,65 @@
+.w-debug-tool
+
+
+    position: fixed
+    left: 0
+    top: 0
+
+    z-index: 9000
+
+
+
+    .collapsed
+        display: block
+        background-color: white
+        border: solid 1px lightgrey
+        border-radius: 3px
+        z-index: 9001
+        position: absolute
+        cursor: pointer
+        padding: 5px
+        left: 0
+        top: 0
+        width: max-content
+        span, i
+            margin-right: 5px
+            display: inline-block
+        .errors, .log
+            background-color: darkred
+            display: inline-block
+            padding: 0 5px
+            color: white
+            border-radius: 3px
+        .log
+            background-color: darkgreen
+        &:hover
+            color: red
+
+    .expanded
+        position: absolute
+        left: 100%
+        top: 30px
+
+        background-color: white
+        width: 500px
+        border: solid 1px lightgrey
+        .props
+            margin-top: - 5px
+            position: relative
+            .empty
+                padding: 10px
+            .btn
+                position: absolute
+                right: 15px
+                top: 5px
+                z-index: 9002
+            > ul
+                background-color: white !important
+
+        .log
+            margin-top: - 5px
+            .empty
+                padding: 10px
+            > ul
+                background-color: white !important
+

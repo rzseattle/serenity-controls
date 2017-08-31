@@ -16,7 +16,8 @@ export default class PanelComponentLoader extends Component {
         this.state = {
             propsLoading: false,
             loadedProps: false,
-            currComponent: ReactHelper.get(props.component)
+            currComponent: ReactHelper.get(props.component),
+            log: []
         }
     }
 
@@ -52,18 +53,28 @@ export default class PanelComponentLoader extends Component {
 
     }
 
+    handleLog(message){
+        this.state.log.push(message);
+        this.forceUpdate();
+    }
+
     render() {
         const s = this.state;
         const p = s.loadedProps || this.props;
         let Component = s.currComponent;
         return <div>
-            <DebugTool props={p} propsReloadHandler={this.handleReloadProps.bind(this)} />
+            <DebugTool
+              props={p}
+              log={s.log}
+              propsReloadHandler={this.handleReloadProps.bind(this)}
+            />
             <NotificationSystem ref={(ns) => this._notificationSystem = ns}/>
 
             <Component
                 {...p}
                 reloadProps={this.handleReloadProps.bind(this)}
                 _notification={this.handleNotifycation.bind(this)}
+                _log={this.handleLog.bind(this)}
                 _reloadProps={this.handleReloadProps.bind(this)}
                 _goto={this.handleGoTo.bind(this)}
                 _resolveComponent={this.handleReloadProps.bind(this)}
