@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import DebugTool from '../utils/DebugTool'
 
 var NotificationSystem = require('react-notification-system');
 
@@ -44,7 +45,7 @@ export default class PanelComponentLoader extends Component {
         });
     }
 
-    handleNotifycation(message, title = '', options = {}) { 
+    handleNotifycation(message, title = '', options = {}) {
         let data =  { title: title, message: message,  ...{ level:'success', ...options} }
 
         this._notificationSystem.addNotification(data);
@@ -56,6 +57,7 @@ export default class PanelComponentLoader extends Component {
         const p = s.loadedProps || this.props;
         let Component = s.currComponent;
         return <div>
+            <DebugTool props={p} propsReloadHandler={this.handleReloadProps.bind(this)} />
             <NotificationSystem ref={(ns) => this._notificationSystem = ns}/>
 
             <Component
