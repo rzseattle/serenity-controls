@@ -35,7 +35,7 @@ export default class extends React.Component {
             _mouseMove: this._mouseMove.bind(this),
             _end: this._end.bind(this)
         };
-
+        this.dragTimeout = null;
     }
 
 
@@ -65,8 +65,10 @@ export default class extends React.Component {
 
     _drag(e) {
         e.preventDefault();
-        document.addEventListener('mousemove', this.listeners._mouseMove);
-        document.addEventListener('mouseup', this.listeners._end);
+        this.dragTimeout = setTimeout(() => {
+            document.addEventListener('mousemove', this.listeners._mouseMove);
+            document.addEventListener('mouseup', this.listeners._end);
+        }, 300);
     }
 
     _end() {
@@ -75,13 +77,13 @@ export default class extends React.Component {
         this.saveData();
     }
 
-    saveData(){
-         window.localStorage['DebugToolData']  = JSON.stringify({
-             expanded: this.state.expanded,
-             left: this.state.style.left,
-             top: this.state.style.top,
-             selectedTab: this.state.currTab
-         });
+    saveData() {
+        window.localStorage['DebugToolData'] = JSON.stringify({
+            expanded: this.state.expanded,
+            left: this.state.style.left,
+            top: this.state.style.top,
+            selectedTab: this.state.currTab
+        });
     }
 
     render() {
@@ -96,6 +98,7 @@ export default class extends React.Component {
               className="collapsed"
               onClick={this.handleExpand.bind(this)}
               onMouseDown={this._drag.bind(this)}
+              onMouseUp={() => clearTimeout(this.dragTimeout)}
 
             >
                 <i className="fa fa-cog"></i>

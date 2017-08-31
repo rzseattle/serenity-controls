@@ -62,6 +62,16 @@ export default class PanelComponentLoader extends Component {
         const s = this.state;
         const p = s.loadedProps || this.props;
         let Component = s.currComponent;
+        if(!Component){
+            return <div style={{padding: 10}}>
+                <h3>Can't find component</h3>
+                <pre>{p.component}</pre>
+                <h5>Path</h5>
+                <pre>{p.component}</pre>
+
+            </div>
+
+        }
         return <div>
             <DebugTool
               props={p}
