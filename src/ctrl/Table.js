@@ -255,7 +255,7 @@ class Table extends Component {
             return;
         }
 
-        let column = this.state.columns.filter(c => c.display === true)[index];
+        let column = this.state.columns.filter(c => c !== null &&  c.display === true)[index];
 
         if (!column.orderField)
             return;
