@@ -9,7 +9,8 @@ class Tabs extends Component {
         /**
          * Default tab that will be activate
          */
-        defaultActiveTab: PropTypes.number
+        defaultActiveTab: PropTypes.number,
+        onTabChange: PropTypes.func
     }
 
     constructor(props) {
@@ -17,6 +18,13 @@ class Tabs extends Component {
         this.state = {
             currentTab: props.defaultActiveTab || 0
         }
+    }
+
+    handleTabChange( index, e ){
+        if(this.props.onTabChange){
+            this.props.onTabChange(index, e);
+        }
+        this.setState({currentTab: index});
     }
 
 
@@ -28,7 +36,7 @@ class Tabs extends Component {
             <div className="w-tabs">
                 <div className="tabs-links">
                     {p.children.map((child, index) =>
-                        <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' + (child.props.badge ? 'with-badge' : '')} onClick={e => this.setState({currentTab: index})}>
+                        <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' + (child.props.badge ? 'with-badge' : '')} onClick={this.handleTabChange.bind(this, index)}>
                             {child.props.icon ?
                                 <i className={'fa fa-' + child.props.icon}></i>
                                 : null}
