@@ -83,11 +83,12 @@ export default class PanelComponentLoader extends Component {
 
         }
         return <div>
-            <DebugTool
+            {!PRODUCTION&&<DebugTool
               props={p}
               log={s.log}
               propsReloadHandler={this.handleReloadProps.bind(this)}
-            />
+            />}
+
             <NotificationSystem ref={(ns) => this._notificationSystem = ns}/>
 
             <Component

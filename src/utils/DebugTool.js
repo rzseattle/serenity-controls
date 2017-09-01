@@ -6,6 +6,13 @@ import JSONTree from 'react-json-tree';
 
 export default class extends React.Component {
 
+
+    static propTypes = {
+        props: PropTypes.object.isRequired,
+        log: PropTypes.array.isRequired,
+        propsReloadHandler: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
         let savedData = window.localStorage['DebugToolData'] || false;
@@ -40,7 +47,7 @@ export default class extends React.Component {
 
 
     _handleKeyDown(e) {
-        if (e.keyCode == 27) { //esc
+        if (e.keyCode === 27) { //esc
             this.setState({expanded: !this.state.expanded});
         }
     }
@@ -101,7 +108,7 @@ export default class extends React.Component {
               onMouseUp={() => clearTimeout(this.dragTimeout)}
 
             >
-                <i className="fa fa-cog"></i>
+                <i className="fa fa-cog"/>
                 {s.errors.length > 0 && <span className="errors">{s.errors.length}</span>}
                 {this.props.log.length > 0 && <span className="log">{this.props.log.length}</span>}
             </div>
