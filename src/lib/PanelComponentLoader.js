@@ -7,23 +7,33 @@ var NotificationSystem = require('react-notification-system');
 
 export default class PanelComponentLoader extends Component {
 
-    //propTypes = {}
+    static propTypes = {
+        component: PropTypes.string.isRequired,
+        requestURI: PropTypes.string.isRequired,
 
-    _notificationSystem: null;
+    };
+
+    static ComponentProps = {
+        _notification: PropTypes.func,
+        _reloadProps: PropTypes.func,
+        _goto: PropTypes.func,
+        _log: PropTypes.func,
+        _resolveComponent:PropTypes.func
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             propsLoading: false,
             loadedProps: false,
-            currComponent: ReactHelper.get(props.component),
-            log: []
+            currComponent: global.ReactHelper.get(props.component),
+			log: []
         }
     }
 
     handleReloadProps(input = {}, callback = false) {
         this.setState({propsLoading: true});
-        $.get(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}, (data) => {
+        global.$.get(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}, (data) => {
             this.setState({propsLoading: false, loadedProps: data});
             if (callback) {
                 callback();
@@ -38,16 +48,16 @@ export default class PanelComponentLoader extends Component {
 
     handleGoTo(path, input = {}) {
         this.setState({propsLoading: true});
-        $.get(path, {...input, __PROPS_REQUEST__: 1}, (data) => {
+        global.$.get(path, {...input, __PROPS_REQUEST__: 1}, (data) => {
             var stateObj = {  };
             let urlParameters = Object.keys(input).map((i) => i+'='+input[i]).join('&');
-            history.pushState(stateObj, "", path +  (urlParameters?"?":'') + urlParameters  );
-            this.setState({propsLoading: false, loadedProps: data, currComponent: ReactHelper.get(data.component)});
+            history.pushState(stateObj, '', path +  (urlParameters?'?':'') + urlParameters  );
+            this.setState({propsLoading: false, loadedProps: data, currComponent: global.ReactHelper.get(data.component)});
         });
     }
 
     handleNotifycation(message, title = '', options = {}) {
-        let data =  { title: title, message: message,  ...{ level:'success', ...options} }
+        let data =  { title: title, message: message,  ...{ level:'success', ...options} };
 
         this._notificationSystem.addNotification(data);
 

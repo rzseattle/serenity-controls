@@ -12,12 +12,15 @@ export default class Panel extends Component {
     };
     static defaultProps = {
         noPadding: false,
-        noBottomMargin: true
-    }
+        noBottomMargin: true,
+        children: null,
+        title: false,
+        toolbar: [],
+    };
 
     render() {
-        const props = this.props
-        let classes = ['w-panel']
+        const props = this.props;
+        let classes = ['w-panel'];
         if (this.props.noPadding) {
             classes.push('panel-no-padding')
         }
@@ -28,7 +31,7 @@ export default class Panel extends Component {
             <div className={classes.join(' ')}>
                 <div className="panel-body">
                     {props.title ? <div className="title">
-                        {props.icon && <i className={'fa fa-' + props.icon}></i>}
+                        {props.icon && <i className={'fa fa-' + props.icon} />}
                         {props.title}
                         <div className="panel-toolbar">{props.toolbar}</div>
                     </div> : ''}
