@@ -18,7 +18,8 @@ export default class PanelComponentLoader extends Component {
         _reloadProps: PropTypes.func,
         _goto: PropTypes.func,
         _log: PropTypes.func,
-        _resolveComponent:PropTypes.func
+        _resolveComponent:PropTypes.func,
+        baseURL: PropTypes.string
     };
 
     constructor(props) {
@@ -64,7 +65,7 @@ export default class PanelComponentLoader extends Component {
     }
 
     handleLog(message){
-        this.state.log.push(message);
+        this.state.log.push({msg: message});
         this.forceUpdate();
     }
 

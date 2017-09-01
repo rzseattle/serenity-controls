@@ -154,7 +154,7 @@ class Body extends React.Component {
                 </TabPane>
                 <TabPane title={'Log'} badge={p.log.length}>
                     <div className="log">
-                        <JSONTree data={p.log} invertTheme={true} hideRoot={true}/>
+                        {p.log.map(el =><JSONTree data={el} invertTheme={true} hideRoot={true}/>)}
                         {p.log.length == 0 ? <div className={'empty'}>--Empty--</div> : null}
                     </div>
                 </TabPane>
