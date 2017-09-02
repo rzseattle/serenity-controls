@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {AppContainer} from 'react-hot-loader';
+import ErrorReporter from './ErrorReporter';
 
 /**
  * react-helper.js
@@ -43,13 +44,13 @@ window.ReactHelper = {
     },
 
     get: function (name) {
-        if(registry[name] == undefined){
-            console.error('[React-helper] Cannot find `' + name+'` registred object');
+        if (registry[name] == undefined) {
+            console.error('[React-helper] Cannot find `' + name + '` registred object');
             console.log('Registred components');
             console.log(registry);
             return;
         }
-        return  registry[name]['_obj'];
+        return registry[name]['_obj'];
     },
 
 
@@ -61,7 +62,7 @@ window.ReactHelper = {
             props = window[props];
 
 
-        if(!registry[name]){
+        if (!registry[name]) {
             console.error(`'${name}' component not registred `)
             return;
         }
@@ -69,7 +70,7 @@ window.ReactHelper = {
         let Component = registry[name]['_obj'];
 
         ReactDOM.render((
-                <AppContainer>
+                <AppContainer errorReporter={ErrorReporter}>
                     <Component {...props} />
                 </AppContainer>
             ), node
