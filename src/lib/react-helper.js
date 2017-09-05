@@ -17,7 +17,14 @@ import ErrorReporter from './ErrorReporter';
  * - There is no step 3!
  */
 
-
+if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = function (callback, thisArg) {
+        thisArg = thisArg || window;
+        for (var i = 0; i < this.length; i++) {
+            callback.call(thisArg, this[i], i, this);
+        }
+    };
+}
 
 let registry = {};
 
@@ -26,6 +33,7 @@ window.ReactHelper = {
     initComponents: function (context = document) {
 
         const selector = '[react-component],[data-react-component]';
+
         context.querySelectorAll(selector).forEach((node) => {
             name =
                 node.getAttribute('react-component') ||
@@ -37,20 +45,22 @@ window.ReactHelper = {
     },
 
 
-    register: function (name, constructor) {
-
-
-        registry[name] = {_obj: constructor};
+    register: function (name, constructor, data = {}) {
+        registry[name] = {_obj: constructor, data: data };
     },
 
     get: function (name) {
+        return this.getWithData(name)['_obj'];
+    },
+
+    getWithData: function(name){
         if (registry[name] == undefined) {
             console.error('[React-helper] Cannot find `' + name + '` registred object');
             console.log('Registred components');
             console.log(registry);
             return;
         }
-        return registry[name]['_obj'];
+        return registry[name];
     },
 
 

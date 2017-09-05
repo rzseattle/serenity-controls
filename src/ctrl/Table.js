@@ -22,8 +22,8 @@ class Table extends Component {
         columns: PropTypes.array,
         onPage: PropTypes.number,
         showFooter: PropTypes.bool,
-        dataProvider: PropTypes.oneOfType([ PropTypes.object, PropTypes.func])
-
+        dataProvider: PropTypes.oneOfType([ PropTypes.object, PropTypes.func]),
+        additionalConditions: PropTypes.object
 
     }
 
@@ -33,7 +33,8 @@ class Table extends Component {
         columns: [],
         buttons: [],
         showFooter: true,
-        rememberState: false
+        rememberState: false,
+        additionalConditions: false
     }
 
     constructor(props) {
@@ -150,7 +151,8 @@ class Table extends Component {
             filters: this.state.filters,
             order: this.state.order,
             onPage: this.state.onPage,
-            currentPage: this.state.currentPage
+            currentPage: this.state.currentPage,
+            additionalConditions: this.props.additionalConditions
         }
     }
 

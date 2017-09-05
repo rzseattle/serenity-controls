@@ -18,7 +18,7 @@ export default class PanelComponentLoader extends Component {
         _reloadProps: PropTypes.func,
         _goto: PropTypes.func,
         _log: PropTypes.func,
-        _resolveComponent:PropTypes.func,
+        _resolveComponent: PropTypes.func,
         baseURL: PropTypes.string
     };
 
@@ -27,8 +27,8 @@ export default class PanelComponentLoader extends Component {
         this.state = {
             propsLoading: false,
             loadedProps: false,
-            currComponent: global.ReactHelper.get(props.component),
-			log: []
+            currComponent: global.ReactHelper.getWithData(props.component),
+            log: []
         }
     }
 
@@ -50,21 +50,21 @@ export default class PanelComponentLoader extends Component {
     handleGoTo(path, input = {}) {
         this.setState({propsLoading: true});
         global.$.get(path, {...input, __PROPS_REQUEST__: 1}, (data) => {
-            var stateObj = {  };
-            let urlParameters = Object.keys(input).map((i) => i+'='+input[i]).join('&');
-            history.pushState(stateObj, '', path +  (urlParameters?'?':'') + urlParameters  );
+            var stateObj = {};
+            let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
+            history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
             this.setState({propsLoading: false, loadedProps: data, currComponent: global.ReactHelper.get(data.component)});
         });
     }
 
     handleNotifycation(message, title = '', options = {}) {
-        let data =  { title: title, message: message,  ...{ level:'success', ...options} };
+        let data = {title: title, message: message, ...{level: 'success', ...options}};
 
         this._notificationSystem.addNotification(data);
 
     }
 
-    handleLog(message){
+    handleLog(message) {
         this.state.log.push({msg: message});
         this.forceUpdate();
     }
@@ -72,22 +72,21 @@ export default class PanelComponentLoader extends Component {
     render() {
         const s = this.state;
         const p = s.loadedProps || this.props;
-        let Component = s.currComponent;
-        if(!Component){
+
+        if (!s.currComponent) {
             return <div style={{padding: 10}}>
                 <h3>Can't find component</h3>
                 <pre>{p.component}</pre>
-                <h5>Path</h5>
-                <pre>{p.component}</pre>
-
             </div>
-
         }
+        let Component = s.currComponent._obj;
+
         return <div>
-            {!PRODUCTION&&<DebugTool
-              props={p}
-              log={s.log}
-              propsReloadHandler={this.handleReloadProps.bind(this)}
+            {!PRODUCTION && <DebugTool
+                props={p}
+                log={s.log}
+                propsReloadHandler={this.handleReloadProps.bind(this)}
+                componentData={s.currComponent.data}
             />}
 
             <NotificationSystem ref={(ns) => this._notificationSystem = ns}/>

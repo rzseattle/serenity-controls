@@ -23,7 +23,7 @@ export default class ErrorReporter extends React.Component {
         let currentMethod = tmp[0];
         let currentFile = tmp[1].replace(')', ' ').split(':');
 
-        fetch('https://localhost:3000/debug/getFile?file=' + currentFile[0] + ':' + currentFile[1], {
+        fetch(window.location.protocol + '//localhost:3000/debug/getFile?file=' + currentFile[0] + ':' + currentFile[1], {
             method: 'get'
         }).then((response) => {
             response.text().then((text) => {

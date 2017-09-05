@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {TabPane, Tabs} from 'frontend/src/ctrl/Tabs';
 import JSONTree from 'react-json-tree';
+import {Modal} from 'frontend/src/ctrl/Overlays';
+import ErrorReporter from '../lib/ErrorReporter';
 
 
 export default class extends React.Component {
@@ -10,7 +12,8 @@ export default class extends React.Component {
     static propTypes = {
         props: PropTypes.object.isRequired,
         log: PropTypes.array.isRequired,
-        propsReloadHandler: PropTypes.func.isRequired
+        propsReloadHandler: PropTypes.func.isRequired,
+        componentData: PropTypes.object
     }
 
     constructor(props) {
@@ -25,6 +28,7 @@ export default class extends React.Component {
             expanded: savedData.expanded,
             errors: [],
             currTab: savedData.selectedTab,
+            lastError: null,
 
             style: {
                 left: savedData.left,
@@ -32,8 +36,11 @@ export default class extends React.Component {
             }
         };
 
-        window.onerror = (msg) => {
-            this.state.errors.push(msg);
+        window.onerror = (messageOrEvent, source, lineno, colno, error) => {
+            console.log('on error');
+            console.log(error);
+            this.state.errors.push(messageOrEvent);
+            this.setState({lastError: error});
             this.forceUpdate();
         };
 
@@ -102,10 +109,10 @@ export default class extends React.Component {
 
         >
             <div
-              className="collapsed"
-              onClick={this.handleExpand.bind(this)}
-              onMouseDown={this._drag.bind(this)}
-              onMouseUp={() => clearTimeout(this.dragTimeout)}
+                className="collapsed"
+                onClick={this.handleExpand.bind(this)}
+                onMouseDown={this._drag.bind(this)}
+                onMouseUp={() => clearTimeout(this.dragTimeout)}
 
             >
                 <i className="fa fa-cog"/>
@@ -114,15 +121,24 @@ export default class extends React.Component {
             </div>
 
             {s.expanded && <div className="expanded">
+
+
+                <div className='toolbar btn-toolbar'>
+                    <a onClick={() => this.props.propsReloadHandler()} className="btn btn-sm btn-default"><i className="fa fa-refresh"></i> Reload props</a>
+                    <a href={`phpstorm://open?url=file://${this.props.componentData.file}&line=1`} className="btn btn-default btn-sm"><i className="fa fa-file-o"></i> edit</a>
+                </div>
                 <Body
-                  log={this.props.log}
-                  props={this.props.props}
-                  errors={this.state.errors}
-                  currTab={this.state.currTab}
-                  onTabChange={(index) => this.setState({currTab: index})}
-                  propsReloadHandler={this.props.propsReloadHandler}
+                    log={this.props.log}
+                    props={this.props.props}
+                    errors={this.state.errors}
+                    currTab={this.state.currTab}
+                    onTabChange={(index) => this.setState({currTab: index})}
                 />
             </div>}
+            <Modal show={this.state.lastError != null} onHide={() => this.setState({lastError: null})}>
+                <ErrorReporter error={this.state.lastError} />
+
+            </Modal>
 
         </div>;
     }
@@ -140,33 +156,51 @@ class Body extends React.Component {
 
     render() {
         let p = this.props;
+
+        let componentProps = {};
+        let debug = {};
+        Object.entries(p.props).map(([key, value]) => {
+            if (key.indexOf('__debug') !== -1) {
+                debug[key.replace('__debug', '')] = value;
+            } else {
+                componentProps[key] = value;
+            }
+        });
+
+
         return <div>
+
             <Tabs
-              defaultActiveTab={p.currTab}
-              onTabChange={p.onTabChange}
+                defaultActiveTab={p.currTab}
+                onTabChange={p.onTabChange}
 
             >
-                <TabPane title={'Props'} badge={Object.entries(p.props).length}>
+                <TabPane title={'Props'} badge={Object.entries(p.props).length} icon="bars">
                     <div className="props">
-                        <a onClick={() => p.propsReloadHandler()} className="btn btn-xs btn-default">Reload props</a>
-                        <JSONTree data={p.props} hideRoot={true} invertTheme={true}/>
+                        <JSONTree data={componentProps} hideRoot={true} invertTheme={true}/>
                     </div>
                 </TabPane>
-                <TabPane title={'Log'} badge={p.log.length}>
+                <TabPane title={'Log'} badge={p.log.length} icon="pencil">
                     <div className="log">
-                        {p.log.map(el =><JSONTree data={el} invertTheme={true} hideRoot={true}/>)}
+                        {p.log.map(el => <JSONTree data={el} invertTheme={true} hideRoot={true}/>)}
                         {p.log.length == 0 ? <div className={'empty'}>--Empty--</div> : null}
                     </div>
                 </TabPane>
-                <TabPane title={'Error'} badge={p.errors.length}>
-
-
-                    <div>
+                <TabPane title={'Error'} badge={p.errors.length} icon="bug">
+                    <div className='error'>
                         {p.errors.map((e, i) => <div key={i}>{e}</div>)}
                         {p.errors.length == 0 ? <div className={'empty'}>--Empty--</div> : null}
                     </div>
                 </TabPane>
+                {Object.entries(debug).map(([key, value]) => {
+                    return <TabPane key={key} title={key} icon="circle-o" badge={Object.entries(value).length}>
+                        <div className='props'>
+                            <JSONTree data={value} hideRoot={true} invertTheme={true}/>
+                        </div>
+                    </TabPane>
+                })}
             </Tabs>
+
         </div>;
     }
 }

@@ -35,8 +35,8 @@ class Tabs extends Component {
         return (
             <div className="w-tabs">
                 <div className="tabs-links">
-                    {p.children.map((child, index) =>
-                        <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' + (child.props.badge ? 'with-badge' : '')} onClick={this.handleTabChange.bind(this, index)}>
+                    {React.Children.map(p.children, (child, index) => {
+                        return <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' + (child.props.badge ? 'with-badge' : '')} onClick={this.handleTabChange.bind(this, index)}>
                             {child.props.icon ?
                                 <i className={'fa fa-' + child.props.icon}></i>
                                 : null}
@@ -45,7 +45,7 @@ class Tabs extends Component {
                                 <div className="w-tabs-badge">{child.props.badge}</div>
                                 : null}
                         </div>
-                    )}
+                    })}
                 </div>
                 <div className="tabs-links-separator"></div>
                 <div className="tab-pane-container">
