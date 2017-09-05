@@ -37,8 +37,6 @@ export default class extends React.Component {
         };
 
         window.onerror = (messageOrEvent, source, lineno, colno, error) => {
-            console.log('on error');
-            console.log(error);
             this.state.errors.push(messageOrEvent);
             this.setState({lastError: error});
             this.forceUpdate();
@@ -135,7 +133,12 @@ export default class extends React.Component {
                     onTabChange={(index) => this.setState({currTab: index})}
                 />
             </div>}
-            <Modal show={this.state.lastError != null} onHide={() => this.setState({lastError: null})}>
+            <Modal
+                show={this.state.lastError != null}
+                onHide={() => this.setState({lastError: null})}
+                ref={modal => this.errorModal = modal}
+                onShow={() => setTimeout( () => this.errorModal.calculatePosition(), 500)}
+            >
                 <ErrorReporter error={this.state.lastError} />
 
             </Modal>
