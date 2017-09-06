@@ -14,7 +14,7 @@ export default class Panel extends Component {
         noPadding: false,
         noBottomMargin: true,
         children: null,
-        title: false,
+        title: "",
         toolbar: [],
     };
 

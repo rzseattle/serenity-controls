@@ -34,7 +34,7 @@ class Table extends Component {
         buttons: [],
         showFooter: true,
         rememberState: false,
-        additionalConditions: false
+        additionalConditions: {}
     }
 
     constructor(props) {
