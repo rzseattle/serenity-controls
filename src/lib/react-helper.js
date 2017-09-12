@@ -1,7 +1,35 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {AppContainer} from 'react-hot-loader';
-import ErrorReporter from './ErrorReporter';
+
+
+class ErrorReporterLoader extends  React.Component{
+
+    constructor(props){
+        super(props);
+        this.state = {
+            loaded: false,
+            component: null
+        }
+    }
+
+    componentDidMount(){
+        import('./ErrorReporter').then((Reporter) => {
+            this.setState({loaded:true, component: Reporter.default});
+        });
+    }
+
+
+    render(){
+        if(!this.state.loaded) {
+            return <div>Loading ...</div>
+        }else{
+            let Component = this.state.component;
+            return <Component error={this.props.error} />
+        }
+    }
+}
+
 
 /**
  * react-helper.js
@@ -80,7 +108,7 @@ window.ReactHelper = {
         let Component = registry[name]['_obj'];
 
         ReactDOM.render((
-                <AppContainer errorReporter={ErrorReporter}>
+                <AppContainer errorReporter={ErrorReporterLoader}>
                     <Component {...props} />
                 </AppContainer>
             ), node
