@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Modal from 'react-overlays/lib/Modal';
 import Overlay from 'react-overlays/lib/Overlay';
 import ResizeObserver from 'resize-observer-polyfill';
+import TweenLite from 'gsap/TweenLite'
 
 
 class Shadow extends Component {
@@ -44,19 +45,27 @@ class MyModal extends Component {
         container: PropTypes.func,
         recalculatePosition: PropTypes.bool,
         showHideLink: PropTypes.bool,
+        fitWidth: PropTypes.bool,
+        fitHeight: PropTypes.bool,
         title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        left: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        bottom: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        right: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     };
     static defaultProps = {
         show: false,
         positionOffset: 5,
-        recalculatePosition: true
+        recalculatePosition: true,
     };
 
     constructor(props) {
         super(props);
         this.state = {
             opened: props.opened,
-            modalStyle: {}
+            modalStyle: {
+                opacity: 0
+            }
         };
         this.modalBody = null;
     }
@@ -86,6 +95,22 @@ class MyModal extends Component {
 
         ro.observe(ReactDOM.findDOMNode(this.modalBody));
         this.isObserved = true;
+        if (false) {
+
+            let s = {opacity: 1, top: 49};
+            const node = ReactDOM.findDOMNode(this.modalBody);
+            TweenLite.to(s, 0.2, {
+                opacity: 1,
+                top: 50,
+                ease: Power4.easeInOut,
+                onUpdate: () => {
+                    node.style['opacity'] = s.opacity;
+                    node.style['top'] = s.top + '%';
+
+
+                }
+            });
+        }
 
     }
 
@@ -125,9 +150,31 @@ class MyModal extends Component {
 
                 let x = Math.min(Math.round(data.width / 2), (window.innerWidth) / 2 - 5);
                 let y = Math.min(Math.round(data.height / 2), (window.innerHeight / 2) - 5);
+                x = this.props.left != undefined || this.props.right != undefined ? 0 : x;
+                y = this.props.top != undefined || this.props.bottom != undefined? 0 : y;
                 node.style['transform'] = `translate(-${x}px, -${y}px)`;
-                node.style['top'] = '50%';
-                node.style['left'] = '50%';
+
+
+                if (this.props.left != undefined) {
+                    node.style['left'] = this.props.left + (Number.isNaN(this.props.left) ? '' : 'px');
+                }
+                if (this.props.right != undefined) {
+                    node.style['right'] = this.props.right + (Number.isNaN(this.props.right) ? '' : 'px');
+                }
+                if( this.props.left == undefined  && this.props.right == undefined) {
+                    node.style['left'] = '50%';
+                }
+
+                if (this.props.top!= undefined) {
+                    node.style['top'] = this.props.top + (Number.isNaN(this.props.top) ? '' : 'px');
+                }
+                if (this.props.bottom != undefined) {
+                    node.style['bottom'] = this.props.bottom + (Number.isNaN(this.props.bottom) ? '' : 'px');
+                }
+
+                if( this.props.top == undefined  && this.props.bottom == undefined) {
+                    node.style['top'] = '50%';
+                }
             }
         }
     }
@@ -150,7 +197,7 @@ class MyModal extends Component {
             onEntered={() => console.log('entered')}
         >
 
-            <div className="w-modal" ref={el => this.modalBody = el} style={{opacity: 0}}>
+            <div className="w-modal" ref={el => this.modalBody = el}>
                 {p.showHideLink &&
                 <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i
                     className="fa fa-close"></i></a>}
