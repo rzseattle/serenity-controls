@@ -6,7 +6,7 @@ import {Modal} from 'frontend/src/ctrl/Overlays';
 import ErrorReporter from '../lib/ErrorReporter';
 
 
-export default class extends React.Component {
+export class DebugTool extends React.Component {
 
 
     static propTypes = {
@@ -15,6 +15,8 @@ export default class extends React.Component {
         propsReloadHandler: PropTypes.func.isRequired,
         componentData: PropTypes.object
     }
+
+
 
     constructor(props) {
         super(props);

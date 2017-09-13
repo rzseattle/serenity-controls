@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import {DateFilter, SelectFilter, NumericFilter, SwitchFilter, TextFilter, MultiFilter, filtersMapping, withFilterOpenLayer} from './Filters'
 
-import {Button as MyButton} from './Button'
-import {Column} from '../utils/Column.tsx'
+
+import {ColumnHelper} from './table/ColumnHelper'
 
 
 class Table extends Component {
@@ -374,7 +374,7 @@ class Table extends Component {
             return null;
         }
 
-        if (inData instanceof Column) {
+        if (inData instanceof ColumnHelper) {
             inData = inData.get();
         }
 
@@ -555,7 +555,7 @@ function FiltersPresenter(props) {
 
                 {Object.entries(props.filters).map(([key, el]) =>
                     <div key={key}>
-                        <div><i className="fa fa-filter"></i></div>
+                        <div><i className="ms-Icon ms-Icon--Filter"></i></div>
                         <div className="caption">{el.caption}</div>
                         <div className="value" dangerouslySetInnerHTML={{__html: el.label}}/>
                         <div className="remove" onClick={(e) => props.FilterDelete(key)}><i className="fa fa-times"></i></div>
@@ -644,11 +644,6 @@ function Footer(props) {
 
 
                 <div className="w-table-buttons">
-
-
-                    {table.props.buttons.map((e) =>
-                        <MyButton {...e} context={table}/>
-                    )}
 
                     <button title="Usuń zmiany" onClick={table.handleStateRemove.bind(table)}><i className="fa fa-eraser"></i></button>
                     <button title="Odśwież" onClick={table.load.bind(table)}><i className="fa fa-refresh"></i></button>
@@ -856,4 +851,4 @@ const Filter = () => null
 const Sorter = () => null
 
 
-export {Table, Column, Filter, Sorter}
+export {Table, ColumnHelper, ColumnHelper as Column, Filter, Sorter}

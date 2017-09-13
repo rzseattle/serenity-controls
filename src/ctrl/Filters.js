@@ -566,7 +566,7 @@ const withFilterOpenLayer = (Filter) => {
                      tabIndex="0"
                 >
                     {this.props.inline ? '' :
-                        <div className="w-filter-openable-trigger" onClick={this.handleTriggerClicked.bind(this)}><i className="fa fa-filter"></i></div>
+                        <div className="w-filter-openable-trigger" onClick={this.handleTriggerClicked.bind(this)}><i className="ms-Icon ms-Icon--Filter"></i></div>
                     }
                     {this.state.show ?
                         <div className="w-filter-openable-body" ref="body">
