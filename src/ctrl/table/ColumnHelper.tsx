@@ -1,50 +1,9 @@
 import * as React from 'react'
-
-interface Option {
-    value: string;
-    label: string;
-}
-
-interface IColumnTemplate<T> {
-    (value: string, row: T, column: object): string | JSX.Element
-}
-
-interface IEventCallback {
-    (row: any, column: object, event: object)
-}
-
-interface IColumnData {
-    field: string,
-    caption: string,
-    isSortable: boolean,
-    display: boolean,
-    toolTip: IColumnTemplate<any>,
-    width: number | string | null,
-    class: Array<string>,
-    type: string,
-    orderField: string,
-    icon: string | JSX.Element,
-    append: string | JSX.Element,
-    prepend: string | JSX.Element,
-    classTemplate: () => Array<string>,
-    styleTemplate: () => Array<string>,
-    template: IColumnTemplate<any>,
-    default: string,
-    events: {
-        click: Array<IEventCallback>,
-        mouseUp: Array<IEventCallback>,
-        enter: Array<IEventCallback>,
-        leave: Array<IEventCallback>
-    },
-    filter: {
-        type: string,
-        field: string
-    }
-}
+import {IColumnData, IEventCallback, ICellTemplate} from './Interfaces';
+import {Option} from 'frontend/src/ctrl/fields/Interfaces';
 
 
-
-export class Column {
+export class ColumnHelper {
     data: IColumnData;
 
     constructor(initData) {
@@ -60,8 +19,8 @@ export class Column {
         };
     }
 
-    static id(field: string, caption: string): Column {
-        return new Column({
+    static id(field: string, caption: string): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             caption: caption,
             filter: {
@@ -71,8 +30,8 @@ export class Column {
 
     }
 
-    static number(field: string, caption: string): Column {
-        return new Column({
+    static number(field: string, caption: string): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             caption: caption,
             filter: {
@@ -82,9 +41,9 @@ export class Column {
 
     }
 
-    static map(field: string, caption: string, options: Array<Option> | object): Column {
+    static map(field: string, caption: string, options: Array<Option> | object): ColumnHelper {
 
-        return new Column({
+        return new ColumnHelper({
             field: field,
             caption: caption,
             template: value => options[value],
@@ -95,8 +54,8 @@ export class Column {
         });
     }
 
-    static text(field: string, caption: string): Column {
-        return new Column({
+    static text(field: string, caption: string): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             caption: caption,
             filter: {
@@ -105,10 +64,10 @@ export class Column {
         })
     }
 
-    static link(field: string, caption: string, urlResolver: any): Column {
+    static link(field: string, caption: string, urlResolver: any): ColumnHelper {
 
-        return Column.text('id', '')
-            .onMouseUp((row, column, e: MouseEvent) => {
+        return ColumnHelper.text('id', '')
+            .onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
                     let url = urlResolver(row, column, event);
                     if (e.button == 1) {
                         window.open(url);
@@ -120,8 +79,8 @@ export class Column {
 
     }
 
-    static money(field, caption): Column {
-        return new Column({
+    static money(field, caption): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             caption: caption,
             template: (val, row) => parseFloat(val).toFixed(2),
@@ -131,16 +90,16 @@ export class Column {
         }).className('right');
     }
 
-    static email(field, caption): Column {
-        return new Column({
+    static email(field, caption): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             caption: caption,
             template: (val, row) => <a href={'mailto:' + val}>{val}</a>
         })
     }
 
-    static date(field, caption): Column {
-        return new Column({
+    static date(field, caption): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             caption: caption,
             icon: 'fa-calendar',
@@ -150,8 +109,8 @@ export class Column {
         });
     }
 
-    static bool(field, caption): Column {
-        return new Column({
+    static bool(field, caption): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             caption: caption,
             classTemplate: (row, column) => ['center', (row[column.field] == '1' ? 'darkgreen' : 'darkred')],
@@ -164,49 +123,49 @@ export class Column {
         })
     }
 
-    static hidden(field): Column {
-        return new Column({
+    static hidden(field): ColumnHelper {
+        return new ColumnHelper({
             field: field,
             display: false
         });
     }
 
-    static template(caption, template: IColumnTemplate<any>): Column {
-        return new Column({
+    static template(caption: string, template: ICellTemplate): ColumnHelper {
+        return new ColumnHelper({
             template: template
         }).noFilter();
     }
 
-    static custom(data): Column {
-        return new Column(data);
+    static custom(data): ColumnHelper {
+        return new ColumnHelper(data);
     }
 
-    className(className): Column {
+    className(className): ColumnHelper {
         this.data.class = className;
         return this;
     }
 
-    template(fn: IColumnTemplate<any>): Column {
+    template(fn: ICellTemplate): ColumnHelper {
         this.data.template = fn;
         return this;
     }
 
-    append(x: any): Column {
+    append(x: any): ColumnHelper {
         this.data.append = x;
         return this;
     }
 
-    prepend(x: any): Column {
+    prepend(x: any): ColumnHelper {
         this.data.prepend = x;
         return this;
     }
 
-    width(x: any): Column {
+    width(x: any): ColumnHelper {
         this.data.width = x;
         return this;
     }
 
-    noFilter(): Column {
+    noFilter(): ColumnHelper {
         this.data.filter = null;
         return this;
     }
@@ -220,27 +179,27 @@ export class Column {
         }
     }*/
 
-    onClick(fn: IEventCallback): Column {
+    onClick(fn: IEventCallback): ColumnHelper {
         this.data.events.click.push(fn);
         return this;
     }
 
-    onMouseUp(fn: IEventCallback): Column {
+    onMouseUp(fn: IEventCallback): ColumnHelper {
         this.data.events.mouseUp.push(fn);
         return this;
     }
 
-    onEnter(fn: IEventCallback): Column {
+    onEnter(fn: IEventCallback): ColumnHelper {
         this.data.events.enter.push(fn);
         return this;
     }
 
-    onLeave(fn: IEventCallback): Column {
+    onLeave(fn: IEventCallback): ColumnHelper {
         this.data.events.leave.push(fn);
         return this;
     }
 
-    set(el): Column {
+    set(el): ColumnHelper {
         this.data = {...this.data, ...el};
         return this;
     }

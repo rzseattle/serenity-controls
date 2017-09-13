@@ -1,26 +1,39 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import DebugTool from '../utils/DebugTool'
+declare var PRODUCTION: boolean;
+declare var $: any;
+declare var global: any;
+import * as React from "react";
+import * as Notifications from "react-notification-system";
 
-var NotificationSystem = require('react-notification-system');
+import {DebugTool} from '../utils/DebugTool'
 
 
-export default class PanelComponentLoader extends Component {
+export interface IArrowViewComponentProps {
+    baseURL: string;
+    _notification: (content: string, title?: string, conf?: object) => any;
+    _reloadProps: () => any;
+    _goto: (componentPath: string) => any;
+    _log: (element: any) => any;
+    _resolveComponent: (componentPath: string) => React.ReactElement<any>
+}
 
-    static propTypes = {
-        component: PropTypes.string.isRequired,
-        requestURI: PropTypes.string.isRequired,
+interface IProps {
+    requestURI: string;
+    component: string
 
-    };
+}
 
-    static ComponentProps = {
-        _notification: PropTypes.func,
-        _reloadProps: PropTypes.func,
-        _goto: PropTypes.func,
-        _log: PropTypes.func,
-        _resolveComponent: PropTypes.func,
-        baseURL: PropTypes.string
-    };
+interface IState {
+    currComponent: any,
+    propsLoading: boolean,
+    loadedProps: any,
+    log: Array<any>
+
+}
+
+export default class PanelComponentLoader extends React.Component<IProps, IState> {
+
+    _notificationSystem: any;
+    state: IState;
 
     constructor(props) {
         super(props);
@@ -32,9 +45,9 @@ export default class PanelComponentLoader extends Component {
         }
     }
 
-    handleReloadProps(input = {}, callback = false) {
+    handleReloadProps(input = {}, callback: () => any) {
         this.setState({propsLoading: true});
-        global.$.get(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}, (data) => {
+        $.get(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}, (data) => {
             this.setState({propsLoading: false, loadedProps: data});
             if (callback) {
                 callback();
@@ -49,7 +62,7 @@ export default class PanelComponentLoader extends Component {
 
     handleGoTo(path, input = {}) {
         this.setState({propsLoading: true});
-        global.$.get(path, {...input, __PROPS_REQUEST__: 1}, (data) => {
+        $.get(path, {...input, __PROPS_REQUEST__: 1}, (data) => {
             var stateObj = {};
             let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
             history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
@@ -71,7 +84,7 @@ export default class PanelComponentLoader extends Component {
 
     render() {
         const s = this.state;
-        const p = s.loadedProps || this.props;
+        const p = s.loadedProps || {...this.props};
 
         if (!s.currComponent) {
             return <div style={{padding: 10}}>
@@ -81,15 +94,19 @@ export default class PanelComponentLoader extends Component {
         }
         let Component = s.currComponent._obj;
 
-        return <div>
-            {!PRODUCTION && <DebugTool
-                props={p}
-                log={s.log}
-                propsReloadHandler={this.handleReloadProps.bind(this)}
-                componentData={s.currComponent.data}
-            />}
+        let debugVar = {
+            log: s.log,
+            propsReloadHandler: this.handleReloadProps.bind(this),
+            componentData: s.currComponent.data,
+            props: p
 
-            <NotificationSystem ref={(ns) => this._notificationSystem = ns}/>
+        };
+
+        return <div>
+            {!PRODUCTION&&<DebugTool {...debugVar} />}
+
+
+            <Notifications ref={(ns) => this._notificationSystem = ns}/>
 
             <Component
                 {...p}
