@@ -1,7 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {SourceMapConsumer} from 'source-map';
-import parse from '../../../react-error-overlay/lib/utils/parser';
+
+
+
+
+
+
 
 var sourceMap = require('source-map');
 export default class ErrorReporter extends React.Component {
@@ -19,7 +24,7 @@ export default class ErrorReporter extends React.Component {
         let e = this.props.error;
 
 
-        let stacks = parse(e.stack);
+        let stacks = parseError(e.stack);
         fetch(window.location.protocol + '//localhost:3000/bundle.js.map', {
             method: 'get'
         }).then((response) => {
@@ -97,4 +102,65 @@ export default class ErrorReporter extends React.Component {
 
         </div>
     }
+}
+
+
+const regexValidFrame_Chrome = /^\s*(at|in)\s.+(:\d+)/;
+const regexValidFrame_FireFox = /(^|@)\S+:\d+|.+line\s+\d+\s+>\s+(eval|Function).+/;
+
+function parseStack(stack) {
+  const frames = stack
+    .filter(
+      e => regexValidFrame_Chrome.test(e) || regexValidFrame_FireFox.test(e)
+    )
+    .map(e => {
+      if (regexValidFrame_FireFox.test(e)) {
+        // Strip eval, we don't care about it
+        let isEval = false;
+        if (/ > (eval|Function)/.test(e)) {
+          e = e.replace(
+            / line (\d+)(?: > eval line \d+)* > (eval|Function):\d+:\d+/g,
+            ':$1'
+          );
+          isEval = true;
+        }
+        const data = e.split(/[@]/g);
+        const last = data.pop();
+        return new StackFrame(
+          data.join('@') || (isEval ? 'eval' : null),
+          ...extractLocation(last)
+        );
+      } else {
+        // Strip eval, we don't care about it
+        if (e.indexOf('(eval ') !== -1) {
+          e = e.replace(/(\(eval at [^()]*)|(\),.*$)/g, '');
+        }
+        if (e.indexOf('(at ') !== -1) {
+          e = e.replace(/\(at /, '(');
+        }
+        const data = e
+          .trim()
+          .split(/\s+/g)
+          .slice(1);
+        const last = data.pop();
+        return new StackFrame(data.join(' ') || null, ...extractLocation(last));
+      }
+    });
+  return frames;
+}
+
+function parseError(error) {
+  if (error == null) {
+    throw new Error('You cannot pass a null object.');
+  }
+  if (typeof error === 'string') {
+    return parseStack(error.split('\n'));
+  }
+  if (Array.isArray(error)) {
+    return parseStack(error);
+  }
+  if (typeof error.stack === 'string') {
+    return parseStack(error.stack.split('\n'));
+  }
+  throw new Error('The error you provided does not contain a stack trace.');
 }

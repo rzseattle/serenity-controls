@@ -67,20 +67,14 @@ class DateFilter extends Filter {
         if (timeStart == '00:00:00' && timeStop == '23:59:59')
             label = `${dateStart} ${separatorI} ${dateStop}`;
 
-
-        if (this.props.onChange) {
-            if (this.state.choiceType == 'range') {
-                this.props.onChange(this.props.field, val, '<x<in', this.props.caption, ':', label);
-            } else if (this.state.choiceType == 'exists') {
-                this.props.onChange(this.props.field, '0000-00-00 00:00:00', '>', this.props.caption, ':', 'Data ustalona');
-            } else if (this.state.choiceType == 'not-exists') {
-                this.props.onChange(this.props.field, ['0000-00-00 00:00:00', null, ''], 'IN', this.props.caption, ':', 'Data nie ustalona');
-            }
-        } else {
-            let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
-            table.data.addFilter(this.props.field, val, '<x<in', this.props.caption, ':', label);
-            table.refresh();
+        if (this.state.choiceType == 'range') {
+            this.props.onChange(this.props.field, val, '<x<in', this.props.caption, ':', label);
+        } else if (this.state.choiceType == 'exists') {
+            this.props.onChange(this.props.field, '0000-00-00 00:00:00', '>', this.props.caption, ':', 'Data ustalona');
+        } else if (this.state.choiceType == 'not-exists') {
+            this.props.onChange(this.props.field, ['0000-00-00 00:00:00', null, ''], 'IN', this.props.caption, ':', 'Data nie ustalona');
         }
+
 
     }
 
@@ -221,10 +215,6 @@ class SelectFilter extends Filter {
 
         if (this.props.onChange) {
             this.props.onChange(this.props.field, values, 'IN', this.props.caption, ':', labels.join(', '));
-        } else {
-            let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
-            table.data.addFilter(this.props.field, values, 'IN', this.props.caption, ':', labels.join(', '));
-            table.refresh();
         }
 
     }
@@ -287,7 +277,7 @@ class SwitchFilter extends Filter {
     handleApply() {
         this.setState({show: false});
         if (this.state.value) {
-            this.props.onChange(this.props.field, this.state.value, '==', this.props.caption,  ' :', this.props.content[this.state.value]);
+            this.props.onChange(this.props.field, this.state.value, '==', this.props.caption, ' :', this.props.content[this.state.value]);
         }
     }
 
@@ -349,14 +339,7 @@ class NumericFilter extends Filter {
 
         }
 
-        if (this.props.onChange) {
-            this.props.onChange(this.props.field, val, this.state.option, this.props.caption, ':', label);
-        } else {
-            let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
-            table.data.addFilter(this.props.field, val, this.state.option, this.props.caption, ':', label);
-            table.refresh();
-        }
-
+        this.props.onChange(this.props.field, val, this.state.option, this.props.caption, ':', label);
 
     }
 
@@ -429,15 +412,7 @@ class TextFilter extends Filter {
         this.setState({show: false});
         const value = this.refs.input.value;
         if (value) {
-
-            if (this.props.onChange) {
-                this.props.onChange(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + ' :', this.refs.input.value);
-            } else {
-                let table = window.Serenity.get($(ReactDOM.findDOMNode(this)).parents('.serenity-widget:eq(0)')[0]);
-                table.data.addFilter(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + ' :', this.refs.input.value);
-                table.refresh();
-            }
-
+            this.props.onChange(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + ' :', this.refs.input.value);
         }
 
     }
