@@ -1,6 +1,6 @@
 export interface ICommand{
 
-    key?: string;
+    key: string;
     icon?: string;
     label: string;
     onClick?: ( event ) => any

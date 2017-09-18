@@ -99,14 +99,17 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             propsReloadHandler: this.handleReloadProps.bind(this),
             componentData: s.currComponent.data,
             props: p
-
         };
+
+        let notificaton = {
+            ref: (ns) => this._notificationSystem = ns
+        }
 
         return <div>
             {!PRODUCTION&&<DebugTool {...debugVar} />}
 
 
-            <Notifications ref={(ns) => this._notificationSystem = ns}/>
+            <Notifications {...notificaton} />
 
             <Component
                 {...p}

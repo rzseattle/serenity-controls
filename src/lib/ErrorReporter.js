@@ -20,7 +20,7 @@ export default class ErrorReporter extends React.Component {
 
 
         let stacks = parse(e.stack);
-        fetch('http://localhost:3000/bundle.js.map', {
+        fetch(window.location.protocol + '//localhost:3000/bundle.js.map', {
             method: 'get'
         }).then((response) => {
                 response.text().then((rawSourceMapJsonData) => {
@@ -81,11 +81,11 @@ export default class ErrorReporter extends React.Component {
             <div style={codeCss}>
                 {this.state.file.map(el => {
                     if (el.line == line) {
-                        return <div style={{backgroundColor: '#FCCFCF'}}>
+                        return <div style={{backgroundColor: '#FCCFCF'}} >
                             <div style={{display: 'inline-block', width: 30}}>{el.line} |</div>
                             {el.content}</div>
                     } else {
-                        return <div style={{backgroundColor: ''}}>
+                        return <div style={{backgroundColor: ''}} >
                             <div style={{display: 'inline-block', width: 30}}>{el.line} |</div>
                             {el.content}</div>
                     }

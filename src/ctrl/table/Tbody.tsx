@@ -48,7 +48,7 @@ export default (props) => {
 
 
         {props.data.map((row, index) =>
-            <tr key={row.id !== undefined ? row.id : index}
+            <tr key={index}
                 className={props.rowClassTemplate ? props.rowClassTemplate(row, index) : ''}
                 style={props.rowStyleTemplate ? props.rowStyleTemplate(row, index) : {}}
             >

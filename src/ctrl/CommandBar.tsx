@@ -43,17 +43,18 @@ export class CommandBar extends React.Component<IProps, any> {
                 <input type="text"
                        onKeyDown={this.handleSearchKeyDown.bind(this)}
                        placeholder="Szukaj..."
+                       className="ms-font-m"
                        autoFocus/>
             </div>
             }
             <div className="menu-bar">
                 <div className="buttons-left">
-                    {this.props.items.map((item: ICommand) => <a onClick={item.onClick}>
+                    {this.props.items.map((item: ICommand, index: number) => <a key={index} onClick={item.onClick} className="ms-font-m">
                         <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
                     </a>)}
                 </div>
                 <div className="buttons-right">
-                    {this.props.rightItems.map((item: ICommand) => <a onClick={item.onClick}>
+                    {this.props.rightItems.map((item: ICommand, index: number) => <a key={index} onClick={item.onClick}>
                         <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
                     </a>)}
                 </div>
