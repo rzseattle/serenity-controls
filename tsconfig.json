@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "baseUrl": ".",
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "include": [
+      "node_modules/frontend/**/*"
+    ],
+    "lib": [
+      "DOM",
+      "ES2017"
+    ]
+  }
+}

@@ -34,8 +34,8 @@ const columnOptions = {
 
 
 const baseColumns = [
-    Col.id('id', 'Id').get(),
-    Col.email('email', 'Email').get(),
+    Col.id('id', 'Id'),
+    Col.email('email', 'Email'),
     Col.text('first_name', 'Name')
         .template((field, row) => <div>{row.first_name} {row.last_name}</div>)
         .onClick((row, column, event) => {
@@ -51,8 +51,8 @@ const baseColumns = [
                 field: 'last_name',
                 caption: 'Last name',
             }
-        ]}).get(),
-    Col.hidden('last_name').get(),
+        ]}),
+    Col.hidden('last_name'),
     Col.text('gender', 'Gender')
         .set({
             filter: {
@@ -65,17 +65,16 @@ const baseColumns = [
                 },
                 multiselect: true
             }
-        })
-        .get(),
-    Col.text('ip_address', 'Ip').className('right').get(),
-    Col.date('date', 'Date').get(),
+        }),
+    Col.text('ip_address', 'Ip').className('right'),
+    Col.date('date', 'Date'),
     Col.money('price', 'Price')
         .append(' $')
         .prepend(' - ')
         .set({
         classTemplate: (row, column) => [parseFloat(row.price) < 100 ? 'darkgreen' : 'darkred'],
         styleTemplate: (row, column) => parseFloat(row.price) < 100 ? {fontSize: '10px'} : {fontSize: '15px'},
-    }).get(),
+    }),
     ,
 ]
 

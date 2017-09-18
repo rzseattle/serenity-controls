@@ -15,9 +15,9 @@ export class CommandBar extends React.Component<IProps, any> {
     public static defaultProps: Partial<IProps> = {
         isSearchBoxVisible: false,
         searchPlaceholderText: 'Szukaj',
+        items: [],
         rightItems: []
     };
-
 
 
     constructor(props) {
@@ -28,8 +28,8 @@ export class CommandBar extends React.Component<IProps, any> {
     }
 
     handleSearchKeyDown(event) {
-        if(event.keyCode == 13 ){
-            if(this.props.onSearch) {
+        if (event.keyCode == 13) {
+            if (this.props.onSearch) {
                 this.props.onSearch(event.target.value);
             }
         }

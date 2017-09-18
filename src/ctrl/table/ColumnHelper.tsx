@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {IColumnData, IEventCallback, ICellTemplate} from './Interfaces';
-import {Option} from 'frontend/src/ctrl/fields/Interfaces';
+import {Option} from '../fields/Interfaces';
 
 
 export class ColumnHelper {
@@ -94,7 +94,10 @@ export class ColumnHelper {
         return new ColumnHelper({
             field: field,
             caption: caption,
-            template: (val, row) => <a href={'mailto:' + val}>{val}</a>
+            template: (val, row) => <a href={'mailto:' + val}>{val}</a>,
+            filter: {
+                type: 'TextFilter',
+            }
         })
     }
 

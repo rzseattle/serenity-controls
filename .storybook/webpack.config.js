@@ -20,18 +20,19 @@ module.exports = {
     },*/
     module: {
         rules: [
+            {test: /\.tsx?$/, loaders: [/*'react-hot-loader/webpack',*/ 'awesome-typescript-loader']},
             {
                 test: /\.css/,
                 loaders: [
                     "style-loader",
-                    { loader: "css-loader", query: { sourceMap: true } },
+                    {loader: "css-loader", query: {sourceMap: true}},
                 ]
             },
             {
                 test: /\.sass/,
                 loaders: [
                     "style-loader",
-                    { loader: "css-loader", query: { sourceMap: true } },
+                    {loader: "css-loader", query: {sourceMap: true}},
                     'resolve-url-loader',
                     {
                         loader: "sass-loader",
@@ -44,9 +45,13 @@ module.exports = {
                 include: path.resolve(__dirname, '../')
             },
 
-            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
+            {test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff"},
+            {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader"}
         ],
+
     },
+    resolve: {
+        extensions: ['.js', '.es6', '.ts', '.tsx']
+    }
 };
 

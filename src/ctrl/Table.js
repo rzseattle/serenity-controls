@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {DateFilter, SelectFilter, NumericFilter, SwitchFilter, TextFilter, MultiFilter, filtersMapping, withFilterOpenLayer} from './Filters'
+import {filtersMapping, withFilterOpenLayer} from './Filters'
 
 
 import {ColumnHelper} from './table/ColumnHelper'
+import FiltersPresenter from './table/FiltersPresenter'
+import Tbody from './table/Tbody'
+import Footer from './table/Footer'
+import {Loading, Error, EmptyResult} from './table/placeholders'
 
 
 class Table extends Component {
@@ -24,7 +28,7 @@ class Table extends Component {
         columns: PropTypes.array,
         onPage: PropTypes.number,
         showFooter: PropTypes.bool,
-        dataProvider: PropTypes.oneOfType([ PropTypes.object, PropTypes.func]),
+        dataProvider: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         additionalConditions: PropTypes.object
 
     }
@@ -102,8 +106,6 @@ class Table extends Component {
     }
 
 
-
-
     componentDidUpdate(prevProps) {
         let state = this.state;
         if (this.props.rememberState) {
@@ -155,15 +157,27 @@ class Table extends Component {
     }
 
     load() {
-        if (this.xhrConnection) {
-            this.xhrConnection.abort();
-        }
 
         this.state.dataSourceError = false;
-        //this.state.dataSourceDebug = false;
+
         this.setState({loading: true});
 
+        let setStateAfterLoad = (input) => {
+            this.setState({
+                data: input.data.slice(0),
+                countAll: 0 + parseInt(input.countAll),
+                loading: false,
+                dataSourceDebug: input.debug ? input.debug : false,
+                firstLoaded: true,
+                selection: [],
+                allChecked: false
+            });
+        }
+
         if (this.props.remoteURL) {
+            if (this.xhrConnection) {
+                this.xhrConnection.abort();
+            }
 
             let xhr = new XMLHttpRequest();
             xhr.onload = (e) => {
@@ -172,15 +186,7 @@ class Table extends Component {
                     //parsed = {data: [], countAll: 0};
                     try {
                         let parsed = JSON.parse(xhr.responseText)
-                        this.setState({
-                            data: parsed.data.slice(0),
-                            countAll: 0 + parseInt(parsed.countAll),
-                            loading: false,
-                            dataSourceDebug: parsed.debug ? parsed.debug : false,
-                            firstLoaded: true,
-                            selection: [],
-                            allChecked: false
-                        });
+                        setStateAfterLoad(parsed);
                     } catch (e) {
                         this.setState({dataSourceError: xhr.responseText, loading: false})
                     }
@@ -195,28 +201,11 @@ class Table extends Component {
             let result = this.props.dataProvider(this.getRequestData());
 
             if (result instanceof Promise) {
-
                 result.then((data) => {
-                    this.setState({
-                        data: data.data.slice(0),
-                        countAll: 0 + parseInt(data.countAll),
-                        loading: false,
-                        dataSourceDebug: data.debug ? data.debug : false,
-                        firstLoaded: true,
-                        selection: [],
-                        allChecked: false
-                    });
+                    setStateAfterLoad(data);
                 })
             } else {
-                this.setState({
-                    data: result.data.slice(0),
-                    countAll: 0 + parseInt(result.countAll),
-                    loading: false,
-                    dataSourceDebug: result.debug ? result.debug : false,
-                    firstLoaded: true,
-                    selection: [],
-                    allChecked: false
-                });
+                setStateAfterLoad(data);
             }
         }
     }
@@ -255,7 +244,7 @@ class Table extends Component {
             return;
         }
 
-        let column = this.state.columns.filter(c => c !== null &&  c.display === true)[index];
+        let column = this.state.columns.filter(c => c !== null && c.display === true)[index];
 
         if (!column.orderField)
             return;
@@ -432,15 +421,9 @@ class Table extends Component {
         return data;
     }
 
-
     render() {
 
         const columns = this.state.columns;
-
-        if (this.props.children !== undefined) {
-            this.getDataFromChildren();
-        }
-
 
         return (
             <div className={'w-table ' + (this.state.loading ? 'w-table-loading' : '')} ref="container" tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
@@ -452,9 +435,7 @@ class Table extends Component {
                                       FilterDelete={this.handleFilterDelete.bind(this)}
                                       orderDelete={this.handleOrderDelete.bind(this)}
                     />
-
                 </div>
-
 
                 <table className={this.state.fixedLayout ? 'w-table-fixed' : ''}>
                     <thead>
@@ -491,7 +472,7 @@ class Table extends Component {
                     {this.state.dataSourceError && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
                     {!this.state.loading && this.state.data.length + 1 == 0 && <EmptyResult colspan={columns.length + 1}/>}
                     {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
-                    {this.state.firstLoaded && this.state.data.length > 0 && <Rows
+                    {this.state.firstLoaded && this.state.data.length > 0 && <Tbody
                         rowClassTemplate={this.props.rowClassTemplate}
                         rowStyleTemplate={this.props.rowStyleTemplate}
                         selection={this.state.selection}
@@ -521,17 +502,6 @@ class Table extends Component {
                 </table>
 
                 {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
-
-
-                {/*<pre>{JSON.stringify(this.state.columns, null, 2)}</pre>
-                 <pre>{JSON.stringify(this.state.order, null, 2)}</pre>
-                 <pre>
-                 image
-                 link
-                 template
-                 menu
-                 </pre>*/}
-
             </div>
         )
     }
@@ -539,316 +509,4 @@ class Table extends Component {
 }
 
 
-function FiltersPresenter(props) {
-
-    let isVisible = Object.entries(props.order).length > 0 || Object.entries(props.filters).length > 0;
-    return (
-        <div className={'w-table-presenter ' + (!isVisible ? 'w-table-presenter-hidden' : '')}>
-            <div className="w-table-presenter-inner">
-                {Object.entries(props.order).map(([field, el], index) =>
-                    <div key={index}>
-                        <div><i className={'fa fa-' + (el.dir == 'asc' ? 'arrow-down' : 'arrow-up')}></i></div>
-                        <div className="caption">{el.caption}</div>
-                        <div className="remove" onClick={(e) => props.orderDelete(field)}><i className="fa fa-times"></i></div>
-                    </div>
-                )}
-
-                {Object.entries(props.filters).map(([key, el]) =>
-                    <div key={key}>
-                        <div><i className="ms-Icon ms-Icon--Filter"></i></div>
-                        <div className="caption">{el.caption}</div>
-                        <div className="value" dangerouslySetInnerHTML={{__html: el.label}}/>
-                        <div className="remove" onClick={(e) => props.FilterDelete(key)}><i className="fa fa-times"></i></div>
-                    </div>
-                )}
-            </div>
-        </div>
-    )
-}
-
-
-function Loading(props) {
-    return (
-        <tbody>
-        <tr>
-            <td className="w-table-center" colSpan={props.colspan}>
-                {/*<i className="fa fa-spinner fa-spin"></i>*/}
-            </td>
-        </tr>
-        </tbody>
-    )
-}
-
-function EmptyResult(props) {
-    return (
-        <tbody>
-        <tr>
-            <td className="w-table-center" colSpan={props.colspan}><h4>Brak danych</h4></td>
-        </tr>
-        </tbody>
-    )
-}
-
-
-function Error(props) {
-    return (
-        <tbody>
-        <tr>
-            <td colSpan={props.colspan}>
-                <span dangerouslySetInnerHTML={{__html: props.error}}/>
-            </td>
-        </tr>
-        </tbody>
-    )
-}
-
-function Footer(props) {
-    const pages = Math.max(Math.ceil(props.count / props.onPage), 1);
-
-    const leftRightCount = 0;
-
-    const from = Math.max(1, Math.min(pages - leftRightCount * 2, Math.max(1, props.currentPage - leftRightCount)));
-    var arr = (function (a, b) {
-        while (a--) b[a] = a + from;
-        return b
-    })(Math.min(leftRightCount * 2 + 1, pages > 0 ? pages : 1), []);
-    const table = props.parent;
-
-    return (
-        <tr>
-            <td colSpan={props.columns.length + 1} className="w-table-footer-main">
-
-
-                <div className="w-table-pager">
-                    <div onClick={(e) => props.currentPageChanged(1)}><i className="fa fa-angle-double-left"></i></div>
-                    <div onClick={(e) => props.currentPageChanged(Math.max(1, props.currentPage - 1))}><i className="fa fa-angle-left"></i></div>
-                    {arr.map((el, i) =>
-                        <div key={i} onClick={(e) => props.currentPageChanged(el)} className={el == props.currentPage ? 'w-table-pager-active' : ''}>{el}</div>
-                    )}
-                    <div onClick={(e) => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}><i className="fa fa-angle-right"></i></div>
-                    <div onClick={(e) => props.currentPageChanged(pages)}><i className="fa fa-angle-double-right"></i></div>
-                </div>
-
-                <div className="w-table-footer-pageinfo">
-                    {props.currentPage} / {pages} [ {props.count} ]
-                </div>
-
-                <div className="w-table-footer-onpage-select">
-                    <span>Na stronie: </span>
-                    <select value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
-                        {([10, 25, 50, 100, 500]).map((x, i) =>
-                            <option key={'onpageval' + x} value={x}>{x}</option>
-                        )}
-                    </select>
-                </div>
-
-
-                <div className="w-table-buttons">
-
-                    <button title="Usuń zmiany" onClick={table.handleStateRemove.bind(table)}><i className="fa fa-eraser"></i></button>
-                    <button title="Odśwież" onClick={table.load.bind(table)}><i className="fa fa-refresh"></i></button>
-                    {/*<button title="Zmień sposób wyświetlania" onClick={table.toggleFixedLayout.bind(table)}><i className="fa fa-window-restore"></i></button>*/}
-                    <div
-                        title="Przesuń i upuść aby zmienić rozmiar tabeli"
-                        className="w-table-footer-drag"
-                        onDragStart={(e) => {
-                            props.bodyResizeStart(e)
-                        }} onDrag={(e) => {
-                        props.bodyResize(e)
-                    }}
-                        onDragEnd={(e) => {
-                            props.bodyResizeEnd(e)
-                        }}
-                        draggable={true}
-                    ><i className="fa fa-arrows-v"></i></div>
-                    {/*{table.state.loading ? <button className="w-table-loading-indicator"><i className="fa fa-spinner fa-spin"></i></button> : ''}*/}
-                </div>
-
-
-            </td>
-        </tr>
-    )
-}
-
-function Rows(props) {
-    const cells = {
-        'Simple': ColumnSimple,
-        'Map': ColumnMap,
-        'Date': ColumnDate,
-        'Multi': ColumnMulti,
-    };
-
-    const packValue = (val, props) => {
-        let templateResult = false;
-        if (props.column.template) {
-            templateResult = props.column.template(val, props.row);
-
-        }
-        return (
-            <div>
-                {props.column.icon ? <i className={'w-table-prepend-icon fa ' + props.column.icon}></i> : ''}
-                {props.column.prepend ? props.column.prepend : ''}
-                {templateResult ? (typeof templateResult == 'string' ? <span dangerouslySetInnerHTML={{__html: (props.column.template(val, props.row))}}></span> : templateResult) : (val ? val : props.column.default)}
-                {props.column.append ? props.column.append : ''}
-            </div>
-        )
-    };
-
-    const columns = props.columns.filter(el => el !== null && el.display === true);
-
-    let cache = {};
-
-    for (let index = 0; index < columns.length; index++) {
-        let column = columns[index];
-        cache[index] = cache[index] || {}
-        cache[index].classes = [];
-        if (props.order[column.field] !== undefined) {
-            cache[index].classes.push('w-table-sorted w-table-sorted-' + props.order[column.field].dir);
-        }
-        if (props.filters[column.field] !== undefined) {
-            cache[index].classes.push('w-table-filtered')
-        }
-        if (
-            column.events.click && column.events.click.length > 0 ||
-            column.events.mouseUp && column.events.mouseUp.length > 0
-        ) {
-            cache[index].classes.push('w-table-cell-clickable');
-        }
-        cache[index].classes = cache[index].classes.concat(column.class);
-    }
-
-
-    return (
-
-
-        <tbody style={{maxHeight: props.bodyHeight}}>
-
-
-        {props.data.map((row, index) =>
-            <tr key={'row' + index}
-                className={props.rowClassTemplate ? props.rowClassTemplate(row, index) : ''}
-                style={props.rowStyleTemplate ? props.rowStyleTemplate(row, index) : {}}
-            >
-                {props.selectable ?
-                    <td className="w-table-selection-cell" onClick={(e) => props.onCheck(index, e)}>
-                        <input type="checkbox" checked={props.selection.indexOf(index) != -1}/>
-                    </td>
-                    : null}
-                {columns.map((column, index2) => {
-                    const Component = column.type ? cells[column.type] : cells['Simple'];
-                    return (<td key={'cell' + index2}
-                                style={{width: column.width, ...column.styleTemplate(row, column)}}
-                                onClick={column.events.click ? (event) => {
-
-                                    column.events.click.map((callback) => {
-                                        callback.bind(this)(row, column, event);
-                                    })
-                                } : function () {
-                                }}
-                                onMouseUp={column.events.mouseUp ? (event) => {
-                                    column.events.mouseUp.map((callback) => {
-                                        callback.bind(this)(row, column, event);
-                                    })
-                                } : function () {
-                                }}
-                                onMouseEnter={column.events.enter ? (event) => {
-                                    column.events.enter.map((callback) => {
-                                        callback.bind(this)(row, column, event);
-                                    })
-                                } : function () {
-                                }}
-                                onMouseLeave={column.events.leave ? (event) => {
-                                    column.events.leave.map((callback) => {
-                                        callback.bind(this)(row, column, event);
-                                    })
-                                } : function () {
-                                }}
-                                className={cache[index2].classes.concat(column.classTemplate(row, column)).join(' ')}
-                        >
-                            <Component column={column} row={row} cells={cells} packValue={packValue}/>
-                        </td>
-                    )
-                })}
-            </tr>
-        )}
-
-        </tbody>
-    )
-}
-
-function ColumnSimple(props) {
-    return (
-        <div>
-            {props.packValue(props.column.field ? (props.row[props.column.field] ? props.row[props.column.field] : props.column.default) : '', props)}
-
-        </div>
-    )
-}
-
-function ColumnDate(props) {
-    return (
-        <div className="w-table-cell-date">
-            {props.packValue(props.column.field ? (props.row[props.column.field] ? props.row[props.column.field] : props.column.default) : '', props)}
-        </div>
-    )
-}
-
-
-function ColumnMap(props) {
-    const value = props.row[props.column.field];
-    return (
-        <div>
-            {props.packValue(props.column.map[value] ? props.column.map[value] : value, props)}
-        </div>
-    )
-}
-
-function ColumnMulti(props) {
-    return (
-        <div>
-            {/*{JSON.stringify(props.column.columns)}*/}
-
-            {props.column.columns.map((column) => {
-                const Component = column.type ? props.cells[column.type] : props.cells['Simple'];
-                let classes = ['w-table-cell-multi']
-                if (column.classTemplate[props.row[column.field]])
-                    classes.push(column.classTemplate[props.row[column.field]]);
-                if (column.classTemplate[props.row[column.field]])
-                    classes.push(column.classTemplate[props.row[column.field]]);
-                if (column.class)
-                    classes = classes.concat(column.class);
-
-                return (<div key={'multi' + column.field} className={classes.join(' ')}>
-                    <Component column={column} row={props.row} packValue={props.packValue}/>
-                </div>)
-            })}
-
-        </div>
-    )
-}
-
-
-const defaultColumnData = {
-    field: '',
-    caption: '',
-    isSortable: true,
-    display: true,
-    toolTip: null,
-    width: null,
-    class: [],
-    type: 'Simple',
-    orderField: 'id',
-    icon: null,
-    append: null,
-    prepend: null,
-    classTemplate: [],
-    template: null,
-    default: ''
-};
-
-
-const Filter = () => null
-const Sorter = () => null
-
-
-export {Table, ColumnHelper, ColumnHelper as Column, Filter, Sorter}
+export {Table, ColumnHelper, ColumnHelper as Column}
