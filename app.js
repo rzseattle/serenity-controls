@@ -6,11 +6,6 @@ require('./styles/App.sass')
 require('./src/lib/react-helper.js');
 //import {AppContainer} from 'react-hot-loader';
 
-import jQuery from 'jquery'
-
-
-if (!global.$)
-    global.$ = jQuery;
 
 
 global.ReactDOM = ReactDOM;

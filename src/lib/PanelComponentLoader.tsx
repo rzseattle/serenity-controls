@@ -3,7 +3,7 @@ declare var $: any;
 declare var global: any;
 import * as React from "react";
 import * as Notifications from "react-notification-system";
-
+import Comm from './Comm'
 import {DebugTool} from '../utils/DebugTool'
 
 
@@ -47,7 +47,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     handleReloadProps(input = {}, callback: () => any) {
         this.setState({propsLoading: true});
-        $.get(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}, (data) => {
+        Comm._post(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}).then((data) => {
             this.setState({propsLoading: false, loadedProps: data});
             if (callback) {
                 callback();
@@ -62,7 +62,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     handleGoTo(path, input = {}) {
         this.setState({propsLoading: true});
-        $.get(path, {...input, __PROPS_REQUEST__: 1}, (data) => {
+        Comm._post(path, {...input, __PROPS_REQUEST__: 1}).then((data) => {
             var stateObj = {};
             let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
             history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
@@ -106,7 +106,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
 
         return <div>
-            {!PRODUCTION&&<DebugTool {...debugVar} />}
+            {!PRODUCTION && <DebugTool {...debugVar} />}
 
 
             <Notifications {...notificaton} />
