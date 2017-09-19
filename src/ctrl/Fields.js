@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Inputmask from 'inputmask';
+//import Inputmask from 'inputmask';
 import Dropzone from 'react-dropzone';
 
 

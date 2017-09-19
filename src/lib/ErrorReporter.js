@@ -1,14 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {SourceMapConsumer} from 'source-map';
+//var sourceMap = require('source-map');
+import {SourceMapConsumer} from 'source-map/dist/source-map.min.js'
 
-
-
-
-
-
-
-var sourceMap = require('source-map');
 export default class ErrorReporter extends React.Component {
 
     constructor(props) {
@@ -17,6 +11,7 @@ export default class ErrorReporter extends React.Component {
             file: [],
             stacks: []
         }
+
     }
 
     componentDidMount() {
@@ -30,7 +25,7 @@ export default class ErrorReporter extends React.Component {
         }).then((response) => {
                 response.text().then((rawSourceMapJsonData) => {
 
-                        var consumer = new sourceMap.SourceMapConsumer(rawSourceMapJsonData);
+                        var consumer = new SourceMapConsumer(rawSourceMapJsonData);
                         stacks.forEach(stack => {
                             this.state.stacks.push(consumer.originalPositionFor({line: stack.lineNumber, column: stack.columnNumber}));
                         });

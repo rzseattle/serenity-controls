@@ -26,6 +26,7 @@ interface IState {
     loading: boolean,
     loadedProps: any,
     log: Array<any>
+    debugToolLoaded: boolean
 
 }
 
@@ -33,6 +34,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     _notificationSystem: any;
     state: IState;
+    DebugTool: any = null;
 
     constructor(props) {
         super(props);
@@ -40,9 +42,23 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             loading: false,
             loadedProps: false,
             currComponent: global.ReactHelper.getWithData(props.component),
-            log: []
+            log: [],
+            debugToolLoaded: false
         }
     }
+
+    componentDidMount() {
+        if (!PRODUCTION) {
+            //import {DebugTool} from '../utils/DebugTool'
+
+            import( /* webpackChunkName = "DebugTool" */ '../utils/DebugTool').then(({DebugTool}) => {
+                this.DebugTool = DebugTool;
+                this.setState({debugToolLoaded: true});
+
+            });
+        }
+    }
+
 
     handleReloadProps(input = {}, callback: () => any) {
         this.setState({loading: true});
@@ -72,7 +88,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     handleNotifycation(message, title = '', options = {}) {
-        let data = {title: title, message: message, ...{level: 'success',   ...options}};
+        let data = {title: title, message: message, ...{level: 'success', ...options}};
 
         this._notificationSystem.addNotification(data);
 
@@ -106,12 +122,12 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             ref: (ns) => this._notificationSystem = ns
         }
 
+        let DebugTool = this.DebugTool;
         return <div>
-            {!PRODUCTION && <DebugTool {...debugVar} />}
+            {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
             {this.state.loading && <div className="w-loader" style={{position: 'absolute', right: 10, top: 15}}>
                 <span><i></i><i></i><i></i><i></i></span>
             </div>}
-
 
 
             <Notifications {...notificaton} />
