@@ -1,19 +1,22 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import * as React from "react";
 
+interface IContainerProps {
+    children?: any
+}
 
-
-const Container = (props) => {
+const Container: React.StatelessComponent<IContainerProps> = (props) => {
     return (
         <div className="container">{props.children}</div>
     )
 }
-Container.propTypes = {
-    children: PropTypes.node.isRequired,
+
+interface IRowProps {
+    children?: any,
+    md?: Array<number>,
+    noGutters?: boolean
 }
 
-
-const Row = (props) => {
+const Row: React.StatelessComponent<IRowProps> = (props) => {
 
     let children = Array.isArray(props.children) ? props.children : [props.children];
     children = children.filter((el) => el != null && el);
@@ -28,7 +31,7 @@ const Row = (props) => {
         }
         //calculating width for rest of columns
         colMd = (12 - sum) / (children.length - props.md.length );
-        colsMd = Object.assign({},props.md);
+        colsMd = Object.assign({}, props.md);
     } else {
         //equal width for each element
         colMd = 12 / children.length;
@@ -39,8 +42,8 @@ const Row = (props) => {
         colsMd[i] = Math.floor(colMd);
     }
 
-    let style = {};
-    if(props.noGutters) {
+    let style: any = {};
+    if (props.noGutters) {
         style.padding = 0;
         style.margin = 0;
     }
@@ -53,26 +56,10 @@ const Row = (props) => {
     )
 }
 
-Row.propTypes = {
-    children: PropTypes.node.isRequired,
-    md: PropTypes.array,
-    noGutters: PropTypes.bool
-}
 
 Row.defaultProps = {
     noGutters: true
 }
 
-/*
-* <Tabs defaultActiveKey="1" onChange={callback}>
-    <TabPane tab="Tab 1" key="1">Content of Tab Pane 1</TabPane>
-    <TabPane tab="Tab 2" key="2">Content of Tab Pane 2</TabPane>
-    <TabPane tab="Tab 3" key="3">Content of Tab Pane 3</TabPane>
-  </Tabs>
-*
-* */
 
-
-
-
-export { Row, Container }
+export {Row, Container}

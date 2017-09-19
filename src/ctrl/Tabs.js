@@ -41,9 +41,8 @@ class Tabs extends Component {
                                 <i className={'fa fa-' + child.props.icon}></i>
                                 : null}
                             {child.props.title}
-                            {child.props.badge != undefined ?
-                                <div className="w-tabs-badge">{child.props.badge}</div>
-                                : null}
+                            {child.props.badge != undefined ?<div className="w-tabs-badge">({child.props.badge})</div>: null}
+
                         </div>
                     })}
                 </div>

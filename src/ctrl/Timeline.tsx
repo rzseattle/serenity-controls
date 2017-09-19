@@ -1,7 +1,16 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import * as React from "react";
 
-const TimelineItem = (props) => {
+
+interface ITimelineItemProps {
+    color?: string,
+    time?: string,
+    user?: string,
+    action?: string,
+    icon?: string,
+    children?: string,
+}
+
+const TimelineItem: React.StatelessComponent<ITimelineItemProps> = (props) => {
 
 
     return (
@@ -11,32 +20,22 @@ const TimelineItem = (props) => {
     )
 }
 
-TimelineItem.propTypes = {
-    color: PropTypes.string,
-    time: PropTypes.string,
-    user: PropTypes.string,
-    action: PropTypes.string,
-    icon: PropTypes.string,
-    children: PropTypes.node,
-}
 
 TimelineItem.defaultProps = {
     //kolor
     color: 'blue'
 }
 
-class Timeline extends Component {
+
+interface ITimelineProps {
+    children?: any,
+}
 
 
-    static propTypes = {
-        children: PropTypes.arrayOf(TimelineItem).isRequired
-    }
+class Timeline extends React.Component<ITimelineProps, any> {
 
     constructor(props) {
         super(props);
-        this.state = {
-            currentTab: props.defaultActiveTab || 0
-        }
     }
 
 
@@ -47,8 +46,8 @@ class Timeline extends Component {
                 <ul>
                     {p.children.map((child, index) =>
                         <li key={index}>
-                            {index+1 < p.children.length && <div className="tail"></div>}
-                            <div className={'head ' + child.props.color  + (child.props.icon?' fa fa-'+child.props.icon:' head-circle')}></div>
+                            {index + 1 < p.children.length && <div className="tail"></div>}
+                            <div className={'head ' + child.props.color + (child.props.icon ? ' fa fa-' + child.props.icon : ' head-circle')}></div>
                             <div className="content">
                                 <p className="content-head">{child.props.time}
                                     {child.props.user && <span className="user">[{child.props.user}]</span>}
@@ -63,10 +62,7 @@ class Timeline extends Component {
                 </ul>
             </div>
         )
-
-        const s = this.state;
     }
 }
-
 
 export {Timeline, TimelineItem}

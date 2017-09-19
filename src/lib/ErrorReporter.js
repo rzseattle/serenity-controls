@@ -108,6 +108,21 @@ export default class ErrorReporter extends React.Component {
 const regexValidFrame_Chrome = /^\s*(at|in)\s.+(:\d+)/;
 const regexValidFrame_FireFox = /(^|@)\S+:\d+|.+line\s+\d+\s+>\s+(eval|Function).+/;
 
+const regexExtractLocation = /\(?(.+?)(?::(\d+))?(?::(\d+))?\)?$/;
+
+function extractLocation(token) {
+  return regexExtractLocation
+    .exec(token)
+    .slice(1)
+    .map(v => {
+      const p = Number(v);
+      if (!isNaN(p)) {
+        return p;
+      }
+      return v;
+    });
+}
+
 function parseStack(stack) {
   const frames = stack
     .filter(
@@ -163,4 +178,112 @@ function parseError(error) {
     return parseStack(error.stack.split('\n'));
   }
   throw new Error('The error you provided does not contain a stack trace.');
+}
+
+class ScriptLine {
+  /** The line number of this line of source. */
+  lineNumber;
+  /** The content (or value) of this line of source. */
+  content;
+  /** Whether or not this line should be highlighted. Particularly useful for error reporting with context. */
+  highlight;
+
+  constructor(lineNumber, content, highlight = false) {
+    this.lineNumber = lineNumber;
+    this.content = content;
+    this.highlight = highlight;
+  }
+}
+
+/**
+ * A representation of a stack frame.
+ */
+class StackFrame {
+  functionName;
+  fileName;
+  lineNumber;
+  columnNumber;
+
+  _originalFunctionName;
+  _originalFileName;
+  _originalLineNumber;
+  _originalColumnNumber;
+
+  _scriptCode;
+  _originalScriptCode;
+
+  constructor(
+    functionName = null,
+    fileName = null,
+    lineNumber = null,
+    columnNumber = null,
+    scriptCode = null,
+    sourceFunctionName = null,
+    sourceFileName = null,
+    sourceLineNumber = null,
+    sourceColumnNumber = null,
+    sourceScriptCode = null
+  ) {
+    if (functionName && functionName.indexOf('Object.') === 0) {
+      functionName = functionName.slice('Object.'.length);
+    }
+    if (
+      // Chrome has a bug with inferring function.name:
+      // https://github.com/facebookincubator/create-react-app/issues/2097
+      // Let's ignore a meaningless name we get for top-level modules.
+      functionName === 'friendlySyntaxErrorLabel' ||
+      functionName === 'exports.__esModule' ||
+      functionName === '<anonymous>' ||
+      !functionName
+    ) {
+      functionName = null;
+    }
+    this.functionName = functionName;
+
+    this.fileName = fileName;
+    this.lineNumber = lineNumber;
+    this.columnNumber = columnNumber;
+
+    this._originalFunctionName = sourceFunctionName;
+    this._originalFileName = sourceFileName;
+    this._originalLineNumber = sourceLineNumber;
+    this._originalColumnNumber = sourceColumnNumber;
+
+    this._scriptCode = scriptCode;
+    this._originalScriptCode = sourceScriptCode;
+  }
+
+  /**
+   * Returns the name of this function.
+   */
+  getFunctionName() {
+    return this.functionName || '(anonymous function)';
+  }
+
+  /**
+   * Returns the source of the frame.
+   * This contains the file name, line number, and column number when available.
+   */
+  getSource() {
+    let str = '';
+    if (this.fileName != null) {
+      str += this.fileName + ':';
+    }
+    if (this.lineNumber != null) {
+      str += this.lineNumber + ':';
+    }
+    if (this.columnNumber != null) {
+      str += this.columnNumber + ':';
+    }
+    return str.slice(0, -1);
+  }
+
+  /**
+   * Returns a pretty version of this stack frame.
+   */
+  toString() {
+    const functionName = this.getFunctionName();
+    const source = this.getSource();
+    return `${functionName}${source ? ` (${source})` : ``}`;
+  }
 }

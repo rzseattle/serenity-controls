@@ -1,21 +1,25 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import * as React from "react";
+import Icon from "./Icon"
 
-export default class Panel extends Component {
+interface IPanelProps {
+    title?: string,
+    noPadding?: boolean,
+    noBottomMargin?: boolean,
+    toolbar?: Array<any>,
+    children?: any,
+    icon?: string
+}
 
-    static propTypes = {
-        title: PropTypes.string,
-        noPadding: PropTypes.bool,
-        noBottomMargin: PropTypes.bool,
-        toolbar: PropTypes.arrayOf(PropTypes.node),
-        children: PropTypes.node
-    };
-    static defaultProps = {
+
+export default class Panel extends React.Component<IPanelProps, any> {
+
+    public static defaultProps: Partial<IPanelProps> = {
         noPadding: false,
         noBottomMargin: true,
         children: null,
-        title: null,
+        title: "",
         toolbar: [],
+        icon: "",
     };
 
     render() {
@@ -29,9 +33,9 @@ export default class Panel extends Component {
         }
         return (
             <div className={classes.join(' ')}>
-                <div className="panel-body">
-                    {props.title ? <div className="title">
-                        {props.icon && <i className={'fa fa-' + props.icon} />}
+                <div className="panel-body ">
+                    {props.title ? <div className="title ">
+                        {props.icon && <Icon name={props.icon}/>}
                         {props.title}
                         <div className="panel-toolbar">{props.toolbar}</div>
                     </div> : ''}

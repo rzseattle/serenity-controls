@@ -1,9 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import * as React from "react";
+import * as ReactDOM from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
+declare var window: any;
 
 
-class ErrorReporterLoader extends  React.Component{
+class ErrorReporterLoader extends  React.Component<any,any>{
 
     constructor(props){
         super(props);
@@ -14,7 +15,7 @@ class ErrorReporterLoader extends  React.Component{
     }
 
     componentDidMount(){
-        import('./ErrorReporter').then((Reporter) => {
+        import("./ErrorReporter").then((Reporter) => {
             this.setState({loaded:true, component: Reporter.default});
         });
     }
@@ -63,7 +64,7 @@ window.ReactHelper = {
         const selector = '[react-component],[data-react-component]';
 
         context.querySelectorAll(selector).forEach((node) => {
-            name =
+            let name =
                 node.getAttribute('react-component') ||
                 node.getAttribute('data-react-component');
             this.initComponent(name, node)
@@ -78,7 +79,7 @@ window.ReactHelper = {
     },
 
     get: function (name) {
-        return this.getWithData(name)['_obj'];
+        return this.getWithData(name);
     },
 
     getWithData: function(name){

@@ -2,8 +2,8 @@ import ReactDOM from 'react-dom'
 import React from 'react'
 import PanelComponentLoader from './src/lib/PanelComponentLoader'
 
-require('./styles/App.sass')
-require('./src/lib/react-helper.js');
+
+require('./src/lib/react-helper.tsx');
 //import {AppContainer} from 'react-hot-loader';
 
 

@@ -1,5 +1,4 @@
 declare var PRODUCTION: boolean;
-declare var $: any;
 declare var global: any;
 import * as React from "react";
 import * as Notifications from "react-notification-system";
@@ -11,7 +10,7 @@ export interface IArrowViewComponentProps {
     baseURL: string;
     _notification: (content: string, title?: string, conf?: object) => any;
     _reloadProps: () => any;
-    _goto: (componentPath: string) => any;
+    _goto: (componentPath: string, args?: any) => any;
     _log: (element: any) => any;
     _resolveComponent: (componentPath: string) => React.ReactElement<any>
 }
@@ -24,7 +23,7 @@ interface IProps {
 
 interface IState {
     currComponent: any,
-    propsLoading: boolean,
+    loading: boolean,
     loadedProps: any,
     log: Array<any>
 
@@ -38,7 +37,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     constructor(props) {
         super(props);
         this.state = {
-            propsLoading: false,
+            loading: false,
             loadedProps: false,
             currComponent: global.ReactHelper.getWithData(props.component),
             log: []
@@ -46,9 +45,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     handleReloadProps(input = {}, callback: () => any) {
-        this.setState({propsLoading: true});
+        this.setState({loading: true});
         Comm._post(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}).then((data) => {
-            this.setState({propsLoading: false, loadedProps: data});
+            this.setState({loading: false, loadedProps: data});
             if (callback) {
                 callback();
             }
@@ -61,17 +60,19 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     handleGoTo(path, input = {}) {
-        this.setState({propsLoading: true});
+        this.setState({loading: true});
         Comm._post(path, {...input, __PROPS_REQUEST__: 1}).then((data) => {
             var stateObj = {};
+            input = {_rch: 1, ...input};
             let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
-            history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
-            this.setState({propsLoading: false, loadedProps: data, currComponent: global.ReactHelper.get(data.component)});
+            //history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
+            window.location.hash = path + (urlParameters ? '?' : '') + urlParameters;
+            this.setState({loading: false, loadedProps: data, currComponent: global.ReactHelper.get(data.component)});
         });
     }
 
     handleNotifycation(message, title = '', options = {}) {
-        let data = {title: title, message: message, ...{level: 'success', ...options}};
+        let data = {title: title, message: message, ...{level: 'success',   ...options}};
 
         this._notificationSystem.addNotification(data);
 
@@ -79,7 +80,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     handleLog(message) {
         this.state.log.push({msg: message});
-        this.forceUpdate();
+        this.setState(null);
     }
 
     render() {
@@ -107,6 +108,10 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
         return <div>
             {!PRODUCTION && <DebugTool {...debugVar} />}
+            {this.state.loading && <div className="w-loader" style={{position: 'absolute', right: 10, top: 15}}>
+                <span><i></i><i></i><i></i><i></i></span>
+            </div>}
+
 
 
             <Notifications {...notificaton} />
