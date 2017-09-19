@@ -20,7 +20,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
     conf.devServer = {
 
-        https: true,
+        https: HTTPS,
         /*https: {
             key: fs.readFileSync("./ssl/ia.key"),
             cert: fs.readFileSync("./ssl/ia.crt"),
