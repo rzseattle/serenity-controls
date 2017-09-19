@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "baseUrl": ".",
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "DOM",
+      "ES2017",
+      "dom.iterable"
+    ]
+  },
+  "exclude": [
+    "resources", "vendor" , "assets", "data"
+  ]
+}
