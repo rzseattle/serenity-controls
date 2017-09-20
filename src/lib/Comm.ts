@@ -1,5 +1,14 @@
+interface IResponseCallback {
+    (response: any): any
+}
+
 class Comm {
 
+    private events: any;
+    private method: string;
+    private url: string;
+    private data: any;
+    private namespace: string;
 
     constructor(url) {
 
@@ -21,7 +30,7 @@ class Comm {
     }
 
 
-    on(event, callback) {
+    on(event: string, callback: IResponseCallback) {
         if (!Array.isArray(this.events[event])) {
             console.error('Unknow event: ' + event);
             console.log(this.events);
@@ -38,14 +47,14 @@ class Comm {
         this.data = data;
     }
 
-    appendFormData(FormData, data, name = '') {
+    appendFormData(FormData: FormData, data, name = '') {
 
         if (data instanceof FileList) {
 
             for (var i = 0; i < data.length; i++) {
                 // get item
                 let file = data.item(i);
-                formData.append(name + '[]', file);
+                FormData.append(name + '[]', file);
 
             }
             return;
@@ -159,7 +168,7 @@ class Comm {
     }
 
 
-    static __preparePromise(method, url, data, callback) {
+    static __preparePromise(method, url, data, callback): Promise<any> {
         return new Promise((resolve, reject) => {
             let comm = new Comm(url);
             comm.method = method;
@@ -179,15 +188,15 @@ class Comm {
     }
 
 
-    static _post(url, data, callback = null) {
+    static _post(url, data, callback = null): Promise<any> {
         return Comm.__preparePromise('POST', url, data, callback);
     }
 
-    static _get(url, data, callback = null) {
+    static _get(url, data, callback = null): Promise<any> {
         return Comm.__preparePromise('GET', url, data, callback);
     }
 
-    static _put(url, data, callback = null) {
+    static _put(url, data, callback = null): Promise<any> {
         return Comm.__preparePromise('PUT', url, data, callback);
     }
 }
