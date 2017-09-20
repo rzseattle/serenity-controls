@@ -3,8 +3,8 @@
     "react"
   ],
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
+    "tslint:recommended",
+    "tslint-react"
   ],
   "rules": {
     "no-set-state": "off",
