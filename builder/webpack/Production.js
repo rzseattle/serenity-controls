@@ -8,7 +8,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, AN
     conf.entry = ENTRY_POINTS;
     conf.output = {
         filename: 'bundle-[id]-[hash].min.js',
-        path: PUBLIC_PATH,
+        path: PATH,
         publicPath: PUBLIC_PATH
     };
     conf.plugins = [
@@ -25,11 +25,11 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, AN
 
 
         new AssetsPlugin({path: PATH}),
-        new CleanWebpackPlugin(['dist'], {
-            root: BASE_PATH + '/assets',
+   /*     new CleanWebpackPlugin(['dist'], {
+            root: PATH,
             verbose: true,
             dry: false
-        }),
+        }),*/
         new webpack.ContextReplacementPlugin(/moment[\\/]locale$/, /^\.\/(pl)$/),
         //
         new webpack.optimize.UglifyJsPlugin({comments: false, minimize: true, sourceMap: true}),
@@ -41,7 +41,6 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, AN
     }
 
 
-    conf.plugins.push();
     return conf;
 
 }

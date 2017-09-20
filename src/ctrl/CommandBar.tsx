@@ -6,7 +6,7 @@ interface IProps {
     searchPlaceholderText?: string;
     onSearch?: (value: string) => any;
     items: Array<ICommand>,
-    rightItems?: Array<ICommand>,
+    rightItems?: Array<ICommand | null>,
 }
 
 
@@ -49,14 +49,25 @@ export class CommandBar extends React.Component<IProps, any> {
             }
             <div className="menu-bar">
                 <div className="buttons-left">
-                    {this.props.items.map((item: ICommand, index: number) => <a key={index} onClick={item.onClick} className="ms-font-m">
-                        <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
-                    </a>)}
+                    {this.props.items.map((item: ICommand, index: number) => {
+                        if (item !== null) {
+                            return <a key={item.key} onClick={item.onClick} className="ms-font-m">
+                                <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
+                            </a>
+                        }
+                        return null;
+                    })}
+
                 </div>
                 <div className="buttons-right">
-                    {this.props.rightItems.map((item: ICommand, index: number) => <a key={index} onClick={item.onClick}>
-                        <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
-                    </a>)}
+                    {this.props.rightItems.map((item: ICommand, index: number) => {
+                        if (item !== null) {
+                            return <a key={item.key} onClick={item.onClick} className="ms-font-m">
+                                <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
+                            </a>
+                        }
+                        return null;
+                    })}
                 </div>
             </div>
 

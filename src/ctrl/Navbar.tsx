@@ -13,12 +13,15 @@ export default (props: IProps) => {
     return (
         <div className="w-navbar">
             <ol>
-                {children.map((child, key) =>
-                    <li key={key} className={'ms-font-m ' + (key + 1 == props.children.length ? 'active' : '')}>
-                        {child}
-                        <i className="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"/>
-                    </li>
-                )}
+                {children.map((child, key) => {
+                    if(child !== null) {
+                        return <li key={key} className={'ms-font-m ' + (key + 1 == props.children.length ? 'active' : '')}>
+                            {child}
+                            <i className="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"/>
+                        </li>
+                    }
+                    return null;
+                })}
             </ol>
 
             <div style={{float: 'right'}}>
