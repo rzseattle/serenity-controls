@@ -41,7 +41,7 @@ export class ColumnHelper {
 
     }
 
-    static map(field: string, caption: string, options: Array<Option> | object): ColumnHelper {
+    static map(field: string, caption: string, options: Array<Option> | object, multiSelectFilter: boolean = false): ColumnHelper {
 
         return new ColumnHelper({
             field: field,
@@ -49,7 +49,8 @@ export class ColumnHelper {
             template: value => options[value],
             filter: {
                 type: 'SelectFilter',
-                content: options
+                content: options,
+                multiselect: multiSelectFilter
             }
         });
     }

@@ -111,7 +111,7 @@ class DateFilter extends Filter {
                             return false
                         }}
                         onPrevMonthClick={(e) => {
-                            e.preventDefault();
+
                             this.props.container.focus();
                             setTimeout(() => {
                                 this.props.container.focus();
@@ -523,12 +523,14 @@ const withFilterOpenLayer = (Filter) => {
         }
 
         onBlur(e) {
+
+            //todo wymienić daty ( tracące focus ) i zmienić timeout na dużo niższy
             var currentTarget = e.target;
             this.hideTimeout = setTimeout(() => {
                 if (!currentTarget.contains(document.activeElement)) {
                     this.setState({show: false})
                 }
-            }, 50);
+            }, 300);
         }
 
         render() {
