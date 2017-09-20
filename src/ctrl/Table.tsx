@@ -1,56 +1,94 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-
+declare var window: any;
+import * as React from "react";
 import {filtersMapping, withFilterOpenLayer} from './Filters'
-
-
 import {ColumnHelper} from './table/ColumnHelper'
 import FiltersPresenter from './table/FiltersPresenter'
 import Tbody from './table/Tbody'
 import Footer from './table/Footer'
-import {Loading, Error, EmptyResult} from './table/placeholders'
+import {IColumnData, IFilter, IOrder} from './table/Interfaces'
+import {EmptyResult, Error, Loading} from './table/placeholders'
 
 
-class Table extends Component {
+interface IDataQuery {
+
+}
+
+interface IDataProvider {
+    (requestData: IDataQuery): Array<any> | Promise<Array<any>> ;
+}
+
+interface ISelectionChangeEvent {
+    (selected: Array<any>): any;
+}
+
+interface IRowClassTemplate {
+    (row: any, index: number): string;
+}
+
+interface IRowStyleTemplate {
+    (row: any, index: number): any;
+}
+
+interface ITableProps {
+    /**
+     * Spróbujemy komentarza może uda się coś wyświetlić
+     */
+    dataProvider?: IDataProvider;
+    remoteURL?: string,
+    selectable?: boolean,
+    onSelectionChange?: ISelectionChangeEvent,
+    controlKey?: string,
+    onPage?: number,
+    rememberState?: boolean,
+    rowClassTemplate?: IRowClassTemplate,
+    rowStyleTemplate?: IRowStyleTemplate,
+    columns: IColumnData[],
+    showFooter?: boolean,
+    additionalConditions?: any
 
 
-    static propTypes = {
-        data: PropTypes.array,
-        remoteURL: PropTypes.string,
-        selectable: PropTypes.bool,
-        onSelectionChange: PropTypes.func,
-        controlKey: PropTypes.string,
-        onPage: PropTypes.number,
-        selectable: PropTypes.bool,
-        rememberState: PropTypes.bool,
-        rowClassTemplate: PropTypes.func,
-        rowStyleTemplate: PropTypes.func,
-        columns: PropTypes.array,
-        onPage: PropTypes.number,
-        showFooter: PropTypes.bool,
-        dataProvider: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        additionalConditions: PropTypes.object
-
-    }
+}
 
 
-    static defaultProps = {
+interface ITableState {
+    loading: boolean,
+    firstLoaded: boolean,
+    data: Array<any>,
+    dataSourceError: string,
+    dataSourceDebug: boolean,
+    filters: { [key: string]: IFilter }
+    order: { [key: string]: IOrder }
+    onPage: number,
+    currentPage: number,
+    countAll: number,
+    fixedLayout: boolean, // props.fixedLayout,
+    columns: IColumnData[],
+    //bodyHeight: this.props.initHeight,
+    allChecked: boolean,
+    selection: Array<any>
+}
+
+class Table extends React.Component<ITableProps, ITableState> {
+
+    public defaultProps: Partial<ITableProps> = {
         onPage: 25,
         columns: [],
-        buttons: [],
         showFooter: true,
         rememberState: false,
         additionalConditions: {}
     }
+    private tmpDragStartY: number;
+    private xhrConnection: XMLHttpRequest;
+    private hashCode: string;
+    public state: ITableState;
 
     constructor(props) {
 
         super(props);
 
-
-        let columns = props.columns || [];
+        let columns: IColumnData[] = props.columns;
         for (let i in columns) {
-            columns[i] = this.returnColumnData(columns[i]);
+            columns[i] = this.prepareColumnData(columns[i]);
         }
 
         //console.log(columns);
@@ -60,7 +98,7 @@ class Table extends Component {
             loading: false,
             firstLoaded: false,
             data: [],
-            dataSourceError: false,
+            dataSourceError: "",
             dataSourceDebug: false,
             filters: {},
             order: {},
@@ -69,18 +107,14 @@ class Table extends Component {
             countAll: 0,
             fixedLayout: false, // props.fixedLayout,
             columns: columns,
-            bodyHeight: this.props.initHeight,
+            //bodyHeight: this.props.initHeight,
             allChecked: false,
             selection: []
         };
 
         //helpers
         this.tmpDragStartY = 0;
-        this.xhrConnection = 0;
-
-        if (window.controls === undefined)
-            window.controls = {};
-        window.controls[this.props.id] = () => this;
+        this.xhrConnection = null;
 
 
         let hashCode = function (s) {
@@ -112,7 +146,7 @@ class Table extends Component {
             window.localStorage[this.hashCode] = JSON.stringify({
                 onPage: state.onPage,
                 currentPage: state.currentPage,
-                bodyHeight: state.bodyHeight,
+                //bodyHeight: state.bodyHeight,
                 filters: state.filters,
                 order: state.order,
                 fixedLayout: state.fixedLayout
@@ -129,20 +163,20 @@ class Table extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let columns = nextProps.columns || [];
+        let columns = nextProps.columns;
         for (let i in columns) {
-            columns[i] = this.returnColumnData(columns[i]);
+            columns[i] = this.prepareColumnData(columns[i]);
         }
-        this.setState({columns, columns});
+        this.setState({columns: columns});
     }
 
-    getRequestData() {
+    public getRequestData(): IDataQuery {
         let trimmedData = [...this.state.columns];
 
         for (let i = 0; i < trimmedData.length; i++) {
             trimmedData[i] = {...trimmedData[i]};
-            trimmedData[i].filter = {};
-            trimmedData[i].events = {};
+            trimmedData[i].filter = null;
+            trimmedData[i].events = null;
         }
 
         return {
@@ -158,7 +192,7 @@ class Table extends Component {
 
     load() {
 
-        this.state.dataSourceError = false;
+        this.state.dataSourceError = "";
 
         this.setState({loading: true});
 
@@ -205,7 +239,7 @@ class Table extends Component {
                     setStateAfterLoad(data);
                 })
             } else {
-                setStateAfterLoad(data);
+                setStateAfterLoad(result);
             }
         }
     }
@@ -222,7 +256,7 @@ class Table extends Component {
             field: field,
             value: value,
             condition: condition,
-            'caption': caption,
+            caption: caption,
             labelCaptionSeparator: labelCaptionSeparator,
             label: label
         };
@@ -249,7 +283,7 @@ class Table extends Component {
         if (!column.orderField)
             return;
 
-        let field = {};
+        let field = null;
 
         const _field = column.field;
 
@@ -291,7 +325,7 @@ class Table extends Component {
 
     handleBodyResizeStart(e) {
         this.tmpDragStartY = e.clientY
-        this.tmpCurrHeight = this.state.bodyHeight;
+        //this.tmpCurrHeight = this.state.bodyHeight;
     }
 
     handleBodyResize(e) {
@@ -301,7 +335,7 @@ class Table extends Component {
     }
 
     handleBodyResizeEnd(e) {
-        this.setState({bodyHeight: this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
+        //this.setState({bodyHeight: this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
     }
 
 
@@ -351,14 +385,14 @@ class Table extends Component {
         if (this.props.onSelectionChange) {
             let tmp = [];
             s.forEach(index => tmp.push(this.state.data[index]));
-            this.props.onSelectionChange(tmp, this);
+            this.props.onSelectionChange(tmp);
         }
 
         this.setState({selection: s});
 
     }
 
-    returnColumnData(inData) {
+    private prepareColumnData(inData: IColumnData): IColumnData {
         if (inData === null) {
             return null;
         }
@@ -367,7 +401,7 @@ class Table extends Component {
             inData = inData.get();
         }
 
-        let data = {
+        let data: IColumnData = {
             'field': null,
             'caption': inData.caption == undefined ? inData.field : inData.caption,
             'isSortable': true,
@@ -390,8 +424,8 @@ class Table extends Component {
                 'leave': []
             },
             'filter': {
-                'type': 'TextFilter',
-                'field': inData.field
+                type: 'TextFilter',
+                field: inData.field
             }
         }
         data.filter = inData.field ? data.filter : null;
@@ -404,10 +438,9 @@ class Table extends Component {
         if (Array.isArray(data.filter)) {
             if (data.filter.length > 0) {
                 data.filter = {
-                    'type': 'MultiFilter',
-                    'field': 'id',
-                    'title': 'Id',
-                    'caption': 'Id',
+                    caption: 'Id',
+                    type: 'MultiFilter',
+                    field: 'id',
                     filters: data.filter
                 }
             } else {

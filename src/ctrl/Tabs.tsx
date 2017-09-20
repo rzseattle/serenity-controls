@@ -1,17 +1,22 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import * as React from "react";
 
-class Tabs extends Component {
+interface ITabsCallback{
+    (index: number, e: any): any;
+}
 
+interface ITabsProps {
+    children: JSX.Element[];
+    onTabChange?: ITabsCallback
+    defaultActiveTab?: number
 
-    static propTypes = {
-        children: PropTypes.node.isRequired,
-        /**
-         * Default tab that will be activate
-         */
-        defaultActiveTab: PropTypes.number,
-        onTabChange: PropTypes.func
-    }
+}
+
+interface ITabsState {
+    currentTab: number
+}
+
+class Tabs extends React.Component<ITabsProps, ITabsState> {
+
 
     constructor(props) {
         super(props);
@@ -20,8 +25,8 @@ class Tabs extends Component {
         }
     }
 
-    handleTabChange( index, e ){
-        if(this.props.onTabChange){
+    handleTabChange(index, e) {
+        if (this.props.onTabChange) {
             this.props.onTabChange(index, e);
         }
         this.setState({currentTab: index});
@@ -35,13 +40,13 @@ class Tabs extends Component {
         return (
             <div className="w-tabs">
                 <div className="tabs-links">
-                    {React.Children.map(p.children, (child, index) => {
+                    {React.Children.map(p.children, (child: any, index) => {
                         return <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' + (child.props.badge ? 'with-badge' : '')} onClick={this.handleTabChange.bind(this, index)}>
                             {child.props.icon ?
                                 <i className={'fa fa-' + child.props.icon}></i>
                                 : null}
                             {child.props.title}
-                            {child.props.badge != undefined ?<div className="w-tabs-badge">({child.props.badge})</div>: null}
+                            {child.props.badge != undefined ? <div className="w-tabs-badge">({child.props.badge})</div> : null}
 
                         </div>
                     })}
@@ -55,7 +60,18 @@ class Tabs extends Component {
     }
 }
 
-const TabPane = (props) => {
+
+
+interface ITabPaneProps {
+    title: string,
+    badge?: string | number,
+    icon?: string,
+    children?: any
+
+}
+
+const TabPane: React.StatelessComponent<ITabPaneProps> = (props) => {
+
     return (
         <div className="tab-pane">
             {props.children}
@@ -63,12 +79,5 @@ const TabPane = (props) => {
     )
 }
 
-TabPane.propTypes = {
-    title: PropTypes.string,
-    badge: PropTypes.oneOfType( [PropTypes.string, PropTypes.number ]),
-    icon: PropTypes.string,
-    children: PropTypes.node
-
-}
 
 export {Tabs, TabPane}

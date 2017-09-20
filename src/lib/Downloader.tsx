@@ -1,17 +1,27 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+import * as React from "react";
+import * as ReactDOM from 'react-dom';
 
-class Downloader extends Component {
+interface ICleanUpCallback{
+    (): any;
+}
 
-    static propTypes = {
-        url: PropTypes.string.isRequired,
-        data: PropTypes.object,
-        cleanup: PropTypes.func.isRequired
-    };
-    static defaultProps = {
+interface IDownloaderProps {
+    url: string;
+    data?: any;
+    cleanup: ICleanUpCallback;
+}
+
+interface IDownloaderState {
+
+}
+
+class Downloader extends React.Component<IDownloaderProps, IDownloaderState> {
+
+    public defaultProps: Partial<IDownloaderProps> = {
         data: {}
-    };
+    }
+
+    private form: HTMLFormElement
 
     constructor(props) {
         super(props);
@@ -41,7 +51,7 @@ class Downloader extends Component {
 }
 
 
-const download = (url, data = {}) => {
+const download = (url: string, data: any = {}): any => {
 
     let parent = document.body;
 

@@ -23,10 +23,7 @@ export interface IColumnData {
         enter?: Array<IEventCallback>,
         leave?: Array<IEventCallback>
     },
-    filter?: {
-        type?: string,
-        field?: string
-    }
+    filter?: { type?: string, field?: string } || Array<{ type?: string, field?: string }>
 }
 
 export interface ICellTemplate {
@@ -35,4 +32,19 @@ export interface ICellTemplate {
 
 export interface IEventCallback {
     (row: any, column: IColumnData, event: React.MouseEvent<HTMLElement> ): any
+}
+
+
+export interface IFilter {
+    field: string
+    value: string,
+    condition: string,
+    caption: string,
+    labelCaptionSeparator: string,
+    label: string
+}
+
+export interface IOrder {
+    field: string;
+    dir: string;
 }
