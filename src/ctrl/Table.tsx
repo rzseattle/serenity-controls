@@ -76,7 +76,7 @@ interface ITableState {
 
 class Table extends React.Component<ITableProps, ITableState> {
 
-    public defaultProps: Partial<ITableProps> = {
+    public static defaultProps: Partial<ITableProps> = {
         onPage: 25,
         columns: [],
         showFooter: true,
