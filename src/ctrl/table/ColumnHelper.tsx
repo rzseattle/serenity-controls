@@ -183,7 +183,7 @@ export class ColumnHelper {
     }
 
     noFilter(): ColumnHelper {
-        this.data.filter = null;
+        this.data.filter = [];
         return this;
     }
 

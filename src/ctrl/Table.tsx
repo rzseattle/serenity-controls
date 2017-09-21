@@ -5,7 +5,7 @@ import {ColumnHelper} from './table/ColumnHelper'
 import FiltersPresenter from './table/FiltersPresenter'
 import Tbody from './table/Tbody'
 import Footer from './table/Footer'
-import {IColumnData, IFilterContext, IFilterValue, IOrder} from './table/Interfaces'
+import {IColumnData, IFilterValue, IOrder} from './table/Interfaces'
 import {EmptyResult, Error, Loading} from './table/placeholders'
 
 
@@ -257,7 +257,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    handleFilterChanged( filterValue: IFilterValue ) {
+    handleFilterChanged(filterValue: IFilterValue) {
         this.state.filters[filterValue.field] = filterValue;
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
     }
@@ -434,7 +434,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
 
         data.orderField = data.orderField || data.field;
-        data.filter.forEach(el =>  el.field = el.field || inData.field)
+        data.filter.forEach(el => el.field = el.field || inData.field)
 
 
         return data;
@@ -467,7 +467,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                         }
                         {columns.filter(el => el !== null && el.display === true).map((el, index) => {
 
-                            const Component = el.filter ? withFilterOpenLayer(el.filter) : null;
+                            const Component = el.filter.length > 0 ? withFilterOpenLayer(el.filter) : null;
                             let classes = []
                             if (this.state.order[el.field] !== undefined) {
                                 classes.push('w-table-sorted w-table-sorted-' + this.state.order[el.field].dir)
@@ -482,7 +482,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                                 >
                                     {el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}
                                     {el.caption}
-                                    {el.filter ? <Component onChange={this.handleFilterChanged.bind(this)}  /> : ''}
+                                    {el.filter.length > 0 ? <Component onChange={this.handleFilterChanged.bind(this)}/> : ''}
                                 </th>)
                         })}
                     </tr>
