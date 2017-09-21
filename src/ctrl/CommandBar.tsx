@@ -4,7 +4,7 @@ import {ICommand} from "../lib/ICommand"
 interface IProps {
     isSearchBoxVisible?: boolean;
     searchPlaceholderText?: string;
-    onSearch?: (value: string) => any;
+    onSearch?: {(value: string): any};
     items: Array<ICommand>,
     rightItems?: Array<ICommand | null>,
 }

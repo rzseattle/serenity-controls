@@ -148,8 +148,8 @@ class MyModal extends Component {
                 node.style['left'] = left + 'px';
             } else {
 
-                let x = Math.min(Math.round(data.width / 2), (window.innerWidth) / 2 - 5);
-                let y = Math.min(Math.round(data.height / 2), (window.innerHeight / 2) - 5);
+                let x = Math.min(Math.round(data.width / 2), (window.innerWidth) / 2 - 5).toFixed();
+                let y = Math.min(Math.round(data.height / 2), (window.innerHeight / 2) - 5).toFixed();
                 x = this.props.left != undefined || this.props.right != undefined ? 0 : x;
                 y = this.props.top != undefined || this.props.bottom != undefined? 0 : y;
                 node.style['transform'] = `translate(-${x}px, -${y}px)`;
