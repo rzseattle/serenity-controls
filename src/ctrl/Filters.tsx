@@ -1,17 +1,38 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
+import * as React from "react";
+import * as ReactDOM from 'react-dom';
+import {IFilterContext, IFilterValue} from "frontend/src/ctrl/table/Interfaces";
 
+import '../../../react-dates/lib/css/_datepicker.css'
 
 let moment;
 let locale;
 let datePicker;
 
+interface IFilterProps {
+    field: string
+    caption: string
+    /**Filters container for keep focus etc */
+    container?: any
+    onChange?: { (filterValue: IFilterValue): any }
+    config?: any
+}
 
-class Filter extends Component {
+interface IFilterComponent {
+    //todo
+    //FILTER_INTERFACE_TEST?: boolean
 
 }
 
-class DateFilter extends Filter {
+class AbstractFilter extends React.Component<IFilterProps, any> {
+
+}
+
+
+class DateFilter extends AbstractFilter implements IFilterComponent {
+    public FILTER_INTERFACE_TEST: boolean = true;
+    timepicker: any;
+    datepicker: any;
+
 
     constructor(props) {
         super(props)
@@ -32,10 +53,10 @@ class DateFilter extends Filter {
     componentWillMount() {
 
         Promise.all([
-            import( 'moment'),
-            import( 'moment/locale/pl' ),
-            import( 'react-dates' ),
-            import( 'react-dates/lib/css/_datepicker.css' ),
+            import('moment'),
+            import('moment/locale/pl'),
+            import('react-dates'),
+
         ]).then(imported => {
             [moment, locale, datePicker/*, timePicker*/] = imported;
             this.setState({
@@ -67,13 +88,31 @@ class DateFilter extends Filter {
         if (timeStart == '00:00:00' && timeStop == '23:59:59')
             label = `${dateStart} ${separatorI} ${dateStop}`;
 
+        let applyVal: string | Array<string> = "";
+        let condition: string;
+
+
         if (this.state.choiceType == 'range') {
-            this.props.onChange(this.props.field, val, '<x<in', this.props.caption, ':', label);
+            condition = "<x<in";
+            applyVal = val;
         } else if (this.state.choiceType == 'exists') {
-            this.props.onChange(this.props.field, '0000-00-00 00:00:00', '>', this.props.caption, ':', 'Data ustalona');
+            condition = ">";
+            applyVal = '0000-00-00 00:00:00';
+            label = 'Data ustalona';
         } else if (this.state.choiceType == 'not-exists') {
-            this.props.onChange(this.props.field, ['0000-00-00 00:00:00', null, ''], 'IN', this.props.caption, ':', 'Data nie ustalona');
+            condition = "IN";
+            applyVal = ['0000-00-00 00:00:00', null, ''];
+            label = "Data nie ustalona";
         }
+
+        this.props.onChange({
+            field: this.props.field,
+            value: applyVal,
+            condition: condition,
+            caption: this.props.caption,
+            labelCaptionSeparator: ":",
+            label: label
+        });
 
 
     }
@@ -94,16 +133,16 @@ class DateFilter extends Filter {
                 <div style={{display: (s.choiceType != 'range' ? 'none' : 'block')}}>
                     <i className="fa fa-calendar-o"></i>
                     <datePicker.DateRangePicker
-                        startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                        endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                        onDatesChange={({startDate, endDate}) => this.setState({startDate, endDate})} // PropTypes.func.isRequired,
-                        focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
+                        onDatesChange={({startDate, endDate}) => this.setState({startDate, endDate})}
+                        focusedInput={this.state.focusedInput}
                         onFocusChange={focusedInput => {
                             if (focusedInput == null) {
                                 this.props.container.focus()
                             }
                             this.setState({focusedInput});
-                        }} // PropTypes.func.isRequired,
+                        }}
                         startDatePlaceholderText="Data od"
                         endDatePlaceholderText="Data do"
                         minimumNights={0}
@@ -145,43 +184,7 @@ class DateFilter extends Filter {
                     </div>
                 </div>
 
-                {/*<div className="w-filter-date-time">
-                 <i className="fa fa-clock-o"></i>
-                 <div>
-                 <timePicker defaultValue={this.state.startTime} showSecond={false}
-                 onChange={(value) => {
-                 if (value) {
-                 this.setState({startTime: value})
 
-                 }
-                 this.props.container.focus()
-                 }}
-                 onClose={() => {
-                 setTimeout(() => this.props.container.focus(), 20);
-                 }}
-                 value={this.state.startTime}
-                 />
-                 </div>
-                 <div >
-                 <svg viewBox="0 0 1000 1000">
-                 <path d="M694.4 242.4l249.1 249.1c11 11 11 21 0 32L694.4 772.7c-5 5-10 7-16 7s-11-2-16-7c-11-11-11-21 0-32l210.1-210.1H67.1c-13 0-23-10-23-23s10-23 23-23h805.4L662.4 274.5c-21-21.1 11-53.1 32-32.1z"></path>
-                 </svg>
-                 </div>
-                 <div>
-                 <timePicker defaultValue={this.state.endTime} showSecond={false}
-                 onChange={(value) => {
-                 if (value) {
-                 this.setState({endTime: value})
-                 }
-                 this.props.container.focus()
-                 }}
-                 onClose={() => {
-                 setTimeout(() => this.props.container.focus(), 20);
-                 }}
-                 value={this.state.endTime}
-                 />
-                 </div>
-                 </div>*/}
                 <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
                 </div>
@@ -193,14 +196,22 @@ class DateFilter extends Filter {
 
 }
 
-class SelectFilter extends Filter {
+class SelectFilter extends AbstractFilter implements IFilterComponent {
+    FILTER_INTERFACE_TEST: boolean;
+    select: any;
+
+    public static defaultProps: Partial<IFilterProps> = {
+        config: {multiselect: false, content: []}
+    };
 
     handleApply(e) {
         e.stopPropagation();
 
         this.setState({show: false});
 
-        let select = ReactDOM.findDOMNode(this.refs.value);
+        console.log(this.select);
+        let select = ReactDOM.findDOMNode(this.select);
+        console.log(select);
         let values = [].filter.call(select.options, function (o) {
             return o.selected;
         }).map(function (o) {
@@ -214,29 +225,36 @@ class SelectFilter extends Filter {
 
 
         if (this.props.onChange) {
-            this.props.onChange(this.props.field, values, 'IN', this.props.caption, ':', labels.join(', '));
+            this.props.onChange({
+                field: this.props.field,
+                value: values,
+                condition: 'IN',
+                caption: this.props.caption,
+                labelCaptionSeparator: ":",
+                label: labels.join(', ')
+            });
         }
 
     }
 
     _handleKeyPress(e) {
         if (e.key === 'Enter') {
-            this.handleApply();
+            this.handleApply(e);
         }
     }
 
     render() {
         return (
 
-            <div className={'w-filter w-filter-select'} ref="body">
-                <select autoFocus ref="value" name="" id="" multiple={this.props.multiselect}
-                        size={this.props.multiselect ? Object.keys(this.props.content).length : 1}
+            <div className={'w-filter w-filter-select'} >
+                <select autoFocus ref={el => this.select = el} multiple={this.props.config.multiselect}
+                        size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}
                         onKeyPress={this._handleKeyPress.bind(this)}
                 >
-                    {this.props.multiselect ? '' :
+                    {this.props.config.multiselect ? '' :
                         <option value="0">Wybierz opcję</option>
                     }
-                    {Object.entries(this.props.content).map((el) =>
+                    {Object.entries(this.props.config.content).map((el) =>
                         <option
                             key={el[0]}
                             value={el[0]}
@@ -260,13 +278,9 @@ class SelectFilter extends Filter {
 
 }
 
-SelectFilter.defaultProps = {
-    multiselect: false,
 
-};
-
-
-class SwitchFilter extends Filter {
+class SwitchFilter extends AbstractFilter implements IFilterComponent {
+    FILTER_INTERFACE_TEST: boolean;
 
 
     constructor(props) {
@@ -277,7 +291,14 @@ class SwitchFilter extends Filter {
     handleApply() {
         this.setState({show: false});
         if (this.state.value) {
-            this.props.onChange(this.props.field, this.state.value, '==', this.props.caption, ' :', this.props.content[this.state.value]);
+            this.props.onChange({
+                field: this.props.field,
+                value: this.state.value,
+                condition: '==',
+                caption: this.props.caption,
+                labelCaptionSeparator: ":",
+                label: this.props.config.content[this.state.value]
+            });
         }
     }
 
@@ -287,7 +308,7 @@ class SwitchFilter extends Filter {
 
             <div className="w-filter w-filter-switch" ref="body">
 
-                {Object.entries(this.props.content).map((el) =>
+                {Object.entries(this.props.config.content).map((el) =>
                     <div>
                         <label htmlFor={el[0]}>
                             <input
@@ -313,7 +334,11 @@ class SwitchFilter extends Filter {
 
 }
 
-class NumericFilter extends Filter {
+class NumericFilter extends AbstractFilter implements IFilterComponent {
+    FILTER_INTERFACE_TEST: boolean;
+    input2: HTMLInputElement;
+    input1: HTMLInputElement;
+    input3: HTMLTextAreaElement;
 
     constructor(props) {
         super(props)
@@ -325,13 +350,13 @@ class NumericFilter extends Filter {
 
         let val, label;
         if (this.state.option != 'IN') {
-            val = this.refs.input1.value;
+            val = this.input1.value;
             if (this.state.option == '<x<') {
-                val += '-' + this.refs.input2.value
+                val += '-' + this.input2.value
             }
             label = val;
         } else {
-            val = this.refs.input3.value.split('\n');
+            val = this.input3.value.split('\n');
             label = val.join(', ')
             if (label.length > 50) {
                 label = label.substring(0, 50) + '....';
@@ -339,7 +364,14 @@ class NumericFilter extends Filter {
 
         }
 
-        this.props.onChange(this.props.field, val, this.state.option, this.props.caption, ':', label);
+        this.props.onChange({
+            field: this.props.field,
+            value: val,
+            condition: this.state.option,
+            caption: this.props.caption,
+            labelCaptionSeparator: ":",
+            label: label
+        });
 
     }
 
@@ -366,14 +398,14 @@ class NumericFilter extends Filter {
                     : ''}
 
                 {this.state.option != 'IN' ?
-                    <input type="" autoFocus ref="input1" onKeyPress={this._handleKeyPress.bind(this)}/>
+                    <input type="text" autoFocus ref={el => this.input1 = el} onKeyPress={this._handleKeyPress.bind(this)}/>
                     :
-                    <textarea type="" autoFocus ref="input3"/>
+                    <textarea autoFocus ref={el => this.input3 = el}/>
                 }
 
                 {this.state.option == '<x<' ?
                     <div className="w-filter-label">Do
-                        <input type="" ref="input2" onKeyPress={this._handleKeyPress.bind(this)}/></div>
+                        <input type="text" ref={el => this.input2 = el} onKeyPress={this._handleKeyPress.bind(this)}/></div>
                     : ''}
                 <select name="" id=""
                         onChange={(e) => this.setState({option: e.currentTarget.value})}
@@ -394,7 +426,10 @@ class NumericFilter extends Filter {
 }
 
 
-class TextFilter extends Filter {
+class TextFilter extends AbstractFilter implements IFilterComponent {
+    FILTER_INTERFACE_TEST: boolean;
+    input: HTMLInputElement;
+    options: any;
 
     constructor(props) {
         super(props)
@@ -410,9 +445,18 @@ class TextFilter extends Filter {
 
     handleApply() {
         this.setState({show: false});
-        const value = this.refs.input.value;
+        const value = this.input.value;
         if (value) {
-            this.props.onChange(this.props.field, value, this.state.option, this.props.caption, this.options[this.state.option] + ' :', this.refs.input.value);
+
+            this.props.onChange({
+                field: this.props.field,
+                value: value,
+                condition: this.state.option,
+                caption: this.props.caption,
+                labelCaptionSeparator: this.options[this.state.option] + ' :',
+                label: this.input.value
+            });
+
         }
 
     }
@@ -429,11 +473,11 @@ class TextFilter extends Filter {
 
             <div className={'w-filter w-filter-text '} ref="body">
 
-                <input type="" autoFocus onKeyPress={this._handleKeyPress.bind(this)} ref="input"/>
+                <input type="text" autoFocus onKeyPress={this._handleKeyPress.bind(this)} ref={(el) => this.input = el}/>
 
-                <select name="" id=""
-                        onChange={(e) => this.setState({option: e.currentTarget.value})}
-                        value={this.state.option}
+                <select
+                    onChange={(e) => this.setState({option: e.currentTarget.value})}
+                    value={this.state.option}
 
                 >
                     {Object.entries(this.options).map(([key, val]) =>
@@ -452,42 +496,14 @@ class TextFilter extends Filter {
 }
 
 
-class MultiFilter extends Filter {
-    render() {
-
-        return (
-
-            <div className={'w-filter w-filter-multi'} ref="body">
-                {this.props.filters.map((el, index) => {
-                    let Component = filtersMapping[el.type]
-                    return (
-                        <div key={'multi_' + index}>
-                            <div className="w-filter-multi-title">{el.caption}</div>
-                            <Component  {...this.props} {...el} showCaption={true}/>
-                        </div>
-                    )
-                })}
 
 
-            </div>
+const withFilterOpenLayer = (filters: IFilterContext[]) => {
+    return class FilterOpenableContainer extends React.Component<any, any> {
+        container: HTMLDivElement;
+        body: HTMLDivElement;
+        hideTimeout: any;
 
-        )
-    }
-}
-
-
-const filtersMapping = {
-    'NumericFilter': NumericFilter,
-    'DateFilter': DateFilter,
-    'SelectFilter': SelectFilter,
-    'SwitchFilter': SwitchFilter,
-    'TextFilter': TextFilter,
-    'MultiFilter': MultiFilter,
-};
-
-
-const withFilterOpenLayer = (Filter) => {
-    return class FilterOpenableContainer extends React.Component {
         constructor(props) {
             super(props)
             this.state = {
@@ -500,9 +516,9 @@ const withFilterOpenLayer = (Filter) => {
         componentDidUpdate(nextProps, nextState) {
 
             if (this.state.show == true) {
-                let data = this.refs.body.getBoundingClientRect();
+                let data = this.body.getBoundingClientRect();
                 if (data.right > window.innerWidth) {
-                    this.refs.body.style.right = 0;
+                    this.body.style.right = '0px';
 
                 } else {
 
@@ -534,20 +550,35 @@ const withFilterOpenLayer = (Filter) => {
         }
 
         render() {
+
+            let additionalHack = {
+                tabIndex: 0
+            }
+            /* {Filter.map((Filter) => <Filter {...this.props} opened={this.state.show} container={this.container} />)} */
             return (
-                <div className={'w-filter-openable ' + (this.state.show ? 'w-filter-openable-opened ' : '')}
-                     onBlur={this.onBlur.bind(this)}
-                     onFocus={this.onFocus.bind(this)}
-                     onFocusCapture={this.onFocus.bind(this)}
-                     ref="container"
-                     tabIndex="0"
+                <div
+                    className={'w-filter-openable ' + (this.state.show ? 'w-filter-openable-opened ' : '')}
+                    ref={el => this.container = el}
+
+                    {...additionalHack}
+                    onBlur={this.onBlur.bind(this)}
+                    onFocus={this.onFocus.bind(this)}
+                    onFocusCapture={this.onFocus.bind(this)}
+
                 >
                     {this.props.inline ? '' :
                         <div className="w-filter-openable-trigger" onClick={this.handleTriggerClicked.bind(this)}><i className="ms-Icon ms-Icon--Filter"></i></div>
                     }
                     {this.state.show ?
-                        <div className="w-filter-openable-body" ref="body">
-                            <Filter {...this.props} opened={this.state.show} container={this.refs.container}/>
+                        <div className="w-filter-openable-body" ref={el => this.body = el}>
+
+                            {filters.map(entry => {
+                                let Filter = entry.component;
+                                return <div>
+                                    <Filter caption={entry.caption} field={entry.field} onChange={this.props.onChange} config={entry.config} container={this.container} />
+
+                                </div>
+                            })}
                         </div>
                         : ''}
                 </div>
@@ -563,7 +594,7 @@ export {
     SwitchFilter,
     NumericFilter,
     TextFilter,
-    MultiFilter,
-    filtersMapping,
-    withFilterOpenLayer
+    AbstractFilter,
+    withFilterOpenLayer,
+    IFilterComponent
 };

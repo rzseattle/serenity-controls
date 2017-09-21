@@ -1,12 +1,13 @@
 import * as React from 'react'
-import {IColumnData, IEventCallback, ICellTemplate} from './Interfaces';
-import {Option} from '../fields/Interfaces';
+import { IColumnData, IEventCallback, ICellTemplate } from './Interfaces';
+import { Option } from '../fields/Interfaces';
+import { NumericFilter, SelectFilter, TextFilter, DateFilter, SwitchFilter } from '../Filters';
 
 
 export class ColumnHelper {
-    data: IColumnData;
+    private data: IColumnData;
 
-    constructor(initData) {
+    constructor(initData: Partial<IColumnData>) {
         this.data = {
             events: {
                 'click': [],
@@ -14,7 +15,7 @@ export class ColumnHelper {
                 'leave': [],
                 'mouseUp': [],
             },
-            filter: {},
+            filter: [],
             ...initData
         };
     }
@@ -23,9 +24,10 @@ export class ColumnHelper {
         return new ColumnHelper({
             field: field,
             caption: caption,
-            filter: {
-                type: 'NumericFilter',
-            }
+            filter: [{
+                field: field,
+                component: NumericFilter,
+            }]
         }).className('right')
 
     }
@@ -34,9 +36,10 @@ export class ColumnHelper {
         return new ColumnHelper({
             field: field,
             caption: caption,
-            filter: {
-                type: 'NumericFilter',
-            }
+            filter: [{
+                field: field,
+                component: NumericFilter,
+            }]
         }).className('right')
 
     }
@@ -47,11 +50,14 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             template: value => options[value],
-            filter: {
-                type: 'SelectFilter',
-                content: options,
-                multiselect: multiSelectFilter
-            }
+            filter: [{
+                field: field,
+                component: SelectFilter,
+                config: {
+                    content: options,
+                    multiselect: multiSelectFilter
+                }
+            }]
         });
     }
 
@@ -59,9 +65,10 @@ export class ColumnHelper {
         return new ColumnHelper({
             field: field,
             caption: caption,
-            filter: {
-                type: 'TextFilter',
-            }
+            filter: [{
+                field: field,
+                component: TextFilter,
+            }]
         })
     }
 
@@ -69,13 +76,13 @@ export class ColumnHelper {
 
         return ColumnHelper.text('id', '')
             .onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
-                    let url = urlResolver(row, column, event);
-                    if (e.button == 1) {
-                        window.open(url);
-                    } else {
-                        window.location.href = url;
-                    }
+                let url = urlResolver(row, column, event);
+                if (e.button == 1) {
+                    window.open(url);
+                } else {
+                    window.location.href = url;
                 }
+            }
             )
 
     }
@@ -85,9 +92,10 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             template: (val, row) => parseFloat(val).toFixed(2),
-            filter: {
-                type: 'NumericFilter',
-            }
+            filter: [{
+                field: field,
+                component: NumericFilter,
+            }]
         }).className('right');
     }
 
@@ -96,9 +104,10 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             template: (val, row) => <a href={'mailto:' + val}>{val}</a>,
-            filter: {
-                type: 'TextFilter',
-            }
+            filter: [{
+                field: field,
+                component: TextFilter,
+            }]
         })
     }
 
@@ -107,9 +116,10 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             icon: 'fa-calendar',
-            filter: {
-                type: 'DateFilter',
-            }
+            filter: [{
+                field: field,
+                component: DateFilter,
+            }]
         });
     }
 
@@ -117,12 +127,15 @@ export class ColumnHelper {
         return new ColumnHelper({
             field: field,
             caption: caption,
-            classTemplate: (row, column) => ['center', (row[column.field] == '1' ? 'darkgreen' : 'darkred')],
-            template: value => <i className={'fa fa-' + (value == 1 ? 'check' : 'times')}></i>,
-            filter: {
-                type: 'SwitchFilter',
-                content: {0: 'Nie', 1: 'Tak'},
-            }
+            classTemplate: (row, column) => ['center', (row[column.field] == '1' ? "darkgreen" : "darkred")],
+            template: value => <i className={'fa fa-' + (value == "1" ? "check" : "times")}></i>,
+            filter: [{
+                field: field,
+                component: SwitchFilter,
+                config: {
+                    content: { 0: 'Nie', 1: 'Tak' },
+                }
+            }]
 
         })
     }
@@ -204,7 +217,7 @@ export class ColumnHelper {
     }
 
     set(el): ColumnHelper {
-        this.data = {...this.data, ...el};
+        this.data = { ...this.data, ...el };
         return this;
     }
 

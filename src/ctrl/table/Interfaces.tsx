@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {IFilterComponent} from "../Filters"
 
 export interface IColumnData {
     field?: string,
@@ -13,17 +14,18 @@ export interface IColumnData {
     icon?: string | JSX.Element,
     append?: string | JSX.Element,
     prepend?: string | JSX.Element,
-    classTemplate?: () => Array<string>,
-    styleTemplate?: () => Array<string>,
+    classTemplate?: { (row: any, column: IColumnData): Array<string> },
+    styleTemplate?: { (row: any, column: IColumnData): any },
     template?: ICellTemplate,
     default?: string,
+    order?: string
     events?: {
         click?: Array<IEventCallback>,
         mouseUp?: Array<IEventCallback>,
         enter?: Array<IEventCallback>,
         leave?: Array<IEventCallback>
     },
-    filter?: { type?: string, field?: string } || Array<{ type?: string, field?: string }>
+    filter?: Array<IFilterContext>
 }
 
 export interface ICellTemplate {
@@ -31,13 +33,20 @@ export interface ICellTemplate {
 }
 
 export interface IEventCallback {
-    (row: any, column: IColumnData, event: React.MouseEvent<HTMLElement> ): any
+    (row: any, column: IColumnData, event: React.MouseEvent<HTMLElement>): any
 }
 
 
-export interface IFilter {
+export interface IFilterContext {
+    field: string,
+    caption?: string,
+    config?: any,
+    component: any
+}
+
+export interface IFilterValue {
     field: string
-    value: string,
+    value: any,
     condition: string,
     caption: string,
     labelCaptionSeparator: string,

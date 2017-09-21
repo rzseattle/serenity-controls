@@ -1,11 +1,11 @@
 declare var window: any;
 import * as React from "react";
-import {filtersMapping, withFilterOpenLayer} from './Filters'
+import {TextFilter, withFilterOpenLayer} from './Filters'
 import {ColumnHelper} from './table/ColumnHelper'
 import FiltersPresenter from './table/FiltersPresenter'
 import Tbody from './table/Tbody'
 import Footer from './table/Footer'
-import {IColumnData, IFilter, IOrder} from './table/Interfaces'
+import {IColumnData, IFilterContext, IFilterValue, IOrder} from './table/Interfaces'
 import {EmptyResult, Error, Loading} from './table/placeholders'
 
 
@@ -13,8 +13,14 @@ interface IDataQuery {
 
 }
 
+interface ITableDataInput {
+    data: Array<any>,
+    countAll?: number
+    debug?: string
+}
+
 interface IDataProvider {
-    (requestData: IDataQuery): Array<any> | Promise<Array<any>> ;
+    (requestData: IDataQuery): ITableDataInput | Promise<ITableDataInput> ;
 }
 
 interface ISelectionChangeEvent {
@@ -42,7 +48,7 @@ interface ITableProps {
     rememberState?: boolean,
     rowClassTemplate?: IRowClassTemplate,
     rowStyleTemplate?: IRowStyleTemplate,
-    columns: IColumnData[],
+    columns: Array<IColumnData> | Array<ColumnHelper>,
     showFooter?: boolean,
     additionalConditions?: any
 
@@ -56,7 +62,7 @@ interface ITableState {
     data: Array<any>,
     dataSourceError: string,
     dataSourceDebug: boolean,
-    filters: { [key: string]: IFilter }
+    filters: { [key: string]: IFilterValue }
     order: { [key: string]: IOrder }
     onPage: number,
     currentPage: number,
@@ -251,15 +257,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    handleFilterChanged(field, value, condition, caption, labelCaptionSeparator, label) {
-        this.state.filters[field] = {
-            field: field,
-            value: value,
-            condition: condition,
-            caption: caption,
-            labelCaptionSeparator: labelCaptionSeparator,
-            label: label
-        };
+    handleFilterChanged( filterValue: IFilterValue ) {
+        this.state.filters[filterValue.field] = filterValue;
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
     }
 
@@ -423,32 +422,19 @@ class Table extends React.Component<ITableProps, ITableState> {
                 'enter': [],
                 'leave': []
             },
-            'filter': {
-                type: 'TextFilter',
-                field: inData.field
-            }
+            'filter': [{
+                component: TextFilter,
+                field: inData.field,
+                caption: inData.field,
+
+            }]
         }
-        data.filter = inData.field ? data.filter : null;
+
         data = {...data, ...inData};
 
 
         data.orderField = data.orderField || data.field;
-
-
-        if (Array.isArray(data.filter)) {
-            if (data.filter.length > 0) {
-                data.filter = {
-                    caption: 'Id',
-                    type: 'MultiFilter',
-                    field: 'id',
-                    filters: data.filter
-                }
-            } else {
-                data.filter = null;
-            }
-        } else if (data.filter != null) {
-            data.filter.field = data.filter.field || inData.field;
-        }
+        data.filter.forEach(el =>  el.field = el.field || inData.field)
 
 
         return data;
@@ -480,7 +466,8 @@ class Table extends React.Component<ITableProps, ITableState> {
                             : null
                         }
                         {columns.filter(el => el !== null && el.display === true).map((el, index) => {
-                            const Component = el.filter ? withFilterOpenLayer(filtersMapping[el.filter.type]) : null;
+
+                            const Component = el.filter ? withFilterOpenLayer(el.filter) : null;
                             let classes = []
                             if (this.state.order[el.field] !== undefined) {
                                 classes.push('w-table-sorted w-table-sorted-' + this.state.order[el.field].dir)
@@ -495,7 +482,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                                 >
                                     {el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}
                                     {el.caption}
-                                    {el.filter ? <Component onChange={this.handleFilterChanged.bind(this)} {...el.filter} caption={el.caption}/> : ''}
+                                    {el.filter ? <Component onChange={this.handleFilterChanged.bind(this)}  /> : ''}
                                 </th>)
                         })}
                     </tr>
@@ -513,9 +500,10 @@ class Table extends React.Component<ITableProps, ITableState> {
                         selectable={this.props.selectable}
                         columns={columns} filters={this.state.filters}
                         order={this.state.order} loading={this.state.loading}
-                        bodyHeight={this.state.fixedLayout ? this.state.bodyHeight : 'auto'}
+
                         data={this.state.data}
                     />}
+                    {/*bodyHeight={this.state.fixedLayout ? this.state.bodyHeight : 'auto'}*/}
 
                     {this.props.showFooter && <tfoot>
                     {this.state.firstLoaded && this.state.data.length > 0 &&
