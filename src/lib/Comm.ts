@@ -188,15 +188,15 @@ class Comm {
     }
 
 
-    static _post(url, data, callback = null): Promise<any> {
+    static _post(url, data = {}, callback = null): Promise<any> {
         return Comm.__preparePromise('POST', url, data, callback);
     }
 
-    static _get(url, data, callback = null): Promise<any> {
+    static _get(url, data = {}, callback = null): Promise<any> {
         return Comm.__preparePromise('GET', url, data, callback);
     }
 
-    static _put(url, data, callback = null): Promise<any> {
+    static _put(url, data = {}, callback = null): Promise<any> {
         return Comm.__preparePromise('PUT', url, data, callback);
     }
 }

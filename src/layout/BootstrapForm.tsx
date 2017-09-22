@@ -1,19 +1,36 @@
-import React, {Children} from 'react';
+import * as React from 'react';
 import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg} from '../ctrl/Fields';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
 
-const withBootstrapFormField = (Field, addInputClass = true) => {
 
 
-    return class BootstrapFieldContainer extends React.Component {
+interface IWithBootstrapFormFieldProps {
+    label?: string
+    help?: string
+    errors?: string[]
+    className?: string
+    prefix?: string
+    suffix?: string
+    layoutType?: 'horizontal' | 'default'
+    //todo do wyrzucenia ( dziedziczenie z IFormFieldProps )
+    name?: string
+    options?: any
+    value?: any
+    onChange?: any
 
-        static propTypes = {
-            label: PropTypes.string,
-            help: PropTypes.string,
-            form: PropTypes.object
-        };
+
+
+}
+//todo odkomentowac typ po zmianie fields
+const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass = true) => {
+
+    return class extends React.Component<IWithBootstrapFormFieldProps, any> {
+
+        public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
+            layoutType: 'default'
+        }
 
         render() {
             let props = this.props;
@@ -30,23 +47,25 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
             }
 
             let field;
+
+            let fieldProps = {...props, className: className}
             if (this.props.suffix || this.props.prefix) {
                 field =
-                  <div className="input-group">
-                      {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
-                      <Field {...this.props} className="form-control"/>
-                      {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
-                  </div>;
+                    <div className="input-group">
+                        {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
+                        <Field {...fieldProps} />
+                        {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
+                    </div>;
 
             } else {
-                field = <Field {...props} className={className}/>;
+                field = <Field {...fieldProps} />;
             }
 
             if (props.layoutType == 'horizontal') {
 
                 return (
                     <div className={classes.join(' ')}>
-                        {this.props.label&&<label className="col-sm-2 control-label">{props.label}</label>}
+                        {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
                         <div className="col-sm-10">
                             {field}
                             {props.help ?
@@ -60,10 +79,10 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
                     </div>
                 )
             }
-            if (props.layoutType == 'default' || props.layoutType == 'inline' || !props.layoutType) {
+            if (props.layoutType == 'default') {
                 return (
                     <div className={classes.join(' ')}>
-                        {this.props.label&&<label>{this.props.label}</label>}
+                        {this.props.label && <label>{this.props.label}</label>}
                         {field}
 
                         {props.help ?
@@ -81,69 +100,90 @@ const withBootstrapFormField = (Field, addInputClass = true) => {
     }
 }
 
-class BForm extends React.Component {
+interface IBFormEvent {
+    form: BForm,
+    inputEvent: Event,
+}
+
+interface IBFormCommEvent {
+    form: BForm,
+    response: any,
+}
+
+interface IBFormProps {
+    /**
+     * ( default | inline | horizontal )
+     */
+    layoutType?: 'default' | 'horizontal',
+    /**
+     * This callback is fired when form input is changed
+     * @callback
+     * @param {object} keys: inputEvent, form
+     */
+    onChange?: { (formEvent: IBFormEvent): any },
+    /**
+     * This callback is fired when form input is submited preventin "action send"
+     * @callback
+     * @param {object} keys: inputEvent, form
+     */
+    onSubmit?: { (formEvent: IBFormEvent): any },
+    /**
+     * This callback is fired to prepare data to sends
+     * @callback
+     * @param {object} keys: inputEvent, form
+     */
+    onBeforeSend?: { (formEvent: IBFormEvent): any },
+    /**
+     * This callback is fired when validation error occured
+     * @callback
+     * @param {object} keys: response, form
+     */
+    onValidatorError?: { (response: IBFormCommEvent): any },
+    /**
+     * This callback is fired when server error occured
+     * @callback
+     * @param {object} keys: response, form
+     */
+    onError?: { (response: IBFormCommEvent): any },
+    /**
+     * This callback is fired after from submited with success
+     * @callback
+     * @param {object} keys: response, form
+     */
+    onSuccess?: { (response: IBFormCommEvent): any },
+    /**
+     * Input data for form inputs ( key = input name )
+     */
+    data?: any,
+    /**
+     * Form target action
+     */
+    action?: string,
+    /**
+     * Namespace for all fields in form
+     */
+    namespace?: string,
+
+    editable?: boolean,
+
+    loading?: boolean
+    children: { (formConf: any): any }
+}
+
+interface IBFormState {
+    data: any
+    fieldErrors: any,
+    formErrors: any,
+    isDirty: boolean,
+    loading: boolean
+}
+
+class BForm extends React.Component<IBFormProps, IBFormState> {
+    formTag: HTMLFormElement;
+    private fieldsValues: {};
 
 
-    static propTypes = {
-        /**
-         * ( default | inline | horizontal )
-         */
-        layoutType: PropTypes.oneOf(['default', 'inline', 'horizontal']),
-        /**
-         * This callback is fired when form input is changed
-         * @callback
-         * @param {object} keys: inputEvent, form
-         */
-        onChange: PropTypes.func,
-        /**
-         * This callback is fired when form input is submited preventin "action send"
-         * @callback
-         * @param {object} keys: inputEvent, form
-         */
-        onSubmit: PropTypes.func,
-        /**
-         * This callback is fired to prepare data to sends
-         * @callback
-         * @param {object} keys: inputEvent, form
-         */
-        onBeforeSend: PropTypes.func,
-        /**
-         * This callback is fired when validation error occured
-         * @callback
-         * @param {object} keys: response, form
-         */
-        onValidatorError: PropTypes.func,
-        /**
-         * This callback is fired when server error occured
-         * @callback
-         * @param {object} keys: response, form
-         */
-        onError: PropTypes.func,
-        /**
-         * This callback is fired after from submited with success
-         * @callback
-         * @param {object} keys: response, form
-         */
-        onSuccess: PropTypes.func,
-        /**
-         * Input data for form inputs ( key = input name )
-         */
-        data: PropTypes.object,
-        /**
-         * Form target action
-         */
-        action: PropTypes.string,
-        /**
-         * Namespace for all fields in form
-         */
-        namespace: PropTypes.string,
-
-        editable: PropTypes.bool,
-
-        loading: PropTypes.bool
-    };
-
-    static defaultProps = {
+    public static defaultProps: Partial<IBFormProps> = {
         layoutType: 'default',
         editable: true,
         data: {},
@@ -242,7 +282,7 @@ class BForm extends React.Component {
                 this.handleValidatorError(response);
             });
             comm.on('error', response => {
-                if (this.props.error) {
+                if (this.props.onError) {
                     this.props.onError({form: this, response: response});
                 }
             });
@@ -306,51 +346,19 @@ class BForm extends React.Component {
 
     }
 
-    renderChildren(children) {
-        return React.Children.map(children, child => {
 
-            if (child != null && child.type && child.type.name == 'BootstrapFieldContainer') {
-
-
-                if (this.state.fieldErrors[child.props.name] === undefined) {
-                    this.state.fieldErrors[child.props.name] = null;
-                }
-                this.state.data[child.props.name] = this.props.data[child.props.name] || null;
-                this.fieldsValues[child.props.name] = this.props.data[child.props.name] || null;
-
-                return React.cloneElement(child, {
-                    value: this.props.data[child.props.name],
-                    layoutType: this.props.layoutType,
-                    editable: this.props.editable,
-                    errors: this.state.fieldErrors[child.props.name],
-                    onChange: (e) => {
-                        if (child.props.onChange) {
-                            child.props.onChange(e);
-
-                        }
-                        this.handleInputChange(e);
-                    }
-                });
-            } else {
-                return child;
-            }
-        });
-        //this.setState({data: this.state.data});
-
-
-    }
 
     applyToField(name, defaultValue = null) {
 
 
-        if (this.state.data[name] === undefined && defaultValue !== false ) {
+        if (this.state.data[name] === undefined && defaultValue !== false) {
             this.state.data[name] = defaultValue;
         }
         if (this.state.fieldErrors[name] === undefined) {
             this.state.fieldErrors[name] = null;
         }
         //false - dont track
-        if(defaultValue !== false) {
+        if (defaultValue !== false) {
             this.fieldsValues[name] = this.props.data[name] || defaultValue;
         }
 
@@ -371,28 +379,21 @@ class BForm extends React.Component {
         let classes = [];
         if (layoutType == 'horizontal') {
             classes.push('form-horizontal');
-        } else if (layoutType == 'inline') {
-            classes.push('form-inline');
+        } else if (layoutType == 'default') {
+            //classes.push('form-inline');
         }
 
 
         return (
-            <form ref="form" className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
+            <form ref={(form) => this.formTag = form} className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
 
-                {this.state.formErrors.length > 0 ?
+                {this.state.formErrors.length > 0 &&
                     <ul className="bg-danger ">
                         {this.state.formErrors.map(el => <li>{el}</li>)}
-                    </ul>
-                    :
-                    ''
-                }
+                    </ul>}
+                {this.props.children(this.applyToField.bind(this))}
 
-                {typeof this.props.children == 'function' ?
-                    this.props.children(this.applyToField.bind(this))
-                    :
-                    this.renderChildren(this.props.children)
-                }
-                <Shadow visible={this.state.loading} loader container={() => this.refs.form}/>
+                <Shadow {...{visible: this.state.loading, loader: true, container: () => this.formTag}} />
             </form>
         )
     }
@@ -406,11 +407,9 @@ const BButtonsBar = props => {
         </div>
     </div>)
 }
-BButtonsBar.propTypes = {
-    children: PropTypes.any.isRequired
-}
 
-const BText = withBootstrapFormField(Text);
+
+const BText = withBootstrapFormField(Text );
 const BTextarea = withBootstrapFormField(Textarea);
 const BSelect = withBootstrapFormField(Select);
 const BSwitch = withBootstrapFormField(Switch);

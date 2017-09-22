@@ -157,8 +157,8 @@ export class ColumnHelper {
         return new ColumnHelper(data);
     }
 
-    className(className): ColumnHelper {
-        this.data.class = className;
+    className(className: string): ColumnHelper {
+        this.data.class = [className];
         return this;
     }
 

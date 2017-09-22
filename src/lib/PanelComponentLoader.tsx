@@ -1,3 +1,5 @@
+import * as NotificationSystem from "react-notification-system";
+
 declare var PRODUCTION: boolean;
 declare var global: any;
 import * as React from "react";
@@ -7,12 +9,23 @@ import {DebugTool} from '../utils/DebugTool'
 
 
 export interface IArrowViewComponentProps {
+    /**
+     * Url without last action part
+     */
     baseURL: string;
-    _notification: (content: string, title?: string, conf?: object) => any;
-    _reloadProps: () => any;
-    _goto: (componentPath: string, args?: any) => any;
-    _log: (element: any) => any;
-    _resolveComponent: (componentPath: string) => React.ReactElement<any>
+    /**
+     * Display panel notification
+     * @param {string} content Notification content
+     * @param {string} title Notification title
+     * @param {Object} conf Config object
+     * @returns {any}
+     * @private
+     */
+    _notification: { (content: string, title?: string, conf?: NotificationSystem.Notification): any };
+    _reloadProps: { (): any };
+    _goto: { (componentPath: string, args?: any): any };
+    _log: { (element: any): any };
+    _resolveComponent: { (componentPath: string): React.ReactElement<any> }
 }
 
 interface IProps {
@@ -51,7 +64,8 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         if (!PRODUCTION) {
             //import {DebugTool} from '../utils/DebugTool'
 
-            import( /* webpackChunkName = "DebugTool" */ '../utils/DebugTool').then(({DebugTool}) => {
+            import
+            ( /* webpackChunkName = "DebugTool" */ '../utils/DebugTool').then(({DebugTool}) => {
                 this.DebugTool = DebugTool;
                 this.setState({debugToolLoaded: true});
 

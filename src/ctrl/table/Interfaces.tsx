@@ -8,7 +8,7 @@ export interface IColumnData {
     display?: boolean,
     toolTip?: ICellTemplate,
     width?: number | string | null,
-    class?: Array<string>,
+    class?: string[],
     type?: string,
     orderField?: string,
     icon?: string | JSX.Element,

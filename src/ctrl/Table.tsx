@@ -413,7 +413,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             'icon': null,
             'append': null,
             'prepend': null,
-            'classTemplate': () => [],
+            'classTemplate':() => [],
             'styleTemplate': () => [],
             'template': null,
             'default': '',
