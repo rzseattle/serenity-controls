@@ -42,7 +42,7 @@ class Downloader extends React.Component<IDownloaderProps, IDownloaderState> {
           <form action={this.props.url}
                 ref={(form) => this.form = form}
                 style={{display: 'none'}} method="post"
-                accept-charset="UTF-8"
+                acceptCharset="UTF-8"
           >
               <textarea name="payload">{JSON.stringify(this.props.data)}</textarea>
           </form>

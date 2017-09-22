@@ -19,6 +19,7 @@ interface IWithBootstrapFormFieldProps {
     options?: any
     value?: any
     onChange?: any
+    style?: any
 
 
 
