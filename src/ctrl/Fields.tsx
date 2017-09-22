@@ -1,8 +1,6 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+import * as React from "react";
 //import Inputmask from 'inputmask';
-import Dropzone from 'react-dropzone';
+import * as Dropzone from 'react-dropzone';
 
 
 let checkIncludes = (options, value) => {
@@ -16,20 +14,36 @@ let checkIncludes = (options, value) => {
     return element.length > 0;
 };
 
+interface IFieldChangeEvent {
+    name: string
+    type: string
+    value: any
+    event: Event
+}
 
-class Select extends Component {
+interface IFieldProps {
+    className?: string,
+    name?: string,
+    value?: number | string | string[] | number[],
+    onChange?: { (changeData: IFieldChangeEvent): any },
+    disabled?: boolean,
+    editable?: boolean
+    style?: any
+}
 
+interface ISelectChangeEvent extends IFieldChangeEvent{
+    selectedIndex: number,
+}
 
-    static propTypes = {
-        options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
-        className: PropTypes.string,
-        name: PropTypes.string,
-        value: PropTypes.string,
-        onChange: PropTypes.func,
-        disabled: PropTypes.bool,
-        editable: PropTypes.bool
-    };
-    static defaultProps = {
+interface ISelectProps extends IFieldProps {
+    options: { value: string | number, label: string }[] | any,
+    onChange?: { (changeData: ISelectChangeEvent): any },
+    value: string | number
+}
+
+class Select extends React.Component<ISelectProps, any> {
+
+    public static defaultProps: Partial<ISelectProps> = {
         options: [],
         editable: true
     };
@@ -86,15 +100,19 @@ class Select extends Component {
     }
 }
 
+interface ITextProps  extends IFieldProps{
+    placeholder: PropTypes.string,
+}
 
-class Text extends Component {
+class Text extends React.Component<ITextProps, any> {
+
     static propTypes = {
         className: PropTypes.string,
         name: PropTypes.string,
         type: PropTypes.string,
         value: PropTypes.string,
         onChange: PropTypes.func,
-        placeholder: PropTypes.string,
+
         disabled: PropTypes.bool,
         editable: PropTypes.bool
 
@@ -396,7 +414,7 @@ class CheckboxGroup extends React.Component {
         this.state = {};
     }
 
-     handleOnChange(e) {
+    handleOnChange(e) {
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -541,15 +559,17 @@ class Date extends React.Component {
                     numberOfMonths={1}
                     displayFormat="YYYY-MM-DD"
                     date={this.state.date}
-                    onDateChange={date => this.handleOnChange(date)} // PropTypes.func.isRequired
-                    focused={this.state.focused} // PropTypes.bool
-                    onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
-                    isOutsideRange={() => false}
-                    disabled={props.disabled}
-                    placeholder={props.placeholder}
-                />
-            </div>
-        );
+                    onDateChange={date => this.handleOnChange(date)}
+                // PropTypes.func.isRequired
+                focused={this.state.focused} // PropTypes.bool
+                onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
+                isOutsideRange={() => false}
+                disabled={props.disabled}
+                placeholder={props.placeholder}
+            />
+    </div>
+    )
+        ;
     }
 }
 
