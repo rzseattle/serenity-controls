@@ -280,7 +280,7 @@ interface IConfirmConf {
     target?: { (): HTMLElement },
 }
 
-const confirm = (message, options?: IConfirmConf) => {
+const confirm = (message, options: IConfirmConf = {}) => {
     let props = {...options};
 
     let parent = options.container ? options.container() : document.body;

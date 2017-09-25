@@ -31,7 +31,7 @@ export interface IArrowViewComponentProps {
 interface IProps {
     requestURI: string;
     component: string
-
+    componentPath?: string
 }
 
 interface IState {
@@ -39,8 +39,8 @@ interface IState {
     loading: boolean,
     loadedProps: any,
     log: Array<any>
-    debugToolLoaded: boolean
-
+    debugToolLoaded: boolean,
+    baseURL: string
 }
 
 export default class PanelComponentLoader extends React.Component<IProps, IState> {
@@ -56,8 +56,11 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             loadedProps: false,
             currComponent: global.ReactHelper.getWithData(props.component),
             log: [],
-            debugToolLoaded: false
+            debugToolLoaded: false,
+            baseURL: this.getBaseURL(window.location.hash)
         }
+
+
     }
 
     componentDidMount() {
@@ -71,17 +74,31 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
             });
         }
+        if (this.props.componentPath) {
+            this.handleGoTo(this.props.componentPath);
+        }
+    }
+
+    getBaseURL(url: string = null): string {
+        let baseURL = url.split('?')[0].replace("#","");
+        let tmp = baseURL.split('/')
+        baseURL = tmp.slice(0, -1).join('/');
+        return baseURL;
     }
 
 
     handleReloadProps(input = {}, callback: () => any) {
         this.setState({loading: true});
         Comm._post(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}).then((data) => {
-            this.setState({loading: false, loadedProps: data});
+            this.setState({loading: false, loadedProps: {...data, baseURL: this.getBaseURL(this.props.requestURI.split('?')[0])}});
             if (callback) {
                 callback();
             }
         });
+    }
+
+    unstable_handleError(){
+        alert('error');
     }
 
     handleResolveComponent(path) {
@@ -89,15 +106,41 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.component != nextProps.component) {
+            let component = global.ReactHelper.get(nextProps.component.replace(/\//g, "_"))
+
+            if (component && component["_obj"].synch == true) {
+                this.setState({
+                    loading: false,
+                    loadedProps: {baseURL: this.getBaseURL(nextProps.component)},
+                    currComponent: component
+                });
+            } else {
+                this.handleGoTo(nextProps.component);
+            }
+        }
+    }
+
     handleGoTo(path, input = {}) {
         this.setState({loading: true});
         Comm._post(path, {...input, __PROPS_REQUEST__: 1}).then((data) => {
             var stateObj = {};
-            input = {_rch: 1, ...input};
             let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
             //history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
             window.location.hash = path + (urlParameters ? '?' : '') + urlParameters;
-            this.setState({loading: false, loadedProps: data, currComponent: global.ReactHelper.get(data.component)});
+            //, currComponent: global.ReactHelper.get(data.component)
+
+            let baseURL = path.split('?')[0];
+            let tmp = baseURL.split('/')
+            baseURL = tmp.slice(0, -1).join('/');
+
+            this.setState({
+                loading: false,
+                loadedProps: {...data, baseURL: baseURL},
+                currComponent: global.ReactHelper.get(path.replace(/\//g, "_")),
+
+            });
         });
     }
 

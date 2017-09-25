@@ -10,6 +10,7 @@ class Comm {
     private data: any;
     private namespace: string;
 
+
     constructor(url) {
 
         this.url = url;
@@ -133,8 +134,13 @@ class Comm {
                         data = JSON.parse(xhr.response);
                     } catch (e) {
                         exceptionOccured = true;
-                        this.debugError(e.message + '<hr />' + xhr.response);
-                        this.callEvent('error', xhr.response);
+                        if (this.events.error.length > 0) {
+                            this.debugError(e.message + '<hr />' + xhr.response);
+                        } else {
+                            this.callEvent('error', xhr.response);
+                        }
+
+
                     }
 
                     if (!exceptionOccured) {

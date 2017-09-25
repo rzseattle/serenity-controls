@@ -24,19 +24,20 @@ interface IFieldChangeEvent {
 interface IFieldProps {
     className?: string,
     name?: string,
-    value?: number | string | string[] | number[],
+    value?: any,
     onChange?: { (changeData: IFieldChangeEvent): any },
     disabled?: boolean,
     editable?: boolean
-    style?: any
+    style?: any,
+    placeholder: string,
 }
 
-interface ISelectChangeEvent extends IFieldChangeEvent{
+interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number,
 }
 
 interface ISelectProps extends IFieldProps {
-    options: { value: string | number, label: string }[] | any,
+    options: { value: string | number, label: string }[] | { [key: string]: string },
     onChange?: { (changeData: ISelectChangeEvent): any },
     value: string | number
 }
@@ -100,26 +101,18 @@ class Select extends React.Component<ISelectProps, any> {
     }
 }
 
-interface ITextProps  extends IFieldProps{
-    placeholder: PropTypes.string,
+interface ITextProps extends IFieldProps {
+    type: 'text' | 'password',
+    value?: string,
 }
 
 class Text extends React.Component<ITextProps, any> {
 
-    static propTypes = {
-        className: PropTypes.string,
-        name: PropTypes.string,
-        type: PropTypes.string,
-        value: PropTypes.string,
-        onChange: PropTypes.func,
 
-        disabled: PropTypes.bool,
-        editable: PropTypes.bool
-
-    };
-    static defaultProps = {
+    public static defaultProps: Partial<ITextProps> = {
         value: '',
-        editable: true
+        editable: true,
+        type: 'text'
     };
 
     handleOnChange(e) {
@@ -162,19 +155,14 @@ class Text extends React.Component<ITextProps, any> {
 }
 
 
-class Textarea extends React.Component {
+interface ITextareaProps extends IFieldProps {
+    value?: string,
+}
+
+class Textarea extends React.Component<ITextareaProps, any> {
 
 
-    static propTypes = {
-        className: PropTypes.string,
-        name: PropTypes.string,
-        value: PropTypes.string,
-        onChange: PropTypes.func,
-        placeholder: PropTypes.string,
-        disabled: PropTypes.bool,
-        editable: PropTypes.bool
-    };
-    static defaultProps = {
+    public static defaultProps: Partial<ITextareaProps> = {
         value: '',
         editable: true
     };
@@ -210,25 +198,24 @@ class Textarea extends React.Component {
     }
 }
 
-class Wysiwyg extends React.Component {
+
+interface IWysiwygProps extends IFieldProps {
+    onLoad: { (): any },
+    value?: string,
+}
+
+declare var CKEDITOR: any;
+
+class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
 
-    static propTypes = {
-        className: PropTypes.string,
-        name: PropTypes.string,
-        value: PropTypes.string,
-        onChange: PropTypes.func,
-        onLoad: PropTypes.func,
-        disabled: PropTypes.bool,
-        editable: PropTypes.bool,
-        style: PropTypes.object
-    };
-    static defaultProps = {
+    public static defaultProps: Partial<IWysiwygProps> = {
         value: '',
         editable: true,
         style: {}
 
     };
+    private id: string;
 
     constructor(props) {
         super(props);
@@ -237,10 +224,15 @@ class Wysiwyg extends React.Component {
 
     }
 
-    handleOnChange(value) {
+    handleOnChange(value, event) {
         this.setState({value: value});
         if (this.props.onChange) {
-            this.props.onChange({name: this.props.name, type: 'wysiwyg', value: value});
+            this.props.onChange({
+                name: this.props.name,
+                type: 'wysiwyg',
+                value: value,
+                event: event
+            });
         }
     }
 
@@ -256,16 +248,16 @@ class Wysiwyg extends React.Component {
         ]).then(imported => {
             imported[0]('https://cdn.ckeditor.com/4.7.2/standard/ckeditor.js', () => {
                 this.setState({libsLoaded: true});
-                let config = {};
+                let config: any = {};
                 if (this.props.style.height) {
                     config.height = this.props.style.height;
                 }
                 CKEDITOR.replace(this.id, config);
                 config.width = 500;
-                CKEDITOR.instances[this.id].on('change', () => {
+                CKEDITOR.instances[this.id].on('change', (e) => {
                     let data = CKEDITOR.instances[this.id].getData();
-                    if (data != this.props.data) {
-                        this.handleOnChange(data);
+                    if (data != this.props.value) {
+                        this.handleOnChange(data, e);
                     }
                 });
 
@@ -306,7 +298,6 @@ class Wysiwyg extends React.Component {
                 id={this.id}
                 className={props.className}
                 name={props.name}
-                onChange={props.onChange}
                 placeholder={props.placeholder}
                 value={props.value === null ? '' : props.value}
                 disabled={props.disabled}
@@ -318,18 +309,15 @@ class Wysiwyg extends React.Component {
 }
 
 
-class Switch extends React.Component {
+interface ISwitchProps extends IFieldProps {
+    options: { value: string | number, label: string }[] | { [key: string]: string },
+    value?: number | string,
+}
 
-    static propTypes = {
-        options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
-        name: PropTypes.string,
-        value: PropTypes.string,
-        onChange: PropTypes.func,
-        disabled: PropTypes.bool,
-        editable: PropTypes.bool
-    };
+class Switch extends React.Component<ISwitchProps, any> {
 
-    static defaultProps = {
+
+    public static defaultProps: Partial<ISwitchProps> = {
         editable: true
     };
 
@@ -340,12 +328,17 @@ class Switch extends React.Component {
         };
     }
 
-    handleOnChange(value) {
+    handleOnChange(value, event) {
         this.setState({value: value});
 
         //this.refs.hidden.value = date;
         if (this.props.onChange) {
-            this.props.onChange({name: this.props.name, type: 'switch', value: value});
+            this.props.onChange({
+                name: this.props.name,
+                type: 'switch',
+                value: value,
+                event: event
+            });
         }
     }
 
@@ -389,21 +382,16 @@ class Switch extends React.Component {
     }
 }
 
+interface ICheckboxGroupProps extends IFieldProps {
+    options: { value: string | number, label: string }[] | { [key: string]: string },
+    value: string[] | number[]
+    inline: boolean
+}
 
-class CheckboxGroup extends React.Component {
+class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
 
-    static propTypes = {
-        options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
-        name: PropTypes.string,
-        value: PropTypes.array,
-        onChange: PropTypes.func,
-        inline: PropTypes.bool,
-        disabled: PropTypes.bool,
-        editable: PropTypes.bool
 
-    };
-
-    static defaultProps = {
+    public static defaultProps: Partial<ICheckboxGroupProps> = {
         value: [],
         editable: true
     };
@@ -447,7 +435,8 @@ class CheckboxGroup extends React.Component {
                     className="w-field-presentation w-field-presentation-checkboxgroup">{props.value.join(',')}</div>;
             } else {
                 return <ul className="w-field-presentation w-field-presentation-checkboxgroup">
-                    {props.value && props.value.map(val => <li key={val}>{props.options[val]}</li>)}
+                    {/*{props.value.map(val => <li key={val}>{props.options[val]}</li>)}*/}
+                    TODO
                 </ul>;
             }
         }
@@ -482,17 +471,14 @@ let moment;
 let locale;
 let datePicker;
 
-class Date extends React.Component {
+interface IDateProps extends IFieldProps {
+    value: string
+}
 
-    static propTypes = {
-        className: PropTypes.string,
-        name: PropTypes.string,
-        value: PropTypes.string,
-        onChange: PropTypes.func,
-        placeholder: PropTypes.string,
-        disabled: PropTypes.bool
+import '../../../react-dates/lib/css/_datepicker.css'
 
-    };
+class Date extends React.Component<IDateProps, any> {
+
 
     static defaultProps = {
         editable: true
@@ -514,7 +500,6 @@ class Date extends React.Component {
             import( 'moment'),
             import( 'moment/locale/pl' ),
             import( 'react-dates' ),
-            import( 'react-dates/lib/css/_datepicker.css' )
         ]).then(imported => {
             [moment, locale, datePicker] = imported;
             this.setState({
@@ -535,7 +520,8 @@ class Date extends React.Component {
             this.props.onChange({
                 name: this.props.name,
                 type: 'date',
-                value: date.format('YYYY-MM-DD')
+                value: date.format('YYYY-MM-DD'),
+                event: null
             });
         }
     }
@@ -560,21 +546,24 @@ class Date extends React.Component {
                     displayFormat="YYYY-MM-DD"
                     date={this.state.date}
                     onDateChange={date => this.handleOnChange(date)}
-                // PropTypes.func.isRequired
-                focused={this.state.focused} // PropTypes.bool
-                onFocusChange={({focused}) => this.setState({focused})} // PropTypes.func.isRequired
-                isOutsideRange={() => false}
-                disabled={props.disabled}
-                placeholder={props.placeholder}
-            />
-    </div>
-    )
-        ;
+                    focused={this.state.focused}
+                    onFocusChange={({focused}) => this.setState({focused})}
+                    isOutsideRange={() => false}
+                    disabled={props.disabled}
+                    placeholder={props.placeholder}
+                />
+            </div>
+        )
+            ;
     }
 }
 
+interface IFileProps extends IFieldProps {
+    value: FileList
+}
 
-class File extends React.Component {
+
+class File extends React.Component<IFileProps, any> {
 
     constructor(props) {
         super(props);
@@ -582,8 +571,13 @@ class File extends React.Component {
 
     handleFileAdd(e) {
         if (this.props.onChange) {
-            console.log(e);
-            this.props.onChange({name: this.props.name, value: e});
+
+            this.props.onChange({
+                name: this.props.name,
+                type: 'file',
+                value: e,
+                event: e
+            });
         }
     }
 
@@ -601,7 +595,7 @@ class File extends React.Component {
                     </span>
 
                 </Dropzone>
-                {props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
+                {/*{props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
                     <div>
                         <a href={el.preview || el.path} target="_blank">
                             <div className="w-file-dropzone-up-list-icon">
@@ -614,31 +608,13 @@ class File extends React.Component {
                                 className={'fa fa-' + (el.preview ? 'upload' : 'check')}></i></div>
                         </a>
                     </div>
-                </div>)}</div>}
+                </div>)}</div>}*/}
 
             </div>
         );
     }
 }
 
-
-/*<input
-
-                    name={props.name}
-                    type="file"
-                    onChange={props.onChange}
-                    disabled={props.disabled}
-
-                />*/
-
-
-File.propTypes = {
-
-    name: PropTypes.string,
-    type: PropTypes.string,
-    onChange: PropTypes.func,
-    disabled: PropTypes.bool
-};
 
 
 export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg};

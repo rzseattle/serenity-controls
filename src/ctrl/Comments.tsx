@@ -1,20 +1,15 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import * as React from "react";
 
-class Comments extends Component {
+interface ICommentsProps  {
+    children: any
+}
 
-
-    propTypes = {
-        children: PropTypes.node.isRequired,
-    }
+class Comments extends React.Component<ICommentsProps, any> {
 
     constructor(props) {
         super(props);
-        this.state = {
-            currentTab: props.defaultActiveTab || 0
-        }
-    }
 
+    }
 
     render() {
         const p = this.props;
@@ -27,8 +22,13 @@ class Comments extends Component {
         )
     }
 }
+interface ICommentItemProps {
+    author: string;
+    time: string
+    children: any
+}
 
-const CommentItem = (props) => {
+const CommentItem: React.StatelessComponent<ICommentItemProps> = (props) => {
     return (
         <div className="comment">
             <a className="avatar">
