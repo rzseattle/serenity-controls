@@ -29,7 +29,7 @@ var getLoaders = function (production) {
                         'react-hot-loader/webpack',
                         {
                             loader: 'awesome-typescript-loader', query: {
-                                configFileName: path.resolve(__dirname, "./tsconfig.json")
+                            configFileName: path.resolve(__dirname, "./tsconfig.json")
                         }
                         }
                     ]
@@ -69,7 +69,23 @@ var getLoaders = function (production) {
     if (production) {
         const ExtractTextPlugin = require('extract-text-webpack-plugin');
         loaders.loaders.push(
-            {test: [/\.sass/, /\.scss/], loader: ExtractTextPlugin.extract('css-loader?sourceMap!sass-loader?sourceMap')} //postcss-loader!
+            {
+                test: [/\.sass/, /\.scss/],
+                loader: ExtractTextPlugin.extract(
+                    [
+                        {loader: 'css-loader', query: {sourceMap: true}},
+                        {
+                            loader: 'sass-loader',
+                            query: {
+                                sourceMap: true,
+                                includePaths: ['node_modules']
+                            }
+                        }
+
+                    ]
+                )
+            }
+            //postcss-loader!
         );
     } else {
 

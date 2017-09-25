@@ -9,7 +9,7 @@
 
 .top-header
     color: black !important
-@import "theme-blue"
+//@import "theme-blue"
 
 #top-header
     color: black !important
@@ -22,7 +22,23 @@
 @import "./ctrl/SerenityControls"
 @import "./backoffice/BackOfficePanel"
 
+.btn
+    border: 0
+    color: black
+    height: 32px
+    background-color: rgb(244, 244, 244);
+    padding: 0px 16px
+    font-weight: 400
+    &:hover
+        background-color: rgb(234, 234, 234)
 
+
+.btn-primary
+    color: white
+    background-color: rgb(0, 120, 215)
+
+    &:hover
+        background-color: #005A9D
 
 .center
     text-align: center
@@ -95,11 +111,7 @@
     i
         margin-right: 5px
 
-.btn-default
-    background-color: lightgrey
-    border-color: lightgrey
-    &:hover
-        color: black
+
 
 
 .amcharts-main-div

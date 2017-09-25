@@ -41,6 +41,7 @@ interface IState {
     log: Array<any>
     debugToolLoaded: boolean,
     baseURL: string
+    errorResponse: string
 }
 
 export default class PanelComponentLoader extends React.Component<IProps, IState> {
@@ -57,7 +58,8 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             currComponent: global.ReactHelper.getWithData(props.component),
             log: [],
             debugToolLoaded: false,
-            baseURL: this.getBaseURL(window.location.hash)
+            baseURL: this.getBaseURL(window.location.hash),
+            errorResponse: null
         }
 
 
@@ -75,6 +77,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             });
         }
         if (this.props.componentPath) {
+
             this.handleGoTo(this.props.componentPath);
         }
     }
@@ -107,7 +110,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
         if (this.props.component != nextProps.component) {
+
             let component = global.ReactHelper.get(nextProps.component.replace(/\//g, "_"))
 
             if (component && component["_obj"].synch == true) {
@@ -123,25 +128,28 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     handleGoTo(path, input = {}) {
-        this.setState({loading: true});
-        Comm._post(path, {...input, __PROPS_REQUEST__: 1}).then((data) => {
+        this.setState({loading: true, errorResponse: null });
+        let comm = new Comm(path);
+        comm.setData({...input, __PROPS_REQUEST__: 1});
+        comm.on(Comm.EVENTS.ERROR,(errorResponse)=>{
+            alert("error");
+            this.setState({errorResponse: errorResponse});
+        });
+        comm.on(Comm.EVENTS.SUCCESS, (data) =>{
+            console.log(data);
             var stateObj = {};
             let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
             //history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
             window.location.hash = path + (urlParameters ? '?' : '') + urlParameters;
-            //, currComponent: global.ReactHelper.get(data.component)
-
-            let baseURL = path.split('?')[0];
-            let tmp = baseURL.split('/')
-            baseURL = tmp.slice(0, -1).join('/');
-
+            let baseURL = this.getBaseURL(path);
             this.setState({
                 loading: false,
                 loadedProps: {...data, baseURL: baseURL},
                 currComponent: global.ReactHelper.get(path.replace(/\//g, "_")),
-
             });
         });
+
+        comm.send();
     }
 
     handleNotifycation(message, title = '', options = {}) {
@@ -163,7 +171,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         if (!s.currComponent) {
             return <div style={{padding: 10}}>
                 <h3>Can't find component</h3>
-                <pre>{p.component}</pre>
+                <pre>"{p.component}"</pre>
             </div>
         }
         let Component = s.currComponent._obj;
@@ -182,14 +190,18 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         let DebugTool = this.DebugTool;
         return <div>
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
-            {this.state.loading && <div className="w-loader" style={{position: 'absolute', right: 10, top: 15}}>
+            {this.state.loading  && <div className="w-loader" style={{position: 'absolute', right: 10, top: 60, zIndex: 100}}>
                 <span><i></i><i></i><i></i><i></i></span>
             </div>}
 
 
             <Notifications {...notificaton} />
+            {this.state.errorResponse!=null&&<pre><h4>Error!!</h4>
+                <div dangerouslySetInnerHTML={{__html:this.state.errorResponse}}/>
+                <div>{this.state.errorResponse}</div>
+            </pre>}
 
-            <Component
+            {(this.state.errorResponse==null)&&<Component
                 {...p}
                 reloadProps={this.handleReloadProps.bind(this)}
                 _notification={this.handleNotifycation.bind(this)}
@@ -197,7 +209,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _reloadProps={this.handleReloadProps.bind(this)}
                 _goto={this.handleGoTo.bind(this)}
                 _resolveComponent={this.handleReloadProps.bind(this)}
-            />
+            />}
 
         </div>
 

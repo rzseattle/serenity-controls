@@ -2,9 +2,21 @@ interface IResponseCallback {
     (response: any): any
 }
 
+
 class Comm {
 
-    private events: any;
+    public static EVENTS = {
+        BEFORE_SEND: 'beforeSend',
+        PROGRESS: 'progress',
+        RESPONSE: 'response',
+        ERROR: 'error',
+        CONNECTION_ERROR: 'connectionError',
+        SUCCESS: 'success',
+        VALIDATION_ERRORS: 'validationErrors',
+        FINISH: 'finish',
+    }
+
+    private registredEvents: any;
     private method: string;
     private url: string;
     private data: any;
@@ -17,7 +29,7 @@ class Comm {
         this.data = {};
         this.namespace = null;
 
-        this.events = {
+        this.registredEvents = {
             beforeSend: [],
             progress: [],
             response: [],
@@ -32,16 +44,16 @@ class Comm {
 
 
     on(event: string, callback: IResponseCallback) {
-        if (!Array.isArray(this.events[event])) {
+        if (!Array.isArray(this.registredEvents[event])) {
             console.error('Unknow event: ' + event);
-            console.log(this.events);
+            console.log(this.registredEvents);
         } else {
-            this.events[event].push(callback);
+            this.registredEvents[event].push(callback);
         }
     }
 
     callEvent(event, data) {
-        this.events[event].map(el => el(data));
+        this.registredEvents[event].map(el => el(data));
     }
 
     setData(data) {
@@ -113,12 +125,12 @@ class Comm {
             this.appendFormData(formData, data);
         }
 
-        this.callEvent('beforeSend', data);
+        this.callEvent(Comm.EVENTS.BEFORE_SEND, data);
 
         let xhr = new XMLHttpRequest();
 
         xhr.upload.onprogress = (event) => {
-            this.callEvent('progress', {
+            this.callEvent(Comm.EVENTS.PROGRESS, {
                 loaded: event.loaded,
                 percent: Math.round(event.loaded / event.total * 100)
             });
@@ -130,14 +142,14 @@ class Comm {
                     let exceptionOccured = false;
                     let data;
                     try {
-                        this.callEvent('response', xhr.response);
+                        this.callEvent(Comm.EVENTS.RESPONSE, xhr.response);
                         data = JSON.parse(xhr.response);
                     } catch (e) {
                         exceptionOccured = true;
-                        if (this.events.error.length > 0) {
+                        if (this.registredEvents.error.length == 0) {
                             this.debugError(e.message + '<hr />' + xhr.response);
                         } else {
-                            this.callEvent('error', xhr.response);
+                            this.callEvent( Comm.EVENTS.ERROR, xhr.response);
                         }
 
 
@@ -145,18 +157,18 @@ class Comm {
 
                     if (!exceptionOccured) {
                         if (data.errors === undefined) {
-                            this.callEvent('success', data);
+                            this.callEvent(Comm.EVENTS.SUCCESS, data);
                         } else {
-                            this.callEvent('validationErrors', data);
+                            this.callEvent(Comm.EVENTS.VALIDATION_ERRORS, data);
                         }
                     }
 
 
                 } else {
                     this.debugError(xhr.status + '<hr />');
-                    this.callEvent('connectionError', xhr.response);
+                    this.callEvent(Comm.EVENTS.CONNECTION_ERROR, xhr.response);
                 }
-                this.callEvent('finish', xhr);
+                this.callEvent(Comm.EVENTS.FINISH, xhr);
             }
         };
 
