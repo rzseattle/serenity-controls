@@ -1,0 +1,174 @@
+.back-office-body
+    padding: 0
+    margin: 0
+    *
+        box-sizing: border-box
+
+.w-panel-container
+
+    background-color: #EEEEEE
+    display: flex
+    flex-wrap: wrap
+
+    height: 800px
+
+    .w-panel-top
+        height: 50px
+        width: 100%
+        background-color: black
+        color: white
+
+        >div
+            float: right
+            line-height: 50px
+            height: 50px
+
+
+        .app-title, .app-icon
+            float: left
+            font-size: 25px
+
+        .app-icon
+            background-color: #0078D7
+            width: 59px
+            text-align: center
+            margin-right: 10px
+
+            &:hover
+                background-color: #124B7D
+                transition: background-color 200ms linear
+
+        .app-user
+            padding: 0 20px
+            cursor: pointer
+            .app-user-icon
+                float: left
+                margin-top: 10px
+                margin-right: 10px
+                background-color: grey
+                width: 30px
+                height: 30px
+                font-size: 20px
+                line-height: 30px
+                text-align: center
+                border-radius: 15px
+            &:hover
+                background-color: #124B7D
+                transition: background-color 200ms linear
+
+
+
+
+    .w-panel-menu
+        width: 190px
+        background-color: #F9F9F9
+        border-right: solid 1px #d7d7d7
+        height: calc( 100% - 50px )
+
+        .menu-section
+            .menu-section-title
+                color: #438eb9
+                background-color: #F8F8F8
+                color: #585858
+                font-weight: 400
+                display: block
+
+
+                height: 35px
+                padding: - 15px
+                padding-left: 7px
+                font-size: 16px
+                border-bottom: 1px solid #e5e5e5
+                cursor: pointer
+                border-left: solid 4px transparent
+                &:hover
+                    border-left-color: #0078D7
+                    background-color: #ececec
+                i
+                    width: 30px
+                    font-size: 22px
+                    line-height: 35px
+                span
+                    display: inline-block
+                    line-height: 35px
+                    vertical-align: bottom
+
+            .menu-section-section-opened
+                overflow: hidden
+                max-height: 500px
+                //transition: max-height 0.45s linear
+
+            .menu-section-section-closed
+                max-height: 0
+                overflow: hidden
+                border: none !important
+                //transition: max-height 0.35s linear
+            .menu-section-section
+                background-color: white
+                border-bottom:  1px solid lightgrey
+
+                .menu-link
+                    font-size: 13px
+                    color: #585858
+                    display: block
+                    position: relative
+                    padding: 7px 0 9px 17px
+                    margin: 0
+                    border-top: 1px dotted #e5e5e5
+                    font-weight: 400
+                    &:hover
+                        color:  #0078D7
+                        cursor: pointer
+                        background-color: #f9f9f9
+                    &:first-child
+                        border-top: none
+
+                    i
+                        color: lightgrey
+                        margin-right: 5px
+
+
+
+
+        .menu-collapse
+            background-color: #F8F8F8
+            border-color: #e0e0e0
+            border-style: solid
+            border-width: 0 0 1px
+            text-align: center
+            padding: 3px 0
+            position: relative
+            border-bottom: none
+            &:before
+                content: " "
+                display: block
+                height: 0
+                border-top: 1px solid
+                border-color: inherit
+                position: absolute
+                left: 15px
+                right: 15px
+                top: 13px
+
+            i
+                border-color: #bbb
+                color: #aaa
+                background-color: #fff
+                padding: 0 5px
+                line-height: 18px
+                cursor: pointer
+                font-size: 14px
+                border-radius: 100%
+                border: 1px solid
+                position: relative
+                text-align: center
+
+
+
+
+
+    .w-panel-body
+        height: calc( 100% - 50px )
+        width: calc( 100% - 191px )
+
+
