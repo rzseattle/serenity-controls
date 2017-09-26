@@ -16,6 +16,8 @@ class Comm {
         FINISH: 'finish',
     }
 
+    public debug: boolean = true;
+
     private registredEvents: any;
     private method: string;
     private url: string;
@@ -147,8 +149,12 @@ class Comm {
                     } catch (e) {
                         exceptionOccured = true;
                         if (this.registredEvents.error.length == 0) {
+
                             this.debugError(e.message + '<hr />' + xhr.response);
                         } else {
+                            if(this.debug) {
+                                this.debugError(e.message + '<hr />' + xhr.response);
+                            }
                             this.callEvent( Comm.EVENTS.ERROR, xhr.response);
                         }
 

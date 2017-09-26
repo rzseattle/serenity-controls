@@ -23,14 +23,23 @@
 @import "./backoffice/BackOfficePanel"
 
 .btn
+    display: inline-block
     border: 0
     color: black
     height: 32px
-    background-color: rgb(244, 244, 244);
+    line-height: 32px
+    background-color: rgb(244, 244, 244)
     padding: 0px 16px
     font-weight: 400
+    text-decoration: none
     &:hover
         background-color: rgb(234, 234, 234)
+        text-decoration: none
+    &:focus
+        text-decoration: none
+        color: black
+        outline: none
+
 
 
 .btn-primary
@@ -39,6 +48,11 @@
 
     &:hover
         background-color: #005A9D
+        color: white
+    &:focus
+        color: white
+        background-color: rgb(0, 120, 215)
+        outline: none
 
 .center
     text-align: center

@@ -2,7 +2,7 @@ import * as React from "react";
 import {ICommand} from "../lib/ICommand";
 
 interface IProps {
-    children: any[];
+    children: any;
     toolbar?: any[];
 }
 

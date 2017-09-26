@@ -130,10 +130,11 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     handleGoTo(path, input = {}) {
         this.setState({loading: true, errorResponse: null });
         let comm = new Comm(path);
+        comm.debug = false;
         comm.setData({...input, __PROPS_REQUEST__: 1});
         comm.on(Comm.EVENTS.ERROR,(errorResponse)=>{
-            alert("error");
-            this.setState({errorResponse: errorResponse});
+
+            this.setState({errorResponse: errorResponse, loading: false});
         });
         comm.on(Comm.EVENTS.SUCCESS, (data) =>{
             console.log(data);
@@ -196,10 +197,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
             <Notifications {...notificaton} />
-            {this.state.errorResponse!=null&&<pre><h4>Error!!</h4>
-                <div dangerouslySetInnerHTML={{__html:this.state.errorResponse}}/>
-                <div>{this.state.errorResponse}</div>
-            </pre>}
+            {this.state.errorResponse!=null&&<div>
+                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html:this.state.errorResponse}}/>
+            </div>}
 
             {(this.state.errorResponse==null)&&<Component
                 {...p}

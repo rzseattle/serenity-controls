@@ -75,7 +75,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
         return <div className="w-panel-container" ref={(container) => this.container = container}>
             <div className="w-panel-top">
-                <div className="app-icon" onClick={() => this.setState({currentBodyComponent: '/admin/dashboard'})}>
+                <div className="app-icon" onClick={() => this.setState({currentBodyComponent: 'app/admin/dashboard'})}>
                     <i className={"ms-Icon ms-Icon--" + this.props.appIcon}/>
                 </div>
                 <div className="app-title">
@@ -91,7 +91,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                 <Modal show={this.state.userMenuVisible} top={50} right={0} onHide={() => this.setState({userMenuVisible: false})}>
                     <div style={{width: 200}}></div>
                     <div style={{padding: 10}}>
-                        <a href=""><Icon name="Accounts"/> Twoje konto</a>
+                        <a onClick={() => this.setState({currentBodyComponent: 'access/users/account', userMenuVisible: false})}><Icon name="Accounts"/> Twoje konto</a>
                     </div>
                     <div style={{padding: 10}}>
                         <a href={this.props.appBaseURL + "/access/accessController/logout"}><Icon name="SignOut"/> Wyloguj się</a>

@@ -4,6 +4,7 @@ import * as Dropzone from 'react-dropzone';
 
 
 let checkIncludes = (options, value) => {
+
     let element = options.filter((element) => {
         if (element.value !== undefined) {
             return element.value == value;
@@ -12,6 +13,7 @@ let checkIncludes = (options, value) => {
         }
     });
     return element.length > 0;
+
 };
 
 interface IFieldChangeEvent {
@@ -384,7 +386,7 @@ class Switch extends React.Component<ISwitchProps, any> {
 
 interface ICheckboxGroupProps extends IFieldProps {
     options: { value: string | number, label: string }[] | { [key: string]: string },
-    value: string[] | number[]
+    value: string[]
     inline: boolean
 }
 
@@ -403,10 +405,18 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
     }
 
     handleOnChange(e) {
+        let value: string[] = this.props.value.slice(0);
+        if (e.target.checked) {
+            value.push(e.target.value);
+        } else {
+            value = value.filter((el) => el != e.target.value);
+        }
+
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
-                type: 'checkboxgroup', value: e.target.value,
+                type: 'checkboxgroup',
+                value: value,
                 event: e
             });
         }
@@ -442,6 +452,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
         }
 
 
+        console.log(props.value)
         let gen = (value, label) => {
             let field = <input type="checkbox"
                                name={props.name}
@@ -614,7 +625,6 @@ class File extends React.Component<IFileProps, any> {
         );
     }
 }
-
 
 
 export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg};
