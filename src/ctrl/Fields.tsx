@@ -244,7 +244,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         }
     }
 
-    componentDidMount() {
+    initializeEditor() {
         Promise.all([
             import( 'scriptjs')
         ]).then(imported => {
@@ -271,7 +271,24 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidMount() {
+        if (this.props.editable) {
+            this.initializeEditor()
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.editable == false && this.props.editable == true) {
+            this.initializeEditor();
+        }
+        if (prevProps.editable == true && this.props.editable == false) {
+            CKEDITOR.instances[this.id].destroy();
+        }
+    }
+
+    componentWillReceiveProps(nextProps, currentProps) {
+
+
         if (nextProps.values) {
             CKEDITOR.instances[this.id].setData(nextProps.values);
         }
@@ -279,14 +296,19 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
 
     componentWillUnmount() {
-        CKEDITOR.instances[this.id].destroy();
+        if ( typeof (CKEDITOR) != "undefined"){
+            if(CKEDITOR.instances[this.id] != undefined) {
+                CKEDITOR.instances[this.id].destroy();
+            }
+        }
     }
 
     render() {
         let props = this.props;
         if (!props.editable) {
             return <div
-                className="w-field-presentation w-field-presentation-wysiwyg">{props.value}</div>;
+                className="w-field-presentation w-field-presentation-wysiwyg"
+                dangerouslySetInnerHTML={{__html: props.value}}></div>;
         }
 
         if (this.state.libsLoaded == false) {

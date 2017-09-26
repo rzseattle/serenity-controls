@@ -5,7 +5,6 @@ import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
 
 
-
 interface IWithBootstrapFormFieldProps {
     label?: string
     help?: string
@@ -22,8 +21,8 @@ interface IWithBootstrapFormFieldProps {
     style?: any
 
 
-
 }
+
 //todo odkomentowac typ po zmianie fields
 const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass = true) => {
 
@@ -348,26 +347,68 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     }
 
 
-
     applyToField(name, defaultValue = null) {
 
+        let value;
+        //if field[name][name2] notation
+        if (name.indexOf("[") != -1) {
 
-        if (this.state.data[name] === undefined && defaultValue !== false) {
-            this.state.data[name] = defaultValue;
+            let tmp = name.replace(/\]/g, "")
+
+            let arrayNotation = tmp.split("[");
+            let dotNotation = arrayNotation.join(".");
+
+
+            let get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
+
+            let set = (obj, path, endValue) => {
+                if (path.length > 1) {
+                    let currKey = path.shift();
+                    obj[currKey] = {};
+                    set(obj[currKey], path, endValue);
+                } else {
+                    obj[path[0]] = endValue;
+                }
+            }
+
+            value = get(this.state.data);
+            if (value === undefined && defaultValue !== false) {
+                set(this.state.data, arrayNotation, defaultValue);
+            }
+            if (get(this.state.fieldErrors) == undefined) {
+                set(this.state.fieldErrors, arrayNotation, null)
+            }
+
+            //false - dont track
+            if (defaultValue !== false) {
+                set(this.fieldsValues, arrayNotation, this.props.data[name] || defaultValue);
+            }
+
+        } else {
+
+
+            if (this.state.data[name] === undefined && defaultValue !== false) {
+                this.state.data[name] = defaultValue;
+            }
+            if (this.state.fieldErrors[name] === undefined) {
+                this.state.fieldErrors[name] = null;
+            }
+            //false - dont track
+            if (defaultValue !== false) {
+                this.fieldsValues[name] = this.props.data[name] || defaultValue;
+            }
+            value = this.props.data[name]
         }
-        if (this.state.fieldErrors[name] === undefined) {
-            this.state.fieldErrors[name] = null;
-        }
-        //false - dont track
-        if (defaultValue !== false) {
-            this.fieldsValues[name] = this.props.data[name] || defaultValue;
-        }
+
+
+        //console.log(this.state.data);
 
         return {
-            value: this.props.data[name],
+            value: value,
             name: name,
             layoutType: this.props.layoutType,
             errors: this.state.fieldErrors[name],
+            editable: this.props.editable,
             onChange: (e) => {
                 this.handleInputChange(e);
             }
@@ -389,9 +430,9 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             <form ref={(form) => this.formTag = form} className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
 
                 {this.state.formErrors.length > 0 &&
-                    <ul className="bg-danger ">
-                        {this.state.formErrors.map(el => <li>{el}</li>)}
-                    </ul>}
+                <ul className="bg-danger ">
+                    {this.state.formErrors.map(el => <li>{el}</li>)}
+                </ul>}
                 {this.props.children(this.applyToField.bind(this))}
 
                 <Shadow {...{visible: this.state.loading, loader: true, container: () => this.formTag}} />
@@ -410,7 +451,7 @@ const BButtonsBar = props => {
 }
 
 
-const BText = withBootstrapFormField(Text );
+const BText = withBootstrapFormField(Text);
 const BTextarea = withBootstrapFormField(Textarea);
 const BSelect = withBootstrapFormField(Select);
 const BSwitch = withBootstrapFormField(Switch);

@@ -50,6 +50,7 @@ interface ITableProps {
     rowStyleTemplate?: IRowStyleTemplate,
     columns: Array<IColumnData> | Array<ColumnHelper>,
     showFooter?: boolean,
+    showHeader?: boolean,
     additionalConditions?: any
 
 
@@ -80,6 +81,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         onPage: 25,
         columns: [],
         showFooter: true,
+        showHeader: true,
         rememberState: false,
         additionalConditions: {}
     }
@@ -457,7 +459,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 </div>
 
                 <table className={this.state.fixedLayout ? 'w-table-fixed' : ''}>
-                    <thead>
+                    {this.props.showHeader&&<thead>
                     <tr>
                         {this.props.selectable ?
                             <th className="w-table-selection-header" onClick={this.handleCheckClicked.bind(this, 'all')}>
@@ -486,7 +488,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                                 </th>)
                         })}
                     </tr>
-                    </thead>
+                    </thead>}
 
 
                     {this.state.dataSourceError && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}

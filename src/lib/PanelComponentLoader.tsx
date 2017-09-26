@@ -83,7 +83,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     getBaseURL(url: string = null): string {
-        let baseURL = url.split('?')[0].replace("#","");
+        let baseURL = url.split('?')[0].replace("#", "");
         let tmp = baseURL.split('/')
         baseURL = tmp.slice(0, -1).join('/');
         return baseURL;
@@ -92,15 +92,16 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     handleReloadProps(input = {}, callback: () => any) {
         this.setState({loading: true});
-        Comm._post(this.props.requestURI, {...input, __PROPS_REQUEST__: 1}).then((data) => {
-            this.setState({loading: false, loadedProps: {...data, baseURL: this.getBaseURL(this.props.requestURI.split('?')[0])}});
+        let url = window.location.hash.replace("#", "");
+        Comm._post(url, {...input, __PROPS_REQUEST__: 1}).then((data) => {
+            this.setState({loading: false, loadedProps: {...data, baseURL: this.getBaseURL(url)}});
             if (callback) {
                 callback();
             }
         });
     }
 
-    unstable_handleError(){
+    unstable_handleError() {
         alert('error');
     }
 
@@ -110,7 +111,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
+
         if (this.props.component != nextProps.component) {
 
             let component = global.ReactHelper.get(nextProps.component.replace(/\//g, "_"))
@@ -128,25 +129,35 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     handleGoTo(path, input = {}) {
-        this.setState({loading: true, errorResponse: null });
-        let comm = new Comm(path);
+
+        this.setState({loading: true, errorResponse: null});
+        let pathQueryString = "";
+        //jesli podano path w formie adresu z ? i parametrami
+        if (path.indexOf("?") != -1) {
+            [path, pathQueryString] = path.split("?");
+        } else {
+            let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
+            window.location.hash = path + (urlParameters ? '?' : '') + urlParameters;
+        }
+        let baseURL = this.getBaseURL(path);
+        let componentPath = path.replace(/\//g, "_");
+
+        let comm = new Comm(path + (pathQueryString ? "?" + pathQueryString : ""));
         comm.debug = false;
         comm.setData({...input, __PROPS_REQUEST__: 1});
-        comm.on(Comm.EVENTS.ERROR,(errorResponse)=>{
-
+        comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
             this.setState({errorResponse: errorResponse, loading: false});
         });
-        comm.on(Comm.EVENTS.SUCCESS, (data) =>{
+        comm.on(Comm.EVENTS.SUCCESS, (data) => {
             console.log(data);
             var stateObj = {};
-            let urlParameters = Object.keys(input).map((i) => i + '=' + input[i]).join('&');
+
             //history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);
-            window.location.hash = path + (urlParameters ? '?' : '') + urlParameters;
-            let baseURL = this.getBaseURL(path);
+
             this.setState({
                 loading: false,
                 loadedProps: {...data, baseURL: baseURL},
-                currComponent: global.ReactHelper.get(path.replace(/\//g, "_")),
+                currComponent: global.ReactHelper.get(componentPath),
             });
         });
 
@@ -191,17 +202,17 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         let DebugTool = this.DebugTool;
         return <div>
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
-            {this.state.loading  && <div className="w-loader" style={{position: 'absolute', right: 10, top: 60, zIndex: 100}}>
+            {this.state.loading && <div className="w-loader" style={{position: 'absolute', right: 10, top: 60, zIndex: 100}}>
                 <span><i></i><i></i><i></i><i></i></span>
             </div>}
 
 
             <Notifications {...notificaton} />
-            {this.state.errorResponse!=null&&<div>
-                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html:this.state.errorResponse}}/>
+            {this.state.errorResponse != null && <div>
+                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.state.errorResponse}}/>
             </div>}
 
-            {(this.state.errorResponse==null)&&<Component
+            {(this.state.errorResponse == null) && <Component
                 {...p}
                 reloadProps={this.handleReloadProps.bind(this)}
                 _notification={this.handleNotifycation.bind(this)}

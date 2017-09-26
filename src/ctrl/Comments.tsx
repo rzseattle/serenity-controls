@@ -1,14 +1,42 @@
 import * as React from "react";
 
-interface ICommentsProps  {
-    children: any
+interface ICommentsProps {
+    children: any;
+    commentAdded: { (comment: string): boolean }
 }
 
 class Comments extends React.Component<ICommentsProps, any> {
+    textarea: HTMLTextAreaElement;
 
     constructor(props) {
         super(props);
+        this.state = {
+            addMode: false,
+            rows: 1
+        }
 
+    }
+
+    handleAddComment() {
+        let result = this.props.commentAdded(this.textarea.value);
+        if (result) {
+            this.setState({addMode: false, rows: 1});
+            this.textarea.value = "";
+        }
+    }
+
+    handleCommentCancel() {
+        this.setState({addMode: false, rows: 1})
+        this.textarea.value = "";
+    }
+
+    handleTextareaFocus() {
+        this.setState({addMode: true})
+    }
+
+    handleRowCalc() {
+        const rows = this.textarea.value.split("\n").length;
+        this.setState({rows: rows})
     }
 
     render() {
@@ -17,11 +45,26 @@ class Comments extends React.Component<ICommentsProps, any> {
 
         return (
             <div className="w-comments">
-                {p.children}
+                <div>
+                    {p.children}
+                </div>
+                <textarea
+                    placeholder="Dodaj komentarz"
+                    rows={this.state.rows}
+                    ref={(el) => this.textarea = el} style={{width: '100%'}}
+                    onFocus={this.handleTextareaFocus.bind(this)}
+                    onChange={this.handleRowCalc.bind(this)}
+                />
+                {this.state.addMode && <div className="clearfix">
+                    <a className="btn btn-primary pull-right" onClick={this.handleAddComment.bind(this)}>Dodaj</a>
+                    <a className="btn pull-right" onClick={this.handleCommentCancel.bind(this)}>Anuluj</a>
+                </div>}
+
             </div>
         )
     }
 }
+
 interface ICommentItemProps {
     author: string;
     time: string

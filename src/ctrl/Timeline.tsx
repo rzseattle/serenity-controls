@@ -6,7 +6,7 @@ interface ITimelineItemProps {
     time?: string,
     user?: string,
     action?: string,
-    icon?: string,
+    icon?: string | {(props): string | false},
     children?: string,
 }
 
@@ -44,10 +44,11 @@ class Timeline extends React.Component<ITimelineProps, any> {
         return (
             <div className="w-timeline">
                 <ul>
-                    {p.children.map((child, index) =>
-                        <li key={index}>
-                            {index + 1 < p.children.length && <div className="tail"></div>}
-                            <div className={'head ' + child.props.color + (child.props.icon ? ' fa fa-' + child.props.icon : ' head-circle')}></div>
+                    {p.children.map((child, index) => {
+                        let icon = typeof (child.props.icon ) == "function" ? child.props.icon(child.props) : child.props.icon;
+                        return <li key={index}>
+                            {index + 1 < p.children.length && <div className="tail"/>}
+                            <div className={'head ' + child.props.color + (icon ? ' ms-Icon ms-Icon--' + icon  : ' head-circle')}/>
                             <div className="content">
                                 <p className="content-head">{child.props.time}
                                     {child.props.user && <span className="user">[{child.props.user}]</span>}
@@ -58,7 +59,7 @@ class Timeline extends React.Component<ITimelineProps, any> {
                             </div>
 
                         </li>
-                    )}
+                    })}
                 </ul>
             </div>
         )
