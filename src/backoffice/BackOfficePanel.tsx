@@ -165,7 +165,7 @@ class Menu extends React.Component<IMenuProps, IMenuState> {
             onMouseLeave={this.handleMenuLeave.bind(this)}
         >
             {this.props.elements.map((el, index) =>
-                <div className="menu-section">
+                <div className="menu-section" key={index}>
                     <div
                         className="menu-section-title"
                         onClick={() => this.setState({currentMenuOpened: index})}

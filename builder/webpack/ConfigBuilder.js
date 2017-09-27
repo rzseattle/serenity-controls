@@ -23,7 +23,8 @@ module.exports = function (input) {
         const FileObserver = require("./FileObserver.js");
         FileObserver(
             input.BASE_PATH,
-            resolve(input.BASE_PATH, './build/js/tmp/components.include.js')
+            resolve(input.BASE_PATH, './build/js/tmp/components.include.js'),
+            resolve(input.BASE_PATH, './build/js/tmp/components.include.sass')
         )
 
         const getDevServerConf = require("./DevServer.js");

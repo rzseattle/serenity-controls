@@ -1,7 +1,7 @@
 var chokidar = require('chokidar');
 const fs = require('fs');
 
-var setupFileObserver = function(BASE_PATH, SAVE_TARGET) {
+var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
 
 
     let watchedDirs = [
@@ -12,55 +12,73 @@ var setupFileObserver = function(BASE_PATH, SAVE_TARGET) {
 
 
     var walk = function (dir) {
-        var results = [];
-        if(fs.existsSync(dir)) {
+        var components = [];
+        var sass = [];
+        if (fs.existsSync(dir)) {
             var list = fs.readdirSync(dir);
             list.forEach(function (file) {
                 file = dir + '/' + file;
                 var stat = fs.statSync(file);
                 if (stat && stat.isDirectory()) {
-                    results = results.concat(walk(file));
+                    let [c, s] = walk(file);
+                    components = components.concat(c);
+                    sass = sass.concat(s);
                 } else {
-
                     if (file.match(/.*\.component\.js$/) || file.match(/.*\.component\.tsx$/)) {
-
-                        let name = file.replace(dir, '');
-                        name = name.replace(/\//g, '_');
-                        name = name.replace('.component.js', '');
-                        name = name.replace('.component.tsx', '');
-                        results.push({
-                            name: name,
-                            path: file
-                        });
+                        components.push(file);
+                    }else if (file.match(/.*\.component\.sass$/)) {
+                        sass.push(file);
                     }
                 }
             });
         }
-        return results;
+
+        return [components, sass];
     };
 
 
     const linkArrowDir = () => {
-        let FileContent = '';
+        let ComponentFileContent = '';
+        let SassFileContent = '';
         watchedDirs.map(config => {
-            walk(config.dir).forEach((entry) => {
-                let name = entry.path.replace(config.dir + '/', '');
+            let [components, sass] = walk(config.dir);
+            components.forEach((entry) => {
+                let name = entry.replace(config.dir + '/', '');
                 name = name.replace(/\//g, '_');
                 name = name.replace('.component.js', '');
                 name = name.replace('.component.tsx', '');
                 name = config.package + '_' + name;
-                let data = {file: entry.path}
+                let data = {file: entry}
 
-                FileContent += 'import ' + name + ' from \'' + entry.path.replace(/\\/g, '\\\\') + '\';\n';
-                FileContent += 'ReactHelper.register(\'' + name + '\', ' + name + ', ' + JSON.stringify(data) + ');\n';
+                ComponentFileContent += 'import ' + name + ' from \'' + entry.replace(/\\/g, '\\\\') + '\';\n';
+                ComponentFileContent += 'ReactHelper.register(\'' + name + '\', ' + name + ', ' + JSON.stringify(data) + ');\n';
             });
+            sass.forEach((entry) => {
+                let name = entry.replace(config.dir + '/', '');
+                name = name.replace(/\//g, '_');
+                name = name.replace('.component.sass', '');
+                name = config.package + '_' + name;
+                SassFileContent += `.${name}";\n`;
+                SassFileContent += `    @import "${entry}";\n`;
+
+            });
+
+
         });
 
-        fs.writeFile(SAVE_TARGET, FileContent, function (err) {
+        fs.writeFile(SAVE_COMPONENT_TARGET, ComponentFileContent, function (err) {
             if (err) {
                 return console.log(err);
+            } else {
+                console.log('The file was saved!');
             }
-            console.log('The file was saved!');
+        });
+        fs.writeFile(SAVE_SASS_TARGET, SassFileContent, function (err) {
+            if (err) {
+                return console.log(err);
+            } else {
+                console.log('The file was saved!');
+            }
         });
     };
 

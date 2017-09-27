@@ -75,7 +75,7 @@ window.ReactHelper = {
 
 
     register: function (name, constructor, data = {}) {
-        registry[name] = {_obj: constructor, data: data };
+        registry[name] = {_obj: constructor, data, key: name };
     },
 
     get: function (name) {

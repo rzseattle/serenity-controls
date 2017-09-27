@@ -200,7 +200,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
 
         let DebugTool = this.DebugTool;
-        return <div>
+        return <div className={s.currComponent.key}>
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
             {this.state.loading && <div className="w-loader" style={{position: 'absolute', right: 10, top: 60, zIndex: 100}}>
                 <span><i></i><i></i><i></i><i></i></span>
