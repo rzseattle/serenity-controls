@@ -58,8 +58,8 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 name = name.replace(/\//g, '_');
                 name = name.replace('.component.sass', '');
                 name = config.package + '_' + name;
-                SassFileContent += `.${name}";\n`;
-                SassFileContent += `    @import "${entry}";\n`;
+                SassFileContent += `.${name}\n`;
+                SassFileContent += `    @import "${entry.replace(/\\/g, "/")}";\n`;
 
             });
 
