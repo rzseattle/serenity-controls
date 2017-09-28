@@ -26,7 +26,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 } else {
                     if (file.match(/.*\.component\.js$/) || file.match(/.*\.component\.tsx$/)) {
                         components.push(file);
-                    }else if (file.match(/.*\.component\.sass$/)) {
+                    } else if (file.match(/.*\.component\.sass$/)) {
                         sass.push(file);
                     }
                 }
@@ -39,6 +39,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
     const linkArrowDir = () => {
         let ComponentFileContent = '';
+        let ComponentFileContentEx = [];
         let SassFileContent = '';
         watchedDirs.map(config => {
             let [components, sass] = walk(config.dir);
@@ -50,8 +51,9 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 name = config.package + '_' + name;
                 let data = {file: entry}
 
-                ComponentFileContent += 'import ' + name + ' from \'' + entry.replace(/\\/g, '\\\\') + '\';\n';
-                ComponentFileContent += 'ReactHelper.register(\'' + name + '\', ' + name + ', ' + JSON.stringify(data) + ');\n';
+                ComponentFileContent += 'import ' + name + ' from \'' + entry.replace(/\\/g, '/') + '\';\n';
+                //ComponentFileContent += `export ${name};\n`;
+                ComponentFileContentEx.push(name)
             });
             sass.forEach((entry) => {
                 let name = entry.replace(config.dir + '/', '');
@@ -65,6 +67,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
         });
+        ComponentFileContent += `\nexport{ ${ComponentFileContentEx.join(",")} };`;
 
         fs.writeFile(SAVE_COMPONENT_TARGET, ComponentFileContent, function (err) {
             if (err) {

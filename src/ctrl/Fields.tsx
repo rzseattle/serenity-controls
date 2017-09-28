@@ -141,7 +141,6 @@ class Text extends React.Component<ITextProps, any> {
 
         return (
             <input
-                ref="field"
                 className={props.className}
                 name={props.name}
                 type={props.type}
@@ -296,8 +295,8 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
 
     componentWillUnmount() {
-        if ( typeof (CKEDITOR) != "undefined"){
-            if(CKEDITOR.instances[this.id] != undefined) {
+        if (typeof (CKEDITOR) != "undefined") {
+            if (CKEDITOR.instances[this.id] != undefined) {
                 CKEDITOR.instances[this.id].destroy();
             }
         }
@@ -326,6 +325,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                 value={props.value === null ? '' : props.value}
                 disabled={props.disabled}
                 style={props.style}
+                onChange={() => true}
             />
 
         );

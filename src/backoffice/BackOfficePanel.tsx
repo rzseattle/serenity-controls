@@ -5,6 +5,9 @@ import {Icon} from 'frontend/src/ctrl/Icon';
 import PanelComponentLoader from 'frontend/src/lib/PanelComponentLoader';
 import {Modal} from 'frontend/src/ctrl/Overlays';
 
+import BackofficeStore from "./BackofficeStore"
+
+
 interface IMenuSection {
     active: boolean
     elements: IMenuElement[]
@@ -31,8 +34,7 @@ interface IBackOfficePanelProps {
 }
 
 interface IBackOfficePanelState {
-    bodyComponentPath: string
-    currentBodyComponent: string,
+    currentView: string
     userMenuVisible: boolean,
 }
 
@@ -42,18 +44,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
     constructor(props: IBackOfficePanelProps) {
         super();
-        let hash = window.location.hash.replace("#", "");
-
-
-        let link = hash.replace(props.appBaseURL, "");
-        link = link.replace(/\//g, "_");
-
 
         this.state = {
-            bodyComponentPath: hash,
-            currentBodyComponent: null,
+            currentView: null,
             userMenuVisible: false
         }
+
+        console.error("BackOfficePanel", "constructor")
     }
 
     componentDidMount() {
@@ -71,11 +68,9 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     render() {
 
 
-        let bodyCompName = this.state.currentBodyComponent;
-
         return <div className="w-panel-container" ref={(container) => this.container = container}>
             <div className="w-panel-top">
-                <div className="app-icon" onClick={() => this.setState({currentBodyComponent: 'app/admin/dashboard'})}>
+                <div className="app-icon" onClick={() => BackofficeStore.changeView('app/admin/dashboard')}>
                     <i className={"ms-Icon ms-Icon--" + this.props.appIcon}/>
                 </div>
                 <div className="app-title">
@@ -91,10 +86,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                 <Modal show={this.state.userMenuVisible} top={50} right={0} onHide={() => this.setState({userMenuVisible: false})}>
                     <div style={{width: 200}}></div>
                     <div style={{padding: 10}}>
-                        <a onClick={() => this.setState({currentBodyComponent: 'access/users/account', userMenuVisible: false})}><Icon name="Accounts"/> Twoje konto</a>
+                        <a onClick={() => {
+                            BackofficeStore.changeView('access/users/account');
+                            this.setState({userMenuVisible: false});
+                        }}><Icon name="Accounts"/> Twoje konto</a>
                     </div>
                     <div style={{padding: 10}}>
-                        <a href={this.props.appBaseURL + "/access/accessController/logout"}><Icon name="SignOut"/> Wyloguj się</a>
+                        <a href={"access/accessController/logout"}><Icon name="SignOut"/> Wyloguj się</a>
                     </div>
                 </Modal>
 
@@ -103,18 +101,12 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
                 <div className="w-panel-menu">
                     <Menu elements={this.props.appMenu}
-                          onMenuElementClick={(element) => this.setState({currentBodyComponent: element.template})}
+                          onMenuElementClick={(element) => BackofficeStore.changeView(element.template)}
 
                     />
                 </div>
                 <div className="w-panel-body">
-
-                    <PanelComponentLoader
-                        componentPath={this.state.bodyComponentPath}
-                        requestURI={this.props.requestURI}
-                        component={bodyCompName}
-
-                    />
+                    <PanelComponentLoader store={BackofficeStore} />
                 </div>
             </div>
 
@@ -179,7 +171,7 @@ class Menu extends React.Component<IMenuProps, IMenuState> {
                     >
                         {!this.state.expanded && <div className="section-inner-title">{el.title}</div>}
                         {el.elements.map(el =>
-                            <div className="menu-link" onClick={() => this.props.onMenuElementClick(el)}>
+                            <div key={el.title} className="menu-link" onClick={() => this.props.onMenuElementClick(el)}>
                                 {el.title}
                             </div>
                         )}

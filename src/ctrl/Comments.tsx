@@ -49,6 +49,7 @@ class Comments extends React.Component<ICommentsProps, any> {
                     {p.children}
                 </div>
                 <textarea
+
                     placeholder="Dodaj komentarz"
                     rows={this.state.rows}
                     ref={(el) => this.textarea = el} style={{width: '100%'}}

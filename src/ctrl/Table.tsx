@@ -138,8 +138,8 @@ class Table extends React.Component<ITableProps, ITableState> {
     componentWillMount() {
 
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
-            this.state = {...this.state, ...JSON.parse(window.localStorage[this.hashCode])};
-            this.state.firstLoaded = false;
+            this.setState({...this.state, ...JSON.parse(window.localStorage[this.hashCode]), firstLoaded: false});
+
         }
     }
 
@@ -314,7 +314,7 @@ class Table extends React.Component<ITableProps, ITableState> {
     handleCurrentPageChange(page) {
         let newPage = Math.max(1, Math.min(Math.ceil(this.state.countAll / this.state.onPage), page));
         if (newPage != this.state.currentPage) {
-            this.setState({currentPage: newPage, selection: [], allChecked: false}, this.load);
+            this.setState({currentPage: newPage, selection: [], allChecked: false}, () => this.load());
         }
     }
 
@@ -415,7 +415,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             'icon': null,
             'append': null,
             'prepend': null,
-            'classTemplate':() => [],
+            'classTemplate': () => [],
             'styleTemplate': () => [],
             'template': null,
             'default': '',
@@ -447,7 +447,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         const columns = this.state.columns;
 
         return (
-            <div className={'w-table ' + (this.state.loading ? 'w-table-loading' : '')} ref="container" tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
+            <div className={'w-table ' + (this.state.loading ? 'w-table-loading' : '')}  tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
                 <div className="w-table-loader">
                     <span><i></i><i></i><i></i><i></i></span>
                 </div>
@@ -459,7 +459,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 </div>
 
                 <table className={this.state.fixedLayout ? 'w-table-fixed' : ''}>
-                    {this.props.showHeader&&<thead>
+                    {this.props.showHeader && <thead>
                     <tr>
                         {this.props.selectable ?
                             <th className="w-table-selection-header" onClick={this.handleCheckClicked.bind(this, 'all')}>
@@ -489,8 +489,6 @@ class Table extends React.Component<ITableProps, ITableState> {
                         })}
                     </tr>
                     </thead>}
-
-
                     {this.state.dataSourceError && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
                     {!this.state.loading && this.state.data.length + 1 == 0 && <EmptyResult colspan={columns.length + 1}/>}
                     {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
