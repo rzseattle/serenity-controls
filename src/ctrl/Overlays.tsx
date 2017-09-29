@@ -292,7 +292,7 @@ class ConfirmModal extends React.Component<any, any> {
         let modalProps = Object.assign({}, this.props);
         delete modalProps.cleanup;
 
-        return <MyModal {...modalProps} className="w-modal-confirm" show={true}>
+        return <Modal {...modalProps} className="w-modal-confirm" show={true}>
             <div style={{padding: 15}}>{this.props.children}</div>
             <div style={{padding: 10, paddingTop: 0, textAlign: 'right'}}>
                 <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok
@@ -300,7 +300,7 @@ class ConfirmModal extends React.Component<any, any> {
                 <button onClick={this.handleAbort.bind(this)} className="btn btn-default">anuluj
                 </button>
             </div>
-        </MyModal>;
+        </Modal>;
     }
 
 }
