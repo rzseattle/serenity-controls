@@ -36,13 +36,10 @@ interface IProps {
 }
 
 interface IState {
-    currComponent: any,
-    loading: boolean,
-    loadedProps: any,
     log: Array<any>
     debugToolLoaded: boolean,
-    errorResponse: string
-    hasError: boolean
+    hasError: boolean,
+    error: any,
 }
 
 @observer
@@ -54,22 +51,17 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
-            loadedProps: false,
-            currComponent: null,
             log: [],
             debugToolLoaded: false,
-            errorResponse: null,
             hasError: false,
+            error: false
         }
-        console.error("PanelComponentLoader", "constructor");
-
 
     }
 
     componentDidCatch(error, info) {
         // Display fallback UI
-        this.setState({hasError: true});
+        this.setState({hasError: true, error: error});
         // You can also log the error to an error reporting service
         //logErrorToMyService(error, info);
     }
@@ -85,54 +77,11 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
             });
         }
-
-        //this.handleGoTo(this.props.view);
-
-    }
-
-    getComponentFromURL(url: string): string {
-        url = url.split('?')[0].replace("#", "");
-        return url.replace(/\//g, "_")
-    }
-
-    getBaseURL(url: string = null): string {
-        let baseURL = url.split('?')[0].replace("#", "");
-        let tmp = baseURL.split('/')
-        baseURL = tmp.slice(0, -1).join('/');
-        return baseURL;
     }
 
 
     handleReloadProps(input = {}, callback: () => any) {
-        this.setState({loading: true});
-        let url = window.location.hash.replace("#", "");
-        Comm._post(url, {...input, __PROPS_REQUEST__: 1}).then((data) => {
-            this.setState({loading: false, loadedProps: {...data, baseURL: this.getBaseURL(url)}});
-            if (callback) {
-                callback();
-            }
-        });
-    }
-
-    handleComponentDisplay(path, data = {}) {
-
-        //alert("ustaliłem");
-        const name = this.getComponentFromURL(path);
-        const currComponent = {
-            name: name,
-            request: path,
-            data: {...data, baseURL: this.getBaseURL(path)}
-        };
-
-
-        this.setState({
-            loading: false,
-            currComponent: currComponent,
-        });
-
-        /*var stateObj = {};
-                history.pushState(stateObj, '', path + (urlParameters ? '?' : '') + urlParameters);*/
-
+        this.props.store.changeView(null, input, callback);
     }
 
 
@@ -164,12 +113,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         const p = this.props;
         let Component = Views[p.store.viewComponentName];
 
-        if (this.state.hasError) {
-            // You can render any custom fallback UI
-            return <h1>Something went wrong.</h1>;
-        }
-
-
+        let DebugTool = this.DebugTool;
         let debugVar = {
             log: s.log,
             propsReloadHandler: this.handleReloadProps.bind(this),
@@ -177,29 +121,30 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             props: p.store.viewData
         };
 
+        if (this.state.hasError) {
+            // You can render any custom fallback UI
+            return <div>
+                <h1>Something went wrong.</h1>
+                {/*{!PRODUCTION && this.state.debugToolLoaded && <DebugTool error={this.state.error}  {...debugVar} />}*/}
+            </div>;
+        }
+
+
         let notificaton = {
             ref: (ns) => this._notificationSystem = ns
         }
 
-        let DebugTool = this.DebugTool;
+
         return <div className={p.store.viewComponentName}>
 
-
-            {!PRODUCTION && false && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
-            {this.state.loading && <div className="w-loader" style={{position: 'absolute', right: 10, top: 60, zIndex: 100}}>
-                <span><i></i><i></i><i></i><i></i></span>
-            </div>}
-
+            {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
             <Notifications {...notificaton} />
             {this.state.errorResponse != null && <div>
                 <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.state.errorResponse}}/>
             </div>}
 
-            {p.store.isViewLoading && <div>Laduje</div>}
-
-
-            {Component && !p.store.isViewLoading && <Component
+            {Component && <Component
                 {...p.store.viewData}
                 reloadProps={this.handleReloadProps.bind(this)}
                 _notification={this.handleNotifycation.bind(this)}
@@ -209,13 +154,43 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _resolveComponent={this.handleReloadProps.bind(this)}
             />}
 
-            {Component == undefined && <div style={{padding: 10}}>
+            {(Component == undefined && p.store.viewComponentName != null) && <div style={{padding: 10}}>
                 <h3>Can't find component</h3>
                 <pre>"{p.store.viewComponentName}"</pre>
             </div>}
 
+            {p.store.viewComponentName == null && <div>Loading...</div>}
 
         </div>
 
     }
 }
+
+class ErrorReporterLoader extends React.Component<any, any> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            loaded: false,
+            component: null
+        }
+    }
+
+    componentDidMount() {
+        import
+        ("./ErrorReporter").then((Reporter) => {
+            this.setState({loaded: true, component: Reporter.default});
+        });
+    }
+
+
+    render() {
+        if (!this.state.loaded) {
+            return <div>Loading ...</div>
+        } else {
+            let Component = this.state.component;
+            return <Component error={this.props.error}/>
+        }
+    }
+}
+

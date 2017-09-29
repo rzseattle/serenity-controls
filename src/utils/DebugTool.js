@@ -13,7 +13,8 @@ export class DebugTool extends React.Component {
         props: PropTypes.object.isRequired,
         log: PropTypes.array.isRequired,
         propsReloadHandler: PropTypes.func.isRequired,
-        componentData: PropTypes.object
+        componentData: PropTypes.object,
+        error: PropTypes.object,
     }
 
 
@@ -30,7 +31,7 @@ export class DebugTool extends React.Component {
             expanded: savedData.expanded,
             errors: [],
             currTab: savedData.selectedTab,
-            lastError: null,
+            lastError: props.error,
 
             style: {
                 left: savedData.left,

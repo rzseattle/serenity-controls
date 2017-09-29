@@ -15,6 +15,7 @@ export default class ErrorReporter extends React.Component {
     }
 
     componentDidMount() {
+        return;
 
         let e = this.props.error;
 
@@ -60,6 +61,7 @@ export default class ErrorReporter extends React.Component {
 
 
     render() {
+        return "<div></div>";
         if (this.state.stacks.length == 0) {
             return <i className="fa fa-spinner fa-spin"></i>
         }

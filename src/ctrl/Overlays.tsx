@@ -1,11 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import * as Modal from 'react-overlays/lib/Modal';
-import * as Overlay from 'react-overlays/lib/Overlay';
-import  ResizeObserver from 'resize-observer-polyfill';
-//import * as TweenLite from 'gsap/TweenLite'
+import ResizeObserver from 'resize-observer-polyfill';
 
+//import * as TweenLite from 'gsap/TweenLite'
 
 
 interface IShadowProps {
@@ -50,6 +47,7 @@ interface IModalProps {
     recalculatePosition?: boolean,
     showHideLink?: boolean,
     title?: string,
+    shadow?: boolean,
     top?: string | number,
     left?: string | number,
     bottom?: string | number,
@@ -62,7 +60,10 @@ interface IModalProps {
 interface IModalState {
 }
 
-class MyModal extends React.Component<IModalProps, IModalState> {
+const modalRoot = document.getElementById('modal-root');
+
+class Modal extends React.Component<IModalProps, IModalState> {
+    el: HTMLDivElement;
     isObserved: boolean;
     modalBody: HTMLDivElement;
 
@@ -71,6 +72,7 @@ class MyModal extends React.Component<IModalProps, IModalState> {
         show: false,
         positionOffset: 5,
         recalculatePosition: true,
+        shadow: true,
     };
 
     constructor(props) {
@@ -81,11 +83,13 @@ class MyModal extends React.Component<IModalProps, IModalState> {
                 opacity: 0
             }
         };
+        this.el = document.createElement('div');
 
     }
 
 
     handleClose() {
+
         if (this.props.onHide) {
             this.props.onHide();
         }
@@ -128,12 +132,26 @@ class MyModal extends React.Component<IModalProps, IModalState> {
 
     }
 
-    componentDidUpdate(prevProps, prevState) {
-
-    }
 
     calculatePosition() {
         this.calculatePos();
+    }
+
+    componentWillReceiveProps(nextProps: IModalProps) {
+        if (this.props.show == false && nextProps.show == true) {
+            this.handleShow();
+        }
+    }
+
+    componentDidMount() {
+        modalRoot.appendChild(this.el);
+        if (this.props.show) {
+            this.handleShow();
+        }
+    }
+
+    componentWillUnmount() {
+        modalRoot.removeChild(this.el);
     }
 
     calculatePos() {
@@ -143,6 +161,7 @@ class MyModal extends React.Component<IModalProps, IModalState> {
         let containerSize = container.getBoundingClientRect();
 
         const node = ReactDOM.findDOMNode(this.modalBody);
+
         if (node) {
             let data = node.getBoundingClientRect();
 
@@ -191,10 +210,15 @@ class MyModal extends React.Component<IModalProps, IModalState> {
                 }
             }
         }
+
+    }
+
+    shouldComponentUpdate(nextProps: IModalProps) {
+        //kiedy jest pokazany lub zmienia stan z pokazanego w schowany
+        return nextProps.show || ( this.props.show && !nextProps.show );
     }
 
     render() {
-
 
         let p = this.props;
 
@@ -208,16 +232,22 @@ class MyModal extends React.Component<IModalProps, IModalState> {
         delete modalProps.bottom;
         delete modalProps.title;
 
+        /*            aria-labelledby='modal-label'
 
+                    backdropClassName="w-modal-shadow"
+                    onHide={this.handleClose.bind(this)}
+                    onShow={this.handleShow.bind(this)}
+                    onEntered={() => console.log('entered')}
+                    {...modalProps}
+                    */
 
-        return (<Modal
-            {...modalProps}
-            aria-labelledby='modal-label'
-            className={'w-modal-container ' + p.className}
-            backdropClassName="w-modal-shadow"
-            onHide={this.handleClose.bind(this)}
-            onShow={this.handleShow.bind(this)}
-            onEntered={() => console.log('entered')}
+        return ReactDOM.createPortal(<div
+            className={'w-modal-container ' + p.className || ""}
+            style={{
+                display: (this.props.show ? "block" : "none"),
+                backgroundColor: (this.props.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent"),
+            }}
+            onClick={this.handleClose.bind(this)}
         >
 
             <div className="w-modal" ref={el => this.modalBody = el}>
@@ -225,12 +255,13 @@ class MyModal extends React.Component<IModalProps, IModalState> {
                 <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i
                     className="fa fa-close"></i></a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
-                {p.children}
+                {this.props.show ? p.children : null}
             </div>
-        </Modal>);
+        </div>, this.el);
     }
 
 }
+
 
 class ConfirmModal extends React.Component<any, any> {
     promise: Promise<{}>;
@@ -367,4 +398,4 @@ const confirm = (message, options: IConfirmConf = {}) => {
 }*/
 
 
-export {MyModal as Modal, Shadow, /*Tooltip,*/ confirm};
+export {Modal, Shadow, /*Tooltip,*/ confirm};

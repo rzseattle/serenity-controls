@@ -5,8 +5,8 @@ import {Icon} from 'frontend/src/ctrl/Icon';
 import PanelComponentLoader from 'frontend/src/lib/PanelComponentLoader';
 import {Modal} from 'frontend/src/ctrl/Overlays';
 
-import BackofficeStore from "./BackofficeStore"
 
+import {observer} from "mobx-react";
 
 interface IMenuSection {
     active: boolean
@@ -30,6 +30,7 @@ interface IBackOfficePanelProps {
     appBaseURL: string
     user: IUser
     appMenu: IMenuSection[]
+    store: any
 
 }
 
@@ -37,7 +38,7 @@ interface IBackOfficePanelState {
     currentView: string
     userMenuVisible: boolean,
 }
-
+@observer
 export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     container: HTMLDivElement;
 
@@ -70,12 +71,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
         return <div className="w-panel-container" ref={(container) => this.container = container}>
             <div className="w-panel-top">
-                <div className="app-icon" onClick={() => BackofficeStore.changeView('app/admin/dashboard')}>
+                <div className="app-icon" onClick={() => this.props.store.changeView('app/admin/dashboard')}>
                     <i className={"ms-Icon ms-Icon--" + this.props.appIcon}/>
                 </div>
                 <div className="app-title">
                     {this.props.appTitle}
                 </div>
+
 
                 <div className="app-user" onClick={() => this.setState({userMenuVisible: true})}>
                     <div className="app-user-icon">
@@ -83,11 +85,15 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     </div>
                     {this.props.user.login}
                 </div>
+                { <div className={" w-loader " + (this.props.store.isViewLoading?"w-loader-hidden":"") } >
+                    <span><i></i><i></i><i></i><i></i></span>
+                </div>}
+
                 <Modal show={this.state.userMenuVisible} top={50} right={0} onHide={() => this.setState({userMenuVisible: false})}>
                     <div style={{width: 200}}></div>
                     <div style={{padding: 10}}>
                         <a onClick={() => {
-                            BackofficeStore.changeView('access/users/account');
+                            this.props.store.changeView('access/users/account');
                             this.setState({userMenuVisible: false});
                         }}><Icon name="Accounts"/> Twoje konto</a>
                     </div>
@@ -101,12 +107,12 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
                 <div className="w-panel-menu">
                     <Menu elements={this.props.appMenu}
-                          onMenuElementClick={(element) => BackofficeStore.changeView(element.template)}
+                          onMenuElementClick={(element) => this.props.store.changeView(element.template)}
 
                     />
                 </div>
                 <div className="w-panel-body">
-                    <PanelComponentLoader store={BackofficeStore} />
+                    <PanelComponentLoader store={this.props.store}/>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import {observable, computed, observe, autorun, toJS, action, runInAction, useStrict} from "mobx";
+import {observable, observe, autorun, toJS, action, runInAction, useStrict, transaction} from "mobx";
 import Comm from '../lib/Comm'
 
 declare var window;
@@ -11,9 +11,11 @@ const getComponentFromURL = (url: string): string => {
 const initial = window.location.hash.replace("#", "") || "app/admin/dashboard";
 
 class Store {
-    @observable viewURL = initial;
+    //url path from browser
+    @observable viewURL = null;
+    //input added to view request
     @observable viewInput = {};
-    @observable viewComponentName = getComponentFromURL(initial);
+    @observable viewComponentName = null;
     @observable isViewLoading = true;
     @observable appBaseURL = window.reactBackOfficeVar.appBaseURL;
 
@@ -25,53 +27,63 @@ class Store {
 
 
     changeView(path: string, input = {}) {
-        runInAction(() => {
-            this.viewInput = input;
-            this.viewURL = path;
+        transaction(() => {
+
+            this.loadDataForView(path, input);
         });
     }
 
-    loadDataForView() {
-        runInAction(() => {
-            console.log("loadDataForView ");
+    loadDataForView(path: string = null, input: any = null, callback: { (): any } = null) {
 
-            let purePath = this.viewURL
 
-            this.isViewLoading = true;
-            this.viewServerErrors = null;
-            this.viewComponentName = getComponentFromURL(this.viewURL);
+        let viewInput = input || this.viewInput;
+        let viewURL = path || this.viewURL;
 
-            let pathQueryString = "";
-            //jesli podano path w formie adresu z ? i parametrami
-            if (this.viewURL.indexOf("?") != -1) {
-                [purePath, pathQueryString] = this.viewURL.split("?");
-            } else {
-                pathQueryString = Object.keys(this.viewInput).map((i) => i + '=' + this.viewInput[i]).join('&');
-            }
 
-            window.location.hash = purePath + (pathQueryString ? "?" + pathQueryString : "");
+        let purePath = viewURL
 
-            let comm = new Comm(this.appBaseURL + purePath + (pathQueryString ? "?" + pathQueryString : ""));
-            comm.debug = false;
-            comm.setData({__PROPS_REQUEST__: 1});
-            comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
-                this.isViewLoading = false;
-                this.viewServerErrors = errorResponse;
+        this.isViewLoading = true;
+        this.viewServerErrors = null;
 
-            });
-            comm.on(Comm.EVENTS.SUCCESS, (data) => {
-                //this.handleComponentDisplay(path, data);
+
+        let pathQueryString = "";
+        //jesli podano path w formie adresu z ? i parametrami
+        if (viewURL.indexOf("?") != -1) {
+            [purePath, pathQueryString] = viewURL.split("?");
+        } else {
+            pathQueryString = Object.keys(viewInput).map((i) => i + '=' + viewInput[i]).join('&');
+        }
+
+        window.location.hash = purePath + (pathQueryString ? "?" + pathQueryString : "");
+
+        let comm = new Comm(this.appBaseURL + purePath + (pathQueryString ? "?" + pathQueryString : ""));
+        comm.debug = false;
+        comm.setData({__PROPS_REQUEST__: 1});
+        comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
+            this.isViewLoading = false;
+            this.viewServerErrors = errorResponse;
+        });
+        comm.on(Comm.EVENTS.SUCCESS, (data) => {
+            transaction(() => {
                 this.viewData = {
-                    baseURL: getBaseURL(this.viewURL),
+                    baseURL: getBaseURL(viewURL),
                     ...data
                 };
+                this.viewInput = viewInput;
+                this.viewURL = viewURL;
+                this.viewComponentName = getComponentFromURL(viewURL);
                 this.isViewLoading = false;
 
             });
-            //alert("wysyłam");
 
-            comm.send();
+            if (callback != null) {
+                callback();
+            }
+
         });
+
+        comm.send();
+
     }
 
 
@@ -80,12 +92,12 @@ class Store {
 
 var store = new Store;
 
-store.loadDataForView();
+store.loadDataForView(initial);
 
 
-const disposer2 = observe(store, "viewURL", (change) => {
+/*const disposer2 = observe(store, "viewURL", (change) => {
     store.loadDataForView();
-});
+});*/
 
 
 autorun(() => {
