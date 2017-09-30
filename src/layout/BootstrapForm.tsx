@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg} from '../ctrl/Fields';
+import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField} from '../ctrl/Fields';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
@@ -16,6 +16,7 @@ interface IWithBootstrapFormFieldProps {
     //todo do wyrzucenia ( dziedziczenie z IFormFieldProps )
     name?: string
     options?: any
+    items?: any
     value?: any
     onChange?: any
     style?: any
@@ -459,4 +460,5 @@ const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
 const BDate = withBootstrapFormField(Date);
 const BFile = withBootstrapFormField(File);
 const BWysiwig = withBootstrapFormField(Wysiwyg);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig, withBootstrapFormField};
+const BConnectionsField = withBootstrapFormField(ConnectionsField);
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig, BConnectionsField,  withBootstrapFormField};

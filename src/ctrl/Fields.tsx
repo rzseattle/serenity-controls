@@ -1,6 +1,7 @@
 import * as React from "react";
 //import Inputmask from 'inputmask';
 import * as Dropzone from 'react-dropzone';
+import {ConnectionsField} from './fields/ConnectionsField'
 
 
 let checkIncludes = (options, value) => {
@@ -16,23 +17,9 @@ let checkIncludes = (options, value) => {
 
 };
 
-interface IFieldChangeEvent {
-    name: string
-    type: string
-    value: any
-    event: Event
-}
 
-interface IFieldProps {
-    className?: string,
-    name?: string,
-    value?: any,
-    onChange?: { (changeData: IFieldChangeEvent): any },
-    disabled?: boolean,
-    editable?: boolean
-    style?: any,
-    placeholder: string,
-}
+
+
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number,
@@ -509,6 +496,7 @@ interface IDateProps extends IFieldProps {
 }
 
 import '../../../react-dates/lib/css/_datepicker.css'
+import {IFieldChangeEvent, IFieldProps} from "frontend/src/ctrl/fields/Interfaces";
 
 class Date extends React.Component<IDateProps, any> {
 
@@ -649,5 +637,5 @@ class File extends React.Component<IFileProps, any> {
 }
 
 
-export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg};
+export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField};
 

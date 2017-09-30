@@ -1,0 +1,230 @@
+import * as React from "react";
+import {Modal} from "frontend/src/ctrl/Overlays";
+import {Icon} from "frontend/src/ctrl/Icon";
+import {IFieldProps} from "frontend/src/ctrl/fields/Interfaces";
+
+interface IConnectionElement {
+    value: string | number;
+    label: string;
+    icon: string;
+    data?: any;
+
+}
+
+interface IConnectionsFieldProps extends IFieldProps{
+    value: string[]
+    maxItems?: number;
+    items: IConnectionElement[];
+    searchResultProvider: (searchString: string, selected: string[]) => Promise<IConnectionElement[]>;
+}
+
+export class ConnectionsField extends React.Component<IConnectionsFieldProps, any> {
+
+    public static defaultProps: Partial<IConnectionsFieldProps> = {
+        placeholder: "Dodaj",
+        maxItems: 10000,
+    };
+
+    private input: HTMLInputElement;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectionOpened: false,
+            selectedIndex: 0,
+            search: "",
+            searchResult: [],
+            loading: false,
+            items: props.items,
+        };
+    }
+
+    public handleInputFocus() {
+        this.setState({selectionOpened: true, selectedIndex: -1});
+    }
+
+    public handleInputBlur() {
+        this.setState({selectionOpened: false, search: ""});
+    }
+
+    public handleInputChange(e) {
+        const value = e.target.value;
+        this.setState({
+            search: value,
+            searchResult: [],
+        });
+        if (value.length > 0) {
+            this.setState({
+                loading: true,
+            });
+            this.props.searchResultProvider(value, this.getValues())
+                .then((result) => {
+                    this.setState({
+                        loading: false,
+                        selectedIndex: 0,
+                        searchResult: result,
+                    });
+                });
+
+        }
+
+    }
+
+    public getValues() {
+        return this.state.items.reduce((p, c) => p.concat(c.value), []);
+    }
+
+    public handleOnChange() {
+
+        if (this.props.onChange) {
+            this.props.onChange({
+                name: this.props.name,
+                type: "ConnectionField",
+                value: this.getValues(),
+                event: null,
+            });
+        }
+    }
+
+    public handleSelection(el) {
+        if (el) {
+            this.setState({
+                items: [...this.state.items, el],
+                search: "",
+            }, this.handleOnChange);
+        }
+    }
+
+    public handleElementDelete(value) {
+
+        this.setState({
+            items: this.state.items.filter((el) => el.value != value),
+        }, this.handleOnChange);
+    }
+
+    public handleInputKeyDown(e) {
+
+        if (e.keyCode == 38 || e.keyCode == 40) {
+            e.preventDefault();
+            const changed = this.state.selectedIndex + (e.keyCode == 38 ? -1 : 1);
+            if (changed >= 0 && changed < this.state.searchResult.length) {
+                this.setState({selectedIndex: changed});
+            }
+        }
+        if (e.keyCode == 13) {
+            this.handleSelection(this.state.searchResult[this.state.selectedIndex]);
+        }
+
+        // usuwanie ostatniego brzez delete
+        if (e.keyCode == 8 && e.target.value == "") {
+            if (this.state.items.length > 0) {
+                this.handleElementDelete(this.state.items[this.state.items.length - 1].value);
+            }
+        }
+    }
+
+    public render() {
+        return <div className={"w-connections-field " + (this.props.editable?"":"w-connections-field-presenter")}>
+            {this.state.items.map((el) => <ConnectionsFieldEntry key={el.value} {...el} onDelete={this.handleElementDelete.bind(this)}/>)}
+
+            <div
+                className="w-connections-field-input"
+                style={{display: this.state.items.length < this.props.maxItems?"block":"none"}}>
+                <input
+                    type="text"
+                    ref={(el) => this.input = el}
+                    onFocus={this.handleInputFocus.bind(this)}
+                    onBlur={this.handleInputBlur.bind(this)}
+                    onKeyDown={this.handleInputKeyDown.bind(this)}
+                    placeholder={this.props.placeholder}
+                    value={this.state.search}
+                    onChange={this.handleInputChange.bind(this)}
+                    autoComplete="off"
+                />
+            </div>
+
+
+            <Modal
+                show={this.state.selectionOpened && this.state.search.length > 0}
+                target={() => this.input}
+                shadow={false}
+                className={"app_crm_tasks_edit"}
+            >
+                <div className="w-connections-field-results" style={{
+                    boxShadow: "0 0 5px 0px rgba(0,0,0,0.4)",
+                    border: "1px solid #eaeaea",
+                    width: 300,
+                }}>
+                    {/*To jest test modala {this.state.selectedIndex}*/}
+                    {this.state.loading && <Loader/>}
+                    {
+                        !this.state.loading && this.state.searchResult.length == 0
+                        &&
+                        <div>Brak wyników</div>
+                    }
+                    {
+                        !this.state.loading
+                        &&
+                        <Selection items={this.state.searchResult} selectedIndex={this.state.selectedIndex}/>
+                    }
+                </div>
+            </Modal>
+
+        </div>;
+    }
+}
+
+interface IConnectionsFieldEntryProps {
+    icon: string;
+    label: string;
+    value: string | number;
+    onDelete: (value: string) => any;
+}
+
+class ConnectionsFieldEntry extends React.Component<IConnectionsFieldEntryProps, any> {
+    public handleDeleteClick(value: string) {
+        if (this.props.onDelete) {
+            this.props.onDelete(value);
+        }
+    }
+
+    public render() {
+        return <div className="w-connections-field-entry">
+            <div className="prepend">
+                <Icon name={this.props.icon}/>
+            </div>
+            <div className="content">
+                {this.props.label}
+            </div>
+            <div className="delete" onClick={this.handleDeleteClick.bind(this, this.props.value)}>
+                <Icon name="Cancel"/>
+            </div>
+        </div>;
+    }
+}
+
+interface ISelectionProps {
+    items: any[];
+    selectedIndex: number;
+}
+
+class Selection extends React.Component<ISelectionProps, any> {
+    public render() {
+        return <div className="w-selection">
+            {this.props.items.map((el, index) =>
+                <div
+                    key={el.value}
+                    className={"w-selection-element " + (index == this.props.selectedIndex ? "w-selection-element-selected" : "")}
+                >
+                    {el.label}
+                </div>,
+            )}
+        </div>;
+    }
+}
+
+const Loader = (props) => {
+    return <div className={" w-loader "}>
+        <span><i></i><i></i><i></i><i></i></span>
+    </div>;
+};
