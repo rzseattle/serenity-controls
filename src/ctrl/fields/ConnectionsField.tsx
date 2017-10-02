@@ -11,11 +11,12 @@ interface IConnectionElement {
 
 }
 
-interface IConnectionsFieldProps extends IFieldProps{
+interface IConnectionsFieldProps extends IFieldProps {
     value: string[]
     maxItems?: number;
     items: IConnectionElement[];
     searchResultProvider: (searchString: string, selected: string[]) => Promise<IConnectionElement[]>;
+    selectionTemplate: (elelent: IConnectionElement) => any;
 }
 
 export class ConnectionsField extends React.Component<IConnectionsFieldProps, any> {
@@ -57,7 +58,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
             this.setState({
                 loading: true,
             });
-            this.props.searchResultProvider(value, this.getValues())
+            this.props.searchResultProvider(value, this.props.maxItems == 1 ? [] : this.getValues())
                 .then((result) => {
                     this.setState({
                         loading: false,
@@ -71,6 +72,13 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     }
 
     public getValues() {
+        if (this.props.maxItems == 1) {
+            if (this.state.items.length == 0) {
+                return null
+            } else {
+                return this.state.items[0].value;
+            }
+        }
         return this.state.items.reduce((p, c) => p.concat(c.value), []);
     }
 
@@ -123,13 +131,15 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         }
     }
 
+
     public render() {
-        return <div className={"w-connections-field " + (this.props.editable?"":"w-connections-field-presenter")}>
+        return <div className={"w-connections-field " + (this.props.editable ? "" : "w-connections-field-presenter")}>
+
             {this.state.items.map((el) => <ConnectionsFieldEntry key={el.value} {...el} onDelete={this.handleElementDelete.bind(this)}/>)}
 
             <div
                 className="w-connections-field-input"
-                style={{display: this.state.items.length < this.props.maxItems?"block":"none"}}>
+                style={{display: this.state.items.length < this.props.maxItems ? "block" : "none"}}>
                 <input
                     type="text"
                     ref={(el) => this.input = el}
@@ -153,7 +163,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                 <div className="w-connections-field-results" style={{
                     boxShadow: "0 0 5px 0px rgba(0,0,0,0.4)",
                     border: "1px solid #eaeaea",
-                    width: 300,
+                    width: () => this.input.getBoundingClientRect().width,
                 }}>
                     {/*To jest test modala {this.state.selectedIndex}*/}
                     {this.state.loading && <Loader/>}
@@ -165,7 +175,12 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                     {
                         !this.state.loading
                         &&
-                        <Selection items={this.state.searchResult} selectedIndex={this.state.selectedIndex}/>
+                        <Selection
+                            items={this.state.searchResult}
+                            selectedIndex={this.state.selectedIndex}
+                            elementClicked={this.handleSelection.bind(this)}
+                            elementTemplate={this.props.selectionTemplate}
+                        />
                     }
                 </div>
             </Modal>
@@ -206,6 +221,8 @@ class ConnectionsFieldEntry extends React.Component<IConnectionsFieldEntryProps,
 interface ISelectionProps {
     items: any[];
     selectedIndex: number;
+    elementTemplate?: (element: any) => any;
+    elementClicked?: (element: any) => any;
 }
 
 class Selection extends React.Component<ISelectionProps, any> {
@@ -216,7 +233,7 @@ class Selection extends React.Component<ISelectionProps, any> {
                     key={el.value}
                     className={"w-selection-element " + (index == this.props.selectedIndex ? "w-selection-element-selected" : "")}
                 >
-                    {el.label}
+                    {this.props.elementTemplate ? this.props.elementTemplate(el) : el.label}
                 </div>,
             )}
         </div>;

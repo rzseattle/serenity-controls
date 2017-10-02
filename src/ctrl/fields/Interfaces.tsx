@@ -12,6 +12,7 @@ export interface IFieldProps {
     editable?: boolean
     style?: any,
     placeholder?: string,
+    autoFocus?: boolean
 }
 
 export interface IFieldChangeEvent {

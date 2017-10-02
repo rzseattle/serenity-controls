@@ -1,5 +1,5 @@
 import * as NotificationSystem from "react-notification-system";
-
+import { toJS} from "mobx";
 declare var PRODUCTION: boolean;
 import * as React from "react";
 import * as Notifications from "react-notification-system";
@@ -140,12 +140,13 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
             <Notifications {...notificaton} />
-            {this.state.errorResponse != null && <div>
-                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.state.errorResponse}}/>
+            {this.props.store.viewServerErrors != null && <div>
+                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.props.store.viewServerErrors}}/>
             </div>}
 
+
             {Component && <Component
-                {...p.store.viewData}
+                {...toJS(p.store.viewData)}
                 reloadProps={this.handleReloadProps.bind(this)}
                 _notification={this.handleNotifycation.bind(this)}
                 _log={this.handleLog.bind(this)}

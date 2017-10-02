@@ -20,6 +20,10 @@ interface IWithBootstrapFormFieldProps {
     value?: any
     onChange?: any
     style?: any
+    autoFocus?: boolean
+    maxItems?: number
+    searchResultProvider?: any
+    editable?: boolean
 
 
 }
@@ -294,11 +298,34 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         return false;
     }
+    getHtmlNotationNameTranslators(fieldName) {
 
+        let tmp = fieldName.replace(/\]/g, "")
+        let arrayNotation = tmp.split("[");
+        let dotNotation = arrayNotation.join(".");
+
+        let get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
+
+        let set = (obj, path, endValue) => {
+            if (path.length > 1) {
+                let currKey = path.shift();
+                if (obj[currKey] == undefined) {
+                    obj[currKey] = {};
+                }
+                set(obj[currKey], path, endValue);
+            } else {
+                obj[path[0]] = endValue;
+            }
+        }
+
+        return {get, set, arrayNotation};
+    }
 
     handleInputChange(e) {
         let name, type, value;
         //custom event data
+
+
         if (e.name !== undefined) {
             name = e.name;
             value = e.value;
@@ -314,6 +341,9 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 value = e.target.files[0];
             }
         }
+
+        let {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
+        console.log(value);
 
 
         if (type == 'checkbox') {
@@ -335,9 +365,9 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             }
 
         } else {
-            this.state.data[name] = value;
+            set(this.state.data, arrayNotation, value);
         }
-        this.fieldsValues[name] = this.state.data[name];
+        set(this.fieldsValues, arrayNotation, value);
 
         this.setState({data: this.state.data, isDirty: true});
 
@@ -348,61 +378,26 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     }
 
 
+
+
     applyToField(name, defaultValue = null) {
 
         let value;
-        //if field[name][name2] notation
-        if (name.indexOf("[") != -1) {
+        let {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
 
-            let tmp = name.replace(/\]/g, "")
-
-            let arrayNotation = tmp.split("[");
-            let dotNotation = arrayNotation.join(".");
-
-
-            let get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
-
-            let set = (obj, path, endValue) => {
-                if (path.length > 1) {
-                    let currKey = path.shift();
-                    obj[currKey] = {};
-                    set(obj[currKey], path, endValue);
-                } else {
-                    obj[path[0]] = endValue;
-                }
-            }
-
-            value = get(this.state.data);
-            if (value === undefined && defaultValue !== false) {
-                set(this.state.data, arrayNotation, defaultValue);
-            }
-            if (get(this.state.fieldErrors) == undefined) {
-                set(this.state.fieldErrors, arrayNotation, null)
-            }
-
-            //false - dont track
-            if (defaultValue !== false) {
-                set(this.fieldsValues, arrayNotation, this.props.data[name] || defaultValue);
-            }
-
-        } else {
-
-
-            if (this.state.data[name] === undefined && defaultValue !== false) {
-                this.state.data[name] = defaultValue;
-            }
-            if (this.state.fieldErrors[name] === undefined) {
-                this.state.fieldErrors[name] = null;
-            }
-            //false - dont track
-            if (defaultValue !== false) {
-                this.fieldsValues[name] = this.props.data[name] || defaultValue;
-            }
-            value = this.props.data[name]
+        value = get(this.state.data);
+        if (value === undefined && defaultValue !== false) {
+            set(this.state.data, arrayNotation, defaultValue);
+        }
+        if (get(this.state.fieldErrors) == undefined) {
+            set(this.state.fieldErrors, arrayNotation, null)
         }
 
+        //false - dont track
+        if (defaultValue !== false) {
+            set(this.fieldsValues, arrayNotation, this.props.data[name] || defaultValue);
+        }
 
-        //console.log(this.state.data);
 
         return {
             value: value,
@@ -461,4 +456,4 @@ const BDate = withBootstrapFormField(Date);
 const BFile = withBootstrapFormField(File);
 const BWysiwig = withBootstrapFormField(Wysiwyg);
 const BConnectionsField = withBootstrapFormField(ConnectionsField);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig, BConnectionsField,  withBootstrapFormField};
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig, BConnectionsField, withBootstrapFormField};

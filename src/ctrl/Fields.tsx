@@ -101,7 +101,8 @@ class Text extends React.Component<ITextProps, any> {
     public static defaultProps: Partial<ITextProps> = {
         value: '',
         editable: true,
-        type: 'text'
+        type: 'text',
+        autoFocus: false
     };
 
     handleOnChange(e) {
@@ -136,6 +137,7 @@ class Text extends React.Component<ITextProps, any> {
                 placeholder={props.placeholder}
                 disabled={props.disabled}
                 style={props.style}
+                autoFocus={props.autoFocus}
             />
 
         );
