@@ -37,7 +37,10 @@ interface IBackOfficePanelProps {
 interface IBackOfficePanelState {
     currentView: string
     userMenuVisible: boolean,
+    menuVisible: boolean,
+    layout: "mobile" | "normal" | "large"
 }
+
 @observer
 export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     container: HTMLDivElement;
@@ -48,21 +51,45 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
         this.state = {
             currentView: null,
-            userMenuVisible: false
+            userMenuVisible: false,
+            menuVisible: true,
+            layout: "normal",
         }
 
         console.error("BackOfficePanel", "constructor")
     }
 
+    adjustToSize() {
+        this.container.style.height = window.innerHeight + 'px';
+        if (window.innerWidth <= 479 && this.state.layout != "mobile") {
+            this.setState({layout: 'mobile', menuVisible: false});
+        } else if (window.innerWidth > 479 && this.state.layout != "normal") {
+            this.setState({layout: 'normal', menuVisible: true});
+        }
+    }
+
+    handleAppIconClicked() {
+        if (this.state.layout != "mobile") {
+            this.props.store.changeView('app/admin/dashboard')
+        } else {
+            this.setState({menuVisible: !this.state.menuVisible});
+        }
+    }
+
+    handleElementClick(element) {
+        this.props.store.changeView(element.template)
+        if (this.state.layout == "mobile") {
+            this.setState({menuVisible: false});
+        }
+    }
+
     componentDidMount() {
         this.container.style.height = window.innerHeight + 'px';
+        this.adjustToSize()
         let timeout = null;
         window.addEventListener('resize', () => {
             //clearTimeout(timeout);
-            timeout = setTimeout(
-                () => this.container.style.height = window.innerHeight + 'px',
-                30
-            );
+            timeout = setTimeout(this.adjustToSize.bind(this), 30);
         })
     }
 
@@ -71,8 +98,8 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
         return <div className="w-panel-container" ref={(container) => this.container = container}>
             <div className="w-panel-top">
-                <div className="app-icon" onClick={() => this.props.store.changeView('app/admin/dashboard')}>
-                    <i className={"ms-Icon ms-Icon--" + this.props.appIcon}/>
+                <div className="app-icon" onClick={this.handleAppIconClicked.bind(this)}>
+                    <i className={"ms-Icon ms-Icon--" + (this.state.layout != "mobile" ? this.props.appIcon : "CollapseMenu")}/>
                 </div>
                 <div className="app-title">
                     {this.props.appTitle}
@@ -85,7 +112,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     </div>
                     {this.props.user.login}
                 </div>
-                { <div className={" w-loader " + (this.props.store.isViewLoading?"w-loader-hidden":"") } >
+                {<div className={" w-loader " + (this.props.store.isViewLoading ? "w-loader-hidden" : "")}>
                     <span><i></i><i></i><i></i><i></i></span>
                 </div>}
 
@@ -105,12 +132,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             </div>
             <div className="w-panel-body-container">
 
-                <div className="w-panel-menu">
+                {this.state.menuVisible && <div className="w-panel-menu">
                     <Menu elements={this.props.appMenu}
-                          onMenuElementClick={(element) => this.props.store.changeView(element.template)}
+                          onMenuElementClick={this.handleElementClick.bind(this)}
+                          mobile={(this.state.layout == "mobile")}
 
                     />
-                </div>
+                </div>}
                 <div className="w-panel-body">
                     <PanelComponentLoader store={this.props.store}/>
                 </div>
@@ -126,6 +154,7 @@ interface IMenuProps {
 
     elements: IMenuSection[]
     onMenuElementClick: { (element: IMenuElement): any }
+    mobile: boolean
 
 }
 
@@ -136,11 +165,11 @@ interface IMenuState {
 }
 
 class Menu extends React.Component<IMenuProps, IMenuState> {
-    constructor(props: IBackOfficePanelProps) {
+    constructor(props: IMenuProps) {
         super();
         this.state = {
             currentMenuOpened: -1,
-            expanded: false
+            expanded: props.mobile
         }
     }
 
@@ -157,10 +186,26 @@ class Menu extends React.Component<IMenuProps, IMenuState> {
         }
     }
 
+    handleElementClick(el) {
+        this.props.onMenuElementClick(el);
+
+    }
+
     render() {
+
+        let style = {};
+        if (this.props.mobile) {
+            style = {
+                position: "absolute",
+                top: 50,
+                bottom: 0,
+                zIndex: 100
+            }
+        }
         return <div
             className={"w-menu " + (this.state.expanded ? 'w-menu-expanded' : 'w-menu-collapsed')}
             onMouseLeave={this.handleMenuLeave.bind(this)}
+            style={style}
         >
             {this.props.elements.map((el, index) =>
                 <div className="menu-section" key={index}>
@@ -177,19 +222,19 @@ class Menu extends React.Component<IMenuProps, IMenuState> {
                     >
                         {!this.state.expanded && <div className="section-inner-title">{el.title}</div>}
                         {el.elements.map(el =>
-                            <div key={el.title} className="menu-link" onClick={() => this.props.onMenuElementClick(el)}>
+                            <div key={el.title} className="menu-link" onClick={this.handleElementClick.bind(this, el)}>
                                 {el.title}
                             </div>
                         )}
                     </div>
                 </div>
             )}
-            <div className="menu-collapse " onClick={() => this.setState({expanded: !this.state.expanded})}>
+
+            {!this.props.mobile && <div className="menu-collapse " onClick={() => this.setState({expanded: !this.state.expanded})}>
                 <Icon
                     name={this.state.expanded ? "DoubleChevronLeftMed" : "DoubleChevronLeftMedMirrored"}
-
                 />
-            </div>
+            </div>}
         </div>
     }
 }
