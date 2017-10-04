@@ -316,6 +316,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         return false;
     }
+
     getHtmlNotationNameTranslators(fieldName) {
 
         let tmp = fieldName.replace(/\]/g, "")
@@ -392,8 +393,6 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
     }
-
-
 
 
     applyToField(name, defaultValue = null) {

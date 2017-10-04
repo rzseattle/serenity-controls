@@ -165,6 +165,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
             {p.store.viewComponentName == null && <div>Loading...</div>}
 
+
         </div>
 
     }
