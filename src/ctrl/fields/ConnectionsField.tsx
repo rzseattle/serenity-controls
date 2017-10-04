@@ -103,6 +103,14 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         }
     }
 
+    public handleSelectionChange(index, el) {
+        this.setState({selectedIndex: index});
+    }
+
+    public handleSelectionClick(index, el) {
+        this.handleSelection(el);
+    }
+
     public handleElementDelete(value) {
 
         this.setState({
@@ -178,7 +186,8 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                         <Selection
                             items={this.state.searchResult}
                             selectedIndex={this.state.selectedIndex}
-                            elementClicked={this.handleSelection.bind(this)}
+                            selectionChange={this.handleSelectionChange.bind(this)}
+                            elementClicked={this.handleSelectionClick.bind(this)}
                             elementTemplate={this.props.selectionTemplate}
                         />
                     }
@@ -222,16 +231,32 @@ interface ISelectionProps {
     items: any[];
     selectedIndex: number;
     elementTemplate?: (element: any) => any;
-    elementClicked?: (element: any) => any;
+    elementClicked?: (index: number, element: any) => any;
+    selectionChange?: (index: number, element: any) => any;
 }
 
 class Selection extends React.Component<ISelectionProps, any> {
+
+    handleMouseEnter(index, el) {
+        console.log("here");
+        this.props.selectionChange(index, el)
+    }
+
+    handleMouseClick(index, el) {
+        this.props.elementClicked(index, el)
+    }
+
+
     public render() {
         return <div className="w-selection">
             {this.props.items.map((el, index) =>
                 <div
                     key={el.value}
                     className={"w-selection-element " + (index == this.props.selectedIndex ? "w-selection-element-selected" : "")}
+                    onMouseEnter={this.handleMouseEnter.bind(this, index, el)}
+                    onMouseDown={this.handleMouseClick.bind(this, index, el)}
+
+
                 >
                     {this.props.elementTemplate ? this.props.elementTemplate(el) : el.label}
                 </div>,

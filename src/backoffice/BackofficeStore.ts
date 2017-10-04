@@ -54,7 +54,8 @@ class Store {
             pathQueryString = Object.keys(viewInput).map((i) => i + '=' + viewInput[i]).join('&');
         }
 
-        window.location.hash = purePath + (pathQueryString ? "?" + pathQueryString : "");
+        let url = purePath + (pathQueryString ? "?" + pathQueryString : "");
+        window.location.hash = url;
 
         let comm = new Comm(this.appBaseURL + purePath + (pathQueryString ? "?" + pathQueryString : ""));
         comm.debug = false;
@@ -64,13 +65,13 @@ class Store {
             this.viewServerErrors = errorResponse;
         });
         comm.on(Comm.EVENTS.SUCCESS, (data) => {
-            transaction(() => {
+            transaction(() => {//18206
                 this.viewData = {
                     baseURL: getBaseURL(viewURL),
                     ...data
                 };
                 this.viewInput = viewInput;
-                this.viewURL = viewURL;
+                this.viewURL = url;
                 this.viewComponentName = getComponentFromURL(viewURL);
                 this.isViewLoading = false;
 

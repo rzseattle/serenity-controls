@@ -65,6 +65,15 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
             } else {
                 field = <Field {...fieldProps} />;
             }
+            let errors = [];
+            if (props.errors ) {
+
+                if(!Array.isArray(props.errors)) {
+                    errors = [props.errors];
+                }else{
+                    errors = props.errors;
+                }
+            }
 
             if (props.layoutType == 'horizontal') {
 
@@ -77,7 +86,7 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
                                 <span className="help-block">{props.help} </span>
                                 : ''}
                             {props.errors ?
-                                <span className="help-block">{props.errors.join(', ')} </span>
+                                <span className="help-block">{errors.join(', ')} </span>
 
                                 : ''}
                         </div>
@@ -94,7 +103,7 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
                             <span className="help-block">{props.help} </span>
                             : ''}
                         {props.errors ?
-                            <span className="help-block">{props.errors.join(', ')} </span>
+                            <span className="help-block">{errors.join(', ')} </span>
 
                             : ''}
                         {/*.join(", ")*/}
@@ -173,6 +182,8 @@ interface IBFormProps {
 
     loading?: boolean
     children: { (formConf: any): any }
+    formErrors?: string[]
+    fieldErrors?: any
 }
 
 interface IBFormState {
@@ -191,16 +202,16 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     public static defaultProps: Partial<IBFormProps> = {
         layoutType: 'default',
         editable: true,
-        data: {},
-        loading: false
+        fieldErrors: {},
+        formErrors: [],
     };
 
     constructor(props) {
         super(props);
         this.state = {
             data: props.data,
-            fieldErrors: {},
-            formErrors: {},
+            fieldErrors: props.fieldErrors,
+            formErrors: props.formErrors,
             isDirty: false,
             loading: props.loading || false
         };
@@ -251,6 +262,13 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         if (nextProps.loading != undefined) {
             this.setState({loading: nextProps.loading});
+        }
+
+        if (nextProps.fieldErrors) {
+            this.setState({fieldErrors: nextProps.fieldErrors});
+        }
+        if (nextProps.formErrors) {
+            this.setState({formErrors: nextProps.formErrors});
         }
     }
 
@@ -343,8 +361,6 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         let {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
-        console.log(value);
-
 
         if (type == 'checkbox') {
             let checked = e.target.checked;
@@ -398,12 +414,13 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             set(this.fieldsValues, arrayNotation, this.props.data[name] || defaultValue);
         }
 
+        //console.log(get(this.state.fieldErrors))
 
         return {
             value: value,
             name: name,
             layoutType: this.props.layoutType,
-            errors: this.state.fieldErrors[name],
+            errors: get(this.state.fieldErrors),
             editable: this.props.editable,
             onChange: (e) => {
                 this.handleInputChange(e);

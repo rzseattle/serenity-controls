@@ -135,7 +135,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
 
 
-        return <div className={p.store.viewComponentName}>
+        return <div className={p.store.viewComponentName} >
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
@@ -153,6 +153,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _reloadProps={this.handleReloadProps.bind(this)}
                 _goto={this.handleGoTo.bind(this)}
                 _resolveComponent={this.handleReloadProps.bind(this)}
+                _scrollTo={(el) =>{
+
+                }}
             />}
 
             {(Component == undefined && p.store.viewComponentName != null) && <div style={{padding: 10}}>
