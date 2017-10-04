@@ -135,7 +135,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
 
 
-        return <div className={p.store.viewComponentName}>
+        return <div className={p.store.viewComponentName} >
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
@@ -161,6 +161,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             </div>}
 
             {p.store.viewComponentName == null && <div>Loading...</div>}
+
 
         </div>
 
