@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {IFilterComponent} from "../Filters"
+import {IFilter} from '../filters/Intefaces';
 
 export interface IColumnData {
     field?: string,
@@ -25,7 +26,7 @@ export interface IColumnData {
         enter?: Array<IEventCallback>,
         leave?: Array<IEventCallback>
     },
-    filter?: Array<IFilterContext>
+    filter?: Array<IFilter>
 }
 
 export interface ICellTemplate {
@@ -37,12 +38,7 @@ export interface IEventCallback {
 }
 
 
-export interface IFilterContext {
-    field: string,
-    caption?: string,
-    config?: any,
-    component: any
-}
+
 
 export interface IFilterValue {
     field: string

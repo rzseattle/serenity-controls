@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from 'react-dom';
-import {IFilterContext, IFilterValue} from "frontend/src/ctrl/table/Interfaces";
+import {IFilter, IFilterValue} from "./filters/Intefaces";
 
 import '../../../react-dates/lib/css/_datepicker.css'
+import {BConnectionsField} from "frontend/src/layout/BootstrapForm";
 
 let moment;
 let locale;
@@ -15,6 +16,7 @@ interface IFilterProps {
     container?: any
     onChange?: { (filterValue: IFilterValue): any }
     config?: any
+    showApply?: boolean
 }
 
 interface IFilterComponent {
@@ -131,7 +133,7 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
             <div className={'w-filter w-filter-date'}>
 
                 <div style={{display: (s.choiceType != 'range' ? 'none' : 'block')}}>
-                    <i className="fa fa-calendar-o"></i>
+
                     <datePicker.DateRangePicker
                         startDate={this.state.startDate}
                         endDate={this.state.endDate}
@@ -168,26 +170,26 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
                 <div className="w-filter-date-exists">
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'})} type="checkbox"/><i className="fa fa-arrows-h"></i> Według wybou
+                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'})} type="checkbox"/> <i className="fa fa-arrows-h"></i> Według wybou
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'})} type="checkbox"/><i className="fa fa-check"></i> Data ustalona
+                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'})} type="checkbox"/> <i className="fa fa-check"></i> Data ustalona
                         </label>
                     </div>
 
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'})} type="checkbox"/><i className="fa fa-times"></i> Brak daty
+                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'})} type="checkbox"/> <i className="fa fa-times"></i> Brak daty
                         </label>
                     </div>
                 </div>
 
 
-                <div>
+                {this.props.showApply && <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
-                </div>
+                </div>}
             </div>
 
 
@@ -209,9 +211,9 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
 
         this.setState({show: false});
 
-        console.log(this.select);
+
         let select = ReactDOM.findDOMNode(this.select);
-        console.log(select);
+
         let values = [].filter.call(select.options, function (o) {
             return o.selected;
         }).map(function (o) {
@@ -244,32 +246,41 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
     }
 
     render() {
+        let content;
+        if (!Array.isArray(this.props.config.content)) {
+            content = Object.entries(this.props.config.content).map(([value, label]) => ({value, label}))
+        } else {
+            content = this.props.config.content;
+        }
+
         return (
 
-            <div className={'w-filter w-filter-select'} >
+            <div className={'w-filter w-filter-select'}>
                 <select autoFocus ref={el => this.select = el} multiple={this.props.config.multiselect}
                         size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}
                         onKeyPress={this._handleKeyPress.bind(this)}
+
                 >
                     {this.props.config.multiselect ? '' :
                         <option value="0">Wybierz opcję</option>
                     }
-                    {Object.entries(this.props.config.content).map((el) =>
+                    {content.map((el) =>
                         <option
-                            key={el[0]}
-                            value={el[0]}
+                            key={el.value}
+                            value={el.value}
+
                             onMouseDown={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
                                 e.currentTarget.selected = e.currentTarget.selected ? false : true;
                                 return false;
                             }}
-                        >{el[1]}</option>
+                        >{el.label}</option>
                     )}
                 </select>
-                <div>
+                {this.props.showApply && <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
-                </div>
+                </div>}
                 {/*<pre>{JSON.stringify(this.props.content, null, 2)} {Object.keys(this.props.content).length}</pre>*/}
             </div>
 
@@ -323,9 +334,9 @@ class SwitchFilter extends AbstractFilter implements IFilterComponent {
                     </div>
                 )}
 
-                <div>
+                {this.props.showApply && <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
-                </div>
+                </div>}
                 {/*<pre>{JSON.stringify(this.props, null, 2)}</pre>*/}
             </div>
 
@@ -415,9 +426,9 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
                         <option value={key} key={key}> {val}</option>
                     )}
                 </select>
-                <div>
+                {this.props.showApply && <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
-                </div>
+                </div>}
                 {/*<pre>{JSON.stringify(this.props, null, 2)}</pre>*/}
             </div>
         )
@@ -425,6 +436,65 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
 
 }
 
+// TODO !!!
+class ConnectionFilter extends AbstractFilter implements IFilterComponent {
+    FILTER_INTERFACE_TEST: boolean;
+    input: HTMLInputElement;
+
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
+
+    handleApply() {
+        this.setState({show: false});
+        const value = this.input.value;
+        if (value) {
+
+            this.props.onChange({
+                field: this.props.field,
+                value: value,
+                condition: this.state.option,
+                caption: this.props.caption,
+                labelCaptionSeparator: ' :',
+                label: this.input.value
+            });
+
+        }
+
+    }
+
+    _handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            this.handleApply();
+        }
+    }
+
+
+    render() {
+        console.log(this.props.config)
+        return (
+
+            <div className={'w-filter w-filter-text '} ref="body">
+
+
+                <BConnectionsField
+                    {...this.props.config}
+                    editable={true}
+                    items={[]}
+
+                />
+
+
+                {this.props.showApply && <div>
+                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
+                </div>}
+            </div>
+
+        )
+    }
+
+}
 
 class TextFilter extends AbstractFilter implements IFilterComponent {
     FILTER_INTERFACE_TEST: boolean;
@@ -485,9 +555,9 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
                     )}
                 </select>
 
-                <div>
+                {this.props.showApply && <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
-                </div>
+                </div>}
             </div>
 
         )
@@ -496,9 +566,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 }
 
 
-
-
-const withFilterOpenLayer = (filters: IFilterContext[]) => {
+const withFilterOpenLayer = (filters: IFilter[]) => {
     return class FilterOpenableContainer extends React.Component<any, any> {
         container: HTMLDivElement;
         body: HTMLDivElement;
@@ -575,7 +643,7 @@ const withFilterOpenLayer = (filters: IFilterContext[]) => {
                             {filters.map(entry => {
                                 let Filter = entry.component;
                                 return <div>
-                                    <Filter caption={entry.caption} field={entry.field} onChange={this.props.onChange} config={entry.config} container={this.container} />
+                                    <Filter caption={entry.caption} field={entry.field} onChange={this.props.onChange} config={entry.config} container={this.container}/>
 
                                 </div>
                             })}
@@ -596,5 +664,7 @@ export {
     TextFilter,
     AbstractFilter,
     withFilterOpenLayer,
-    IFilterComponent
+    IFilterComponent,
+    ConnectionFilter
+
 };

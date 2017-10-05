@@ -17,6 +17,7 @@ interface IConnectionsFieldProps extends IFieldProps {
     items: IConnectionElement[];
     searchResultProvider: (searchString: string, selected: string[]) => Promise<IConnectionElement[]>;
     selectionTemplate: (elelent: IConnectionElement) => any;
+    placeholder?: string;
 }
 
 export class ConnectionsField extends React.Component<IConnectionsFieldProps, any> {
@@ -24,6 +25,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     public static defaultProps: Partial<IConnectionsFieldProps> = {
         placeholder: "Dodaj",
         maxItems: 10000,
+        items: []
     };
 
     private input: HTMLInputElement;
@@ -36,7 +38,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
             search: "",
             searchResult: [],
             loading: false,
-            items: props.items,
+            items: props.items || [],
         };
     }
 
