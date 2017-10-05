@@ -38,7 +38,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
             search: "",
             searchResult: [],
             loading: false,
-            items: props.items || [],
+            items: props.items,
         };
     }
 
