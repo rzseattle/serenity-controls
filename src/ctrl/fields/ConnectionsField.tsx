@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Modal} from "frontend/src/ctrl/Overlays";
 import {Icon} from "frontend/src/ctrl/Icon";
-import {IFieldProps} from "frontend/src/ctrl/fields/Interfaces";
+import {IFieldProps, IFieldChangeEvent} from "frontend/src/ctrl/fields/Interfaces";
 
 interface IConnectionElement {
     value: string | number;
@@ -11,6 +11,10 @@ interface IConnectionElement {
 
 }
 
+interface IConnectionChangeEvent extends IFieldChangeEvent{
+    items: IConnectionElement[]
+}
+
 interface IConnectionsFieldProps extends IFieldProps {
     value: string[]
     maxItems?: number;
@@ -18,6 +22,7 @@ interface IConnectionsFieldProps extends IFieldProps {
     searchResultProvider: (searchString: string, selected: string[]) => Promise<IConnectionElement[]>;
     selectionTemplate: (elelent: IConnectionElement) => any;
     placeholder?: string;
+    onChange?: { (changeData: IConnectionChangeEvent): any },
 }
 
 export class ConnectionsField extends React.Component<IConnectionsFieldProps, any> {
@@ -73,6 +78,10 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
 
     }
 
+    public getItems() {
+        return this.state.items;
+    }
+
     public getValues() {
         if (this.props.maxItems == 1) {
             if (this.state.items.length == 0) {
@@ -92,6 +101,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                 type: "ConnectionField",
                 value: this.getValues(),
                 event: null,
+                items: this.getItems()
             });
         }
     }

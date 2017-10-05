@@ -52,6 +52,8 @@ interface ITableProps {
     showFooter?: boolean,
     showHeader?: boolean,
     additionalConditions?: any
+    filters?: { [key: string]: IFilterValue };
+    onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any ;
 
 
 }
@@ -83,7 +85,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         showFooter: true,
         showHeader: true,
         rememberState: false,
-        additionalConditions: {}
+        additionalConditions: {},
+        filters: {}
     }
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
@@ -108,7 +111,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             data: [],
             dataSourceError: "",
             dataSourceDebug: false,
-            filters: {},
+            filters: this.props.filters,
             order: {},
             onPage: this.props.onPage,
             currentPage: 1,
@@ -176,6 +179,13 @@ class Table extends React.Component<ITableProps, ITableState> {
             columns[i] = this.prepareColumnData(columns[i]);
         }
         this.setState({columns: columns});
+
+        if (nextProps.filters) {
+            this.setState({
+                filters: nextProps.filters,
+                currentPage: 1
+            }, this.load);
+        }
     }
 
     public getRequestData(): IDataQuery {
@@ -262,11 +272,18 @@ class Table extends React.Component<ITableProps, ITableState> {
     handleFilterChanged(filterValue: IFilterValue) {
         this.state.filters[filterValue.field] = filterValue;
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
+        if (this.props.onFiltersChange) {
+            this.props.onFiltersChange(this.state.filters);
+        }
+
     }
 
     handleFilterDelete(key) {
         delete this.state.filters[key];
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
+        if (this.props.onFiltersChange) {
+            this.props.onFiltersChange(this.state.filters);
+        }
     }
 
     handleOrderDelete(field) {
@@ -447,7 +464,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         const columns = this.state.columns;
 
         return (
-            <div className={'w-table ' + (this.state.loading ? 'w-table-loading' : '')}  tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
+            <div className={'w-table ' + (this.state.loading ? 'w-table-loading' : '')} tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
                 <div className="w-table-loader">
                     <span><i></i><i></i><i></i><i></i></span>
                 </div>

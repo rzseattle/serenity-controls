@@ -56,7 +56,6 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             layout: "normal",
         }
 
-        console.error("BackOfficePanel", "constructor")
     }
 
     adjustToSize() {

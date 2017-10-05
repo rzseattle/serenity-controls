@@ -15,6 +15,7 @@ interface IFilterProps {
     /**Filters container for keep focus etc */
     container?: any
     onChange?: { (filterValue: IFilterValue): any }
+    onApply?: { (filterValue: IFilterValue): any }
     config?: any
     showApply?: boolean
 }
@@ -73,9 +74,8 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
 
     }
 
-    handleApply() {
 
-        this.setState({show: false});
+    getValue() {
         let dateStart = this.state.startDate.format('YYYY-MM-DD');
         let timeStart = this.state.startTime.format('HH:mm:ss');
         let dateStop = this.state.endDate.format('YYYY-MM-DD');
@@ -107,16 +107,28 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
             label = "Data nie ustalona";
         }
 
-        this.props.onChange({
+        return {
             field: this.props.field,
             value: applyVal,
             condition: condition,
             caption: this.props.caption,
             labelCaptionSeparator: ":",
             label: label
-        });
+        };
 
+    }
 
+    handleChange() {
+        if (this.state.startDate && this.state.endDate && this.props.onChange) {
+            this.props.onChange(this.getValue())
+        }
+    }
+
+    handleApply() {
+        this.setState({show: false});
+        if (this.props.onApply) {
+            this.props.onApply(this.getValue())
+        }
     }
 
     render() {
@@ -137,10 +149,16 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
                     <datePicker.DateRangePicker
                         startDate={this.state.startDate}
                         endDate={this.state.endDate}
-                        onDatesChange={({startDate, endDate}) => this.setState({startDate, endDate})}
+                        onDatesChange={({startDate, endDate}) => {
+                            this.setState({startDate, endDate}, () => {
+                                if (startDate && endDate) {
+                                    this.handleChange();
+                                }
+                            });
+                        }}
                         focusedInput={this.state.focusedInput}
                         onFocusChange={focusedInput => {
-                            if (focusedInput == null) {
+                            if (focusedInput == null && this.props.container) {
                                 this.props.container.focus()
                             }
                             this.setState({focusedInput});
@@ -152,17 +170,21 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
                             return false
                         }}
                         onPrevMonthClick={(e) => {
-
-                            this.props.container.focus();
-                            setTimeout(() => {
+                            if (this.props.container) {
                                 this.props.container.focus();
-                            }, 250)
+
+                                setTimeout(() => {
+                                    this.props.container.focus();
+                                }, 250)
+                            }
                         }}
                         onNextMonthClick={() => {
-                            this.props.container.focus();
-                            setTimeout(() => {
+                            if (this.props.container) {
                                 this.props.container.focus();
-                            }, 250)
+                                setTimeout(() => {
+                                    this.props.container.focus();
+                                }, 250)
+                            }
                         }}
                         renderCalendarInfo={() => false}
                     />
@@ -206,10 +228,9 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
         config: {multiselect: false, content: []}
     };
 
-    handleApply(e) {
-        e.stopPropagation();
 
-        this.setState({show: false});
+    getValue() {
+        let select = ReactDOM.findDOMNode(this.select);
 
 
         let select = ReactDOM.findDOMNode(this.select);
@@ -225,23 +246,29 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
             return o.innerHTML;
         });
 
+        values = this.props.config.multiselect ? values : values[0];
+        let condition = this.props.config.multiselect ? "IN" : "==";
+        return {
+            field: this.props.field,
+            value: values,
+            condition: condition,
+            caption: this.props.caption,
+            labelCaptionSeparator: ":",
+            label: labels.join(', ')
+        }
+    }
 
+    handleChange() {
         if (this.props.onChange) {
-            this.props.onChange({
-                field: this.props.field,
-                value: values,
-                condition: 'IN',
-                caption: this.props.caption,
-                labelCaptionSeparator: ":",
-                label: labels.join(', ')
-            });
+            this.props.onChange(this.getValue());
         }
 
     }
 
-    _handleKeyPress(e) {
-        if (e.key === 'Enter') {
-            this.handleApply(e);
+    handleApply() {
+        this.setState({show: false});
+        if (this.props.onApply) {
+            this.props.onApply(this.getValue());
         }
     }
 
@@ -262,7 +289,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
 
                 >
                     {this.props.config.multiselect ? '' :
-                        <option value="0">Wybierz opcję</option>
+                        <option key={"-1default"} value="">Wybierz opcję</option>
                     }
                     {content.map((el) =>
                         <option
@@ -500,35 +527,59 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
     FILTER_INTERFACE_TEST: boolean;
     input: HTMLInputElement;
     options: any;
+    timeout: null
 
     constructor(props) {
         super(props)
 
         this.state = {
-            option: 'LIKE'
-
+            option: 'LIKE',
+            searchText: ''
         }
-
         this.options = {'LIKE': 'zawiera', '==': 'r\u00f3wny', '!=': 'r\u00f3\u017cne', 'NOT LIKE': 'nie zawiera', '^%': 'zaczyna si\u0119 od', '%$': 'ko\u0144czy si\u0119 na'};
 
     }
 
+    getValue() {
+        return {
+            field: this.props.field,
+            value: this.state.searchText,
+            condition: this.state.option,
+            caption: this.props.caption,
+            labelCaptionSeparator: this.options[this.state.option] + ' :',
+            label: this.state.searchText
+        };
+    }
+
+    handleChange() {
+        clearTimeout(this.timeout);
+        setTimeout(() => {
+            if (this.props.onChange) {
+                this.props.onChange(this.getValue());
+            }
+        }, 400)
+    }
+
     handleApply() {
         this.setState({show: false});
-        const value = this.input.value;
-        if (value) {
-
-            this.props.onChange({
-                field: this.props.field,
-                value: value,
-                condition: this.state.option,
-                caption: this.props.caption,
-                labelCaptionSeparator: this.options[this.state.option] + ' :',
-                label: this.input.value
-            });
-
+        if (this.state.searchText && this.props.onApply) {
+            this.props.onApply(this.getValue());
         }
+    }
 
+    handleInputChange(e) {
+        this.setState(
+            {searchText: e.target.value},
+            this.handleChange
+        );
+
+    }
+
+    handleSelectChange(e) {
+        this.setState(
+            {option: e.target.value},
+            this.handleChange
+        );
     }
 
     _handleKeyPress(e) {
@@ -543,10 +594,10 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 
             <div className={'w-filter w-filter-text '} ref="body">
 
-                <input type="text" autoFocus onKeyPress={this._handleKeyPress.bind(this)} ref={(el) => this.input = el}/>
+                <input type="text" onChange={this.handleInputChange.bind(this)} autoFocus onKeyPress={this._handleKeyPress.bind(this)}/>
 
                 <select
-                    onChange={(e) => this.setState({option: e.currentTarget.value})}
+                    onChange={this.handleSelectChange.bind(this)}
                     value={this.state.option}
 
                 >

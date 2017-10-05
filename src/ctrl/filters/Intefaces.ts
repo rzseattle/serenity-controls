@@ -2,7 +2,7 @@ export interface IFilter {
     field: string,
     caption?: string,
     config?: any,
-    onChange?: () => any
+    onChange?: (value: IFilterValue) => any
     component: any
 }
 
