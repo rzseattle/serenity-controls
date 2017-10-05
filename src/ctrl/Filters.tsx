@@ -192,18 +192,18 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
                 <div className="w-filter-date-exists">
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'})} type="checkbox"/> <i className="fa fa-arrows-h"></i> Według wybou
+                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'}, this.handleChange)} type="checkbox"/> <i className="fa fa-arrows-h"></i> Według wybou
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'})} type="checkbox"/> <i className="fa fa-check"></i> Data ustalona
+                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'}, this.handleChange)} type="checkbox"/> <i className="fa fa-check"></i> Data ustalona
                         </label>
                     </div>
 
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'})} type="checkbox"/> <i className="fa fa-times"></i> Brak daty
+                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'}, this.handleChange)} type="checkbox"/> <i className="fa fa-times"></i> Brak daty
                         </label>
                     </div>
                 </div>
@@ -230,9 +230,6 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
 
 
     getValue() {
-        let select = ReactDOM.findDOMNode(this.select);
-
-
         let select = ReactDOM.findDOMNode(this.select);
 
         let values = [].filter.call(select.options, function (o) {
@@ -283,10 +280,12 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
         return (
 
             <div className={'w-filter w-filter-select'}>
-                <select autoFocus ref={el => this.select = el} multiple={this.props.config.multiselect}
-                        size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}
-                        onKeyPress={this._handleKeyPress.bind(this)}
-
+                <select
+                    autoFocus
+                    ref={el => this.select = el}
+                    multiple={this.props.config.multiselect}
+                    size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}
+                    onChange={this.handleChange.bind(this)}
                 >
                     {this.props.config.multiselect ? '' :
                         <option key={"-1default"} value="">Wybierz opcję</option>
@@ -302,7 +301,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
                                 e.currentTarget.selected = e.currentTarget.selected ? false : true;
                                 return false;
                             }}
-                        >{el.label}</option>
+                        >{el.label} </option>
                     )}
                 </select>
                 {this.props.showApply && <div>
@@ -463,30 +462,44 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
 
 }
 
-// TODO !!!
 class ConnectionFilter extends AbstractFilter implements IFilterComponent {
     FILTER_INTERFACE_TEST: boolean;
-    input: HTMLInputElement;
 
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            searchValue: null,
+            searchLabel: null,
+        }
+    }
+
+
+    getValue() {
+        return {
+            field: this.props.field,
+            value: this.state.searchValue,
+            condition: "=",
+            caption: this.props.caption,
+            labelCaptionSeparator: ' :',
+            label: this.state.searchLabel
+        }
+    }
+
+    handleChange(event) {
+        this.setState({
+            searchValue: event.value,
+            searchLabel: event.items[0].label,
+        }, () => {
+            if (this.props.onChange != null) {
+                this.props.onChange(this.getValue());
+            }
+        });
     }
 
     handleApply() {
         this.setState({show: false});
-        const value = this.input.value;
-        if (value) {
-
-            this.props.onChange({
-                field: this.props.field,
-                value: value,
-                condition: this.state.option,
-                caption: this.props.caption,
-                labelCaptionSeparator: ' :',
-                label: this.input.value
-            });
-
+        if (this.state.searchValue && this.props.onApply) {
+            this.props.onApply(this.getValue())
         }
 
     }
@@ -499,7 +512,6 @@ class ConnectionFilter extends AbstractFilter implements IFilterComponent {
 
 
     render() {
-        console.log(this.props.config)
         return (
 
             <div className={'w-filter w-filter-text '} ref="body">
@@ -509,7 +521,7 @@ class ConnectionFilter extends AbstractFilter implements IFilterComponent {
                     {...this.props.config}
                     editable={true}
                     items={[]}
-
+                    onChange={this.handleChange.bind(this)}
                 />
 
 
