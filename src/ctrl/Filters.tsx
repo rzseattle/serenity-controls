@@ -4,6 +4,7 @@ import {IFilter, IFilterValue} from "./filters/Intefaces";
 
 import '../../../react-dates/lib/css/_datepicker.css'
 import {BConnectionsField} from "frontend/src/layout/BootstrapForm";
+import {Switch} from "frontend/src/ctrl/Fields";
 
 let moment;
 let locale;
@@ -35,6 +36,7 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
     public FILTER_INTERFACE_TEST: boolean = true;
     timepicker: any;
     datepicker: any;
+    choiceTypes = {'<x<in': "range", ">": 'exists', "IN": "not-exists"};
 
 
     constructor(props) {
@@ -46,7 +48,7 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
             startTime: null,
             endTime: null,
             libsLoaded: false,
-            choiceType: 'range' // exists, not-exists
+            choiceType: props.value ? this.choiceTypes[props.value.condition] : 'range'  // exists, not-exists
         }
 
         this.datepicker = null;
@@ -72,6 +74,12 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
         });
 
 
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            choiceType: nextProps.value ? this.choiceTypes[nextProps.value.condition] : 'range'
+        })
     }
 
 
@@ -224,6 +232,18 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
     FILTER_INTERFACE_TEST: boolean;
     select: any;
 
+    constructor(props) {
+        super(props);
+        this.state = {value: props.value ? props.value.value : ""};
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            value: nextProps.value ? nextProps.value.value : ""
+        })
+    }
+
+
     public static defaultProps: Partial<IFilterProps> = {
         config: {multiselect: false, content: []}
     };
@@ -255,7 +275,10 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
         }
     }
 
-    handleChange() {
+    handleChange(e) {
+        this.setState({
+            value: e.target.value
+        })
         if (this.props.onChange) {
             this.props.onChange(this.getValue());
         }
@@ -286,6 +309,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
                     multiple={this.props.config.multiselect}
                     size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}
                     onChange={this.handleChange.bind(this)}
+                    value={this.state.value}
                 >
                     {this.props.config.multiselect ? '' :
                         <option key={"-1default"} value="">Wybierz opcję</option>
@@ -322,44 +346,46 @@ class SwitchFilter extends AbstractFilter implements IFilterComponent {
 
     constructor(props) {
         super(props);
-        this.state = {value: null};
+        this.state = {value: props.value ? props.value.value : null};
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            value: nextProps.value ? nextProps.value.value : null
+        })
+    }
+
+    getValue() {
+        return {
+            field: this.props.field,
+            value: this.state.value,
+            condition: '==',
+            caption: this.props.caption,
+            labelCaptionSeparator: ":",
+            label: this.props.config.content[this.state.value].label
+        }
+    }
+
+    handleChange() {
+        this.setState({show: false});
+        if (this.props.onChange) {
+            this.props.onChange(this.getValue())
+        }
     }
 
     handleApply() {
         this.setState({show: false});
-        if (this.state.value) {
-            this.props.onChange({
-                field: this.props.field,
-                value: this.state.value,
-                condition: '==',
-                caption: this.props.caption,
-                labelCaptionSeparator: ":",
-                label: this.props.config.content[this.state.value]
-            });
+        if (this.props.onApply) {
+            this.props.onApply(this.getValue())
         }
     }
 
     render() {
+
         return (
 
-
             <div className="w-filter w-filter-switch" ref="body">
-
-                {Object.entries(this.props.config.content).map((el) =>
-                    <div>
-                        <label htmlFor={el[0]}>
-                            <input
-                                name="switch"
-                                type="radio"
-                                key={el[0]}
-                                id={el[0]}
-                                value={el[0]}
-                                onChange={(e) => this.setState({value: el[0]})}
-                                checked={(el[0] == this.state.value)}
-                            /> {el[1]}</label>
-                    </div>
-                )}
-
+                <Switch options={this.props.config.content} value={this.state.value} onChange={(e) => this.setState({value: e.value}, this.handleChange)}/>
                 {this.props.showApply && <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
                 </div>}
@@ -488,7 +514,7 @@ class ConnectionFilter extends AbstractFilter implements IFilterComponent {
     handleChange(event) {
         this.setState({
             searchValue: event.value,
-            searchLabel: event.items[0].label,
+            searchLabel: event.items.length > 0 ? event.items[0].label : null,
         }, () => {
             if (this.props.onChange != null) {
                 this.props.onChange(this.getValue());
@@ -545,11 +571,25 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
         super(props)
 
         this.state = {
-            option: 'LIKE',
-            searchText: ''
+            option: props.value ? props.value.condition : 'LIKE',
+            searchText: props.value ? props.value.value : '',
         }
-        this.options = {'LIKE': 'zawiera', '==': 'r\u00f3wny', '!=': 'r\u00f3\u017cne', 'NOT LIKE': 'nie zawiera', '^%': 'zaczyna si\u0119 od', '%$': 'ko\u0144czy si\u0119 na'};
+        this.options = {
+            'LIKE': 'zawiera',
+            '==': 'r\u00f3wny',
+            '!=': 'r\u00f3\u017cne',
+            'NOT LIKE': 'nie zawiera',
+            '^%': 'zaczyna si\u0119 od',
+            '%$': 'ko\u0144czy si\u0119 na'
+        };
 
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            option: nextProps.value ? nextProps.value.condition : 'LIKE',
+            searchText: nextProps.value ? nextProps.value.value : '',
+        })
     }
 
     getValue() {
@@ -606,7 +646,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 
             <div className={'w-filter w-filter-text '} ref="body">
 
-                <input type="text" onChange={this.handleInputChange.bind(this)} autoFocus onKeyPress={this._handleKeyPress.bind(this)}/>
+                <input type="text" value={this.state.searchText} onChange={this.handleInputChange.bind(this)} autoFocus onKeyPress={this._handleKeyPress.bind(this)}/>
 
                 <select
                     onChange={this.handleSelectChange.bind(this)}

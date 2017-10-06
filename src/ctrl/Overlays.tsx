@@ -250,7 +250,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
             onClick={this.handleClose.bind(this)}
         >
 
-            <div className="w-modal" ref={el => this.modalBody = el}>
+            <div className="w-modal" ref={el => this.modalBody = el} onClick={(e) => e.stopPropagation() }>
                 {p.showHideLink &&
                 <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i
                     className="fa fa-close"></i></a>}

@@ -1,4 +1,5 @@
 declare var window: any;
+declare var PRODUCTION: any;
 import * as React from "react";
 import {TextFilter, withFilterOpenLayer} from './Filters'
 import {ColumnHelper} from './table/ColumnHelper'
@@ -77,6 +78,52 @@ interface ITableState {
     selection: Array<any>
 }
 
+const deepCopy = (obj) => {
+    return JSON.parse(JSON.stringify(obj));
+}
+
+const deepIsEqual = (a, b) => {
+    if (a === b) return true;
+
+    var arrA = Array.isArray(a)
+        , arrB = Array.isArray(b)
+        , i;
+
+    if (arrA && arrB) {
+        if (a.length != b.length) return false;
+        for (i = 0; i < a.length; i++)
+            if (!deepIsEqual(a[i], b[i])) return false;
+        return true;
+    }
+
+    if (arrA != arrB) return false;
+
+    if (a && b && typeof a === 'object' && typeof b === 'object') {
+        var keys = Object.keys(a);
+        if (keys.length !== Object.keys(b).length) return false;
+
+        var dateA = a instanceof Date
+            , dateB = b instanceof Date;
+        if (dateA && dateB) return a.getTime() == b.getTime();
+        if (dateA != dateB) return false;
+
+        var regexpA = a instanceof RegExp
+            , regexpB = b instanceof RegExp;
+        if (regexpA && regexpB) return a.toString() == b.toString();
+        if (regexpA != regexpB) return false;
+
+        for (i = 0; i < keys.length; i++)
+            if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
+
+        for (i = 0; i < keys.length; i++)
+            if (!deepIsEqual(a[keys[i]], b[keys[i]])) return false;
+
+        return true;
+    }
+
+    return false;
+}
+
 class Table extends React.Component<ITableProps, ITableState> {
 
     public static defaultProps: Partial<ITableProps> = {
@@ -111,7 +158,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             data: [],
             dataSourceError: "",
             dataSourceDebug: false,
-            filters: this.props.filters,
+            filters: deepCopy(this.props.filters),
             order: {},
             onPage: this.props.onPage,
             currentPage: 1,
@@ -141,7 +188,12 @@ class Table extends React.Component<ITableProps, ITableState> {
     componentWillMount() {
 
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
-            this.setState({...this.state, ...JSON.parse(window.localStorage[this.hashCode]), firstLoaded: false});
+            this.setState({...this.state, ...JSON.parse(window.localStorage[this.hashCode]), firstLoaded: false}, () => {
+                if (this.props.onFiltersChange) {
+                    this.props.onFiltersChange(deepCopy(this.state.filters));
+                }
+            });
+
 
         }
     }
@@ -173,18 +225,117 @@ class Table extends React.Component<ITableProps, ITableState> {
         this.load();
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        let should = false;
+
+        if (!PRODUCTION) {
+            console.log("[Table] Checking update ...");
+        }
+
+        if (!deepIsEqual(this.state.data, nextState.data)) {
+            if (!PRODUCTION) {
+                console.log("[Table] Data diference")
+            }
+            return true
+        }
+
+        if (!deepIsEqual(this.state.filters, nextState.filters)) {
+            if (!PRODUCTION) {
+                console.log("[Table] Filters diference")
+            }
+            return true;
+        }
+        if (!deepIsEqual(this.state.order, nextState.order)) {
+            if (!PRODUCTION) {
+                console.log("[Table] order diference")
+            }
+            return true;
+        }
+        if (!deepIsEqual(this.state.columns, nextState.columns)) {
+            if (!PRODUCTION) {
+                console.log("[Table] Columns diference")
+            }
+            return true;
+        }
+        let n = nextState;
+        let p = this.state;
+        if (!deepIsEqual(
+                [
+                    p.loading,
+                    p.onPage,
+                    p.currentPage,
+                    p.allChecked,
+                    p.selection,
+                    p.dataSourceError,
+                    p.dataSourceDebug
+                ],
+                [
+                    n.loading,
+                    n.onPage,
+                    n.currentPage,
+                    n.allChecked,
+                    n.selection,
+                    n.dataSourceError,
+                    n.dataSourceDebug
+                ]
+            )) {
+            if (!PRODUCTION) {
+                console.log("[Table] Base state diference")
+            }
+            return true;
+        }
+
+
+        let np = nextProps;
+        let pr = this.props;
+        if (!deepIsEqual(
+                [
+                    pr.remoteURL,
+                    pr.selectable,
+                    pr.showFooter,
+                    pr.showHeader,
+                    pr.additionalConditions,
+                ],
+                [
+                    np.remoteURL,
+                    np.selectable,
+                    np.showFooter,
+                    np.showHeader,
+                    np.additionalConditions,
+                ]
+            )) {
+            if (!PRODUCTION) {
+                console.log("[Table] Base props diference")
+            }
+            return true;
+        }
+
+        if (!PRODUCTION) {
+            console.log("Table should update: false");
+        }
+
+        return should;
+    }
+
     componentWillReceiveProps(nextProps) {
-        let columns = nextProps.columns;
+
+        let columns = [...nextProps.columns];
         for (let i in columns) {
             columns[i] = this.prepareColumnData(columns[i]);
         }
-        this.setState({columns: columns});
+        if (JSON.stringify(columns) != JSON.stringify(this.state.columns)) {
+            console.log("to też ustawiam");
+            this.setState({columns: columns});
+        }
 
         if (nextProps.filters) {
-            this.setState({
-                filters: nextProps.filters,
-                currentPage: 1
-            }, this.load);
+            var nextJSON = JSON.stringify(nextProps.filters);
+            if (nextJSON != JSON.stringify(this.state.filters)) {
+                this.setState({
+                    filters: deepCopy(nextProps.filters),
+                    currentPage: 1
+                }, this.load);
+            }
         }
     }
 
@@ -273,7 +424,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         this.state.filters[filterValue.field] = filterValue;
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
         if (this.props.onFiltersChange) {
-            this.props.onFiltersChange(this.state.filters);
+            this.props.onFiltersChange(deepCopy(this.state.filters));
         }
 
     }
@@ -282,7 +433,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         delete this.state.filters[key];
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
         if (this.props.onFiltersChange) {
-            this.props.onFiltersChange(this.state.filters);
+            this.props.onFiltersChange(deepCopy(this.state.filters));
         }
     }
 
@@ -507,7 +658,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                     </tr>
                     </thead>}
                     {this.state.dataSourceError && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
-                    {!this.state.loading && this.state.data.length + 1 == 0 && <EmptyResult colspan={columns.length + 1}/>}
+                    {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
                     {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
                     {this.state.firstLoaded && this.state.data.length > 0 && <Tbody
                         rowClassTemplate={this.props.rowClassTemplate}

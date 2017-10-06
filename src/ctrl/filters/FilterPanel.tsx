@@ -32,7 +32,12 @@ export class FilterPanel extends React.Component<IFilterPanelProps, IFilterPanel
     }
 
     public handleChange(filter: IFilter, val: IFilterValue) {
-        this.state.value[val.field] = val;
+        if (val.value) {
+            this.state.value[val.field] = val;
+        } else {
+            delete this.state.value[val.field];
+        }
+
 
         this.setState({
             value: this.state.value,
@@ -53,16 +58,18 @@ export class FilterPanel extends React.Component<IFilterPanelProps, IFilterPanel
             {filters.map((filter) => {
                 const Component = filter.component;
                 filter.onChange = (val: IFilterValue) => {
-
                     this.handleChange(filter, val);
                 };
+
+                filter.value = this.state.value[filter.field];
+
                 return <div key={filter.field} className="filter-element">
                     <div className="filter-caption">  {filter.caption}</div>
                     <Component {...filter}  />
                 </div>;
             })}
-            <a className="btn btn-primary" onClick={this.handleApply.bind(this)}>Zastosuj</a>
-            <a className="btn ">Wyczyść filtry</a>
+            {/*<a className="btn btn-primary" onClick={this.handleApply.bind(this)}>Zastosuj</a>
+            <a className="btn ">Wyczyść filtry</a>*/}
         </div>;
     }
 }
