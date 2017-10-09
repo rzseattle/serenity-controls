@@ -66,6 +66,8 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             filter: [{
+                caption: caption,
+                //label: caption,
                 field: field,
                 component: TextFilter,
             }]

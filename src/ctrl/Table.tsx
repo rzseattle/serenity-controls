@@ -421,6 +421,8 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     handleFilterChanged(filterValue: IFilterValue) {
+
+        console.log(filterValue);
         this.state.filters[filterValue.field] = filterValue;
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
         if (this.props.onFiltersChange) {
@@ -652,7 +654,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                                 >
                                     {el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}
                                     {el.caption}
-                                    {el.filter.length > 0 ? <Component onChange={this.handleFilterChanged.bind(this)}/> : ''}
+                                    {el.filter.length > 0 ? <Component showApply={true} onApply={this.handleFilterChanged.bind(this)}/> : ''}
                                 </th>)
                         })}
                     </tr>

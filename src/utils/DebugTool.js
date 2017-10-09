@@ -4,6 +4,8 @@ import {TabPane, Tabs} from 'frontend/src/ctrl/Tabs';
 import JSONTree from 'react-json-tree';
 import {Modal} from 'frontend/src/ctrl/Overlays';
 import ErrorReporter from '../lib/ErrorReporter';
+import {ViewFileMap} from '../../../../build/js/tmp/components.include';
+
 
 
 export class DebugTool extends React.Component {
@@ -40,6 +42,7 @@ export class DebugTool extends React.Component {
         };
 
         window.onerror = (messageOrEvent, source, lineno, colno, error) => {
+
             this.state.errors.push(messageOrEvent);
             this.setState({lastError: error});
             this.forceUpdate();
@@ -125,8 +128,9 @@ export class DebugTool extends React.Component {
 
 
                 <div className='toolbar btn-toolbar'>
+
                     <a onClick={() => this.props.propsReloadHandler()} className="btn btn-sm btn-default"><i className="fa fa-refresh"></i> Reload props</a>
-                    <a href={`phpstorm://open?url=file://${this.props.componentData.file}&line=1`} className="btn btn-default btn-sm"><i className="fa fa-file-o"></i> edit</a>
+                    <a href={`phpstorm://open?url=file://${ViewFileMap[this.props.store.viewComponentName]}&line=1`} className="btn btn-default btn-sm"><i className="fa fa-file-o"></i> edit</a>
                 </div>
                 <Body
                     log={this.props.log}
@@ -140,8 +144,9 @@ export class DebugTool extends React.Component {
                 show={this.state.lastError != null}
                 onHide={() => this.setState({lastError: null})}
                 ref={modal => this.errorModal = modal}
-                onShow={() => setTimeout( () => this.errorModal.calculatePosition(), 500)}
+
             >
+
                 <ErrorReporter error={this.state.lastError} />
 
             </Modal>

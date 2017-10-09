@@ -565,7 +565,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
     FILTER_INTERFACE_TEST: boolean;
     input: HTMLInputElement;
     options: any;
-    timeout: null
+    timeout: number = null;
 
     constructor(props) {
         super(props)
@@ -605,7 +605,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 
     handleChange() {
         clearTimeout(this.timeout);
-        setTimeout(() => {
+        this.timeout = setTimeout(() => {
             if (this.props.onChange) {
                 this.props.onChange(this.getValue());
             }
@@ -746,7 +746,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                             {filters.map(entry => {
                                 let Filter = entry.component;
                                 return <div>
-                                    <Filter caption={entry.caption} field={entry.field} onChange={this.props.onChange} config={entry.config} container={this.container}/>
+                                    <Filter caption={entry.caption} showApply={true} field={entry.field} onApply={this.props.onApply} config={entry.config} container={this.container}/>
 
                                 </div>
                             })}

@@ -1,5 +1,6 @@
 import * as NotificationSystem from "react-notification-system";
-import { toJS} from "mobx";
+import {toJS} from "mobx";
+
 declare var PRODUCTION: boolean;
 import * as React from "react";
 import * as Notifications from "react-notification-system";
@@ -61,6 +62,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     componentDidCatch(error, info) {
         // Display fallback UI
+        if (!PRODUCTION) {
+
+        }
         this.setState({hasError: true, error: error});
         // You can also log the error to an error reporting service
         //logErrorToMyService(error, info);
@@ -71,11 +75,13 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             //import {DebugTool} from '../utils/DebugTool'
 
             import
-            ( /* webpackChunkName = "DebugTool" */ '../utils/DebugTool').then(({DebugTool}) => {
+                ( /* webpackChunkName = "DebugTool" */ '../utils/DebugTool').then(({DebugTool}) => {
                 this.DebugTool = DebugTool;
                 this.setState({debugToolLoaded: true});
 
             });
+
+
         }
     }
 
@@ -118,14 +124,16 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             log: s.log,
             propsReloadHandler: this.handleReloadProps.bind(this),
             componentData: {},
-            props: p.store.viewData
+            props: p.store.viewData,
+            store: p.store
         };
 
         if (this.state.hasError) {
             // You can render any custom fallback UI
             return <div>
                 <h1>Something went wrong.</h1>
-                {/*{!PRODUCTION && this.state.debugToolLoaded && <DebugTool error={this.state.error}  {...debugVar} />}*/}
+                {!PRODUCTION && this.state.debugToolLoaded && <DebugTool error={this.state.error}  {...debugVar} />}
+
             </div>;
         }
 
@@ -135,7 +143,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
 
 
-        return <div className={p.store.viewComponentName} >
+        return <div className={p.store.viewComponentName}>
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
@@ -153,7 +161,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _reloadProps={this.handleReloadProps.bind(this)}
                 _goto={this.handleGoTo.bind(this)}
                 _resolveComponent={this.handleReloadProps.bind(this)}
-                _scrollTo={(el) =>{
+                _scrollTo={(el) => {
 
                 }}
             />}
@@ -183,7 +191,7 @@ class ErrorReporterLoader extends React.Component<any, any> {
 
     componentDidMount() {
         import
-        ("./ErrorReporter").then((Reporter) => {
+            ("./ErrorReporter").then((Reporter) => {
             this.setState({loaded: true, component: Reporter.default});
         });
     }
