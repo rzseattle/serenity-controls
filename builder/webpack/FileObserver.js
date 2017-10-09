@@ -40,6 +40,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
     const linkArrowDir = () => {
         let ComponentFileContent = '';
         let ComponentFileContentEx = [];
+        let ComponentFileContentMapFiles = {};
         let SassFileContent = '';
         watchedDirs.map(config => {
             let [components, sass] = walk(config.dir);
@@ -53,6 +54,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
                 ComponentFileContent += 'import ' + name + ' from \'' + entry.replace(/\\/g, '/') + '\';\n';
                 //ComponentFileContent += `export ${name};\n`;
+                ComponentFileContentMapFiles[name] = entry.replace(/\\/g, '/');
                 ComponentFileContentEx.push(name)
             });
             sass.forEach((entry) => {
@@ -68,6 +70,9 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
         });
         ComponentFileContent += `\nexport{ ${ComponentFileContentEx.join(",")} };`;
+        ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFiles)} ;`;
+
+
 
         fs.writeFile(SAVE_COMPONENT_TARGET, ComponentFileContent, function (err) {
             if (err) {
