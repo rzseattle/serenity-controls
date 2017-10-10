@@ -55,6 +55,7 @@ interface ITableProps {
     additionalConditions?: any
     filters?: { [key: string]: IFilterValue };
     onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any ;
+    onDataChange?: (data: any) => any ;
 
 
 }
@@ -375,6 +376,10 @@ class Table extends React.Component<ITableProps, ITableState> {
                 selection: [],
                 allChecked: false
             });
+            if(this.props.onDataChange){
+                this.props.onDataChange(input.data.slice(0));
+            }
+
         }
 
         if (this.props.remoteURL) {
