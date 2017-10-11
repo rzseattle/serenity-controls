@@ -25,6 +25,7 @@ interface IMenuElement {
 interface IBackOfficePanelProps {
 
     appIcon: string
+    onlyBody?: boolean
     appTitle: string
     requestURI: string
     appBaseURL: string
@@ -45,6 +46,10 @@ interface IBackOfficePanelState {
 export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     container: HTMLDivElement;
 
+    public static defaultProps: Partial<IBackOfficePanelProps> = {
+        onlyBody: false
+    }
+
 
     constructor(props: IBackOfficePanelProps) {
         super();
@@ -59,7 +64,9 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     }
 
     adjustToSize() {
-        this.container.style.height = window.innerHeight + 'px';
+        if(this.container) {
+            this.container.style.height = window.innerHeight + 'px';
+        }
         if (window.innerWidth <= 479 && this.state.layout != "mobile") {
             this.setState({layout: 'mobile', menuVisible: false});
         } else if (window.innerWidth > 479 && this.state.layout != "normal") {
@@ -83,7 +90,6 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     }
 
     componentDidMount() {
-        this.container.style.height = window.innerHeight + 'px';
         this.adjustToSize()
         let timeout = null;
         window.addEventListener('resize', () => {
@@ -93,6 +99,10 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     }
 
     render() {
+
+        if(this.props.onlyBody){
+            return <PanelComponentLoader store={this.props.store}/>;
+        }
 
 
         return <div className="w-panel-container" ref={(container) => this.container = container}>

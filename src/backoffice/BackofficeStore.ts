@@ -93,7 +93,7 @@ class Store {
 
 var store = new Store;
 
-store.loadDataForView(initial);
+//store.loadDataForView(initial);
 
 
 /*const disposer2 = observe(store, "viewURL", (change) => {
