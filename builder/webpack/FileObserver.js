@@ -5,6 +5,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
     let watchedDirs = [
+        {package: 'app', dir: BASE_PATH + '/application/views'},
         {package: 'app', dir: BASE_PATH + '/app/views'},
         {package: 'access', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/access/views'},
         {package: 'translations', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/translations/views'}
