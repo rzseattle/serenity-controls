@@ -323,7 +323,12 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         let arrayNotation = tmp.split("[");
         let dotNotation = arrayNotation.join(".");
 
-        let get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
+        let get;
+        try {
+            get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
+        }catch {
+            console.error("try{ return obj." + dotNotation + "; }catch(e){ return undefined;}");
+        }
 
         let set = (obj, path, endValue) => {
             if (path.length > 1) {

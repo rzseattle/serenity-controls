@@ -376,7 +376,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 selection: [],
                 allChecked: false
             });
-            if(this.props.onDataChange){
+            if (this.props.onDataChange) {
                 this.props.onDataChange(input.data.slice(0));
             }
 
@@ -664,21 +664,22 @@ class Table extends React.Component<ITableProps, ITableState> {
                         })}
                     </tr>
                     </thead>}
-                    {this.state.dataSourceError && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
-                    {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
-                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
-                    {this.state.firstLoaded && this.state.data.length > 0 && <Tbody
-                        rowClassTemplate={this.props.rowClassTemplate}
-                        rowStyleTemplate={this.props.rowStyleTemplate}
-                        selection={this.state.selection}
-                        onCheck={this.handleCheckClicked.bind(this)}
-                        selectable={this.props.selectable}
-                        columns={columns} filters={this.state.filters}
-                        order={this.state.order} loading={this.state.loading}
+                    <tbody>
+                        {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
+                        {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
+                        {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
+                        {this.state.firstLoaded && this.state.data.length > 0 && <Tbody
+                            rowClassTemplate={this.props.rowClassTemplate}
+                            rowStyleTemplate={this.props.rowStyleTemplate}
+                            selection={this.state.selection}
+                            onCheck={this.handleCheckClicked.bind(this)}
+                            selectable={this.props.selectable}
+                            columns={columns} filters={this.state.filters}
+                            order={this.state.order} loading={this.state.loading}
 
-                        data={this.state.data}
-                    />}
-                    {/*bodyHeight={this.state.fixedLayout ? this.state.bodyHeight : 'auto'}*/}
+                            data={this.state.data}
+                        />}
+                    </tbody>
 
                     {this.props.showFooter && <tfoot>
                     {this.state.firstLoaded && this.state.data.length > 0 &&

@@ -5,7 +5,12 @@ declare var window;
 
 const getComponentFromURL = (url: string): string => {
     url = url.split('?')[0].replace("#", "");
-    return url.replace(/\//g, "_")
+    url = url.replace(/\//g, "_")
+
+    //old versions ( raporty ) hack
+    if(url[0] == "_")
+        url = "app" + url;
+    return url;
 }
 
 const initial = window.location.hash.replace("#", "") || "app/admin/dashboard";
