@@ -146,9 +146,9 @@ export class DebugTool extends React.Component {
                 ref={modal => this.errorModal = modal}
 
             >
-
+                <div style={{maxWidth: 800}}>
                 <ErrorReporter error={this.state.lastError} />
-
+                </div>
             </Modal>
 
         </div>;

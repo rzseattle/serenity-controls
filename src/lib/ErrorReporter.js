@@ -19,7 +19,7 @@ export default class ErrorReporter extends React.Component {
 
         let e = this.props.error;
 
-
+        
         let stacks = parseError(e.stack);
         fetch(window.location.protocol + '//localhost:3000/bundle.js.map', {
             method: 'get'
@@ -71,7 +71,7 @@ export default class ErrorReporter extends React.Component {
 
         let containerCss = {backgroundColor: 'white', padding: 5, margin: 5, border: 'solid 1px grey'};
         let messageCss = {color: 'darkred', marginTop: 5};
-        let codeCss = {whiteSpace: 'pre', backgroundColor: '#FDF3F4', color: 'black', padding: 5};
+        let codeCss = {whiteSpace: 'pre', backgroundColor: '#FDF3F4', color: 'black', padding: 5, width: "100%", overflow: 'auto'};
 
 
         let line = this.state.stacks[0].line;
@@ -94,8 +94,12 @@ export default class ErrorReporter extends React.Component {
 
                 })}
             </div>
-            <h4><a href={`phpstorm://open?url=file://${this.state.stacks[0].source}&line=${this.state.stacks[0].line}`}>{this.state.stacks[0].source}:{this.state.stacks[0].line}</a></h4>
-            {this.state.stacks.map(e => <div key={e.line}>{e.source}:{e.line}</div>)}
+            <h4>
+                <a href={`phpstorm://open?url=file://${this.state.stacks[0].source}&line=${this.state.stacks[0].line}`}>{this.state.stacks[0].source}:{this.state.stacks[0].line}</a>
+            </h4>
+            {this.state.stacks.map(e => <div key={e.line}>
+                <a style={{color: 'black'}} href={`phpstorm://open?url=file://${e.source}&line=${e.line}`}>{e.source}:{e.line}</a>
+                </div>)}
 
         </div>
     }
