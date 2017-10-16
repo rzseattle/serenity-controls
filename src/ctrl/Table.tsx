@@ -17,7 +17,8 @@ interface IDataQuery {
 interface ITableDataInput {
     data: Array<any>,
     countAll?: number
-    debug?: string
+    debug?: string,
+    decorator?: { (requestData: IDataQuery, data: ITableDataInput): ITableDataInput | Promise<ITableDataInput> }
 }
 
 interface IDataProvider {
@@ -35,6 +36,7 @@ interface IRowClassTemplate {
 interface IRowStyleTemplate {
     (row: any, index: number): any;
 }
+
 
 interface ITableProps {
     /**
@@ -56,6 +58,7 @@ interface ITableProps {
     filters?: { [key: string]: IFilterValue };
     onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any ;
     onDataChange?: (data: any) => any ;
+    data?: ITableDataInput
 
 
 }
@@ -134,7 +137,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         showHeader: true,
         rememberState: false,
         additionalConditions: {},
-        filters: {}
+        filters: {},
+        data: {data: [], countAll: 0, debug: ""}
     }
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
@@ -156,14 +160,14 @@ class Table extends React.Component<ITableProps, ITableState> {
         this.state = {
             loading: false,
             firstLoaded: false,
-            data: [],
+            data: this.props.data.data,
             dataSourceError: "",
             dataSourceDebug: false,
             filters: deepCopy(this.props.filters),
             order: {},
             onPage: this.props.onPage,
             currentPage: 1,
-            countAll: 0,
+            countAll: this.props.data.countAll,
             fixedLayout: false, // props.fixedLayout,
             columns: columns,
             //bodyHeight: this.props.initHeight,
@@ -223,7 +227,9 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     componentDidMount() {
-        this.load();
+        if (this.props.remoteURL || this.props.dataProvider) {
+            this.load();
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -366,7 +372,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
         this.setState({loading: true});
 
-        let setStateAfterLoad = (input) => {
+        let setStateAfterLoad = (input, callback = null) => {
             this.setState({
                 data: input.data.slice(0),
                 countAll: 0 + parseInt(input.countAll),
@@ -375,7 +381,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 firstLoaded: true,
                 selection: [],
                 allChecked: false
-            });
+            }, callback);
             if (this.props.onDataChange) {
                 this.props.onDataChange(input.data.slice(0));
             }
@@ -410,7 +416,18 @@ class Table extends React.Component<ITableProps, ITableState> {
 
             if (result instanceof Promise) {
                 result.then((data) => {
-                    setStateAfterLoad(data);
+                    setStateAfterLoad(data, () => {
+                        if (data.decorator != undefined) {
+                            let result = data.decorator(this.getRequestData(), deepCopy(data) );
+                            if (result instanceof Promise) {
+                                result.then((data) => {
+                                    setStateAfterLoad(data);
+                                });
+                            } else {
+                                setStateAfterLoad(result);
+                            }
+                        }
+                    });
                 })
             } else {
                 setStateAfterLoad(result);
@@ -665,20 +682,22 @@ class Table extends React.Component<ITableProps, ITableState> {
                     </tr>
                     </thead>}
                     <tbody>
-                        {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
-                        {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
-                        {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
-                        {this.state.firstLoaded && this.state.data.length > 0 && <Tbody
-                            rowClassTemplate={this.props.rowClassTemplate}
-                            rowStyleTemplate={this.props.rowStyleTemplate}
-                            selection={this.state.selection}
-                            onCheck={this.handleCheckClicked.bind(this)}
-                            selectable={this.props.selectable}
-                            columns={columns} filters={this.state.filters}
-                            order={this.state.order} loading={this.state.loading}
+                    {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
+                    {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
+                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
+                    {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
+                    {/*this.state.firstLoaded && */}
+                    {this.state.data.length > 0 && <Tbody
+                        rowClassTemplate={this.props.rowClassTemplate}
+                        rowStyleTemplate={this.props.rowStyleTemplate}
+                        selection={this.state.selection}
+                        onCheck={this.handleCheckClicked.bind(this)}
+                        selectable={this.props.selectable}
+                        columns={columns} filters={this.state.filters}
+                        order={this.state.order} loading={this.state.loading}
 
-                            data={this.state.data}
-                        />}
+                        data={this.state.data}
+                    />}
                     </tbody>
 
                     {this.props.showFooter && <tfoot>

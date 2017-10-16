@@ -2,7 +2,7 @@ import * as React from "react";
 //import Inputmask from 'inputmask';
 import * as Dropzone from 'react-dropzone';
 import {ConnectionsField} from './fields/ConnectionsField'
-import * as moment from  'moment'
+
 
 let checkIncludes = (options, value) => {
 
@@ -16,9 +16,6 @@ let checkIncludes = (options, value) => {
     return element.length > 0;
 
 };
-
-
-
 
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
@@ -492,6 +489,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
 
 let locale;
 let datePicker;
+let moment;
 
 interface IDateProps extends IFieldProps {
     value: string
@@ -520,13 +518,14 @@ class Date extends React.Component<IDateProps, any> {
     componentWillMount() {
 
         Promise.all([
+            import('moment'),
             import( 'moment/locale/pl' ),
             import( 'react-dates' ),
         ]).then(imported => {
-            [ locale, datePicker] = imported;
+            [moment, locale, datePicker/*, timePicker*/] = imported;
 
             this.setState({
-                date: this.props.value ? moment.default(this.props.value, 'YYYY-MM-DD') : null,
+                date: this.props.value ? moment(this.props.value, 'YYYY-MM-DD') : null,
                 libsLoaded: true
             });
         });

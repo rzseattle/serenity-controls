@@ -23,9 +23,10 @@ class Comm {
     private url: string;
     private data: any;
     private namespace: string;
+    private xhr: XMLHttpRequest;
 
 
-    constructor(url) {
+    constructor(url, method = "POST") {
 
         this.url = url;
         this.data = {};
@@ -41,7 +42,10 @@ class Comm {
             validationErrors: [],
             finish: []
         };
-        this.method = 'POST';
+        this.method = method;
+
+
+        this.xhr  = null;
     }
 
 
@@ -118,6 +122,13 @@ class Comm {
         errorWindow.focus();
     }
 
+    abort(){
+        if(this.xhr){
+            this.xhr.abort();
+        }
+    }
+
+
 
     send() {
 
@@ -129,33 +140,34 @@ class Comm {
 
         this.callEvent(Comm.EVENTS.BEFORE_SEND, data);
 
-        let xhr = new XMLHttpRequest();
 
-        xhr.upload.onprogress = (event) => {
+        this.xhr = new XMLHttpRequest();
+
+        this.xhr.upload.onprogress = (event) => {
             this.callEvent(Comm.EVENTS.PROGRESS, {
                 loaded: event.loaded,
                 percent: Math.round(event.loaded / event.total * 100)
             });
         };
 
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
+        this.xhr.onreadystatechange = () => {
+            if (this.xhr.readyState === 4) {
+                if (this.xhr.status === 200) {
                     let exceptionOccured = false;
                     let data;
                     try {
-                        this.callEvent(Comm.EVENTS.RESPONSE, xhr.response);
-                        data = JSON.parse(xhr.response);
+                        this.callEvent(Comm.EVENTS.RESPONSE, this.xhr.response);
+                        data = JSON.parse(this.xhr.response);
                     } catch (e) {
                         exceptionOccured = true;
                         if (this.registredEvents.error.length == 0) {
 
-                            this.debugError(e.message + '<hr />' + xhr.response);
+                            this.debugError(e.message + '<hr />' + this.xhr.response);
                         } else {
                             if(this.debug) {
-                                this.debugError(e.message + '<hr />' + xhr.response);
+                                this.debugError(e.message + '<hr />' + this.xhr.response);
                             }
-                            this.callEvent( Comm.EVENTS.ERROR, xhr.response);
+                            this.callEvent( Comm.EVENTS.ERROR, this.xhr.response);
                         }
 
 
@@ -171,22 +183,25 @@ class Comm {
 
 
                 } else {
-                    this.debugError(xhr.status + '<hr />');
-                    this.callEvent(Comm.EVENTS.CONNECTION_ERROR, xhr.response);
+                    // 0 == abotreted
+                    if(this.xhr.status != 0 ) {
+                        this.debugError(this.xhr.status + '<hr />');
+                        this.callEvent(Comm.EVENTS.CONNECTION_ERROR, this.xhr.response);
+                    }
                 }
-                this.callEvent(Comm.EVENTS.FINISH, xhr);
+                this.callEvent(Comm.EVENTS.FINISH, this.xhr);
             }
         };
 
-        xhr.open(this.method, this.url, true);
+        this.xhr.open(this.method, this.url, true);
 
         if (this.method == 'POST') {
-            xhr.send(formData);
+            this.xhr.send(formData);
         } else if (this.method == 'GET') {
-            xhr.send();
+            this.xhr.send();
         } else if (this.method == 'PUT') {
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
+            this.xhr.setRequestHeader('Content-Type', 'application/json');
+            this.xhr.send(JSON.stringify(data));
         }
 
     }
