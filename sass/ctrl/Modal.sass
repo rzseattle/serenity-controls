@@ -78,6 +78,38 @@
 .w-shadow-fixed
     position: fixed
 
+
+.w-tooltip
+    .w-modal
+        transform: translateY( 10px )
+
+        padding: 5px
+        border: 1px solid #eaeaea
+        box-shadow: 0 0 5px 0px rgba(0,0,0,0.4)
+        padding: 0
+    .w-toolbar-brake
+        position: absolute
+        height: 16px
+        width: 16px
+        top: -8px
+        transform: rotate(45deg)
+        background-color: white
+        box-shadow: inherit
+        z-index: 9
+    .w-toolbar-content
+        z-index: 10
+        position: relative
+        background: white
+        padding: 10px
+
+.w-tooltip-top
+    .w-modal
+        transform: translateY( -10px )
+    .w-toolbar-brake
+        top: auto
+        bottom: -8px
+
+
 $loader-size: 1
 span.loader, .w-loader > span
     display: block
@@ -121,4 +153,5 @@ span.loader, .w-loader > span
         i
             width: (9*$loaderSize)+px
             height: (9*$loaderSize)+px
+
 

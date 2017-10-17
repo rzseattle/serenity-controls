@@ -53,7 +53,9 @@ interface IModalProps {
     bottom?: string | number,
     right?: string | number,
     className?: string,
-    children: any
+    children: any,
+    orientation?: string
+    onOrientationChange?: { (type): any }
 
 }
 
@@ -174,7 +176,11 @@ class Modal extends React.Component<IModalProps, IModalState> {
                 }
                 let top = targetData.top + targetData.height + this.props.positionOffset;
                 if (top + data.height > containerSize.height) {
-                    top = containerSize.height - data.height - this.props.positionOffset;
+                    //top = containerSize.height - data.height - this.props.positionOffset;
+                    top = targetData.top - data.height - this.props.positionOffset;
+                    if (this.props.onOrientationChange) {
+                        this.props.onOrientationChange("top");
+                    }
                 }
 
                 node.style['top'] = top + 'px';
@@ -182,10 +188,14 @@ class Modal extends React.Component<IModalProps, IModalState> {
             } else {
 
                 let x: number = Math.round(Math.min(data.width / 2, (window.innerWidth) / 2 - 5));
+                console.log(data.width, "dw")
+                console.log(x, "x")
                 let y = Math.round(Math.min(data.height / 2, (window.innerHeight / 2) - 5));
                 x = this.props.left != undefined || this.props.right != undefined ? 0 : x;
                 y = this.props.top != undefined || this.props.bottom != undefined ? 0 : y;
                 node.style['transform'] = `translate(-${x}px, -${y}px)`;
+                console.log(x, "x2");
+
 
 
                 if (this.props.left != undefined) {
@@ -215,31 +225,12 @@ class Modal extends React.Component<IModalProps, IModalState> {
 
     shouldComponentUpdate(nextProps: IModalProps) {
         //kiedy jest pokazany lub zmienia stan z pokazanego w schowany
-        return nextProps.show || ( this.props.show && !nextProps.show );
+        return nextProps.show || (this.props.show && !nextProps.show);
     }
 
     render() {
 
         let p = this.props;
-
-        let modalProps = Object.assign({}, p) as any;
-        delete modalProps.showHideLink;
-        delete modalProps.positionOffset;
-        delete modalProps.recalculatePosition;
-        delete modalProps.children;
-        delete modalProps.top;
-        delete modalProps.right;
-        delete modalProps.bottom;
-        delete modalProps.title;
-
-        /*            aria-labelledby='modal-label'
-
-                    backdropClassName="w-modal-shadow"
-                    onHide={this.handleClose.bind(this)}
-                    onShow={this.handleShow.bind(this)}
-                    onEntered={() => console.log('entered')}
-                    {...modalProps}
-                    */
 
         return ReactDOM.createPortal(<div
             className={'w-modal-container ' + p.className || ""}
@@ -250,7 +241,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
             onClick={this.handleClose.bind(this)}
         >
 
-            <div className="w-modal" ref={el => this.modalBody = el} onClick={(e) => e.stopPropagation() }>
+            <div className="w-modal" ref={el => this.modalBody = el} onClick={(e) => e.stopPropagation()}>
                 {p.showHideLink &&
                 <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i
                     className="fa fa-close"></i></a>}
@@ -333,69 +324,57 @@ const confirm = (message, options: IConfirmConf = {}) => {
 };
 
 
-/*class Tooltip extends React.Component {
+class Tooltip extends React.Component<any, any> {
 
     static propTypes = {};
 
     constructor(props) {
         super(props);
         this.state = {
-            opened: false
+            brakeLeft: 0,
+            orientation: 'bottom left edge'
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-
-        if (nextProps.target) {
-            this.setState({opened: true});
-        } else {
-            this.setState({opened: false});
-        }
-        if (nextProps.opened) {
-            this.setState({opened: nextProps.opened});
-        }
+    componentDidMount() {
+        let targetPos = this.props.target().getBoundingClientRect();
+        let center = Math.round(/*targetPos.left -*/ (targetPos.width / 2));
+        this.setState({brakeLeft: center});
     }
 
-
     componentDidUpdate() {
-        if (this.state.opened) {
-            //ReactDOM.findDOMNode(this.refs.body).focus();
-        }
+        //let targetPos = this.props.target().getBoundingClientRect();
+        //let center = Math.round(targetPos.left - ( targetPos.width / 2 ));
+        //this.setState({brakeLeft: center});
     }
 
     handleBlur() {
         this.setState({opened: false});
     }
 
+    orientationChange(type) {
+        this.setState({orientation: 'top left edge'})
+    }
+
     render() {
         let p = this.props;
-        return (
-            <Overlay
-                show={this.state.opened}
-                onHide={() => this.setState({show: false})}
-                placement={p.placement}
-                container={p.container}
-                shouldUpdatePosition={true}
-                target={props => {
-                    return ReactDOM.findDOMNode(p.target);
-                }}
-            >
-                <div
-                    tabIndex={1}
-                    style={{display: this.state.opened ? 'block' : 'none', position: 'absolute'}}
-                    className="w-tooltip"
-                    autoFocus={true}
-                /!*onBlur={this.handleBlur.bind(this)}*!/
-                ref="body"
-            >
-                {this.props.children}
+        return (<Modal
+            show={true}
+            target={this.props.target}
+            shadow={false}
+            onHide={this.props.onHide}
+            className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
+            onOrientationChange={this.orientationChange.bind(this)}
+        >
+            <div className="w-toolbar-brake" style={{left: this.state.brakeLeft}}/>
+            <div className="w-toolbar-content">
+                {p.children}
             </div>
-    </Overlay>
-    )
-        ;
 
+
+        </Modal>);
     }
-}*/
+}
 
 
-export {Modal, Shadow, /*Tooltip,*/ confirm};
+export {Modal, Shadow, Tooltip, confirm};
