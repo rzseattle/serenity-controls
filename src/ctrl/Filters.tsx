@@ -362,7 +362,7 @@ class SwitchFilter extends AbstractFilter implements IFilterComponent {
             condition: '==',
             caption: this.props.caption,
             labelCaptionSeparator: ":",
-            label: this.props.config.content[this.state.value].label
+            label: this.props.config.content.filter(el => el.value == this.state.value)[0].label
         }
     }
 
