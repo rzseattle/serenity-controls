@@ -495,8 +495,8 @@ interface IDateProps extends IFieldProps {
     value: string
 }
 
-import '../../../react-dates/lib/css/_datepicker.css'
-import {IFieldChangeEvent, IFieldProps} from "frontend/src/ctrl/fields/Interfaces";
+import 'react-dates/lib/css/_datepicker.css'
+import {IFieldChangeEvent, IFieldProps} from "./fields/Interfaces";
 
 class Date extends React.Component<IDateProps, any> {
 

@@ -1,6 +1,6 @@
-import {IFilter} from "frontend/src/ctrl/filters/Intefaces";
+import {IFilter} from "../filters/Intefaces";
 import {NumericFilter, SelectFilter, TextFilter, DateFilter, SwitchFilter, ConnectionFilter} from '../Filters';
-import {Option} from "frontend/src/ctrl/fields/Interfaces";
+import {Option} from "../fields/Interfaces";
 
 export class FilterHelper {
     private data: IFilter;

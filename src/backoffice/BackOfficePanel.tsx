@@ -1,9 +1,9 @@
 import * as React from 'react'
-import {Arrow} from "../../../../data/cache/db/ts-definitions";
-import IUser = Arrow.Access.Models.IUser;
-import {Icon} from 'frontend/src/ctrl/Icon';
-import PanelComponentLoader from 'frontend/src/lib/PanelComponentLoader';
-import {Modal} from 'frontend/src/ctrl/Overlays';
+//import {Arrow} from "../../../../data/cache/db/ts-definitions";
+
+import {Icon} from '../ctrl/Icon';
+import PanelComponentLoader from '../lib/PanelComponentLoader';
+import {Modal} from '../ctrl/Overlays';
 
 
 import {observer} from "mobx-react";
@@ -29,7 +29,7 @@ interface IBackOfficePanelProps {
     appTitle: string
     requestURI: string
     appBaseURL: string
-    user: IUser
+    user: any
     appMenu: IMenuSection[]
     store: any
 

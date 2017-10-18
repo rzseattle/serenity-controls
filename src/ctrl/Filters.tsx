@@ -2,9 +2,9 @@ import * as React from "react";
 import * as ReactDOM from 'react-dom';
 import {IFilter, IFilterValue} from "./filters/Intefaces";
 
-import '../../../react-dates/lib/css/_datepicker.css'
-import {BConnectionsField} from "frontend/src/layout/BootstrapForm";
-import {Switch} from "frontend/src/ctrl/Fields";
+import 'react-dates/lib/css/_datepicker.css'
+import {BConnectionsField} from "../layout/BootstrapForm";
+import {Switch} from "./Fields";
 
 let moment;
 let locale;

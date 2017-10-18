@@ -1,7 +1,7 @@
 import * as React from "react";
-import {IFilterValue} from "frontend/src/ctrl/table/Interfaces";
-import {IFilter} from "frontend/src/ctrl/filters/Intefaces";
-import {FilterHelper} from "frontend/src/ctrl/filters/FilterHelper";
+import {IFilterValue} from "../table/Interfaces";
+import {IFilter} from "../filters/Intefaces";
+import {FilterHelper} from "../filters/FilterHelper";
 
 interface IFilterPanelProps {
     items: any[];

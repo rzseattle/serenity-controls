@@ -1,7 +1,7 @@
 import * as React from "react";
-import {Modal} from "frontend/src/ctrl/Overlays";
-import {Icon} from "frontend/src/ctrl/Icon";
-import {IFieldProps, IFieldChangeEvent} from "frontend/src/ctrl/fields/Interfaces";
+import {Modal} from "../Overlays";
+import {Icon} from "../Icon";
+import {IFieldProps, IFieldChangeEvent} from "../fields/Interfaces";
 
 interface IConnectionElement {
     value: string | number;

@@ -5,8 +5,11 @@ declare var PRODUCTION: boolean;
 import * as React from "react";
 import * as Notifications from "react-notification-system";
 import Comm from './Comm'
-import {DebugTool} from '../utils/DebugTool'
-import *  as Views from '../../../../build/js/tmp/components.include';
+import {DebugTool} from "../utils/DebugTool"
+
+//declare var Views: any;
+import *  as Views from "../../../../build/js/tmp/components.include";
+
 import {observer} from "mobx-react";
 
 //console.log(Views);
