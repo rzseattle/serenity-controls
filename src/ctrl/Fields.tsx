@@ -1,6 +1,6 @@
 import * as React from "react";
 //import Inputmask from 'inputmask';
-import * as Dropzone from 'react-dropzone';
+import  Dropzone from 'react-dropzone';
 import {ConnectionsField} from './fields/ConnectionsField'
 
 
