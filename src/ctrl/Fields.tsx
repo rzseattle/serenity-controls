@@ -492,7 +492,8 @@ let datePicker;
 let moment;
 
 interface IDateProps extends IFieldProps {
-    value: string
+    value: string,
+    placeholder?: string;
 }
 
 import 'react-dates/lib/css/_datepicker.css'

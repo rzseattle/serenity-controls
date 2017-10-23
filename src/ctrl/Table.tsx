@@ -701,7 +701,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                     </tbody>
 
                     {this.props.showFooter && <tfoot>
-                    {this.state.firstLoaded && this.state.data.length > 0 &&
+                    {this.state.firstLoaded  &&
                     <Footer
                         columns={columns}
                         count={this.state.countAll}

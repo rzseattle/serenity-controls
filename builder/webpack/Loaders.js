@@ -29,8 +29,8 @@ var getLoaders = function (production) {
                         'react-hot-loader/webpack',
                         {
                             loader: 'awesome-typescript-loader', query: {
-                            configFileName: path.resolve(__dirname, "./tsconfig.json")
-                        }
+                                configFileName: path.resolve(__dirname, "./tsconfig.json")
+                            }
                         }
                     ]
                 },
@@ -60,8 +60,13 @@ var getLoaders = function (production) {
                         }
                     ]
                 },
-                {test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff&name=/cache/[hash].[ext]'},
-                {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader?name=/cache/[hash].[ext]'}
+                {
+                    test: /\.(ttf|eot|svg|woff|woff2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                    loader: 'url-loader',
+                    options: {
+                        name: "name=/cache/[hash].[ext]"
+                    }
+                }
             ]
 
         }
@@ -74,7 +79,7 @@ var getLoaders = function (production) {
                 loader: ExtractTextPlugin.extract(
                     [
                         {loader: 'css-loader', query: {sourceMap: true}},
-                        'resolve-url-loader',
+                        {loader: 'css-loader', query: {sourceMap: true}},
                         {
                             loader: 'sass-loader',
                             query: {
@@ -88,7 +93,9 @@ var getLoaders = function (production) {
             }
             //postcss-loader!
         );
+
     } else {
+
 
         loaders.loaders.push(
             {
@@ -96,7 +103,7 @@ var getLoaders = function (production) {
                 loaders: [
                     'style-loader',
                     {loader: 'css-loader', query: {sourceMap: true}},
-                    'resolve-url-loader',
+                    {loader: 'resolve-url-loader', query: {sourceMap: true}},
                     {
                         loader: 'sass-loader',
                         query: {

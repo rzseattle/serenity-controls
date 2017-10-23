@@ -24,6 +24,7 @@ interface IWithBootstrapFormFieldProps {
     maxItems?: number
     searchResultProvider?: any
     editable?: boolean
+    placeholder?: string
 
 
 }
@@ -66,11 +67,11 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
                 field = <Field {...fieldProps} />;
             }
             let errors = [];
-            if (props.errors ) {
+            if (props.errors) {
 
-                if(!Array.isArray(props.errors)) {
+                if (!Array.isArray(props.errors)) {
                     errors = [props.errors];
-                }else{
+                } else {
                     errors = props.errors;
                 }
             }
@@ -184,6 +185,8 @@ interface IBFormProps {
     children: { (formConf: any): any }
     formErrors?: string[]
     fieldErrors?: any
+    errors?: any
+    useFormTag?: boolean
 }
 
 interface IBFormState {
@@ -204,6 +207,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         editable: true,
         fieldErrors: {},
         formErrors: [],
+        useFormTag: true,
     };
 
     constructor(props) {
@@ -264,12 +268,19 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             this.setState({loading: nextProps.loading});
         }
 
+
+
         if (nextProps.fieldErrors) {
             this.setState({fieldErrors: nextProps.fieldErrors});
         }
         if (nextProps.formErrors) {
             this.setState({formErrors: nextProps.formErrors});
         }
+
+        if (nextProps.errors) {
+            this.setState({fieldErrors: nextProps.errors.fieldErrors, formErrors: nextProps.errors.errors});
+        }
+
     }
 
     componentDidMount() {
@@ -326,7 +337,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         let get;
         try {
             get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
-        }catch {
+        } catch {
             console.error("try{ return obj." + dotNotation + "; }catch(e){ return undefined;}");
         }
 
@@ -442,9 +453,10 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             //classes.push('form-inline');
         }
 
+        const Tag = this.props.useFormTag ? "form" : "div";
 
         return (
-            <form ref={(form) => this.formTag = form} className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
+            <Tag ref={(form) => this.formTag = form} className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
 
                 {this.state.formErrors.length > 0 &&
                 <ul className="bg-danger ">
@@ -453,7 +465,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 {this.props.children(this.applyToField.bind(this))}
 
                 <Shadow {...{visible: this.state.loading, loader: true, container: () => this.formTag}} />
-            </form>
+            </Tag>
         )
     }
 }
