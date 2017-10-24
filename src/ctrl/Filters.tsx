@@ -5,6 +5,7 @@ import {IFilter, IFilterValue} from "./filters/Intefaces";
 import 'react-dates/lib/css/_datepicker.css'
 import {BConnectionsField} from "../layout/BootstrapForm";
 import {Switch} from "./Fields";
+import {Icon} from "frontend/src/ctrl/Icon";
 
 let moment;
 let locale;
@@ -200,18 +201,18 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
                 <div className="w-filter-date-exists">
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'}, this.handleChange)} type="checkbox"/> <i className="fa fa-arrows-h"></i> Według wybou
+                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'}, this.handleChange)} type="checkbox"/> <Icon name={"ScrollUpDown"} /> Według wybou
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'}, this.handleChange)} type="checkbox"/> <i className="fa fa-check"></i> Data ustalona
+                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'}, this.handleChange)} type="checkbox"/> <Icon name={"CheckMark"} />  Data ustalona
                         </label>
                     </div>
 
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'}, this.handleChange)} type="checkbox"/> <i className="fa fa-times"></i> Brak daty
+                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'}, this.handleChange)} type="checkbox"/> <Icon name={"Clear"} />  Brak daty
                         </label>
                     </div>
                 </div>

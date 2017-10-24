@@ -79,7 +79,7 @@ var getLoaders = function (production) {
                 loader: ExtractTextPlugin.extract(
                     [
                         {loader: 'css-loader', query: {sourceMap: true}},
-                        {loader: 'css-loader', query: {sourceMap: true}},
+                        {loader: 'resolve-url-loader', query: {sourceMap: true}},
                         {
                             loader: 'sass-loader',
                             query: {
