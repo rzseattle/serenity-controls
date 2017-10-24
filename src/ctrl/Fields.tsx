@@ -1,6 +1,6 @@
 import * as React from "react";
 //import Inputmask from 'inputmask';
-import  Dropzone from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 import {ConnectionsField} from './fields/ConnectionsField'
 
 
@@ -121,7 +121,9 @@ class Text extends React.Component<ITextProps, any> {
         const props = this.props;
         if (!props.editable) {
             return <div
-                className="w-field-presentation w-field-presentation-text">{props.value}</div>;
+                className={"w-field-presentation w-field-presentation-text " + (props.value?"":"w-field-presentation-empty")}
+            >{props.value}
+            </div>;
         }
 
         return (
@@ -618,7 +620,7 @@ class File extends React.Component<IFileProps, any> {
                     </span>
 
                 </Dropzone>
-                {/*{props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
+                {props.value && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
                     <div>
                         <a href={el.preview || el.path} target="_blank">
                             <div className="w-file-dropzone-up-list-icon">
@@ -631,7 +633,7 @@ class File extends React.Component<IFileProps, any> {
                                 className={'fa fa-' + (el.preview ? 'upload' : 'check')}></i></div>
                         </a>
                     </div>
-                </div>)}</div>}*/}
+                </div>)}</div>}
 
             </div>
         );

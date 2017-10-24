@@ -55,7 +55,7 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
             let field;
 
             let fieldProps = {...props, className: className}
-            if (this.props.suffix || this.props.prefix) {
+            if ((this.props.suffix || this.props.prefix) && this.props.editable) {
                 field =
                     <div className="input-group">
                         {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
@@ -86,7 +86,7 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
                             {props.help ?
                                 <span className="help-block">{props.help} </span>
                                 : ''}
-                            {props.errors ?
+                            {props.errors && this.props.editable ?
                                 <span className="help-block">{errors.join(', ')} </span>
 
                                 : ''}
@@ -103,7 +103,7 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
                         {props.help ?
                             <span className="help-block">{props.help} </span>
                             : ''}
-                        {props.errors ?
+                        {props.errors && this.props.editable ?
                             <span className="help-block">{errors.join(', ')} </span>
 
                             : ''}
@@ -269,7 +269,6 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
 
-
         if (nextProps.fieldErrors) {
             this.setState({fieldErrors: nextProps.fieldErrors});
         }
@@ -278,7 +277,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         if (nextProps.errors) {
-            this.setState({fieldErrors: nextProps.errors.fieldErrors, formErrors: nextProps.errors.errors});
+            this.setState({fieldErrors: nextProps.errors.fieldErrors || {}, formErrors: nextProps.errors.errors || []});
         }
 
     }
