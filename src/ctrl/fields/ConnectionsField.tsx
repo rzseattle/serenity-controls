@@ -132,6 +132,10 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
 
     public handleInputKeyDown(e) {
 
+        e.stopPropagation();
+
+        e.nativeEvent.stopImmediatePropagation();
+
         if (e.keyCode == 38 || e.keyCode == 40) {
             e.preventDefault();
             const changed = this.state.selectedIndex + (e.keyCode == 38 ? -1 : 1);
@@ -141,6 +145,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         }
         if (e.keyCode == 13) {
             this.handleSelection(this.state.searchResult[this.state.selectedIndex]);
+            e.preventDefault();
         }
 
         // usuwanie ostatniego brzez delete
