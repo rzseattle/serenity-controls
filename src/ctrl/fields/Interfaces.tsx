@@ -1,6 +1,6 @@
 export interface Option {
-    value: string;
-    label: string;
+    value: string | number;
+    label: string | number;
 }
 
 export interface IFieldProps {

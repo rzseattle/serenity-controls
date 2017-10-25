@@ -240,7 +240,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            value: nextProps.value ? nextProps.value.value : ""
+            value: nextProps.value ? nextProps.value.value : this.props.config._default
         })
     }
 

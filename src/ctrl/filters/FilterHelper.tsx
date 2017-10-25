@@ -46,13 +46,14 @@ export class FilterHelper {
         });
     }
 
-    static select(field, caption, content: Option[], multi: boolean = false) {
+    static select(field, caption, content: Option[], multi: boolean = false, _default = null) {
         return new FilterHelper({
             field: field,
             caption: caption,
             config: {
                 multiselect: multi,
-                content: content
+                content: content,
+                _default: _default
             },
             component: SelectFilter
         });
