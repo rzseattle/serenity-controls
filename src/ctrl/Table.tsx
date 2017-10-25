@@ -8,6 +8,8 @@ import Tbody from './table/Tbody'
 import Footer from './table/Footer'
 import {IColumnData, IFilterValue, IOrder} from './table/Interfaces'
 import {EmptyResult, Error, Loading} from './table/placeholders'
+import {Icon} from "frontend/src/ctrl/Icon";
+import {Tooltip} from "frontend/src/ctrl/Overlays";
 
 
 interface IDataQuery {
@@ -79,7 +81,8 @@ interface ITableState {
     columns: IColumnData[],
     //bodyHeight: this.props.initHeight,
     allChecked: boolean,
-    selection: Array<any>
+    selection: Array<any>,
+    tooltipData: any
 }
 
 const deepCopy = (obj) => {
@@ -144,6 +147,7 @@ class Table extends React.Component<ITableProps, ITableState> {
     private xhrConnection: XMLHttpRequest;
     private hashCode: string;
     public state: ITableState;
+    private tooltipTimeout: number;
 
     constructor(props) {
 
@@ -172,7 +176,8 @@ class Table extends React.Component<ITableProps, ITableState> {
             columns: columns,
             //bodyHeight: this.props.initHeight,
             allChecked: false,
-            selection: []
+            selection: [],
+            tooltipData: null
         };
 
         //helpers
@@ -187,6 +192,8 @@ class Table extends React.Component<ITableProps, ITableState> {
             }, 0);
         }
         this.hashCode = hashCode(this.props.controlKey + (window.CONTROLS_BASE_LOCATION != undefined ? window.CONTROLS_BASE_LOCATION : window.location.href));
+
+        this.tooltipTimeout = null;
     }
 
 
@@ -238,6 +245,8 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+
+        return true;
         let should = false;
 
         if (!PRODUCTION) {
@@ -616,6 +625,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             'styleTemplate': () => [],
             'template': null,
             'default': '',
+            'header': {},
             'events': {
                 'click': [],
                 'enter': [],
@@ -678,8 +688,25 @@ class Table extends React.Component<ITableProps, ITableState> {
                                 <th key={index} onClick={this.headClicked.bind(this, index)}
                                     style={{width: el.width}}
                                     className={classes.join(' ')}
+                                    onMouseEnter={(e) => {
+                                        if (el.header.tooltip) {
+                                            e.persist();
+
+                                            clearTimeout(this.tooltipTimeout);
+                                            this.tooltipTimeout = setTimeout(() => {
+                                                this.setState({tooltipData: {target: e.target, text: el.header.tooltip}});
+                                            }, 50);
+                                        }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (el.header.tooltip) {
+                                            clearTimeout(this.tooltipTimeout);
+                                            this.setState({tooltipData: null});
+                                        }
+                                    }}
                                 >
                                     {el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}
+                                    {el.header.icon && <Icon name={el.header.icon}/>}
                                     {el.caption}
                                     {el.filter.length > 0 ? <Component showApply={true} onApply={this.handleFilterChanged.bind(this)}/> : ''}
                                 </th>)
@@ -723,6 +750,13 @@ class Table extends React.Component<ITableProps, ITableState> {
                 </table>
 
                 {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
+                {this.state.tooltipData != null && <Tooltip
+                    target={() => this.state.tooltipData.target}
+                    orientation={"top"}
+                    layer={false}
+                >
+                    {this.state.tooltipData.text}
+                </Tooltip>}
             </div>
         )
     }

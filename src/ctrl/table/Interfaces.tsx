@@ -20,6 +20,10 @@ export interface IColumnData {
     template?: ICellTemplate,
     default?: string,
     order?: string
+    header?: {
+        icon?: string,
+        tooltip?: string,
+    }
     events?: {
         click?: Array<IEventCallback>,
         mouseUp?: Array<IEventCallback>,

@@ -48,6 +48,7 @@ interface IModalProps {
     showHideLink?: boolean,
     title?: string,
     shadow?: boolean,
+    layer?: boolean,
     top?: string | number,
     left?: string | number,
     bottom?: string | number,
@@ -75,6 +76,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
         positionOffset: 5,
         recalculatePosition: true,
         shadow: true,
+        layer: true
     };
 
     constructor(props) {
@@ -233,7 +235,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
         let p = this.props;
 
         return ReactDOM.createPortal(<div
-            className={'w-modal-container ' + p.className || ""}
+            className={(this.props.layer ? 'w-modal-container ' : '') + p.className || ""}
             style={{
                 display: (this.props.show ? "block" : "none"),
                 backgroundColor: (this.props.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent"),
@@ -326,7 +328,10 @@ const confirm = (message, options: IConfirmConf = {}) => {
 
 class Tooltip extends React.Component<any, any> {
 
-    static propTypes = {};
+    public static defaultProps = {
+        layer: true
+    }
+
 
     constructor(props) {
         super(props);
@@ -362,6 +367,7 @@ class Tooltip extends React.Component<any, any> {
             show={true}
             target={this.props.target}
             shadow={false}
+            layer={this.props.layer}
             onHide={this.props.onHide}
             className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
             onOrientationChange={this.orientationChange.bind(this)}

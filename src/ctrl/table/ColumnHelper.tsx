@@ -16,6 +16,7 @@ export class ColumnHelper {
                 'mouseUp': [],
             },
             filter: [],
+            header: {},
             ...initData
         };
     }
@@ -181,6 +182,15 @@ export class ColumnHelper {
 
     width(x: any): ColumnHelper {
         this.data.width = x;
+        return this;
+    }
+
+    headerTooltip(text: string){
+        this.data.header.tooltip = text;
+        return this;
+    }
+    headerIcon(iconName: string){
+        this.data.header.icon = iconName;
         return this;
     }
 

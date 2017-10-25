@@ -2,6 +2,9 @@ import * as React from "react";
 
 export default (props) => {
 
+
+    console.log("tbody updating");
+
     const packValue = (val, column, row) => {
         let templateResult = false;
         if (column.template) {
