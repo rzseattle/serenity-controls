@@ -193,7 +193,12 @@ class Table extends React.Component<ITableProps, ITableState> {
     componentWillMount() {
 
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
-            this.setState({...this.state, ...JSON.parse(window.localStorage[this.hashCode]), firstLoaded: false}, () => {
+
+            const local = JSON.parse(window.localStorage[this.hashCode]);
+            let filters = deepCopy(this.state.filters);
+            //for controlable filters u cant overwrite them when table is mounting
+            filters = {...filters, ...local.filters};
+            this.setState({...this.state, ...local, firstLoaded: false, filters}, () => {
                 if (this.props.onFiltersChange) {
                     this.props.onFiltersChange(deepCopy(this.state.filters));
                 }
@@ -418,7 +423,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 result.then((data) => {
                     setStateAfterLoad(data, () => {
                         if (data.decorator != undefined) {
-                            let result = data.decorator(this.getRequestData(), deepCopy(data) );
+                            let result = data.decorator(this.getRequestData(), deepCopy(data));
                             if (result instanceof Promise) {
                                 result.then((data) => {
                                     setStateAfterLoad(data);
@@ -701,7 +706,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                     </tbody>
 
                     {this.props.showFooter && <tfoot>
-                    {this.state.firstLoaded  &&
+                    {this.state.firstLoaded &&
                     <Footer
                         columns={columns}
                         count={this.state.countAll}
