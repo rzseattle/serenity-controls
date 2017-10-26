@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from 'react-dom';
 import ResizeObserver from 'resize-observer-polyfill';
+import {Icon} from "frontend/src/ctrl/Icon";
 
 //import * as TweenLite from 'gsap/TweenLite'
 
@@ -245,8 +246,9 @@ class Modal extends React.Component<IModalProps, IModalState> {
 
             <div className="w-modal" ref={el => this.modalBody = el} onClick={(e) => e.stopPropagation()}>
                 {p.showHideLink &&
-                <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}> <i
-                    className="fa fa-close"></i></a>}
+                <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}>
+                    <Icon name="ChromeClose" />
+                </a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
                 {this.props.show ? p.children : null}
             </div>
