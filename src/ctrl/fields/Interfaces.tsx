@@ -3,6 +3,11 @@ export interface Option {
     label: string | number;
 }
 
+export interface IOption {
+    value: string | number;
+    label: string | number;
+}
+
 export interface IFieldProps {
     className?: string,
     name?: string,

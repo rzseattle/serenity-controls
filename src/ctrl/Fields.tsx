@@ -3,6 +3,11 @@ import * as React from "react";
 import Dropzone from 'react-dropzone';
 import {ConnectionsField} from './fields/ConnectionsField'
 
+import * as Selectivity from 'selectivity/react';
+import 'react-dates/lib/css/_datepicker.css'
+import 'selectivity/styles/selectivity-react.css'
+import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
+
 
 let checkIncludes = (options, value) => {
 
@@ -23,7 +28,7 @@ interface ISelectChangeEvent extends IFieldChangeEvent {
 }
 
 interface ISelectProps extends IFieldProps {
-    options: { value: string | number, label: string }[] | { [key: string]: string },
+    options: IOption[] | { [key: string]: string },
     onChange?: { (changeData: ISelectChangeEvent): any },
     value: string | number
 }
@@ -57,32 +62,69 @@ class Select extends React.Component<ISelectProps, any> {
                     }
                 }
                 return <div
-                    className="w-field-presentation w-field-presentation-select">{props.value}</div>;
+                    className={"w-field-presentation w-field-presentation-select " + (props.value ? "" : "w-field-presentation-empty")}
+
+                >{props.value}</div>;
             } else {
                 return <div
-                    className="w-field-presentation w-field-presentation-select">{props.options[props.value]}</div>;
+                    className={"w-field-presentation w-field-presentation-select " + (props.value ? "" : "w-field-presentation-empty")}
+
+                >{props.options[props.value]}</div>;
             }
         }
 
+
+        let options = props.options
+        if (!Array.isArray(props.options)) {
+            options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
+        }
         return (
-            <select
-                className={props.className}
-                name={props.name}
-                onChange={this.handleOnChange.bind(this)}
-                value={props.value === null ? '' : props.value}
-                disabled={props.disabled}
-                style={props.style}
-            >
-                {Array.isArray(props.options) ?
-                    props.options.map(option => {
-                        return <option key={option.value} value={option.value}> {option.label}</option>;
-                    })
-                    :
-                    Object.entries(props.options).map(([value, label]) => {
-                        return <option key={value} value={value}> {label}</option>;
-                    })
-                }
-            </select>
+            <div>
+
+                <Selectivity.React
+                    allowClear={false}
+
+                    items={(options as IOption[]).map((e) => ({id: e.value, text: e.label}))}
+
+                    placeholder="Wybierz"
+                    positionDropdown={(dropdown, select) => {
+
+                        var dim = select.getBoundingClientRect();
+                        dropdown.style.width = dim.width + "px";
+
+                    }}
+
+                    onChange={(e) => {
+                        if (this.props.onChange) {
+                            this.props.onChange({
+                                name: this.props.name,
+                                type: 'select',
+                                value: e.value,
+                                selectedIndex: null,
+                                event: e
+                            });
+                        }
+                    }}
+                />
+                {/*<select
+                    className={props.className}
+                    name={props.name}
+                    onChange={this.handleOnChange.bind(this)}
+                    value={props.value === null ? '' : props.value}
+                    disabled={props.disabled}
+                    style={props.style}
+                >
+                    {Array.isArray(props.options) ?
+                        props.options.map(option => {
+                            return <option key={option.value} value={option.value}> {option.label}</option>;
+                        })
+                        :
+                        Object.entries(props.options).map(([value, label]) => {
+                            return <option key={value} value={value}> {label}</option>;
+                        })
+                    }
+                </select>*/}
+            </div>
         );
     }
 }
@@ -121,7 +163,7 @@ class Text extends React.Component<ITextProps, any> {
         const props = this.props;
         if (!props.editable) {
             return <div
-                className={"w-field-presentation w-field-presentation-text " + (props.value?"":"w-field-presentation-empty")}
+                className={"w-field-presentation w-field-presentation-text " + (props.value ? "" : "w-field-presentation-empty")}
             >{props.value}
             </div>;
         }
@@ -498,9 +540,6 @@ interface IDateProps extends IFieldProps {
     placeholder?: string;
 }
 
-import 'react-dates/lib/css/_datepicker.css'
-import {IFieldChangeEvent, IFieldProps} from "./fields/Interfaces";
-
 class Date extends React.Component<IDateProps, any> {
 
 
@@ -620,7 +659,7 @@ class File extends React.Component<IFileProps, any> {
                     </span>
 
                 </Dropzone>
-                {props.value&& Array.isArray(props.value) && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
+                {props.value && Array.isArray(props.value) && <div className="w-file-dropzone-up-list">{props.value.map(el => <div>
                     <div>
                         <a href={el.preview || el.path} target="_blank">
                             <div className="w-file-dropzone-up-list-icon">
