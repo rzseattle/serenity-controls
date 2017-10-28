@@ -8,8 +8,8 @@ import Tbody from './table/Tbody'
 import Footer from './table/Footer'
 import {IColumnData, IFilterValue, IOrder} from './table/Interfaces'
 import {EmptyResult, Error, Loading} from './table/placeholders'
-import {Icon} from "frontend/src/ctrl/Icon";
-import {Tooltip} from "frontend/src/ctrl/Overlays";
+import {Icon} from "./Icon";
+import {Tooltip} from "./Overlays";
 
 
 interface IDataQuery {
@@ -246,7 +246,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
     shouldComponentUpdate(nextProps, nextState) {
 
-        return true;
+
         let should = false;
 
         if (!PRODUCTION) {

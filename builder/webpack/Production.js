@@ -18,20 +18,19 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, AN
 
         new webpack.DefinePlugin({
             PRODUCTION: JSON.stringify(true),
-            'process.env': {
-                NODE_ENV: JSON.stringify('production')
-            }
+            'process.env.NODE_ENV': JSON.stringify('production')
+
         }),
 
 
-        new AssetsPlugin({path: PATH}),
+        new AssetsPlugin({path: PATH, update: true}),
    /*     new CleanWebpackPlugin(['dist'], {
             root: PATH,
             verbose: true,
             dry: false
         }),*/
         new webpack.ContextReplacementPlugin(/moment[\\/]locale$/, /^\.\/(pl)$/),
-        //
+
         new webpack.optimize.UglifyJsPlugin({comments: false, minimize: true, sourceMap: true}),
         new webpack.optimize.OccurrenceOrderPlugin()
 

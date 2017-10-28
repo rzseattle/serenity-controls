@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from 'react-dom';
 import ResizeObserver from 'resize-observer-polyfill';
-import {Icon} from "frontend/src/ctrl/Icon";
+import {Icon} from "./Icon";
 
 //import * as TweenLite from 'gsap/TweenLite'
 

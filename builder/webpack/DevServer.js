@@ -69,7 +69,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         new webpack.NoEmitOnErrorsPlugin(),
         // do not emit compiled assets that include errors
         new webpack.DefinePlugin({
-            PRODUCTION: JSON.stringify(false)
+            PRODUCTION: JSON.stringify(false),
+            'process.env.NODE_ENV': JSON.stringify('development')
         })
 
 

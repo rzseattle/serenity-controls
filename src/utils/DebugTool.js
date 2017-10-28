@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {TabPane, Tabs} from 'frontend/src/ctrl/Tabs';
+import {TabPane, Tabs} from '../ctrl/Tabs';
 import JSONTree from 'react-json-tree';
-import {Modal} from 'frontend/src/ctrl/Overlays';
+import {Modal} from '../ctrl/Overlays';
 import ErrorReporter from '../lib/ErrorReporter';
 import {ViewFileMap} from '../../../../build/js/tmp/components.include';
 
