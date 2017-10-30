@@ -178,7 +178,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
                     left = containerSize.width - data.width - this.props.positionOffset;
                 }
                 let top = targetData.top + targetData.height + this.props.positionOffset;
-                if (top + data.height > containerSize.height) {
+                if (top + data.height > containerSize.height || (this.props.orientation && this.props.orientation.indexOf("top") != -1)) {
                     //top = containerSize.height - data.height - this.props.positionOffset;
                     top = targetData.top - data.height - this.props.positionOffset;
                     if (this.props.onOrientationChange) {
@@ -306,6 +306,29 @@ interface IConfirmConf {
     target?: { (): HTMLElement },
 }
 
+
+
+export const tooltip = (content, options) => {
+    let props = {...options};
+
+    let parent =  document.body;
+
+    const wrapper = parent.appendChild(document.createElement('div'));
+    let cleanup = () => {
+        ReactDOM.unmountComponentAtNode(wrapper);
+        wrapper.remove();
+    };
+
+    const component = ReactDOM.render(<Tooltip {...props} >
+        <div>
+            {content}
+        </div>
+    </Tooltip>, wrapper);
+
+
+    return cleanup;
+};
+
 const confirm = (message, options: IConfirmConf = {}) => {
     let props = {...options};
 
@@ -331,7 +354,8 @@ const confirm = (message, options: IConfirmConf = {}) => {
 class Tooltip extends React.Component<any, any> {
 
     public static defaultProps = {
-        layer: true
+        layer: true,
+        orientation: 'bottom left edge'
     }
 
 
@@ -339,7 +363,7 @@ class Tooltip extends React.Component<any, any> {
         super(props);
         this.state = {
             brakeLeft: 0,
-            orientation: 'bottom left edge'
+            orientation: this.props.orientation
         };
     }
 
@@ -373,6 +397,7 @@ class Tooltip extends React.Component<any, any> {
             onHide={this.props.onHide}
             className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
             onOrientationChange={this.orientationChange.bind(this)}
+            orientation={this.state.orientation}
         >
             <div className="w-toolbar-brake" style={{left: this.state.brakeLeft}}/>
             <div className="w-toolbar-content">

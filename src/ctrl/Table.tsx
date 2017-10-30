@@ -10,6 +10,8 @@ import {IColumnData, IFilterValue, IOrder} from './table/Interfaces'
 import {EmptyResult, Error, Loading} from './table/placeholders'
 import {Icon} from "./Icon";
 import {Tooltip} from "./Overlays";
+import {deepCopy, deepIsEqual} from "frontend/src/lib/JSONTools";
+import Thead from "frontend/src/ctrl/table/Thead";
 
 
 interface IDataQuery {
@@ -85,51 +87,6 @@ interface ITableState {
     tooltipData: any
 }
 
-const deepCopy = (obj) => {
-    return JSON.parse(JSON.stringify(obj));
-}
-
-const deepIsEqual = (a, b) => {
-    if (a === b) return true;
-
-    var arrA = Array.isArray(a)
-        , arrB = Array.isArray(b)
-        , i;
-
-    if (arrA && arrB) {
-        if (a.length != b.length) return false;
-        for (i = 0; i < a.length; i++)
-            if (!deepIsEqual(a[i], b[i])) return false;
-        return true;
-    }
-
-    if (arrA != arrB) return false;
-
-    if (a && b && typeof a === 'object' && typeof b === 'object') {
-        var keys = Object.keys(a);
-        if (keys.length !== Object.keys(b).length) return false;
-
-        var dateA = a instanceof Date
-            , dateB = b instanceof Date;
-        if (dateA && dateB) return a.getTime() == b.getTime();
-        if (dateA != dateB) return false;
-
-        var regexpA = a instanceof RegExp
-            , regexpB = b instanceof RegExp;
-        if (regexpA && regexpB) return a.toString() == b.toString();
-        if (regexpA != regexpB) return false;
-
-        for (i = 0; i < keys.length; i++)
-            if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
-
-        for (i = 0; i < keys.length; i++)
-            if (!deepIsEqual(a[keys[i]], b[keys[i]])) return false;
-
-        return true;
-    }
-
-    return false;
-}
 
 class Table extends React.Component<ITableProps, ITableState> {
 
@@ -244,21 +201,9 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-
+    /*shouldComponentUpdate(nextProps, nextState) {
 
         let should = false;
-
-        if (!PRODUCTION) {
-            console.log("[Table] Checking update ...");
-        }
-
-        if (!deepIsEqual(this.state.data, nextState.data)) {
-            if (!PRODUCTION) {
-                console.log("[Table] Data diference")
-            }
-            return true
-        }
 
         if (!deepIsEqual(this.state.filters, nextState.filters)) {
             if (!PRODUCTION) {
@@ -336,7 +281,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
 
         return should;
-    }
+    }*/
 
     componentWillReceiveProps(nextProps) {
 
@@ -458,7 +403,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
     handleFilterChanged(filterValue: IFilterValue) {
 
-        console.log(filterValue);
+
         this.state.filters[filterValue.field] = filterValue;
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
         if (this.props.onFiltersChange) {
@@ -481,9 +426,6 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     headClicked(index, e) {
-        if (e.target.tagName != 'TH') {
-            return;
-        }
 
         let column = this.state.columns.filter(c => c !== null && c.display === true)[index];
 
@@ -650,8 +592,7 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     render() {
-
-        const columns = this.state.columns;
+        const columns = deepCopy(this.state.columns);
 
         return (
             <div className={'w-table ' + (this.state.loading ? 'w-table-loading' : '')} tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
@@ -665,54 +606,17 @@ class Table extends React.Component<ITableProps, ITableState> {
                     />
                 </div>
 
-                <table className={this.state.fixedLayout ? 'w-table-fixed' : ''}>
-                    {this.props.showHeader && <thead>
-                    <tr>
-                        {this.props.selectable ?
-                            <th className="w-table-selection-header" onClick={this.handleCheckClicked.bind(this, 'all')}>
-                                <input type="checkbox" checked={this.state.allChecked}/>
-                            </th>
-                            : null
-                        }
-                        {columns.filter(el => el !== null && el.display === true).map((el, index) => {
+                <table>
+                    {this.props.showHeader && <Thead
+                        selectable={this.props.selectable}
+                        columns={columns}
+                        order={deepCopy(this.state.order)}
+                        filters={deepCopy(this.state.filters)}
+                        onFilterChanged={this.handleFilterChanged.bind(this)}
+                        onCellClicked={this.headClicked.bind(this)}
+                        onCheckAllClicked={this.handleCheckClicked.bind(this, 'all')}
 
-                            const Component = el.filter.length > 0 ? withFilterOpenLayer(el.filter) : null;
-                            let classes = []
-                            if (this.state.order[el.field] !== undefined) {
-                                classes.push('w-table-sorted w-table-sorted-' + this.state.order[el.field].dir)
-                            }
-                            if (this.state.filters[el.field] !== undefined) {
-                                classes.push('w-table-filtered')
-                            }
-                            return (
-                                <th key={index} onClick={this.headClicked.bind(this, index)}
-                                    style={{width: el.width}}
-                                    className={classes.join(' ')}
-                                    onMouseEnter={(e) => {
-                                        if (el.header.tooltip) {
-                                            e.persist();
-
-                                            clearTimeout(this.tooltipTimeout);
-                                            this.tooltipTimeout = setTimeout(() => {
-                                                this.setState({tooltipData: {target: e.target, text: el.header.tooltip}});
-                                            }, 50);
-                                        }
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        if (el.header.tooltip) {
-                                            clearTimeout(this.tooltipTimeout);
-                                            this.setState({tooltipData: null});
-                                        }
-                                    }}
-                                >
-                                    {el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}
-                                    {el.header.icon && <Icon name={el.header.icon}/>}
-                                    {el.caption}
-                                    {el.filter.length > 0 ? <Component showApply={true} onApply={this.handleFilterChanged.bind(this)}/> : ''}
-                                </th>)
-                        })}
-                    </tr>
-                    </thead>}
+                    />}
                     <tbody>
                     {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
                     {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
@@ -750,13 +654,6 @@ class Table extends React.Component<ITableProps, ITableState> {
                 </table>
 
                 {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
-                {this.state.tooltipData != null && <Tooltip
-                    target={() => this.state.tooltipData.target}
-                    orientation={"top"}
-                    layer={false}
-                >
-                    {this.state.tooltipData.text}
-                </Tooltip>}
             </div>
         )
     }

@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { IColumnData, IEventCallback, ICellTemplate } from './Interfaces';
-import { Option } from '../fields/Interfaces';
-import { NumericFilter, SelectFilter, TextFilter, DateFilter, SwitchFilter } from '../Filters';
+import {ICellTemplate, IColumnData, IEventCallback} from './Interfaces';
+import {Option} from '../fields/Interfaces';
+import {DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter} from '../Filters';
+import {IFilter} from 'frontend/src/ctrl/filters/Intefaces';
 
 
 export class ColumnHelper {
@@ -50,7 +51,17 @@ export class ColumnHelper {
         return new ColumnHelper({
             field: field,
             caption: caption,
-            template: value => options[value],
+            template: value => {
+                if (Array.isArray(options)) {
+                    let res = options.filter(e => e.value == value);
+                    if (res.length > 0) {
+                        return res[0].label;
+                    }
+                    return "---";
+                } else {
+                    return options[value]
+                }
+            },
             filter: [{
                 field: field,
                 component: SelectFilter,
@@ -79,13 +90,13 @@ export class ColumnHelper {
 
         return ColumnHelper.text('id', '')
             .onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
-                let url = urlResolver(row, column, event);
-                if (e.button == 1) {
-                    window.open(url);
-                } else {
-                    window.location.href = url;
+                    let url = urlResolver(row, column, event);
+                    if (e.button == 1) {
+                        window.open(url);
+                    } else {
+                        window.location.href = url;
+                    }
                 }
-            }
             )
 
     }
@@ -136,7 +147,10 @@ export class ColumnHelper {
                 field: field,
                 component: SwitchFilter,
                 config: {
-                    content: { 0: 'Nie', 1: 'Tak' },
+                    content: [
+                        {value: 0, label: "Nie"},
+                        {value: 1, label: "Tak"},
+                    ],
                 }
             }]
 
@@ -185,12 +199,19 @@ export class ColumnHelper {
         return this;
     }
 
-    headerTooltip(text: string){
+    headerTooltip(text: string) {
         this.data.header.tooltip = text;
         return this;
     }
-    headerIcon(iconName: string){
+
+    headerIcon(iconName: string) {
         this.data.header.icon = iconName;
+        this.data.filter[0].caption = "xx";
+        return this;
+    }
+
+    addFilter(filter: IFilter) {
+        this.data.filter.push(filter);
         return this;
     }
 
@@ -229,7 +250,7 @@ export class ColumnHelper {
     }
 
     set(el): ColumnHelper {
-        this.data = { ...this.data, ...el };
+        this.data = {...this.data, ...el};
         return this;
     }
 
