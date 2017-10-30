@@ -18,7 +18,7 @@ interface IRowProps {
 
 const Row: React.StatelessComponent<IRowProps> = (props) => {
 
-    let children = Array.isArray(props.children) ? props.children : [props.children];
+    let children = React.Children.toArray(props.children);
     children = children.filter((el) => el != null && el);
 
     let colMd = 0
