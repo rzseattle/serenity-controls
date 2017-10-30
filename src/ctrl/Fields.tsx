@@ -58,7 +58,9 @@ class Select extends React.Component<ISelectProps, any> {
             if (Array.isArray(props.options)) {
                 for (let i in props.options) {
                     if (props.options[i].value == props.value) {
-                        return <div>{props.options[i].label}</div>;
+                        return <div
+                            className={"w-field-presentation w-field-presentation-select " + (props.value ? "" : "w-field-presentation-empty")}
+                        >{props.options[i].label}</div>;
                     }
                 }
                 return <div
@@ -83,6 +85,7 @@ class Select extends React.Component<ISelectProps, any> {
 
                 <Selectivity.React
                     allowClear={false}
+                    value={this.props.value}
 
                     items={(options as IOption[]).map((e) => ({id: e.value, text: e.label}))}
 
@@ -403,12 +406,18 @@ class Switch extends React.Component<ISwitchProps, any> {
             if (Array.isArray(props.options)) {
                 for (let i in props.options) {
                     if (props.options[i].value == props.value) {
-                        return <div>{props.options[i].label}</div>;
+                        return <div
+                            className={"w-field-presentation w-field-presentation-switch "}
+                        >{props.options[i].label}</div>;
                     }
                 }
-                return <div>{props.value}</div>;
+                return <div
+                    className={"w-field-presentation w-field-presentation-switch " + (props.value ? "" : "w-field-presentation-empty")}
+                >{props.value}</div>;
             } else {
-                return <div>{props.options[props.value]}</div>;
+                return <div
+                    className={"w-field-presentation w-field-presentation-switch " + (props.options[props.value] ? "" : "w-field-presentation-empty")}
+                >{props.options[props.value]}</div>;
             }
         }
 

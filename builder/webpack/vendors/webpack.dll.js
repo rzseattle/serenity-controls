@@ -9,7 +9,7 @@ module.exports = function (input) {
         entry: {
             vendors: [
                 resolve(__dirname, '../../../src/vendors.js'),
-                input.BASE_PATH + "/build/js/vendors.js"
+                input.BASE_PATH + '/build/js/vendors.js'
             ]
         },
         output: {
@@ -21,6 +21,17 @@ module.exports = function (input) {
         },
         module: {
             loaders: [
+                {
+                    test: /\.tsx?$/,
+                    loaders: [
+                        'react-hot-loader/webpack',
+                        {
+                            loader: 'awesome-typescript-loader', query: {
+                                configFileName: resolve(__dirname, '../tsconfig.json')
+                            }
+                        }
+                    ]
+                },
                 {test: /\.css/, loader: 'style-loader!css-loader'},
                 {
                     test: /\.(jpe?g|png|gif|svg)$/i,
@@ -75,7 +86,7 @@ module.exports = function (input) {
         plugins: [
             new webpack.DllPlugin({
                 // The manifest we will use to reference the libraries
-                path: input.PATH + "/vendors-reference.json",
+                path: input.PATH + '/vendors-reference.json',
                 name: '[name]',
                 context: input.BASE_PATH
             }),
@@ -88,7 +99,8 @@ module.exports = function (input) {
             new ExtractTextPlugin({filename: 'vendor-[hash].css', allChunks: true})
         ],
         resolve: {
-            modules: ['node_modules']
+            modules: ['node_modules'],
+            extensions: ['.js', '.es6', '.ts', '.tsx'],
         }
     };
     return conf;
