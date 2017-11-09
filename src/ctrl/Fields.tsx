@@ -59,7 +59,7 @@ class Select extends React.Component<ISelectProps, any> {
                 for (let i in props.options) {
                     if (props.options[i].value == props.value) {
                         return <div
-                            className={"w-field-presentation w-field-presentation-select " + (props.value ? "" : "w-field-presentation-empty")}
+                            className={"w-field-presentgitation w-field-presentation-select " + (props.value ? "" : "w-field-presentation-empty")}
                         >{props.options[i].label}</div>;
                     }
                 }
@@ -81,21 +81,23 @@ class Select extends React.Component<ISelectProps, any> {
             options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
         }
         return (
-            <div>
+            <div style={{position: "relative"}}>
 
                 <Selectivity.React
-                    allowClear={false}
+                    allowClear={true}
+
                     value={this.props.value}
 
                     items={(options as IOption[]).map((e) => ({id: e.value, text: e.label}))}
 
-                    placeholder="Wybierz"
+                    placeholder="Wybierz "
+
                     positionDropdown={(dropdown, select) => {
-
-                        var dim = select.getBoundingClientRect();
+                        var dim = select.getBoundingClientRect()
                         dropdown.style.width = dim.width + "px";
-
+                        dropdown.style.top = ( dim.height  ) + "px";
                     }}
+
 
                     onChange={(e) => {
                         if (this.props.onChange) {
@@ -135,6 +137,7 @@ class Select extends React.Component<ISelectProps, any> {
 interface ITextProps extends IFieldProps {
     type: 'text' | 'password',
     value?: string,
+    onKeyDown: any
 }
 
 class Text extends React.Component<ITextProps, any> {
@@ -182,6 +185,7 @@ class Text extends React.Component<ITextProps, any> {
                 disabled={props.disabled}
                 style={props.style}
                 autoFocus={props.autoFocus}
+                onKeyDown={props.onKeyDown}
             />
 
         );
@@ -512,8 +516,6 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
             }
         }
 
-
-        console.log(props.value)
         let gen = (value, label) => {
             let field = <input type="checkbox"
                                name={props.name}
@@ -576,7 +578,7 @@ class Date extends React.Component<IDateProps, any> {
             [moment, locale, datePicker/*, timePicker*/] = imported;
 
             this.setState({
-                date: this.props.value ? moment(this.props.value, 'YYYY-MM-DD') : null,
+                date: this.props.value && this.props.value != "0000-00-00" ? moment(this.props.value, 'YYYY-MM-DD') : null,
                 libsLoaded: true
             });
         });

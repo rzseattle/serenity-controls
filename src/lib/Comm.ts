@@ -241,3 +241,5 @@ class Comm {
 }
 
 export default Comm;
+
+export {Comm};

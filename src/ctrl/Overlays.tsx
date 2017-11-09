@@ -159,6 +159,12 @@ class Modal extends React.Component<IModalProps, IModalState> {
         modalRoot.removeChild(this.el);
     }
 
+    componentDidUpdate(){
+        if (this.props.show) {
+            this.calculatePos();
+        }
+    }
+
     calculatePos() {
 
 
@@ -191,14 +197,10 @@ class Modal extends React.Component<IModalProps, IModalState> {
             } else {
 
                 let x: number = Math.round(Math.min(data.width / 2, (window.innerWidth) / 2 - 5));
-                console.log(data.width, "dw")
-                console.log(x, "x")
                 let y = Math.round(Math.min(data.height / 2, (window.innerHeight / 2) - 5));
                 x = this.props.left != undefined || this.props.right != undefined ? 0 : x;
                 y = this.props.top != undefined || this.props.bottom != undefined ? 0 : y;
                 node.style['transform'] = `translate(-${x}px, -${y}px)`;
-                console.log(x, "x2");
-
 
 
                 if (this.props.left != undefined) {
@@ -284,7 +286,7 @@ class ConfirmModal extends React.Component<any, any> {
     }
 
     render() {
-        let modalProps = Object.assign({}, this.props);
+        let modalProps: any = Object.assign({}, this.props);
         delete modalProps.cleanup;
 
         return <Modal {...modalProps} className="w-modal-confirm" show={true}>

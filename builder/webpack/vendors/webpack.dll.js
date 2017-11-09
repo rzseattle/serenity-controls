@@ -1,9 +1,17 @@
 var {resolve} = require('path');
 var webpack = require('webpack');
+const fs = require('fs');
 const AssetsPlugin = require('assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = function (input) {
+
+
+    const assets = require(input.PATH + '/webpack-assets.json');
+    try {
+        fs.unlinkSync(input.BASE_PATH + assets.vendors.js);
+        fs.unlinkSync(input.BASE_PATH + assets.vendors.css);
+    }catch(e){}
 
     var conf = {
         entry: {

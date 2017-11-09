@@ -19,6 +19,7 @@ interface IWithBootstrapFormFieldProps {
     items?: any
     value?: any
     onChange?: any
+    onKeyDown?: any
     style?: any
     autoFocus?: boolean
     maxItems?: number

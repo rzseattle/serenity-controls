@@ -45,3 +45,5 @@ export default class Panel extends React.Component<IPanelProps, any> {
         )
     }
 }
+
+export {Panel}

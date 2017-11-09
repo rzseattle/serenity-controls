@@ -1,7 +1,19 @@
 const webpack = require('webpack');
 const {resolve} = require('path');
+const fs = require('fs');
 
 module.exports = function (input) {
+
+    const assets = require(input.PATH + '/webpack-assets.json');
+    try {
+        fs.unlinkSync(input.BASE_PATH + assets.admin.js);
+        fs.unlinkSync(input.BASE_PATH + assets.admin.js + ".map");
+        fs.unlinkSync(input.BASE_PATH + assets.admin.css);
+        fs.unlinkSync(input.BASE_PATH + assets.admin.css + ".map");
+    } catch (e) {
+    }
+
+
 
     var conf = {
         context: resolve(__dirname, ''),
@@ -22,29 +34,29 @@ module.exports = function (input) {
 
         const FileObserver = require('./FileObserver.js');
         FileObserver(
-          input.BASE_PATH,
-          resolve(input.BASE_PATH, './build/js/tmp/components.include.js'),
-          resolve(input.BASE_PATH, './build/js/tmp/components.include.sass')
+            input.BASE_PATH,
+            resolve(input.BASE_PATH, './build/js/tmp/components.include.js'),
+            resolve(input.BASE_PATH, './build/js/tmp/components.include.sass')
         );
 
         const getDevServerConf = require('./DevServer.js');
         tmp = getDevServerConf(
-          input.ENTRY_POINTS,
-          input.PUBLIC_PATH,
-          resolve(input.BASE_PATH, input.PUBLIC_PATH),
-          input.BASE_PATH,
-          input.HTTPS,
-          webpack
+            input.ENTRY_POINTS,
+            input.PUBLIC_PATH,
+            resolve(input.BASE_PATH, input.PUBLIC_PATH),
+            input.BASE_PATH,
+            input.HTTPS,
+            webpack
         );
     } else {
         const getProductionConf = require('./Production.js');
         tmp = getProductionConf(
-          input.ENTRY_POINTS,
-          input.PUBLIC_PATH,
-          input.PATH,
-          input.BASE_PATH,
-          input.ANALYZE,
-          webpack
+            input.ENTRY_POINTS,
+            input.PUBLIC_PATH,
+            input.PATH,
+            input.BASE_PATH,
+            input.ANALYZE,
+            webpack
         );
     }
 
@@ -56,12 +68,12 @@ module.exports = function (input) {
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
     conf.plugins.push(
-      new webpack.DllReferencePlugin({
-          // An absolute path of your application source code
-          context: input.BASE_PATH,
-          // The path to the generated vendor-manifest file
-          manifest: input.PATH + '/vendors-reference.json'
-      })
+        new webpack.DllReferencePlugin({
+            // An absolute path of your application source code
+            context: input.BASE_PATH,
+            // The path to the generated vendor-manifest file
+            manifest: input.PATH + '/vendors-reference.json'
+        })
     );
 
 
