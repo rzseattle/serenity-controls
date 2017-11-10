@@ -1,16 +1,18 @@
 const webpack = require('webpack');
-const {resolve} = require('path');
+var {resolve, basename} = require('path');
 const fs = require('fs');
 
 module.exports = function (input) {
 
-    const assets = require(input.PATH + '/webpack-assets.json');
-    try {
-        fs.unlinkSync(input.BASE_PATH + assets.admin.js);
-        fs.unlinkSync(input.BASE_PATH + assets.admin.js + ".map");
-        fs.unlinkSync(input.BASE_PATH + assets.admin.css);
-        fs.unlinkSync(input.BASE_PATH + assets.admin.css + ".map");
-    } catch (e) {
+    if (fs.existsSync(input.PATH + '/webpack-assets.json')) {
+        const assets = require(input.PATH + '/webpack-assets.json');
+        try {
+            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.js));
+            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.js) + ".map");
+            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.css));
+            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.css) + ".map");
+        } catch (e) {
+        }
     }
 
 
