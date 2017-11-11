@@ -1,8 +1,9 @@
 import * as React from "react";
 import Comm from "frontend/src/lib/Comm";
+import {Datasource} from "frontend/src/lib/Datasource";
 
 interface ILoaderContainerProps {
-    url: string;
+    datasource: Datasource;
     children: { (result: any): any }
     debug: boolean
 }
@@ -24,13 +25,14 @@ export class LoaderContainer extends React.Component<ILoaderContainerProps, any>
     }
 
     componentDidMount() {
-        Comm._post(this.props.url, {}).then((result) => {
+        this.props.datasource.onReady((result) => {
             this.setState({
                 loaded: true,
                 data: result
-            })
+            });
+        });
 
-        })
+        this.props.datasource.resolve();
     }
 
 
@@ -42,7 +44,7 @@ export class LoaderContainer extends React.Component<ILoaderContainerProps, any>
                     "Loading..." :
                     <div>
                         {this.props.children(this.state.data)}
-                        {this.props.debug&&<pre>{JSON.stringify(this.state.data, null, 2)}</pre>}
+                        {this.props.debug && <pre>{JSON.stringify(this.state.data, null, 2)}</pre>}
                     </div>
                 }
             </div>

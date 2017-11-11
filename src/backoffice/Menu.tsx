@@ -31,7 +31,7 @@ interface IMenuState {
 
 export class Menu extends React.Component<IMenuProps, IMenuState> {
     constructor(props: IMenuProps) {
-        super();
+        super(props);
         this.state = {
             currentMenuOpened: -1,
             expanded: props.mobile

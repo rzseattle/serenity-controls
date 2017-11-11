@@ -41,7 +41,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
 
     constructor(props: IBackOfficePanelProps) {
-        super();
+        super(props);
 
         this.state = {
             currentView: null,
