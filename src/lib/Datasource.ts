@@ -9,6 +9,10 @@ export class Datasource {
     private source: string | Promise<any> | Function;
     private input: any;
     private eventsReady: { (result: any): any }[] = [];
+    private filters = {
+        map: []
+    }
+
 
     constructor(source: string | Promise<any> | Function, input = {}) {
         this.source = source;
@@ -19,11 +23,15 @@ export class Datasource {
         return new Datasource(source, input);
     }
 
-    onReady(fn: { (result: any): any }) {
+    observe(fn: { (result: any): any }) {
         this.eventsReady.push(fn);
     }
 
     runReady(result) {
+        for (let i = 0; i < this.filters.map.length; i++) {
+            result = result.map(this.filters.map[i]);
+        }
+
         for (let i = 0; i < this.eventsReady.length; i++) {
             this.eventsReady[i](result);
         }
@@ -32,7 +40,7 @@ export class Datasource {
     processResult(result) {
         if (typeof result == "function" || isPromise(result) || typeof result == "string") {
             var obj = new Datasource(result, this.input);
-            obj.onReady((result) => {
+            obj.observe((result) => {
                 this.runReady(result);
             });
             obj.resolve();
@@ -61,5 +69,8 @@ export class Datasource {
         }
     }
 
+    map(fn: { (result: any): any }) {
+        this.filters.map.push(fn);
+    }
 
 }
