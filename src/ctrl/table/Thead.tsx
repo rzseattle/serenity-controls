@@ -20,12 +20,14 @@ export default class Thead extends React.Component<any, any> {
             [
                 this.props.columns,
                 this.props.filters,
-                this.props.order
+                this.props.order,
+                this.props.allChecked
             ],
             [
                 nextProps.columns,
                 nextProps.filters,
-                nextProps.order
+                nextProps.order,
+                nextProps.allChecked,
             ]
         )
     }
@@ -36,7 +38,7 @@ export default class Thead extends React.Component<any, any> {
         <tr>
             {this.props.selectable ?
                 <th className="w-table-selection-header" onClick={this.props.onCheckAllClicked}>
-                    <input type="checkbox" checked={this.state.allChecked}/>
+                    <input type="checkbox" checked={this.props.allChecked}/>
                 </th>
                 : null
             }

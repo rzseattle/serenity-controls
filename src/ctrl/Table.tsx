@@ -615,6 +615,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                         onFilterChanged={this.handleFilterChanged.bind(this)}
                         onCellClicked={this.headClicked.bind(this)}
                         onCheckAllClicked={this.handleCheckClicked.bind(this, 'all')}
+                        allChecked={this.state.allChecked}
 
                     />}
                     <tbody>
@@ -626,12 +627,11 @@ class Table extends React.Component<ITableProps, ITableState> {
                     {this.state.data.length > 0 && <Tbody
                         rowClassTemplate={this.props.rowClassTemplate}
                         rowStyleTemplate={this.props.rowStyleTemplate}
-                        selection={this.state.selection}
+                        selection={deepCopy(this.state.selection)}
                         onCheck={this.handleCheckClicked.bind(this)}
                         selectable={this.props.selectable}
                         columns={columns} filters={this.state.filters}
                         order={this.state.order} loading={this.state.loading}
-
                         data={this.state.data}
                     />}
                     </tbody>

@@ -10,7 +10,17 @@ export default class Tbody extends React.Component<any, any> {
 
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !deepIsEqual(this.props.data, nextProps.data)
+
+        return !deepIsEqual(
+            [
+                this.props.data,
+                this.props.selection,
+            ],
+            [
+                nextProps.data,
+                nextProps.selection,
+            ]
+        )
     }
 
 
