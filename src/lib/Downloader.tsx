@@ -51,7 +51,7 @@ class Downloader extends React.Component<IDownloaderProps, IDownloaderState> {
 }
 
 
-const download = (url: string, data: any = {}): any => {
+export const download = (url: string, data: any = {}): any => {
 
     let parent = document.body;
 
