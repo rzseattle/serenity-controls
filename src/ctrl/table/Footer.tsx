@@ -8,7 +8,8 @@ export default class Footer extends React.Component<any, any> {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !deepIsEqual(
+        return true;
+        /*return !deepIsEqual(
             [
                 this.props.columns,
                 this.props.onPage,
@@ -19,7 +20,7 @@ export default class Footer extends React.Component<any, any> {
                 nextProps.onPage,
                 nextProps.currentPage
             ]
-        )
+        )*/
     }
 
     render() {

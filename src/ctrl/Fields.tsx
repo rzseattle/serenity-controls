@@ -40,6 +40,23 @@ class Select extends React.Component<ISelectProps, any> {
         editable: true
     };
 
+    /*shouldComponentUpdate(nextProps, nextState) {
+
+        return !deepIsEqual(
+            [
+                this.props.columns,
+                this.props.onPage,
+                this.props.currentPage
+            ],
+            [
+                nextProps.columns,
+                nextProps.onPage,
+                nextProps.currentPage
+            ]
+        )
+    }*/
+
+
     handleOnChange(e) {
         if (this.props.onChange) {
             this.props.onChange({
@@ -53,6 +70,7 @@ class Select extends React.Component<ISelectProps, any> {
     }
 
     render() {
+        //console.log("select render");
         const props = this.props;
         if (!props.editable) {
             if (Array.isArray(props.options)) {
