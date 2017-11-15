@@ -27,8 +27,6 @@ export default class Tbody extends React.Component<any, any> {
     render() {
         let props = this.props;
 
-        console.log("tbody updating");
-
         const packValue = (val, column, row) => {
             let templateResult = false;
             if (column.template) {
@@ -85,25 +83,25 @@ export default class Tbody extends React.Component<any, any> {
                                 style={{width: column.width, ...column.styleTemplate(row, column)}}
                                 onClick={column.events.click ? (event) => {
                                     column.events.click.map((callback) => {
-                                        callback.bind(this)(row, column, event);
+                                        callback.bind(this)(row, column, event, this);
                                     })
                                 } : function () {
                                 }}
                                 onMouseUp={column.events.mouseUp ? (event) => {
                                     column.events.mouseUp.map((callback) => {
-                                        callback.bind(this)(row, column, event);
+                                        callback.bind(this)(row, column, event, this);
                                     })
                                 } : function () {
                                 }}
                                 onMouseEnter={column.events.enter ? (event) => {
                                     column.events.enter.map((callback) => {
-                                        callback.bind(this)(row, column, event);
+                                        callback.bind(this)(row, column, event, this);
                                     })
                                 } : function () {
                                 }}
                                 onMouseLeave={column.events.leave ? (event) => {
                                     column.events.leave.map((callback) => {
-                                        callback.bind(this)(row, column, event);
+                                        callback.bind(this)(row, column, event, this);
                                     })
                                 } : function () {
                                 }}
