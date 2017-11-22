@@ -1,0 +1,53 @@
+$loader-size: 1
+.w-loading-indicator
+    padding: 10px
+    width: 100%
+    text-align: center
+    > div
+        > .w-loading-indicator-text
+            margin-top: 6px
+            color: grey
+        margin: 0 auto
+        > span
+            display: block
+            margin: 0 auto
+
+            width: (20*$loader-size)+px
+            height: (20*$loader-size)+px
+            animation: rotate 1.2s infinite linear
+            transform: rotate(45deg)
+
+            i
+                width: (9*$loader-size)+px
+                height: (9*$loader-size)+px
+                border-radius: 100%
+                background-color: #106ebe
+                transform: scale(.75)
+                display: block
+                position: absolute
+                opacity: .3
+                animation: opacity 1s infinite linear alternate
+                transform-origin: 50% 50%
+                &:first-child
+                    left: 0
+                    top: 0
+                &:nth-child(2)
+                    right: 0
+                    top: 0
+                    animation-delay: .4s
+                &:nth-child(3)
+                    right: 0
+                    bottom: 0
+                    animation-delay: .8s
+                &:nth-child(4)
+                    left: 0
+                    bottom: 0
+                    animation-delay: 1.2s
+
+@for $loaderSize from 1 through 4
+    .w-loading-indicator > div > .size#{$loaderSize}
+        width: (20*$loaderSize)+px
+        height: (20*$loaderSize)+px
+        i
+            width: (9*$loaderSize)+px
+            height: (9*$loaderSize)+px
