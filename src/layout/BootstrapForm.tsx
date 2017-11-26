@@ -5,6 +5,8 @@ import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
 
 
+
+
 interface IWithBootstrapFormFieldProps {
     label?: string
     help?: string
@@ -12,78 +14,86 @@ interface IWithBootstrapFormFieldProps {
     className?: string
     prefix?: string
     suffix?: string
-    layoutType?: 'horizontal' | 'default'
-    //todo do wyrzucenia ( dziedziczenie z IFormFieldProps )
-    name?: string
-    options?: any
-    items?: any
-    value?: any
-    onChange?: any
-    onKeyDown?: any
-    style?: any
-    autoFocus?: boolean
-    maxItems?: number
-    searchResultProvider?: any
+    layoutType?: 'horizontal' | 'default',
+    addInputClass?: boolean,
     editable?: boolean
-    placeholder?: string
-
 
 }
 
-//todo odkomentowac typ po zmianie fields
-const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass = true) => {
-
-    return class extends React.Component<IWithBootstrapFormFieldProps, any> {
-
-        public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
-            layoutType: 'default'
-        }
-
-        render() {
-            let props = this.props;
-
-            let classes = ['form-group'];
-
-            if (this.props.errors) {
-                classes.push('has-error');
+const withBootstrapFormField = ({addInputClass = true}: IWithBootstrapFormFieldProps = {}) =>
+    <TOriginalProps extends object>(Component: (React.ComponentClass<TOriginalProps> | React.StatelessComponent<TOriginalProps>)) => {
+        type ResultProps = TOriginalProps & IWithBootstrapFormFieldProps;
+        return class extends React.Component<ResultProps, any> {
+            public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
+                layoutType: 'default'
             }
 
-            let className = addInputClass ? 'form-control' : '';
-            if (props.className) {
-                className += ' ' + props.className;
-            }
+            render(): JSX.Element {
+                let props = this.props;
 
-            let field;
 
-            let fieldProps = {...props, className: className}
-            if ((this.props.suffix || this.props.prefix) && this.props.editable) {
-                field =
-                    <div className="input-group">
-                        {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
-                        <Field {...fieldProps} />
-                        {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
-                    </div>;
+                let classes = ['form-group'];
 
-            } else {
-                field = <Field {...fieldProps} />;
-            }
-            let errors = [];
-            if (props.errors) {
-
-                if (!Array.isArray(props.errors)) {
-                    errors = [props.errors];
-                } else {
-                    errors = props.errors;
+                if (this.props.errors) {
+                    classes.push('has-error');
                 }
-            }
 
-            if (props.layoutType == 'horizontal') {
+                let className = addInputClass ? 'form-control' : '';
+                if (props.className) {
+                    className += ' ' + props.className;
+                }
 
-                return (
-                    <div className={classes.join(' ')}>
-                        {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
-                        <div className="col-sm-10">
+                let field;
+
+
+                let fieldProps: any = {};
+                Object.assign(fieldProps, props, {className: className});
+
+                if ((this.props.suffix || this.props.prefix) && this.props.editable) {
+                    field =
+                        <div className="input-group">
+                            {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
+                            <Component {...props} {...fieldProps} />
+                            {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
+                        </div>;
+
+                } else {
+                    field = <Component {...fieldProps} />;
+                }
+                let errors = [];
+                if (props.errors) {
+
+                    if (!Array.isArray(props.errors)) {
+                        errors = [props.errors];
+                    } else {
+                        errors = props.errors;
+                    }
+                }
+
+                if (props.layoutType == 'horizontal') {
+
+                    return (
+                        <div className={classes.join(' ')}>
+                            {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
+                            <div className="col-sm-10">
+                                {field}
+                                {props.help ?
+                                    <span className="help-block">{props.help} </span>
+                                    : ''}
+                                {props.errors && this.props.editable ?
+                                    <span className="help-block">{errors.join(', ')} </span>
+
+                                    : ''}
+                            </div>
+                        </div>
+                    )
+                }
+                if (props.layoutType == 'default') {
+                    return (
+                        <div className={classes.join(' ')}>
+                            {this.props.label && <label>{this.props.label}</label>}
                             {field}
+
                             {props.help ?
                                 <span className="help-block">{props.help} </span>
                                 : ''}
@@ -91,30 +101,13 @@ const withBootstrapFormField = (Field/*: typeof React.Component*/, addInputClass
                                 <span className="help-block">{errors.join(', ')} </span>
 
                                 : ''}
+                            {/*.join(", ")*/}
                         </div>
-                    </div>
-                )
-            }
-            if (props.layoutType == 'default') {
-                return (
-                    <div className={classes.join(' ')}>
-                        {this.props.label && <label>{this.props.label}</label>}
-                        {field}
-
-                        {props.help ?
-                            <span className="help-block">{props.help} </span>
-                            : ''}
-                        {props.errors && this.props.editable ?
-                            <span className="help-block">{errors.join(', ')} </span>
-
-                            : ''}
-                        {/*.join(", ")*/}
-                    </div>
-                )
+                    )
+                }
             }
         }
     }
-}
 
 interface IBFormEvent {
     form: BForm,
@@ -471,22 +464,15 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 }
 
 
-const BButtonsBar = props => {
-    return (<div className="row form-group">
-        <div className="col-sm-10 col-sm-offset-2">
-            {props.children}
-        </div>
-    </div>)
-}
 
 
-const BText = withBootstrapFormField(Text);
-const BTextarea = withBootstrapFormField(Textarea);
-const BSelect = withBootstrapFormField(Select);
-const BSwitch = withBootstrapFormField(Switch);
-const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
-const BDate = withBootstrapFormField(Date);
-const BFile = withBootstrapFormField(File);
-const BWysiwig = withBootstrapFormField(Wysiwyg);
-const BConnectionsField = withBootstrapFormField(ConnectionsField);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig, BConnectionsField, withBootstrapFormField};
+const BText = withBootstrapFormField()(Text);
+const BTextarea = withBootstrapFormField()(Textarea);
+const BSelect = withBootstrapFormField()(Select);
+const BSwitch = withBootstrapFormField()(Switch);
+const BCheckboxGroup = withBootstrapFormField()(CheckboxGroup);
+const BDate = withBootstrapFormField()(Date);
+const BFile = withBootstrapFormField()(File);
+const BWysiwig = withBootstrapFormField()(Wysiwyg);
+const BConnectionsField = withBootstrapFormField()(ConnectionsField);
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea,  BDate, BFile, BWysiwig, BConnectionsField, withBootstrapFormField};

@@ -152,10 +152,10 @@ class Select extends React.Component<ISelectProps, any> {
     }
 }
 
-interface ITextProps extends IFieldProps {
-    type: 'text' | 'password',
+interface ITextProps extends   IFieldProps  {
+    type?: 'text' | 'password',
     value?: string,
-    onKeyDown: any
+    onKeyDown?: any
 }
 
 class Text extends React.Component<ITextProps, any> {
