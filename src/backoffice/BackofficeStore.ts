@@ -8,7 +8,7 @@ const getComponentFromURL = (url: string): string => {
     url = url.replace(/\//g, "_")
 
     //old versions ( raporty ) hack
-    if(url[0] == "_")
+    if (url[0] == "_")
         url = "app" + url;
     return url;
 }
@@ -41,7 +41,7 @@ class Store {
     loadDataForView(path: string = null, input: any = null, callback: { (): any } = null) {
 
 
-        let viewInput = input || this.viewInput;
+        let viewInput = input || toJS(this.viewInput);
         let viewURL = path || this.viewURL;
 
 
@@ -52,9 +52,18 @@ class Store {
 
 
         let pathQueryString = "";
-        //jesli podano path w formie adresu z ? i parametrami
+
         if (viewURL.indexOf("?") != -1) {
             [purePath, pathQueryString] = viewURL.split("?");
+            let tmp = pathQueryString.split("&").map((inEl) => inEl.split("="));
+            let tmp2 = {};
+            //podmiana parametrow z inputa do urlla
+            for (let i = 0; i < tmp.length; i++) {
+                tmp2[tmp[i][0]] = tmp[i][1];
+            }
+            tmp2 = {...tmp2, ...viewInput};
+            pathQueryString = Object.keys(tmp2).map((i) => i + '=' + tmp2[i]).join('&');
+
         } else {
             pathQueryString = Object.keys(viewInput).map((i) => i + '=' + viewInput[i]).join('&');
         }
@@ -72,8 +81,8 @@ class Store {
         comm.on(Comm.EVENTS.SUCCESS, (data) => {
             transaction(() => {//18206
                 this.viewData = {
+                    ...data,
                     baseURL: getBaseURL(viewURL),
-                    ...data
                 };
                 this.viewInput = viewInput;
                 this.viewURL = url;

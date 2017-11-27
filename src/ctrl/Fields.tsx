@@ -30,6 +30,7 @@ interface ISelectChangeEvent extends IFieldChangeEvent {
 interface ISelectProps extends IFieldProps {
     options: IOption[] | { [key: string]: string },
     onChange?: { (changeData: ISelectChangeEvent): any },
+    allowClear?: boolean
     value: string | number
 }
 
@@ -37,7 +38,8 @@ class Select extends React.Component<ISelectProps, any> {
 
     public static defaultProps: Partial<ISelectProps> = {
         options: [],
-        editable: true
+        editable: true,
+        allowClear: false,
     };
 
     /*shouldComponentUpdate(nextProps, nextState) {
@@ -102,9 +104,9 @@ class Select extends React.Component<ISelectProps, any> {
             <div style={{position: "relative"}}>
 
                 <Selectivity.React
-                    allowClear={true}
+                    allowClear={this.props.allowClear}
 
-                    value={this.props.value}
+                    value={this.props.value || null}
 
                     items={(options as IOption[]).map((e) => ({id: e.value, text: e.label}))}
 
@@ -129,24 +131,7 @@ class Select extends React.Component<ISelectProps, any> {
                         }
                     }}
                 />
-                {/*<select
-                    className={props.className}
-                    name={props.name}
-                    onChange={this.handleOnChange.bind(this)}
-                    value={props.value === null ? '' : props.value}
-                    disabled={props.disabled}
-                    style={props.style}
-                >
-                    {Array.isArray(props.options) ?
-                        props.options.map(option => {
-                            return <option key={option.value} value={option.value}> {option.label}</option>;
-                        })
-                        :
-                        Object.entries(props.options).map(([value, label]) => {
-                            return <option key={value} value={value}> {label}</option>;
-                        })
-                    }
-                </select>*/}
+
             </div>
         );
     }
@@ -258,6 +243,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
 interface IWysiwygProps extends IFieldProps {
     onLoad: { (): any },
     value?: string,
+
 }
 
 declare var CKEDITOR: any;

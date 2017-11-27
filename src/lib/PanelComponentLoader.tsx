@@ -29,7 +29,7 @@ export interface IArrowViewComponentProps {
      * @private
      */
     _notification: { (content: string, title?: string, conf?: NotificationSystem.Notification): any };
-    _reloadProps: { (): any };
+    _reloadProps: { (args?: any, callback?: { (): any }): any };
     _goto: { (componentPath: string, args?: any): any };
     _log: { (element: any): any };
     _resolveComponent: { (componentPath: string): React.ReactElement<any> }
