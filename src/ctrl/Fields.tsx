@@ -329,8 +329,8 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     componentWillReceiveProps(nextProps, currentProps) {
 
 
-        if (nextProps.values) {
-            CKEDITOR.instances[this.id].setData(nextProps.values);
+        if (nextProps.value) {
+            CKEDITOR.instances[this.id].setData(nextProps.value);
         }
     }
 
