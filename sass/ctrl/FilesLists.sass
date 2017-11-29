@@ -1,3 +1,46 @@
+.w-file-list
+    .dropzone
+        display: inline-block
+        background-color: rgb(38, 139, 210)
+        color: white
+        margin-top: 10px
+
+        border: solid 1px lightgrey
+        padding: 3px 10px
+        cursor: pointer
+        &:hover
+            background-color: #ededed
+            color: black
+
+    .w-file-list-files
+        width: 100%
+        display: table
+        .w-file-list-element
+
+            width: 100%
+            display: table-row
+            > div
+                display: table-cell
+                padding: 5px 0
+                height: 20px
+
+            .w-file-list-name
+
+                i
+                    margin-right: 10px
+                    font-size: 20px
+
+            .w-file-list-size
+                width: 80px
+                text-align: right
+
+
+            .w-file-list-remove
+                width: 30px
+                text-align: center
+
+
+
 .w-gallery
     .w-gallery-add
         float: left
@@ -51,12 +94,10 @@
             .w-gallery-upload-name
                 bottom: 3px
                 left: 3px
-                width: calc( 100% - 6px )
+                width: calc(100% - 6px)
                 overflow: hidden
                 position: absolute
                 text-overflow: ellipsis
-
-
 
             > a
                 cursor: pointer
@@ -96,8 +137,6 @@
                             //text-overflow: ellipsis
                             //overflow: hidden
                             word-wrap: break-word
-
-
 
                         .w-gallery-delete, .w-gallery-drag
                             position: absolute
