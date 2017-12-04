@@ -104,6 +104,13 @@ interface IFileList extends IFieldProps {
 class FileList extends React.Component<IFileList, any> {
 
 
+    public constructor(props){
+        super(props);
+        this.state = {
+            filesDeleted: []
+        }
+    }
+
     public handleFileAdd(addedFiles: (File & { preview: string })[]) {
         let currFiles = this.props.value ? this.props.value.slice() : [];
         for (let i = 0; i < addedFiles.length; i++) {
@@ -127,17 +134,28 @@ class FileList extends React.Component<IFileList, any> {
 
     }
 
+    componentWillReceiveProps(nextProps){
+
+        //this.setState({filesDeleted: []});
+        //console.log(nextProps);
+    }
+
     handleFileClick(index) {
         alert("klikanie jeszcze nie");
     }
 
     handleFileRemove(index) {
         let currFiles = this.props.value ? this.props.value.slice() : [];
-        confirm("Czy na pewno usun¹æ plik `" + currFiles[index].name + "` ?").then(() => {
+        //confirm("Czy na pewno usun¹æ plik `" + currFiles[index].name + "` ?").then(() => {
+
+            let deleted = this.state.filesDeleted;
+            deleted.push(currFiles[index]);
+
+            this.setState({filesDeleted: deleted});
 
             currFiles.splice(index, 1);
             this.handleChange(currFiles);
-        })
+        //})
     }
 
     handleChange(currFiles) {
@@ -164,21 +182,25 @@ class FileList extends React.Component<IFileList, any> {
 
     render() {
         let {value} = this.props;
+        let deleted = this.state.filesDeleted;
 
         return (
             <div className="w-file-list">
                 <Dropzone className="dropzone" activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd.bind(this)}>
                     <span><Icon name={"Add"}/> Dodaj </span>
                 </Dropzone>
+
                 <div className="w-file-list-files">
+                    {/*{deleted.map((el) => <div>Do usuniêcia: {el.name}</div>)}*/}
                     {value ? value.map((el, index) => <div className="w-file-list-element" key={el.name}>
                         <div className="w-file-list-name">
                             <a onClick={this.handleFileClick.bind(this, index)}><Icon name={this.isImage(el.path) ? "Photo2" : "TextDocument"}/>{el.name}</a>
+                            {!el.uploaded && <div className="w-file-list-upload-info">Plik zostanie za³adowany po zapisaniu formularza</div>}
                         </div>
                         <div className="w-file-list-size"><a href={el.path} download={true}><Icon name={"Download"}/></a></div>
                         <div className="w-file-list-size">{this.formatBytes(el.size)}</div>
                         <div className="w-file-list-remove"><a onClick={this.handleFileRemove.bind(this, index)}><Icon name={"Delete"}/> </a></div>
-                    </div>) : "---"}
+                    </div>) : null}
                 </div>
                 {/*<pre>
                     {JSON.stringify(value, null, 2)}
