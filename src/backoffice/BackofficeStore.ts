@@ -1,4 +1,4 @@
-import {observable, observe, autorun, toJS, action, runInAction, useStrict, transaction} from "mobx";
+import {autorun, observable, toJS, transaction} from "mobx";
 import Comm from '../lib/Comm'
 
 declare var window;
@@ -15,7 +15,7 @@ const getComponentFromURL = (url: string): string => {
 
 const initial = window.location.hash.replace("#", "") || "app/admin/dashboard";
 
-class Store {
+class BackofficeStore {
     //url path from browser
     @observable viewURL = null;
     //input added to view request
@@ -28,6 +28,10 @@ class Store {
     @observable viewData = {}
     @observable viewState = {}
 
+
+    private onViewLoadArr = [];
+    private onViewLoadedArr = [];
+
     //setState()
 
 
@@ -38,7 +42,20 @@ class Store {
         });
     }
 
+    onViewLoad(callback) {
+        this.onViewLoadArr.push(callback);
+    }
+
+    onViewLoaded(callback) {
+        this.onViewLoadedArr.push(callback);
+    }
+
     loadDataForView(path: string = null, input: any = null, callback: { (): any } = null) {
+
+
+        for (let i = 0; i < this.onViewLoadArr.length; i++) {
+            this.onViewLoadArr[i]();
+        }
 
 
         let viewInput = input || toJS(this.viewInput);
@@ -95,6 +112,10 @@ class Store {
                 callback();
             }
 
+            for (let i = 0; i < this.onViewLoadedArr.length; i++) {
+                this.onViewLoadedArr[i]();
+            }
+
         });
 
         comm.send();
@@ -105,7 +126,7 @@ class Store {
 }
 
 
-var store = new Store;
+var store = new BackofficeStore;
 
 store.loadDataForView(initial);
 

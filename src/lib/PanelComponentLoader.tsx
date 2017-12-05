@@ -1,18 +1,16 @@
 import * as NotificationSystem from "react-notification-system";
-import {toJS} from "mobx";
-
-declare var PRODUCTION: boolean;
-import * as React from "react";
 import * as Notifications from "react-notification-system";
-import Comm from './Comm'
+import {toJS} from "mobx";
+import * as React from "react";
 import {DebugTool} from "../utils/DebugTool"
 
 //declare var Views: any;
 import *  as Views from "../../../../build/js/tmp/components.include";
 
 import {observer} from "mobx-react";
-import "react-progress-2/main.css"
-import Progress from "react-progress-2";
+
+declare var PRODUCTION: boolean;
+
 //console.log(Views);
 
 
@@ -34,10 +32,14 @@ export interface IArrowViewComponentProps {
     _goto: { (componentPath: string, args?: any): any };
     _log: { (element: any): any };
     _resolveComponent: { (componentPath: string): React.ReactElement<any> }
+    _startLoadingIndicator:  { (): any };
+    _stopLoadingIndicator:  { (): any };
 }
 
 interface IProps {
     store: any;
+    onLoadStart?: { (): any };
+    onLoadEnd?: { (): any };
 }
 
 interface IState {
@@ -91,7 +93,6 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
     handleReloadProps(input = {}, callback: () => any) {
-        Progress.show();
         this.props.store.changeView(null, input, callback);
     }
 
@@ -149,8 +150,6 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
         return <div className={p.store.viewComponentName}>
-            <Progress.Component style={{background: "black", top: 48, left: 60, zIndex: 30, height: 4}}
-                                        thumbStyle={{background: "red", height: 4}}/>
 
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
@@ -169,6 +168,8 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _reloadProps={this.handleReloadProps.bind(this)}
                 _goto={this.handleGoTo.bind(this)}
                 _resolveComponent={this.handleReloadProps.bind(this)}
+                _startLoadingIndicator={this.props.onLoadStart}
+                _stopLoadingIndicator={this.props.onLoadEnd}
                 _scrollTo={(el) => {
 
                 }}

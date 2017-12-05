@@ -1,7 +1,4 @@
 import * as React from 'react'
-
-//import {Arrow} from "../../../../data/cache/db/ts-definitions";
-
 import {Icon} from '../ctrl/Icon';
 import PanelComponentLoader from '../lib/PanelComponentLoader';
 import {Modal} from '../ctrl/Overlays';
@@ -9,6 +6,11 @@ import {Modal} from '../ctrl/Overlays';
 
 import {observer} from "mobx-react";
 import {IMenuSection, Menu} from 'frontend/src/backoffice/Menu';
+
+import "react-progress-2/main.css"
+import Progress from "react-progress-2";
+
+//import {Arrow} from "../../../../data/cache/db/ts-definitions";
 
 
 interface IBackOfficePanelProps {
@@ -50,10 +52,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             layout: "normal",
         }
 
+        this.props.store.onViewLoad(() => this.handleLoadStart());
+        this.props.store.onViewLoaded(() => this.handleLoadEnd());
+
     }
 
     adjustToSize() {
-        if(this.container) {
+        if (this.container) {
             this.container.style.height = window.innerHeight + 'px';
         }
         if (window.innerWidth <= 479 && this.state.layout != "mobile") {
@@ -87,9 +92,17 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         })
     }
 
+    handleLoadStart() {
+        Progress.show();
+    }
+
+    handleLoadEnd() {
+        Progress.hide();
+    }
+
     render() {
 
-        if(this.props.onlyBody){
+        if (this.props.onlyBody) {
             return <PanelComponentLoader store={this.props.store}/>;
         }
 
@@ -134,11 +147,19 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     <Menu elements={this.props.appMenu}
                           onMenuElementClick={this.handleElementClick.bind(this)}
                           mobile={(this.state.layout == "mobile")}
-
                     />
                 </div>}
-                <div className="w-panel-body">
-                    <PanelComponentLoader store={this.props.store}/>
+                <div className="w-panel-body" style={{position: "relative"}}>
+                    <Progress.Component
+                        style={{background: "black", top: 0,  zIndex: 30, height: 3, position: 'absolute', overflow: "hidden"}}
+                        thumbStyle={{background: "#0078D7", height: 4}}
+                    />
+                    <PanelComponentLoader
+                        store={this.props.store}
+                        onLoadStart={this.handleLoadStart}
+                        onLoadEnd={this.handleLoadEnd}
+
+                    />
                 </div>
             </div>
 

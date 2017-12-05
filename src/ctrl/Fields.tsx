@@ -262,7 +262,8 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     constructor(props) {
         super(props);
         this.id = 'fields-wysiwyg-' + (Math.random() * 10000000).toFixed(0);
-        this.state = {libsLoaded: false};
+        this.state = {
+            libsLoaded: false};
 
     }
 

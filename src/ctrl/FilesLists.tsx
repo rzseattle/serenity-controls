@@ -1,12 +1,10 @@
 import * as React from "react";
 
-import {SortableContainer, SortableElement, arrayMove, SortableHandle} from 'react-sortable-hoc';
-import {Modal, Shadow, confirm} from './Overlays'
-import {BForm} from '../layout/BootstrapForm'
+import {arrayMove, SortableContainer, SortableElement, SortableHandle} from 'react-sortable-hoc';
 import Dropzone from 'react-dropzone'
-import Comm from '../lib/Comm';
-import {IFieldChangeEvent, IFieldProps} from "./fields/Interfaces";
+import {IFieldProps} from "./fields/Interfaces";
 import {Icon} from "frontend/src/ctrl/Icon";
+import {Modal} from "frontend/src/ctrl/Overlays";
 
 interface IFile {
     key: number,
@@ -41,30 +39,30 @@ const ImageBox = SortableElement((props) => {
     if (file.type && file.type.indexOf('image') != -1)
         isImage = true;
 
+    if (!file.uploaded) {
+        /*let reader = new FileReader();
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+        reader.readAsDataURL(file.nativeObj);*/
 
-    let icon = "fa-file";
-    if (!isImage) {
-
-        if (file.path.indexOf(".pdf") != -1 || file.type == "application/pdf") {
-            icon = 'fa-file-pdf-o'
-        }
     }
 
+
     return (<div>
-        <a onClick={props.onClick}>
-            {file.uploaded == undefined && <span>
-                <span></span>{isImage ? <img src={file.path} alt=""/> : <i className={'fa fa-icon ' + icon}></i>}
+        <a onClick={() => props.onClick(props._index)}>
+            <span>
+                <span></span>{file.uploaded ? <img src={file.path} alt=""/> : <Icon name={"Upload"} />}
 
                 <div className="w-gallery-on-hover">
-                    <div>{file.name}</div>
-                    <a onClick={props.onDelete} className="w-gallery-delete"><i className="fa fa-times"></i></a>
+                    <a onClick={(e) => {
+                        e.stopPropagation();
+                        props.onDelete(props._index);
+                    }} className="w-gallery-delete"><i className="fa fa-times"></i></a>
                     <DragHandle/>
                 </div>
-            </span>}
-            {file.uploaded != undefined && <div>
-                <Progress percent={file.uploaded}/>
-                <div className="w-gallery-upload-name">{file.name}</div>
-            </div>}
+            </span>
+            <div className="w-gallery-name">{file.name}</div>
         </a>
     </div>)
 });
@@ -77,10 +75,11 @@ const SortableImageList = SortableContainer((props) => {
             {props.files && props.files.map((file, index) =>
                 <ImageBox
                     file={file}
-                    key={'item-' + index}
+                    key={file.name}
                     index={index}
-                    onClick={(e) => props.onClick(file, e)}
-                    onDelete={(e) => props.onDelete(file, e)}
+                    _index={index}
+                    onClick={props.onClick}
+                    onDelete={props.onDelete}
 
                 />
             )}
@@ -97,24 +96,42 @@ const Gallery = (props) => <div>Gallery</div>
 
 
 interface IFileList extends IFieldProps {
-    value: IFile[],
+    value: IFile[];
+    type?: "gallery" | "filelist";
+    buttonTitle?: string;
+    maxLength?: number;
 
 }
 
 class FileList extends React.Component<IFileList, any> {
 
+    public static defaultProps: Partial<IFileList> = {
+        type: "filelist",
+        maxLength: null,
+        buttonTitle: 'Dodaj'
+    }
 
-    public constructor(props){
+    public constructor(props) {
         super(props);
         this.state = {
-            filesDeleted: []
+            filesDeleted: [],
+            preview: null
         }
     }
 
     public handleFileAdd(addedFiles: (File & { preview: string })[]) {
         let currFiles = this.props.value ? this.props.value.slice() : [];
         for (let i = 0; i < addedFiles.length; i++) {
+            if (this.props.maxLength && i >= this.props.maxLength) {
+                continue;
+            }
             let el = addedFiles[i];
+            if (this.props.type == "gallery" && !this.isImage(el.name)) {
+                alert(`"${el.name}" to nie plik graficzny`);
+                continue;
+            }
+
+
             let file: IFile = {
                 key: null,
                 name: el.name,
@@ -134,27 +151,32 @@ class FileList extends React.Component<IFileList, any> {
 
     }
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
 
         //this.setState({filesDeleted: []});
         //console.log(nextProps);
     }
 
     handleFileClick(index) {
-        alert("klikanie jeszcze nie");
+        const el = this.props.value[index];
+        if (this.isImage(el.path)) {
+            this.setState({preview: el});
+        } else {
+            alert("Brak podglÄ…du do tego rodzaju plikÃ³w");
+        }
     }
 
     handleFileRemove(index) {
         let currFiles = this.props.value ? this.props.value.slice() : [];
-        //confirm("Czy na pewno usun¹æ plik `" + currFiles[index].name + "` ?").then(() => {
+        //confirm("Czy na pewno usunï¿½ï¿½ plik `" + currFiles[index].name + "` ?").then(() => {
 
-            let deleted = this.state.filesDeleted;
-            deleted.push(currFiles[index]);
+        let deleted = this.state.filesDeleted;
+        deleted.push(currFiles[index]);
 
-            this.setState({filesDeleted: deleted});
+        this.setState({filesDeleted: deleted});
 
-            currFiles.splice(index, 1);
-            this.handleChange(currFiles);
+        currFiles.splice(index, 1);
+        this.handleChange(currFiles);
         //})
     }
 
@@ -181,30 +203,61 @@ class FileList extends React.Component<IFileList, any> {
     }
 
     render() {
-        let {value} = this.props;
+        let {value, type, maxLength} = this.props;
+        let {preview} = this.state;
         let deleted = this.state.filesDeleted;
 
         return (
             <div className="w-file-list">
-                <Dropzone className="dropzone" activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd.bind(this)}>
-                    <span><Icon name={"Add"}/> Dodaj </span>
-                </Dropzone>
+                {(!maxLength || (value && value.length < maxLength) || !value) && <Dropzone className="dropzone" activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd.bind(this)}>
+                    <span><Icon name={"Add"}/> {this.props.buttonTitle} </span>
+                </Dropzone>}
 
-                <div className="w-file-list-files">
-                    {/*{deleted.map((el) => <div>Do usuniêcia: {el.name}</div>)}*/}
-                    {value ? value.map((el, index) => <div className="w-file-list-element" key={el.name}>
+                <div className={" " + (type == "gallery" ? "w-file-list-gallery" : "w-file-list-files")}>
+                    {/*{deleted.map((el) => <div>Do usuniï¿½cia: {el.name}</div>)}*/}
+                    {value && type == "filelist" ? value.map((el, index) => <div className="w-file-list-element" key={el.name}>
                         <div className="w-file-list-name">
                             <a onClick={this.handleFileClick.bind(this, index)}><Icon name={this.isImage(el.path) ? "Photo2" : "TextDocument"}/>{el.name}</a>
-                            {!el.uploaded && <div className="w-file-list-upload-info">Plik zostanie za³adowany po zapisaniu formularza</div>}
+                            {!el.uploaded && <div className="w-file-list-upload-info">Plik zostanie zaÅ‚adowany po zapisaniu formularza</div>}
                         </div>
                         <div className="w-file-list-size"><a href={el.path} download={true}><Icon name={"Download"}/></a></div>
                         <div className="w-file-list-size">{this.formatBytes(el.size)}</div>
                         <div className="w-file-list-remove"><a onClick={this.handleFileRemove.bind(this, index)}><Icon name={"Delete"}/> </a></div>
                     </div>) : null}
+                    {/*  <pre>
+                        {JSON.stringify(value, null, 2)}
+                    </pre>*/}
+
+                    {value && type == "gallery" && <SortableImageList
+                        helperClass={"w-file-list-dragging"}
+                        files={value}
+                        onSortEnd={(oldIndex, newIndex, collection) => {
+                            alert(oldIndex + " " + newIndex);
+                        }}
+                        useDragHandle={true}
+                        lockToContainerEdges={true}
+                        onDelete={this.handleFileRemove.bind(this)}
+                        onClick={(index) => {
+                            console.log(index);
+                            this.setState({preview: value[index]});
+                        }}
+
+                    />}
+
                 </div>
                 {/*<pre>
-                    {JSON.stringify(value, null, 2)}
+                    {JSON.stringify(preview, null, 2)}
                 </pre>*/}
+
+                {preview && <Modal
+                    show={true}
+                    onHide={() => this.setState({preview: null})}
+                    title={preview.name}
+                    showHideLink={true}
+                >
+                    <img style={{maxWidth: 800, maxHeight: 600}} src={preview.path}/>
+
+                </Modal>}
             </div>
         )
     }

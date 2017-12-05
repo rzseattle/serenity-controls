@@ -14,6 +14,7 @@ require('mobx-react');
 require('gsap');
 require('inputmask');
 require('lodash');
+require('react-progress-2');
 //require('frontend');
 require('react-addons-shallow-compare');
 
