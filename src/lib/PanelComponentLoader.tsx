@@ -11,7 +11,8 @@ import {DebugTool} from "../utils/DebugTool"
 import *  as Views from "../../../../build/js/tmp/components.include";
 
 import {observer} from "mobx-react";
-
+import "react-progress-2/main.css"
+import Progress from "react-progress-2";
 //console.log(Views);
 
 
@@ -90,6 +91,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
     handleReloadProps(input = {}, callback: () => any) {
+        Progress.show();
         this.props.store.changeView(null, input, callback);
     }
 
@@ -147,6 +149,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
         return <div className={p.store.viewComponentName}>
+            <Progress.Component style={{background: "black", top: 48, left: 60, zIndex: 30, height: 4}}
+                                        thumbStyle={{background: "red", height: 4}}/>
+
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
