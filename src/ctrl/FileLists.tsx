@@ -32,12 +32,16 @@ const Progress = (props) => {
 }
 
 const ImageBox = SortableElement((props) => {
+
     const file = props.file;
     let isImage = false;
     if (file.path.match(/.(jpg|jpeg|png|gif)$/i))
         isImage = true;
     if (file.type && file.type.indexOf('image') != -1)
         isImage = true;
+
+
+    let style = props.style || {};
 
     if (!file.uploaded) {
         /*let reader = new FileReader();
@@ -49,8 +53,8 @@ const ImageBox = SortableElement((props) => {
     }
 
 
-    return (<div>
-        <a onClick={() => props.onClick(props._index)}>
+    return (<div style={style}>
+        <a onClick={() => props.onClick(props._index)} >
             <span>
                 <span></span>{file.uploaded ? <img src={file.path} alt=""/> : <Icon name={"Upload"} />}
 
@@ -80,6 +84,7 @@ const SortableImageList = SortableContainer((props) => {
                     _index={index}
                     onClick={props.onClick}
                     onDelete={props.onDelete}
+                    style={props.itemStyle}
 
                 />
             )}
@@ -88,18 +93,13 @@ const SortableImageList = SortableContainer((props) => {
 });
 
 
-interface IGalleryProps {
-    files: IFile[]
-}
-
-const Gallery = (props) => <div>Gallery</div>
-
 
 interface IFileList extends IFieldProps {
     value: IFile[];
     type?: "gallery" | "filelist";
     buttonTitle?: string;
     maxLength?: number;
+    itemStyle?: any;
 
 }
 
@@ -108,7 +108,8 @@ class FileList extends React.Component<IFileList, any> {
     public static defaultProps: Partial<IFileList> = {
         type: "filelist",
         maxLength: null,
-        buttonTitle: 'Dodaj'
+        buttonTitle: 'Dodaj',
+        itemStyle: {}
     }
 
     public constructor(props) {
@@ -167,6 +168,7 @@ class FileList extends React.Component<IFileList, any> {
     }
 
     handleFileRemove(index) {
+
         let currFiles = this.props.value ? this.props.value.slice() : [];
         //confirm("Czy na pewno usun�� plik `" + currFiles[index].name + "` ?").then(() => {
 
@@ -241,6 +243,7 @@ class FileList extends React.Component<IFileList, any> {
                             console.log(index);
                             this.setState({preview: value[index]});
                         }}
+                        itemStyle={this.props.itemStyle}
 
                     />}
 
@@ -263,4 +266,4 @@ class FileList extends React.Component<IFileList, any> {
     }
 }
 
-export {Gallery, FileList};
+export { FileList};

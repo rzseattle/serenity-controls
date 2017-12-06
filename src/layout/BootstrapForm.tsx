@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField} from '../ctrl/Fields';
+import {FileList} from '../ctrl/FileLists';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
 import PropTypes from 'prop-types';
@@ -475,4 +476,5 @@ const BDate = withBootstrapFormField()(Date);
 const BFile = withBootstrapFormField()(File);
 const BWysiwig = withBootstrapFormField()(Wysiwyg);
 const BConnectionsField = withBootstrapFormField()(ConnectionsField);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea,  BDate, BFile, BWysiwig, BConnectionsField, withBootstrapFormField};
+const BFileList = withBootstrapFormField()(FileList);
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea,  BDate, BFile, BWysiwig, BConnectionsField, BFileList, withBootstrapFormField};

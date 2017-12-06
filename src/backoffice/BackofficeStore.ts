@@ -94,6 +94,10 @@ class BackofficeStore {
         comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
             this.isViewLoading = false;
             this.viewServerErrors = errorResponse;
+            for (let i = 0; i < this.onViewLoadedArr.length; i++) {
+                this.onViewLoadedArr[i]();
+            }
+
         });
         comm.on(Comm.EVENTS.SUCCESS, (data) => {
             transaction(() => {//18206
