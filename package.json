@@ -33,7 +33,7 @@
     "scriptjs": "^2.5.8",
     "typescript": "^2.6.2",
     "uuid": "^3.1.0",
-    "selectivity": "^3.0.6",
+    "selectivity": "^3.0.6"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.2.17",
