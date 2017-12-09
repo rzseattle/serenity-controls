@@ -6,16 +6,7 @@ var getLoaders = function (production) {
             loaders: [
                 {
                     test: [/\.js$/, /\.es6$/],
-                    exclude: function (modulePath) {
-                        if (
-                            modulePath.indexOf('frontend') == -1 &&
-                            modulePath.indexOf('component.js') == -1
-
-                        ) {
-                            return true;
-                        }
-                        return false;
-                    },
+                    exclude:path.resolve(__dirname, 'node_modules'),
                     //loader: 'babel-loader',
                     //dodatkowe ustawienia potrzebne aby babel działał out of home dir ( inaczej nie parsował plików z zewnątrz)
                     loaders: 'babel-loader?babelrc=true&extends=' + require('path').join(__dirname, '/.babelrc')
@@ -29,7 +20,7 @@ var getLoaders = function (production) {
                         'react-hot-loader/webpack',
                         {
                             loader: 'awesome-typescript-loader', query: {
-                                configFileName: path.resolve(__dirname, "./tsconfig.json")
+                                configFileName: path.resolve(__dirname, './tsconfig.json')
                             }
                         }
                     ]
@@ -64,7 +55,7 @@ var getLoaders = function (production) {
                     test: /\.(ttf|eot|svg|woff|woff2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                     loader: 'url-loader',
                     options: {
-                        name: "name=/cache/[hash].[ext]"
+                        name: 'name=/cache/[hash].[ext]'
                     }
                 }
             ]
