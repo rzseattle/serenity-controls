@@ -29,7 +29,7 @@ module.exports = function (input) {
 
     };
     const GetLoaders = require('./Loaders.js');
-    conf.module = GetLoaders(input.PRODUCTION);
+    conf.module = GetLoaders(input.PRODUCTION, input);
 
     let tmp;
     if (!input.PRODUCTION) {

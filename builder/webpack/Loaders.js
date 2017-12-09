@@ -1,12 +1,12 @@
 const path = require('path');
-var getLoaders = function (production) {
+var getLoaders = function (production, input) {
 
     let loaders =
         {
             loaders: [
                 {
                     test: [/\.js$/, /\.es6$/],
-                    exclude:path.resolve(__dirname, 'node_modules'),
+                    exclude: path.resolve(input.BASE_PATH, 'node_modules'),
                     //loader: 'babel-loader',
                     //dodatkowe ustawienia potrzebne aby babel działał out of home dir ( inaczej nie parsował plików z zewnątrz)
                     loaders: 'babel-loader?babelrc=true&extends=' + require('path').join(__dirname, '/.babelrc')
