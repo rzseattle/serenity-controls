@@ -4,7 +4,15 @@ const fs = require('fs');
 const AssetsPlugin = require('assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+
 module.exports = function (input) {
+
+    var entryPoints = []
+
+    if (input.USE_BUILD_IN_VENDORS === true || input.USE_BUILD_IN_VENDORS === undefined) {
+        entryPoints.push(resolve(__dirname, '../../../src/vendors.js'));
+    }
+    entryPoints.push(input.BASE_PATH + '/build/js/vendors.js');
 
 
     if (fs.existsSync(input.PATH + '/webpack-assets.json')) {
@@ -19,10 +27,7 @@ module.exports = function (input) {
 
     var conf = {
         entry: {
-            vendors: [
-                resolve(__dirname, '../../../src/vendors.js'),
-                input.BASE_PATH + '/build/js/vendors.js'
-            ]
+            vendors: entryPoints
         },
         output: {
             // The bundle file
@@ -79,18 +84,18 @@ module.exports = function (input) {
                 {
                     test: [/\.sass/, /\.scss/],
                     loader: ExtractTextPlugin.extract(
-                      [
-                          {loader: 'css-loader', query: {sourceMap: true}},
-                          {loader: 'resolve-url-loader', query: {sourceMap: true}},
-                          {
-                              loader: 'sass-loader',
-                              query: {
-                                  sourceMap: true,
-                                  includePaths: ['node_modules']
-                              }
-                          }
+                        [
+                            {loader: 'css-loader', query: {sourceMap: true}},
+                            {loader: 'resolve-url-loader', query: {sourceMap: true}},
+                            {
+                                loader: 'sass-loader',
+                                query: {
+                                    sourceMap: true,
+                                    includePaths: ['node_modules']
+                                }
+                            }
 
-                      ]
+                        ]
                     )
                 }
             ]

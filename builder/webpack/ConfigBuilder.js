@@ -69,6 +69,7 @@ module.exports = function (input) {
 
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
+
     conf.plugins.push(
         new webpack.DllReferencePlugin({
             // An absolute path of your application source code
