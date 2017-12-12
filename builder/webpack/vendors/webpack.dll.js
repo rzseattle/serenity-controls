@@ -41,7 +41,6 @@ module.exports = function (input) {
                 {
                     test: /\.tsx?$/,
                     loaders: [
-                        'react-hot-loader/webpack',
                         {
                             loader: 'awesome-typescript-loader', query: {
                                 configFileName: resolve(__dirname, '../tsconfig.json')
@@ -49,7 +48,15 @@ module.exports = function (input) {
                         }
                     ]
                 },
-                {test: /\.css/, loader: 'style-loader!css-loader'},
+                {
+                    test: /\.css/,
+                    loader: ExtractTextPlugin.extract(
+                        [
+                            {loader: 'css-loader', query: {sourceMap: true}},
+                            {loader: 'resolve-url-loader', query: {sourceMap: true}},
+
+                        ])
+                },
                 {
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     loaders: [
