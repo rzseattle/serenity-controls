@@ -36,6 +36,7 @@ module.exports = function (input) {
             publicPath: input.PUBLIC_PATH,
             library: '[name]'
         },
+        devtool: 'source-map',
         module: {
             loaders: [
                 {
