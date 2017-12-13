@@ -1,8 +1,8 @@
-import React from 'react';
+import * as React from "react";
 //var sourceMap = require('source-map');
 import {SourceMapConsumer} from 'source-map/dist/source-map.min.js';
 
-export default class ErrorReporter extends React.Component {
+export default class ErrorReporter extends React.Component<any,any> {
 
     constructor(props) {
         super(props);
@@ -70,7 +70,7 @@ export default class ErrorReporter extends React.Component {
 
         let containerCss = {backgroundColor: 'white', padding: 5, margin: 5, border: 'solid 1px grey'};
         let messageCss = {color: 'darkred', marginTop: 5};
-        let codeCss = {whiteSpace: 'pre', backgroundColor: '#FDF3F4', color: 'black', padding: 5, width: '100%', overflow: 'auto'};
+        let codeCss:any = {whiteSpace: 'pre', backgroundColor: '#FDF3F4', color: 'black', padding: 5, width: '100%', overflow: 'auto'};
 
 
         let line = this.state.stacks[0].line;

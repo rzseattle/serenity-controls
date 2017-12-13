@@ -6,7 +6,7 @@ interface ITabsCallback{
 }
 
 interface ITabsProps {
-    children: JSX.Element[];
+    children: JSX.Element[] | any[];
     onTabChange?: ITabsCallback
     defaultActiveTab?: number
 

@@ -6,14 +6,21 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "target": "es5",
+    "downlevelIteration": true,
     "lib": [
       "DOM",
       "es5",
+      "es2015.collection",
+      "es2015.iterable",
       "ES2017",
       "dom.iterable"
     ]
   },
   "exclude": [
-    "resources", "vendor" , "assets", "data"
+    "resources",
+    "vendor",
+    "assets",
+    "data"
   ]
 }

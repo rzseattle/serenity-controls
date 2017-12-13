@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import * as React from "react";
 import PropTypes from 'prop-types';
 import {TabPane, Tabs} from '../ctrl/Tabs';
 import JSONTree from 'react-json-tree';
@@ -7,8 +7,8 @@ import ErrorReporter from '../lib/ErrorReporter';
 import {ViewFileMap} from '../../../../build/js/tmp/components.include';
 
 
-
-export class DebugTool extends React.Component {
+//todo js -> ts
+export class DebugTool extends React.Component<any, any> {
 
 
     static propTypes = {
@@ -18,7 +18,9 @@ export class DebugTool extends React.Component {
         componentData: PropTypes.object,
         error: PropTypes.object,
     }
-
+    private listeners: any;
+    private dragTimeout: any;
+    private errorModal: any;
 
 
     constructor(props) {
@@ -147,7 +149,7 @@ export class DebugTool extends React.Component {
 
             >
                 <div style={{maxWidth: 800}}>
-                <ErrorReporter error={this.state.lastError} />
+                    <ErrorReporter error={this.state.lastError}/>
                 </div>
             </Modal>
 
@@ -155,7 +157,8 @@ export class DebugTool extends React.Component {
     }
 }
 
-class Body extends React.Component {
+class Body extends React.Component<any, any> {
+
 
     constructor(props) {
         super(props);
@@ -166,7 +169,7 @@ class Body extends React.Component {
     }
 
     render() {
-        let p = this.props;
+        let p: any = this.props;
 
         let componentProps = {};
         let debug = {};
@@ -184,7 +187,6 @@ class Body extends React.Component {
             <Tabs
                 defaultActiveTab={p.currTab}
                 onTabChange={p.onTabChange}
-
             >
                 <TabPane title={'Props'} badge={Object.entries(p.props).length} icon="bars">
                     <div className="props">
