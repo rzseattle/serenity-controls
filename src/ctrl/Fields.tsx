@@ -115,7 +115,7 @@ class Select extends React.Component<ISelectProps, any> {
                     positionDropdown={(dropdown, select) => {
                         var dim = select.getBoundingClientRect()
                         dropdown.style.width = dim.width + "px";
-                        dropdown.style.top = (dim.height) + "px";
+                        dropdown.style.top = ( dim.height  ) + "px";
                     }}
 
 
@@ -137,7 +137,7 @@ class Select extends React.Component<ISelectProps, any> {
     }
 }
 
-interface ITextProps extends IFieldProps {
+interface ITextProps extends   IFieldProps  {
     type?: 'text' | 'password',
     value?: string,
     onKeyDown?: any
@@ -346,7 +346,8 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     componentWillReceiveProps(nextProps, currentProps) {
-        if (typeof(CKEDITOR) != "undefined" && CKEDITOR.instances[this.id] != undefined && nextProps.value && nextProps.value != CKEDITOR.instances[this.id].getData()) {
+
+        if (typeof (CKEDITOR) != "undefined" && CKEDITOR.instances[this.id] != undefined && nextProps.value &&  nextProps.value !=  CKEDITOR.instances[this.id].getData()) {
             CKEDITOR.instances[this.id].setData(nextProps.value);
         }
     }
