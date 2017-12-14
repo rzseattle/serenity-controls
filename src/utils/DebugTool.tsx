@@ -7,17 +7,19 @@ import ErrorReporter from '../lib/ErrorReporter';
 import {ViewFileMap} from '../../../../build/js/tmp/components.include';
 
 
+interface IDebugToolProps {
+    props: any,
+    store: any,
+    log: any,
+    propsReloadHandler: any,
+    componentData: any,
+    error?: any,
+}
+
 //todo js -> ts
-export class DebugTool extends React.Component<any, any> {
+export class DebugTool extends React.Component<IDebugToolProps, any> {
 
 
-    static propTypes = {
-        props: PropTypes.object.isRequired,
-        log: PropTypes.array.isRequired,
-        propsReloadHandler: PropTypes.func.isRequired,
-        componentData: PropTypes.object,
-        error: PropTypes.object,
-    }
     private listeners: any;
     private dragTimeout: any;
     private errorModal: any;

@@ -1,7 +1,7 @@
 declare var window: any;
 declare var PRODUCTION: any;
 import * as React from "react";
-import {TextFilter, withFilterOpenLayer} from './Filters'
+import {TextFilter} from './Filters'
 import {ColumnHelper} from './table/ColumnHelper'
 import FiltersPresenter from './table/FiltersPresenter'
 import Tbody from './table/Tbody'

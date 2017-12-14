@@ -386,7 +386,7 @@ class Tooltip extends React.Component<any, any> {
     }
 
     orientationChange(type) {
-        this.setState({orientation: 'top left edge'})
+        //this.setState({orientation: 'top left edge'})
     }
 
     render() {

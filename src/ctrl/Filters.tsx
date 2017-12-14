@@ -670,95 +670,6 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 }
 
 
-const withFilterOpenLayer = (filters: IFilter[]) => {
-    return class FilterOpenableContainer extends React.Component<any, any> {
-        container: HTMLDivElement;
-        body: HTMLDivElement;
-        hideTimeout: any;
-
-        constructor(props) {
-            super(props)
-            this.state = {
-                show: false,
-            }
-
-            this.hideTimeout = null;
-        }
-
-        componentDidUpdate(nextProps, nextState) {
-
-            if (this.state.show == true) {
-                let data = this.body.getBoundingClientRect();
-                if (data.right > window.innerWidth) {
-                    this.body.style.right = '0px';
-
-                } else {
-
-                }
-            }
-
-            return true
-        }
-
-        handleTriggerClicked(e) {
-            e.stopPropagation();
-            this.setState({show: !this.state.show});
-        }
-
-        onFocus(e) {
-            clearTimeout(this.hideTimeout);
-            this.hideTimeout = null;
-        }
-
-        onBlur(e) {
-
-            //todo wymienić daty ( tracące focus ) i zmienić timeout na dużo niższy
-            var currentTarget = e.target;
-            this.hideTimeout = setTimeout(() => {
-                if (!currentTarget.contains(document.activeElement)) {
-                    this.setState({show: false})
-                }
-            }, 300);
-        }
-
-        render() {
-
-            let additionalHack = {
-                tabIndex: 0
-            }
-            /* {Filter.map((Filter) => <Filter {...this.props} opened={this.state.show} container={this.container} />)} */
-            return (
-                <div
-                    className={'w-filter-openable ' + (this.state.show ? 'w-filter-openable-opened ' : '')}
-                    ref={el => this.container = el}
-
-                    {...additionalHack}
-                    onBlur={this.onBlur.bind(this)}
-                    onFocus={this.onFocus.bind(this)}
-                    onFocusCapture={this.onFocus.bind(this)}
-
-                >
-                    {this.props.inline ? '' :
-                        <div className="w-filter-openable-trigger" onClick={this.handleTriggerClicked.bind(this)}><i className="ms-Icon ms-Icon--Filter"></i></div>
-                    }
-                    {this.state.show ?
-                        <div className="w-filter-openable-body" ref={el => this.body = el}>
-
-                            {filters.map(entry => {
-                                let Filter = entry.component;
-                                return <div>
-                                    <Filter caption={entry.caption} showApply={true} field={entry.field} onApply={this.props.onApply} config={entry.config} container={this.container}/>
-
-                                </div>
-                            })}
-                        </div>
-                        : ''}
-                </div>
-            )
-        }
-    }
-}
-
 
 export {
     DateFilter,
@@ -767,8 +678,6 @@ export {
     NumericFilter,
     TextFilter,
     AbstractFilter,
-    withFilterOpenLayer,
     IFilterComponent,
     ConnectionFilter
-
 };
