@@ -115,7 +115,7 @@ class Select extends React.Component<ISelectProps, any> {
                     positionDropdown={(dropdown, select) => {
                         var dim = select.getBoundingClientRect()
                         dropdown.style.width = dim.width + "px";
-                        dropdown.style.top = ( dim.height  ) + "px";
+                        dropdown.style.top = (dim.height) + "px";
                     }}
 
 
@@ -137,7 +137,7 @@ class Select extends React.Component<ISelectProps, any> {
     }
 }
 
-interface ITextProps extends   IFieldProps  {
+interface ITextProps extends IFieldProps {
     type?: 'text' | 'password',
     value?: string,
     onKeyDown?: any
@@ -263,7 +263,8 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         super(props);
         this.id = 'fields-wysiwyg-' + (Math.random() * 10000000).toFixed(0);
         this.state = {
-            libsLoaded: false};
+            libsLoaded: false
+        };
 
     }
 
@@ -289,9 +290,26 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         Promise.all([
             import( 'scriptjs')
         ]).then(imported => {
-            imported[0]('https://cdn.ckeditor.com/4.7.2/standard/ckeditor.js', () => {
+            //https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.7.3/plugins/justify/icons/hidpi/justifyblock.png
+
+            imported[0]('https://cdn.ckeditor.com/4.7.3/full/ckeditor.js', () => {
                 this.setState({libsLoaded: true});
-                let config: any = {};
+                let config: any = {
+                    toolbar: [
+
+                        {name: 'clipboard', items: ['Undo', 'Redo']},
+                        {name: 'styles', items: ['Format', 'HorizontalRule']},
+                        {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat']},
+                        //{name: 'colors', items: ['TextColor', 'BGColor']},
+                        {name: 'align', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+                        {name: 'links', items: ['Link', 'Unlink']},
+                        {name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']},
+                        {name: 'insert', items: ['Image', 'Table']},
+                        {name: 'tools', items: ['Maximize']},
+
+                    ],
+                    extraPlugins: "justify",
+                };
                 if (this.props.style.height) {
                     config.height = this.props.style.height;
                 }
@@ -328,8 +346,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     componentWillReceiveProps(nextProps, currentProps) {
-
-        if (CKEDITOR.instances[this.id] != undefined && nextProps.value &&  nextProps.value !=  CKEDITOR.instances[this.id].getData()) {
+        if (typeof(CKEDITOR) != "undefined" && CKEDITOR.instances[this.id] != undefined && nextProps.value && nextProps.value != CKEDITOR.instances[this.id].getData()) {
             CKEDITOR.instances[this.id].setData(nextProps.value);
         }
     }
