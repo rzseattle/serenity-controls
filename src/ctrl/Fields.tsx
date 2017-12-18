@@ -297,7 +297,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                 let config: any = {
                     toolbar: [
 
-                        {name: 'clipboard', items: ['Undo', 'Redo']},
+                        {name: 'clipboard', items: ['Undo', 'Redo', "Source"]},
                         {name: 'styles', items: ['Format', 'HorizontalRule']},
                         {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat']},
                         //{name: 'colors', items: ['TextColor', 'BGColor']},
@@ -309,10 +309,12 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
                     ],
                     extraPlugins: "justify",
+                    enterMode: CKEDITOR.ENTER_P
                 };
                 if (this.props.style.height) {
                     config.height = this.props.style.height;
                 }
+
                 CKEDITOR.replace(this.id, config);
                 config.width = 500;
                 CKEDITOR.instances[this.id].on('change', (e) => {

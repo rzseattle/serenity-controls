@@ -48,7 +48,7 @@ export default class Thead extends React.Component<any, any> {
     }
 
     handleMouseLeave(index, e) {
-        const el = this.props.columns[index];
+        const el = this.props.columns.filter(el => el !== null && el.display === true)[index];
         if (el.header.tooltip) {
             this.tooltipCleanup();
             this.tooltipCleanup = null;
