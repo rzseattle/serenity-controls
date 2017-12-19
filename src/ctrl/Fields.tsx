@@ -115,7 +115,7 @@ class Select extends React.Component<ISelectProps, any> {
                     positionDropdown={(dropdown, select) => {
                         var dim = select.getBoundingClientRect()
                         dropdown.style.width = dim.width + "px";
-                        dropdown.style.top = ( dim.height  ) + "px";
+                        dropdown.style.top = (dim.height) + "px";
                     }}
 
 
@@ -137,7 +137,7 @@ class Select extends React.Component<ISelectProps, any> {
     }
 }
 
-interface ITextProps extends   IFieldProps  {
+interface ITextProps extends IFieldProps {
     type?: 'text' | 'password',
     value?: string,
     onKeyDown?: any
@@ -297,15 +297,17 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                 let config: any = {
                     toolbar: [
 
-                        {name: 'clipboard', items: ['Undo', 'Redo', "Source"]},
-                        {name: 'styles', items: ['Format', 'HorizontalRule']},
-                        {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat']},
+                        {name: 'clipboard', items: ['Undo', 'Redo']},
+                        {name: 'styles', items: ['Format']},
+                        {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', 'RemoveFormat']},
                         //{name: 'colors', items: ['TextColor', 'BGColor']},
                         {name: 'align', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
-                        {name: 'links', items: ['Link', 'Unlink']},
                         {name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']},
+                        '/',
+                        {name: 'styles', items: ['HorizontalRule']},
+                        {name: 'links', items: ['Link', 'Unlink']},
                         {name: 'insert', items: ['Image', 'Table']},
-                        {name: 'tools', items: ['Maximize']},
+                        {name: 'tools', items: ['Maximize', "Source"]},
 
                     ],
                     extraPlugins: "justify",
@@ -314,6 +316,9 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                 if (this.props.style.height) {
                     config.height = this.props.style.height;
                 }
+
+                config.allowedContent = true;
+                config.extraAllowedContent = 'iframe[*]';
 
                 CKEDITOR.replace(this.id, config);
                 config.width = 500;
@@ -349,7 +354,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
     componentWillReceiveProps(nextProps, currentProps) {
 
-        if (typeof (CKEDITOR) != "undefined" && CKEDITOR.instances[this.id] != undefined && nextProps.value &&  nextProps.value !=  CKEDITOR.instances[this.id].getData()) {
+        if (typeof (CKEDITOR) != "undefined" && CKEDITOR.instances[this.id] != undefined && nextProps.value && nextProps.value != CKEDITOR.instances[this.id].getData()) {
             CKEDITOR.instances[this.id].setData(nextProps.value);
         }
     }

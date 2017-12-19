@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {IFilterComponent} from "../Filters"
 import {IFilter} from '../filters/Intefaces';
+import {Row} from 'frontend/src/ctrl/table/Tbody';
 
 export interface IColumnData {
     field?: string,
@@ -38,7 +39,7 @@ export interface ICellTemplate {
 }
 
 export interface IEventCallback {
-    (row: any, column: IColumnData, event: React.MouseEvent<HTMLElement>): any
+    (row: any, column: IColumnData, event: React.MouseEvent<HTMLElement>, rowComponent: Row): any
 }
 
 

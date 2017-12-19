@@ -90,7 +90,7 @@ export default class Tbody extends React.Component<any, any> {
 //00:14:15;10
 //00:14:42;18
 
-class Row extends React.PureComponent<any, any> {
+export class Row extends React.PureComponent<any, any> {
 
     render() {
 
