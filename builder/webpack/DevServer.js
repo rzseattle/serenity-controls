@@ -2,12 +2,12 @@ const {CheckerPlugin} = require('awesome-typescript-loader')
 const path = require('path');
 const fs = require('fs');
 
-var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, webpack) {
+var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, webpack) {
     conf = {};
 
     conf.output = {
         filename: 'bundle.js',
-        publicPath: 'http' + (HTTPS ? 's' : '') + '://localhost:3000/',
+        publicPath: 'http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`,
         devtoolModuleFilenameTemplate: function (info) {
             return path.resolve(BASE_PATH, info.absoluteResourcePath);
         }
@@ -29,8 +29,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         //pfx: resolve(__dirname, './cert2.pfx'),
         //pfxPassphrase: 'xxx123',
         hot: true,
-        port: 3000,
-        publicPath: 'http' + (HTTPS ? 's' : '') + '://localhost:3000/',
+        port: PORT,
+        publicPath: 'http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`,
         host: 'localhost',
 
         disableHostCheck: true,
