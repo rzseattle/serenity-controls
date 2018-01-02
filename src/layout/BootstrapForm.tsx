@@ -1,11 +1,8 @@
 import * as React from 'react';
-import {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField} from '../ctrl/Fields';
+import {CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg} from '../ctrl/Fields';
 import {FileList} from '../ctrl/FileLists';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
-import PropTypes from 'prop-types';
-
-
 
 
 interface IWithBootstrapFormFieldProps {
@@ -330,9 +327,11 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         let get;
         try {
+            dotNotation = dotNotation.replace(/\.([0-9]+)/g, "[$1]" );
             get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
-        } catch {
+        } catch (e) {
             console.error("try{ return obj." + dotNotation + "; }catch(e){ return undefined;}");
+            console.error(e.message);
         }
 
         let set = (obj, path, endValue) => {
@@ -477,4 +476,4 @@ const BFile = withBootstrapFormField()(File);
 const BWysiwig = withBootstrapFormField()(Wysiwyg);
 const BConnectionsField = withBootstrapFormField()(ConnectionsField);
 const BFileList = withBootstrapFormField()(FileList);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea,  BDate, BFile, BWysiwig, BConnectionsField, BFileList, withBootstrapFormField};
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BDate, BFile, BWysiwig, BConnectionsField, BFileList, withBootstrapFormField};
