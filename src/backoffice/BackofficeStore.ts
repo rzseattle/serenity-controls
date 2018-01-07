@@ -13,7 +13,7 @@ const getComponentFromURL = (url: string): string => {
     return url;
 }
 
-const initial = window.location.hash.replace("#", "") || "app/admin/dashboard";
+const initial = window.location.hash.replace("#", "") || "/app/admin/dashboard";
 
 class BackofficeStore {
     //url path from browser

@@ -5,6 +5,7 @@ import JSONTree from 'react-json-tree';
 import {Modal} from '../ctrl/Overlays';
 import ErrorReporter from '../lib/ErrorReporter';
 import {ViewFileMap} from '../../../../build/js/tmp/components.include';
+import Icon from "frontend/src/ctrl/Icon";
 
 
 interface IDebugToolProps {
@@ -123,7 +124,8 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
                 onMouseUp={() => clearTimeout(this.dragTimeout)}
 
             >
-                <i className="fa fa-cog"/>
+
+                <Icon name={"Edit"} />
                 {s.errors.length > 0 && <span className="errors">{s.errors.length}</span>}
                 {this.props.log.length > 0 && <span className="log">{this.props.log.length}</span>}
             </div>

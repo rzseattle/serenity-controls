@@ -241,7 +241,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
 
 
 interface IWysiwygProps extends IFieldProps {
-    onLoad: { (): any },
+    onLoad?: { (): any },
     value?: string,
 
 }
