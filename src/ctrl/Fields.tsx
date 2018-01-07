@@ -281,6 +281,9 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     handleOnLoad() {
+        CKEDITOR.instances[this.id].setData(this.props.value);
+
+        //just textarea replacement making value of editor and value of form not equal
         if (this.props.onLoad) {
             this.props.onLoad();
         }
@@ -322,19 +325,29 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
                 CKEDITOR.replace(this.id, config);
                 config.width = 500;
+
                 CKEDITOR.instances[this.id].on('change', (e) => {
                     let data = CKEDITOR.instances[this.id].getData();
-                    if (data != this.props.value) {
+                    if (data != this.props.value && this.isInputTextChanged(this.props.value)) {
                         this.handleOnChange(data, e);
                     }
                 });
 
 
-                CKEDITOR.on('instanceReady', () => this.handleOnLoad());
-
+                CKEDITOR.instances[this.id].on('instanceReady', () => this.handleOnLoad());
 
             });
         });
+    }
+
+    isInputTextChanged(input) {
+        let data = CKEDITOR.instances[this.id].getData();
+        if (data != input.replace(/\r\n/g, "\n")) {
+            return true
+        }
+
+        return false;
+
     }
 
     componentDidMount() {
@@ -353,9 +366,14 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     componentWillReceiveProps(nextProps, currentProps) {
-
-        if (typeof (CKEDITOR) != "undefined" && CKEDITOR.instances[this.id] != undefined && nextProps.value && nextProps.value != CKEDITOR.instances[this.id].getData()) {
+        if (
+            typeof (CKEDITOR) != "undefined" && CKEDITOR.instances[this.id] != undefined &&
+            nextProps.value && nextProps.value != CKEDITOR.instances[this.id].getData()
+            && this.isInputTextChanged(nextProps.value)
+        ) {
             CKEDITOR.instances[this.id].setData(nextProps.value);
+
+
         }
     }
 
@@ -388,7 +406,6 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                 className={props.className}
                 name={props.name}
                 placeholder={props.placeholder}
-                value={props.value === null ? '' : props.value}
                 disabled={props.disabled}
                 style={props.style}
                 onChange={() => true}

@@ -75,7 +75,7 @@ const SortableImageList = SortableContainer((props) => {
 
 
     return (
-        <div className="w-gallery-list">
+        <div className="w-gallery-list" > 
             {props.files && props.files.map((file, index) =>
                 <ImageBox
                     file={file}
@@ -167,19 +167,22 @@ class FileList extends React.Component<IFileList, any> {
         }
     }
 
+    handleMoveFile(moveEvent)  {
+        let {oldIndex, newIndex} = moveEvent;
+        let currFiles = this.props.value ? this.props.value.slice() : [];
+        currFiles.splice(newIndex, 0, currFiles.splice(oldIndex, 1)[0]);
+        this.handleChange(currFiles);
+    }
+
     handleFileRemove(index) {
 
         let currFiles = this.props.value ? this.props.value.slice() : [];
-        //confirm("Czy na pewno usun�� plik `" + currFiles[index].name + "` ?").then(() => {
-
         let deleted = this.state.filesDeleted;
         deleted.push(currFiles[index]);
-
         this.setState({filesDeleted: deleted});
-
         currFiles.splice(index, 1);
         this.handleChange(currFiles);
-        //})
+
     }
 
     handleChange(currFiles) {
@@ -233,14 +236,12 @@ class FileList extends React.Component<IFileList, any> {
                     {value && type == "gallery" && <SortableImageList
                         helperClass={"w-file-list-dragging"}
                         files={value}
-                        onSortEnd={(oldIndex, newIndex, collection) => {
-                            alert(oldIndex + " " + newIndex);
-                        }}
+                        onSortEnd={this.handleMoveFile.bind(this)}
+                        axis={'xy'}
                         useDragHandle={true}
                         lockToContainerEdges={true}
                         onDelete={this.handleFileRemove.bind(this)}
                         onClick={(index) => {
-                            console.log(index);
                             this.setState({preview: value[index]});
                         }}
                         itemStyle={this.props.itemStyle}
