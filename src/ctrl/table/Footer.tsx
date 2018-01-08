@@ -1,5 +1,6 @@
 import * as React from "react";
 import {deepIsEqual} from "frontend/src/lib/JSONTools";
+import Icon from "frontend/src/ctrl/Icon";
 
 
 export default class Footer extends React.Component<any, any> {
@@ -43,13 +44,13 @@ export default class Footer extends React.Component<any, any> {
 
 
                     <div className="w-table-pager">
-                        <div onClick={(e) => props.currentPageChanged(1)}><i className="fa fa-angle-double-left"></i></div>
-                        <div onClick={(e) => props.currentPageChanged(Math.max(1, props.currentPage - 1))}><i className="fa fa-angle-left"></i></div>
+                        <div onClick={(e) => props.currentPageChanged(1)}><Icon name={"DoubleChevronLeft12"} /></div>
+                        <div onClick={(e) => props.currentPageChanged(Math.max(1, props.currentPage - 1))}><Icon name={"ChevronLeft"} /></div>
                         {arr.map((el, i) =>
                             <div key={i} onClick={(e) => props.currentPageChanged(el)} className={el == props.currentPage ? 'w-table-pager-active' : ''}>{el}</div>
                         )}
-                        <div onClick={(e) => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}><i className="fa fa-angle-right"></i></div>
-                        <div onClick={(e) => props.currentPageChanged(pages)}><i className="fa fa-angle-double-right"></i></div>
+                        <div onClick={(e) => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}><Icon name={"ChevronRight"} /></div>
+                        <div onClick={(e) => props.currentPageChanged(pages)}><Icon name={"DoubleChevronRight12"} /></div>
                     </div>
 
                     <div className="w-table-footer-pageinfo">
@@ -68,8 +69,8 @@ export default class Footer extends React.Component<any, any> {
 
                     <div className="w-table-buttons">
 
-                        <button title="Usuń zmiany" onClick={table.handleStateRemove.bind(table)}><i className="fa fa-eraser"></i></button>
-                        <button title="Odśwież" onClick={table.load.bind(table)}><i className="fa fa-refresh"></i></button>
+                        {/*<button title="Usuń zmiany" onClick={table.handleStateRemove.bind(table)}><i className="fa fa-eraser"></i></button>*/}
+                        <button title="Odśwież" onClick={table.load.bind(table)}><Icon name={"Sync"} /></button>
                         {/*<button title="Zmień sposób wyświetlania" onClick={table.toggleFixedLayout.bind(table)}><i className="fa fa-window-restore"></i></button>*/}
                         <div
                             title="Przesuń i upuść aby zmienić rozmiar tabeli"

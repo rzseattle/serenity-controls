@@ -3,6 +3,7 @@ import {ICellTemplate, IColumnData, IEventCallback} from './Interfaces';
 import {Option} from '../fields/Interfaces';
 import {DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter} from '../Filters';
 import {IFilter} from 'frontend/src/ctrl/filters/Intefaces';
+import Icon from 'frontend/src/ctrl/Icon';
 
 
 export class ColumnHelper {
@@ -142,7 +143,7 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             classTemplate: (row, column) => ['center', (row[column.field] == '1' ? "darkgreen" : "darkred")],
-            template: value => <i className={'fa fa-' + (value == "1" ? "check" : "times")}></i>,
+            template: value => <Icon name={(value == "1" ? "CheckMark" : "Clear")} />,
             filter: [{
                 field: field,
                 component: SwitchFilter,
@@ -166,6 +167,7 @@ export class ColumnHelper {
 
     static template(caption: string, template: ICellTemplate): ColumnHelper {
         return new ColumnHelper({
+            caption: caption,
             template: template
         }).noFilter();
     }
