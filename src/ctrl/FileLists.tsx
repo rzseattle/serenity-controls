@@ -114,6 +114,7 @@ class FileList extends React.Component<IFileList, any> {
 
     public constructor(props) {
         super(props);
+
         this.state = {
             filesDeleted: [],
             preview: null

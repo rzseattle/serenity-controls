@@ -205,7 +205,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     constructor(props) {
         super(props);
         this.state = {
-            data: props.data,
+            data: props.data || {},
             fieldErrors: props.fieldErrors,
             formErrors: props.formErrors,
             isDirty: false,
@@ -278,8 +278,14 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     }
 
+    public submit() {
+        this.handleSubmit(null);
+    }
+
     handleSubmit(e) {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
 
         if (this.props.onSubmit) {
             this.props.onSubmit({inputEvent: e, form: this});
@@ -327,7 +333,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         let get;
         try {
-            dotNotation = dotNotation.replace(/\.([0-9]+)/g, "[$1]" );
+            dotNotation = dotNotation.replace(/\.([0-9]+)/g, "[$1]");
             get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
         } catch (e) {
             console.error("try{ return obj." + dotNotation + "; }catch(e){ return undefined;}");
@@ -419,7 +425,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         //false - dont track
         if (defaultValue !== false) {
-            set(this.fieldsValues, arrayNotation, this.props.data[name] || defaultValue);
+            set(this.fieldsValues, arrayNotation, this.props.data ? this.props.data[name] || defaultValue : defaultValue);
         }
 
         //console.log(get(this.state.fieldErrors))
@@ -462,8 +468,6 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         )
     }
 }
-
-
 
 
 const BText = withBootstrapFormField()(Text);
