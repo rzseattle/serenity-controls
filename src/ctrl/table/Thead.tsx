@@ -169,6 +169,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                             {filters.map(entry => {
                                 let Filter = entry.component;
                                 return <div>
+                                    {filters.length>1&&<div className={"w-filter-openable-title"}>{entry.caption}</div>}
                                     <Filter caption={entry.caption} showApply={true} field={entry.field} onApply={this.props.onApply} config={entry.config} container={this.container}/>
                                 </div>
                             })}
