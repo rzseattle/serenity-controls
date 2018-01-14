@@ -8,8 +8,10 @@ import {DebugTool} from "../utils/DebugTool"
 import *  as Views from "../../../../build/js/tmp/components.include";
 
 import {observer} from "mobx-react";
+import Comm from "frontend/src/lib/Comm";
 
 declare var PRODUCTION: boolean;
+declare var window: any;
 
 //console.log(Views);
 
@@ -32,8 +34,8 @@ export interface IArrowViewComponentProps {
     _goto: { (componentPath: string, args?: any): any };
     _log: { (element: any): any };
     _resolveComponent: { (componentPath: string): React.ReactElement<any> }
-    _startLoadingIndicator:  { (): any };
-    _stopLoadingIndicator:  { (): any };
+    _startLoadingIndicator: { (): any };
+    _stopLoadingIndicator: { (): any };
 }
 
 interface IProps {
@@ -88,6 +90,31 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             });
 
 
+        }
+    }
+
+    componentWillReact() {
+        let {store} = this.props;
+
+        if (store.viewComponentName && !Views[store.viewComponentName]) {
+            console.log(store.viewComponentName, "brakuje komponentu");
+
+            /*fetch(window.location.protocol + '//localhost:3000/debug/resolveComponent', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}, // this line is important, if this content-type is not set it wont work
+                body: 'foo=bar&blah=1'
+            });*/
+
+            alert("xxx");
+            Comm._post(
+                window.location.protocol + '//localhost:3000/debug/resolveComponent',
+                {
+                    component: store.viewComponentName,
+                    package: window.reactBackOfficeVar.packages
+                }
+            ).then((result) => {
+
+            });
         }
     }
 
@@ -176,7 +203,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             />}
 
             {(Component == undefined && p.store.viewComponentName != null) && <div style={{padding: 10}}>
-                <h3>Can't find component</h3>
+                <h3>Can't find component </h3>
                 <pre>"{p.store.viewComponentName}"</pre>
             </div>}
 
