@@ -35,7 +35,7 @@ var getLoaders = function (production, input) {
                 },
 
                 {test: /\.css/, loader: 'style-loader!css-loader'},
-                {yarn r
+                {
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     loaders: [
                         'file-loader?hash=sha512&digest=hex&name=./cache/[hash].[ext]',
