@@ -33,6 +33,24 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         publicPath: 'http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`,
         host: 'localhost',
 
+        stats: {
+            colors: true,
+            hash: false,
+            version: false,
+            timings: false,
+            assets: false,
+            chunks: false,
+            modules: false,
+            reasons: false,
+            children: false,
+            source: false,
+            errors: false,
+            errorDetails: false,
+            warnings: false,
+            publicPath: false
+        },
+
+
         disableHostCheck: true,
 
         headers: {
@@ -42,8 +60,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
         setup: (app) => {
 
-            const busboyBodyParser = require('busboy-body-parser');
-            app.use(busboyBodyParser({ limit: '5mb', multi: true }));
+            /*const busboyBodyParser = require('busboy-body-parser');
+            app.use(busboyBodyParser({limit: '5mb', multi: true}));*/
 
 
             app.get('/debug/getFile', function (req, res) {
@@ -51,7 +69,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                 res.send(fs.readFileSync(req.param('file')));
             });
 
-            app.post('/debug/getRoutes', function (req, res) {
+            /*app.post('/debug/getRoutes', function (req, res) {
                 //let cache = fs.readFileSync(BASE_PATH + "/cache/symfony/route.json");
                 let response = {
                     baseDir: BASE_PATH,
@@ -59,9 +77,9 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                 }
                 res.send(JSON.stringify(response));
 
-            });
+            });*/
 
-            app.post('/debug/resolveComponent', function (req, res) {
+            /*app.post('/debug/resolveComponent', function (req, res) {
                 res.header('Access-Control-Allow-Origin', '*');
 
                 let component = req.body.component;
@@ -81,7 +99,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                         dir: path.dirname(_path)
                     }
                 ));
-            });
+            });*/
 
         }
     };

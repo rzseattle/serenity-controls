@@ -9,49 +9,52 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
     let newRoutingStr = "";
 
+
+    let newRouteFileGenerator = () => {
+        let conf = require(routeFile + "/route.json");
+        let ComponentFileContent = "";
+        let ComponentFileContentMapFilesX = {};
+        for (i in conf) {
+
+            let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
+
+            if (fs.existsSync(componentPath)) {
+                let name = i.replace("/", "").replace(/\//g, "_");
+                ComponentFileContent += 'import ' + name + ' from \'' + componentPath.replace(/\\/g, '/') + '\';\n';
+                ComponentFileContent += ' export { ' + name + '}; \n';
+                ComponentFileContentMapFilesX[i] = conf[i];
+            } else {
+                let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
+            }
+        }
+
+        let targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
+        ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
+        fs.writeFile(targetfilename, ComponentFileContent, function (err) {
+            if (err) {
+                return console.log(err);
+            } else {
+                console.log('The file was saved: ' + targetfilename);
+            }
+        });
+
+    }
+
+
     fs.access(routeFile, fs.constants.R_OK, (err) => {
-        console.log(err ? 'no access!' : 'can read/write');
         let size = 0;
         if (!err) {
-
+            newRouteFileGenerator();
             chokidar.watch(routeFile, {awaitWriteFinish: true}).on('change', (path, details) => {
-                if (path.indexOf == undefined) {
-                    console.log(path);
-                }
                 if (path && path.indexOf && path.indexOf("route.json") != -1) {
                     if (details.size != size) {
                         size = details.size;
-                        let conf = require(routeFile + "/route.json");
-                        let ComponentFileContent = "";
-                        let ComponentFileContentMapFilesX = {};
-                        for (i in conf) {
-
-                            let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
-
-                            if (fs.existsSync(componentPath)) {
-                                let name = i.replace("/", "").replace(/\//g, "_");
-                                ComponentFileContent += 'import ' + name + ' from \'' + componentPath.replace(/\\/g, '/') + '\';\n';
-                                ComponentFileContent += ' export { ' + name + '}; \n';
-                                ComponentFileContentMapFilesX[i] = conf[i];
-                            } else {
-                                let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
-                                console.log(componentPath, "not found");
-                            }
-                        }
-
-                        ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
-                        fs.writeFile(SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include"), ComponentFileContent, function (err) {
-                            if (err) {
-                                return console.log(err);
-                            } else {
-                                console.log('The file was saved!');
-                            }
-                        });
-
-
+                        newRouteFileGenerator();
                     }
                 }
             });
+        } else {
+            console.error("No route file detected");
         }
     });
 
