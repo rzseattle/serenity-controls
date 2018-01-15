@@ -71,6 +71,6 @@
     "tslint": "^5.8.0",
     "tslint-react": "^3.2.0",
     "url-loader": "^0.6.2",
-    "hard-source-webpack-plugin": "^0.5.15",
+    "hard-source-webpack-plugin": "^0.5.15"
   }
 }
