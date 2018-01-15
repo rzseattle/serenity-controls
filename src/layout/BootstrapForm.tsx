@@ -72,7 +72,7 @@ const withBootstrapFormField = ({addInputClass = true}: IWithBootstrapFormFieldP
 
                     return (
                         <div className={classes.join(' ')}>
-                            {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
+                            {this.props.label && <label className="col-sm-2 control-label" dangerouslySetInnerHTML={{__html: "&nbsp;"}}>{props.label}</label>}
                             <div className="col-sm-10">
                                 {field}
                                 {props.help ?
@@ -480,4 +480,6 @@ const BFile = withBootstrapFormField()(File);
 const BWysiwig = withBootstrapFormField()(Wysiwyg);
 const BConnectionsField = withBootstrapFormField()(ConnectionsField);
 const BFileList = withBootstrapFormField()(FileList);
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BDate, BFile, BWysiwig, BConnectionsField, BFileList, withBootstrapFormField};
+const BContainer = withBootstrapFormField()((props) => <div>{props.children}</div>);
+
+export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BDate, BFile, BWysiwig, BConnectionsField, BFileList, BContainer, withBootstrapFormField};

@@ -1,11 +1,12 @@
 import * as NotificationSystem from "react-notification-system";
-import * as Notifications from "react-notification-system";
+//import * as Notifications from "react-notification-system";
 import {toJS} from "mobx";
 import * as React from "react";
 import {DebugTool} from "../utils/DebugTool"
 
 //declare var Views: any;
 import *  as Views from "../../../../build/js/tmp/components.include";
+import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include";
 
 import {observer} from "mobx-react";
 import Comm from "frontend/src/lib/Comm";
@@ -14,6 +15,31 @@ declare var PRODUCTION: boolean;
 declare var window: any;
 
 //console.log(Views);
+
+let exampleComponent = `import * as React from "react";
+import {IArrowViewComponentProps} from "frontend/src/lib/PanelComponentLoader";
+
+import Navbar from "frontend/src/ctrl/Navbar";
+
+interface IProps extends IArrowViewComponentProps {
+}
+
+export default class ArrowViewComponent extends React.Component<IProps, any> {
+    public render() {
+        return (
+            <div>
+                <Navbar>
+                    <span>Path</span>
+                </Navbar>
+                <div>
+                    <div className="panel-body-margins">
+                        Content
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}`;
 
 
 export interface IArrowViewComponentProps {
@@ -49,6 +75,8 @@ interface IState {
     debugToolLoaded: boolean,
     hasError: boolean,
     error: any,
+    devComponentFile: string,
+    devComponentDir: string,
 }
 
 @observer
@@ -63,7 +91,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             log: [],
             debugToolLoaded: false,
             hasError: false,
-            error: false
+            error: false,
+            devComponentFile: null,
+            devComponentDir: null
         }
 
     }
@@ -80,8 +110,6 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     componentWillMount() {
         if (!PRODUCTION) {
-            //import {DebugTool} from '../utils/DebugTool'
-
             import
                 ( /* webpackChunkName = "DebugTool" */ '../utils/DebugTool').then(({DebugTool}) => {
                 this.DebugTool = DebugTool;
@@ -93,27 +121,38 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
     }
 
+    getComponent(component) {
+
+
+        let {store} = this.props;
+
+        if (Views[store.viewComponentName])
+            return Views[store.viewComponentName];
+
+        if (ViewsRoute[store.viewComponentName])
+            return ViewsRoute[store.viewComponentName];
+
+        return false;
+    }
+
     componentWillReact() {
         let {store} = this.props;
 
-        if (store.viewComponentName && !Views[store.viewComponentName]) {
-            console.log(store.viewComponentName, "brakuje komponentu");
+        let component = this.getComponent(store.viewComponentName)
 
-            /*fetch(window.location.protocol + '//localhost:3000/debug/resolveComponent', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}, // this line is important, if this content-type is not set it wont work
-                body: 'foo=bar&blah=1'
-            });*/
-
-            alert("xxx");
+        if (store.viewComponentName && !component && !PRODUCTION) {
             Comm._post(
                 window.location.protocol + '//localhost:3000/debug/resolveComponent',
                 {
                     component: store.viewComponentName,
-                    package: window.reactBackOfficeVar.packages
+                    packages: JSON.stringify(window.reactBackOfficeVar.packages)
                 }
             ).then((result) => {
-
+                console.log(result);
+                this.setState({
+                    devComponentFile: result.path,
+                    devComponentDir: result.dir,
+                })
             });
         }
     }
@@ -150,7 +189,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     render() {
         const s = this.state;
         const p = this.props;
-        let Component = Views[p.store.viewComponentName];
+        let Component = this.getComponent(p.store.viewComponentName);
 
         let DebugTool = this.DebugTool;
         let debugVar = {
@@ -181,7 +220,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
-            <Notifications {...notificaton} />
+            <NotificationSystem {...notificaton} />
             {this.props.store.viewServerErrors != null && <div>
                 <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.props.store.viewServerErrors}}/>
             </div>}
@@ -205,6 +244,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             {(Component == undefined && p.store.viewComponentName != null) && <div style={{padding: 10}}>
                 <h3>Can't find component </h3>
                 <pre>"{p.store.viewComponentName}"</pre>
+                <pre><a href={`phpstorm://open?url=file://${this.state.devComponentFile}&line=1`}>{this.state.devComponentFile}</a></pre>
+                <pre><a href={`phpstorm://open?url=file://${this.state.devComponentDir}&line=0`}>{this.state.devComponentDir}</a></pre>
+                <pre style={{backgroundColor: 'white', padding: 10, border: 'solid 1px grey', fontSize: 11}}>{exampleComponent}</pre>
             </div>}
 
             {p.store.viewComponentName == null && <div>Loading...</div>}

@@ -7,9 +7,12 @@ const getComponentFromURL = (url: string): string => {
     url = url.split('?')[0].replace("#", "");
     url = url.replace(/\//g, "_")
 
-    //old versions ( raporty ) hack
     if (url[0] == "_")
-        url = "app" + url;
+        url = url.replace("_", "");
+
+    /*//old versions ( raporty ) hack
+    if (url[0] == "_")
+        url = "app" + url;*/
     return url;
 }
 
@@ -36,6 +39,7 @@ class BackofficeStore {
 
 
     changeView(path: string, input = {}) {
+        path = path.replace(this.appBaseURL, "");
         transaction(() => {
 
             this.loadDataForView(path, input);
@@ -103,7 +107,7 @@ class BackofficeStore {
             transaction(() => {//18206
                 this.viewData = {
                     ...data,
-                    baseURL: getBaseURL(viewURL),
+                    baseURL: this.appBaseURL +  getBaseURL(viewURL),
                 };
                 this.viewInput = viewInput;
                 this.viewURL = url;

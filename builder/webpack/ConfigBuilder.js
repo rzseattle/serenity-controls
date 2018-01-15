@@ -49,6 +49,7 @@ module.exports = function (input) {
             input.BASE_PATH,
             input.HTTPS,
             input.PORT || 3000,
+            input.DOMAIN,
             webpack
         );
     } else {

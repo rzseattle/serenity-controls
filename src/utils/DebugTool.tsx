@@ -6,7 +6,12 @@ import {Modal} from '../ctrl/Overlays';
 import ErrorReporter from '../lib/ErrorReporter';
 import {ViewFileMap} from '../../../../build/js/tmp/components.include';
 import Icon from "frontend/src/ctrl/Icon";
+import Comm from "frontend/src/lib/Comm";
+import {DevProperties} from "./DevProperties"
+import {Copyable} from "frontend/src/ctrl/Copyable";
+import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include";
 
+declare var DEV_PROPERIES: DevProperties;
 
 interface IDebugToolProps {
     props: any,
@@ -39,6 +44,7 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
             errors: [],
             currTab: savedData.selectedTab,
             lastError: props.error,
+            routes: null,
 
             style: {
                 left: savedData.left,
@@ -71,6 +77,13 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
 
     componentWillMount() {
         document.addEventListener('keydown', this.listeners._handleKeyDown);
+
+
+        Comm._post(
+            DEV_PROPERIES.app_domain + '/utils/developer/getRoutes'
+        ).then((result) => {
+            this.setState({routes: result})
+        });
     }
 
 
@@ -125,18 +138,24 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
 
             >
 
-                <Icon name={"Edit"} />
+                <Icon name={"Edit"}/>
                 {s.errors.length > 0 && <span className="errors">{s.errors.length}</span>}
                 {this.props.log.length > 0 && <span className="log">{this.props.log.length}</span>}
             </div>
 
             {s.expanded && <div className="expanded">
 
-
                 <div className='toolbar btn-toolbar'>
 
-                    <a onClick={() => this.props.propsReloadHandler()} className="btn btn-sm btn-default"><i className="fa fa-refresh"></i> Reload props</a>
-                    <a href={`phpstorm://open?url=file://${ViewFileMap[this.props.store.viewComponentName]}&line=1`} className="btn btn-default btn-sm"><i className="fa fa-file-o"></i> edit</a>
+                    <a onClick={() => this.props.propsReloadHandler()} className="btn btn-sm btn-default"><Icon name={"Sync"}/> Reload props </a>
+                    {ViewsRoute.ViewFileMap[this.props.store.viewURL] && <>
+                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${ViewsRoute.ViewFileMap[this.props.store.viewURL]._debug.file}&line=${ViewsRoute.ViewFileMap[this.props.store.viewURL]._debug.line}`} className="btn btn-default btn-sm">
+                            <Icon name={"FileCode"}/> edit backend
+                        </a>
+                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${ViewsRoute.ViewFileMap[this.props.store.viewURL]._debug.template}.component.tsx&line=1`} className="btn btn-default btn-sm"><Icon name={"Code"}/> edit frontend</a>
+
+                    </>}
+
                 </div>
                 <Body
                     log={this.props.log}
@@ -144,7 +163,9 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
                     errors={this.state.errors}
                     currTab={this.state.currTab}
                     onTabChange={(index) => this.setState({currTab: index})}
+                    routeInfo={ViewsRoute.ViewFileMap[this.props.store.viewURL]}
                 />
+                {/*this.state.routes && this.state.routes[this.props.store.viewURL] ? this.state.routes[this.props.store.viewURL] : null*/}
             </div>}
             <Modal
                 show={this.state.lastError != null}
@@ -160,6 +181,7 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
         </div>;
     }
 }
+
 
 class Body extends React.Component<any, any> {
 
@@ -209,6 +231,20 @@ class Body extends React.Component<any, any> {
                         {p.errors.length == 0 ? <div className={'empty'}>--Empty--</div> : null}
                     </div>
                 </TabPane>
+                {p.routeInfo && <TabPane title={'Route info'} icon="Info">
+
+                    <div style={{padding: 5}}>
+                        <Copyable>
+                            {p.routeInfo._controller}:{p.routeInfo._method}
+                        </Copyable>
+                    </div>
+                    <div style={{padding: 5}}>
+                        <Copyable>
+                            {p.routeInfo._debug.file}:{p.routeInfo._debug.line}
+                        </Copyable>
+                    </div>
+
+                </TabPane>}
                 {Object.entries(debug).map(([key, value]) => {
                     return <TabPane key={key} title={key} icon="circle-o" badge={Object.entries(value).length}>
                         <div className='props'>

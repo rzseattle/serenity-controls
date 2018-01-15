@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Icon} from "frontend/src/ctrl/Icon";
 
-interface ITabsCallback{
+interface ITabsCallback {
     (index: number, e: any): any;
 }
 
@@ -42,9 +42,12 @@ class Tabs extends React.Component<ITabsProps, ITabsState> {
             <div className="w-tabs">
                 <div className="tabs-links">
                     {React.Children.map(p.children, (child: any, index) => {
+                        if (child == null) {
+                            return;
+                        }
                         return <div key={index} className={(index == s.currentTab ? 'active' : '') + ' ' + (child.props.badge ? 'with-badge' : '')} onClick={this.handleTabChange.bind(this, index)}>
                             {child.props.icon ?
-                                <Icon name={child.props.icon} />
+                                <Icon name={child.props.icon}/>
                                 : null}
                             {child.props.title}
                             {child.props.badge != undefined ? <div className="w-tabs-badge">({child.props.badge})</div> : null}
@@ -60,7 +63,6 @@ class Tabs extends React.Component<ITabsProps, ITabsState> {
         )
     }
 }
-
 
 
 interface ITabPaneProps {
