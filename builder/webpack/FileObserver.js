@@ -20,6 +20,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 }
                 if (path && path.indexOf && path.indexOf("route.json") != -1) {
                     if (details.size != size) {
+                        size = details.size;
                         let conf = require(routeFile + "/route.json");
                         let ComponentFileContent = "";
                         let ComponentFileContentMapFilesX = {};
