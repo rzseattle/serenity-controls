@@ -138,9 +138,10 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     componentWillReact() {
         let {store} = this.props;
 
-        let component = this.getComponent(store.viewComponentName)
+        let component = this.getComponent(store.viewComponentName);
+        console.error(store.viewComponentName, "cant find")
 
-        if (store.viewComponentName && !component && !PRODUCTION) {
+        /*if (store.viewComponentName && !component && !PRODUCTION) {
             Comm._post(
                 window.location.protocol + '//localhost:3000/debug/resolveComponent',
                 {
@@ -154,7 +155,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                     devComponentDir: result.dir,
                 })
             });
-        }
+        }*/
     }
 
 

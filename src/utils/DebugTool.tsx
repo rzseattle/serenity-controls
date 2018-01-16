@@ -77,13 +77,6 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
 
     componentWillMount() {
         document.addEventListener('keydown', this.listeners._handleKeyDown);
-
-
-        Comm._post(
-            DEV_PROPERIES.app_domain + '/utils/developer/getRoutes'
-        ).then((result) => {
-            this.setState({routes: result})
-        });
     }
 
 

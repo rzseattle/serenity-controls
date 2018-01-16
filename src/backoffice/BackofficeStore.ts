@@ -39,7 +39,13 @@ class BackofficeStore {
 
 
     changeView(path: string, input = {}) {
-        path = path.replace(this.appBaseURL, "");
+        if(path) {
+            let len = this.appBaseURL.length;
+            if(  path.substr(0, len) == this.appBaseURL){
+                path = path.substr(len)
+            }
+
+        }
         transaction(() => {
 
             this.loadDataForView(path, input);

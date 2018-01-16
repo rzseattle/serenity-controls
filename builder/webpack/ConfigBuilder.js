@@ -68,18 +68,30 @@ module.exports = function (input) {
         conf[i] = tmp[i];
     }
 
+    var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
+
+    conf.plugins.push(new HardSourceWebpackPlugin({
+        // Either an absolute path or relative to webpack's options.context.
+        cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+        // Either an absolute path or relative to webpack's options.context.
+        // Sets webpack's recordsPath if not already set.
+        recordsPath: 'node_modules/.cache/hard-source/[confighash]/records.json',
+    }));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
 
-    conf.plugins.push(
-        new webpack.DllReferencePlugin({
-            // An absolute path of your application source code
-            context: input.BASE_PATH,
-            // The path to the generated vendor-manifest file
-            manifest: input.PATH + '/vendors-reference.json'
-        })
-    );
+
+    if (false) {
+        conf.plugins.push(
+            new webpack.DllReferencePlugin({
+                // An absolute path of your application source code
+                context: input.BASE_PATH,
+                // The path to the generated vendor-manifest file
+                manifest: input.PATH + '/vendors-reference.json'
+            })
+        );
+    }
 
 
     return conf;
