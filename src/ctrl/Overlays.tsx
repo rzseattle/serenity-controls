@@ -64,7 +64,7 @@ interface IModalProps {
 interface IModalState {
 }
 
-const modalRoot = document.getElementById('modal-root');
+let modalRoot = document.getElementById('modal-root');
 
 class Modal extends React.Component<IModalProps, IModalState> {
     el: HTMLDivElement;
@@ -89,6 +89,10 @@ class Modal extends React.Component<IModalProps, IModalState> {
             }
         };
         this.el = document.createElement('div');
+
+        if (modalRoot == null) {
+            modalRoot = document.getElementById('modal-root');
+        }
 
     }
 
@@ -159,7 +163,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
         modalRoot.removeChild(this.el);
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         if (this.props.show) {
             this.calculatePos();
         }
@@ -249,7 +253,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
             <div className="w-modal" ref={el => this.modalBody = el} onClick={(e) => e.stopPropagation()}>
                 {p.showHideLink &&
                 <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}>
-                    <Icon name="ChromeClose" />
+                    <Icon name="ChromeClose"/>
                 </a>}
                 {p.title && <div className="w-modal-title">{p.title}</div>}
                 {this.props.show ? p.children : null}
@@ -313,7 +317,7 @@ interface IConfirmConf {
 export const tooltip = (content, options) => {
     let props = {...options};
 
-    let parent =  document.body;
+    let parent = document.body;
 
     const wrapper = parent.appendChild(document.createElement('div'));
     let cleanup = () => {

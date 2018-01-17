@@ -42,14 +42,17 @@ module.exports = function (input) {
     conf.module = GetLoaders(input.PRODUCTION, input);
 
     let tmp;
-    if (!input.PRODUCTION && input.USE_FRAMEWORK_OBSERVERS) {
+    if (!input.PRODUCTION) {
 
-        const FileObserver = require('./FileObserver.js');
-        FileObserver(
-            input.BASE_PATH,
-            resolve(input.BASE_PATH, './build/js/tmp/components.include.js'),
-            resolve(input.BASE_PATH, './build/js/tmp/components.include.sass')
-        );
+        if (input.USE_FRAMEWORK_OBSERVERS) {
+            const FileObserver = require('./FileObserver.js');
+            FileObserver(
+                input.BASE_PATH,
+                resolve(input.BASE_PATH, './build/js/tmp/components.include.js'),
+                resolve(input.BASE_PATH, './build/js/tmp/components.include.sass')
+            );
+        }
+
 
         const getDevServerConf = require('./DevServer.js');
         tmp = getDevServerConf(
@@ -105,4 +108,5 @@ module.exports = function (input) {
 
 
     return conf;
-};
+}
+;

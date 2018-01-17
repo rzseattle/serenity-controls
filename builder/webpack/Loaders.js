@@ -22,6 +22,7 @@ var getLoaders = function (production, input) {
                             loader: 'awesome-typescript-loader', query: {
                                 configFileName: path.resolve(__dirname, './tsconfig.json'),
                                 useCache: true,
+                                cacheDirectory: 'node_modules/.cache/awcache',
                                 forceIsolatedModules: true,
                                 reportFiles: [
                                     "views/**/*.{ts,tsx}",

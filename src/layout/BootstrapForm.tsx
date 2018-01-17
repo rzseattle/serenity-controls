@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg} from '../ctrl/Fields';
+import {CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg, Ra} from '../ctrl/Fields';
 import {FileList} from '../ctrl/FileLists';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
@@ -72,7 +72,7 @@ const withBootstrapFormField = ({addInputClass = true}: IWithBootstrapFormFieldP
 
                     return (
                         <div className={classes.join(' ')}>
-                            {this.props.label && <label className="col-sm-2 control-label" dangerouslySetInnerHTML={{__html: "&nbsp;"}}>{props.label}</label>}
+                            {this.props.label && <label className="col-sm-2 control-label" >{props.label}</label>}
                             <div className="col-sm-10">
                                 {field}
                                 {props.help ?
@@ -231,6 +231,10 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             }
         }
         return data;
+    }
+
+    getErrors() {
+        return {fieldErrors: this.state.fieldErrors, formErrors: this.state.formErrors};
     }
 
     /**
