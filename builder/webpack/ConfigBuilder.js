@@ -2,7 +2,17 @@ const webpack = require('webpack');
 var {resolve, basename} = require('path');
 const fs = require('fs');
 
+let configDefaults = {
+    HTTPS: false,
+    ANALYZE: false,
+    PORT: 3000,
+    USE_FRAMEWORK_OBSERVERS: true
+};
+
+
 module.exports = function (input) {
+
+    input = Object.assign(configDefaults, input);
 
     if (fs.existsSync(input.PATH + '/webpack-assets.json')) {
         const assets = require(input.PATH + '/webpack-assets.json');
@@ -32,7 +42,7 @@ module.exports = function (input) {
     conf.module = GetLoaders(input.PRODUCTION, input);
 
     let tmp;
-    if (!input.PRODUCTION) {
+    if (!input.PRODUCTION && input.USE_FRAMEWORK_OBSERVERS) {
 
         const FileObserver = require('./FileObserver.js');
         FileObserver(
