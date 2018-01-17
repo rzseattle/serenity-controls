@@ -11,7 +11,11 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
     let newRouteFileGenerator = () => {
-        let conf = require(routeFile + "/route.json");
+        let targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
+
+        let conf = JSON.parse(fs.readFileSync(routeFile + "/route.json"));
+
+
         let ComponentFileContent = "";
         let ComponentFileContentMapFilesX = {};
         for (i in conf) {
@@ -19,16 +23,22 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
             let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
 
             if (fs.existsSync(componentPath)) {
-                let name = i.replace("/", "").replace(/\//g, "_");
+                let name = i
+                    .replace("/", "")
+                    .replace(/\//g, "_")
+                    .replace(/\{/g, "_")
+                    .replace(/\}/g, "_")
+                ;
                 ComponentFileContent += 'import ' + name + ' from \'' + componentPath.replace(/\\/g, '/') + '\';\n';
                 ComponentFileContent += ' export { ' + name + '}; \n';
+                conf[i].component = name;
                 ComponentFileContentMapFilesX[i] = conf[i];
             } else {
-                let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
+                ComponentFileContentMapFilesX[i] = conf[i];
             }
         }
 
-        let targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
+
         ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
         fs.writeFile(targetfilename, ComponentFileContent, function (err) {
             if (err) {
@@ -129,6 +139,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         ComponentFileContent += `\nexport{ ${ComponentFileContentEx.join(",")} };`;
         ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFiles)} ;`;
 
+        newRouteFileGenerator();
 
         fs.writeFile(SAVE_COMPONENT_TARGET, ComponentFileContent, function (err) {
             if (err) {

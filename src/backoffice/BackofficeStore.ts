@@ -5,6 +5,11 @@ declare var window;
 
 const getComponentFromURL = (url: string): string => {
     url = url.split('?')[0].replace("#", "");
+
+    if (window.newRoutingRules == true) {
+        return url;
+    }
+
     url = url.replace(/\//g, "_")
 
     if (url[0] == "_")
@@ -16,7 +21,7 @@ const getComponentFromURL = (url: string): string => {
     return url;
 }
 
-const initial = window.location.hash.replace("#", "") || "/app/admin/dashboard";
+const initial = window.location.hash.replace("#", "") || "/admin/dashboard";
 
 class BackofficeStore {
     //url path from browser
@@ -39,9 +44,9 @@ class BackofficeStore {
 
 
     changeView(path: string, input = {}) {
-        if(path) {
+        if (path) {
             let len = this.appBaseURL.length;
-            if(  path.substr(0, len) == this.appBaseURL){
+            if (path.substr(0, len) == this.appBaseURL) {
                 path = path.substr(len)
             }
 
@@ -113,7 +118,7 @@ class BackofficeStore {
             transaction(() => {//18206
                 this.viewData = {
                     ...data,
-                    baseURL: this.appBaseURL +  getBaseURL(viewURL),
+                    baseURL: this.appBaseURL + getBaseURL(viewURL),
                 };
                 this.viewInput = viewInput;
                 this.viewURL = url;

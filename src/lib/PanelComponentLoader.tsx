@@ -10,6 +10,7 @@ import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include"
 
 import {observer} from "mobx-react";
 import Comm from "frontend/src/lib/Comm";
+import {Copyable} from "frontend/src/ctrl/Copyable";
 
 declare var PRODUCTION: boolean;
 declare var window: any;
@@ -76,7 +77,6 @@ interface IState {
     hasError: boolean,
     error: any,
     devComponentFile: string,
-    devComponentDir: string,
 }
 
 @observer
@@ -84,6 +84,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     _notificationSystem: any;
     DebugTool: any = null;
+    private baseURL: string;
 
     constructor(props) {
         super(props);
@@ -93,7 +94,6 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             hasError: false,
             error: false,
             devComponentFile: null,
-            devComponentDir: null
         }
 
     }
@@ -123,14 +123,58 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     getComponent(component) {
 
-
         let {store} = this.props;
 
-        if (Views[store.viewComponentName])
-            return Views[store.viewComponentName];
+        if (!component) {
+            return false;
+        }
+        this.baseURL = null;
 
-        if (ViewsRoute[store.viewComponentName])
-            return ViewsRoute[store.viewComponentName];
+        component = component.replace(/\//g, "_")
+
+        if (component[0] == "_")
+            component = component.replace("_", "");
+
+        if (Views[component])
+            return Views[component];
+
+        if (ViewsRoute[component])
+            return ViewsRoute[component];
+
+
+        //dynamic path matching
+        for (let i in ViewsRoute.ViewFileMap) {
+            let el = ViewsRoute.ViewFileMap[i];
+            if (el.component && i.indexOf("{") != -1) {
+                let regexp = new RegExp(
+                    "^" + i
+                    // repplace all {var} to (.+?)
+                        .replace(
+                            /\{.+?\}/g,
+                            "(.+?)"
+                        )
+                        // replace all / to _
+                        .replace(
+                            /\//g,
+                            "_"
+                        )
+                        // replace first _ to ""
+                        .replace(
+                            "_",
+                            ""
+                        )
+                    + "$");
+                if (component.match(regexp) !== null) {
+                    //this.setState({baseURL: i.split("/{")[0]})
+                    let tmp = i.split("/{")[0].split("/");
+                    tmp = tmp.slice(0, -1);
+                    this.baseURL = tmp.join("/");
+                    console.log(this.baseURL);
+
+                    return ViewsRoute[el.component];
+                }
+            }
+        }
 
         return false;
     }
@@ -138,24 +182,29 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     componentWillReact() {
         let {store} = this.props;
 
-        let component = this.getComponent(store.viewComponentName);
-        console.error(store.viewComponentName, "cant find")
+        if (store.viewComponentName) {
+            let component = this.getComponent(store.viewComponentName);
+            if (!component) {
+                if (!PRODUCTION) {
+                    this.setState({devComponentFile: null});
+                    console.error(`Can't find component file for: "${store.viewComponentName}"`);
 
-        /*if (store.viewComponentName && !component && !PRODUCTION) {
-            Comm._post(
-                window.location.protocol + '//localhost:3000/debug/resolveComponent',
-                {
-                    component: store.viewComponentName,
-                    packages: JSON.stringify(window.reactBackOfficeVar.packages)
+
+                    if (ViewsRoute.ViewFileMap[store.viewComponentName]) {
+                        console.info("Route for path found:")
+                        let file = ViewsRoute.ViewFileMap[store.viewComponentName]._debug.template + ".component.tsx";
+                        console.info(ViewsRoute.ViewFileMap[store.viewComponentName]._debug.template + ".component.tsx", "File:")
+                        console.info(ViewsRoute.ViewFileMap[store.viewComponentName]._debug, "More")
+                        this.setState({devComponentFile: file});
+                    } else {
+                        console.error("Route dont't exist in routes");
+                        console.table(ViewsRoute.ViewFileMap)
+                    }
                 }
-            ).then((result) => {
-                console.log(result);
-                this.setState({
-                    devComponentFile: result.path,
-                    devComponentDir: result.dir,
-                })
-            });
-        }*/
+            }
+        }
+
+
     }
 
 
@@ -210,11 +259,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             </div>;
         }
 
-
         let notificaton = {
             ref: (ns) => this._notificationSystem = ns
         }
-
 
         return <div className={p.store.viewComponentName}>
 
@@ -230,6 +277,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             {Component && <Component
                 {...toJS(p.store.viewData)}
                 reloadProps={this.handleReloadProps.bind(this)}
+                baseURL={this.baseURL ? this.baseURL : p.store.viewData.baseURL}
                 _notification={this.handleNotifycation.bind(this)}
                 _log={this.handleLog.bind(this)}
                 _reloadProps={this.handleReloadProps.bind(this)}
@@ -242,12 +290,13 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 }}
             />}
 
-            {(Component == undefined && p.store.viewComponentName != null) && <div style={{padding: 10}}>
+            {(Component == false && p.store.viewComponentName != null) && <div style={{padding: 10}}>
                 <h3>Can't find component </h3>
-                <pre>"{p.store.viewComponentName}"</pre>
-                <pre><a href={`phpstorm://open?url=file://${this.state.devComponentFile}&line=1`}>{this.state.devComponentFile}</a></pre>
-                <pre><a href={`phpstorm://open?url=file://${this.state.devComponentDir}&line=0`}>{this.state.devComponentDir}</a></pre>
-                <pre style={{backgroundColor: 'white', padding: 10, border: 'solid 1px grey', fontSize: 11}}>{exampleComponent}</pre>
+                <pre>Route: "{p.store.viewComponentName}"</pre>
+                <pre>Component file: <a href={`phpstorm://open?url=file://${this.state.devComponentFile}&line=1`}>{this.state.devComponentFile}</a></pre>
+                <Copyable>
+                    <pre style={{backgroundColor: 'white', padding: 10, border: 'solid 1px grey', fontSize: 11}}>{exampleComponent}</pre>
+                </Copyable>
             </div>}
 
             {p.store.viewComponentName == null && <div>Loading...</div>}
