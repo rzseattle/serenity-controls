@@ -5,7 +5,7 @@ import * as React from "react";
 import {DebugTool} from "../utils/DebugTool"
 
 //declare var Views: any;
-import *  as Views from "../../../../build/js/tmp/components.include";
+import *  as Views from "../../../../build/js/tmp/components.include.js";
 import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include";
 
 import {observer} from "mobx-react";

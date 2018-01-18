@@ -174,8 +174,10 @@ class Comm {
                     }
 
                     if (!exceptionOccured) {
-                        if (data.errors === undefined) {
+                        if (data.errors === undefined && data.accessDeny === undefined) {
                             this.callEvent(Comm.EVENTS.SUCCESS, data);
+                        }else if (data.accessDeny !== undefined) {
+                            alert("Access deny " + data.accessDeny);
                         } else {
                             this.callEvent(Comm.EVENTS.VALIDATION_ERRORS, data);
                         }
@@ -194,6 +196,7 @@ class Comm {
         };
 
         this.xhr.open(this.method, this.url, true);
+        this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
         if (this.method == 'POST') {
             this.xhr.send(formData);
