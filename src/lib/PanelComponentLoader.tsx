@@ -6,10 +6,9 @@ import {DebugTool} from "../utils/DebugTool"
 
 //declare var Views: any;
 import *  as Views from "../../../../build/js/tmp/components.include.js";
-import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include";
+import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
 
 import {observer} from "mobx-react";
-import Comm from "frontend/src/lib/Comm";
 import {Copyable} from "frontend/src/ctrl/Copyable";
 
 declare var PRODUCTION: boolean;
@@ -137,6 +136,8 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
         if (Views[component])
             return Views[component];
+        if (Views["app_" + component])
+            return Views["app_" + component];
 
         if (ViewsRoute[component])
             return ViewsRoute[component];

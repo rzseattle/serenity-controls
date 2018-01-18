@@ -5,42 +5,77 @@ const path = require('path');
 var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
 
 
-    let routeFile = path.resolve(BASE_PATH + '/data/cache/symfony/');
-
-    let newRoutingStr = "";
-
-
     let newRouteFileGenerator = () => {
-        let targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
+    }
+    let routeFile = path.resolve(BASE_PATH + '/data/cache/symfony/');
+    let targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
 
-        let conf = JSON.parse(fs.readFileSync(routeFile + "/route.json"));
+    //new router observation
+    if (fs.existsSync(routeFile + "route.json")) {
 
 
-        let ComponentFileContent = "";
-        let ComponentFileContentMapFilesX = {};
-        for (i in conf) {
+        let newRoutingStr = "";
 
-            let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
 
-            if (fs.existsSync(componentPath)) {
-                let name = i
-                    .replace("/", "")
-                    .replace(/\//g, "_")
-                    .replace(/\{/g, "_")
-                    .replace(/\}/g, "_")
-                ;
-                ComponentFileContent += 'import ' + name + ' from \'' + componentPath.replace(/\\/g, '/') + '\';\n';
-                ComponentFileContent += ' export { ' + name + '}; \n';
-                conf[i].component = name;
-                ComponentFileContentMapFilesX[i] = conf[i];
-            } else {
-                ComponentFileContentMapFilesX[i] = conf[i];
+        newRouteFileGenerator = () => {
+            targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
+
+            let conf = JSON.parse(fs.readFileSync(routeFile + "/route.json"));
+
+
+            let ComponentFileContent = "";
+            let ComponentFileContentMapFilesX = {};
+            for (i in conf) {
+
+                let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
+
+                if (fs.existsSync(componentPath)) {
+                    let name = i
+                        .replace("/", "")
+                        .replace(/\//g, "_")
+                        .replace(/\{/g, "_")
+                        .replace(/\}/g, "_")
+                    ;
+                    ComponentFileContent += 'import ' + name + ' from \'' + componentPath.replace(/\\/g, '/') + '\';\n';
+                    ComponentFileContent += ' export { ' + name + '}; \n';
+                    conf[i].component = name;
+                    ComponentFileContentMapFilesX[i] = conf[i];
+                } else {
+                    ComponentFileContentMapFilesX[i] = conf[i];
+                }
             }
+
+
+            ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
+            fs.writeFile(targetfilename, ComponentFileContent, function (err) {
+                if (err) {
+                    return console.log(err);
+                } else {
+                    console.log('The file was saved: ' + targetfilename);
+                }
+            });
+
         }
 
 
-        ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
-        fs.writeFile(targetfilename, ComponentFileContent, function (err) {
+        fs.access(routeFile, fs.constants.R_OK, (err) => {
+            let size = 0;
+            if (!err) {
+                newRouteFileGenerator();
+                chokidar.watch(routeFile, {awaitWriteFinish: true}).on('change', (path, details) => {
+                    if (path && path.indexOf && path.indexOf("route.json") != -1) {
+                        if (details.size != size) {
+                            size = details.size;
+                            newRouteFileGenerator();
+                        }
+                    }
+                });
+            } else {
+                console.error("No route file detected");
+            }
+        });
+    } else {
+        fs.writeFile(targetfilename, "export const ViewFileMap = {};", function (err) {
             if (err) {
                 return console.log(err);
             } else {
@@ -49,24 +84,6 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         });
 
     }
-
-
-    fs.access(routeFile, fs.constants.R_OK, (err) => {
-        let size = 0;
-        if (!err) {
-            newRouteFileGenerator();
-            chokidar.watch(routeFile, {awaitWriteFinish: true}).on('change', (path, details) => {
-                if (path && path.indexOf && path.indexOf("route.json") != -1) {
-                    if (details.size != size) {
-                        size = details.size;
-                        newRouteFileGenerator();
-                    }
-                }
-            });
-        } else {
-            console.error("No route file detected");
-        }
-    });
 
 
     let watchedDirs = [

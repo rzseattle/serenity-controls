@@ -9,7 +9,7 @@ import Icon from "frontend/src/ctrl/Icon";
 import Comm from "frontend/src/lib/Comm";
 import {DevProperties} from "./DevProperties"
 import {Copyable} from "frontend/src/ctrl/Copyable";
-import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include";
+import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
 
 declare var DEV_PROPERIES: DevProperties;
 
