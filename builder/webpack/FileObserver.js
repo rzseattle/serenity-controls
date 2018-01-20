@@ -11,8 +11,8 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
     let targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
 
     //new router observation
-    if (fs.existsSync(routeFile + "route.json")) {
-
+    if (fs.existsSync(routeFile + "/route.json")) {
+        console.log("jest plik");
 
         let newRoutingStr = "";
 
@@ -75,6 +75,8 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
             }
         });
     } else {
+        console.log("Ni ma pliku wczytuje pusty");
+        console.log(routeFile + "route.json");
         fs.writeFile(targetfilename, "export const ViewFileMap = {};", function (err) {
             if (err) {
                 return console.log(err);
