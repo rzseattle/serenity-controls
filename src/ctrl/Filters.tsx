@@ -201,18 +201,18 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
                 <div className="w-filter-date-exists">
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'}, this.handleChange)} type="checkbox"/> <Icon name={"ScrollUpDown"} /> Według wybou
+                            <input checked={s.choiceType == 'range'} onChange={e => this.setState({choiceType: 'range'}, this.handleChange)} type="checkbox"/> <Icon name={"ScrollUpDown"}/> Według wybou
                         </label>
                     </div>
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'}, this.handleChange)} type="checkbox"/> <Icon name={"CheckMark"} />  Data ustalona
+                            <input checked={s.choiceType == 'exists'} onChange={e => this.setState({choiceType: 'exists'}, this.handleChange)} type="checkbox"/> <Icon name={"CheckMark"}/> Data ustalona
                         </label>
                     </div>
 
                     <div>
                         <label>
-                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'}, this.handleChange)} type="checkbox"/> <Icon name={"Clear"} />  Brak daty
+                            <input checked={s.choiceType == 'not-exists'} onChange={e => this.setState({choiceType: 'not-exists'}, this.handleChange)} type="checkbox"/> <Icon name={"Clear"}/> Brak daty
                         </label>
                     </div>
                 </div>
@@ -406,12 +406,11 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
 
     constructor(props) {
         super(props)
-        this.state = {option: '=='};
+        this.state = {option: 'LIKE'};
     }
 
-    handleApply() {
-        this.setState({show: false});
 
+    getValue() {
         let val, label;
         if (this.state.option != 'IN') {
             val = this.input1.value;
@@ -428,14 +427,29 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
 
         }
 
-        this.props.onChange({
+        return {
             field: this.props.field,
             value: val,
             condition: this.state.option,
             caption: this.props.caption,
             labelCaptionSeparator: ":",
             label: label
-        });
+        };
+    }
+
+    handleApply() {
+        this.setState({show: false});
+
+
+        if (this.props.onApply) {
+            console.log(this.getValue());
+            this.props.onApply(this.getValue());
+        }
+
+        if (this.props.onChange) {
+
+            this.props.onChange(this.getValue());
+        }
 
     }
 
@@ -447,6 +461,7 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
 
     render() {
         const options = {
+            'LIKE': 'zawiera',
             '==': 'równa',
             '<': 'mniejsza',
             '<=': 'mniejsza równa',
@@ -668,7 +683,6 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
     }
 
 }
-
 
 
 export {

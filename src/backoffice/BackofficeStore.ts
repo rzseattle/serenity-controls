@@ -147,7 +147,9 @@ class BackofficeStore {
 
 var store = new BackofficeStore;
 
-store.loadDataForView(initial);
+if(initial) {
+    store.loadDataForView(initial);
+}
 
 
 /*const disposer2 = observe(store, "viewURL", (change) => {

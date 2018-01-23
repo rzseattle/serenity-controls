@@ -54,15 +54,15 @@ const ImageBox = SortableElement((props) => {
 
 
     return (<div style={style}>
-        <a onClick={() => props.onClick(props._index)} >
+        <a onClick={() => props.onClick(props._index)}>
             <span>
-                <span></span>{file.uploaded ? <img src={file.path} alt=""/> : <Icon name={"Upload"} />}
+                <span></span>{file.uploaded ? <img src={file.path} alt=""/> : <Icon name={"Upload"}/>}
 
                 <div className="w-gallery-on-hover">
                     <a onClick={(e) => {
                         e.stopPropagation();
                         props.onDelete(props._index);
-                    }} className="w-gallery-delete"><i className="fa fa-times"></i></a>
+                    }} className="w-gallery-delete"><Icon name={"Clear"}/> </a>
                     <DragHandle/>
                 </div>
             </span>
@@ -75,7 +75,7 @@ const SortableImageList = SortableContainer((props) => {
 
 
     return (
-        <div className="w-gallery-list" > 
+        <div className="w-gallery-list">
             {props.files && props.files.map((file, index) =>
                 <ImageBox
                     file={file}
@@ -91,7 +91,6 @@ const SortableImageList = SortableContainer((props) => {
         </div>
     )
 });
-
 
 
 interface IFileList extends IFieldProps {
@@ -168,7 +167,7 @@ class FileList extends React.Component<IFileList, any> {
         }
     }
 
-    handleMoveFile(moveEvent)  {
+    handleMoveFile(moveEvent) {
         let {oldIndex, newIndex} = moveEvent;
         let currFiles = this.props.value ? this.props.value.slice() : [];
         currFiles.splice(newIndex, 0, currFiles.splice(oldIndex, 1)[0]);
@@ -268,4 +267,4 @@ class FileList extends React.Component<IFileList, any> {
     }
 }
 
-export { FileList};
+export {FileList};

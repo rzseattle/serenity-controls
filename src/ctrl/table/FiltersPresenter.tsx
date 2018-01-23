@@ -1,4 +1,5 @@
 import * as React from "react";
+import Icon from "frontend/src/ctrl/Icon";
 
 export default function (props) {
 
@@ -10,7 +11,7 @@ export default function (props) {
                     <div key={index}>
                         <div><i className={'fa fa-' + (el.dir == 'asc' ? 'arrow-down' : 'arrow-up')}></i></div>
                         <div className="caption">{el.caption}</div>
-                        <div className="remove" onClick={(e) => props.orderDelete(field)}><i className="fa fa-times"></i></div>
+                        <div className="remove" onClick={(e) => props.orderDelete(field)}><Icon name={"Clear"} /> </div>
                     </div>
                 )}
 
@@ -20,7 +21,8 @@ export default function (props) {
                         <div><i className="ms-Icon ms-Icon--Filter"></i></div>
                         <div className="caption">{el.caption}</div>
                         <div className="value" dangerouslySetInnerHTML={{__html: el.label}}/>
-                        <div className="remove" onClick={(e) => props.FilterDelete(key)}><i className="fa fa-times"></i></div>
+                        <div className="remove" onClick={(e) => props.FilterDelete(key)}><Icon name={"Clear"} /></div>
+
                     </div>
                 )}
             </div>

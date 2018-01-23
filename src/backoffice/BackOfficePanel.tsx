@@ -136,7 +136,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                         }}><Icon name="Accounts"/> Twoje konto</a>
                     </div>
                     <div style={{padding: 10}}>
-                        <a href={"access/accessController/logout"}><Icon name="SignOut"/> Wyloguj się</a>
+                        <a href={"/crm/access/logout"}><Icon name="SignOut"/> Wyloguj się</a>
                     </div>
                 </Modal>
 

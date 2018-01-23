@@ -28,6 +28,7 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             filter: [{
+                caption: caption,
                 field: field,
                 component: NumericFilter,
             }]
@@ -40,6 +41,7 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             filter: [{
+                caption: caption,
                 field: field,
                 component: NumericFilter,
             }]
