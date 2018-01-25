@@ -25,9 +25,11 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
             let ComponentFileContent = "";
             let ComponentFileContentMapFilesX = {};
+            let SassFileContent = "";
             for (i in conf) {
 
                 let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
+                let sassPath = BASE_PATH + conf[i]._debug.template + ".component.sass";
 
                 if (fs.existsSync(componentPath)) {
                     let name = i
@@ -40,8 +42,14 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                     ComponentFileContent += ' export { ' + name + '}; \n';
                     conf[i].component = name;
                     ComponentFileContentMapFilesX[i] = conf[i];
+                    if (fs.existsSync(sassPath)) {
+                        SassFileContent += `.${name}\n`;
+                        SassFileContent += `    @import "${sassPath.replace(/\\/g, "/")}";\n`;
+                    }
                 } else {
                     ComponentFileContentMapFilesX[i] = conf[i];
+                    if(componentPath.indexOf("access") != -1)
+                        console.error(componentPath , "Dont exist");
                 }
             }
 
@@ -54,6 +62,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                     console.log('The file was saved: ' + targetfilename);
                 }
             });
+            fs.writeFile(SAVE_SASS_TARGET, SassFileContent, function (err) {});
 
         }
 
@@ -124,56 +133,66 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
     const linkArrowDir = () => {
-        let ComponentFileContent = '';
-        let ComponentFileContentEx = [];
-        let ComponentFileContentMapFiles = {};
-        let SassFileContent = '';
-        watchedDirs.map(config => {
-            let [components, sass] = walk(config.dir);
-            components.forEach((entry) => {
-                let name = entry.replace(config.dir + '/', '');
-                name = name.replace(/\//g, '_');
-                name = name.replace('.component.js', '');
-                name = name.replace('.component.tsx', '');
-                name = config.package + '_' + name;
-                let data = {file: entry}
-
-                ComponentFileContent += 'import ' + name + ' from \'' + entry.replace(/\\/g, '/') + '\';\n';
-                //ComponentFileContent += `export ${name};\n`;
-                ComponentFileContentMapFiles[name] = entry.replace(/\\/g, '/');
-                ComponentFileContentEx.push(name)
-            });
-            sass.forEach((entry) => {
-                let name = entry.replace(config.dir + '/', '');
-                name = name.replace(/\//g, '_');
-                name = name.replace('.component.sass', '');
-                name = config.package + '_' + name;
-                SassFileContent += `.${name}\n`;
-                SassFileContent += `    @import "${entry.replace(/\\/g, "/")}";\n`;
-
-            });
-
-
-        });
-        ComponentFileContent += `\nexport{ ${ComponentFileContentEx.join(",")} };`;
-        ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFiles)} ;`;
 
         newRouteFileGenerator();
 
-        fs.writeFile(SAVE_COMPONENT_TARGET, ComponentFileContent, function (err) {
-            if (err) {
-                return console.log(err);
-            } else {
-                console.log('The file was saved!');
-            }
-        });
-        fs.writeFile(SAVE_SASS_TARGET, SassFileContent, function (err) {
-            if (err) {
-                return console.log(err);
-            } else {
-                console.log('The file was saved!');
-            }
-        });
+        if (false) {
+            let ComponentFileContent = '';
+            let ComponentFileContentEx = [];
+            let ComponentFileContentMapFiles = {};
+            let SassFileContent = '';
+            watchedDirs.map(config => {
+
+                let [components, sass] = walk(config.dir);
+                components.forEach((entry) => {
+                    let name = entry.replace(config.dir + '/', '');
+                    name = name.replace(/\//g, '_');
+                    name = name.replace('.component.js', '');
+                    name = name.replace('.component.tsx', '');
+                    name = config.package + '_' + name;
+                    let data = {file: entry}
+
+                    ComponentFileContent += 'import ' + name + ' from \'' + entry.replace(/\\/g, '/') + '\';\n';
+                    //ComponentFileContent += `export ${name};\n`;
+                    ComponentFileContentMapFiles[name] = entry.replace(/\\/g, '/');
+                    ComponentFileContentEx.push(name)
+                });
+                sass.forEach((entry) => {
+                    let name = entry.replace(config.dir + '/', '');
+                    name = name.replace(/\//g, '_');
+                    name = name.replace('.component.sass', '');
+                    name = config.package + '_' + name;
+                    SassFileContent += `.${name}\n`;
+                    SassFileContent += `    @import "${entry.replace(/\\/g, "/")}";\n`;
+
+                });
+
+
+            });
+            //file router enabled/disabled
+
+            ComponentFileContent += `\nexport{ ${ComponentFileContentEx.join(",")} };`;
+            ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFiles)} ;`;
+
+            fs.writeFile(SAVE_COMPONENT_TARGET, ComponentFileContent, function (err) {
+                if (err) {
+                    return console.log(err);
+                } else {
+                    console.log('The file was saved!');
+                }
+            });
+
+            fs.writeFile(SAVE_SASS_TARGET, SassFileContent, function (err) {
+                if (err) {
+                    return console.log(err);
+                } else {
+                    console.log('The file was saved!');
+                }
+            });
+
+        }
+
+
     };
 
     linkArrowDir();
@@ -193,11 +212,9 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
         })
         .on('add', (event, path) => {
-            console.log(event, path);
             linkArrowDir();
         })
         .on('unlink', (event, path) => {
-            console.log(event, path);
             linkArrowDir();
         });
 

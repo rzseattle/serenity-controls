@@ -2,14 +2,11 @@ import * as NotificationSystem from "react-notification-system";
 //import * as Notifications from "react-notification-system";
 import {toJS} from "mobx";
 import * as React from "react";
-import {DebugTool} from "../utils/DebugTool"
 
-//declare var Views: any;
-import *  as Views from "../../../../build/js/tmp/components.include.js";
-import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
 
 import {observer} from "mobx-react";
 import {Copyable} from "frontend/src/ctrl/Copyable";
+import Router from "frontend/src/backoffice/Router";
 
 declare var PRODUCTION: boolean;
 declare var window: any;
@@ -120,87 +117,19 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
     }
 
-    getComponent(component) {
-
-        let {store} = this.props;
-
-        if (!component) {
-            return false;
-        }
-        this.baseURL = null;
-
-        component = component.replace(/\//g, "_")
-
-        if (component[0] == "_")
-            component = component.replace("_", "");
-
-        if (Views[component])
-            return Views[component];
-        if (Views["app_" + component])
-            return Views["app_" + component];
-
-        if (ViewsRoute[component])
-            return ViewsRoute[component];
-
-
-        //dynamic path matching
-        for (let i in ViewsRoute.ViewFileMap) {
-            let el = ViewsRoute.ViewFileMap[i];
-            if (el.component && i.indexOf("{") != -1) {
-                let regexp = new RegExp(
-                    "^" + i
-                    // repplace all {var} to (.+?)
-                        .replace(
-                            /\{.+?\}/g,
-                            "(.+?)"
-                        )
-                        // replace all / to _
-                        .replace(
-                            /\//g,
-                            "_"
-                        )
-                        // replace first _ to ""
-                        .replace(
-                            "_",
-                            ""
-                        )
-                    + "$");
-                if (component.match(regexp) !== null) {
-                    //this.setState({baseURL: i.split("/{")[0]})
-                    let tmp = i.split("/{")[0].split("/");
-                    tmp = tmp.slice(0, -1);
-                    this.baseURL = tmp.join("/");
-                    console.log(this.baseURL);
-
-                    return ViewsRoute[el.component];
-                }
-            }
-        }
-
-        return false;
+    getComponentInfo(path) {
+        return Router.resolve(path);
     }
 
     componentWillReact() {
         let {store} = this.props;
 
         if (store.viewComponentName) {
-            let component = this.getComponent(store.viewComponentName);
+            let component = this.getComponentInfo(store.viewComponentName);
             if (!component) {
                 if (!PRODUCTION) {
                     this.setState({devComponentFile: null});
                     console.error(`Can't find component file for: "${store.viewComponentName}"`);
-
-
-                    if (ViewsRoute.ViewFileMap[store.viewComponentName]) {
-                        console.info("Route for path found:")
-                        let file = ViewsRoute.ViewFileMap[store.viewComponentName]._debug.template + ".component.tsx";
-                        console.info(ViewsRoute.ViewFileMap[store.viewComponentName]._debug.template + ".component.tsx", "File:")
-                        console.info(ViewsRoute.ViewFileMap[store.viewComponentName]._debug, "More")
-                        this.setState({devComponentFile: file});
-                    } else {
-                        console.error("Route dont't exist in routes");
-                        console.table(ViewsRoute.ViewFileMap)
-                    }
                 }
             }
         }
@@ -210,7 +139,11 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
     handleReloadProps(input = {}, callback: () => any) {
-        this.props.store.changeView(null, input, callback);
+        this.props.onLoadStart();
+        this.props.store.changeView(null, input, () => {
+            this.props.onLoadEnd();
+            callback();
+        });
     }
 
 
@@ -240,13 +173,14 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     render() {
         const s = this.state;
         const p = this.props;
-        let Component = this.getComponent(p.store.viewComponentName);
+        let ComponentInfo: any = Router.resolve(p.store.viewComponentName);
+        
 
         let DebugTool = this.DebugTool;
         let debugVar = {
             log: s.log,
             propsReloadHandler: this.handleReloadProps.bind(this),
-            componentData: {},
+            componentInfo: ComponentInfo,
             props: p.store.viewData,
             store: p.store
         };
@@ -264,8 +198,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             ref: (ns) => this._notificationSystem = ns
         }
 
-        return <div className={p.store.viewComponentName}>
-
+        return <div className={ComponentInfo.extendedInfo.component}>
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
@@ -275,7 +208,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             </div>}
 
 
-            {Component && <Component
+            {ComponentInfo && <ComponentInfo.Component
                 {...toJS(p.store.viewData)}
                 reloadProps={this.handleReloadProps.bind(this)}
                 baseURL={this.baseURL ? this.baseURL : p.store.viewData.baseURL}
@@ -291,7 +224,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 }}
             />}
 
-            {(Component == false && p.store.viewComponentName != null) && <div style={{padding: 10}}>
+            {(ComponentInfo == false && p.store.viewComponentName != null) && <div style={{padding: 10}}>
                 <h3>Can't find component </h3>
                 <pre>Route: "{p.store.viewComponentName}"</pre>
                 <pre>Component file: <a href={`phpstorm://open?url=file://${this.state.devComponentFile}&line=1`}>{this.state.devComponentFile}</a></pre>

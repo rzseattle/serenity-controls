@@ -30,7 +30,8 @@ interface IBackOfficePanelState {
     currentView: string
     userMenuVisible: boolean,
     menuVisible: boolean,
-    layout: "mobile" | "normal" | "large"
+    layout: "mobile" | "normal" | "large",
+    loading: boolean
 }
 
 @observer
@@ -50,6 +51,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             userMenuVisible: false,
             menuVisible: true,
             layout: "normal",
+            loading: false
         }
 
         this.props.store.onViewLoad(() => this.handleLoadStart());
@@ -93,14 +95,18 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     }
 
     handleLoadStart() {
+        this.setState({loading: true});
         Progress.show();
+
     }
 
     handleLoadEnd() {
-        Progress.hide();
+        this.setState({loading: false});
+        setTimeout(() => Progress.hide(), 20);
     }
 
     render() {
+
 
         if (this.props.onlyBody) {
             return <PanelComponentLoader store={this.props.store}/>;
@@ -123,7 +129,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     </div>
                     {this.props.user.login}
                 </div>
-                {<div className={" w-loader " + (this.props.store.isViewLoading ? "w-loader-hidden" : "")}>
+                {<div className={" w-loader " + (this.props.store.isViewLoading || this.state.loading ? "w-loader-hidden" : "")}>
                     <span><i></i><i></i><i></i><i></i></span>
                 </div>}
 
@@ -151,15 +157,15 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                 </div>}
                 <div className="w-panel-body" style={{position: "relative"}}>
                     <Progress.Component
-                        style={{background: "black", top: 0,  zIndex: 30, height: 3, position: 'absolute', overflow: "hidden"}}
-                        thumbStyle={{background: "#0078D7", height: 4}}
+                        style={{background: "transparent", top: 2, zIndex: 30, height: 3, position: 'absolute', overflow: "hidden", borderRadius: 4}}
+                        thumbStyle={{background: "#950309", height: 3}}
                     />
-                    <PanelComponentLoader
+                    {this.props.store.viewComponentName && <PanelComponentLoader
                         store={this.props.store}
-                        onLoadStart={this.handleLoadStart}
-                        onLoadEnd={this.handleLoadEnd}
+                        onLoadStart={this.handleLoadStart.bind(this)}
+                        onLoadEnd={this.handleLoadEnd.bind(this)}
 
-                    />
+                    />}
                 </div>
             </div>
 

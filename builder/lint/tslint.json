@@ -9,9 +9,10 @@
   "rules": {
     "no-set-state": "off",
     // override tslint-react rules here
+
     "jsx-wrap-multiline": false,
     "ordered-imports": false,
-    "max-line-length": 200,
+    "max-line-length": false,
     "no-submodule-imports": false,
     "triple-equals": false,
     "jsx-no-multiline-js": false,

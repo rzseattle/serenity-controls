@@ -4,7 +4,6 @@ import {TabPane, Tabs} from '../ctrl/Tabs';
 import JSONTree from 'react-json-tree';
 import {Modal} from '../ctrl/Overlays';
 import ErrorReporter from '../lib/ErrorReporter';
-import {ViewFileMap} from '../../../../build/js/tmp/components.include';
 import Icon from "frontend/src/ctrl/Icon";
 import Comm from "frontend/src/lib/Comm";
 import {DevProperties} from "./DevProperties"
@@ -18,8 +17,8 @@ interface IDebugToolProps {
     store: any,
     log: any,
     propsReloadHandler: any,
-    componentData: any,
     error?: any,
+    componentInfo: any,
 }
 
 //todo js -> ts
@@ -118,6 +117,10 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
     render() {
 
         let s = this.state;
+
+        let {componentInfo} = this.props;
+
+        let extendedInfo = componentInfo.extendedInfo;
         return <div className={'w-debug-tool'}
                     tabIndex={1}
                     style={this.state.style}
@@ -141,11 +144,11 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
                 <div className='toolbar btn-toolbar'>
 
                     <a onClick={() => this.props.propsReloadHandler()} className="btn btn-sm btn-default"><Icon name={"Sync"}/> Reload props </a>
-                    {ViewsRoute.ViewFileMap[this.props.store.viewURL] && <>
-                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${ViewsRoute.ViewFileMap[this.props.store.viewURL]._debug.file}&line=${ViewsRoute.ViewFileMap[this.props.store.viewURL]._debug.line}`} className="btn btn-default btn-sm">
+                    {extendedInfo && <>
+                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${extendedInfo._debug.file}&line=${extendedInfo._debug.line}`} className="btn btn-default btn-sm">
                             <Icon name={"FileCode"}/> edit backend
                         </a>
-                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${ViewsRoute.ViewFileMap[this.props.store.viewURL]._debug.template}.component.tsx&line=1`} className="btn btn-default btn-sm"><Icon name={"Code"}/> edit frontend</a>
+                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${extendedInfo._debug.template}.component.tsx&line=1`} className="btn btn-default btn-sm"><Icon name={"Code"}/> edit frontend</a>
 
                     </>}
 
