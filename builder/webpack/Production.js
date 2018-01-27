@@ -2,11 +2,11 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, ANALYZE, webpack) {
+var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LANGUAGE, ANALYZE, webpack) {
     conf = {};
     conf.entry = ENTRY_POINTS;
     conf.output = {
-        filename: 'bundle-[id]-[hash].min.js',
+        filename: `bundle-${LANGUAGE}-[id]-[hash].min.js`,
         path: PATH,
         publicPath: PUBLIC_PATH
     };

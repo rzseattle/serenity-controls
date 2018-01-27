@@ -6,7 +6,8 @@ let configDefaults = {
     HTTPS: false,
     ANALYZE: false,
     PORT: 3000,
-    USE_FRAMEWORK_OBSERVERS: true
+    USE_FRAMEWORK_OBSERVERS: true,
+    LANGUAGE: "pl"
 };
 
 
@@ -24,7 +25,6 @@ module.exports = function (input) {
         } catch (e) {
         }
     }
-
 
 
     var conf = {
@@ -72,6 +72,7 @@ module.exports = function (input) {
             input.PUBLIC_PATH,
             input.PATH,
             input.BASE_PATH,
+            input.LANGUAGE,
             input.ANALYZE,
             webpack
         );
@@ -93,6 +94,23 @@ module.exports = function (input) {
     }));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
+
+    conf.plugins.push(
+        function () {
+            this.plugin("done", function (stats) {
+
+                fs.writeFile(input.PATH + '/compolation-hash.txt', stats.hash, function () {
+                });
+
+/*                fs.readdirSync(input.PATH).forEach(file => {
+                    if( (file.indexOf('.js') != -1 || file.indexOf('.css') != -1) && file.indexOf(stats.hash) == -1){
+                        fs.unlink(file, function(){});
+                    }
+                })*/
+
+
+            })
+        });
 
 
     if (false) {
