@@ -148,16 +148,17 @@ class Table extends React.Component<ITableProps, ITableState> {
                 return a & a
             }, 0);
         }
-        this.hashCode = hashCode(this.props.controlKey + (window.CONTROLS_BASE_LOCATION != undefined ? window.CONTROLS_BASE_LOCATION : window.location.href));
+        this.hashCode = hashCode(this.props.controlKey + (window.CONTROLS_BASE_LOCATION != undefined ? window.CONTROLS_BASE_LOCATION : window.location.pathname + window.location.hash.split("?")[0]));
 
         this.tooltipTimeout = null;
+
     }
 
 
     componentWillMount() {
 
-        if (this.props.rememberState && window.localStorage[this.hashCode]) {
 
+        if (this.props.rememberState && window.localStorage[this.hashCode]) {
             const local = JSON.parse(window.localStorage[this.hashCode]);
             let filters = deepCopy(this.state.filters);
             //for controlable filters u cant overwrite them when table is mounting

@@ -7,8 +7,9 @@ interface ITabsCallback {
 
 interface ITabsProps {
     children: JSX.Element[] | any[];
-    onTabChange?: ITabsCallback
-    defaultActiveTab?: number
+    onTabChange?: ITabsCallback;
+    defaultActiveTab?: number;
+    activeTab?: number
 
 }
 
@@ -22,7 +23,7 @@ class Tabs extends React.Component<ITabsProps, ITabsState> {
     constructor(props) {
         super(props);
         this.state = {
-            currentTab: props.defaultActiveTab || 0
+            currentTab: props.activeTab || props.defaultActiveTab || 0
         }
     }
 
@@ -30,9 +31,16 @@ class Tabs extends React.Component<ITabsProps, ITabsState> {
         if (this.props.onTabChange) {
             this.props.onTabChange(index, e);
         }
-        this.setState({currentTab: index});
+        if (this.props.activeTab == null) {
+            this.setState({currentTab: index});
+        }
     }
 
+    componentWillReceiveProps(nextProps: Readonly<ITabsProps>, nextContext: any): void {
+        if (nextProps.activeTab != null) {
+            this.setState({currentTab: nextProps.activeTab});
+        }
+    }
 
     render() {
         const p = this.props;

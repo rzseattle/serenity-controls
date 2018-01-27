@@ -7,8 +7,9 @@ import {Modal} from '../ctrl/Overlays';
 import {observer} from "mobx-react";
 import {IMenuSection, Menu} from 'frontend/src/backoffice/Menu';
 
-import "react-progress-2/main.css"
-import Progress from "react-progress-2";
+import * as NProgress from "nprogress/nprogress.js"
+import "nprogress/nprogress.css"
+NProgress.configure({ parent: '.w-panel-body' });
 
 //import {Arrow} from "../../../../data/cache/db/ts-definitions";
 
@@ -95,18 +96,15 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     }
 
     handleLoadStart() {
-        this.setState({loading: true});
-        Progress.show();
+        NProgress.start();
 
     }
 
     handleLoadEnd() {
-        this.setState({loading: false});
-        setTimeout(() => Progress.hide(), 20);
+        NProgress.done();
     }
 
     render() {
-
 
         if (this.props.onlyBody) {
             return <PanelComponentLoader store={this.props.store}/>;
@@ -156,10 +154,10 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     />
                 </div>}
                 <div className="w-panel-body" style={{position: "relative"}}>
-                    <Progress.Component
+                    {/*<Progress.Component
                         style={{background: "transparent", top: 2, zIndex: 30, height: 3, position: 'absolute', overflow: "hidden", borderRadius: 4}}
                         thumbStyle={{background: "#950309", height: 3}}
-                    />
+                    />*/}
                     {this.props.store.viewComponentName && <PanelComponentLoader
                         store={this.props.store}
                         onLoadStart={this.handleLoadStart.bind(this)}

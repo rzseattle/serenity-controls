@@ -20,7 +20,7 @@ interface IFile {
 }
 
 
-const DragHandle = SortableHandle(() => <a className="w-gallery-drag"><i className="fa fa-arrows"></i></a>); //
+const DragHandle = SortableHandle(() => <a className="w-gallery-drag"><Icon  name={"SIPMove"} /></a>); //
 
 
 const Progress = (props) => {
@@ -54,7 +54,7 @@ const ImageBox = SortableElement((props) => {
 
 
     return (<div style={style}>
-        <a onClick={() => props.onClick(props._index)}>
+        <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
             <span>
                 <span></span>{file.uploaded ? <img src={file.path} alt=""/> : <Icon name={"Upload"}/>}
 
@@ -67,7 +67,7 @@ const ImageBox = SortableElement((props) => {
                 </div>
             </span>
             <div className="w-gallery-name">{file.name}</div>
-        </a>
+        </div>
     </div>)
 });
 
