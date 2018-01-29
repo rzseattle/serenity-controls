@@ -1,4 +1,3 @@
-const AssetsPlugin = require('assets-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -11,6 +10,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
         publicPath: PUBLIC_PATH
     };
     conf.plugins = [
+        new webpack.HashedModuleIdsPlugin(),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({filename: 'bundle-[hash].css', allChunks: true}),
 
@@ -22,13 +22,6 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
             }
         }),
 
-
-        new AssetsPlugin({path: PATH, update: true}),
-        /*     new CleanWebpackPlugin(['dist'], {
-                 root: PATH,
-                 verbose: true,
-                 dry: false
-             }),*/
         new webpack.ContextReplacementPlugin(/moment[\\/]locale$/, /^\.\/(pl)$/),
 
         new webpack.optimize.UglifyJsPlugin({comments: false, minimize: true, sourceMap: true}),

@@ -3,7 +3,7 @@ var getLoaders = function (production, input) {
 
     let loaders =
         {
-            loaders: [
+            rules: [
                 {
                     test: [/\.js$/, /\.es6$/],
                     exclude: path.resolve(input.BASE_PATH, 'node_modules'),
@@ -73,7 +73,7 @@ var getLoaders = function (production, input) {
 
     if (production) {
         const ExtractTextPlugin = require('extract-text-webpack-plugin');
-        loaders.loaders.push(
+        loaders.rules.push(
             {
                 test: [/\.sass/, /\.scss/],
                 loader: ExtractTextPlugin.extract(
@@ -97,7 +97,7 @@ var getLoaders = function (production, input) {
     } else {
 
 
-        loaders.loaders.push(
+        loaders.rules.push(
             {
                 test: /\.sass/,
                 loaders: [

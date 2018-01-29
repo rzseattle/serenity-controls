@@ -15,17 +15,6 @@ module.exports = function (input) {
 
     input = Object.assign(configDefaults, input);
 
-    if (fs.existsSync(input.PATH + '/webpack-assets.json')) {
-        const assets = require(input.PATH + '/webpack-assets.json');
-        try {
-            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.js));
-            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.js) + ".map");
-            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.css));
-            fs.unlinkSync(input.PATH + '/' + basename(assets.admin.css) + ".map");
-        } catch (e) {
-        }
-    }
-
 
     var conf = {
         context: resolve(__dirname, ''),
@@ -87,10 +76,20 @@ module.exports = function (input) {
 
     conf.plugins.push(new HardSourceWebpackPlugin({
         // Either an absolute path or relative to webpack's options.context.
-        cacheDirectory: 'node_modules/.cache/hard-source/[confighash]',
+        cacheDirectory: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]',
         // Either an absolute path or relative to webpack's options.context.
         // Sets webpack's recordsPath if not already set.
-        recordsPath: 'node_modules/.cache/hard-source/[confighash]/records.json',
+        recordsPath: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]/records.json',
+        configHash: function (webpackConfig) {
+            // node-object-hash on npm can be used to build this.
+            return require('node-object-hash')({sort: false}).hash(webpackConfig);
+        },
+        // Either false, a string, an object, or a project hashing function.
+        environmentHash: {
+            root: process.cwd(),
+            directories: [],
+            files: ['package-lock.json', 'yarn.lock'],
+        },
     }));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
@@ -98,17 +97,8 @@ module.exports = function (input) {
     conf.plugins.push(
         function () {
             this.plugin("done", function (stats) {
-
-                fs.writeFile(input.PATH + '/compolation-hash.txt', stats.hash, function () {
+                fs.writeFile(input.PATH + `/compolation-hash-${input.LANGUAGE}.txt`, stats.hash, function () {
                 });
-
-/*                fs.readdirSync(input.PATH).forEach(file => {
-                    if( (file.indexOf('.js') != -1 || file.indexOf('.css') != -1) && file.indexOf(stats.hash) == -1){
-                        fs.unlink(file, function(){});
-                    }
-                })*/
-
-
             })
         });
 
