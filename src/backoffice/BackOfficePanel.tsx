@@ -11,7 +11,7 @@ import * as NProgress from "nprogress/nprogress.js"
 import "nprogress/nprogress.css"
 NProgress.configure({ parent: '.w-panel-body' });
 
-//import {Arrow} from "../../../../data/cache/db/ts-definitions";
+
 
 
 interface IBackOfficePanelProps {
@@ -73,7 +73,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
     handleAppIconClicked() {
         if (this.state.layout != "mobile") {
-            this.props.store.changeView('app/admin/dashboard')
+            this.props.store.changeView('/admin/dashboard')
         } else {
             this.setState({menuVisible: !this.state.menuVisible});
         }

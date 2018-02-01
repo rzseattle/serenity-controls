@@ -33,7 +33,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         publicPath: 'http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`,
         host: 'localhost',
 
-        stats: {
+
+        stats: "minimal",/*{
             colors: true,
             hash: false,
             version: false,
@@ -48,7 +49,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
             errorDetails: false,
             warnings: false,
             publicPath: false
-        },
+        },*/
 
 
         disableHostCheck: true,
@@ -58,7 +59,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
             'Content-Type': 'application/javascript'
         },
 
-        setup: (app) => {
+        before: (app) => {
 
             /*const busboyBodyParser = require('busboy-body-parser');
             app.use(busboyBodyParser({limit: '5mb', multi: true}));*/

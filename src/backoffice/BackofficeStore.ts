@@ -1,7 +1,15 @@
 import {autorun, observable, toJS, transaction} from "mobx";
 import Comm from '../lib/Comm'
 
+
 declare var window;
+
+const getBaseURL = (url: string = null): string => {
+    let baseURL = url.split('?')[0].replace("#", "");
+    let tmp = baseURL.split('/')
+    baseURL = tmp.slice(0, -1).join('/');
+    return baseURL;
+}
 
 const getComponentFromURL = (url: string): string => {
     url = url.split('?')[0].replace("#", "");
@@ -9,7 +17,6 @@ const getComponentFromURL = (url: string): string => {
     if (window.newRoutingRules == true) {
         return url;
     }
-
     url = url.replace(/\//g, "_")
 
     if (url[0] == "_")
@@ -18,10 +25,17 @@ const getComponentFromURL = (url: string): string => {
     /*//old versions ( raporty ) hack
     if (url[0] == "_")
         url = "app" + url;*/
+
+
     return url;
 }
+let initial;
+if (window.reactBackOfficeVar.path) {
+    initial = window.reactBackOfficeVar.path;
+} else {
+    initial = window.location.hash.replace("#", "") || "/admin/dashboard";
+}
 
-const initial = window.location.hash.replace("#", "") || "/admin/dashboard";
 
 class BackofficeStore {
     //url path from browser
@@ -33,7 +47,7 @@ class BackofficeStore {
     @observable appBaseURL = window.reactBackOfficeVar.appBaseURL;
 
     @observable viewServerErrors = null;
-    @observable viewData = {}
+    @observable viewData: any = {}
     @observable viewState = {}
 
 
@@ -66,6 +80,18 @@ class BackofficeStore {
     }
 
     loadDataForView(path: string = null, input: any = null, callback: { (): any } = null) {
+
+        console.log(path + window.reactBackOfficeVar.path);
+
+        if (path == window.reactBackOfficeVar.path) {
+            this.viewData = window.reactVariable;
+            this.viewData.baseURL = window.reactBackOfficeVar.appBaseURL + getBaseURL(window.reactBackOfficeVar.path);
+            this.viewData.appBaseURL = window.reactBackOfficeVar.appBaseURL;
+            this.isViewLoading = false;
+
+            this.viewComponentName = window.reactBackOfficeVar.path;
+            return;
+        }
 
 
         for (let i = 0; i < this.onViewLoadArr.length; i++) {
@@ -147,7 +173,7 @@ class BackofficeStore {
 
 var store = new BackofficeStore;
 
-if(initial) {
+if (initial) {
     store.loadDataForView(initial);
 }
 
@@ -163,13 +189,6 @@ autorun(() => {
 
 })
 
-
-const getBaseURL = (url: string = null): string => {
-    let baseURL = url.split('?')[0].replace("#", "");
-    let tmp = baseURL.split('/')
-    baseURL = tmp.slice(0, -1).join('/');
-    return baseURL;
-}
 
 //useStrict(true);
 export default store;

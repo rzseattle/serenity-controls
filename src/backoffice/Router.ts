@@ -24,6 +24,9 @@ class Router {
         //szukanie w routerze budowanym ze ścieżek do lplików
         Component = this.lookAtFileRouter(path);
 
+       /* console.log(path);
+        console.log(ViewsRoute.ViewFileMap);*/
+
         //jeśli nie znaleziono
         if (!Component) {
 

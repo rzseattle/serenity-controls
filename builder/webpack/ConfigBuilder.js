@@ -94,13 +94,30 @@ module.exports = function (input) {
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
 
-    conf.plugins.push(
-        function () {
-            this.plugin("done", function (stats) {
-                fs.writeFile(input.PATH + `/compolation-hash-${input.LANGUAGE}.txt`, stats.hash, function () {
-                });
-            })
-        });
+    if (input.PRODUCTION) {
+        conf.plugins.push(
+            function () {
+                this.plugin("after-emit", function (compilation, callback) {
+                    var stats = compilation.getStats().toJson();
+                    /*  console.log("-----------------------");
+                      fs.writeFile(input.PATH + `/cos.txt`, JSON.stringify(compilation.getStats().toJson(), null, 2), function () {
+
+                      })*/
+
+                    if (stats) {
+                        console.log(stats.hash);
+                        console.log(stats.assetsByChunkName);
+                        console.log(input.LANGUAGE);
+                        console.log("-----------------------");
+                    }
+
+                    fs.writeFile(input.PATH + `/compilation-hash-${input.LANGUAGE}.txt`, compilation.getStats().hash, function () {
+                        callback();
+                    });
+
+                })
+            });
+    }
 
 
     if (false) {

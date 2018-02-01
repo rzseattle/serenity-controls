@@ -174,7 +174,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         const s = this.state;
         const p = this.props;
         let ComponentInfo: any = Router.resolve(p.store.viewComponentName);
-        
+
 
         let DebugTool = this.DebugTool;
         let debugVar = {

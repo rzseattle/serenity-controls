@@ -5,22 +5,33 @@ const path = require('path');
 var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
 
 
-    let newRouteFileGenerator = () => {
-    }
-    let routeFile = path.resolve(BASE_PATH + '/data/cache/symfony/');
+    let routeFileDir = path.resolve(BASE_PATH + '/data/cache/symfony/');
     let targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
 
-    //new router observation
-    if (fs.existsSync(routeFile + "/route.json")) {
-        console.log("jest plik");
+    let watchedDirs = [
+        {package: 'app', dir: BASE_PATH + '/application/views'},
+        {package: 'app', dir: BASE_PATH + '/app/views'},
+        {package: 'access', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/access/views'},
+        {package: 'translations', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/translations/views'},
+        {package: 'utils', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/utils/views'},
+        {package: '', dir: routeFileDir}
+    ];
 
-        let newRoutingStr = "";
+    let newRouteFileGenerator = () => {
+    }
+
+
+    //new router observation
+    if (fs.existsSync(routeFileDir + "/route.json")) {
 
 
         newRouteFileGenerator = () => {
+
+
             targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
 
-            let conf = JSON.parse(fs.readFileSync(routeFile + "/route.json"));
+
+            let conf = JSON.parse(fs.readFileSync(routeFileDir + "/route.json"));
 
 
             let ComponentFileContent = "";
@@ -48,44 +59,21 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                     }
                 } else {
                     ComponentFileContentMapFilesX[i] = conf[i];
-                    if(componentPath.indexOf("access") != -1)
-                        console.error(componentPath , "Dont exist");
+                    if (componentPath.indexOf("access") != -1) {
+                        //console.error(componentPath, "Dont exist");
+                    }
                 }
             }
 
-
             ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
-            fs.writeFile(targetfilename, ComponentFileContent, function (err) {
-                if (err) {
-                    return console.log(err);
-                } else {
-                    console.log('The file was saved: ' + targetfilename);
-                }
-            });
-            fs.writeFile(SAVE_SASS_TARGET, SassFileContent, function (err) {});
+            fs.writeFileSync(targetfilename, ComponentFileContent);
+            fs.writeFileSync(SAVE_SASS_TARGET, SassFileContent);
 
         }
 
-
-        fs.access(routeFile, fs.constants.R_OK, (err) => {
-            let size = 0;
-            if (!err) {
-                newRouteFileGenerator();
-                chokidar.watch(routeFile, {awaitWriteFinish: true}).on('change', (path, details) => {
-                    if (path && path.indexOf && path.indexOf("route.json") != -1) {
-                        if (details.size != size) {
-                            size = details.size;
-                            newRouteFileGenerator();
-                        }
-                    }
-                });
-            } else {
-                console.error("No route file detected");
-            }
-        });
     } else {
         console.log("Ni ma pliku wczytuje pusty");
-        console.log(routeFile + "route.json");
+        console.log(routeFileDir + "route.json");
         fs.writeFile(targetfilename, "export const ViewFileMap = {};", function (err) {
             if (err) {
                 return console.log(err);
@@ -97,16 +85,8 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
     }
 
 
-    let watchedDirs = [
-        {package: 'app', dir: BASE_PATH + '/application/views'},
-        {package: 'app', dir: BASE_PATH + '/app/views'},
-        {package: 'access', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/access/views'},
-        {package: 'translations', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/translations/views'},
-        {package: 'utils', dir: BASE_PATH + '/vendor/arrow/engine/src/packages/utils/views'},
-    ];
-
-
     var walk = function (dir) {
+        console.log("here3")
         var components = [];
         var sass = [];
         if (fs.existsSync(dir)) {
@@ -133,7 +113,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
     const linkArrowDir = () => {
-
+        console.log("here");
         newRouteFileGenerator();
 
         if (false) {
@@ -174,21 +154,8 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
             ComponentFileContent += `\nexport{ ${ComponentFileContentEx.join(",")} };`;
             ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFiles)} ;`;
 
-            fs.writeFile(SAVE_COMPONENT_TARGET, ComponentFileContent, function (err) {
-                if (err) {
-                    return console.log(err);
-                } else {
-                    console.log('The file was saved!');
-                }
-            });
-
-            fs.writeFile(SAVE_SASS_TARGET, SassFileContent, function (err) {
-                if (err) {
-                    return console.log(err);
-                } else {
-                    console.log('The file was saved!');
-                }
-            });
+            fs.writeFileSync(SAVE_COMPONENT_TARGET, ComponentFileContent);
+            fs.writeFileSync(SAVE_SASS_TARGET, SassFileContent);
 
         }
 
@@ -217,6 +184,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         .on('unlink', (event, path) => {
             linkArrowDir();
         });
+
 
 }
 
