@@ -113,7 +113,6 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
     const linkArrowDir = () => {
-        console.log("here");
         newRouteFileGenerator();
 
         if (false) {

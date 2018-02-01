@@ -25,10 +25,12 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
         new webpack.ContextReplacementPlugin(/moment[\\/]locale$/, /^\.\/(pl)$/),
 
         new webpack.optimize.UglifyJsPlugin({
+            parallel: true,
             comments: false,
             minimize: true,
             sourceMap: true,
             cacheDir: "node_modules/.cache/UglifyJsPlugin",
+            cache: true
         }),
         new webpack.optimize.OccurrenceOrderPlugin()
 
