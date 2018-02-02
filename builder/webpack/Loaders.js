@@ -9,12 +9,17 @@ var getLoaders = function (production, input) {
                     exclude: path.resolve(input.BASE_PATH, 'node_modules'),
                     //loader: 'babel-loader',
                     //dodatkowe ustawienia potrzebne aby babel działał out of home dir ( inaczej nie parsował plików z zewnątrz)
-                    loaders: 'babel-loader?babelrc=true&cacheDirectory=true&extends=' + require('path').join(__dirname, '/.babelrc')
-
+                    use: 'happypack/loader?id=js',
+                    //loaders: 'babel-loader?babelrc=true&cacheDirectory=true&extends=' + require('path').join(__dirname, '/.babelrc'),
 
                 },
 
                 {
+                    test: /\.tsx?$/,
+                    use: 'happypack/loader?id=tsx',
+
+                },
+/*                {
                     test: /\.tsx?$/,
                     loaders: [
                         'react-hot-loader/webpack',
@@ -25,15 +30,15 @@ var getLoaders = function (production, input) {
                                 cacheDirectory: 'node_modules/.cache/awcache',
                                 forceIsolatedModules: true,
                                 reportFiles: [
-                                    "views/**/*.{ts,tsx}",
-                                    "src/**/*.{ts,tsx}",
+                                    "views/!**!/!*.{ts,tsx}",
+                                    "src/!**!/!*.{ts,tsx}",
                                 ]
 
 
                             }
                         }
                     ]
-                },
+                },*/
 
                 {test: /\.css/, loader: 'style-loader!css-loader'},
                 {
@@ -72,27 +77,12 @@ var getLoaders = function (production, input) {
         }
 
     if (production) {
-        const ExtractTextPlugin = require('extract-text-webpack-plugin');
-        loaders.rules.push(
-            {
-                test: [/\.sass/, /\.scss/],
-                loader: ExtractTextPlugin.extract(
-                    [
-                        {loader: 'css-loader', query: {sourceMap: true}},
-                        {loader: 'resolve-url-loader', query: {sourceMap: true}},
-                        {
-                            loader: 'sass-loader',
-                            query: {
-                                sourceMap: true,
-                                includePaths: ['node_modules']
-                            }
-                        }
 
-                    ]
-                )
-            }
-            //postcss-loader!
-        );
+        loaders.rules.push({
+            test: [/\.sass/, /\.scss/],
+            use: 'happypack/loader?id=sass',
+        });
+
 
     } else {
 

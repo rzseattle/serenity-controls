@@ -40,6 +40,7 @@ module.exports = function (input) {
                 resolve(input.BASE_PATH, './build/js/tmp/components.include.js'),
                 resolve(input.BASE_PATH, './build/js/tmp/components.include.sass')
             );
+
         }
 
 
