@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 var {resolve, basename} = require('path');
 const fs = require('fs');
+const HappyPack = require('happypack');
+const path = require('path');
 
 let configDefaults = {
     HTTPS: false,
@@ -40,7 +42,6 @@ module.exports = function (input) {
                 resolve(input.BASE_PATH, './build/js/tmp/components.include.js'),
                 resolve(input.BASE_PATH, './build/js/tmp/components.include.sass')
             );
-
         }
 
 
@@ -73,6 +74,51 @@ module.exports = function (input) {
     }
 
     var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+
+    conf.plugins = conf.plugins.concat( [
+        new HappyPack({
+            id: 'sass',
+            loaders: [
+                {loader: 'css-loader', query: {sourceMap: true}},
+                {loader: 'resolve-url-loader', query: {sourceMap: true}},
+                {
+                    loader: 'sass-loader',
+                    query: {
+                        sourceMap: true,
+                        includePaths: ['node_modules']
+                    }
+                }
+            ],
+            threadPool: HappyPack.ThreadPool({size: 4}),
+
+        }),
+
+        new HappyPack({
+            id: 'js',
+            loaders: ['babel-loader?babelrc=true&cacheDirectory=true&extends=' + require('path').join(__dirname, '/.babelrc')],
+            threadPool: HappyPack.ThreadPool({size: 4}),
+        }),
+        new HappyPack({
+            id: 'css',
+            loaders: ['style-loader!css-loader'],
+            threadPool: HappyPack.ThreadPool({size: 4}),
+        }),
+        new HappyPack({
+            id: 'tsx',
+            loaders: [
+                'react-hot-loader/webpack',
+                {
+                    path: 'ts-loader',
+                    query: {
+                        happyPackMode: true,
+                        transpileOnly: true
+                    }
+                }
+            ],
+            threadPool: HappyPack.ThreadPool({size: 4}),
+        }),
+    ]);
+
 
 
     conf.plugins.push(new HardSourceWebpackPlugin({

@@ -40,7 +40,7 @@ var getLoaders = function (production, input) {
                     ]
                 },*/
 
-                {test: /\.css/, loader: 'style-loader!css-loader'},
+                {test: /\.css/, use: 'happypack/loader?id=css'},
                 {
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     loaders: [

@@ -1,4 +1,3 @@
-const {CheckerPlugin} = require('awesome-typescript-loader')
 const path = require('path');
 const fs = require('fs');
 
@@ -111,11 +110,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
     ].concat(devEntries);
 
     conf.plugins = [
-        /*new webpack.SourceMapDevToolPlugin({
-            filename: '[name].js.map',
-            exclude: ['vendor.js']
-        }),*/
-        new CheckerPlugin(),
+
+
         new webpack.HotModuleReplacementPlugin(),
         // enable HMR globally
 
