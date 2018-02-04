@@ -1,8 +1,12 @@
 import {autorun, observable, toJS, transaction} from "mobx";
 import Comm from '../lib/Comm'
+import Router from "frontend/src/backoffice/Router";
 
 
 declare var window;
+
+const browserInput = window.reactBackOfficeVar;
+
 
 const getBaseURL = (url: string = null): string => {
     let baseURL = url.split('?')[0].replace("#", "");
@@ -13,7 +17,6 @@ const getBaseURL = (url: string = null): string => {
 
 const getComponentFromURL = (url: string): string => {
     url = url.split('?')[0].replace("#", "");
-
     if (window.newRoutingRules == true) {
         return url;
     }
@@ -21,51 +24,45 @@ const getComponentFromURL = (url: string): string => {
 
     if (url[0] == "_")
         url = url.replace("_", "");
-
-    /*//old versions ( raporty ) hack
-    if (url[0] == "_")
-        url = "app" + url;*/
-
-
     return url;
 }
 let initial;
-if (window.reactBackOfficeVar.path) {
-    initial = window.reactBackOfficeVar.path;
+if (browserInput.path) {
+    initial = browserInput.path;
 } else {
     initial = window.location.hash.replace("#", "") || "/admin/dashboard";
 }
 
 
 class BackofficeStore {
-    //url path from browser
-    @observable viewURL = null;
+
+
+
     //input added to view request
     @observable viewInput = {};
-    @observable viewComponentName = null;
+    basePath = browserInput.basePath;
+
     @observable isViewLoading = true;
-    @observable appBaseURL = window.reactBackOfficeVar.appBaseURL;
 
     @observable viewServerErrors = null;
+    @observable view: any = {}
     @observable viewData: any = {}
-    @observable viewState = {}
-
 
     private onViewLoadArr = [];
     private onViewLoadedArr = [];
 
-    //setState()
-
+    init(){
+        let route = window.location.pathname.replace(browserInput.basePath, "");
+        this.viewData = browserInput.inputProps;
+        this.view = Router.resolve(route);
+    }
 
     changeView(path: string, input = {}) {
-        if (path) {
-            let len = this.appBaseURL.length;
-            if (path.substr(0, len) == this.appBaseURL) {
-                path = path.substr(len)
-            }
-
-        }
         transaction(() => {
+            this.view = Router.resolve(path);
+
+
+
 
             this.loadDataForView(path, input);
         });
@@ -81,15 +78,18 @@ class BackofficeStore {
 
     loadDataForView(path: string = null, input: any = null, callback: { (): any } = null) {
 
-        console.log(path + window.reactBackOfficeVar.path);
 
-        if (path == window.reactBackOfficeVar.path) {
+
+
+        console.log(path + browserInput.path);
+
+        if (path == browserInput.path) {
             this.viewData = window.reactVariable;
-            this.viewData.baseURL = window.reactBackOfficeVar.appBaseURL + getBaseURL(window.reactBackOfficeVar.path);
-            this.viewData.appBaseURL = window.reactBackOfficeVar.appBaseURL;
+            this.viewData.baseURL = browserInput.appBaseURL + getBaseURL(browserInput.path);
+            this.viewData.appBaseURL = browserInput.appBaseURL;
             this.isViewLoading = false;
 
-            this.viewComponentName = window.reactBackOfficeVar.path;
+            this.viewComponentName = browserInput.path;
             return;
         }
 
@@ -174,7 +174,8 @@ class BackofficeStore {
 var store = new BackofficeStore;
 
 if (initial) {
-    store.loadDataForView(initial);
+    store.init();
+    //store.loadDataForView(initial);
 }
 
 

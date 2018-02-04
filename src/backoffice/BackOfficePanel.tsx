@@ -9,20 +9,16 @@ import {IMenuSection, Menu} from 'frontend/src/backoffice/Menu';
 
 import * as NProgress from "nprogress/nprogress.js"
 import "nprogress/nprogress.css"
-NProgress.configure({ parent: '.w-panel-body' });
 
-
+NProgress.configure({parent: '.w-panel-body'});
 
 
 interface IBackOfficePanelProps {
-
-    appIcon: string
+    icon: string
     onlyBody?: boolean
-    appTitle: string
-    requestURI: string
-    appBaseURL: string
+    title: string
     user: any
-    appMenu: IMenuSection[]
+    menu: IMenuSection[]
     store: any
 
 }
@@ -106,18 +102,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
     render() {
 
-        if (this.props.onlyBody) {
-            return <PanelComponentLoader store={this.props.store}/>;
-        }
-
-
         return <div className="w-panel-container" ref={(container) => this.container = container}>
-            <div className="w-panel-top">
+            {!this.props.onlyBody && <div className="w-panel-top">
                 <div className="app-icon" onClick={this.handleAppIconClicked.bind(this)}>
-                    <i className={"ms-Icon ms-Icon--" + (this.state.layout != "mobile" ? this.props.appIcon : "CollapseMenu")}/>
+                    <i className={"ms-Icon ms-Icon--" + (this.state.layout != "mobile" ? this.props.icon : "CollapseMenu")}/>
                 </div>
                 <div className="app-title">
-                    {this.props.appTitle}
+                    {this.props.title}
                 </div>
 
 
@@ -144,26 +135,22 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     </div>
                 </Modal>
 
-            </div>
+            </div>}
             <div className="w-panel-body-container">
 
-                {this.state.menuVisible && <div className="w-panel-menu">
-                    <Menu elements={this.props.appMenu}
+                {this.state.menuVisible && !this.props.onlyBody && <div className="w-panel-menu">
+                    <Menu elements={this.props.menu}
                           onMenuElementClick={this.handleElementClick.bind(this)}
                           mobile={(this.state.layout == "mobile")}
                     />
                 </div>}
                 <div className="w-panel-body" style={{position: "relative"}}>
-                    {/*<Progress.Component
-                        style={{background: "transparent", top: 2, zIndex: 30, height: 3, position: 'absolute', overflow: "hidden", borderRadius: 4}}
-                        thumbStyle={{background: "#950309", height: 3}}
-                    />*/}
-                    {this.props.store.viewComponentName && <PanelComponentLoader
+                    <PanelComponentLoader
                         store={this.props.store}
                         onLoadStart={this.handleLoadStart.bind(this)}
                         onLoadEnd={this.handleLoadEnd.bind(this)}
 
-                    />}
+                    />
                 </div>
             </div>
 

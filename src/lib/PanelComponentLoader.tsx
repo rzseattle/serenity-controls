@@ -110,33 +110,13 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 ( /* webpackChunkName = "DebugTool" */ '../utils/DebugTool').then(({DebugTool}) => {
                 this.DebugTool = DebugTool;
                 this.setState({debugToolLoaded: true});
-
             });
-
-
         }
     }
 
     getComponentInfo(path) {
         return Router.resolve(path);
     }
-
-    componentWillReact() {
-        let {store} = this.props;
-
-        if (store.viewComponentName) {
-            let component = this.getComponentInfo(store.viewComponentName);
-            if (!component) {
-                if (!PRODUCTION) {
-                    this.setState({devComponentFile: null});
-                    console.error(`Can't find component file for: "${store.viewComponentName}"`);
-                }
-            }
-        }
-
-
-    }
-
 
     handleReloadProps(input = {}, callback: () => any) {
         this.props.onLoadStart();
@@ -173,7 +153,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     render() {
         const s = this.state;
         const p = this.props;
-        let ComponentInfo: any = Router.resolve(p.store.viewComponentName);
+        let ComponentInfo: any = p.store.view;
 
 
         let DebugTool = this.DebugTool;
@@ -209,9 +189,9 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
             {ComponentInfo && <ComponentInfo.Component
-                {...toJS(p.store.viewData)}
+                {...toJS(p.store.viewData, true)}
                 reloadProps={this.handleReloadProps.bind(this)}
-                baseURL={this.baseURL ? this.baseURL : p.store.viewData.baseURL}
+                baseURL={p.store.basePath + p.store.view.baseURL}
                 _notification={this.handleNotifycation.bind(this)}
                 _log={this.handleLog.bind(this)}
                 _reloadProps={this.handleReloadProps.bind(this)}
@@ -232,10 +212,6 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                     <pre style={{backgroundColor: 'white', padding: 10, border: 'solid 1px grey', fontSize: 11}}>{exampleComponent}</pre>
                 </Copyable>
             </div>}
-
-            {p.store.viewComponentName == null && <div>Loading...</div>}
-
-
         </div>
 
     }
