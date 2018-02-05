@@ -80,7 +80,7 @@ module.exports = function (input) {
 
     var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-    let threads = HappyPack.ThreadPool({size: 8});
+    let threads = HappyPack.ThreadPool({size: 3});
 
     conf.plugins = conf.plugins.concat([
         new HappyPack({
@@ -97,7 +97,7 @@ module.exports = function (input) {
                 }
             ],
 
-            threadPool: HappyPack.ThreadPool({size: 2}),
+            threadPool: threads,
 
         }),
 
@@ -152,7 +152,7 @@ module.exports = function (input) {
 
     if (input.PRODUCTION) {
 
-        conf.plugins.push(new ExtractTextPlugin('styles.css'));
+        conf.plugins.push(new ExtractTextPlugin(`bundle-[hash].css`));
         conf.plugins.push(
             function () {
                 this.plugin("after-emit", function (compilation, callback) {
@@ -167,11 +167,14 @@ module.exports = function (input) {
                         console.log(stats.assetsByChunkName);
                         console.log(input.LANGUAGE);
                         console.log("-----------------------");
-                    }
 
-                    fs.writeFile(input.PATH + `/compilation-hash-${input.LANGUAGE}.txt`, compilation.getStats().hash, function () {
-                        callback();
-                    });
+
+                        let content = stats.assetsByChunkName.admin[0] + "|" + compilation.getStats().hash
+                        fs.writeFile(input.PATH + `/compilation-hash-${input.LANGUAGE}.txt`, content, function () {
+                            callback();
+                        });
+
+                    }
 
                 })
             });
