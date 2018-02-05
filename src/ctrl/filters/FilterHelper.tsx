@@ -46,7 +46,7 @@ export class FilterHelper {
         });
     }
 
-    static select(field, caption, content: Option[], multi: boolean = false, _default = null) {
+    static select(field, caption, content: Option[], multi: boolean = false, _default = "") {
         return new FilterHelper({
             field: field,
             caption: caption,

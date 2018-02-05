@@ -43,7 +43,10 @@ export interface IArrowViewComponentProps {
     /**
      * Url without last action part
      */
-    baseURL: string;
+
+    _baseURL: string;
+
+    _basePath: string;
     /**
      * Display panel notification
      * @param {string} content Notification content
@@ -54,7 +57,8 @@ export interface IArrowViewComponentProps {
      */
     _notification: { (content: string, title?: string, conf?: NotificationSystem.Notification): any };
     _reloadProps: { (args?: any, callback?: { (): any }): any };
-    _goto: { (componentPath: string, args?: any): any };
+    _setPanelOption: { (name: string, value: string | number | boolean, callback?: { (): any }): any };
+    _goto: { (componentPath: string, args?: any, callback?: { (): any }): any };
     _log: { (element: any): any };
     _resolveComponent: { (componentPath: string): React.ReactElement<any> }
     _startLoadingIndicator: { (): any };
@@ -63,8 +67,9 @@ export interface IArrowViewComponentProps {
 
 interface IProps {
     store: any;
-    onLoadStart?: { (): any };
-    onLoadEnd?: { (): any };
+    onLoadStart: { (): any };
+    onLoadEnd: { (): any };
+    setPanelOption: { (name: string, value: string | number | boolean, callback?: { (): any }): any };
 }
 
 interface IState {
@@ -114,34 +119,25 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         }
     }
 
-    getComponentInfo(path) {
-        return Router.resolve(path);
-    }
 
     handleReloadProps(input = {}, callback: () => any) {
         this.props.onLoadStart();
         this.props.store.changeView(null, input, () => {
             this.props.onLoadEnd();
-            callback();
+            if (callback) {
+                callback();
+            }
         });
     }
 
 
-    handleGoTo(path, input = {}) {
-        this.props.store.changeView(path, input);
-
-    }
-
-    handleResolveComponent(path) {
-        alert('Resolving component ' + path);
-
+    handleGoTo(path, input = {}, callback = null) {
+        this.props.store.changeView(path, input, callback);
     }
 
     handleNotifycation(message, title = '', options = {}) {
         let data = {title: title, message: message, ...{level: 'success', ...options}};
-
         this._notificationSystem.addNotification(data);
-
     }
 
     handleLog(message) {
@@ -178,7 +174,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             ref: (ns) => this._notificationSystem = ns
         }
 
-        return <div className={ComponentInfo.extendedInfo.component}>
+        return <div className={ComponentInfo && ComponentInfo.extendedInfo.component}>
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
@@ -188,13 +184,16 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             </div>}
 
 
-            {ComponentInfo && <ComponentInfo.Component
+            {ComponentInfo ? <ComponentInfo.Component
                 {...toJS(p.store.viewData, true)}
                 reloadProps={this.handleReloadProps.bind(this)}
-                baseURL={p.store.basePath + p.store.view.baseURL}
+                baseURL={p.store.view.baseURL}
+                _baseURL={p.store.view.baseURL}
+                _basePath={p.store.basePath}
                 _notification={this.handleNotifycation.bind(this)}
                 _log={this.handleLog.bind(this)}
                 _reloadProps={this.handleReloadProps.bind(this)}
+                _setPanelOption={this.props.setPanelOption}
                 _goto={this.handleGoTo.bind(this)}
                 _resolveComponent={this.handleReloadProps.bind(this)}
                 _startLoadingIndicator={this.props.onLoadStart}
@@ -202,7 +201,11 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _scrollTo={(el) => {
 
                 }}
-            />}
+            /> : !this.props.store.isViewLoading && <div style={{padding: 20}}>
+                <h1>404 not found</h1>
+                <div>Selected resource cannot be found</div>
+
+            </div>}
 
             {(ComponentInfo == false && p.store.viewComponentName != null) && <div style={{padding: 10}}>
                 <h3>Can't find component </h3>

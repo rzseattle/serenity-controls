@@ -24,8 +24,8 @@ class Router {
         //szukanie w routerze budowanym ze ścieżek do lplików
         Component = this.lookAtFileRouter(path);
 
-       /* console.log(path);
-        console.log(ViewsRoute.ViewFileMap);*/
+        /* console.log(path);
+         console.log(ViewsRoute.ViewFileMap);*/
 
         //jeśli nie znaleziono
         if (!Component) {
@@ -81,9 +81,12 @@ class Router {
 
         if (!Component) {
 
-            console.log(pathInfo);
+
+            console.error("Not found:" + pathInfo);
             console.log(ViewsRoute.ViewFileMap);
-            return null;
+
+            throw "Route not found";
+
         }
 
         return {

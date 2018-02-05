@@ -5,6 +5,13 @@ interface IResponseCallback {
 
 class Comm {
 
+    public static basePath = "";
+    public static errorFallback = null;
+
+    public static onStart = null;
+    public static onFinish = null;
+
+
     public static EVENTS = {
         BEFORE_SEND: 'beforeSend',
         PROGRESS: 'progress',
@@ -45,7 +52,7 @@ class Comm {
         this.method = method;
 
 
-        this.xhr  = null;
+        this.xhr = null;
     }
 
 
@@ -117,20 +124,31 @@ class Comm {
     }
 
     debugError(error) {
-        let errorWindow = window.open('', '', 'width=800,height=600');
-        errorWindow.document.write('<pre>' + error + '</pre>');
-        errorWindow.focus();
+        if (Comm.errorFallback) {
+            Comm.errorFallback(
+                {
+                    url: Comm.basePath + this.url,
+                    input: this.data,
+                    response: error
+                }
+            )
+        } else {
+            let errorWindow = window.open('', '', 'width=800,height=600');
+            errorWindow.document.write('<pre>' + error + '</pre>');
+            errorWindow.focus();
+        }
+
+
     }
 
-    abort(){
-        if(this.xhr){
+    abort() {
+        if (this.xhr) {
             this.xhr.abort();
         }
     }
 
 
-
-    send() {
+    send(): XMLHttpRequest {
 
         let data = this.prepareData();
         const formData = new FormData();
@@ -164,10 +182,10 @@ class Comm {
 
                             this.debugError(e.message + '<hr />' + this.xhr.response);
                         } else {
-                            if(this.debug) {
+                            if (this.debug) {
                                 this.debugError(e.message + '<hr />' + this.xhr.response);
                             }
-                            this.callEvent( Comm.EVENTS.ERROR, this.xhr.response);
+                            this.callEvent(Comm.EVENTS.ERROR, this.xhr.response);
                         }
 
 
@@ -176,7 +194,7 @@ class Comm {
                     if (!exceptionOccured) {
                         if (data.errors === undefined && data.accessDeny === undefined) {
                             this.callEvent(Comm.EVENTS.SUCCESS, data);
-                        }else if (data.accessDeny !== undefined) {
+                        } else if (data.accessDeny !== undefined) {
                             alert("Access deny " + data.accessDeny);
                         } else {
                             this.callEvent(Comm.EVENTS.VALIDATION_ERRORS, data);
@@ -186,16 +204,23 @@ class Comm {
 
                 } else {
                     // 0 == abotreted
-                    if(this.xhr.status != 0 ) {
+                    if (this.xhr.status != 0) {
                         this.debugError(this.xhr.status + '<hr />');
                         this.callEvent(Comm.EVENTS.CONNECTION_ERROR, this.xhr.response);
                     }
                 }
                 this.callEvent(Comm.EVENTS.FINISH, this.xhr);
+                if (Comm.onFinish) {
+                    Comm.onFinish();
+                }
             }
         };
 
-        this.xhr.open(this.method, this.url, true);
+        if (Comm.onStart) {
+            Comm.onStart();
+        }
+
+        this.xhr.open(this.method, Comm.basePath + this.url, true);
         this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
         if (this.method == 'POST') {
@@ -206,6 +231,8 @@ class Comm {
             this.xhr.setRequestHeader('Content-Type', 'application/json');
             this.xhr.send(JSON.stringify(data));
         }
+
+        return this.xhr;
 
     }
 

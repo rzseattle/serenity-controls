@@ -28,7 +28,8 @@ interface IBackOfficePanelState {
     userMenuVisible: boolean,
     menuVisible: boolean,
     layout: "mobile" | "normal" | "large",
-    loading: boolean
+    loading: boolean,
+    onlyBody: boolean
 }
 
 @observer
@@ -48,7 +49,8 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             userMenuVisible: false,
             menuVisible: true,
             layout: "normal",
-            loading: false
+            loading: false,
+            onlyBody: this.props.onlyBody,
         }
 
         this.props.store.onViewLoad(() => this.handleLoadStart());
@@ -100,10 +102,16 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         NProgress.done();
     }
 
+    handleSetPanelOption(name, value, callback) {
+        let obj = {};
+        obj[name] = value;
+        this.setState(obj, callback);
+    }
+
     render() {
 
         return <div className="w-panel-container" ref={(container) => this.container = container}>
-            {!this.props.onlyBody && <div className="w-panel-top">
+            {!this.state.onlyBody && <div className="w-panel-top">
                 <div className="app-icon" onClick={this.handleAppIconClicked.bind(this)}>
                     <i className={"ms-Icon ms-Icon--" + (this.state.layout != "mobile" ? this.props.icon : "CollapseMenu")}/>
                 </div>
@@ -138,7 +146,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             </div>}
             <div className="w-panel-body-container">
 
-                {this.state.menuVisible && !this.props.onlyBody && <div className="w-panel-menu">
+                {this.state.menuVisible && !this.state.onlyBody && <div className="w-panel-menu">
                     <Menu elements={this.props.menu}
                           onMenuElementClick={this.handleElementClick.bind(this)}
                           mobile={(this.state.layout == "mobile")}
@@ -149,6 +157,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                         store={this.props.store}
                         onLoadStart={this.handleLoadStart.bind(this)}
                         onLoadEnd={this.handleLoadEnd.bind(this)}
+                        setPanelOption={this.handleSetPanelOption.bind(this)}
 
                     />
                 </div>

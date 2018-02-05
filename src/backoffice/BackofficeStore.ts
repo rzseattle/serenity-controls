@@ -1,41 +1,16 @@
 import {autorun, observable, toJS, transaction} from "mobx";
 import Comm from '../lib/Comm'
 import Router from "frontend/src/backoffice/Router";
-
+import * as qs from "qs"
+import {HexBase64Latin1Encoding} from "crypto";
 
 declare var window;
-
 const browserInput = window.reactBackOfficeVar;
 
-
-const getBaseURL = (url: string = null): string => {
-    let baseURL = url.split('?')[0].replace("#", "");
-    let tmp = baseURL.split('/')
-    baseURL = tmp.slice(0, -1).join('/');
-    return baseURL;
-}
-
-const getComponentFromURL = (url: string): string => {
-    url = url.split('?')[0].replace("#", "");
-    if (window.newRoutingRules == true) {
-        return url;
-    }
-    url = url.replace(/\//g, "_")
-
-    if (url[0] == "_")
-        url = url.replace("_", "");
-    return url;
-}
-let initial;
-if (browserInput.path) {
-    initial = browserInput.path;
-} else {
-    initial = window.location.hash.replace("#", "") || "/admin/dashboard";
-}
+Comm.basePath = browserInput.basePath;
 
 
 class BackofficeStore {
-
 
 
     //input added to view request
@@ -45,27 +20,103 @@ class BackofficeStore {
     @observable isViewLoading = true;
 
     @observable viewServerErrors = null;
-    @observable view: any = {}
+    @observable view: any = null
     @observable viewData: any = {}
 
     private onViewLoadArr = [];
     private onViewLoadedArr = [];
 
-    init(){
-        let route = window.location.pathname.replace(browserInput.basePath, "");
-        this.viewData = browserInput.inputProps;
-        this.view = Router.resolve(route);
+
+    init() {
+        //this.viewData = browserInput.inputProps;
+        //this.view = Router.resolve(route);
+        if (window.location.hash != "#" && window.location.hash) {
+            this.changeView(window.location.hash.replace("#", ""));
+        } else {
+            let path = window.location.pathname;
+            this.changeView(path.replace(browserInput.basePath, ""));
+        }
+
+        window.addEventListener("hashchange", this.hashChangeHandler, false);
+
     }
 
-    changeView(path: string, input = {}) {
-        transaction(() => {
-            this.view = Router.resolve(path);
+
+    hashChangeHandler = (event) => {
+        if (window.location.hash != "#") {
+            console.log("Hash change - loading");
+            this.changeView(window.location.hash.replace("#", ""));
+        }
+    }
+
+    changeView(path: string, input = null, callback: { (): any } = null) {
+
+        try {
+            this.isViewLoading = true;
+            this.viewServerErrors = null;
+
+            //for just reloading props
+            if (path == null) {
+                if (window.location.hash != "#") {
+                    path = window.location.hash.replace("#", "");
+                } else {
+                    let [base, query] = window.location.href.split("?");
+                    path = window.location.pathname.replace(browserInput.basePath, "") + (query ? "?" + query : "")
+                }
+            }
+
+            let url = "";
+            let view: any;
+            //check path contains query string
+            if (path.indexOf("?") == -1) {
+                view = Router.resolve(path);
+                let query = qs.stringify(input);
+                url = path + (query ? "?" + query : "");
+
+            } else {
+                let [purePath, pathQueryString] = path.split("?");
+                view = Router.resolve(purePath);
+                let partOfInput = qs.parse(pathQueryString);
+                let query = qs.stringify(Object.assign({}, partOfInput, input));
+                url = purePath + (query ? "?" + query : "");
+            }
+
+            window.removeEventListener("hashchange", this.hashChangeHandler);
+            window.location.hash = url
+            setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
+
+            let comm = new Comm(url);
+
+            comm.setData({__PROPS_REQUEST__: 1});
+            comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
+                this.viewServerErrors = errorResponse;
+                for (let i = 0; i < this.onViewLoadedArr.length; i++) {
+                    this.onViewLoadedArr[i]();
+                }
+            });
+            comm.on(Comm.EVENTS.SUCCESS, (data) => {
+
+                transaction(() => {
+                    this.viewData = data;
+                    this.view = view;
+                });
+
+                for (let i = 0; i < this.onViewLoadedArr.length; i++) {
+                    this.onViewLoadedArr[i]();
+                }
+                if (callback) {
+                    callback();
+                }
+            });
+            comm.on(Comm.EVENTS.FINISH, () => this.isViewLoading = false);
+            comm.send();
+        } catch (e) {
+            this.viewServerErrors = "Error loading route: " + path;
+            this.view = null;
+            //console.log("route not fon")
+        }
 
 
-
-
-            this.loadDataForView(path, input);
-        });
     }
 
     onViewLoad(callback) {
@@ -76,106 +127,20 @@ class BackofficeStore {
         this.onViewLoadedArr.push(callback);
     }
 
-    loadDataForView(path: string = null, input: any = null, callback: { (): any } = null) {
-
-
-
-
-        console.log(path + browserInput.path);
-
-        if (path == browserInput.path) {
-            this.viewData = window.reactVariable;
-            this.viewData.baseURL = browserInput.appBaseURL + getBaseURL(browserInput.path);
-            this.viewData.appBaseURL = browserInput.appBaseURL;
-            this.isViewLoading = false;
-
-            this.viewComponentName = browserInput.path;
-            return;
-        }
-
-
-        for (let i = 0; i < this.onViewLoadArr.length; i++) {
-            this.onViewLoadArr[i]();
-        }
-
-
-        let viewInput = input || toJS(this.viewInput);
-        let viewURL = path || this.viewURL;
-
-
-        let purePath = viewURL
-
-        this.isViewLoading = true;
-        this.viewServerErrors = null;
-
-
-        let pathQueryString = "";
-
-        if (viewURL.indexOf("?") != -1) {
-            [purePath, pathQueryString] = viewURL.split("?");
-            let tmp = pathQueryString.split("&").map((inEl) => inEl.split("="));
-            let tmp2 = {};
-            //podmiana parametrow z inputa do urlla
-            for (let i = 0; i < tmp.length; i++) {
-                tmp2[tmp[i][0]] = tmp[i][1];
-            }
-            tmp2 = {...tmp2, ...viewInput};
-            pathQueryString = Object.keys(tmp2).map((i) => i + '=' + tmp2[i]).join('&');
-
-        } else {
-            pathQueryString = Object.keys(viewInput).map((i) => i + '=' + viewInput[i]).join('&');
-        }
-
-        let url = purePath + (pathQueryString ? "?" + pathQueryString : "");
-        window.location.hash = url;
-
-        let comm = new Comm(this.appBaseURL + purePath + (pathQueryString ? "?" + pathQueryString : ""));
-        comm.debug = false;
-        comm.setData({__PROPS_REQUEST__: 1});
-        comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
-            this.isViewLoading = false;
-            this.viewServerErrors = errorResponse;
-            for (let i = 0; i < this.onViewLoadedArr.length; i++) {
-                this.onViewLoadedArr[i]();
-            }
-
-        });
-        comm.on(Comm.EVENTS.SUCCESS, (data) => {
-            transaction(() => {//18206
-                this.viewData = {
-                    ...data,
-                    baseURL: this.appBaseURL + getBaseURL(viewURL),
-                };
-                this.viewInput = viewInput;
-                this.viewURL = url;
-                this.viewComponentName = getComponentFromURL(viewURL);
-                this.isViewLoading = false;
-
-            });
-
-            if (callback != null) {
-                callback();
-            }
-
-            for (let i = 0; i < this.onViewLoadedArr.length; i++) {
-                this.onViewLoadedArr[i]();
-            }
-
-        });
-
-        comm.send();
-
-    }
-
 
 }
 
 
 var store = new BackofficeStore;
+store.init();
 
-if (initial) {
-    store.init();
-    //store.loadDataForView(initial);
+Comm.errorFallback = function (data) {
+    console.error("Conn error");
+
+    store.viewServerErrors =
+        "<h3>" + data.url + "</h3>"
+        //+ "<pre>" + JSON.stringify(data.input, null, 2) + "</pre>"
+        + data.response;
 }
 
 
@@ -187,7 +152,6 @@ if (initial) {
 autorun(() => {
     window.store = toJS(store);
     window.storeObj = store;
-
 })
 
 

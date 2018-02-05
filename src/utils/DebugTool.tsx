@@ -120,7 +120,8 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
 
         let {componentInfo} = this.props;
 
-        let extendedInfo = componentInfo.extendedInfo;
+
+        let extendedInfo = componentInfo ? componentInfo.extendedInfo : null;
         return <div className={'w-debug-tool'}
                     tabIndex={1}
                     style={this.state.style}

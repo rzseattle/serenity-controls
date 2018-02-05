@@ -12,6 +12,7 @@ import {Icon} from "./Icon";
 import {Tooltip} from "./Overlays";
 import {deepCopy, deepIsEqual} from "frontend/src/lib/JSONTools";
 import Thead from "frontend/src/ctrl/table/Thead";
+import Comm from "frontend/src/lib/Comm";
 
 
 interface IDataQuery {
@@ -26,7 +27,7 @@ interface ITableDataInput {
 }
 
 interface IDataProvider {
-    (requestData: IDataQuery): ITableDataInput | Promise<ITableDataInput> ;
+    (requestData: IDataQuery): ITableDataInput | Promise<ITableDataInput>;
 }
 
 interface ISelectionChangeEvent {
@@ -60,8 +61,8 @@ interface ITableProps {
     showHeader?: boolean,
     additionalConditions?: any
     filters?: { [key: string]: IFilterValue };
-    onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any ;
-    onDataChange?: (data: any) => any ;
+    onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any;
+    onDataChange?: (data: any) => any;
     data?: ITableDataInput
 
 
@@ -291,7 +292,6 @@ class Table extends React.Component<ITableProps, ITableState> {
             columns[i] = this.prepareColumnData(columns[i]);
         }
         if (JSON.stringify(columns) != JSON.stringify(this.state.columns)) {
-            console.log("to też ustawiam");
             this.setState({columns: columns});
         }
 
@@ -353,23 +353,13 @@ class Table extends React.Component<ITableProps, ITableState> {
                 this.xhrConnection.abort();
             }
 
-            let xhr = new XMLHttpRequest();
-            xhr.onload = (e) => {
-                let parsed;
-                if (xhr.status === 200) {
-                    //parsed = {data: [], countAll: 0};
-                    try {
-                        let parsed = JSON.parse(xhr.responseText)
-                        setStateAfterLoad(parsed);
-                    } catch (e) {
-                        this.setState({dataSourceError: xhr.responseText, loading: false})
-                    }
-                }
-            }
-            xhr.open('PUT', this.props.remoteURL + '?' + new Date().getTime(), true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(this.getRequestData()));
-            this.xhrConnection = xhr;
+            let comm = new Comm(this.props.remoteURL, "PUT");
+            comm.on(Comm.EVENTS.SUCCESS, (data) => {
+                setStateAfterLoad(data);
+            });
+            comm.setData(this.getRequestData());
+            comm.on(Comm.EVENTS.FINISH, () => this.setState({loading: false}));
+            this.xhrConnection = comm.send();
 
         } else if (this.props.dataProvider) {
             let result = this.props.dataProvider(this.getRequestData());
