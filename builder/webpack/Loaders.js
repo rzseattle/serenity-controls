@@ -1,4 +1,5 @@
 const path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var getLoaders = function (production, input) {
 
     let loaders =
@@ -19,26 +20,26 @@ var getLoaders = function (production, input) {
                     use: 'happypack/loader?id=tsx',
 
                 },
-/*                {
-                    test: /\.tsx?$/,
-                    loaders: [
-                        'react-hot-loader/webpack',
-                        {
-                            loader: 'awesome-typescript-loader', query: {
-                                configFileName: path.resolve(__dirname, './tsconfig.json'),
-                                useCache: true,
-                                cacheDirectory: 'node_modules/.cache/awcache',
-                                forceIsolatedModules: true,
-                                reportFiles: [
-                                    "views/!**!/!*.{ts,tsx}",
-                                    "src/!**!/!*.{ts,tsx}",
-                                ]
+                /*                {
+                                    test: /\.tsx?$/,
+                                    loaders: [
+                                        'react-hot-loader/webpack',
+                                        {
+                                            loader: 'awesome-typescript-loader', query: {
+                                                configFileName: path.resolve(__dirname, './tsconfig.json'),
+                                                useCache: true,
+                                                cacheDirectory: 'node_modules/.cache/awcache',
+                                                forceIsolatedModules: true,
+                                                reportFiles: [
+                                                    "views/!**!/!*.{ts,tsx}",
+                                                    "src/!**!/!*.{ts,tsx}",
+                                                ]
 
 
-                            }
-                        }
-                    ]
-                },*/
+                                            }
+                                        }
+                                    ]
+                                },*/
 
                 {test: /\.css/, use: 'happypack/loader?id=css'},
                 {
@@ -80,7 +81,7 @@ var getLoaders = function (production, input) {
 
         loaders.rules.push({
             test: [/\.sass/, /\.scss/],
-            use: 'happypack/loader?id=sass',
+            use: ExtractTextPlugin.extract('happypack/loader?id=sass'),
         });
 
 
