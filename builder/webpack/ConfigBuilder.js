@@ -3,6 +3,8 @@ var {resolve, basename} = require('path');
 const fs = require('fs');
 const HappyPack = require('happypack');
 const path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 let configDefaults = {
     HTTPS: false,
@@ -22,9 +24,12 @@ module.exports = function (input) {
         context: resolve(__dirname, ''),
         devtool: input.PRODUCTION ? 'source-map' : 'cheap-module-source-map',
         resolve: {
-            extensions: ['.js', '.es6', '.ts', '.tsx'],
+            extensions: ['.js', '.ts', '.tsx'],
             unsafeCache: true,
-            modules: ['node_modules']
+            modules: ['node_modules'],
+            symlinks: false,
+            cacheWithContext: false
+
         }
 
 
@@ -75,7 +80,9 @@ module.exports = function (input) {
 
     var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-    conf.plugins = conf.plugins.concat( [
+    let threads = HappyPack.ThreadPool({size: 8});
+
+    conf.plugins = conf.plugins.concat([
         new HappyPack({
             id: 'sass',
             loaders: [
@@ -89,19 +96,20 @@ module.exports = function (input) {
                     }
                 }
             ],
-            threadPool: HappyPack.ThreadPool({size: 4}),
+
+            threadPool: HappyPack.ThreadPool({size: 2}),
 
         }),
 
         new HappyPack({
             id: 'js',
             loaders: ['babel-loader?babelrc=true&cacheDirectory=true&extends=' + require('path').join(__dirname, '/.babelrc')],
-            threadPool: HappyPack.ThreadPool({size: 4}),
+            threadPool: threads,
         }),
         new HappyPack({
             id: 'css',
             loaders: ['style-loader!css-loader'],
-            threadPool: HappyPack.ThreadPool({size: 4}),
+            threadPool: threads,
         }),
         new HappyPack({
             id: 'tsx',
@@ -115,7 +123,7 @@ module.exports = function (input) {
                     }
                 }
             ],
-            threadPool: HappyPack.ThreadPool({size: 4}),
+            threadPool: threads,
         }),
     ]);
 
@@ -138,10 +146,13 @@ module.exports = function (input) {
             files: ['package-lock.json', 'yarn.lock'],
         },
     }));
+    conf.plugins.push(new ForkTsCheckerWebpackPlugin());
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
 
     if (input.PRODUCTION) {
+
+        conf.plugins.push(new ExtractTextPlugin('styles.css'));
         conf.plugins.push(
             function () {
                 this.plugin("after-emit", function (compilation, callback) {
@@ -164,18 +175,6 @@ module.exports = function (input) {
 
                 })
             });
-    }
-
-
-    if (false) {
-        conf.plugins.push(
-            new webpack.DllReferencePlugin({
-                // An absolute path of your application source code
-                context: input.BASE_PATH,
-                // The path to the generated vendor-manifest file
-                manifest: input.PATH + '/vendors-reference.json'
-            })
-        );
     }
 
 
