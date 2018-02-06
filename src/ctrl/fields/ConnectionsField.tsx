@@ -1,9 +1,9 @@
 import * as React from "react";
 import {Modal} from "../Overlays";
 import {Icon} from "../Icon";
-import {IFieldProps, IFieldChangeEvent} from "../fields/Interfaces";
+import {IFieldChangeEvent, IFieldProps} from "../fields/Interfaces";
 
-interface IConnectionElement {
+export interface IConnectionElement {
     value: string | number;
     label: string;
     icon: string;
@@ -11,7 +11,7 @@ interface IConnectionElement {
 
 }
 
-interface IConnectionChangeEvent extends IFieldChangeEvent{
+export interface IConnectionChangeEvent extends IFieldChangeEvent {
     items: IConnectionElement[]
 }
 

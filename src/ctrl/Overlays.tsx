@@ -284,6 +284,7 @@ class ConfirmModal extends React.Component<any, any> {
     }
 
     handleConfirm() {
+        this.props.onOk();
         this.promiseResolve();
 
         this.props.cleanup();
@@ -313,6 +314,37 @@ interface IConfirmConf {
 }
 
 
+const confirm = async (message, options: IConfirmConf = {}) => {
+    let props = {...options};
+
+    let parent = options.container ? options.container() : document.body;
+
+    const wrapper = parent.appendChild(document.createElement('div'));
+    let cleanup = () => {
+        ReactDOM.unmountComponentAtNode(wrapper);
+        wrapper.remove();
+    };
+
+    let resolver;
+    let promise = new Promise((resolve, reject) =>{
+        resolver = resolve
+    });
+
+
+    let x : any = <ConfirmModal {...props} onOk={resolver} cleanup={cleanup}>
+        <div>
+            {message}
+        </div>
+    </ConfirmModal>
+    ;
+
+    ReactDOM.render(x, wrapper)
+
+
+
+    return promise;
+};
+
 
 export const tooltip = (content, options) => {
     let props = {...options};
@@ -333,27 +365,6 @@ export const tooltip = (content, options) => {
 
 
     return cleanup;
-};
-
-const confirm = (message, options: IConfirmConf = {}) => {
-    let props = {...options};
-
-    let parent = options.container ? options.container() : document.body;
-
-    const wrapper = parent.appendChild(document.createElement('div'));
-    let cleanup = () => {
-        ReactDOM.unmountComponentAtNode(wrapper);
-        wrapper.remove();
-    };
-
-    const component = ReactDOM.render(<ConfirmModal {...props} cleanup={cleanup}>
-        <div>
-            {message}
-        </div>
-    </ConfirmModal>, wrapper);
-
-
-    return component.promise;
 };
 
 
