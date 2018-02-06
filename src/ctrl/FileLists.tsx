@@ -93,7 +93,7 @@ const SortableImageList = SortableContainer((props) => {
 });
 
 
-interface IFileList extends IFieldProps {
+export interface IFileList extends IFieldProps {
     value: IFile[];
     type?: "gallery" | "filelist";
     buttonTitle?: string;

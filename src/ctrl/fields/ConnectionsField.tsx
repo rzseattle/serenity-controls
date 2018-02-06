@@ -15,12 +15,12 @@ interface IConnectionChangeEvent extends IFieldChangeEvent{
     items: IConnectionElement[]
 }
 
-interface IConnectionsFieldProps extends IFieldProps {
+export interface IConnectionsFieldProps extends IFieldProps {
     value: string[]
     maxItems?: number;
-    items: IConnectionElement[];
+    items?: IConnectionElement[];
     searchResultProvider: (searchString: string, selected: string[]) => Promise<IConnectionElement[]>;
-    selectionTemplate: (elelent: IConnectionElement) => any;
+    selectionTemplate?: (elelent: IConnectionElement) => any;
     placeholder?: string;
     onChange?: { (changeData: IConnectionChangeEvent): any },
 }

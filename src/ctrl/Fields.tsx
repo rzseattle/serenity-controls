@@ -27,7 +27,7 @@ interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number,
 }
 
-interface ISelectProps extends IFieldProps {
+export interface ISelectProps extends IFieldProps {
     options: IOption[] | { [key: string]: string },
     onChange?: { (changeData: ISelectChangeEvent): any },
     allowClear?: boolean
@@ -137,7 +137,7 @@ class Select extends React.Component<ISelectProps, any> {
     }
 }
 
-interface ITextProps extends IFieldProps {
+export interface ITextProps extends IFieldProps {
     type?: 'text' | 'password',
     value?: string,
     onKeyDown?: any
@@ -196,7 +196,7 @@ class Text extends React.Component<ITextProps, any> {
 }
 
 
-interface ITextareaProps extends IFieldProps {
+export interface ITextareaProps extends IFieldProps {
     value?: string,
 }
 
@@ -240,7 +240,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
 }
 
 
-interface IWysiwygProps extends IFieldProps {
+export interface IWysiwygProps extends IFieldProps {
     onLoad?: { (): any },
     value?: string,
 
@@ -416,7 +416,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 }
 
 
-interface ISwitchProps extends IFieldProps {
+export interface ISwitchProps extends IFieldProps {
     options: { value: string | number, label: string }[] | { [key: string]: string },
     value?: number | string,
 }
@@ -495,7 +495,7 @@ class Switch extends React.Component<ISwitchProps, any> {
     }
 }
 
-interface ICheckboxGroupProps extends IFieldProps {
+export interface ICheckboxGroupProps extends IFieldProps {
     options: { value: string | number, label: string }[] | { [key: string]: string },
     value: string[]
     inline: boolean
@@ -592,7 +592,7 @@ let locale;
 let datePicker;
 let moment;
 
-interface IDateProps extends IFieldProps {
+export interface IDateProps extends IFieldProps {
     value: string,
     placeholder?: string;
 }
@@ -679,7 +679,7 @@ class Date extends React.Component<IDateProps, any> {
     }
 }
 
-interface IFileProps extends IFieldProps {
+export interface IFileProps extends IFieldProps {
     value: FileList
 }
 

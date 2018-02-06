@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg, Ra} from '../ctrl/Fields';
-import {FileList} from '../ctrl/FileLists';
+import {CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg, ITextProps, ITextareaProps, ISelectProps, ISwitchProps, ICheckboxGroupProps, IDateProps, IFileProps, IWysiwygProps} from '../ctrl/Fields';
+import {FileList, IFileList} from '../ctrl/FileLists';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
+import {IConnectionsFieldProps} from 'frontend/src/ctrl/fields/ConnectionsField';
 
 
 interface IWithBootstrapFormFieldProps {
@@ -18,10 +19,22 @@ interface IWithBootstrapFormFieldProps {
 
 }
 
-const withBootstrapFormField = ({addInputClass = true}: IWithBootstrapFormFieldProps = {}) =>
-    <TOriginalProps extends object>(Component: (React.ComponentClass<TOriginalProps> | React.StatelessComponent<TOriginalProps>)) => {
-        type ResultProps = TOriginalProps & IWithBootstrapFormFieldProps;
-        return class extends React.Component<ResultProps, any> {
+/*
+
+({addInputClass = true}: IWithBootstrapFormFieldProps = {}) =>
+        <TOriginalProps extends {}>(Component: (React.ComponentClass<TOriginalProps> | React.StatelessComponent<TOriginalProps>)) => {
+
+            type ResultProps = TOriginalProps & IWithBootstrapFormFieldProps;
+
+            return class HOC extends React.Component<ResultProps, any> {
+
+* */
+
+
+const withBootstrapFormField =
+
+    ({addInputClass = true}: IWithBootstrapFormFieldProps = {}) => <TOriginalProps extends {}>(Component: React.ComponentType<TOriginalProps>) => {
+        return class extends React.Component<TOriginalProps & IWithBootstrapFormFieldProps> {
             public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
                 layoutType: 'default'
             }
@@ -72,7 +85,7 @@ const withBootstrapFormField = ({addInputClass = true}: IWithBootstrapFormFieldP
 
                     return (
                         <div className={classes.join(' ')}>
-                            {this.props.label && <label className="col-sm-2 control-label" >{props.label}</label>}
+                            {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
                             <div className="col-sm-10">
                                 {field}
                                 {props.help ?
@@ -474,16 +487,16 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 }
 
 
-const BText = withBootstrapFormField()(Text);
-const BTextarea = withBootstrapFormField()(Textarea);
-const BSelect = withBootstrapFormField()(Select);
-const BSwitch = withBootstrapFormField()(Switch);
-const BCheckboxGroup = withBootstrapFormField()(CheckboxGroup);
-const BDate = withBootstrapFormField()(Date);
-const BFile = withBootstrapFormField()(File);
-const BWysiwig = withBootstrapFormField()(Wysiwyg);
-const BConnectionsField = withBootstrapFormField()(ConnectionsField);
-const BFileList = withBootstrapFormField()(FileList);
+const BText = withBootstrapFormField()<ITextProps>(Text);
+const BTextarea = withBootstrapFormField()<ITextareaProps>(Textarea);
+const BSelect = withBootstrapFormField()<ISelectProps>(Select);
+const BSwitch = withBootstrapFormField()<ISwitchProps>(Switch);
+const BCheckboxGroup = withBootstrapFormField()<ICheckboxGroupProps>(CheckboxGroup);
+const BDate = withBootstrapFormField()<IDateProps>(Date);
+const BFile = withBootstrapFormField()<IFileProps>(File);
+const BWysiwig = withBootstrapFormField()<IWysiwygProps>(Wysiwyg);
+const BConnectionsField = withBootstrapFormField()<IConnectionsFieldProps>(ConnectionsField);
+const BFileList = withBootstrapFormField()<IFileList>(FileList);
 const BContainer = withBootstrapFormField()((props) => <div>{props.children}</div>);
 
 export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BDate, BFile, BWysiwig, BConnectionsField, BFileList, BContainer, withBootstrapFormField};
