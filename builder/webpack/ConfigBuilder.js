@@ -27,7 +27,6 @@ module.exports = function (input) {
             extensions: ['.js', '.ts', '.tsx'],
             unsafeCache: true,
             modules: ['node_modules'],
-            symlinks: false,
             cacheWithContext: false
 
         }
