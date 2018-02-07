@@ -58,6 +58,7 @@ module.exports = function (input) {
             input.HTTPS,
             input.PORT || 3000,
             input.DOMAIN,
+            input.LANGUAGE,
             webpack
         );
     } else {
@@ -152,31 +153,7 @@ module.exports = function (input) {
     if (input.PRODUCTION) {
 
         conf.plugins.push(new ExtractTextPlugin(`bundle-[hash].css`));
-        conf.plugins.push(
-            function () {
-                this.plugin("after-emit", function (compilation, callback) {
-                    var stats = compilation.getStats().toJson();
-                    /*  console.log("-----------------------");
-                      fs.writeFile(input.PATH + `/cos.txt`, JSON.stringify(compilation.getStats().toJson(), null, 2), function () {
 
-                      })*/
-
-                    if (stats) {
-                        console.log(stats.hash);
-                        console.log(stats.assetsByChunkName);
-                        console.log(input.LANGUAGE);
-                        console.log("-----------------------");
-
-
-                        let content = stats.assetsByChunkName.admin[0] + "|" + compilation.getStats().hash
-                        fs.writeFile(input.PATH + `/compilation-hash-${input.LANGUAGE}.txt`, content, function () {
-                            callback();
-                        });
-
-                    }
-
-                })
-            });
     }
 
 

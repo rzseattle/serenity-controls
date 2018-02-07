@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, webpack) {
+var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
     conf = {};
 
     conf.output = {
@@ -122,6 +122,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         // do not emit compiled assets that include errors
         new webpack.DefinePlugin({
             PRODUCTION: JSON.stringify(false),
+            LANGUAGE: JSON.stringify(LANGUAGE),
             DEV_PROPERIES: JSON.stringify({
                 app_domain: DOMAIN,
                 build_domain: JSON.stringify('http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`),

@@ -9,6 +9,7 @@ import {IMenuSection, Menu} from 'frontend/src/backoffice/Menu';
 
 import * as NProgress from "nprogress/nprogress.js"
 import "nprogress/nprogress.css"
+import Comm from 'frontend/src/lib/Comm';
 
 NProgress.configure({parent: '.w-panel-body'});
 
@@ -56,6 +57,9 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         this.props.store.onViewLoad(() => this.handleLoadStart());
         this.props.store.onViewLoaded(() => this.handleLoadEnd());
 
+        Comm.onStart = this.handleLoadStart;
+        Comm.onFinish = this.handleLoadEnd;
+
     }
 
     adjustToSize() {
@@ -93,12 +97,12 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         })
     }
 
-    handleLoadStart() {
+    handleLoadStart = () => {
         NProgress.start();
 
     }
 
-    handleLoadEnd() {
+    handleLoadEnd = () => {
         NProgress.done();
     }
 
