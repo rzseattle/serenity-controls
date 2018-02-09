@@ -130,11 +130,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     </div>
                     {this.props.user.login}
                 </div>
-                {<div className={" w-loader " + (this.props.store.isViewLoading || this.state.loading ? "w-loader-hidden" : "")}>
+                {<div
+                    className={" w-loader " + (this.props.store.isViewLoading || this.state.loading ? "w-loader-hidden" : "")}>
                     <span><i></i><i></i><i></i><i></i></span>
                 </div>}
 
-                <Modal show={this.state.userMenuVisible} top={50} right={0} onHide={() => this.setState({userMenuVisible: false})}>
+                <Modal show={this.state.userMenuVisible} top={50} right={0}
+                       onHide={() => this.setState({userMenuVisible: false})}>
                     <div style={{width: 200}}></div>
                     <div style={{padding: 10}}>
                         <a onClick={() => {
@@ -143,7 +145,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                         }}><Icon name="Accounts"/> Twoje konto</a>
                     </div>
                     <div style={{padding: 10}}>
-                        <a href={"/crm/access/logout"}><Icon name="SignOut"/> Wyloguj się</a>
+                        <a href={Comm.basePath + "/access/logout"}><Icon name="SignOut"/> Wyloguj się</a>
                     </div>
                 </Modal>
 
