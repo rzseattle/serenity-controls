@@ -82,7 +82,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     }
 
     handleElementClick(element) {
-        this.props.store.changeView(element.template)
+        this.props.store.changeView(element.route)
         if (this.state.layout == "mobile") {
             this.setState({menuVisible: false});
         }
@@ -139,13 +139,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                        onHide={() => this.setState({userMenuVisible: false})}>
                     <div style={{width: 200}}></div>
                     <div style={{padding: 10}}>
-                        <a onClick={() => {
+                        {/*<a onClick={() => {
                             this.props.store.changeView('access/users/account');
                             this.setState({userMenuVisible: false});
-                        }}><Icon name="Accounts"/> Twoje konto</a>
+                        }}><Icon name="Accounts"/> Twoje konto</a>*/}
                     </div>
                     <div style={{padding: 10}}>
-                        <a href={Comm.basePath + "/access/logout"}><Icon name="SignOut"/> Wyloguj się</a>
+                        <a href={Comm.basePath + "/access/logout"}><Icon name="SignOut"/> {__("Wyloguj się")}</a>
                     </div>
                 </Modal>
 

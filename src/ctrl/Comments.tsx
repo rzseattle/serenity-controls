@@ -50,15 +50,15 @@ class Comments extends React.Component<ICommentsProps, any> {
                 </div>
                 <textarea
 
-                    placeholder="Dodaj komentarz"
+                    placeholder={__("Dodaj komentarz")}
                     rows={this.state.rows}
                     ref={(el) => this.textarea = el} style={{width: '100%'}}
                     onFocus={this.handleTextareaFocus.bind(this)}
                     onChange={this.handleRowCalc.bind(this)}
                 />
                 {this.state.addMode && <div className="clearfix">
-                    <a className="btn btn-primary pull-right" onClick={this.handleAddComment.bind(this)}>Dodaj</a>
-                    <a className="btn pull-right" onClick={this.handleCommentCancel.bind(this)}>Anuluj</a>
+                    <a className="btn btn-primary pull-right" onClick={this.handleAddComment.bind(this)}>{__("Dodaj")}</a>
+                    <a className="btn pull-right" onClick={this.handleCommentCancel.bind(this)}>{__("Anuluj")}</a>
                 </div>}
 
             </div>

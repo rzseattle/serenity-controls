@@ -109,11 +109,11 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
         } else if (this.state.choiceType == 'exists') {
             condition = ">";
             applyVal = '0000-00-00 00:00:00';
-            label = 'Data ustalona';
+            label = __('Data ustalona');
         } else if (this.state.choiceType == 'not-exists') {
             condition = "IN";
             applyVal = ['0000-00-00 00:00:00', null, ''];
-            label = "Data nie ustalona";
+            label = __("Data nie ustalona");
         }
 
         return {
@@ -313,7 +313,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
                     value={this.state.value}
                 >
                     {this.props.config.multiselect ? '' :
-                        <option key={"-1default"} value="">Wybierz opcję</option>
+                        <option key={"-1default"} value="">{__("Wybierz opcję")}</option>
                     }
                     {content.map((el) =>
                         <option
@@ -461,14 +461,14 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
 
     render() {
         const options = {
-            'LIKE': 'zawiera',
-            '==': 'równa',
-            '<': 'mniejsza',
-            '<=': 'mniejsza równa',
-            '>': 'większa',
-            '>=': 'większa równia',
-            '<x<': 'pomiędzy',
-            'IN': 'wiele wartości ( rozdziel enterem )',
+            'LIKE': __('zawiera'),
+            '==': __('równa'),
+            '<': __('mniejsza'),
+            '<=': __('mniejsza równa'),
+            '>': __('większa'),
+            '>=': __('większa równia'),
+            '<x<': __('pomiędzy'),
+            'IN': __('wiele wartości ( rozdziel enterem )'),
         };
         return (
             <div className={'w-filter w-filter-numeric'} ref="body">
@@ -591,12 +591,12 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
             searchText: props.value ? props.value.value : '',
         }
         this.options = {
-            'LIKE': 'zawiera',
-            '==': 'r\u00f3wny',
-            '!=': 'r\u00f3\u017cne',
-            'NOT LIKE': 'nie zawiera',
-            '^%': 'zaczyna si\u0119 od',
-            '%$': 'ko\u0144czy si\u0119 na'
+            'LIKE': __('zawiera'),
+            '==': __('równy'),
+            '!=': __('różne'),
+            'NOT LIKE': __('nie zawiera'),
+            '^%': __('zaczyna się od'),
+            '%$': __('kończy się na')
         };
 
     }

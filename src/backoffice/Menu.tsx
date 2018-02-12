@@ -11,7 +11,7 @@ export interface IMenuSection {
 
 export interface IMenuElement {
     icon: string//"fa-shopping-cart"
-    template: string//"app/shop/orders/index"
+    route: string//"app/shop/orders/index"
     title: string//"Zamówienia"
 }
 

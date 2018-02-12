@@ -28,7 +28,7 @@ export interface IConnectionsFieldProps extends IFieldProps {
 export class ConnectionsField extends React.Component<IConnectionsFieldProps, any> {
 
     public static defaultProps: Partial<IConnectionsFieldProps> = {
-        placeholder: "Dodaj",
+        placeholder: __("Dodaj"),
         maxItems: 10000,
         items: []
     };

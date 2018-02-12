@@ -45,27 +45,15 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
         function () {
             this.plugin("after-emit", function (compilation, callback) {
                 var stats = compilation.getStats().toJson();
-                /*  console.log("-----------------------");
-                  fs.writeFile(input.PATH + `/cos.txt`, JSON.stringify(compilation.getStats().toJson(), null, 2), function () {
-
-                  })*/
-
                 if (stats) {
-                    console.log(stats.hash);
-                    console.log(stats.assetsByChunkName);
-                    console.log(LANGUAGE);
-                    console.log("-----------------------");
-
-
                     let content = stats.assetsByChunkName.admin[0] + "|" + compilation.getStats().hash
-                    fs.writeFile( PATH + `/compilation-hash-${LANGUAGE}.txt`, content, function () {
+                    fs.writeFile(PATH + `/compilation-hash-${LANGUAGE}.txt`, content, function () {
                         callback();
                     });
-
                 }
-
             })
-        });
+        }
+    );
 
 
     return conf;

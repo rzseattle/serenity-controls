@@ -128,7 +128,6 @@ module.exports = function (input) {
     ]);
 
 
-
     conf.plugins.push(new HardSourceWebpackPlugin({
         // Either an absolute path or relative to webpack's options.context.
         cacheDirectory: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]',
@@ -155,6 +154,42 @@ module.exports = function (input) {
         conf.plugins.push(new ExtractTextPlugin(`bundle-[hash].css`));
 
     }
+
+
+    conf.plugins.push(
+        function () {
+            this.plugin("done", function (stats) {
+
+                var stats = stats.toJson();
+                //console.log(stats.warnings);
+
+                let missingLang = {};
+                if (stats.warnings && stats.warnings.length) {
+                    for (let i in stats.warnings) {
+                        let el = "" + stats.warnings[i];
+                        if (el.indexOf("Missing localization: ") != -1) {
+                            let lines = ("" + el).split("\n");
+                            for (let x = 0; x < lines.length; x++) {
+                                if (lines[x].indexOf("Missing localization: ") == 0) {
+                                    missingLang[lines[x].replace("Missing localization: ", "")] = "";
+                                }
+                            }
+                        }
+
+                    }
+
+                    fs.writeFile(resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`), JSON.stringify(missingLang, null, 2), function () {
+
+                    });
+
+                }
+
+                return true;
+            });
+
+
+        }
+    );
 
 
     return conf;

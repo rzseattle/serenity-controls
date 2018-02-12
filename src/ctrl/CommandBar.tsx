@@ -14,7 +14,7 @@ export class CommandBar extends React.Component<IProps, any> {
 
     public static defaultProps: Partial<IProps> = {
         isSearchBoxVisible: false,
-        searchPlaceholderText: 'Szukaj',
+        searchPlaceholderText: __('Szukaj'),
         items: [],
         rightItems: []
     };
