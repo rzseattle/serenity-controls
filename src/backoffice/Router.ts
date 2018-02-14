@@ -7,7 +7,7 @@ class Router {
 
     public resolve(path) {
 
-        let baseURL = path.split("/").slice(0, -1).join("/");
+
         let pathInfo = path;
         let Component = null;
         let extendedInfo = null;
@@ -16,70 +16,43 @@ class Router {
             return false;
         }
 
-        path = path.replace(/\//g, "_");
-        path = path.replace(/\-/g, "_");
 
-        if (path[0] == "_")
-            path = path.replace("_", "");
-
-        //szukanie w routerze budowanym ze ścieżek do lplików
-        Component = this.lookAtFileRouter(path);
-
-        /* console.log(path);
-         console.log(ViewsRoute.ViewFileMap);*/
-
-        //jeśli nie znaleziono
-        if (!Component) {
-
-            //badanie wpisów powstałych z symfony routera
-            if (ViewsRoute[path]) {
-                Component = ViewsRoute[path];
-                extendedInfo = ViewsRoute.ViewFileMap[pathInfo];
+        //dynamic path matching
+        for (let i in ViewsRoute.ViewFileMap) {
+            let el = ViewsRoute.ViewFileMap[i];
+            if (el.component && i.indexOf("{") != -1) {
+                let regexp = new RegExp(
+                    "^" + i
+                    // repplace all {var} to (.+?)
+                        .replace(
+                            /\{.+?\}/g,
+                            "(.+?)"
+                        )
+                        // replace all / to _
+                        .replace(
+                            /\//g,
+                            "_"
+                        )
+                        // replace first _ to ""
+                        .replace(
+                            "_",
+                            ""
+                        )
+                    + "$");
+                if (path.match(regexp) !== null) {
+                    let tmp = i.split("/{")[0].split("/");
+                    tmp = tmp.slice(0, -1);
+                    Component = ViewsRoute[el.component];
+                    extendedInfo = el;
+                    break;
+                }
             } else {
-                //dynamic path matching
-                for (let i in ViewsRoute.ViewFileMap) {
-                    let el = ViewsRoute.ViewFileMap[i];
-                    if (el.component && i.indexOf("{") != -1) {
-                        let regexp = new RegExp(
-                            "^" + i
-                            // repplace all {var} to (.+?)
-                                .replace(
-                                    /\{.+?\}/g,
-                                    "(.+?)"
-                                )
-                                // replace all / to _
-                                .replace(
-                                    /\//g,
-                                    "_"
-                                )
-                                .replace(
-                                    /-/g,
-                                    "_"
-                                )
-                                // replace first _ to ""
-                                .replace(
-                                    "_",
-                                    ""
-                                )
-                            + "$");
-                        if (path.match(regexp) !== null) {
-                            let tmp = i.split("/{")[0].split("/");
-                            tmp = tmp.slice(0, -1);
-                            baseURL = tmp.join("/");
-                            Component = ViewsRoute[el.component];
-                            extendedInfo = el;
-                            break;
-                        }
-                    } else {
-                        if (path == i) {
-                            let tmp = i.split("/{")[0].split("/");
-                            tmp = tmp.slice(0, -1);
-                            baseURL = tmp.join("/");
-                            Component = ViewsRoute[el.component];
-                            extendedInfo = el;
-                            break;
-                        }
-                    }
+                if (path == i) {
+                    let tmp = i.split("/{")[0].split("/");
+                    tmp = tmp.slice(0, -1);
+                    Component = ViewsRoute[el.component];
+                    extendedInfo = el;
+                    break;
                 }
             }
         }
@@ -87,8 +60,16 @@ class Router {
         if (!Component) {
 
 
-            console.error("Not found:" + pathInfo);
-            console.log(ViewsRoute.ViewFileMap);
+            if (extendedInfo) {
+                console.error("Component file not found:" + pathInfo);
+                console.error("Component file should be:" + extendedInfo._debug.template);
+                /*console.error("Additional info");
+                console.log(extendedInfo);*/
+            } else {
+                console.error("Route not fount: " + pathInfo);
+                console.log(ViewsRoute.ViewFileMap);
+            }
+
 
             throw "Route not found";
 
