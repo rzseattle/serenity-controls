@@ -90,7 +90,7 @@ class Router {
         }
 
         return {
-            baseURL,
+            baseURL: extendedInfo['_baseRoutePath'],
             path: pathInfo,
             Component,
             extendedInfo

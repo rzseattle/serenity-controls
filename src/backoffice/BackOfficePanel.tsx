@@ -159,13 +159,14 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     />
                 </div>}
                 <div className="w-panel-body" style={{position: "relative"}}>
-                    <PanelComponentLoader
-                        store={this.props.store}
-                        onLoadStart={this.handleLoadStart.bind(this)}
-                        onLoadEnd={this.handleLoadEnd.bind(this)}
-                        setPanelOption={this.handleSetPanelOption.bind(this)}
 
-                    />
+                        <PanelComponentLoader
+                            store={this.props.store}
+                            onLoadStart={this.handleLoadStart.bind(this)}
+                            onLoadEnd={this.handleLoadEnd.bind(this)}
+                            setPanelOption={this.handleSetPanelOption.bind(this)}
+                        />
+
                 </div>
             </div>
 

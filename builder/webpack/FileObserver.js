@@ -86,7 +86,6 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
     var walk = function (dir) {
-        console.log("here3")
         var components = [];
         var sass = [];
         if (fs.existsSync(dir)) {
@@ -113,6 +112,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
 
     const linkArrowDir = () => {
+
         newRouteFileGenerator();
 
         if (false) {

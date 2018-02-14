@@ -28,6 +28,7 @@ class BackofficeStore {
 
 
     init() {
+
         //this.viewData = browserInput.inputProps;
         //this.view = Router.resolve(route);
         if (window.location.hash != "#" && window.location.hash) {
@@ -129,10 +130,15 @@ class BackofficeStore {
 
 
 }
+var store;
 
+if (window.store) {
+    store = window.store;
+} else {
+    window.store = store = new BackofficeStore;
+    store.init();
+}
 
-var store = new BackofficeStore;
-store.init();
 
 Comm.errorFallback = function (data) {
     console.error("Conn error");
@@ -149,10 +155,10 @@ Comm.errorFallback = function (data) {
 });*/
 
 
-autorun(() => {
+/*autorun(() => {
     window.store = toJS(store);
     window.storeObj = store;
-})
+})*/
 
 
 //useStrict(true);
