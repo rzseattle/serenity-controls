@@ -16,7 +16,8 @@ class Router {
             return false;
         }
 
-        path = path.replace(/\//g, "_")
+        path = path.replace(/\//g, "_");
+        path = path.replace(/\-/g, "_");
 
         if (path[0] == "_")
             path = path.replace("_", "");
