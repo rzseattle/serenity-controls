@@ -48,6 +48,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                         .replace(/\//g, "_")
                         .replace(/\{/g, "_")
                         .replace(/\}/g, "_")
+                        .replace(/\-/g, "_")
                     ;
                     ComponentFileContent += 'import ' + name + ' from \'' + componentPath.replace(/\\/g, '/') + '\';\n';
                     ComponentFileContent += ' export { ' + name + '}; \n';
