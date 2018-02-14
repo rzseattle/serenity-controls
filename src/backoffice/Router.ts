@@ -52,6 +52,10 @@ class Router {
                                     /\//g,
                                     "_"
                                 )
+                                .replace(
+                                    /-/g,
+                                    "_"
+                                )
                                 // replace first _ to ""
                                 .replace(
                                     "_",
