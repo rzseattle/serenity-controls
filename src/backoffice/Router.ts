@@ -31,12 +31,7 @@ class Router {
                         // replace all / to _
                         .replace(
                             /\//g,
-                            "_"
-                        )
-                        // replace first _ to ""
-                        .replace(
-                            "_",
-                            ""
+                            "\/"
                         )
                     + "$");
                 if (path.match(regexp) !== null) {
