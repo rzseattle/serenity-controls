@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg, ITextProps, ITextareaProps, ISelectProps, ISwitchProps, ICheckboxGroupProps, IDateProps, IFileProps, IWysiwygProps} from '../ctrl/Fields';
+import {CheckboxGroup, ConnectionsField, Date, File, ICheckboxGroupProps, IDateProps, IFileProps, ISelectProps, ISwitchProps, ITextareaProps, ITextProps, IWysiwygProps, Select, Switch, Text, Textarea, Wysiwyg} from '../ctrl/Fields';
 import {FileList, IFileList} from '../ctrl/FileLists';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
 import {IConnectionsFieldProps} from 'frontend/src/ctrl/fields/ConnectionsField';
+import {Copyable} from 'frontend/src/ctrl/Copyable';
 
 
 interface IWithBootstrapFormFieldProps {
@@ -16,6 +17,7 @@ interface IWithBootstrapFormFieldProps {
     layoutType?: 'horizontal' | 'default',
     addInputClass?: boolean,
     editable?: boolean
+    copyable?: boolean
 
 }
 
@@ -102,7 +104,7 @@ const withBootstrapFormField =
                 if (props.layoutType == 'default') {
                     return (
                         <div className={classes.join(' ')}>
-                            {this.props.label && <label>{this.props.label}</label>}
+                            {this.props.label && <label>{this.props.label} {this.props.copyable && <Copyable toCopy={this.props.value}/>}</label>}
                             {field}
 
                             {props.help ?

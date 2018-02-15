@@ -1,5 +1,4 @@
 //declare var Views: any;
-import *  as Views from "../../../../build/js/tmp/components.include.js";
 import *  as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
 
 
