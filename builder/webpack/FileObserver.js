@@ -90,7 +90,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         [routeFileDir],
         {
             ignored: /(^|[\/\\])\../,
-            ignoreInitial: true
+            ignoreInitial: true,
             awaitWriteFinish: {
                 stabilityThreshold: 2000,
                 pollInterval: 100
