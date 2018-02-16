@@ -91,6 +91,10 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         {
             ignored: /(^|[\/\\])\../,
             ignoreInitial: true
+            awaitWriteFinish: {
+                stabilityThreshold: 2000,
+                pollInterval: 100
+            },
 
         })
         .on('add', (event, path) => {
