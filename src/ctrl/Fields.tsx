@@ -342,6 +342,10 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
     isInputTextChanged(input) {
         let data = CKEDITOR.instances[this.id].getData();
+
+        if (input == null) {
+            return data != "";
+        }
         if (data != input.replace(/\r\n/g, "\n")) {
             return true
         }
