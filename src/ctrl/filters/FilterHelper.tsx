@@ -1,5 +1,5 @@
 import {IFilter} from "../filters/Intefaces";
-import {NumericFilter, SelectFilter, TextFilter, DateFilter, SwitchFilter, ConnectionFilter} from '../Filters';
+import {ConnectionFilter, DateFilter, SelectFilter, SwitchFilter, TextFilter} from '../Filters';
 import {Option} from "../fields/Interfaces";
 
 export class FilterHelper {
@@ -70,7 +70,7 @@ export class FilterHelper {
         });
     }
 
-    public get(): IFilter{
+    public get(): IFilter {
         return this.data
     }
 

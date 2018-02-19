@@ -98,7 +98,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         showHeader: true,
         rememberState: false,
         additionalConditions: {},
-        filters: {},
+        filters: null,
         data: {data: [], countAll: 0, debug: ""}
     }
     private tmpDragStartY: number;

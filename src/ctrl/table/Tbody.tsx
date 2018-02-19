@@ -132,7 +132,7 @@ export class Row extends React.PureComponent<any, any> {
                         style={{width: column.width, ...column.styleTemplate(row, column)}}
                         onClick={column.events.click ? (event) => {
                             column.events.click.map((callback) => {
-                                callback.bind(this)(row, column, event, this);
+                                callback.bind(this)(row, column, this, event.target);
                             })
                         } : function () {
                         }}

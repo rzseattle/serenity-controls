@@ -145,7 +145,7 @@ export class ColumnHelper {
             field: field,
             caption: caption,
             classTemplate: (row, column) => ['center', (row[column.field] == '1' ? "darkgreen" : "darkred")],
-            template: value => <Icon name={(value == "1" ? "CheckMark" : "Clear")} />,
+            template: value => <Icon name={(value == "1" ? "CheckMark" : "Clear")}/>,
             filter: [{
                 field: field,
                 component: SwitchFilter,
@@ -250,6 +250,16 @@ export class ColumnHelper {
 
     onLeave(fn: IEventCallback): ColumnHelper {
         this.data.events.leave.push(fn);
+        return this;
+    }
+
+    styleTemplate(fn: { (row: any, column: IColumnData): any }) {
+        this.data.styleTemplate = fn;
+        return this;
+    }
+
+    classTemplate(fn: { (row: any, column: IColumnData): Array<string> }) {
+        this.data.classTemplate = fn;
         return this;
     }
 
