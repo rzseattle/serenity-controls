@@ -1,5 +1,4 @@
 import * as React from "react";
-import Comm from "frontend/src/lib/Comm";
 import {Datasource} from "frontend/src/lib/Datasource";
 import {LoadingIndicator} from "frontend/src/ctrl/LoadingIndicator";
 import {Shadow} from "frontend/src/ctrl/Overlays";
@@ -30,6 +29,15 @@ export class LoaderContainer extends React.Component<ILoaderContainerProps, any>
 
     }
 
+    load = () => {
+        this.setState({
+                loaded: false,
+                data: null
+            },
+            () => this.props.datasource.resolve()
+        );
+    }
+
     componentDidMount() {
         this.props.datasource.observe((result) => {
             this.setState({
@@ -43,13 +51,13 @@ export class LoaderContainer extends React.Component<ILoaderContainerProps, any>
 
 
     render() {
-        let { prerender, debug, indicatorText} = this.props
-        let { loaded } = this.state
+        let {prerender, debug, indicatorText} = this.props
+        let {loaded} = this.state
 
         return (
             <div style={{position: "relative"}}>
-                {!loaded && prerender && <Shadow loader={true} /> }
-                {!loaded && !prerender && <LoadingIndicator text={indicatorText} /> }
+                {!loaded && prerender && <Shadow loader={true}/>}
+                {!loaded && !prerender && <LoadingIndicator text={indicatorText}/>}
                 {(loaded || (!loaded && prerender)) && this.props.children(this.state.data)}
                 {debug && <pre>{JSON.stringify(this.state.data, null, 2)}</pre>}
             </div>
