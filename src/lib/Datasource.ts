@@ -49,7 +49,7 @@ export class Datasource {
         }
     }
 
-    resolve() {
+    resolve = () => {
         let result;
         if (typeof this.source == "function") {
             this.processResult(this.source(this.input));

@@ -311,6 +311,8 @@ class ConfirmModal extends React.Component<any, any> {
 interface IConfirmConf {
     container?: { (): HTMLElement },
     target?: { (): HTMLElement },
+    title?: string,
+    showHideLink?: boolean
 }
 
 
@@ -326,16 +328,16 @@ const confirm = async (message, options: IConfirmConf = {}) => {
     };
 
     let resolver;
-    let promise = new Promise((resolve, reject) =>{
+    let promise = new Promise((resolve, reject) => {
         resolver = resolve
     });
 
 
-    let x : any = <ConfirmModal {...props} onOk={resolver} cleanup={cleanup}>
-        <div>
-            {message}
-        </div>
-    </ConfirmModal>
+    let x: any = <ConfirmModal {...props} onOk={resolver} cleanup={cleanup} >
+            <div>
+                {message}
+            </div>
+        </ConfirmModal>
     ;
 
     ReactDOM.render(x, wrapper)

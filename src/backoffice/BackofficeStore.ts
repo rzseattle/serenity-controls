@@ -1,8 +1,8 @@
-import {autorun, observable, toJS, transaction} from "mobx";
+import {observable, transaction} from "mobx";
 import Comm from '../lib/Comm'
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs"
-import {HexBase64Latin1Encoding} from "crypto";
+import {BackOfficeColumnHelper} from "frontend/src/backoffice/BackOfficeColumnHelper";
 
 declare var window;
 const browserInput = window.reactBackOfficeVar;
@@ -50,7 +50,7 @@ class BackofficeStore {
         }
     }
 
-    changeView(path: string, input = null, callback: { (): any } = null) {
+    changeView = (path: string, input = null, callback: { (): any } = null) => {
 
         try {
             this.isViewLoading = true;
@@ -120,11 +120,11 @@ class BackofficeStore {
 
     }
 
-    onViewLoad(callback) {
+    onViewLoad = (callback) => {
         this.onViewLoadArr.push(callback);
     }
 
-    onViewLoaded(callback) {
+    onViewLoaded = (callback) => {
         this.onViewLoadedArr.push(callback);
     }
 
@@ -147,7 +147,9 @@ Comm.errorFallback = function (data) {
         "<h3>" + data.url + "</h3>"
         //+ "<pre>" + JSON.stringify(data.input, null, 2) + "</pre>"
         + data.response;
-}
+};
+
+BackOfficeColumnHelper.goto = store.changeView;
 
 
 /*const disposer2 = observe(store, "viewURL", (change) => {

@@ -8,11 +8,10 @@ import Tbody from './table/Tbody'
 import Footer from './table/Footer'
 import {IColumnData, IFilterValue, IOrder} from './table/Interfaces'
 import {EmptyResult, Error, Loading} from './table/placeholders'
-import {Icon} from "./Icon";
-import {Tooltip} from "./Overlays";
-import {deepCopy, deepIsEqual} from "frontend/src/lib/JSONTools";
+import {deepCopy} from "frontend/src/lib/JSONTools";
 import Thead from "frontend/src/ctrl/table/Thead";
 import Comm from "frontend/src/lib/Comm";
+import {Datasource} from "frontend/src/lib/Datasource";
 
 
 interface IDataQuery {
@@ -49,6 +48,7 @@ interface ITableProps {
      */
     dataProvider?: IDataProvider;
     remoteURL?: string,
+    dataSource?: Datasource,
     selectable?: boolean,
     onSelectionChange?: ISelectionChangeEvent,
     controlKey?: string,
@@ -198,7 +198,7 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     componentDidMount() {
-        if (this.props.remoteURL || this.props.dataProvider) {
+        if (this.props.remoteURL || this.props.dataProvider || this.props.dataSource) {
             this.load();
         }
     }
@@ -360,6 +360,13 @@ class Table extends React.Component<ITableProps, ITableState> {
             comm.setData(this.getRequestData());
             comm.on(Comm.EVENTS.FINISH, () => this.setState({loading: false}));
             this.xhrConnection = comm.send();
+
+        } else if (this.props.dataSource) {
+            let {dataSource} = this.props;
+            dataSource.observe((result) => {
+                setStateAfterLoad(result);
+            });
+            dataSource.resolve();
 
         } else if (this.props.dataProvider) {
             let result = this.props.dataProvider(this.getRequestData());

@@ -7,7 +7,7 @@ import Icon from 'frontend/src/ctrl/Icon';
 
 
 export class ColumnHelper {
-    private data: IColumnData;
+    protected data: IColumnData;
 
     constructor(initData: Partial<IColumnData>) {
         this.data = {
