@@ -664,7 +664,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 
                 <input type="text" value={this.state.searchText} onChange={this.handleInputChange.bind(this)} autoFocus onKeyPress={this._handleKeyPress.bind(this)}/>
 
-                <select
+                {this.props.config.extendedInfo && <select
                     onChange={this.handleSelectChange.bind(this)}
                     value={this.state.option}
 
@@ -672,7 +672,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
                     {Object.entries(this.options).map(([key, val]) =>
                         <option value={key} key={key}> {val}</option>
                     )}
-                </select>
+                </select>}
 
                 {this.props.showApply && <div>
                     <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>

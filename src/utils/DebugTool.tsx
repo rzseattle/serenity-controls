@@ -146,7 +146,8 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
 
                     <a onClick={() => this.props.propsReloadHandler()} className="btn btn-sm btn-default"><Icon name={"Sync"}/> Reload props </a>
                     {extendedInfo && <>
-                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${extendedInfo._debug.file}&line=${extendedInfo._debug.line}`} className="btn btn-default btn-sm">
+                        {/*${DEV_PROPERIES.project_dir}*/}
+                        <a href={`phpstorm://open?url=file://${extendedInfo._debug.file}&line=${extendedInfo._debug.line}`} className="btn btn-default btn-sm">
                             <Icon name={"FileCode"}/> edit backend
                         </a>
                         <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${extendedInfo._debug.template}.component.tsx&line=1`} className="btn btn-default btn-sm"><Icon name={"Code"}/> edit frontend</a>

@@ -29,11 +29,14 @@ export class FilterHelper {
         });
     }
 
-    static text(field, caption) {
+    static text(field, caption, extendedInfo = true) {
         return new FilterHelper({
             field: field,
             caption: caption,
-            component: TextFilter
+            component: TextFilter,
+            config:{
+                extendedInfo
+            }
         });
     }
 
