@@ -127,6 +127,9 @@ export class ColumnHelper {
             filter: [{
                 field: field,
                 component: TextFilter,
+                config: {
+                    extendedInfo: true
+                }
             }]
         })
     }
