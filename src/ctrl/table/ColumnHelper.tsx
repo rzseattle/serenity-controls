@@ -85,6 +85,9 @@ export class ColumnHelper {
                 //label: caption,
                 field: field,
                 component: TextFilter,
+                config: {
+                    extendedInfo: true
+                }
             }]
         })
     }
