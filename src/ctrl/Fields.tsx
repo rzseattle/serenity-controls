@@ -32,6 +32,7 @@ export interface ISelectProps extends IFieldProps {
     onChange?: { (changeData: ISelectChangeEvent): any },
     allowClear?: boolean
     value: string | number
+    disabledClass: string
 }
 
 class Select extends React.Component<ISelectProps, any> {
@@ -79,7 +80,7 @@ class Select extends React.Component<ISelectProps, any> {
                 for (let i in props.options) {
                     if (props.options[i].value == props.value) {
                         return <div
-                            className={"w-field-presentgitation w-field-presentation-select " + (props.value ? "" : "w-field-presentation-empty")}
+                            className={"w-field-presentgitation w-field-presentation-select " + props.disabledClass + (props.value ? "" : "w-field-presentation-empty")}
                         >{props.options[i].label}</div>;
                     }
                 }
@@ -172,7 +173,7 @@ class Text extends React.Component<ITextProps, any> {
         const props = this.props;
         if (!props.editable) {
             return <div
-                className={"w-field-presentation w-field-presentation-text " + (props.value ? "" : "w-field-presentation-empty")}
+                className={"w-field-presentation w-field-presentation-text " + props.disabledClass + " " + (props.value ? "" : "w-field-presentation-empty")}
             >{props.value}
             </div>;
         }
@@ -222,7 +223,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
         let props = this.props;
         if (!props.editable) {
             return <div
-                className="w-field-presentation w-field-presentation-textarea">{props.value}</div>;
+                className={"w-field-presentation w-field-presentation-textarea " + props.disabledClass}>{props.value}</div>;
         }
         return (
             <textarea
@@ -461,7 +462,7 @@ class Switch extends React.Component<ISwitchProps, any> {
                 for (let i in props.options) {
                     if (props.options[i].value == props.value) {
                         return <div
-                            className={"w-field-presentation w-field-presentation-switch "}
+                            className={"w-field-presentation w-field-presentation-switch " + props.disabledClass}
                         >{props.options[i].label}</div>;
                     }
                 }

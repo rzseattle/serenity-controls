@@ -1,5 +1,23 @@
 import * as React from 'react';
-import {CheckboxGroup, ConnectionsField, Date, File, ICheckboxGroupProps, IDateProps, IFileProps, ISelectProps, ISwitchProps, ITextareaProps, ITextProps, IWysiwygProps, Select, Switch, Text, Textarea, Wysiwyg} from '../ctrl/Fields';
+import {
+    CheckboxGroup,
+    ConnectionsField,
+    Date,
+    File,
+    ICheckboxGroupProps,
+    IDateProps,
+    IFileProps,
+    ISelectProps,
+    ISwitchProps,
+    ITextareaProps,
+    ITextProps,
+    IWysiwygProps,
+    Select,
+    Switch,
+    Text,
+    Textarea,
+    Wysiwyg
+} from '../ctrl/Fields';
 import {FileList, IFileList} from '../ctrl/FileLists';
 import {Shadow} from '../ctrl/Overlays';
 import Comm from '../lib/Comm';
@@ -18,7 +36,8 @@ interface IWithBootstrapFormFieldProps {
     addInputClass?: boolean,
     editable?: boolean
     copyable?: boolean
-
+    disabledClass?: string
+    labelClass?: string
 }
 
 /*
@@ -104,7 +123,8 @@ const withBootstrapFormField =
                 if (props.layoutType == 'default') {
                     return (
                         <div className={classes.join(' ')}>
-                            {this.props.label && <label>{this.props.label} {this.props.copyable && <Copyable toCopy={this.props.value}/>}</label>}
+                            {this.props.label && <label className={this.props.labelClass}>{this.props.label} {this.props.copyable &&
+                            <Copyable toCopy={this.props.value}/>}</label>}
                             {field}
 
                             {props.help ?
@@ -474,7 +494,8 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         const Tag = this.props.useFormTag ? "form" : "div";
 
         return (
-            <Tag ref={(form) => this.formTag = form} className={classes.join(' ')} onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
+            <Tag ref={(form) => this.formTag = form} className={classes.join(' ')}
+                 onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
 
                 {this.state.formErrors.length > 0 &&
                 <ul className="bg-danger ">
@@ -501,4 +522,18 @@ const BConnectionsField = withBootstrapFormField()<IConnectionsFieldProps>(Conne
 const BFileList = withBootstrapFormField()<IFileList>(FileList);
 const BContainer = withBootstrapFormField()((props) => <div>{props.children}</div>);
 
-export {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BDate, BFile, BWysiwig, BConnectionsField, BFileList, BContainer, withBootstrapFormField};
+export {
+    BForm,
+    BText,
+    BSwitch,
+    BSelect,
+    BCheckboxGroup,
+    BTextarea,
+    BDate,
+    BFile,
+    BWysiwig,
+    BConnectionsField,
+    BFileList,
+    BContainer,
+    withBootstrapFormField
+};

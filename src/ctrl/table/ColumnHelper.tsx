@@ -230,6 +230,9 @@ export class ColumnHelper {
         return this;
     }
 
+    noSorter(): ColumnHelper {
+        return this;
+    }
 
     /*filter(type, field, conf) {
         if(Array.isArray(this.data.filter)){

@@ -18,6 +18,7 @@ export interface IFieldProps {
     style?: any,
     placeholder?: string,
     autoFocus?: boolean
+    disabledClass?: string
 }
 
 export interface IFieldChangeEvent {
