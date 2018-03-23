@@ -30,7 +30,6 @@
         &:hover
             i
                 color: #106ebe
-
         input
             height: 40px
             padding: 8px 8px 8px 0
@@ -81,3 +80,69 @@
             text-align: right
             padding-right: 20px
             flex: 0 0 auto
+    .dropdown-layer
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100vh
+        display: block
+        z-index: 0
+    .buttons-left
+        z-index: 9999
+    .bar-dropdown
+        display: inline-flex
+        cursor: pointer
+        padding: 0 8px 0 4px
+        font-size: 14px
+        color: #106ebe
+        position: relative
+        background: none
+        border: none
+        outline: none
+        text-align: left
+        &:hover
+            background: #eaeaea
+        i
+            font-size: 16px
+            padding: 0 4px
+        .ms-Icon--ChevronDown
+            color: #505050
+            font-size: 12px
+            margin-left: 5px
+
+    .bar-dropdown-list
+        position: absolute
+        top: 100%
+        padding: 10px 0
+        background: white
+        box-sizing: border-box
+        box-shadow: rgba(0, 0, 0, 0.4) 1px 3px 6px -1px
+        border-width: 1px
+        border-style: solid
+        border-color: rgb(234, 234, 234)
+        outline: transparent
+        transition: max-height .7s
+        overflow: hidden
+        height: auto
+        .bar-dropdown-item
+            display: flex
+            padding: 5px
+            cursor: pointer
+            padding-right: 15px
+            i
+                font-size: 14px
+                color: rgb(0, 120, 215)
+                display: inline-block
+                min-height: 1px
+                max-height: 32px
+                width: 12px
+                margin-right: 10px
+                margin-left: 4px
+                vertical-align: middle
+                flex-shrink: 0
+            span
+                color: #1e1e1e
+                font-size: 13px
+            &:hover
+                background: #f6f6f6
