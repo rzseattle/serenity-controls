@@ -251,3 +251,31 @@ $screen-lg: 1200px
     @else if $media == lg
         @media only screen and (min-width: $screen-lg)
             @content
+
+.row
+    > :first-child
+        > div
+            > .w-panel
+                margin-left: 0 !important
+                margin-right: 5px
+
+        > .w-panel
+            margin-left: 0 !important
+            margin-right: 5px
+
+    > :last-child
+        > div
+            > .w-panel
+                margin-right: 0 !important
+                margin-left: 5px
+
+        > .w-panel
+            margin-right: 0 !important
+            margin-left: 5px
+
+.w-panel-body-container-inner
+    .w-tabs
+        margin-top: 5px
+
+    .panel-body-margins
+        margin: 0

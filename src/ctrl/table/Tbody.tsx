@@ -138,7 +138,7 @@ export class Row extends React.PureComponent<any, any> {
                         }}
                         onMouseUp={column.events.mouseUp ? (event) => {
                             column.events.mouseUp.map((callback) => {
-                                callback.bind(this)(row, column, event, this);
+                                callback.bind(this)(row, column, this, event.target, event);
                             })
                         } : function () {
                         }}
@@ -155,6 +155,7 @@ export class Row extends React.PureComponent<any, any> {
                         } : function () {
                         }}
                         className={cache[index2].classes.concat(column.classTemplate(row, column)).join(' ')}
+                        onContextMenu={(e)=> e.preventDefault()}
 
                     >
                         {packFn(row[column.field] ? row[column.field] : column.default, column, row)}

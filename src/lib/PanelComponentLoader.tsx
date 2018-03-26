@@ -63,10 +63,12 @@ export interface IArrowViewComponentProps {
     _resolveComponent: { (componentPath: string): React.ReactElement<any> }
     _startLoadingIndicator: { (): any };
     _stopLoadingIndicator: { (): any };
+    _isSub: boolean
 }
 
 interface IProps {
     store: any;
+    isSub: boolean;
     onLoadStart: { (): any };
     onLoadEnd: { (): any };
     setPanelOption: { (name: string, value: string | number | boolean, callback?: { (): any }): any };
@@ -198,6 +200,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _resolveComponent={this.handleReloadProps.bind(this)}
                 _startLoadingIndicator={this.props.onLoadStart}
                 _stopLoadingIndicator={this.props.onLoadEnd}
+                _isSub={this.props.isSub}
                 _scrollTo={(el) => {
 
                 }}

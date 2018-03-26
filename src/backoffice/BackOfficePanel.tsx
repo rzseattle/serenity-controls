@@ -15,11 +15,12 @@ NProgress.configure({parent: '.w-panel-body'});
 
 
 interface IBackOfficePanelProps {
-    icon: string
+    icon?: string
     onlyBody?: boolean
-    title: string
-    user: any
-    menu: IMenuSection[]
+    isSub?: boolean
+    title?: string
+    user?: any
+    menu?: IMenuSection[]
     store: any
 
 }
@@ -38,7 +39,8 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     container: HTMLDivElement;
 
     public static defaultProps: Partial<IBackOfficePanelProps> = {
-        onlyBody: false
+        onlyBody: false,
+        isSub: false
     }
 
 
@@ -89,12 +91,14 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     }
 
     componentDidMount() {
-        this.adjustToSize()
-        let timeout = null;
-        window.addEventListener('resize', () => {
-            //clearTimeout(timeout);
-            timeout = setTimeout(this.adjustToSize.bind(this), 30);
-        })
+        if (!this.props.isSub) {
+            this.adjustToSize()
+            let timeout = null;
+            window.addEventListener('resize', () => {
+                //clearTimeout(timeout);
+                timeout = setTimeout(this.adjustToSize.bind(this), 30);
+            })
+        }
     }
 
     handleLoadStart = () => {
@@ -150,7 +154,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                 </Modal>
 
             </div>}
-            <div className="w-panel-body-container">
+            <div className={"w-panel-body-container" + (this.props.isSub ? " w-panel-body-container-inner" : "")}>
 
                 {this.state.menuVisible && !this.state.onlyBody && <div className="w-panel-menu">
                     <Menu elements={this.props.menu}
@@ -160,12 +164,13 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                 </div>}
                 <div className="w-panel-body" style={{position: "relative"}}>
 
-                        <PanelComponentLoader
-                            store={this.props.store}
-                            onLoadStart={this.handleLoadStart.bind(this)}
-                            onLoadEnd={this.handleLoadEnd.bind(this)}
-                            setPanelOption={this.handleSetPanelOption.bind(this)}
-                        />
+                    <PanelComponentLoader
+                        store={this.props.store}
+                        onLoadStart={this.handleLoadStart.bind(this)}
+                        onLoadEnd={this.handleLoadEnd.bind(this)}
+                        setPanelOption={this.handleSetPanelOption.bind(this)}
+                        isSub={this.props.isSub}
+                    />
 
                 </div>
             </div>

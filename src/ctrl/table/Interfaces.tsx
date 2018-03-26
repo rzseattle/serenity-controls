@@ -38,7 +38,7 @@ export interface ICellTemplate {
 }
 
 export interface IEventCallback {
-    (row: any, column: IColumnData, rowComponent: Row, cell: HTMLElement): any
+    (row: any, column: IColumnData, rowComponent: Row, cell: HTMLElement, event: any): any
 }
 
 

@@ -9,7 +9,8 @@ interface ITabsProps {
     children: JSX.Element[] | any[];
     onTabChange?: ITabsCallback;
     defaultActiveTab?: number;
-    activeTab?: number
+    activeTab?: number;
+    mountAllTabs?: boolean
 
 }
 
@@ -19,6 +20,10 @@ interface ITabsState {
 
 class Tabs extends React.Component<ITabsProps, ITabsState> {
 
+
+    public static defaultProps: Partial<ITabsProps> = {
+        mountAllTabs: false,
+    }
 
     constructor(props) {
         super(props);
@@ -59,13 +64,26 @@ class Tabs extends React.Component<ITabsProps, ITabsState> {
                                 : null}
                             {child.props.title}
                             {child.props.badge != undefined ? <div className="w-tabs-badge">({child.props.badge})</div> : null}
+                            {child.props.onClose && <a onClick={(e) =>{
+                                e.stopPropagation();
+                                child.props.onClose(index);
+                            }} className={"tabs-close"}><Icon name={"ChromeClose"}/></a>}
+
 
                         </div>
                     })}
                 </div>
                 <div className="tabs-links-separator"></div>
                 <div className="tab-pane-container">
-                    {p.children[s.currentTab]}
+                    {!this.props.mountAllTabs && React.Children.toArray(p.children)[s.currentTab]}
+                    {this.props.mountAllTabs && <div>
+                        {React.Children.map(p.children, (child: any, index) => {
+                            if (child == null) {
+                                return;
+                            }
+                            return <div style={{display: (index == s.currentTab ? 'block' : 'none')}}>{child}</div>
+                        })}
+                    </div>}
                 </div>
             </div>
         )
@@ -77,7 +95,8 @@ interface ITabPaneProps {
     title: string,
     badge?: string | number,
     icon?: string,
-    children?: any
+    children?: any,
+    onClose?: { (index: number): any },
 
 }
 

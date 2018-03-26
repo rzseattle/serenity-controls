@@ -13,6 +13,7 @@ Comm.basePath = browserInput.basePath;
 class BackofficeStore {
 
 
+    subStore = false;
     //input added to view request
     @observable viewInput = {};
     basePath = browserInput.basePath;
@@ -82,9 +83,12 @@ class BackofficeStore {
                 url = purePath + (query ? "?" + query : "");
             }
 
-            window.removeEventListener("hashchange", this.hashChangeHandler);
-            window.location.hash = url
-            setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
+
+            if(!this.subStore) {
+                window.removeEventListener("hashchange", this.hashChangeHandler);
+                window.location.hash = url
+                setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
+            }
 
             let comm = new Comm(url);
 
@@ -162,7 +166,15 @@ BackOfficeColumnHelper.goto = store.changeView;
     window.storeObj = store;
 })*/
 
+const newStore = () =>{
+    let store = new BackofficeStore;
+    store.subStore = true;
+    return store;
+}
 
-//useStrict(true);
-export default store;
+
+
+export {store, newStore};
+
+
 
