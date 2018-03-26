@@ -1,6 +1,7 @@
 import * as React from "react";
 import {deepIsEqual} from "frontend/src/lib/JSONTools";
 import Icon from "frontend/src/ctrl/Icon";
+import {translate} from "frontend/src/utils/Translator";
 
 
 export default class Footer extends React.Component<any, any> {
@@ -58,7 +59,7 @@ export default class Footer extends React.Component<any, any> {
                     </div>
 
                     <div className="w-table-footer-onpage-select">
-                        <span>Na stronie: </span>
+                        <span>{__("Na stronie")}: </span>
                         <select value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
                             {([10, 25, 50, 100, 500]).map((x, i) =>
                                 <option key={'onpageval' + x} value={x}>{x}</option>
