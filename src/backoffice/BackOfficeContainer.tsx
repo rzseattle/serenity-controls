@@ -19,13 +19,6 @@ export class BackOfficeContainer extends React.Component<IBackOfficeContainerPro
     constructor(props: IBackOfficeContainerProps, context: any) {
         super(props, context);
 
-        this.state = {
-            storeReady: false
-        };
-
-    }
-
-    componentDidMount() {
         this.store = new BackofficeStore;
         this.store.subStore = true;
         this.store.changeView(this.props.route)
