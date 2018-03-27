@@ -2,15 +2,12 @@ import {observable, transaction} from "mobx";
 import Comm from '../lib/Comm'
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs"
-import {BackOfficeColumnHelper} from "frontend/src/backoffice/BackOfficeColumnHelper";
 
 declare var window;
 const browserInput = window.reactBackOfficeVar;
 
-Comm.basePath = browserInput.basePath;
 
-
-class BackofficeStore {
+export class BackofficeStore {
 
 
     subStore = false;
@@ -84,7 +81,7 @@ class BackofficeStore {
             }
 
 
-            if(!this.subStore) {
+            if (!this.subStore) {
                 window.removeEventListener("hashchange", this.hashChangeHandler);
                 window.location.hash = url
                 setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
@@ -134,47 +131,16 @@ class BackofficeStore {
 
 
 }
-var store;
 
-if (window.store) {
-    store = window.store;
-} else {
-    window.store = store = new BackofficeStore;
-    store.init();
-}
-
-
-Comm.errorFallback = function (data) {
-    console.error("Conn error");
-
-    store.viewServerErrors =
-        "<h3>" + data.url + "</h3>"
-        //+ "<pre>" + JSON.stringify(data.input, null, 2) + "</pre>"
-        + data.response;
-};
-
-BackOfficeColumnHelper.goto = store.changeView;
-
-
-/*const disposer2 = observe(store, "viewURL", (change) => {
-    store.loadDataForView();
-});*/
-
-
-/*autorun(() => {
-    window.store = toJS(store);
-    window.storeObj = store;
-})*/
-
-const newStore = () =>{
+/*const newStore = () =>{
     let store = new BackofficeStore;
     store.subStore = true;
     return store;
-}
+}*/
 
 
 
-export {store, newStore};
+
 
 
 

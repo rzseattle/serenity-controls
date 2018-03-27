@@ -1,11 +1,8 @@
 import * as React from 'react'
-import * as StoreUtils from "./BackofficeStore";
+
 import BackOfficePanel from 'frontend/src/backoffice/BackOfficePanel';
+import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
 
-declare var window: any;
-
-
-//const _store = newStore();
 
 interface IBackOfficeContainerProps {
     route: string;
@@ -17,28 +14,25 @@ interface IBackOfficeContainerState {
 
 export class BackOfficeContainer extends React.Component<IBackOfficeContainerProps, IBackOfficeContainerState> {
 
-    store: null
+    store: any = null
 
     constructor(props: IBackOfficeContainerProps, context: any) {
         super(props, context);
 
+        this.state = {
+            storeReady: false
+        };
 
-        this.store = StoreUtils.newStore();
-        this.store.changeView(this.props.route);
     }
 
     componentDidMount() {
-
-
-
+        this.store = new BackofficeStore;
+        this.store.subStore = true;
+        this.store.changeView(this.props.route)
     }
 
     render() {
-        //return "to jest container";
-        return <div>
-
-            <BackOfficePanel store={this.store} onlyBody={true} isSub={true}/>
-        </div>
+        return <BackOfficePanel store={this.store} onlyBody={true} isSub={true}/>
     }
 
 }
