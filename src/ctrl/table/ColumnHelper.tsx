@@ -138,7 +138,7 @@ export class ColumnHelper {
         return new ColumnHelper({
             field: field,
             caption: caption,
-            icon: 'fa-calendar',
+
             filter: [{
                 field: field,
                 component: DateFilter,

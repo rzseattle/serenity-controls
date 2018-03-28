@@ -66,6 +66,18 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
         this.dragTimeout = null;
     }
 
+    routeReloadHandler(): any {
+        const location = window.location.protocol + "//" + window.location.host + this.props.store.basePath;
+
+        const url = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "refreshRoute");
+        const params = {location};
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+
+        fetch(url.toString()).then(() => {
+            window.location.reload();
+        })
+    }
+
 
     _handleKeyDown(e) {
         if (e.keyCode === 27) { //esc
@@ -144,6 +156,8 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
 
                 <div className='toolbar btn-toolbar'>
 
+                    <a onClick={() => this.routeReloadHandler()} className="btn btn-sm btn-default"><Icon name={"Sync"}/> Reload route </a>
+
                     <a onClick={() => this.props.propsReloadHandler()} className="btn btn-sm btn-default"><Icon name={"Sync"}/> Reload props </a>
                     {extendedInfo && <>
                         {/*${DEV_PROPERIES.project_dir}*/}
@@ -161,7 +175,7 @@ export class DebugTool extends React.Component<IDebugToolProps, any> {
                     errors={this.state.errors}
                     currTab={this.state.currTab}
                     onTabChange={(index) => this.setState({currTab: index})}
-                    routeInfo={ViewsRoute.ViewFileMap[this.props.store.viewURL]}
+                    routeInfo={extendedInfo}
                 />
                 {/*this.state.routes && this.state.routes[this.props.store.viewURL] ? this.state.routes[this.props.store.viewURL] : null*/}
             </div>}
@@ -192,6 +206,44 @@ class Body extends React.Component<any, any> {
 
     }
 
+
+    private arrangeIntoTree(paths) {
+        const tree = [];
+
+        paths.forEach((path) => {
+
+            const pathParts = path.split('/');
+            pathParts.shift(); // Remove first blank element from the parts array.
+
+            let currentLevel = tree; // initialize currentLevel to root
+
+            pathParts.forEach((part) => {
+
+                // check to see if the path already exists.
+                const existingPath = currentLevel.filter(level => level.name === part);
+
+                if (existingPath.length > 0) {
+                    // The path to this item was already in the tree, so don't add it again.
+                    // Set the current level to this path's children
+                    currentLevel = existingPath[0].children;
+                } else {
+                    const newPart = {
+                        name: part,
+                        path: pathParts[pathParts.length - 1] == part ? path : "",
+                        children: [],
+                        isDir: true, //path.file.dir
+                    };
+
+                    currentLevel.push(newPart);
+                    currentLevel = newPart.children;
+                }
+            });
+        });
+
+        return tree;
+    }
+
+
     render() {
         let p: any = this.props;
 
@@ -205,6 +257,9 @@ class Body extends React.Component<any, any> {
             }
         });
 
+        const paths = Object.entries(ViewsRoute.ViewFileMap).map(([key, value]) => key);
+        paths.sort();
+        let tree = this.arrangeIntoTree(paths);
 
         return <div>
 
@@ -229,20 +284,13 @@ class Body extends React.Component<any, any> {
                         {p.errors.length == 0 ? <div className={'empty'}>--Empty--</div> : null}
                     </div>
                 </TabPane>
-                {p.routeInfo && <TabPane title={'Route info'} icon="Info">
-
-                    <div style={{padding: 5}}>
-                        <Copyable>
-                            {p.routeInfo._controller}:{p.routeInfo._method}
-                        </Copyable>
+                <TabPane title={'Route info'} icon="Info">
+                    <div className={"route-tree"}>
+                        <ul>
+                            {tree.map((el) => <RouteElement key={el.name} element={el}/>)}
+                        </ul>
                     </div>
-                    <div style={{padding: 5}}>
-                        <Copyable>
-                            {p.routeInfo._debug.file}:{p.routeInfo._debug.line}
-                        </Copyable>
-                    </div>
-
-                </TabPane>}
+                </TabPane>
                 {Object.entries(debug).map(([key, value]) => {
                     return <TabPane key={key} title={key} icon="circle-o" badge={Object.entries(value).length}>
                         <div className='props'>
@@ -254,4 +302,20 @@ class Body extends React.Component<any, any> {
 
         </div>;
     }
+}
+
+const RouteElement = (props) => {
+    let element = props.element;
+    let info = ViewsRoute.ViewFileMap[element.path];
+    return <li>
+        <a href="">{element.name}</a>
+
+        {info && <div className={"route-be-info"}>
+            <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}/${info._debug.file}&line=${info._debug.line}`}>{info._controller}::{info._method}</a>
+        </div>}
+        {element.children.length > 0 && <ul>
+            {element.children.map((el) => <RouteElement key={el.name} element={el}/>)}
+        </ul>}
+    </li>
+
 }

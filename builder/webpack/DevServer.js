@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 
 var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
 
@@ -19,7 +20,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                 , cA: true
             }]
         });
-        if(!fs.existsSync(BASE_PATH + "/build/js/ssl")) {
+        if (!fs.existsSync(BASE_PATH + "/build/js/ssl")) {
             fs.mkdirSync(BASE_PATH + "/build/js/ssl")
             fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.crt", pems.cert, {encoding: "utf-8"});
             fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.key", pems.private, {encoding: "utf-8"});
@@ -33,7 +34,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
     conf.output = {
         filename: 'bundle.js',
-        publicPath: 'http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`,
+        publicPath: 'http' + (HTTPS ? 's' : '') + `://127.0.0.1:${PORT}/`,
         devtoolModuleFilenameTemplate: function (info) {
             return path.resolve(BASE_PATH, info.absoluteResourcePath);
         }
@@ -56,11 +57,11 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         //pfxPassphrase: 'xxx123',
         hot: true,
         port: PORT,
-        publicPath: 'http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`,
-        host: 'localhost',
+        publicPath: 'http' + (HTTPS ? 's' : '') + `://127.0.0.1:${PORT}/`,
+        host: '127.0.0.1',
 
 
-        stats: "minimal",/*{
+        stats: "minimal", /*{
             colors: true,
             hash: false,
             version: false,
@@ -94,6 +95,25 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
             app.get('/debug/getFile', function (req, res) {
                 res.header('Access-Control-Allow-Origin', '*');
                 res.send(fs.readFileSync(req.param('file')));
+            });
+            app.get('/refreshRoute', function (req, response) {
+                response.header('Access-Control-Allow-Origin', '*');
+
+                let routeFile = path.resolve(BASE_PATH + '/data/cache/symfony/route.json');
+                let file = fs.createWriteStream(routeFile);
+
+                let options = { headers: {'Cookie': 'ARROW_DEBUG_WEBPACK_DEV_SERVER=1'}};
+
+                https.get(
+                    req.param('location') + "/utils/developer/getRoutes",
+                    (res) => {
+                        res.pipe(file);
+                        response.send("OK");
+                    },
+                    options
+                )
+
+
             });
 
             /*app.post('/debug/getRoutes', function (req, res) {
