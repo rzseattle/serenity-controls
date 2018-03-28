@@ -62,32 +62,34 @@ export class CommandBar extends React.Component<IProps, any> {
                             if (item.subItems !== undefined){
                                 let dropdownHeight = "100px";
                                 let dropdownVisible = "1";
-                                return (
-                                <button className={"bar-dropdown"} key={item.key} onClick={(event) => {
-                                    const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
-                                    this.setState({
-                                        dropdownElementList: item.subItems,
-                                        dropdownPosition: elementPosittion.left,
-                                    })
-                                    if(this.state.dropdownHeight > 1){
-                                        this.setState({
-                                            dropdownHeight: 0,
-                                            dropdownVisible: 0,
-                                            dropdownLayerVisible: "none",
-                                            dropdownShowed: false,
-                                        })
-                                    } else {
-                                        this.setState({
-                                            dropdownHeight: 500,
-                                            dropdownVisible: 1,
-                                            dropdownLayerVisible: "block",
-                                            dropdownShowed: true,
-                                        })
-                                    }
-                                }}>
-                                    <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label} <i className={"ms-Icon ms-Icon--ChevronDown"}></i>
-                                </button>
-                                );
+                                    return (
+                                        <button className={"bar-dropdown"} key={item.key} onClick={(event) => {
+                                            const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
+                                            this.setState({
+                                                dropdownElementList: item.subItems,
+                                                dropdownPosition: elementPosittion.left,
+                                            })
+                                            if (this.state.dropdownHeight > 1) {
+                                                this.setState({
+                                                    dropdownHeight: 0,
+                                                    dropdownVisible: 0,
+                                                    dropdownLayerVisible: "none",
+                                                    dropdownShowed: false,
+                                                })
+                                            } else {
+                                                this.setState({
+                                                    dropdownHeight: 500,
+                                                    dropdownVisible: 1,
+                                                    dropdownLayerVisible: "block",
+                                                    dropdownShowed: true,
+                                                })
+                                            }
+                                        }}>
+                                            <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label} <i
+                                            className={"ms-Icon ms-Icon--ChevronDown"}></i>
+                                        </button>
+                                    )
+
                             } else {
                             return <a key={item.key} onClick={item.onClick} >
                                 <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
@@ -119,7 +121,11 @@ export class CommandBar extends React.Component<IProps, any> {
                 {this.state.dropdownShowed == true &&
                     <div className={"bar-dropdown-list"} style={{maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition - 60}}>
                         {this.state.dropdownElementList.map((element) => {
-                            return <div className={"bar-dropdown-item"} key={element.key} onClick={element.onClick}><i className={"ms-Icon ms-Icon--" + element.icon}></i><span>{element.label}</span></div>
+                            if (element.type !== "input"){
+                                return <div className={"bar-dropdown-item"} key={element.key} onClick={element.onClick}><i className={"ms-Icon ms-Icon--" + element.icon}></i><span>{element.label}</span></div>
+                            } else {
+                                return <div className={"bar-dropdown-item input-inside"} key={element.key} onChange={element.onChange}><input type="text" placeholder={"Wprowadź nazwe nowej grupy produktów"}/></div>
+                            }
                         })}
                     </div>
                 }
