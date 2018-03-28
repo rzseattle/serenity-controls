@@ -80,7 +80,7 @@ module.exports = function (input) {
 
     var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-    let threads = HappyPack.ThreadPool({size: 3});
+    let threads = HappyPack.ThreadPool({size: 2});
 
     conf.plugins = conf.plugins.concat([
         new HappyPack({
