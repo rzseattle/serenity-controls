@@ -38,7 +38,7 @@ module.exports = function (input) {
 
     let tmp;
     if (!input.PRODUCTION) {
-
+        conf.mode = 'development';
         if (input.USE_FRAMEWORK_OBSERVERS) {
             const FileObserver = require('./FileObserver.js');
             FileObserver(
@@ -62,6 +62,7 @@ module.exports = function (input) {
             webpack
         );
     } else {
+        conf.mode = 'production';
         const getProductionConf = require('./Production.js');
         tmp = getProductionConf(
             input.ENTRY_POINTS,
@@ -80,7 +81,7 @@ module.exports = function (input) {
 
     var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
-    let threads = HappyPack.ThreadPool({size: 2});
+    let threads = HappyPack.ThreadPool({size: 4});
 
     conf.plugins = conf.plugins.concat([
         new HappyPack({
@@ -114,13 +115,23 @@ module.exports = function (input) {
         new HappyPack({
             id: 'tsx',
             loaders: [
-                'react-hot-loader/webpack',
                 {
                     path: 'ts-loader',
                     query: {
                         happyPackMode: true,
                         transpileOnly: true
                     }
+                },
+                {
+                    loader: 'babel-loader',
+                    options: {
+                        plugins: [
+                            '@babel/plugin-syntax-typescript',
+                            '@babel/plugin-syntax-decorators',
+                            '@babel/plugin-syntax-jsx',
+                            'react-hot-loader/babel',
+                        ],
+                    },
                 }
             ],
             threadPool: threads,
@@ -128,23 +139,25 @@ module.exports = function (input) {
     ]);
 
 
-    conf.plugins.push(new HardSourceWebpackPlugin({
-        // Either an absolute path or relative to webpack's options.context.
-        cacheDirectory: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]',
-        // Either an absolute path or relative to webpack's options.context.
-        // Sets webpack's recordsPath if not already set.
-        recordsPath: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]/records.json',
-        configHash: function (webpackConfig) {
-            // node-object-hash on npm can be used to build this.
-            return require('node-object-hash')({sort: false}).hash(webpackConfig);
-        },
-        // Either false, a string, an object, or a project hashing function.
-        environmentHash: {
-            root: process.cwd(),
-            directories: [],
-            files: ['package-lock.json', 'yarn.lock'],
-        },
-    }));
+    if (false) {
+        conf.plugins.push(new HardSourceWebpackPlugin({
+            // Either an absolute path or relative to webpack's options.context.
+            cacheDirectory: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]',
+            // Either an absolute path or relative to webpack's options.context.
+            // Sets webpack's recordsPath if not already set.
+            recordsPath: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]/records.json',
+            configHash: function (webpackConfig) {
+                // node-object-hash on npm can be used to build this.
+                return require('node-object-hash')({sort: false}).hash(webpackConfig);
+            },
+            // Either false, a string, an object, or a project hashing function.
+            environmentHash: {
+                root: process.cwd(),
+                directories: [],
+                files: ['package-lock.json', 'yarn.lock'],
+            },
+        }));
+    }
     conf.plugins.push(new ForkTsCheckerWebpackPlugin());
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/app.tsx'));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + '/build/js/App.sass'));
