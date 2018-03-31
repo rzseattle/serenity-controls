@@ -120,7 +120,6 @@ export class BackofficeStore {
                 for (let i = 0; i < this.onViewLoadedArr.length; i++) {
                     this.onViewLoadedArr[i]();
                 }
-                this.dataUpdated();
             });
             comm.on(Comm.EVENTS.SUCCESS, (data) => {
                 this.viewData = data;

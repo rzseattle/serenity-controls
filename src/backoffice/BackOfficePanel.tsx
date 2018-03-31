@@ -3,20 +3,17 @@ import {Icon} from '../ctrl/Icon';
 import PanelComponentLoader from '../lib/PanelComponentLoader';
 import {Modal} from '../ctrl/Overlays';
 
-
-import {observer} from "mobx-react";
 import {IMenuSection, Menu} from 'frontend/src/backoffice/Menu';
 
 import * as NProgress from "nprogress/nprogress.js"
 import "nprogress/nprogress.css"
 import Comm from 'frontend/src/lib/Comm';
-import {Context} from 'frontend/src/backoffice/BackOfficeContextProvider';
+
 import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
 
 NProgress.configure({parent: '.w-panel-body'});
 
 let store = new BackofficeStore();
-
 
 interface IBackOfficePanelProps {
     icon?: string
@@ -25,8 +22,6 @@ interface IBackOfficePanelProps {
     title?: string
     user?: any
     menu?: IMenuSection[]
-
-
 }
 
 interface IBackOfficePanelState {
@@ -39,7 +34,6 @@ interface IBackOfficePanelState {
     contextState: any,
 }
 
-@observer
 export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     container: HTMLDivElement;
 
@@ -47,7 +41,6 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         onlyBody: false,
         isSub: false
     }
-
 
     constructor(props: IBackOfficePanelProps) {
         super(props);
