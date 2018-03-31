@@ -13,7 +13,6 @@ import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
 
 NProgress.configure({parent: '.w-panel-body'});
 
-let store = new BackofficeStore();
 
 interface IBackOfficePanelProps {
     icon?: string
@@ -22,6 +21,7 @@ interface IBackOfficePanelProps {
     title?: string
     user?: any
     menu?: IMenuSection[]
+    store?: BackofficeStore
 }
 
 interface IBackOfficePanelState {
@@ -36,6 +36,7 @@ interface IBackOfficePanelState {
 
 export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     container: HTMLDivElement;
+    store: BackofficeStore
 
     public static defaultProps: Partial<IBackOfficePanelProps> = {
         onlyBody: false,
@@ -45,6 +46,8 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
     constructor(props: IBackOfficePanelProps) {
         super(props);
 
+        this.store = this.props.store ? this.props.store : new BackofficeStore();
+
         this.state = {
             currentView: null,
             userMenuVisible: false,
@@ -52,11 +55,11 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             layout: "normal",
             loading: false,
             onlyBody: this.props.onlyBody,
-            contextState: store.getState()
+            contextState: this.store.getState()
         }
 
-        store.onViewLoad(() => this.handleLoadStart());
-        store.onViewLoaded(() => this.handleLoadEnd());
+        this.store.onViewLoad(() => this.handleLoadStart());
+        this.store.onViewLoaded(() => this.handleLoadEnd());
 
         Comm.onStart = this.handleLoadStart;
         Comm.onFinish = this.handleLoadEnd;
@@ -73,27 +76,28 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             this.setState({layout: 'normal', menuVisible: true});
         }
     }
+
     handleAppIconClicked() {
         if (this.state.layout != "mobile") {
-            store.changeView('/admin/dashboard')
+            this.store.changeView('/admin/dashboard')
         } else {
             this.setState({menuVisible: !this.state.menuVisible});
         }
     }
 
     handleElementClick(element) {
-        store.changeView(element.route)
+        this.store.changeView(element.route)
         if (this.state.layout == "mobile") {
             this.setState({menuVisible: false});
         }
     }
 
     componentDidMount() {
-        store.onDataUpdated(() => {
-            this.setState({contextState: store.getState()})
+        this.store.onDataUpdated(() => {
+            this.setState({contextState: this.store.getState()})
         })
         if (!this.props.isSub) {
-            store.initRootElement();
+            this.store.initRootElement();
             this.adjustToSize()
             let timeout = null;
             window.addEventListener('resize', () => {
@@ -102,6 +106,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             })
         }
     }
+
     handleLoadStart = () => {
         NProgress.start();
     }
@@ -134,8 +139,8 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     </div>
                     {this.props.user.login}
                 </div>
-                {<div
-                    className={" w-loader " + (store.isViewLoading || this.state.loading ? "w-loader-hidden" : "")}>
+                {false && <div
+                    className={" w-loader " + (this.store.isViewLoading || this.state.loading ? "w-loader-hidden" : "")}>
                     <span><i></i><i></i><i></i><i></i></span>
                 </div>}
 
@@ -167,17 +172,15 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     <PanelComponentLoader
                         context={{
                             ...this.state.contextState,
-                            changeView: store.changeView,
-                            onViewLoad: store.onViewLoad,
-                            onViewLoaded: store.onViewLoaded,
+                            changeView: this.store.changeView,
+                            onViewLoad: this.store.onViewLoad,
+                            onViewLoaded: this.store.onViewLoaded,
                         }}
                         onLoadStart={this.handleLoadStart.bind(this)}
                         onLoadEnd={this.handleLoadEnd.bind(this)}
                         setPanelOption={this.handleSetPanelOption.bind(this)}
                         isSub={this.props.isSub}
                     />
-
-
                 </div>
             </div>
 

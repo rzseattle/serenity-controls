@@ -52,17 +52,13 @@ export class BackofficeStore {
 
     initRootElement() {
 
-        //this.viewData = browserInput.inputProps;
-        //this.view = Router.resolve(route);
         if (window.location.hash != "#" && window.location.hash) {
             this.changeView(window.location.hash.replace("#", ""));
         } else {
             let path = window.location.pathname;
             this.changeView(path.replace(browserInput.basePath, ""));
         }
-
         window.addEventListener("hashchange", this.hashChangeHandler, false);
-
     }
 
 
