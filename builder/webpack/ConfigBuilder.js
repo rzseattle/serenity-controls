@@ -104,7 +104,15 @@ module.exports = function (input) {
 
         new HappyPack({
             id: 'js',
-            loaders: ['babel-loader?babelrc=true&cacheDirectory=true&extends=' + require('path').join(__dirname, '/.babelrc')],
+            loaders: [
+                {
+                    path: 'babel-loader',
+                    query: {
+                        babelrc: true,
+                        cacheDirectory: true,
+                        extends: require('path').join(__dirname, '/.babelrc')
+                    },
+                }],
             threadPool: threads,
         }),
         new HappyPack({
@@ -125,18 +133,40 @@ module.exports = function (input) {
                 {
                     loader: 'babel-loader',
                     options: {
-                        plugins: [
-                            '@babel/plugin-syntax-typescript',
-                            '@babel/plugin-syntax-decorators',
-                            '@babel/plugin-syntax-jsx',
-                            'react-hot-loader/babel',
+                        "presets": [
+                            [
+                                "@babel/preset-env",
+                                {
+                                    "targets": {
+                                        "browsers": "last 2 Chrome versions",
+                                        "node": "current"
+                                    }
+                                }
+                            ],
+                            "@babel/react",
+                            "@babel/typescript"
                         ],
+
+                        plugins:
+                            [
+                                '@babel/plugin-syntax-typescript',
+                                '@babel/plugin-syntax-decorators',
+                                '@babel/plugin-syntax-jsx',
+                                "@babel/plugin-syntax-dynamic-import",
+                                'react-hot-loader/babel',
+                                "@babel/proposal-class-properties",
+                                "@babel/proposal-object-rest-spread",
+                                "babel-plugin-transform-class-properties",
+                                "babel-plugin-transform-decorators-legacy"
+
+                            ],
                     },
                 }
             ],
             threadPool: threads,
         }),
-    ]);
+    ])
+    ;
 
 
     if (false) {

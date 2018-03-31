@@ -22,7 +22,7 @@ interface IFilterProps {
     showApply?: boolean
 }
 
-interface IFilterComponent {
+export interface IFilterComponent {
     //todo
     //FILTER_INTERFACE_TEST?: boolean
 
@@ -692,6 +692,6 @@ export {
     NumericFilter,
     TextFilter,
     AbstractFilter,
-    IFilterComponent,
+
     ConnectionFilter
 };

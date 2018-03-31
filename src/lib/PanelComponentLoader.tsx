@@ -13,30 +13,6 @@ declare var window: any;
 
 //console.log(Views);
 
-let exampleComponent = `import * as React from "react";
-import {IArrowViewComponentProps} from "frontend/src/lib/PanelComponentLoader";
-
-import Navbar from "frontend/src/ctrl/Navbar";
-
-interface IProps extends IArrowViewComponentProps {
-}
-
-export default class ArrowViewComponent extends React.Component<IProps, any> {
-    public render() {
-        return (
-            <div>
-                <Navbar>
-                    <span>Path</span>
-                </Navbar>
-                <div>
-                    <div className="panel-body-margins">
-                        Content
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}`;
 
 
 export interface IArrowViewComponentProps {
@@ -176,11 +152,14 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             ref: (ns) => this._notificationSystem = ns
         }
 
+        console.log("generuje");
+        console.log(ComponentInfo);
+
         return <div className={ComponentInfo && ComponentInfo.extendedInfo.component}>
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
-            <NotificationSystem {...notificaton} />
+            {/*<NotificationSystem {...notificaton} />*/}
             {this.props.store.viewServerErrors != null && <div>
                 <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.props.store.viewServerErrors}}/>
             </div>}
@@ -215,7 +194,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 <pre>Route: "{p.store.viewComponentName}"</pre>
                 <pre>Component file: <a href={`phpstorm://open?url=file://${this.state.devComponentFile}&line=1`}>{this.state.devComponentFile}</a></pre>
                 <Copyable>
-                    <pre style={{backgroundColor: 'white', padding: 10, border: 'solid 1px grey', fontSize: 11}}>{exampleComponent}</pre>
+                    <pre style={{backgroundColor: 'white', padding: 10, border: 'solid 1px grey', fontSize: 11}}></pre>
                 </Copyable>
             </div>}
         </div>

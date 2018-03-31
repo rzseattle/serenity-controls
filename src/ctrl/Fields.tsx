@@ -247,7 +247,7 @@ export interface IWysiwygProps extends IFieldProps {
 
 }
 
-declare var CKEDITOR: any;
+let CKEDITOR = null;
 
 class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
