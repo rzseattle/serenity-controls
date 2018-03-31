@@ -1,8 +1,6 @@
-import * as NotificationSystem from "react-notification-system";
+import NotificationSystem from "react-notification-system";
 //import * as Notifications from "react-notification-system";
-import {toJS} from "mobx";
 import * as React from "react";
-
 
 import {observer} from "mobx-react";
 import {Copyable} from "frontend/src/ctrl/Copyable";
@@ -12,7 +10,6 @@ declare var PRODUCTION: boolean;
 declare var window: any;
 
 //console.log(Views);
-
 
 
 export interface IArrowViewComponentProps {
@@ -43,7 +40,7 @@ export interface IArrowViewComponentProps {
 }
 
 interface IProps {
-    store: any;
+    context: any;
     isSub: boolean;
     onLoadStart: { (): any };
     onLoadEnd: { (): any };
@@ -58,7 +55,7 @@ interface IState {
     devComponentFile: string,
 }
 
-@observer
+
 export default class PanelComponentLoader extends React.Component<IProps, IState> {
 
     _notificationSystem: any;
@@ -100,7 +97,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     handleReloadProps(input = {}, callback: () => any) {
         this.props.onLoadStart();
-        this.props.store.changeView(null, input, () => {
+        this.props.context.changeView(null, input, () => {
             this.props.onLoadEnd();
             if (callback) {
                 callback();
@@ -110,7 +107,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
 
     handleGoTo(path, input = {}, callback = null) {
-        this.props.store.changeView(path, input, callback);
+        this.props.context.changeView(path, input, callback);
     }
 
     handleNotifycation(message, title = '', options = {}) {
@@ -127,7 +124,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     render() {
         const s = this.state;
         const p = this.props;
-        let ComponentInfo: any = p.store.view;
+        let ComponentInfo: any = p.context.view;
 
 
         let DebugTool = this.DebugTool;
@@ -135,8 +132,8 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             log: s.log,
             propsReloadHandler: this.handleReloadProps.bind(this),
             componentInfo: ComponentInfo,
-            props: p.store.viewData,
-            store: p.store
+            props: p.context.viewData,
+            store: p.context
         };
 
         if (this.state.hasError) {
@@ -152,25 +149,29 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             ref: (ns) => this._notificationSystem = ns
         }
 
-        console.log("generuje");
-        console.log(ComponentInfo);
-
         return <div className={ComponentInfo && ComponentInfo.extendedInfo.component}>
+
 
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
-            {/*<NotificationSystem {...notificaton} />*/}
-            {this.props.store.viewServerErrors != null && <div>
-                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.props.store.viewServerErrors}}/>
+            <NotificationSystem {...notificaton} />
+            {this.props.context.viewServerErrors != null && <div>
+                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.props.context.viewServerErrors}}/>
             </div>}
+
+            {/*<pre>
+            {JSON.stringify(ComponentInfo, null, 2)}
+                <hr/>
+            {JSON.stringify(this.props.context, null, 2)}
+            </pre>*/}
 
 
             {ComponentInfo ? <ComponentInfo.Component
-                {...toJS(p.store.viewData, true)}
+                {...p.context.viewData}
                 reloadProps={this.handleReloadProps.bind(this)}
-                baseURL={p.store.view.baseURL}
-                _baseURL={p.store.view.baseURL}
-                _basePath={p.store.basePath}
+                baseURL={p.context.view.baseURL}
+                _baseURL={p.context.view.baseURL}
+                _basePath={p.context.basePath}
                 _notification={this.handleNotifycation.bind(this)}
                 _log={this.handleLog.bind(this)}
                 _reloadProps={this.handleReloadProps.bind(this)}
@@ -183,15 +184,15 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 _scrollTo={(el) => {
 
                 }}
-            /> : !this.props.store.isViewLoading && <div style={{padding: 20}}>
+            /> : !this.props.context.isViewLoading && <div style={{padding: 20}}>
                 <h1>404 not found</h1>
                 <div>Selected resource cannot be found</div>
 
             </div>}
 
-            {(ComponentInfo == false && p.store.viewComponentName != null) && <div style={{padding: 10}}>
+            {(ComponentInfo == false && p.context.viewComponentName != null) && <div style={{padding: 10}}>
                 <h3>Can't find component </h3>
-                <pre>Route: "{p.store.viewComponentName}"</pre>
+                <pre>Route: "{p.context.viewComponentName}"</pre>
                 <pre>Component file: <a href={`phpstorm://open?url=file://${this.state.devComponentFile}&line=1`}>{this.state.devComponentFile}</a></pre>
                 <Copyable>
                     <pre style={{backgroundColor: 'white', padding: 10, border: 'solid 1px grey', fontSize: 11}}></pre>

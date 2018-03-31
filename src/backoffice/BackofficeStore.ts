@@ -1,4 +1,4 @@
-import {observable, transaction} from "mobx";
+
 import Comm from '../lib/Comm'
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs"
@@ -10,22 +10,47 @@ const browserInput = window.reactBackOfficeVar;
 export class BackofficeStore {
 
 
+    getState() {
+        return {
+            basePath: this.basePath,
+            viewInput: this.viewInput,
+            view: this.view,
+            viewData: this.viewData,
+            viewServerErrors: this.viewServerErrors,
+            isViewLoading: this.isViewLoading,
+
+        }
+    }
+
+    onDataUpdated(cb) {
+        this.dataUpdateCb = cb;
+    }
+
+    dataUpdated() {
+        if (this.dataUpdateCb) {
+            this.dataUpdateCb();
+        }
+    }
+
+    dataUpdateCb: null
+
+
     subStore = false;
     //input added to view request
-    @observable viewInput = {};
+    viewInput = {};
     basePath = browserInput.basePath;
 
-    @observable isViewLoading = true;
+    isViewLoading = true;
 
-    @observable viewServerErrors = null;
-    @observable view: any = null
-    @observable viewData: any = {}
+    viewServerErrors = null;
+    view: any = null
+    viewData: any = {}
 
     private onViewLoadArr = [];
     private onViewLoadedArr = [];
 
 
-    init() {
+    initRootElement() {
 
         //this.viewData = browserInput.inputProps;
         //this.view = Router.resolve(route);
@@ -95,13 +120,11 @@ export class BackofficeStore {
                 for (let i = 0; i < this.onViewLoadedArr.length; i++) {
                     this.onViewLoadedArr[i]();
                 }
+                this.dataUpdated();
             });
             comm.on(Comm.EVENTS.SUCCESS, (data) => {
-
-                transaction(() => {
-                    this.viewData = data;
-                    this.view = view;
-                });
+                this.viewData = data;
+                this.view = view;
 
                 for (let i = 0; i < this.onViewLoadedArr.length; i++) {
                     this.onViewLoadedArr[i]();
@@ -110,11 +133,16 @@ export class BackofficeStore {
                     callback();
                 }
             });
-            comm.on(Comm.EVENTS.FINISH, () => this.isViewLoading = false);
+            comm.on(Comm.EVENTS.FINISH, () => {
+                this.isViewLoading = false
+                this.dataUpdated();
+
+            });
             comm.send();
         } catch (e) {
             this.viewServerErrors = "Error loading route: " + path;
             this.view = null;
+            this.dataUpdated();
             //console.log("route not fon")
         }
 
