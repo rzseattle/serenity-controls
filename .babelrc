@@ -1,8 +1,15 @@
 {
   "presets": [
-    "es2015",
-    "stage-0",
-    "react"
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "browsers": "last 2 Chrome versions",
+          "node": "current"
+        }
+      }
+    ],
+    "@babel/react"
   ],
   "plugins": [
     "react-hot-loader/babel"
