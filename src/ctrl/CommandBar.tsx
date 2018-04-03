@@ -121,6 +121,9 @@ export class CommandBar extends React.Component<IProps, any> {
                 {this.state.dropdownShowed == true &&
                     <div className={"bar-dropdown-list"} style={{maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition - 60}}>
                         {this.state.dropdownElementList.map((element) => {
+                            if(element == null){
+                                return null;
+                            }
                             if (element.type !== "input"){
                                 return <div className={"bar-dropdown-item"} key={element.key} onClick={element.onClick}><i className={"ms-Icon ms-Icon--" + element.icon}></i><span>{element.label}</span></div>
                             } else {
