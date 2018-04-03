@@ -32,6 +32,7 @@ export class CommandBar extends React.Component<IProps, any> {
             dropdownLayerVisible: "none",
             dropdownPosition: null,
             dropdownElementList: null,
+            dropdownLayerHeight: "0px",
         }
     }
 
@@ -65,9 +66,12 @@ export class CommandBar extends React.Component<IProps, any> {
                                     return (
                                         <button className={"bar-dropdown"} key={item.key} onClick={(event) => {
                                             const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
+
+                                            const parent = ReactDOM.findDOMNode(this).parentNode.getBoundingClientRect();
                                             this.setState({
                                                 dropdownElementList: item.subItems,
                                                 dropdownPosition: elementPosittion.left,
+                                                dropdownLayerHeight: parent.height,
                                             })
                                             if (this.state.dropdownHeight > 1) {
                                                 this.setState({
@@ -110,7 +114,7 @@ export class CommandBar extends React.Component<IProps, any> {
                         return null;
                     })}
                 </div>
-                <div className={"dropdown-layer"} style={{display: this.state.dropdownLayerVisible}} onClick={() => {
+                <div className={"dropdown-layer"} style={{display: this.state.dropdownLayerVisible, height: this.state.dropdownLayerHeight}} onClick={() => {
                     this.setState({
                         dropdownLayerVisible: "none",
                         dropdownHeight: 0,
