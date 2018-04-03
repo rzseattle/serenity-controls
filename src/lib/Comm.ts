@@ -2,6 +2,8 @@ interface IResponseCallback {
     (response: any): any
 }
 
+declare var PRODUCTION: any;
+declare var DEV_PROPERIES: any;
 
 class Comm {
 
@@ -169,6 +171,58 @@ class Comm {
         };
 
         this.xhr.onreadystatechange = () => {
+            if (!PRODUCTION) {
+                if (this.xhr.readyState == this.xhr.HEADERS_RECEIVED) {
+                    const hash = this.xhr.getResponseHeader("ARROW_DEBUG_ROUTE_HASH");
+
+
+                    const checkCompilationInProgress = (cbNotInCompilation) => {
+                        const url2 = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "isCompilationInProgress");
+
+                        fetch(url2.toString()).then((response) => {
+                            return response.json();
+                        }).then((response) => {
+                            if (response.result) {
+                                console.log("still in compilation ");
+                                setTimeout(() => {
+                                    checkCompilationInProgress(cbNotInCompilation);
+                                }, 100);
+
+
+                            } else {
+                                cbNotInCompilation();
+                                console.log("not in compilation");
+                            }
+                        })
+                    };
+
+                    if (hash != null) {
+                        console.log(hash, "compilation hash");
+                        const location = window.location.protocol + "//" + window.location.host + Comm.basePath;
+                        const url = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "refreshRoute");
+                        const params = {location, hash};
+                        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+
+                        fetch(url.toString()).then((response) => {
+                            response.json().then((response) => {
+                                if (response.result == 1) {
+                                    //alert("Wait for webpack recompilation  " + JSON.stringify(response));
+                                    setTimeout(() => {
+                                        let inCompilation;
+                                        checkCompilationInProgress(() =>{
+                                            alert("Route change detected. Application will restart");
+                                            window.location.reload();
+                                        });
+                                    }, 200);
+
+                                } else {
+                                }
+                            });
+                        })
+                    }
+                }
+            }
+
             if (this.xhr.readyState === 4) {
                 if (this.xhr.status === 200) {
                     let exceptionOccured = false;
