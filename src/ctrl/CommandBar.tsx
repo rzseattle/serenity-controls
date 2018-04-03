@@ -115,6 +115,7 @@ export class CommandBar extends React.Component<IProps, any> {
                         dropdownLayerVisible: "none",
                         dropdownHeight: 0,
                         dropdownVisible: 0,
+                        dropdownShowed: false,
                     })
                 }}></div>
 
