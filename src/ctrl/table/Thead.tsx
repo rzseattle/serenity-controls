@@ -79,7 +79,9 @@ export default class Thead extends React.Component<any, any> {
                     return <th key={index}
                                style={{width: el.width}}
                                className={classes.join(' ')}
-                               onClick={(e) => this.props.onCellClicked(index, e)}
+                               onClick={(e) => {
+                                   el.isSortable && this.props.onCellClicked(index, e)
+                               }}
                                onMouseEnter={this.handleMouseEnter.bind(this, index)}
                                onMouseLeave={this.handleMouseLeave.bind(this, index)}
                     >
@@ -169,7 +171,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                             {filters.map(entry => {
                                 let Filter = entry.component;
                                 return <div key={entry.field}>
-                                    {filters.length>1&&<div className={"w-filter-openable-title"}>{entry.caption}</div>}
+                                    {filters.length > 1 && <div className={"w-filter-openable-title"}>{entry.caption}</div>}
                                     <Filter caption={entry.caption} showApply={true} field={entry.field} onApply={this.props.onApply} config={entry.config} container={this.container}/>
                                 </div>
                             })}
