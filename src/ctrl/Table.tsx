@@ -1,93 +1,80 @@
 declare var window: any;
 declare var PRODUCTION: any;
 import * as React from "react";
-import {TextFilter} from './Filters'
-import {ColumnHelper} from './table/ColumnHelper'
-import FiltersPresenter from './table/FiltersPresenter'
-import Tbody from './table/Tbody'
-import Footer from './table/Footer'
-import {IColumnData, IFilterValue, IOrder} from './table/Interfaces'
-import {EmptyResult, Error, Loading} from './table/placeholders'
+import {TextFilter} from "./Filters";
+import {ColumnHelper} from "./table/ColumnHelper";
+import FiltersPresenter from "./table/FiltersPresenter";
+import Tbody from "./table/Tbody";
+import Footer from "./table/Footer";
+import {IColumnData, IFilterValue, IOrder} from "./table/Interfaces";
+import {EmptyResult, Error, Loading} from "./table/placeholders";
 import {deepCopy} from "frontend/src/lib/JSONTools";
 import Thead from "frontend/src/ctrl/table/Thead";
 import Comm from "frontend/src/lib/Comm";
 import {Datasource} from "frontend/src/lib/Datasource";
-
 
 interface IDataQuery {
 
 }
 
 interface ITableDataInput {
-    data: Array<any>,
-    countAll?: number
-    debug?: string,
-    decorator?: { (requestData: IDataQuery, data: ITableDataInput): ITableDataInput | Promise<ITableDataInput> }
+    data: any[];
+    countAll?: number;
+    debug?: string;
+    decorator?: (requestData: IDataQuery, data: ITableDataInput) => ITableDataInput | Promise<ITableDataInput>;
 }
 
-interface IDataProvider {
-    (requestData: IDataQuery): ITableDataInput | Promise<ITableDataInput>;
-}
+type IDataProvider = (requestData: IDataQuery) => ITableDataInput | Promise<ITableDataInput>;
 
-interface ISelectionChangeEvent {
-    (selected: Array<any>): any;
-}
+type ISelectionChangeEvent = (selected: any[]) => any;
 
-interface IRowClassTemplate {
-    (row: any, index: number): string;
-}
+type IRowClassTemplate = (row: any, index: number) => string;
 
-interface IRowStyleTemplate {
-    (row: any, index: number): any;
-}
-
+type IRowStyleTemplate = (row: any, index: number) => any;
 
 interface ITableProps {
     /**
      * Spróbujemy komentarza może uda się coś wyświetlić
      */
     dataProvider?: IDataProvider;
-    remoteURL?: string,
-    dataSource?: Datasource,
-    selectable?: boolean,
-    onSelectionChange?: ISelectionChangeEvent,
-    controlKey?: string,
-    onPage?: number,
-    rememberState?: boolean,
-    rowClassTemplate?: IRowClassTemplate,
-    rowStyleTemplate?: IRowStyleTemplate,
-    columns: Array<IColumnData> | Array<ColumnHelper>,
-    showFooter?: boolean,
-    showHeader?: boolean,
-    additionalConditions?: any
+    remoteURL?: string;
+    dataSource?: Datasource;
+    selectable?: boolean;
+    onSelectionChange?: ISelectionChangeEvent;
+    controlKey?: string;
+    onPage?: number;
+    rememberState?: boolean;
+    rowClassTemplate?: IRowClassTemplate;
+    rowStyleTemplate?: IRowStyleTemplate;
+    columns: IColumnData[] | ColumnHelper[];
+    showFooter?: boolean;
+    showHeader?: boolean;
+    additionalConditions?: any;
     filters?: { [key: string]: IFilterValue };
     onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any;
     onDataChange?: (data: any) => any;
-    data?: ITableDataInput
-
+    data?: ITableDataInput;
 
 }
-
 
 interface ITableState {
-    loading: boolean,
-    firstLoaded: boolean,
-    data: Array<any>,
-    dataSourceError: string,
-    dataSourceDebug: boolean,
-    filters: { [key: string]: IFilterValue }
-    order: { [key: string]: IOrder }
-    onPage: number,
-    currentPage: number,
-    countAll: number,
-    fixedLayout: boolean, // props.fixedLayout,
-    columns: IColumnData[],
+    loading: boolean;
+    firstLoaded: boolean;
+    data: any[];
+    dataSourceError: string;
+    dataSourceDebug: boolean;
+    filters: { [key: string]: IFilterValue };
+    order: { [key: string]: IOrder };
+    onPage: number;
+    currentPage: number;
+    countAll: number;
+    fixedLayout: boolean; // props.fixedLayout,
+    columns: IColumnData[];
     //bodyHeight: this.props.initHeight,
-    allChecked: boolean,
-    selection: Array<any>,
-    tooltipData: any
+    allChecked: boolean;
+    selection: any[];
+    tooltipData: any;
 }
-
 
 class Table extends React.Component<ITableProps, ITableState> {
 
@@ -99,8 +86,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         rememberState: false,
         additionalConditions: {},
         filters: null,
-        data: {data: [], countAll: 0, debug: ""}
-    }
+        data: {data: [], countAll: 0, debug: ""},
+    };
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
     private hashCode: string;
@@ -111,13 +98,12 @@ class Table extends React.Component<ITableProps, ITableState> {
 
         super(props);
 
-        let columns: IColumnData[] = props.columns;
-        for (let i in columns) {
+        const columns: IColumnData[] = props.columns;
+        for (const i in columns) {
             columns[i] = this.prepareColumnData(columns[i]);
         }
 
         //console.log(columns);
-
 
         this.state = {
             loading: false,
@@ -131,33 +117,30 @@ class Table extends React.Component<ITableProps, ITableState> {
             currentPage: 1,
             countAll: this.props.data.countAll,
             fixedLayout: false, // props.fixedLayout,
-            columns: columns,
+            columns,
             //bodyHeight: this.props.initHeight,
             allChecked: false,
             selection: [],
-            tooltipData: null
+            tooltipData: null,
         };
 
         //helpers
         this.tmpDragStartY = 0;
         this.xhrConnection = null;
 
-
-        let hashCode = function (s) {
-            return s.split('').reduce(function (a, b) {
+        const hashCode = function(s) {
+            return s.split("").reduce(function(a, b) {
                 a = ((a << 5) - a) + b.charCodeAt(0);
-                return a & a
+                return a & a;
             }, 0);
-        }
+        };
         this.hashCode = hashCode(this.props.controlKey + (window.CONTROLS_BASE_LOCATION != undefined ? window.CONTROLS_BASE_LOCATION : window.location.pathname + window.location.hash.split("?")[0]));
 
         this.tooltipTimeout = null;
 
     }
 
-
-    componentWillMount() {
-
+    public componentWillMount() {
 
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
             const local = JSON.parse(window.localStorage[this.hashCode]);
@@ -170,17 +153,15 @@ class Table extends React.Component<ITableProps, ITableState> {
                 }
             });
 
-
         }
     }
 
-    getData() {
+    public getData() {
         return this.state.data;
     }
 
-
-    componentDidUpdate(prevProps) {
-        let state = this.state;
+    public componentDidUpdate(prevProps) {
+        const state = this.state;
         if (this.props.rememberState) {
             window.localStorage[this.hashCode] = JSON.stringify({
                 onPage: state.onPage,
@@ -188,7 +169,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 //bodyHeight: state.bodyHeight,
                 filters: state.filters,
                 order: state.order,
-                fixedLayout: state.fixedLayout
+                fixedLayout: state.fixedLayout,
 
             });
         }
@@ -197,7 +178,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         if (this.props.remoteURL || this.props.dataProvider || this.props.dataSource) {
             this.load();
         }
@@ -253,7 +234,6 @@ class Table extends React.Component<ITableProps, ITableState> {
             return true;
         }
 
-
         let np = nextProps;
         let pr = this.props;
         if (!deepIsEqual(
@@ -285,29 +265,29 @@ class Table extends React.Component<ITableProps, ITableState> {
         return should;
     }*/
 
-    componentWillReceiveProps(nextProps) {
+    public componentWillReceiveProps(nextProps) {
 
-        let columns = [...nextProps.columns];
-        for (let i in columns) {
+        const columns = [...nextProps.columns];
+        for (const i in columns) {
             columns[i] = this.prepareColumnData(columns[i]);
         }
         if (JSON.stringify(columns) != JSON.stringify(this.state.columns)) {
-            this.setState({columns: columns});
+            this.setState({columns});
         }
 
         if (nextProps.filters) {
-            var nextJSON = JSON.stringify(nextProps.filters);
+            const nextJSON = JSON.stringify(nextProps.filters);
             if (nextJSON != JSON.stringify(this.state.filters)) {
                 this.setState({
                     filters: deepCopy(nextProps.filters),
-                    currentPage: 1
+                    currentPage: 1,
                 }, this.load);
             }
         }
     }
 
     public getRequestData(): IDataQuery {
-        let trimmedData = [...this.state.columns];
+        const trimmedData = [...this.state.columns];
 
         for (let i = 0; i < trimmedData.length; i++) {
             trimmedData[i] = {...trimmedData[i]};
@@ -322,17 +302,17 @@ class Table extends React.Component<ITableProps, ITableState> {
             order: this.state.order,
             onPage: this.state.onPage,
             currentPage: this.state.currentPage,
-            additionalConditions: this.props.additionalConditions
-        }
+            additionalConditions: this.props.additionalConditions,
+        };
     }
 
-    load() {
+    public load() {
 
         this.state.dataSourceError = "";
 
         this.setState({loading: true});
 
-        let setStateAfterLoad = (input, callback = null) => {
+        const setStateAfterLoad = (input, callback = null) => {
             this.setState({
                 data: input.data.slice(0),
                 countAll: 0 + parseInt(input.countAll),
@@ -340,20 +320,20 @@ class Table extends React.Component<ITableProps, ITableState> {
                 dataSourceDebug: input.debug ? input.debug : false,
                 firstLoaded: true,
                 selection: [],
-                allChecked: false
+                allChecked: false,
             }, callback);
             if (this.props.onDataChange) {
                 this.props.onDataChange(input.data.slice(0));
             }
 
-        }
+        };
 
         if (this.props.remoteURL) {
             if (this.xhrConnection) {
                 this.xhrConnection.abort();
             }
 
-            let comm = new Comm(this.props.remoteURL, "PUT");
+            const comm = new Comm(this.props.remoteURL, "PUT");
             comm.on(Comm.EVENTS.SUCCESS, (data) => {
                 setStateAfterLoad(data);
             });
@@ -362,20 +342,20 @@ class Table extends React.Component<ITableProps, ITableState> {
             this.xhrConnection = comm.send();
 
         } else if (this.props.dataSource) {
-            let {dataSource} = this.props;
+            const {dataSource} = this.props;
             dataSource.observe((result) => {
                 setStateAfterLoad(result);
             });
             dataSource.resolve();
 
         } else if (this.props.dataProvider) {
-            let result = this.props.dataProvider(this.getRequestData());
+            const result = this.props.dataProvider(this.getRequestData());
 
             if (result instanceof Promise) {
                 result.then((data) => {
                     setStateAfterLoad(data, () => {
                         if (data.decorator != undefined) {
-                            let result = data.decorator(this.getRequestData(), deepCopy(data));
+                            const result = data.decorator(this.getRequestData(), deepCopy(data));
                             if (result instanceof Promise) {
                                 result.then((data) => {
                                     setStateAfterLoad(data);
@@ -385,22 +365,21 @@ class Table extends React.Component<ITableProps, ITableState> {
                             }
                         }
                     });
-                })
+                });
             } else {
                 setStateAfterLoad(result);
             }
         }
     }
 
-    handleStateRemove() {
+    public handleStateRemove() {
         delete  window.localStorage[this.hashCode];
-        if (confirm('Wyczyszczono dane tabelki, czy chcesz odświeżyć stronę?')) {
+        if (confirm("Wyczyszczono dane tabelki, czy chcesz odświeżyć stronę?")) {
             window.location.reload();
         }
     }
 
-    handleFilterChanged(filterValue: IFilterValue) {
-
+    public handleFilterChanged(filterValue: IFilterValue) {
 
         this.state.filters[filterValue.field] = filterValue;
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
@@ -410,7 +389,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
     }
 
-    handleFilterDelete(key) {
+    public handleFilterDelete(key) {
         delete this.state.filters[key];
         this.setState({currentPage: 1, filters: this.state.filters}, this.load);
         if (this.props.onFiltersChange) {
@@ -418,22 +397,22 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    handleOrderDelete(field) {
-        delete this.state.order[field]
+    public handleOrderDelete(field) {
+        delete this.state.order[field];
         this.setState({}, this.load);
     }
 
-    headClicked(index, e) {
+    public headClicked(index, e) {
 
-        let column = this.state.columns.filter(c => c !== null && c.display === true)[index];
+        const column = this.state.columns.filter((c) => c !== null && c.display === true)[index];
 
-        if (!column.orderField)
+        if (!column.orderField) {
             return;
+        }
 
         let field = null;
 
         const _field = column.field;
-
 
         if (this.state.order[_field]) {
             field = this.state.order[_field];
@@ -441,11 +420,11 @@ class Table extends React.Component<ITableProps, ITableState> {
             field = {
                 caption: column.caption,
                 field: column.orderField,
-                dir: 'desc'
-            }
+                dir: "desc",
+            };
         }
 
-        field = {...field, dir: field.dir == 'asc' ? 'desc' : 'asc'};
+        field = {...field, dir: field.dir == "asc" ? "desc" : "asc"};
 
         this.state.order[_field] = field;
 
@@ -453,40 +432,39 @@ class Table extends React.Component<ITableProps, ITableState> {
 
     }
 
-    handleOnPageChangepage(onPage) {
-        this.setState({onPage: onPage, currentPage: 1}, this.load);
+    public handleOnPageChangepage(onPage) {
+        this.setState({onPage, currentPage: 1}, this.load);
     }
 
-    handleCurrentPageChange(page) {
-        let newPage = Math.max(1, Math.min(Math.ceil(this.state.countAll / this.state.onPage), page));
+    public handleCurrentPageChange(page) {
+        const newPage = Math.max(1, Math.min(Math.ceil(this.state.countAll / this.state.onPage), page));
         if (newPage != this.state.currentPage) {
             this.setState({currentPage: newPage, selection: [], allChecked: false}, () => this.load());
         }
     }
 
-    toggleFixedLayout() {
+    public toggleFixedLayout() {
         this.setState({
-            fixedLayout: !this.state.fixedLayout
+            fixedLayout: !this.state.fixedLayout,
         });
     }
 
-    handleBodyResizeStart(e) {
-        this.tmpDragStartY = e.clientY
+    public handleBodyResizeStart(e) {
+        this.tmpDragStartY = e.clientY;
         //this.tmpCurrHeight = this.state.bodyHeight;
     }
 
-    handleBodyResize(e) {
+    public handleBodyResize(e) {
         if (e.clientY) {
             //this.setState({bodyHeight:  this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
         }
     }
 
-    handleBodyResizeEnd(e) {
+    public handleBodyResizeEnd(e) {
         //this.setState({bodyHeight: this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
     }
 
-
-    handleKeyDown(e) {
+    public handleKeyDown(e) {
         //right
         if (e.keyCode == 39) {
             this.handleCurrentPageChange(this.state.currentPage + 1);
@@ -499,9 +477,9 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    handleCheckClicked(index) {
+    public handleCheckClicked(index) {
         let s = this.state.selection;
-        if (index == 'all') {
+        if (index == "all") {
 
             if (!this.state.allChecked) {
                 this.state.data.forEach((el, index) => {
@@ -515,11 +493,13 @@ class Table extends React.Component<ITableProps, ITableState> {
             this.setState({allChecked: !this.state.allChecked});
         } else {
 
-            let selected = s.indexOf(index);
-            if (selected == -1)
+            const selected = s.indexOf(index);
+            if (selected == -1) {
                 s.push(index);
-            else
+            }
+            else {
                 s.splice(selected, 1);
+            }
 
             if (s.length == this.state.data.length) {
                 this.state.allChecked = true;
@@ -530,8 +510,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
 
         if (this.props.onSelectionChange) {
-            let tmp = [];
-            s.forEach(index => tmp.push(this.state.data[index]));
+            const tmp = [];
+            s.forEach((index) => tmp.push(this.state.data[index]));
             this.props.onSelectionChange(tmp);
         }
 
@@ -549,51 +529,49 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
 
         let data: IColumnData = {
-            'field': null,
-            'caption': inData.caption == undefined ? inData.field : inData.caption,
-            'isSortable': true,
-            'display': true,
-            'toolTip': null,
-            'width': null,
-            'class': [],
-            'type': 'Simple',
-            'orderField': null,
-            'icon': null,
-            'append': null,
-            'prepend': null,
-            'classTemplate': () => [],
-            'styleTemplate': () => [],
-            'template': null,
-            'default': '',
-            'header': {},
-            'events': {
-                'click': [],
-                'enter': [],
-                'leave': []
+            field: null,
+            caption: inData.caption == undefined ? inData.field : inData.caption,
+            isSortable: true,
+            display: true,
+            toolTip: null,
+            width: null,
+            class: [],
+            type: "Simple",
+            orderField: null,
+            icon: null,
+            append: null,
+            prepend: null,
+            classTemplate: null,
+            styleTemplate: null,
+            template: null,
+            default: "",
+            header: {},
+            events: {
+                click: [],
+                enter: [],
+                leave: [],
             },
-            'filter': [{
+            filter: [{
                 component: TextFilter,
                 field: inData.field,
                 caption: inData.field,
 
-            }]
-        }
+            }],
+        };
 
         data = {...data, ...inData};
 
-
         data.orderField = data.orderField || data.field;
-        data.filter.forEach(el => el.field = el.field || inData.field)
-
+        data.filter.forEach((el) => el.field = el.field || inData.field);
 
         return data;
     }
 
-    render() {
+    public render() {
         const columns = deepCopy(this.state.columns);
 
         return (
-            <div className={'w-table ' + (this.state.loading ? 'w-table-loading' : '')} tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
+            <div className={"w-table " + (this.state.loading ? "w-table-loading" : "")} tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
                 <div className="w-table-loader">
                     <span><i></i><i></i><i></i><i></i></span>
                 </div>
@@ -612,7 +590,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                         filters={deepCopy(this.state.filters)}
                         onFilterChanged={this.handleFilterChanged.bind(this)}
                         onCellClicked={this.headClicked.bind(this)}
-                        onCheckAllClicked={this.handleCheckClicked.bind(this, 'all')}
+                        onCheckAllClicked={this.handleCheckClicked.bind(this, "all")}
                         allChecked={this.state.allChecked}
 
                     />}
@@ -653,10 +631,9 @@ class Table extends React.Component<ITableProps, ITableState> {
 
                 {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
             </div>
-        )
+        );
     }
 
 }
 
-
-export {Table, ColumnHelper, ColumnHelper as Column}
+export {Table, ColumnHelper, ColumnHelper as Column};
