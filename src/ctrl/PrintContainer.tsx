@@ -3,19 +3,18 @@ import * as ReactDOM from "react-dom";
 import {Modal} from "frontend/src/ctrl/Overlays";
 import {CommandBar} from "frontend/src/ctrl/CommandBar";
 
-
 interface PrintContainerProps {
     title: string;
-    onHide: { (): any }
-    onPrint: { (): any }
+    onHide: () => any;
+    onPrint?: () => any;
 }
 
 export class PrintContainer extends React.Component<PrintContainerProps, any> {
     private iframe: HTMLIFrameElement;
 
     public static defaultProps: Partial<PrintContainerProps> = {
-        title: __("Podgląd wydruku")
-    }
+        title: __("Podgląd wydruku"),
+    };
 
     constructor(props) {
         super(props);
@@ -28,7 +27,7 @@ export class PrintContainer extends React.Component<PrintContainerProps, any> {
 
     }
 
-    handlePrint = () => {
+    public handlePrint = () => {
         this.iframe.focus();
         this.iframe.contentWindow.print();
         if (this.props.onPrint) {
@@ -36,7 +35,7 @@ export class PrintContainer extends React.Component<PrintContainerProps, any> {
         }
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.setState({ready: true});
     }
 
@@ -62,14 +61,13 @@ export class PrintContainer extends React.Component<PrintContainerProps, any> {
                 </div>
             </Modal>
 
-
         </div>;
     }
 }
 
 export const PrintPage = (props) => {
-    return <div className={"w-print-page"}>{props.children}</div>
-}
+    return <div className={"w-print-page"}>{props.children}</div>;
+};
 
 function copyStyles(sourceDoc, targetDoc) {
     Array.from(sourceDoc.styleSheets).forEach((styleSheet: any) => {
@@ -106,23 +104,21 @@ class MyWindowPortal extends React.PureComponent<any, any> {
     }
 
     public componentDidMount() {
-        var iframe = this.props.iframe;
+        const iframe = this.props.iframe;
 
         // STEP 3: open a new browser window and store a reference to it
-        this.externalWindow = iframe.contentWindow;//window.open("", "", "width=600,height=400,left=200,top=200");
+        this.externalWindow = iframe.contentWindow; //window.open("", "", "width=600,height=400,left=200,top=200");
 
         // STEP 4: append the container <div> (that has props.children appended to it) to the body of the new window
         this.externalWindow.document.body.appendChild(this.containerEl);
         //this.externalWindow.document.body.classList.add("w-print-page");
 
         this.externalWindow.document.title = "A React portal window";
-        let style = this.externalWindow.document.createElement("style");
+        const style = this.externalWindow.document.createElement("style");
         style.appendChild(this.externalWindow.document.createTextNode("@page { size: auto;  margin: 0mm;  }"));
         this.externalWindow.document.head.appendChild(style);
 
-
         copyStyles(document, this.externalWindow.document);
-
 
         // update the state in the parent component if the user closes the
         // new window
