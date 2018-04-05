@@ -4,6 +4,7 @@ import PanelComponentLoader from '../lib/PanelComponentLoader';
 import {Modal} from '../ctrl/Overlays';
 
 import {IMenuSection, Menu} from 'frontend/src/backoffice/Menu';
+import {BackOfficeContainer} from 'frontend/src/backoffice/BackOfficeContainer';
 
 import * as NProgress from "nprogress/nprogress.js"
 import "nprogress/nprogress.css"
@@ -32,6 +33,7 @@ interface IBackOfficePanelState {
     loading: boolean,
     onlyBody: boolean,
     contextState: any,
+    openedWindows: any,
 }
 
 export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
@@ -55,7 +57,8 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             layout: "normal",
             loading: false,
             onlyBody: this.props.onlyBody,
-            contextState: this.store.getState()
+            contextState: this.store.getState(),
+            openedWindows: [],
         }
 
         this.store.onViewLoad(() => this.handleLoadStart());
@@ -85,11 +88,23 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         }
     }
 
-    handleElementClick(element) {
-        this.store.changeView(element.route)
+    handleElementClick(element, inWindow = false) {
+        if (inWindow) {
+            this.setState({
+                openedWindows: this.state.openedWindows.concat(element)
+            });
+        } else {
+            this.store.changeView(element.route)
+        }
         if (this.state.layout == "mobile") {
             this.setState({menuVisible: false});
         }
+    }
+
+    handleCloseWindow(route: any): any {
+        this.setState({
+            openedWindows: this.state.openedWindows.filter((el) => el.route != route)
+        });
     }
 
     componentDidMount() {
@@ -168,6 +183,23 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                     />
                 </div>}
                 <div className="w-panel-body" style={{position: "relative"}}>
+
+                    {this.state.openedWindows.map((el) => {
+
+                        return (
+                            <Modal
+                                show={true}
+                                onHide={() => this.handleCloseWindow(el.route)}
+                                title={el.title}
+                                showHideLink={true}
+                                top={55}
+                            >
+                                <div style={{width: "90vw", paddingBottom: 10, backgroundColor: "#ECECEC"}}>
+                                    <BackOfficeContainer route={el.route}/>
+                                </div>
+                            </Modal>
+                        );
+                    })}
 
                     <PanelComponentLoader
                         context={{

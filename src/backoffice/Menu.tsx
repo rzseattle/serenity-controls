@@ -18,7 +18,7 @@ export interface IMenuElement {
 interface IMenuProps {
 
     elements: IMenuSection[]
-    onMenuElementClick: { (element: IMenuElement): any }
+    onMenuElementClick: { (element: IMenuElement, inWindow?: boolean): any }
     mobile: boolean
 
 }
@@ -49,6 +49,11 @@ export class Menu extends React.Component<IMenuProps, IMenuState> {
         if (!this.state.expanded) {
             this.setState({currentMenuOpened: -1});
         }
+    }
+
+    handleElementClickOpen(el, event) {
+        event.stopPropagation();
+        this.props.onMenuElementClick(el, true);
     }
 
     handleElementClick(el) {
@@ -89,6 +94,9 @@ export class Menu extends React.Component<IMenuProps, IMenuState> {
                         {el.elements.map(el =>
                             <div key={el.title} className="menu-link" onClick={this.handleElementClick.bind(this, el)}>
                                 {el.title}
+                                <div onClick={this.handleElementClickOpen.bind(this, el)} className={"menu-link-open-window"}>
+                                    <Icon name={"OpenInNewWindow"}/>
+                                </div>
                             </div>
                         )}
                     </div>

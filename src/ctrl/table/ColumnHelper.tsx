@@ -231,6 +231,7 @@ export class ColumnHelper {
     }
 
     noSorter(): ColumnHelper {
+        this.data.isSortable = false;
         return this;
     }
 
@@ -272,7 +273,7 @@ export class ColumnHelper {
         return this;
     }
 
-    set(el): ColumnHelper {
+    set(el: Partial<IColumnData>): ColumnHelper {
         this.data = {...this.data, ...el};
         return this;
     }

@@ -80,6 +80,9 @@ export default class Tbody extends React.Component<any, any> {
                 packFn={packValue}
                 rowClassTemplate={props.rowClassTemplate}
                 rowStyleTemplate={props.rowStyleTemplate}
+                selectable={this.props.selectable}
+                isSelected={this.props.selection.includes(index)}
+                onCheck={() => this.props.onCheck(index)}
 
             />
         );
@@ -125,6 +128,9 @@ export class Row extends React.PureComponent<any, any> {
             style={props.rowStyleTemplate ? props.rowStyleTemplate(row) : {}}
 
         >
+            {props.selectable && <td className={"w-table-selection-cell"}>
+                <input type="checkbox" onChange={() => props.onCheck()} checked={this.props.isSelected}/>
+            </td>}
             {columns.map((column, index2) => {
                 return (
                     <td
@@ -155,7 +161,7 @@ export class Row extends React.PureComponent<any, any> {
                         } : function () {
                         }}
                         className={cache[index2].classes.concat(column.classTemplate(row, column)).join(' ')}
-                        onContextMenu={(e)=> e.preventDefault()}
+                        onContextMenu={(e) => e.preventDefault()}
 
                     >
                         {packFn(row[column.field] ? row[column.field] : column.default, column, row)}
