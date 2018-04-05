@@ -79,7 +79,7 @@ module.exports = function (input) {
         conf[i] = tmp[i];
     }
 
-    var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+
 
     let threads = HappyPack.ThreadPool({size: 4});
 
@@ -170,6 +170,7 @@ module.exports = function (input) {
 
 
     if (false) {
+        var HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
         conf.plugins.push(new HardSourceWebpackPlugin({
             // Either an absolute path or relative to webpack's options.context.
             cacheDirectory: input.BASE_PATH + '/node_modules/.cache/hard-source/[confighash]',
