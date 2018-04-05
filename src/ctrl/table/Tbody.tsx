@@ -1,16 +1,14 @@
 import * as React from "react";
 import {deepIsEqual} from "frontend/src/lib/JSONTools";
-import uuidv4 from 'uuid/v4'
+import uuidv4 from "uuid/v4";
 //const uuidv4 = require('uuid/v4');
-
 
 export default class Tbody extends React.Component<any, any> {
     constructor(props) {
         super(props);
     }
 
-
-    shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps, nextState) {
 
         return !deepIsEqual(
             [
@@ -20,13 +18,12 @@ export default class Tbody extends React.Component<any, any> {
             [
                 nextProps.data,
                 nextProps.selection,
-            ]
-        )
+            ],
+        );
     }
 
-
-    render() {
-        let props = this.props;
+    public render() {
+        const props = this.props;
 
         const packValue = (val, column, row) => {
             let templateResult = false;
@@ -35,38 +32,16 @@ export default class Tbody extends React.Component<any, any> {
 
             }
             return (
-                <div>
-                    {column.icon ? <i className={'w-table-prepend-icon fa ' + column.icon}></i> : ''}
-                    {column.prepend ? column.prepend : ''}
-                    {templateResult ? (typeof templateResult == 'string' ? <span dangerouslySetInnerHTML={{__html: (column.template(val, row))}}></span> : templateResult) : (val ? val : column.default)}
-                    {column.append ? column.append : ''}
-                </div>
-            )
+                <>
+                    {column.icon ? <i className={"w-table-prepend-icon fa " + column.icon}></i> : ""}
+                    {column.prepend ? column.prepend : ""}
+                    {templateResult ? (typeof templateResult == "string" ? <span dangerouslySetInnerHTML={{__html: (column.template(val, row))}}></span> : templateResult) : (val ? val : column.default)}
+                    {column.append ? column.append : ""}
+                </>
+            );
         };
 
-        const columns = props.columns.filter(el => el !== null && el.display === true);
-
-        let cache = {};
-
-        for (let index = 0; index < columns.length; index++) {
-            let column = columns[index];
-            cache[index] = cache[index] || {}
-            cache[index].classes = [];
-            if (props.order[column.field] !== undefined) {
-                cache[index].classes.push('w-table-sorted w-table-sorted-' + props.order[column.field].dir);
-            }
-            if (props.filters[column.field] !== undefined) {
-                cache[index].classes.push('w-table-filtered')
-            }
-            if (
-                column.events.click && column.events.click.length > 0 ||
-                column.events.mouseUp && column.events.mouseUp.length > 0
-            ) {
-                cache[index].classes.push('w-table-cell-clickable');
-            }
-            cache[index].classes = cache[index].classes.concat(column.class);
-
-        }
+        const columns = props.columns.filter((el) => el !== null && el.display === true);
 
 
         return props.data.map((row, index) =>
@@ -84,9 +59,8 @@ export default class Tbody extends React.Component<any, any> {
                 isSelected={this.props.selection.includes(index)}
                 onCheck={() => this.props.onCheck(index)}
 
-            />
+            />,
         );
-
 
     }
 }
@@ -95,36 +69,41 @@ export default class Tbody extends React.Component<any, any> {
 
 export class Row extends React.PureComponent<any, any> {
 
-    render() {
+    public render() {
 
         const props = this.props;
-        let {columns, row, packFn, order, filters} = this.props;
+        const {columns, row, packFn, order, filters} = this.props;
 
-        let cache = {};
+        const cache = {};
 
         for (let index = 0; index < columns.length; index++) {
-            let column = columns[index];
-            cache[index] = cache[index] || {}
+            const column = columns[index];
+            cache[index] = cache[index] || {};
             cache[index].classes = [];
             if (order[column.field] !== undefined) {
-                cache[index].classes.push('w-table-sorted w-table-sorted-' + order[column.field].dir);
+                cache[index].classes.push("w-table-sorted w-table-sorted-" + order[column.field].dir);
             }
             if (filters[column.field] !== undefined) {
-                cache[index].classes.push('w-table-filtered')
+                cache[index].classes.push("w-table-filtered");
             }
             if (
                 column.events.click && column.events.click.length > 0 ||
                 column.events.mouseUp && column.events.mouseUp.length > 0
             ) {
-                cache[index].classes.push('w-table-cell-clickable');
+                cache[index].classes.push("w-table-cell-clickable");
             }
             cache[index].classes = cache[index].classes.concat(column.class);
 
+            cache[index].style = null;
+            if (column.width) {
+                cache[index].style = {width: column.width};
+            }
+
+
         }
 
-
         return (<tr
-            className={props.rowClassTemplate ? props.rowClassTemplate(row) : ''}
+            className={props.rowClassTemplate ? props.rowClassTemplate(row) : ""}
             style={props.rowStyleTemplate ? props.rowStyleTemplate(row) : {}}
 
         >
@@ -132,41 +111,41 @@ export class Row extends React.PureComponent<any, any> {
                 <input type="checkbox" onChange={() => props.onCheck()} checked={this.props.isSelected}/>
             </td>}
             {columns.map((column, index2) => {
+                let style = cache[index2].style;
+                if (column.styleTemplate != null) {
+                    style = {...style, ...column.styleTemplate(row, column)};
+                }
                 return (
                     <td
                         key={uuidv4()}
-                        style={{width: column.width, ...column.styleTemplate(row, column)}}
-                        onClick={column.events.click ? (event) => {
+                        style={style}
+                        onClick={column.events.click.length > 0 ? (event) => {
                             column.events.click.map((callback) => {
                                 callback.bind(this)(row, column, this, event.target);
-                            })
-                        } : function () {
-                        }}
-                        onMouseUp={column.events.mouseUp ? (event) => {
+                            });
+                        } : null}
+                        onMouseUp={column.events.mouseUp.length > 0 ? (event) => {
                             column.events.mouseUp.map((callback) => {
                                 callback.bind(this)(row, column, this, event.target, event);
-                            })
-                        } : function () {
-                        }}
-                        onMouseEnter={column.events.enter ? (event) => {
+                            });
+                        } : null}
+                        onMouseEnter={column.events.enter.length > 0 ? (event) => {
                             column.events.enter.map((callback) => {
                                 callback.bind(this)(row, column, event, this);
-                            })
-                        } : function () {
-                        }}
-                        onMouseLeave={column.events.leave ? (event) => {
+                            });
+                        } : null}
+                        onMouseLeave={column.events.leave.length > 0 ? (event) => {
                             column.events.leave.map((callback) => {
                                 callback.bind(this)(row, column, event, this);
-                            })
-                        } : function () {
-                        }}
-                        className={cache[index2].classes.concat(column.classTemplate(row, column)).join(' ')}
+                            });
+                        } : null}
+                        className={cache[index2].classes.concat(column.classTemplate !== null ? column.classTemplate(row, column) : []).join(" ")}
                         onContextMenu={(e) => e.preventDefault()}
 
                     >
                         {packFn(row[column.field] ? row[column.field] : column.default, column, row)}
                     </td>
-                )
+                );
             })}
         </tr>);
     }
@@ -174,5 +153,5 @@ export class Row extends React.PureComponent<any, any> {
 
 const Cell = (props) => {
 
-}
+};
 
