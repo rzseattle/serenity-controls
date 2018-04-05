@@ -7,14 +7,13 @@ require('react-dates/lib/css/_datepicker.css');
 require('react-dropzone');
 require('react-notification-system');
 require('resize-observer-polyfill');
-require('mobx');
+
 require('moment');
 require('uuid');
-require('mobx-react');
-require('gsap');
+
 require('inputmask');
 require('lodash');
-require('react-progress-2');
+
 //require('frontend');
 require('react-addons-shallow-compare');
 
