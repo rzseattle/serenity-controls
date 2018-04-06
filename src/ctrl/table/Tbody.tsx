@@ -1,6 +1,7 @@
 import * as React from "react";
 import {deepIsEqual} from "frontend/src/lib/JSONTools";
 import uuidv4 from "uuid/v4";
+import Icon from "../Icon";
 //const uuidv4 = require('uuid/v4');
 
 export default class Tbody extends React.Component<any, any> {
@@ -33,10 +34,10 @@ export default class Tbody extends React.Component<any, any> {
             }
             return (
                 <>
-                    {column.icon ? <i className={"w-table-prepend-icon fa " + column.icon}></i> : ""}
-                    {column.prepend ? column.prepend : ""}
-                    {templateResult ? (typeof templateResult == "string" ? <span dangerouslySetInnerHTML={{__html: (column.template(val, row))}}></span> : templateResult) : (val ? val : column.default)}
-                    {column.append ? column.append : ""}
+                    {column.icon !== null ? <Icon name={column.icon}/> : null}
+                    {column.prepend !== null ? column.prepend : ""}
+                    {templateResult !== false ? (typeof templateResult == "string" ? <span dangerouslySetInnerHTML={{__html: (column.template(val, row))}}/> : templateResult) : (val ? val : column.default)}
+                    {column.append !== null ? column.append : ""}
                 </>
             );
         };
@@ -108,11 +109,11 @@ export class Row extends React.PureComponent<any, any> {
 
         >
             {props.selectable && <td className={"w-table-selection-cell"}>
-                <input type="checkbox" onChange={() => props.onCheck()} checked={this.props.isSelected}/>
+                <input type="checkbox" onChange={props.onCheck} checked={this.props.isSelected}/>
             </td>}
             {columns.map((column, index2) => {
                 let style = cache[index2].style;
-                if (column.styleTemplate != null) {
+                if (column.styleTemplate !== null) {
                     style = {...style, ...column.styleTemplate(row, column)};
                 }
                 return (
