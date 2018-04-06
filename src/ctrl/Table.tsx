@@ -87,6 +87,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         additionalConditions: {},
         filters: null,
         data: {data: [], countAll: 0, debug: ""},
+        rowClassTemplate: null,
+        rowStyleTemplate: null
     };
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
@@ -550,6 +552,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 click: [],
                 enter: [],
                 leave: [],
+                mouseUp: [],
             },
             filter: [{
                 component: TextFilter,

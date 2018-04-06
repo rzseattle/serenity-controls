@@ -26,22 +26,6 @@ export default class Tbody extends React.Component<any, any> {
     public render() {
         const props = this.props;
 
-        const packValue = (val, column, row) => {
-            let templateResult = false;
-            if (column.template !== null) {
-                templateResult = column.template(val, row);
-
-            }
-            return (
-                <>
-                    {column.icon !== null ? <Icon name={column.icon}/> : null}
-                    {column.prepend !== null ? column.prepend : ""}
-                    {templateResult !== false ? (typeof templateResult == "string" ? <span dangerouslySetInnerHTML={{__html: (column.template(val, row))}}/> : templateResult) : (val ? val : column.default)}
-                    {column.append !== null ? column.append : ""}
-                </>
-            );
-        };
-
         const columns = props.columns.filter((el) => el !== null && el.display === true);
 
         const {order, filters} = this.props;
@@ -70,9 +54,7 @@ export default class Tbody extends React.Component<any, any> {
                 cache[index].style = {width: column.width};
             }
 
-
         }
-
 
         return props.data.map((row, index) => {
 
@@ -83,9 +65,6 @@ export default class Tbody extends React.Component<any, any> {
                 _key={key}
                 columns={columns}
                 row={row}
-                order={props.order}
-                filters={props.filters}
-                packFn={packValue}
                 rowClassTemplate={props.rowClassTemplate}
                 rowStyleTemplate={props.rowStyleTemplate}
                 selectable={this.props.selectable}
@@ -102,17 +81,36 @@ export default class Tbody extends React.Component<any, any> {
 
 export class Row extends React.PureComponent<any, any> {
 
+    public packFn = (val, column, row) => {
+        let templateResult = false;
+        if (column.template !== null) {
+            templateResult = column.template(val, row);
+
+        }
+        return (
+            <>
+                {column.icon !== null && <Icon name={column.icon}/>}
+                {column.prepend !== null && column.prepend}
+                {templateResult !== false ? templateResult : (val ? val : column.default)}
+                {column.append !== null && column.append}
+            </>
+        );
+    }
+
     public render() {
 
         const props = this.props;
-        const {columns, row, packFn, cache, _key} = this.props;
+        const {columns, row, cache, _key} = this.props;
 
+        const rowProps: any = {};
+        if (props.rowClassTemplate !== null) {
+            rowProps.className = props.rowClassTemplate(row);
+        }
+        if (props.rowStyleTemplate !== null) {
+            rowProps.style = props.rowStyleTemplate(row);
+        }
 
-        return (<tr
-            className={props.rowClassTemplate ? props.rowClassTemplate(row) : ""}
-            style={props.rowStyleTemplate ? props.rowStyleTemplate(row) : {}}
-
-        >
+        return (<tr {...rowProps} >
             {props.selectable && <td className={"w-table-selection-cell"}>
                 <input type="checkbox" onChange={props.onCheck} checked={this.props.isSelected}/>
             </td>}
@@ -128,40 +126,59 @@ export class Row extends React.PureComponent<any, any> {
                     className = cache[index2].classes.join(" ");
                 }
 
+                const cellProps: any = {};
+
+                if (className !== null) {
+                    cellProps.className = className;
+                }
+
+                if (style !== null && Object.keys(style).length !== 0) {
+                    cellProps.style = style;
+                }
+
+                if (column.events.click.length > 0) {
+                    cellProps.onClick = (event) => {
+                        column.events.click.map((callback) => {
+                            callback.bind(this)(row, column, this, event.target);
+                        });
+                    };
+                    cellProps.onContextMenu = (e) => e.preventDefault();
+                }
+                if (column.events.mouseUp.length > 0) {
+                    cellProps.onMouseUp = (event) => {
+                        column.events.mouseUp.map((callback) => {
+                            callback.bind(this)(row, column, this, event.target);
+                        });
+                    };
+                }
+
+                if (column.events.enter.length > 0) {
+                    cellProps.onMouseEnter = (event) => {
+                        column.events.enter.map((callback) => {
+                            callback.bind(this)(row, column, this, event.target);
+                        });
+                    };
+                }
+                if (column.events.leave.length > 0) {
+                    cellProps.onMouseLeave = (event) => {
+                        column.events.leave.map((callback) => {
+                            callback.bind(this)(row, column, this, event.target);
+                        });
+                    };
+                }
+
                 return (
                     <td
                         key={_key + index2}
-                        style={style}
-                        onClick={column.events.click.length > 0 ? (event) => {
-                            column.events.click.map((callback) => {
-                                callback.bind(this)(row, column, this, event.target);
-                            });
-                        } : null}
-                        onMouseUp={column.events.mouseUp.length > 0 ? (event) => {
-                            column.events.mouseUp.map((callback) => {
-                                callback.bind(this)(row, column, this, event.target, event);
-                            });
-                        } : null}
-                        onMouseEnter={column.events.enter.length > 0 ? (event) => {
-                            column.events.enter.map((callback) => {
-                                callback.bind(this)(row, column, event, this);
-                            });
-                        } : null}
-                        onMouseLeave={column.events.leave.length > 0 ? (event) => {
-                            column.events.leave.map((callback) => {
-                                callback.bind(this)(row, column, event, this);
-                            });
-                        } : null}
-                        className={className}
-                        onContextMenu={(e) => e.preventDefault()}
-
+                        {...cellProps}
                     >
-                        {packFn(row[column.field] ? row[column.field] : column.default, column, row)}
+                        {this.packFn(row[column.field] ? row[column.field] : column.default, column, row)}
                     </td>
                 );
             })}
         </tr>);
     }
+
 }
 
 const Cell = (props) => {

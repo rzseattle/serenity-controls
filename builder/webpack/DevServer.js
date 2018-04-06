@@ -108,7 +108,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                     req.param('location') + "/utils/developer/getRoutes",
                     (res) => {
                         res.pipe(file);
-                        response.send("OK");
+                        response.send(JSON.stringify(["OK"]));
                     },
                     options
                 )

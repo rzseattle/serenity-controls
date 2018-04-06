@@ -123,9 +123,6 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         const p = this.props;
         let ComponentInfo: any = p.context.view;
 
-        console.error(this.props.context.viewServerErrors);
-
-
         let DebugTool = this.DebugTool;
         let debugVar = {
             log: s.log,
