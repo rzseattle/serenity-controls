@@ -48,7 +48,7 @@ export default class Tbody extends React.Component<any, any> {
         return props.data.map((row, index) =>
 
             <Row
-                key={uuidv4()}
+                key={row.id != undefined ? row.id : uuidv4()}
                 columns={columns}
                 row={row}
                 order={props.order}
