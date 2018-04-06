@@ -1,15 +1,12 @@
 import NotificationSystem from "react-notification-system";
-//import * as Notifications from "react-notification-system";
 import * as React from "react";
-
-import {observer} from "mobx-react";
 import {Copyable} from "frontend/src/ctrl/Copyable";
-import Router from "frontend/src/backoffice/Router";
+
 
 declare var PRODUCTION: boolean;
 declare var window: any;
 
-//console.log(Views);
+
 
 
 export interface IArrowViewComponentProps {
@@ -36,7 +33,7 @@ export interface IArrowViewComponentProps {
     _resolveComponent: { (componentPath: string): React.ReactElement<any> }
     _startLoadingIndicator: { (): any };
     _stopLoadingIndicator: { (): any };
-    _isSub: boolean
+    _isSub: boolean;
 }
 
 interface IProps {
@@ -126,6 +123,8 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         const p = this.props;
         let ComponentInfo: any = p.context.view;
 
+        console.error(this.props.context.viewServerErrors);
+
 
         let DebugTool = this.DebugTool;
         let debugVar = {
@@ -155,8 +154,10 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
             <NotificationSystem {...notificaton} />
-            {this.props.context.viewServerErrors != null && <div>
-                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.props.context.viewServerErrors}}/>
+            {this.props.context.viewServerErrors != null && <div style={{margin: 10, padding: 10, backgroundColor: "white"}}>
+                <pre>{this.props.context.viewServerErrors.url}</pre>
+                <pre style={{maxHeight: 200, overflow: "auto"}}>{JSON.stringify(this.props.context.viewServerErrors.input,null,2)}</pre>
+                <div style={{padding: 10, backgroundColor: 'white', margin: 15}} dangerouslySetInnerHTML={{__html: this.props.context.viewServerErrors.response}}/>
             </div>}
 
             {/*<pre>

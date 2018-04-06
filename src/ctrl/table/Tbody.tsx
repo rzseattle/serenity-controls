@@ -28,7 +28,7 @@ export default class Tbody extends React.Component<any, any> {
 
         const packValue = (val, column, row) => {
             let templateResult = false;
-            if (column.template) {
+            if (column.template !== null) {
                 templateResult = column.template(val, row);
 
             }
@@ -44,37 +44,7 @@ export default class Tbody extends React.Component<any, any> {
 
         const columns = props.columns.filter((el) => el !== null && el.display === true);
 
-
-        return props.data.map((row, index) =>
-
-            <Row
-                key={row.id != undefined ? row.id : uuidv4()}
-                columns={columns}
-                row={row}
-                order={props.order}
-                filters={props.filters}
-                packFn={packValue}
-                rowClassTemplate={props.rowClassTemplate}
-                rowStyleTemplate={props.rowStyleTemplate}
-                selectable={this.props.selectable}
-                isSelected={this.props.selection.includes(index)}
-                onCheck={() => this.props.onCheck(index)}
-
-            />,
-        );
-
-    }
-}
-//00:14:15;10
-//00:14:42;18
-
-export class Row extends React.PureComponent<any, any> {
-
-    public render() {
-
-        const props = this.props;
-        const {columns, row, packFn, order, filters} = this.props;
-
+        const {order, filters} = this.props;
         const cache = {};
 
         for (let index = 0; index < columns.length; index++) {
@@ -103,6 +73,41 @@ export class Row extends React.PureComponent<any, any> {
 
         }
 
+
+        return props.data.map((row, index) => {
+
+            const key = row.id != undefined ? row.id : uuidv4();
+
+            return (<Row
+                key={key}
+                _key={key}
+                columns={columns}
+                row={row}
+                order={props.order}
+                filters={props.filters}
+                packFn={packValue}
+                rowClassTemplate={props.rowClassTemplate}
+                rowStyleTemplate={props.rowStyleTemplate}
+                selectable={this.props.selectable}
+                isSelected={this.props.selection.includes(index)}
+                onCheck={() => this.props.onCheck(index)}
+                cache={cache}
+
+            />);
+
+        });
+
+    }
+}
+
+export class Row extends React.PureComponent<any, any> {
+
+    public render() {
+
+        const props = this.props;
+        const {columns, row, packFn, cache, _key} = this.props;
+
+
         return (<tr
             className={props.rowClassTemplate ? props.rowClassTemplate(row) : ""}
             style={props.rowStyleTemplate ? props.rowStyleTemplate(row) : {}}
@@ -116,9 +121,16 @@ export class Row extends React.PureComponent<any, any> {
                 if (column.styleTemplate !== null) {
                     style = {...style, ...column.styleTemplate(row, column)};
                 }
+                let className = null;
+                if (column.classTemplate !== null) {
+                    className = cache[index2].classes.concat(column.classTemplate(row, column)).join(" ");
+                } else if (cache[index2].classes.length > 0) {
+                    className = cache[index2].classes.join(" ");
+                }
+
                 return (
                     <td
-                        key={uuidv4()}
+                        key={_key + index2}
                         style={style}
                         onClick={column.events.click.length > 0 ? (event) => {
                             column.events.click.map((callback) => {
@@ -140,7 +152,7 @@ export class Row extends React.PureComponent<any, any> {
                                 callback.bind(this)(row, column, event, this);
                             });
                         } : null}
-                        className={cache[index2].classes.concat(column.classTemplate !== null ? column.classTemplate(row, column) : []).join(" ")}
+                        className={className}
                         onContextMenu={(e) => e.preventDefault()}
 
                     >
@@ -155,4 +167,3 @@ export class Row extends React.PureComponent<any, any> {
 const Cell = (props) => {
 
 };
-
