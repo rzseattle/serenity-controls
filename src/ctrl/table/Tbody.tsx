@@ -139,17 +139,17 @@ export class Row extends React.PureComponent<any, any> {
                 if (column.events.click.length > 0) {
                     cellProps.onClick = (event) => {
                         column.events.click.map((callback) => {
-                            callback.bind(this)(row, column, this, event.target);
+                            callback.bind(this)(row, column, this, event.target, event);
                         });
                     };
-                    cellProps.onContextMenu = (e) => e.preventDefault();
                 }
                 if (column.events.mouseUp.length > 0) {
                     cellProps.onMouseUp = (event) => {
                         column.events.mouseUp.map((callback) => {
-                            callback.bind(this)(row, column, this, event.target);
+                            callback.bind(this)(row, column, this, event.target, event);
                         });
                     };
+                    cellProps.onContextMenu = (e) => e.preventDefault();
                 }
 
                 if (column.events.enter.length > 0) {
