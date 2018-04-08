@@ -209,7 +209,7 @@ interface IBFormProps {
     editable?: boolean,
 
     loading?: boolean
-    children: { (formConf: any): any }
+    children: { (formConf: any, data: any , form: BForm): any }
     formErrors?: string[]
     fieldErrors?: any
     errors?: any
@@ -501,7 +501,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 <ul className="bg-danger ">
                     {this.state.formErrors.map(el => <li>{el}</li>)}
                 </ul>}
-                {this.props.children(this.applyToField.bind(this))}
+                {this.props.children(this.applyToField.bind(this), this.getData(), this)}
 
                 <Shadow {...{visible: this.state.loading, loader: true, container: () => this.formTag}} />
             </Tag>
