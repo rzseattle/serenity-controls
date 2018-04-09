@@ -1,10 +1,9 @@
-import * as React from 'react'
-import {ICellTemplate, IColumnData, IEventCallback} from './Interfaces';
-import {Option} from '../fields/Interfaces';
-import {DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter} from '../Filters';
-import {IFilter} from 'frontend/src/ctrl/filters/Intefaces';
-import Icon from 'frontend/src/ctrl/Icon';
-
+import * as React from "react";
+import {ICellTemplate, IColumnData, IEventCallback} from "./Interfaces";
+import {Option} from "../fields/Interfaces";
+import {DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter} from "../Filters";
+import {IFilter} from "frontend/src/ctrl/filters/Intefaces";
+import Icon from "frontend/src/ctrl/Icon";
 
 export class ColumnHelper {
     protected data: IColumnData;
@@ -12,225 +11,230 @@ export class ColumnHelper {
     constructor(initData: Partial<IColumnData>) {
         this.data = {
             events: {
-                'click': [],
-                'enter': [],
-                'leave': [],
-                'mouseUp': [],
+                click: [],
+                enter: [],
+                leave: [],
+                mouseUp: [],
             },
             filter: [],
             header: {},
-            ...initData
+            ...initData,
         };
     }
 
-    static id(field: string, caption: string): ColumnHelper {
+    public static id(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
-            field: field,
-            caption: caption,
+            field,
+            caption,
             filter: [{
-                caption: caption,
-                field: field,
+                caption,
+                field,
                 component: NumericFilter,
-            }]
-        }).className('right')
+            }],
+        }).className("right");
 
     }
 
-    static number(field: string, caption: string): ColumnHelper {
+    public static number(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
-            field: field,
-            caption: caption,
+            field,
+            caption,
             filter: [{
-                caption: caption,
-                field: field,
+                caption,
+                field,
                 component: NumericFilter,
-            }]
-        }).className('right')
+            }],
+        }).className("right");
 
     }
 
-    static map(field: string, caption: string, options: Array<Option> | object, multiSelectFilter: boolean = false): ColumnHelper {
+    public static map(field: string, caption: string, options: Option[] | object, multiSelectFilter: boolean = false): ColumnHelper {
 
         return new ColumnHelper({
-            field: field,
-            caption: caption,
-            template: value => {
+            field,
+            caption,
+            template: (value) => {
                 if (Array.isArray(options)) {
-                    let res = options.filter(e => e.value == value);
+                    const res = options.filter((e) => e.value == value);
                     if (res.length > 0) {
                         return res[0].label;
                     }
                     return "---";
                 } else {
-                    return options[value]
+                    return options[value];
                 }
             },
             filter: [{
-                field: field,
+                field,
                 component: SelectFilter,
                 config: {
                     content: options,
-                    multiselect: multiSelectFilter
-                }
-            }]
+                    multiselect: multiSelectFilter,
+                },
+            }],
         });
     }
 
-    static text(field: string, caption: string): ColumnHelper {
+    public static text(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
-            field: field,
-            caption: caption,
+            field,
+            caption,
             filter: [{
-                caption: caption,
-                //label: caption,
-                field: field,
+                caption,
+                // label: caption,
+                field,
                 component: TextFilter,
                 config: {
-                    extendedInfo: true
-                }
-            }]
-        })
+                    extendedInfo: true,
+                },
+            }],
+        });
     }
 
-    static link(field: string, caption: string, urlResolver: any): ColumnHelper {
+    public static link(field: string, caption: string, urlResolver: any): ColumnHelper {
 
-        return ColumnHelper.text('id', '')
+        return ColumnHelper.text("id", "")
             .onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
-                    let url = urlResolver(row, column, event);
+                    const url = urlResolver(row, column, event);
                     if (e.button == 1) {
                         window.open(url);
                     } else {
                         window.location.href = url;
                     }
-                }
-            )
+                },
+            );
 
     }
 
-    static money(field, caption): ColumnHelper {
+    public static money(field, caption): ColumnHelper {
         return new ColumnHelper({
-            field: field,
-            caption: caption,
+            field,
+            caption,
             template: (val, row) => parseFloat(val).toFixed(2),
             filter: [{
-                field: field,
+                field,
                 component: NumericFilter,
-            }]
-        }).className('right');
+            }],
+        }).className("right");
     }
 
-    static email(field, caption): ColumnHelper {
+    public static email(field, caption): ColumnHelper {
         return new ColumnHelper({
-            field: field,
-            caption: caption,
-            template: (val, row) => <a href={'mailto:' + val}>{val}</a>,
+            field,
+            caption,
+            template: (val, row) => <a href={"mailto:" + val}>{val}</a>,
             filter: [{
-                field: field,
+                field,
                 component: TextFilter,
                 config: {
-                    extendedInfo: true
-                }
-            }]
-        })
-    }
-
-    static date(field, caption): ColumnHelper {
-        return new ColumnHelper({
-            field: field,
-            caption: caption,
-
-            filter: [{
-                field: field,
-                component: DateFilter,
-            }]
+                    extendedInfo: true,
+                },
+            }],
         });
     }
 
-    static bool(field, caption): ColumnHelper {
+    public static date(field, caption): ColumnHelper {
         return new ColumnHelper({
-            field: field,
-            caption: caption,
-            classTemplate: (row, column) => ['center', (row[column.field] == '1' ? "darkgreen" : "darkred")],
-            template: value => <Icon name={(value == "1" ? "CheckMark" : "Clear")}/>,
+            field,
+            caption,
+
             filter: [{
-                field: field,
+                field,
+                component: DateFilter,
+            }],
+        });
+    }
+
+    public static bool(field, caption): ColumnHelper {
+        return new ColumnHelper({
+            field,
+            caption,
+            classTemplate: (row, column) => ["center", (row[column.field] == "1" ? "darkgreen" : "darkred")],
+            template: (value) => <Icon name={(value == "1" ? "CheckMark" : "Clear")}/>,
+            filter: [{
+                field,
                 component: SwitchFilter,
                 config: {
                     content: [
                         {value: 0, label: "Nie"},
                         {value: 1, label: "Tak"},
                     ],
-                }
-            }]
+                },
+            }],
 
-        })
-    }
-
-    static hidden(field): ColumnHelper {
-        return new ColumnHelper({
-            field: field,
-            display: false
         });
     }
 
-    static template(caption: string, template: ICellTemplate): ColumnHelper {
+    public static hidden(field): ColumnHelper {
         return new ColumnHelper({
-            caption: caption,
-            template: template
+            field,
+            display: false,
+        });
+    }
+
+    public static template(caption: string, template: ICellTemplate): ColumnHelper {
+        return new ColumnHelper({
+            caption,
+            template,
         }).noFilter();
     }
 
-    static custom(data): ColumnHelper {
+    public static custom(data): ColumnHelper {
         return new ColumnHelper(data);
     }
 
-    className(className: string): ColumnHelper {
+    public className(className: string): ColumnHelper {
         this.data.class = [className];
         return this;
     }
 
-    template(fn: ICellTemplate): ColumnHelper {
+    public template(fn: ICellTemplate): ColumnHelper {
         this.data.template = fn;
         return this;
     }
 
-    append(x: any): ColumnHelper {
+    public append(x: any): ColumnHelper {
         this.data.append = x;
         return this;
     }
 
-    prepend(x: any): ColumnHelper {
+    public prepend(x: any): ColumnHelper {
         this.data.prepend = x;
         return this;
     }
 
-    width(x: any): ColumnHelper {
+    public width(x: any): ColumnHelper {
         this.data.width = x;
         return this;
     }
 
-    headerTooltip(text: string) {
+    public rowSpan(span: number) {
+        this.data.rowSpan = span;
+        return this;
+    }
+
+    public headerTooltip(text: string) {
         this.data.header.tooltip = text;
         return this;
     }
 
-    headerIcon(iconName: string) {
+    public headerIcon(iconName: string) {
         this.data.header.icon = iconName;
         this.data.filter[0].caption = "xx";
         return this;
     }
 
-    addFilter(filter: IFilter) {
+    public addFilter(filter: IFilter) {
         this.data.filter.push(filter);
         return this;
     }
 
-    noFilter(): ColumnHelper {
+    public noFilter(): ColumnHelper {
         this.data.filter = [];
         return this;
     }
 
-    noSorter(): ColumnHelper {
+    public noSorter(): ColumnHelper {
         this.data.isSortable = false;
         return this;
     }
@@ -243,44 +247,42 @@ export class ColumnHelper {
         }
     }*/
 
-    onClick(fn: IEventCallback): ColumnHelper {
+    public onClick(fn: IEventCallback): ColumnHelper {
         this.data.events.click.push(fn);
         return this;
     }
 
-    onMouseUp(fn: IEventCallback): ColumnHelper {
+    public onMouseUp(fn: IEventCallback): ColumnHelper {
         this.data.events.mouseUp.push(fn);
         return this;
     }
 
-    onEnter(fn: IEventCallback): ColumnHelper {
+    public onEnter(fn: IEventCallback): ColumnHelper {
         this.data.events.enter.push(fn);
         return this;
     }
 
-    onLeave(fn: IEventCallback): ColumnHelper {
+    public onLeave(fn: IEventCallback): ColumnHelper {
         this.data.events.leave.push(fn);
         return this;
     }
 
-    styleTemplate(fn: { (row: any, column: IColumnData): any }) {
+    public styleTemplate(fn: (row: any, column: IColumnData) => any) {
         this.data.styleTemplate = fn;
         return this;
     }
 
-    classTemplate(fn: { (row: any, column: IColumnData): Array<string> }) {
+    public classTemplate(fn: (row: any, column: IColumnData) => string[]) {
         this.data.classTemplate = fn;
         return this;
     }
 
-    set(el: Partial<IColumnData>): ColumnHelper {
+    public set(el: Partial<IColumnData>): ColumnHelper {
         this.data = {...this.data, ...el};
         return this;
     }
 
-    get(): IColumnData {
+    public get(): IColumnData {
         return this.data;
     }
 }
-
-
