@@ -20,7 +20,6 @@
     "jsx-no-bind": false,
     "jsx-no-lambda": false,
     "object-literal-sort-keys": false,
-    "jsx-no-bind": true,
-    "member-ordering": false
+    "jsx-no-bind": true
   }
 }

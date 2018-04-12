@@ -1,3 +1,4 @@
+
 import Comm from '../lib/Comm'
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs"
@@ -58,11 +59,6 @@ export class BackofficeStore {
             this.changeView(path.replace(browserInput.basePath, ""));
         }
         window.addEventListener("hashchange", this.hashChangeHandler, false);
-
-        Comm.errorFallback = (error) => {
-            this.viewServerErrors = error;
-            this.dataUpdated();
-        }
     }
 
 

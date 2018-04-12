@@ -1,5 +1,5 @@
 import {IFilter} from "../filters/Intefaces";
-import {ConnectionFilter, DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter} from "../Filters";
+import {ConnectionFilter, DateFilter, SelectFilter, SwitchFilter, TextFilter} from '../Filters';
 import {Option} from "../fields/Interfaces";
 
 export class FilterHelper {
@@ -9,72 +9,72 @@ export class FilterHelper {
         this.data = {
             field: null,
             component: null,
-            ...initData,
+            ...initData
         };
     }
 
-    public static date(field, caption) {
+    static date(field, caption) {
         return new FilterHelper({
-            field,
-            caption,
-            component: DateFilter,
+            field: field,
+            caption: caption,
+            component: DateFilter
         });
     }
 
-    public static number(field, caption) {
+    static number(field, caption) {
         return new FilterHelper({
-            field,
-            caption,
-            component: NumericFilter,
+            field: field,
+            caption: caption,
+            component: DateFilter
         });
     }
 
-    public static text(field, caption, extendedInfo = true) {
+    static text(field, caption, extendedInfo = true) {
         return new FilterHelper({
-            field,
-            caption,
+            field: field,
+            caption: caption,
             component: TextFilter,
-            config: {
-                extendedInfo,
-            },
+            config:{
+                extendedInfo
+            }
         });
     }
 
-    public static connection(field, caption, config) {
+    static connection(field, caption, config) {
         return new FilterHelper({
-            field,
-            caption,
+            field: field,
+            caption: caption,
             component: ConnectionFilter,
-            config,
+            config: config,
         });
     }
 
-    public static select(field, caption, content: Option[], multi: boolean = false, defaultValue = "") {
+    static select(field, caption, content: Option[], multi: boolean = false, _default = "") {
         return new FilterHelper({
-            field,
-            caption,
+            field: field,
+            caption: caption,
             config: {
                 multiselect: multi,
-                content,
-                _default: defaultValue,
+                content: content,
+                _default: _default
             },
-            component: SelectFilter,
+            component: SelectFilter
         });
     }
 
-    public static switch(field, caption, content: Option[]) {
+    static switch(field, caption, content: Option[],) {
         return new FilterHelper({
-            field,
-            caption,
+            field: field,
+            caption: caption,
             config: {
-                content,
+                content: content
             },
-            component: SwitchFilter,
+            component: SwitchFilter
         });
     }
 
     public get(): IFilter {
-        return this.data;
+        return this.data
     }
 
 }

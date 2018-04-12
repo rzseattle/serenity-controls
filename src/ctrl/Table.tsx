@@ -6,7 +6,7 @@ import {ColumnHelper} from "./table/ColumnHelper";
 import FiltersPresenter from "./table/FiltersPresenter";
 import Tbody from "./table/Tbody";
 import Footer from "./table/Footer";
-import {ICellTemplate, IColumnData, IFilterValue, IOrder} from "./table/Interfaces";
+import {IColumnData, IFilterValue, IOrder} from "./table/Interfaces";
 import {EmptyResult, Error, Loading} from "./table/placeholders";
 import {deepCopy} from "frontend/src/lib/JSONTools";
 import Thead from "frontend/src/ctrl/table/Thead";
@@ -54,7 +54,6 @@ interface ITableProps {
     onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any;
     onDataChange?: (data: any) => any;
     data?: ITableDataInput;
-    infoRow?: ICellTemplate;
 
 }
 
@@ -88,9 +87,6 @@ class Table extends React.Component<ITableProps, ITableState> {
         additionalConditions: {},
         filters: null,
         data: {data: [], countAll: 0, debug: ""},
-        rowClassTemplate: null,
-        rowStyleTemplate: null,
-        infoRow: null,
     };
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
@@ -132,8 +128,8 @@ class Table extends React.Component<ITableProps, ITableState> {
         this.tmpDragStartY = 0;
         this.xhrConnection = null;
 
-        const hashCode = function (s) {
-            return s.split("").reduce(function (a, b) {
+        const hashCode = function(s) {
+            return s.split("").reduce(function(a, b) {
                 a = ((a << 5) - a) + b.charCodeAt(0);
                 return a & a;
             }, 0);
@@ -548,14 +544,12 @@ class Table extends React.Component<ITableProps, ITableState> {
             classTemplate: null,
             styleTemplate: null,
             template: null,
-            rowSpan: null,
             default: "",
             header: {},
             events: {
                 click: [],
                 enter: [],
                 leave: [],
-                mouseUp: [],
             },
             filter: [{
                 component: TextFilter,
@@ -600,7 +594,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                         allChecked={this.state.allChecked}
 
                     />}
-                    <tbody className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row" }>
+                    <tbody>
                     {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
                     {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
                     {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
@@ -615,7 +609,6 @@ class Table extends React.Component<ITableProps, ITableState> {
                         columns={columns} filters={this.state.filters}
                         order={this.state.order} loading={this.state.loading}
                         data={this.state.data}
-                        infoRow={this.props.infoRow}
                     />}
                     </tbody>
 

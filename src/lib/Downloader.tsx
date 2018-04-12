@@ -1,9 +1,7 @@
 import * as React from "react";
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from "react-dom";
 
-interface ICleanUpCallback{
-    (): any;
-}
+type ICleanUpCallback = () => any;
 
 interface IDownloaderProps {
     url: string;
@@ -18,30 +16,30 @@ interface IDownloaderState {
 class Downloader extends React.Component<IDownloaderProps, IDownloaderState> {
 
     public defaultProps: Partial<IDownloaderProps> = {
-        data: {}
-    }
+        data: {},
+    };
 
-    private form: HTMLFormElement
+    private form: HTMLFormElement;
 
     constructor(props) {
         super(props);
     }
 
-    download() {
+    public download() {
         this.form.submit();
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.download();
         setTimeout(() => this.props.cleanup(), 10);
 
     }
 
-    render() {
+    public render() {
         return (
           <form action={this.props.url}
                 ref={(form) => this.form = form}
-                style={{display: 'none'}} method="post"
+                style={{display: "none"}} method="post"
                 acceptCharset="UTF-8"
           >
               <textarea name="payload">{JSON.stringify(this.props.data)}</textarea>
@@ -50,26 +48,23 @@ class Downloader extends React.Component<IDownloaderProps, IDownloaderState> {
     }
 }
 
-
 export const download = (url: string, data: any = {}): any => {
 
-    let parent = document.body;
+    const parent = document.body;
 
-    const wrapper = parent.appendChild(document.createElement('div'));
-    let cleanup = () => {
+    const wrapper = parent.appendChild(document.createElement("div"));
+    const cleanup = () => {
         ReactDOM.unmountComponentAtNode(wrapper);
         wrapper.remove();
     };
-    let props = {
-        url: url,
-        data: data
+    const props = {
+        url,
+        data,
     };
 
     const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup}/>, wrapper);
 
-
     return component.promise;
 };
-
 
 export default download;
