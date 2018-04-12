@@ -1,49 +1,48 @@
-import * as React from 'react'
-import {Icon} from '../ctrl/Icon';
-import PanelComponentLoader from '../lib/PanelComponentLoader';
-import {Modal} from '../ctrl/Overlays';
+import * as React from "react";
+import {Icon} from "../ctrl/Icon";
+import PanelComponentLoader from "../lib/PanelComponentLoader";
+import {Modal} from "../ctrl/Overlays";
 
-import {IMenuSection, Menu} from 'frontend/src/backoffice/Menu';
-import {BackOfficeContainer} from 'frontend/src/backoffice/BackOfficeContainer';
+import {IMenuSection, Menu} from "frontend/src/backoffice/Menu";
+import {BackOfficeContainer} from "frontend/src/backoffice/BackOfficeContainer";
 
-import * as NProgress from "nprogress/nprogress.js"
-import "nprogress/nprogress.css"
-import Comm from 'frontend/src/lib/Comm';
+import * as NProgress from "nprogress/nprogress.js";
+import "nprogress/nprogress.css";
+import Comm from "frontend/src/lib/Comm";
 
 import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
 
-NProgress.configure({parent: '.w-panel-body'});
-
+NProgress.configure({parent: ".w-panel-body"});
 
 interface IBackOfficePanelProps {
-    icon?: string
-    onlyBody?: boolean
-    isSub?: boolean
-    title?: string
-    user?: any
-    menu?: IMenuSection[]
-    store?: BackofficeStore
+    icon?: string;
+    onlyBody?: boolean;
+    isSub?: boolean;
+    title?: string;
+    user?: any;
+    menu?: IMenuSection[];
+    store?: BackofficeStore;
 }
 
 interface IBackOfficePanelState {
-    currentView: string
-    userMenuVisible: boolean,
-    menuVisible: boolean,
-    layout: "mobile" | "normal" | "large",
-    loading: boolean,
-    onlyBody: boolean,
-    contextState: any,
-    openedWindows: any,
+    currentView: string;
+    userMenuVisible: boolean;
+    menuVisible: boolean;
+    layout: "mobile" | "normal" | "large";
+    loading: boolean;
+    onlyBody: boolean;
+    contextState: any;
+    openedWindows: any;
 }
 
 export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
-    container: HTMLDivElement;
-    store: BackofficeStore
+    public container: HTMLDivElement;
+    public store: BackofficeStore;
 
     public static defaultProps: Partial<IBackOfficePanelProps> = {
         onlyBody: false,
-        isSub: false
-    }
+        isSub: false,
+    };
 
     constructor(props: IBackOfficePanelProps) {
         super(props);
@@ -59,7 +58,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
             onlyBody: this.props.onlyBody,
             contextState: this.store.getState(),
             openedWindows: [],
-        }
+        };
 
         this.store.onViewLoad(() => this.handleLoadStart());
         this.store.onViewLoaded(() => this.handleLoadEnd());
@@ -69,74 +68,74 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
 
     }
 
-    adjustToSize() {
+    public adjustToSize() {
         if (this.container) {
-            this.container.style.height = window.innerHeight + 'px';
+            this.container.style.height = window.innerHeight + "px";
         }
         if (window.innerWidth <= 479 && this.state.layout != "mobile") {
-            this.setState({layout: 'mobile', menuVisible: false});
+            this.setState({layout: "mobile", menuVisible: false});
         } else if (window.innerWidth > 479 && this.state.layout != "normal") {
-            this.setState({layout: 'normal', menuVisible: true});
+            this.setState({layout: "normal", menuVisible: true});
         }
     }
 
-    handleAppIconClicked() {
+    public handleAppIconClicked() {
         if (this.state.layout != "mobile") {
-            this.store.changeView('/admin/dashboard')
+            this.store.changeView("/admin/dashboard");
         } else {
             this.setState({menuVisible: !this.state.menuVisible});
         }
     }
 
-    handleElementClick(element, inWindow = false) {
+    public handleElementClick(element, inWindow = false) {
         if (inWindow) {
             this.setState({
-                openedWindows: this.state.openedWindows.concat(element)
+                openedWindows: this.state.openedWindows.concat(element),
             });
         } else {
-            this.store.changeView(element.route)
+            this.store.changeView(element.route);
         }
         if (this.state.layout == "mobile") {
             this.setState({menuVisible: false});
         }
     }
 
-    handleCloseWindow(route: any): any {
+    public handleCloseWindow(route: any): any {
         this.setState({
-            openedWindows: this.state.openedWindows.filter((el) => el.route != route)
+            openedWindows: this.state.openedWindows.filter((el) => el.route != route),
         });
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.store.onDataUpdated(() => {
-            this.setState({contextState: this.store.getState()})
-        })
+            this.setState({contextState: this.store.getState()});
+        });
         if (!this.props.isSub) {
             this.store.initRootElement();
-            this.adjustToSize()
+            this.adjustToSize();
             let timeout = null;
-            window.addEventListener('resize', () => {
-                //clearTimeout(timeout);
+            window.addEventListener("resize", () => {
+                // clearTimeout(timeout);
                 timeout = setTimeout(this.adjustToSize.bind(this), 30);
-            })
+            });
         }
     }
 
-    handleLoadStart = () => {
+    public handleLoadStart = () => {
         NProgress.start();
     }
 
-    handleLoadEnd = () => {
+    public handleLoadEnd = () => {
         NProgress.done();
     }
 
-    handleSetPanelOption(name, value, callback) {
-        let obj = {};
+    public handleSetPanelOption(name, value, callback) {
+        const obj = {};
         obj[name] = value;
         this.setState(obj, callback);
     }
 
-    render() {
+    public render() {
 
         return <div className="w-panel-container" ref={(container) => this.container = container}>
             {!this.state.onlyBody && <div className="w-panel-top">
@@ -146,7 +145,6 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                 <div className="app-title">
                     {this.props.title}
                 </div>
-
 
                 <div className="app-user" onClick={() => this.setState({userMenuVisible: true})}>
                     <div className="app-user-icon">
@@ -216,8 +214,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                 </div>
             </div>
 
-
-        </div>
+        </div>;
     }
 }
 

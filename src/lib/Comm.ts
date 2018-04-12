@@ -1,6 +1,4 @@
-interface IResponseCallback {
-    (response: any): any
-}
+type IResponseCallback = (response: any) => any;
 
 declare var PRODUCTION: any;
 declare var DEV_PROPERIES: any;
@@ -13,17 +11,16 @@ class Comm {
     public static onStart = null;
     public static onFinish = null;
 
-
     public static EVENTS = {
-        BEFORE_SEND: 'beforeSend',
-        PROGRESS: 'progress',
-        RESPONSE: 'response',
-        ERROR: 'error',
-        CONNECTION_ERROR: 'connectionError',
-        SUCCESS: 'success',
-        VALIDATION_ERRORS: 'validationErrors',
-        FINISH: 'finish',
-    }
+        BEFORE_SEND: "beforeSend",
+        PROGRESS: "progress",
+        RESPONSE: "response",
+        ERROR: "error",
+        CONNECTION_ERROR: "connectionError",
+        SUCCESS: "success",
+        VALIDATION_ERRORS: "validationErrors",
+        FINISH: "finish",
+    };
 
     public debug: boolean = true;
 
@@ -33,7 +30,6 @@ class Comm {
     private data: any;
     private namespace: string;
     private xhr: XMLHttpRequest;
-
 
     constructor(url, method = "POST") {
 
@@ -49,73 +45,71 @@ class Comm {
             connectionError: [],
             success: [],
             validationErrors: [],
-            finish: []
+            finish: [],
         };
         this.method = method;
-
 
         this.xhr = null;
     }
 
-
-    on(event: string, callback: IResponseCallback) {
+    public on(event: string, callback: IResponseCallback) {
         if (!Array.isArray(this.registredEvents[event])) {
-            console.error('Unknow event: ' + event);
+            console.error("Unknow event: " + event);
             console.log(this.registredEvents);
         } else {
             this.registredEvents[event].push(callback);
         }
     }
 
-    callEvent(event, data) {
-        this.registredEvents[event].map(el => el(data));
+    public callEvent(event, data) {
+        this.registredEvents[event].map((el) => el(data));
     }
 
-    setData(data) {
+    public setData(data) {
         this.data = data;
     }
 
-    appendFormData(FormData: FormData, data, name = '') {
+    public appendFormData(FormData: FormData, data, name = "") {
 
         if (data instanceof FileList) {
 
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 // get item
-                let file = data.item(i);
-                FormData.append(name + '[]', file);
+                const file = data.item(i);
+                FormData.append(name + "[]", file);
 
             }
             return;
         }
 
-        if (Object.prototype.toString.call(data) == '[object File]') {
+        if (Object.prototype.toString.call(data) == "[object File]") {
             FormData.append(name, data);
             return;
         }
 
-        if (typeof data === 'object' && data != null) {
+        if (typeof data === "object" && data != null) {
 
             Object.entries(data).map(([index, value]) => {
-                if (name == '') {
+                if (name == "") {
                     this.appendFormData(FormData, value, index);
                 } else {
                     //test for array in field name
-                    let openBracket = index.indexOf('[');
-                    let newName = name + '[' + index + ']';
+                    const openBracket = index.indexOf("[");
+                    let newName = name + "[" + index + "]";
                     if (openBracket != -1) {
-                        newName = name + '[' + index.slice(0, openBracket) + ']' + index.slice(openBracket);
+                        newName = name + "[" + index.slice(0, openBracket) + "]" + index.slice(openBracket);
                     }
                     this.appendFormData(FormData, value, newName);
                 }
             });
         } else {
             //if (data && data != null) {
-            FormData.append(name, data == null ? '' : data);
+            FormData.append(name, data == null ? "" : data);
             //}
         }
     }
 
-    prepareData() {
+    public prepareData() {
         let data = {};
         if (this.namespace) {
             data[this.namespace] = this.data;
@@ -125,48 +119,45 @@ class Comm {
         return data;
     }
 
-    debugError(error) {
+    public debugError(error) {
         if (Comm.errorFallback) {
             Comm.errorFallback(
                 {
                     url: Comm.basePath + this.url,
                     input: this.data,
-                    response: error
-                }
-            )
+                    response: error,
+                },
+            );
         } else {
-            let errorWindow = window.open('', '', 'width=800,height=600');
-            errorWindow.document.write('<pre>' + error + '</pre>');
+            const errorWindow = window.open("", "", "width=800,height=600");
+            errorWindow.document.write("<pre>" + error + "</pre>");
             errorWindow.focus();
         }
 
-
     }
 
-    abort() {
+    public abort() {
         if (this.xhr) {
             this.xhr.abort();
         }
     }
 
+    public send(): XMLHttpRequest {
 
-    send(): XMLHttpRequest {
-
-        let data = this.prepareData();
+        const data = this.prepareData();
         const formData = new FormData();
-        if (this.method == 'POST') {
+        if (this.method == "POST") {
             this.appendFormData(formData, data);
         }
 
         this.callEvent(Comm.EVENTS.BEFORE_SEND, data);
-
 
         this.xhr = new XMLHttpRequest();
 
         this.xhr.upload.onprogress = (event) => {
             this.callEvent(Comm.EVENTS.PROGRESS, {
                 loaded: event.loaded,
-                percent: Math.round(event.loaded / event.total * 100)
+                percent: Math.round(event.loaded / event.total * 100),
             });
         };
 
@@ -174,7 +165,6 @@ class Comm {
             if (!PRODUCTION) {
                 if (this.xhr.readyState == this.xhr.HEADERS_RECEIVED) {
                     const hash = this.xhr.getResponseHeader("ARROW_DEBUG_ROUTE_HASH");
-
 
                     const checkCompilationInProgress = (cbNotInCompilation) => {
                         const url2 = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "isCompilationInProgress");
@@ -188,12 +178,11 @@ class Comm {
                                     checkCompilationInProgress(cbNotInCompilation);
                                 }, 100);
 
-
                             } else {
                                 cbNotInCompilation();
                                 console.log("not in compilation");
                             }
-                        })
+                        });
                     };
 
                     if (hash != null) {
@@ -201,7 +190,7 @@ class Comm {
                         const location = window.location.protocol + "//" + window.location.host + Comm.basePath;
                         const url = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "refreshRoute");
                         const params = {location, hash};
-                        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+                        Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
 
                         fetch(url.toString()).then((response) => {
                             response.json().then((response) => {
@@ -209,7 +198,7 @@ class Comm {
                                     //alert("Wait for webpack recompilation  " + JSON.stringify(response));
                                     setTimeout(() => {
                                         let inCompilation;
-                                        checkCompilationInProgress(() =>{
+                                        checkCompilationInProgress(() => {
                                             alert("Route change detected. Application will restart");
                                             window.location.reload();
                                         });
@@ -218,7 +207,7 @@ class Comm {
                                 } else {
                                 }
                             });
-                        })
+                        });
                     }
                 }
             }
@@ -234,14 +223,13 @@ class Comm {
                         exceptionOccured = true;
                         if (this.registredEvents.error.length == 0) {
 
-                            this.debugError(e.message + '<hr />' + this.xhr.response);
+                            this.debugError(e.message + "<hr />" + this.xhr.response);
                         } else {
                             if (this.debug) {
-                                this.debugError(e.message + '<hr />' + this.xhr.response);
+                                this.debugError(e.message + "<hr />" + this.xhr.response);
                             }
                             this.callEvent(Comm.EVENTS.ERROR, this.xhr.response);
                         }
-
 
                     }
 
@@ -255,11 +243,10 @@ class Comm {
                         }
                     }
 
-
                 } else {
                     // 0 == abotreted
                     if (this.xhr.status != 0) {
-                        this.debugError(this.xhr.status + '<hr />');
+                        this.debugError(this.xhr.status + "<hr />");
                         this.callEvent(Comm.EVENTS.CONNECTION_ERROR, this.xhr.response);
                     }
                 }
@@ -275,14 +262,14 @@ class Comm {
         }
 
         this.xhr.open(this.method, Comm.basePath + this.url, true);
-        this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        this.xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-        if (this.method == 'POST') {
+        if (this.method == "POST") {
             this.xhr.send(formData);
-        } else if (this.method == 'GET') {
+        } else if (this.method == "GET") {
             this.xhr.send();
-        } else if (this.method == 'PUT') {
-            this.xhr.setRequestHeader('Content-Type', 'application/json');
+        } else if (this.method == "PUT") {
+            this.xhr.setRequestHeader("Content-Type", "application/json");
             this.xhr.send(JSON.stringify(data));
         }
 
@@ -290,19 +277,18 @@ class Comm {
 
     }
 
-
-    static __preparePromise(method, url, data, callback): Promise<any> {
+    public static __preparePromise(method, url, data, callback): Promise<any> {
         return new Promise((resolve, reject) => {
-            let comm = new Comm(url);
+            const comm = new Comm(url);
             comm.method = method;
             if (callback) {
-                comm.on('success', callback);
+                comm.on("success", callback);
             }
-            comm.on('success', (data) => resolve(data));
+            comm.on("success", (data) => resolve(data));
 
-            comm.on('validationErrors', (data) => reject(data));
-            comm.on('connectionError', (data) => reject(data));
-            comm.on('error', (data) => reject(data));
+            comm.on("validationErrors", (data) => reject(data));
+            comm.on("connectionError", (data) => reject(data));
+            comm.on("error", (data) => reject(data));
 
             comm.setData(data);
             comm.send();
@@ -310,17 +296,16 @@ class Comm {
         });
     }
 
-
-    static _post(url, data = {}, callback = null): Promise<any> {
-        return Comm.__preparePromise('POST', url, data, callback);
+    public static _post(url, data = {}, callback = null): Promise<any> {
+        return Comm.__preparePromise("POST", url, data, callback);
     }
 
-    static _get(url, data = {}, callback = null): Promise<any> {
-        return Comm.__preparePromise('GET', url, data, callback);
+    public static _get(url, data = {}, callback = null): Promise<any> {
+        return Comm.__preparePromise("GET", url, data, callback);
     }
 
-    static _put(url, data = {}, callback = null): Promise<any> {
-        return Comm.__preparePromise('PUT', url, data, callback);
+    public static _put(url, data = {}, callback = null): Promise<any> {
+        return Comm.__preparePromise("PUT", url, data, callback);
     }
 }
 
