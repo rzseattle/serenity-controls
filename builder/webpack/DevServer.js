@@ -98,15 +98,13 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
             });
             app.get('/refreshRoute', function (req, response) {
                 response.header('Access-Control-Allow-Origin', '*');
-
-                let routeFile = path.resolve(BASE_PATH + '/data/cache/symfony/route.json');
-                let file = fs.createWriteStream(routeFile);
-
                 let options = { headers: {'Cookie': 'ARROW_DEBUG_WEBPACK_DEV_SERVER=1'}};
 
                 https.get(
                     req.param('location') + "/utils/developer/getRoutes",
                     (res) => {
+                        let routeFile = path.resolve(BASE_PATH + '/data/cache/symfony/route.json');
+                        let file = fs.createWriteStream(routeFile);
                         res.pipe(file);
                         response.send(JSON.stringify(["OK"]));
                     },
