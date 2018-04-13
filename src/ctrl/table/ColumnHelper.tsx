@@ -183,7 +183,84 @@ export class ColumnHelper {
         return new ColumnHelper(data);
     }
 
-    public className(className: string): ColumnHelper {
+    editable(fn, type: string, enabled: boolean): ColumnHelper {
+        if(enabled === false){
+            return this.data;
+        };
+        this.data.template = (value, row, column, rowContainer) => {
+            let changedValue = value;
+            if (column.inEditState == true) {
+                switch (type){
+                    case "text":
+                        return (
+                            <div className={"global-input-column"}>
+                                <input type="text"
+                                       onChange={(e) => changedValue = e.target.value} defaultValue={value}
+                                       autoFocus={true}
+                                       onBlur={() => {
+                                           if (value !== changedValue){
+                                               fn(column, row, changedValue);
+                                           }
+                                           column.inEditState = false;
+                                           rowContainer.forceUpdate();
+                                       }}
+                                />
+                            </div>
+                        );
+                        break;
+                    case "textarea":
+                        return (
+                            <div className={"global-input-column"}>
+                            <textarea
+                                autoFocus={true}
+                                onChange={(e) => changedValue = e.target.value} defaultValue={value}
+                                onBlur={() => {
+                                    if (value !== changedValue){
+                                        fn(column, row, changedValue);
+                                    }
+                                    column.inEditState = false;
+                                    rowContainer.forceUpdate();
+                                }}
+                            />
+                            </div>
+                        );
+                        break;
+                };
+            } else {
+                switch (type) {
+                    case "text":
+                        return (
+                            <div className={"global-input-column global-input-column-disabled"}>
+                                <input type="text"
+                                       defaultValue={value}
+                                       disabled={true}
+                                />
+                            </div>
+                        );
+                        break;
+                    case "textarea":
+                        return (
+                            <div className={"global-input-column global-input-column-disabled"}>
+                            <textarea
+                                autoFocus={true}
+                                defaultValue={value}
+                                disabled={true}
+                            />
+                            </div>
+                        );
+                        break;
+                }
+            }
+        };
+        this.data.events.click.push((row, column, rowContainer) => {
+            column.inEditState = true;
+            rowContainer.forceUpdate();
+        });
+        console.log(this.data);
+        return this;
+    }
+
+    className(className: string): ColumnHelper {
         this.data.class = [className];
         return this;
     }
