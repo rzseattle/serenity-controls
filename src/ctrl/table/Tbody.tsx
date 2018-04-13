@@ -15,10 +15,12 @@ export default class Tbody extends React.Component<any, any> {
             [
                 this.props.data,
                 this.props.selection,
+                this.props.columns,
             ],
             [
                 nextProps.data,
                 nextProps.selection,
+                nextProps.columns,
             ],
         );
     }
@@ -89,7 +91,7 @@ export class Row extends React.PureComponent<any, any> {
     public packFn = (val, column, row) => {
         let templateResult = false;
         if (column.template !== null) {
-            templateResult = column.template(val, row);
+            templateResult = column.template(val, row, column, this);
 
         }
         return (
