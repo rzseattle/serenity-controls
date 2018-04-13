@@ -44,6 +44,7 @@ export class BackofficeStore {
     viewServerErrors = null;
     view: any = null
     viewData: any = {}
+    externalViewData: any = {}
 
     private onViewLoadArr = [];
     private onViewLoadedArr = [];
@@ -122,7 +123,7 @@ export class BackofficeStore {
                 }
             });
             comm.on(Comm.EVENTS.SUCCESS, (data) => {
-                this.viewData = data;
+                this.viewData = Object.assign({}, data, this.externalViewData);
                 this.view = view;
 
                 for (let i = 0; i < this.onViewLoadedArr.length; i++) {
