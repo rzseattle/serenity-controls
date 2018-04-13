@@ -256,7 +256,6 @@ export class ColumnHelper {
             column.inEditState = true;
             rowContainer.forceUpdate();
         });
-        console.log(this.data);
         return this;
     }
 
