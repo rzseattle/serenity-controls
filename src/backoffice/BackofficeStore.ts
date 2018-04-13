@@ -1,15 +1,14 @@
-import Comm from '../lib/Comm'
+import Comm from "../lib/Comm";
 import Router from "frontend/src/backoffice/Router";
-import * as qs from "qs"
+import * as qs from "qs";
 
 declare var window;
 const browserInput = window.reactBackOfficeVar;
 
-
 export class BackofficeStore {
+    public dataUpdateCb: () => any;
 
-
-    getState() {
+    public getState() {
         return {
             basePath: this.basePath,
             viewInput: this.viewInput,
@@ -17,45 +16,39 @@ export class BackofficeStore {
             viewData: this.viewData,
             viewServerErrors: this.viewServerErrors,
             isViewLoading: this.isViewLoading,
-
-        }
+        };
     }
 
-    onDataUpdated(cb) {
+    public onDataUpdated(cb) {
         this.dataUpdateCb = cb;
     }
 
-    dataUpdated() {
-        if (this.dataUpdateCb) {
+    public dataUpdated() {
+        if (this.dataUpdateCb !== undefined) {
             this.dataUpdateCb();
         }
     }
 
-    dataUpdateCb: null
+    public subStore = false;
+    // input added to view request
+    public viewInput = {};
+    public basePath = browserInput.basePath;
 
+    public isViewLoading = true;
 
-    subStore = false;
-    //input added to view request
-    viewInput = {};
-    basePath = browserInput.basePath;
-
-    isViewLoading = true;
-
-    viewServerErrors = null;
-    view: any = null
-    viewData: any = {}
-    externalViewData: any = {}
+    public viewServerErrors = null;
+    public view: any = null;
+    public viewData: any = {};
+    public externalViewData: any = {};
 
     private onViewLoadArr = [];
     private onViewLoadedArr = [];
 
-
-    initRootElement() {
-
+    public initRootElement() {
         if (window.location.hash != "#" && window.location.hash) {
             this.changeView(window.location.hash.replace("#", ""));
         } else {
-            let path = window.location.pathname;
+            const path = window.location.pathname;
             this.changeView(path.replace(browserInput.basePath, ""));
         }
         window.addEventListener("hashchange", this.hashChangeHandler, false);
@@ -63,112 +56,89 @@ export class BackofficeStore {
         Comm.errorFallback = (error) => {
             this.viewServerErrors = error;
             this.dataUpdated();
-        }
+        };
     }
 
-
-    hashChangeHandler = (event) => {
+    public hashChangeHandler = () => {
         if (window.location.hash != "#") {
-            console.log("Hash change - loading");
             this.changeView(window.location.hash.replace("#", ""));
         }
-    }
+    };
 
-    changeView = (path: string, input = null, callback: { (): any } = null) => {
-
+    public changeView = (path: string, input = null, callback: () => any = null) => {
         try {
             this.isViewLoading = true;
             this.viewServerErrors = null;
 
-            //for just reloading props
+            // for just reloading props
             if (path == null) {
                 if (window.location.hash != "#") {
                     path = window.location.hash.replace("#", "");
                 } else {
-                    let [base, query] = window.location.href.split("?");
-                    path = window.location.pathname.replace(browserInput.basePath, "") + (query ? "?" + query : "")
+                    const [base, query] = window.location.href.split("?");
+                    path = window.location.pathname.replace(browserInput.basePath, "") + (query ? "?" + query : "");
                 }
             }
 
             let url = "";
             let view: any;
-            //check path contains query string
+            // check path contains query string
             if (path.indexOf("?") == -1) {
                 view = Router.resolve(path);
-                let query = qs.stringify(input);
+                const query = qs.stringify(input);
                 url = path + (query ? "?" + query : "");
-
             } else {
-                let [purePath, pathQueryString] = path.split("?");
+                const [purePath, pathQueryString] = path.split("?");
                 view = Router.resolve(purePath);
-                let partOfInput = qs.parse(pathQueryString);
-                let query = qs.stringify(Object.assign({}, partOfInput, input));
+                const partOfInput = qs.parse(pathQueryString);
+                const query = qs.stringify(Object.assign({}, partOfInput, input));
                 url = purePath + (query ? "?" + query : "");
             }
 
-
             if (!this.subStore) {
                 window.removeEventListener("hashchange", this.hashChangeHandler);
-                window.location.hash = url
+                window.location.hash = url;
                 setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
             }
 
-            let comm = new Comm(url);
+            const comm = new Comm(url);
 
-            comm.setData({__PROPS_REQUEST__: 1});
+            comm.setData({ __PROPS_REQUEST__: 1 });
             comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
                 this.viewServerErrors = errorResponse;
-                for (let i = 0; i < this.onViewLoadedArr.length; i++) {
-                    this.onViewLoadedArr[i]();
+
+                for (const el of this.onViewLoadedArr) {
+                    el();
                 }
             });
             comm.on(Comm.EVENTS.SUCCESS, (data) => {
                 this.viewData = Object.assign({}, data, this.externalViewData);
                 this.view = view;
 
-                for (let i = 0; i < this.onViewLoadedArr.length; i++) {
-                    this.onViewLoadedArr[i]();
+                for (const el of this.onViewLoadedArr) {
+                    el();
                 }
                 if (callback) {
                     callback();
                 }
             });
             comm.on(Comm.EVENTS.FINISH, () => {
-                this.isViewLoading = false
+                this.isViewLoading = false;
                 this.dataUpdated();
-
             });
             comm.send();
         } catch (e) {
             this.viewServerErrors = "Error loading route: " + path;
             this.view = null;
             this.dataUpdated();
-            //console.log("route not fon")
         }
+    };
 
-
-    }
-
-    onViewLoad = (callback) => {
+    public onViewLoad = (callback) => {
         this.onViewLoadArr.push(callback);
-    }
+    };
 
-    onViewLoaded = (callback) => {
+    public onViewLoaded = (callback) => {
         this.onViewLoadedArr.push(callback);
-    }
-
-
+    };
 }
-
-/*const newStore = () =>{
-    let store = new BackofficeStore;
-    store.subStore = true;
-    return store;
-}*/
-
-
-
-
-
-
-
