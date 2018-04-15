@@ -1,30 +1,27 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {ICommand} from "../lib/ICommand"
+import { ICommand } from "../lib/ICommand";
 
 interface IProps {
     isSearchBoxVisible?: boolean;
     searchPlaceholderText?: string;
-    onSearch?: {(value: string): any};
-    items: Array<ICommand>,
-    rightItems?: Array<ICommand | null>,
+    onSearch?: { (value: string): any };
+    items: Array<ICommand>;
+    rightItems?: Array<ICommand | null>;
 }
 
-
 export class CommandBar extends React.Component<IProps, any> {
-
     public static defaultProps: Partial<IProps> = {
         isSearchBoxVisible: false,
-        searchPlaceholderText: __('Szukaj'),
+        searchPlaceholderText: __("Szukaj"),
         items: [],
-        rightItems: []
+        rightItems: [],
     };
-
 
     constructor(props) {
         super(props);
         this.state = {
-            searchedText: '',
+            searchedText: "",
 
             dropdownHeight: 0,
             dropdownShowed: false,
@@ -33,7 +30,7 @@ export class CommandBar extends React.Component<IProps, any> {
             dropdownPosition: null,
             dropdownElementList: null,
             dropdownLayerHeight: "0px",
-        }
+        };
     }
 
     handleSearchKeyDown(event) {
@@ -42,102 +39,119 @@ export class CommandBar extends React.Component<IProps, any> {
                 this.props.onSearch(event.target.value);
             }
         }
-        this.setState({searchedText: event.target.value})
+        this.setState({ searchedText: event.target.value });
     }
 
     render() {
-        return <div className="w-command-bar">
-            {this.props.isSearchBoxVisible && <div className="search-box">
-                <i className="ms-Icon ms-Icon--Search "></i>
-                <input type="text"
-                       onKeyDown={this.handleSearchKeyDown.bind(this)}
-                       placeholder="Szukaj..."
-
-                       autoFocus/>
-            </div>
-            }
-            <div className="menu-bar">
-                <div className="buttons-left">
-                    {this.props.items.map((item: ICommand, index: number) => {
-                        if (item !== null) {
-                            if (item.subItems !== undefined){
-                                let dropdownHeight = "100px";
-                                let dropdownVisible = "1";
+        return (
+            <div className="w-command-bar">
+                {this.props.isSearchBoxVisible && (
+                    <div className="search-box">
+                        <i className="ms-Icon ms-Icon--Search " />
+                        <input type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Szukaj..." autoFocus />
+                    </div>
+                )}
+                <div className="menu-bar">
+                    <div className="buttons-left">
+                        {this.props.items.map((item: ICommand | false, index: number) => {
+                            if (item !== null && item !== false) {
+                                if (item.subItems !== undefined) {
+                                    let dropdownHeight = "100px";
+                                    let dropdownVisible = "1";
                                     return (
-                                        <button className={"bar-dropdown"} key={item.key} onClick={(event) => {
-                                            const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
+                                        <button
+                                            className={"bar-dropdown"}
+                                            key={item.key}
+                                            onClick={(event) => {
+                                                const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
 
-                                            const parent = ReactDOM.findDOMNode(this).parentNode.getBoundingClientRect();
-                                            this.setState({
-                                                dropdownElementList: item.subItems,
-                                                dropdownPosition: elementPosittion.left,
-                                                dropdownLayerHeight: parent.height,
-                                            })
-                                            if (this.state.dropdownHeight > 1) {
+                                                const parent = ReactDOM.findDOMNode(this).parentNode.getBoundingClientRect();
                                                 this.setState({
-                                                    dropdownHeight: 0,
-                                                    dropdownVisible: 0,
-                                                    dropdownLayerVisible: "none",
-                                                    dropdownShowed: false,
-                                                })
-                                            } else {
-                                                this.setState({
-                                                    dropdownHeight: 500,
-                                                    dropdownVisible: 1,
-                                                    dropdownLayerVisible: "block",
-                                                    dropdownShowed: true,
-                                                })
-                                            }
-                                        }}>
-                                            <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label} <i
-                                            className={"ms-Icon ms-Icon--ChevronDown"}></i>
+                                                    dropdownElementList: item.subItems,
+                                                    dropdownPosition: elementPosittion.left,
+                                                    dropdownLayerHeight: parent.height,
+                                                });
+                                                if (this.state.dropdownHeight > 1) {
+                                                    this.setState({
+                                                        dropdownHeight: 0,
+                                                        dropdownVisible: 0,
+                                                        dropdownLayerVisible: "none",
+                                                        dropdownShowed: false,
+                                                    });
+                                                } else {
+                                                    this.setState({
+                                                        dropdownHeight: 500,
+                                                        dropdownVisible: 1,
+                                                        dropdownLayerVisible: "block",
+                                                        dropdownShowed: true,
+                                                    });
+                                                }
+                                            }}
+                                        >
+                                            <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label} <i className={"ms-Icon ms-Icon--ChevronDown"} />
                                         </button>
-                                    )
-
-                            } else {
-                            return <a key={item.key} onClick={item.onClick} >
-                                <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
-                            </a>
+                                    );
+                                } else {
+                                    return (
+                                        <a key={item.key} onClick={item.onClick}>
+                                            <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label}
+                                        </a>
+                                    );
+                                }
                             }
-                        }
-                        return null;
-                    })}
-
-                </div>
-                <div className="buttons-right">
-                    {this.props.rightItems.map((item: ICommand, index: number) => {
-                        if (item !== null) {
-                            return <a key={item.key} onClick={item.onClick} className="ms-font-m">
-                                <i className={"ms-Icon ms-Icon--" + item.icon}></i> {item.label}
-                            </a>
-                        }
-                        return null;
-                    })}
-                </div>
-                <div className={"dropdown-layer"} style={{display: this.state.dropdownLayerVisible, height: this.state.dropdownLayerHeight}} onClick={() => {
-                    this.setState({
-                        dropdownLayerVisible: "none",
-                        dropdownHeight: 0,
-                        dropdownVisible: 0,
-                        dropdownShowed: false,
-                    })
-                }}></div>
-
-                {this.state.dropdownShowed == true &&
-                    <div className={"bar-dropdown-list"} style={{maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition - 60}}>
-                        {this.state.dropdownElementList.map((element) => {
-                            if(element == null){
-                                return null;
-                            }
-                            if (element.type !== "input"){
-                                return <div className={"bar-dropdown-item"} key={element.key} onClick={element.onClick}><i className={"ms-Icon ms-Icon--" + element.icon}></i><span>{element.label}</span></div>
-                            } else {
-                                return <div className={"bar-dropdown-item input-inside"} key={element.key} onChange={element.onChange}><input type="text" placeholder={"Wprowadź nazwe nowej grupy produktów"}/></div>
-                            }
+                            return null;
                         })}
                     </div>
-                }
+                    <div className="buttons-right">
+                        {this.props.rightItems.map((item: ICommand | false, index: number) => {
+                            if (item !== null && item !== false) {
+                                return (
+                                    <a key={item.key} onClick={item.onClick} className="ms-font-m">
+                                        <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label}
+                                    </a>
+                                );
+                            }
+                            return null;
+                        })}
+                    </div>
+                    <div
+                        className={"dropdown-layer"}
+                        style={{ display: this.state.dropdownLayerVisible, height: this.state.dropdownLayerHeight }}
+                        onClick={() => {
+                            this.setState({
+                                dropdownLayerVisible: "none",
+                                dropdownHeight: 0,
+                                dropdownVisible: 0,
+                                dropdownShowed: false,
+                            });
+                        }}
+                    />
+
+                    {this.state.dropdownShowed == true && (
+                        <div className={"bar-dropdown-list"} style={{ maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition - 60 }}>
+                            {this.state.dropdownElementList.map((element) => {
+                                if (element == null) {
+                                    return null;
+                                }
+                                if (element.type !== "input") {
+                                    return (
+                                        <div className={"bar-dropdown-item"} key={element.key} onClick={element.onClick}>
+                                            <i className={"ms-Icon ms-Icon--" + element.icon} />
+                                            <span>{element.label}</span>
+                                        </div>
+                                    );
+                                } else {
+                                    return (
+                                        <div className={"bar-dropdown-item input-inside"} key={element.key} onChange={element.onChange}>
+                                            <input type="text" placeholder={"Wprowadź nazwe nowej grupy produktów"} />
+                                        </div>
+                                    );
+                                }
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        );
     }
 }

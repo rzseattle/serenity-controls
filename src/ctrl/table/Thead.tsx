@@ -167,7 +167,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                         <div className="w-filter-openable-trigger" onClick={this.handleTriggerClicked.bind(this)}><i className="ms-Icon ms-Icon--Filter"></i></div>
                     }
                     {this.state.show ?
-                        <div className="w-filter-openable-body" ref={el => this.body = el}>
+                        <div className={"w-filter-openable-body " + (filters.length>3?"w-filter-openable-body-grid":"")} ref={el => this.body = el}>
                             {filters.map(entry => {
                                 let Filter = entry.component;
                                 return <div key={entry.field}>

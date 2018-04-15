@@ -30,6 +30,22 @@
             font-size: 18px
             font-weight: lighter
             margin-left: 5px
+        .w-filter-openable-title
+            text-align: left
+            margin-top: 5px
+            font-size: 15px
+            font-weight: bold
+
+    .w-filter-openable-body-grid
+        width: 600px
+        >div
+            width: calc( 50% - 10px )
+            float: left
+            &:nth-child(odd)
+                +clearfix
+            &:nth-child(even)
+                +clearfix
+                margin-left: 20px
 
     &.w-filter-openable-opened
         .w-filter-openable-trigger

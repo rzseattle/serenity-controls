@@ -1,21 +1,20 @@
 import * as React from "react";
-import * as ReactDOM from 'react-dom';
-import ResizeObserver from 'resize-observer-polyfill';
-import {Icon} from "./Icon";
+import * as ReactDOM from "react-dom";
+import ResizeObserver from "resize-observer-polyfill";
+import { Icon } from "./Icon";
 
 //import * as TweenLite from 'gsap/TweenLite'
 
-
 interface IShadowProps {
-    visible?: boolean,
-    container?: { (): HTMLElement },
-    loader?: boolean
+    visible?: boolean;
+    container?: { (): HTMLElement };
+    loader?: boolean;
 }
 
 class Shadow extends React.Component<IShadowProps, any> {
     public static defaultProps: IShadowProps = {
         visible: true,
-        loader: false
+        loader: false,
     };
 
     constructor(props) {
@@ -23,61 +22,62 @@ class Shadow extends React.Component<IShadowProps, any> {
     }
 
     render() {
-        return <div>
-            {this.props.visible && <div className="w-shadow">
-                {this.props.loader && <span className="loader loader-x3">
-                <i></i>
-                <i></i>
-                <i></i>
-                <i></i>
-            </span>}
-            </div>}
-        </div>;
+        return (
+            <div>
+                {this.props.visible && (
+                    <div className="w-shadow">
+                        {this.props.loader && (
+                            <span className="loader loader-x3">
+                                <i />
+                                <i />
+                                <i />
+                                <i />
+                            </span>
+                        )}
+                    </div>
+                )}
+            </div>
+        );
     }
-
 }
 
-
-interface IModalProps {
-    show: boolean,
-    onShow?: { (): any },
-    onHide?: { (): any },
-    container?: { (): HTMLElement },
-    target?: { (): HTMLElement },
-    positionOffset?: number,
-    recalculatePosition?: boolean,
-    showHideLink?: boolean,
-    title?: string,
-    shadow?: boolean,
-    layer?: boolean,
-    top?: string | number,
-    left?: string | number,
-    bottom?: string | number,
-    right?: string | number,
-    className?: string,
-    children: any,
-    orientation?: string
-    onOrientationChange?: { (type): any }
-
+export interface IModalProps {
+    show: boolean;
+    onShow?(): any;
+    onHide?(): any;
+    container?(): HTMLElement;
+    target?(): HTMLElement;
+    positionOffset?: number;
+    recalculatePosition?: boolean;
+    showHideLink?: boolean;
+    title?: string;
+    shadow?: boolean;
+    layer?: boolean;
+    top?: string | number;
+    left?: string | number;
+    bottom?: string | number;
+    right?: string | number;
+    className?: string;
+    children: any;
+    orientation?: string;
+    onOrientationChange?(type: string): any;
 }
 
-interface IModalState {
-}
+interface IModalState {}
 
-let modalRoot = document.getElementById('modal-root');
+let modalRoot = document.getElementById("modal-root");
 
 class Modal extends React.Component<IModalProps, IModalState> {
     el: HTMLDivElement;
     isObserved: boolean;
     modalBody: HTMLDivElement;
 
-
     static defaultProps = {
         show: false,
         positionOffset: 5,
         recalculatePosition: true,
         shadow: true,
-        layer: true
+        layer: true,
     };
 
     constructor(props) {
@@ -85,20 +85,17 @@ class Modal extends React.Component<IModalProps, IModalState> {
         this.state = {
             opened: props.opened,
             modalStyle: {
-                opacity: 0
-            }
+                opacity: 0,
+            },
         };
-        this.el = document.createElement('div');
+        this.el = document.createElement("div");
 
         if (modalRoot == null) {
-            modalRoot = document.getElementById('modal-root');
+            modalRoot = document.getElementById("modal-root");
         }
-
     }
 
-
     handleClose() {
-
         if (this.props.onHide) {
             this.props.onHide();
         }
@@ -112,7 +109,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
 
         const ro = new ResizeObserver((entries, observer) => {
             for (const entry of entries) {
-                const {left, top, width, height} = entry.contentRect;
+                const { left, top, width, height } = entry.contentRect;
 
                 if (this.props.recalculatePosition) {
                     this.calculatePos();
@@ -138,9 +135,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
                  }
              });
          }*/
-
     }
-
 
     calculatePosition() {
         this.calculatePos();
@@ -170,8 +165,6 @@ class Modal extends React.Component<IModalProps, IModalState> {
     }
 
     calculatePos() {
-
-
         let container = this.props.container ? this.props.container() : document.body;
         let containerSize = container.getBoundingClientRect();
 
@@ -196,40 +189,37 @@ class Modal extends React.Component<IModalProps, IModalState> {
                     }
                 }
 
-                node.style['top'] = top + 'px';
-                node.style['left'] = left + 'px';
+                node.style["top"] = top + "px";
+                node.style["left"] = left + "px";
             } else {
-
-                let x: number = Math.round(Math.min(data.width / 2, (window.innerWidth) / 2 - 5));
-                let y = Math.round(Math.min(data.height / 2, (window.innerHeight / 2) - 5));
+                let x: number = Math.round(Math.min(data.width / 2, window.innerWidth / 2 - 5));
+                let y = Math.round(Math.min(data.height / 2, window.innerHeight / 2 - 5));
                 x = this.props.left != undefined || this.props.right != undefined ? 0 : x;
                 y = this.props.top != undefined || this.props.bottom != undefined ? 0 : y;
-                node.style['transform'] = `translate(-${x}px, -${y}px)`;
-
+                node.style["transform"] = `translate(-${x}px, -${y}px)`;
 
                 if (this.props.left != undefined) {
-                    node.style['left'] = this.props.left + (Number.isNaN(this.props.left as any) ? '' : 'px');
+                    node.style["left"] = this.props.left + (Number.isNaN(this.props.left as any) ? "" : "px");
                 }
                 if (this.props.right != undefined) {
-                    node.style['right'] = this.props.right + (Number.isNaN(this.props.right as any) ? '' : 'px');
+                    node.style["right"] = this.props.right + (Number.isNaN(this.props.right as any) ? "" : "px");
                 }
                 if (this.props.left == undefined && this.props.right == undefined) {
-                    node.style['left'] = '50%';
+                    node.style["left"] = "50%";
                 }
 
                 if (this.props.top != undefined) {
-                    node.style['top'] = this.props.top + (Number.isNaN(this.props.top as any) ? '' : 'px');
+                    node.style["top"] = this.props.top + (Number.isNaN(this.props.top as any) ? "" : "px");
                 }
                 if (this.props.bottom != undefined) {
-                    node.style['bottom'] = this.props.bottom + (Number.isNaN(this.props.bottom as any) ? '' : 'px');
+                    node.style["bottom"] = this.props.bottom + (Number.isNaN(this.props.bottom as any) ? "" : "px");
                 }
 
                 if (this.props.top == undefined && this.props.bottom == undefined) {
-                    node.style['top'] = '50%';
+                    node.style["top"] = "50%";
                 }
             }
         }
-
     }
 
     shouldComponentUpdate(nextProps: IModalProps) {
@@ -238,31 +228,31 @@ class Modal extends React.Component<IModalProps, IModalState> {
     }
 
     render() {
-
         let p = this.props;
 
-        return ReactDOM.createPortal(<div
-            className={(this.props.layer ? 'w-modal-container ' : '') + p.className || ""}
-            style={{
-                display: (this.props.show ? "block" : "none"),
-                backgroundColor: (this.props.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent"),
-            }}
-            onClick={this.handleClose.bind(this)}
-        >
-
-            <div className="w-modal" ref={el => this.modalBody = el} onClick={(e) => e.stopPropagation()}>
-                {p.showHideLink &&
-                <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}>
-                    <Icon name="ChromeClose"/>
-                </a>}
-                {p.title && <div className="w-modal-title">{p.title}</div>}
-                {this.props.show ? p.children : null}
-            </div>
-        </div>, this.el);
+        return ReactDOM.createPortal(
+            <div
+                className={(this.props.layer ? "w-modal-container " : "") + p.className || ""}
+                style={{
+                    display: this.props.show ? "block" : "none",
+                    backgroundColor: this.props.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
+                }}
+                onClick={this.handleClose.bind(this)}
+            >
+                <div className="w-modal" ref={(el) => (this.modalBody = el)} onClick={(e) => e.stopPropagation()}>
+                    {p.showHideLink && (
+                        <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}>
+                            <Icon name="ChromeClose" />
+                        </a>
+                    )}
+                    {p.title && <div className="w-modal-title">{p.title}</div>}
+                    {this.props.show ? p.children : null}
+                </div>
+            </div>,
+            this.el,
+        );
     }
-
 }
-
 
 class ConfirmModal extends React.Component<any, any> {
     promise: Promise<{}>;
@@ -294,34 +284,35 @@ class ConfirmModal extends React.Component<any, any> {
         let modalProps: any = Object.assign({}, this.props);
         delete modalProps.cleanup;
 
-        return <Modal {...modalProps} className="w-modal-confirm" show={true}>
-            <div style={{padding: 15}}>{this.props.children}</div>
-            <div style={{padding: 10, paddingTop: 0, textAlign: 'right'}}>
-                <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">ok
-                </button>
-                <button onClick={this.handleAbort.bind(this)} className="btn btn-default">anuluj
-                </button>
-            </div>
-        </Modal>;
+        return (
+            <Modal {...modalProps} className="w-modal-confirm" show={true}>
+                <div style={{ padding: 15 }}>{this.props.children}</div>
+                <div style={{ padding: 10, paddingTop: 0, textAlign: "right" }}>
+                    <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">
+                        ok
+                    </button>
+                    <button onClick={this.handleAbort.bind(this)} className="btn btn-default">
+                        anuluj
+                    </button>
+                </div>
+            </Modal>
+        );
     }
-
 }
-
 
 interface IConfirmConf {
-    container?: { (): HTMLElement },
-    target?: { (): HTMLElement },
-    title?: string,
-    showHideLink?: boolean
+    container?: { (): HTMLElement };
+    target?: { (): HTMLElement };
+    title?: string;
+    showHideLink?: boolean;
 }
 
-
 const confirm = async (message, options: IConfirmConf = {}) => {
-    let props = {...options};
+    let props = { ...options };
 
     let parent = options.container ? options.container() : document.body;
 
-    const wrapper = parent.appendChild(document.createElement('div'));
+    const wrapper = parent.appendChild(document.createElement("div"));
     let cleanup = () => {
         ReactDOM.unmountComponentAtNode(wrapper);
         wrapper.remove();
@@ -329,67 +320,59 @@ const confirm = async (message, options: IConfirmConf = {}) => {
 
     let resolver;
     let promise = new Promise((resolve, reject) => {
-        resolver = resolve
+        resolver = resolve;
     });
 
-
-    let x: any = <ConfirmModal {...props} onOk={resolver} cleanup={cleanup} >
-            <div>
-                {message}
-            </div>
+    let x: any = (
+        <ConfirmModal {...props} onOk={resolver} cleanup={cleanup}>
+            <div>{message}</div>
         </ConfirmModal>
-    ;
+    );
 
-    ReactDOM.render(x, wrapper)
-
-
+    ReactDOM.render(x, wrapper);
 
     return promise;
 };
 
-
 export const tooltip = (content, options) => {
-    let props = {...options};
+    let props = { ...options };
 
     let parent = document.body;
 
-    const wrapper = parent.appendChild(document.createElement('div'));
+    const wrapper = parent.appendChild(document.createElement("div"));
     let cleanup = () => {
         ReactDOM.unmountComponentAtNode(wrapper);
         wrapper.remove();
     };
 
-    const component = ReactDOM.render(<Tooltip {...props} >
-        <div>
-            {content}
-        </div>
-    </Tooltip>, wrapper);
-
+    const component = ReactDOM.render(
+        <Tooltip {...props}>
+            <div>{content}</div>
+        </Tooltip>,
+        wrapper,
+    );
 
     return cleanup;
 };
 
-
 class Tooltip extends React.Component<any, any> {
-
     public static defaultProps = {
         layer: true,
-        orientation: 'bottom left edge'
-    }
-
+        orientation: "bottom left edge",
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             brakeLeft: 0,
-            orientation: this.props.orientation
+            orientation: this.props.orientation,
         };
     }
 
     componentDidMount() {
         let targetPos = this.props.target().getBoundingClientRect();
-        let center = Math.round(/*targetPos.left -*/ (targetPos.width / 2));
-        this.setState({brakeLeft: center});
+        let center = Math.round(/*targetPos.left -*/ targetPos.width / 2);
+        this.setState({ brakeLeft: center });
     }
 
     componentDidUpdate() {
@@ -399,7 +382,7 @@ class Tooltip extends React.Component<any, any> {
     }
 
     handleBlur() {
-        this.setState({opened: false});
+        this.setState({ opened: false });
     }
 
     orientationChange(type) {
@@ -408,25 +391,22 @@ class Tooltip extends React.Component<any, any> {
 
     render() {
         let p = this.props;
-        return (<Modal
-            show={true}
-            target={this.props.target}
-            shadow={false}
-            layer={this.props.layer}
-            onHide={this.props.onHide}
-            className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
-            onOrientationChange={this.orientationChange.bind(this)}
-            orientation={this.state.orientation}
-        >
-            <div className="w-toolbar-brake" style={{left: this.state.brakeLeft}}/>
-            <div className="w-toolbar-content">
-                {p.children}
-            </div>
-
-
-        </Modal>);
+        return (
+            <Modal
+                show={true}
+                target={this.props.target}
+                shadow={false}
+                layer={this.props.layer}
+                onHide={this.props.onHide}
+                className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
+                onOrientationChange={this.orientationChange.bind(this)}
+                orientation={this.state.orientation}
+            >
+                <div className="w-toolbar-brake" style={{ left: this.state.brakeLeft }} />
+                <div className="w-toolbar-content">{p.children}</div>
+            </Modal>
+        );
     }
 }
 
-
-export {Modal, Shadow, Tooltip, confirm};
+export { Modal, Shadow, Tooltip, confirm };
