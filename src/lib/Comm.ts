@@ -163,6 +163,7 @@ class Comm {
 
         this.xhr.onreadystatechange = () => {
             if (!PRODUCTION) {
+                //console.log("phpstorm://open?url=file://C:\\dev\\www\\esotiq.com//vendor/arrow/shop/views/admin/orders/orderscontroller/index.component.tsx&line=1")
                 if (this.xhr.readyState == this.xhr.HEADERS_RECEIVED) {
                     const hash = this.xhr.getResponseHeader("ARROW_DEBUG_ROUTE_HASH");
 

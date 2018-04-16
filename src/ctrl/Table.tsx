@@ -52,7 +52,7 @@ interface ITableProps {
     additionalConditions?: any;
     filters?: { [key: string]: IFilterValue };
     onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any;
-    onDataChange?: (data: any) => any;
+    onDataChange?: (data: any, count: number) => any;
     data?: ITableDataInput;
     infoRow?: ICellTemplate;
 
@@ -327,7 +327,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 allChecked: false,
             }, callback);
             if (this.props.onDataChange) {
-                this.props.onDataChange(input.data.slice(0));
+                this.props.onDataChange(input.data.slice(0), input.countAll );
             }
 
         };
