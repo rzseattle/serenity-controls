@@ -136,14 +136,14 @@ export class CommandBar extends React.Component<IProps, any> {
                                 if (element.type !== "input") {
                                     return (
                                         <div className={"bar-dropdown-item"} key={element.key} onClick={element.onClick}>
-                                            <i className={"ms-Icon ms-Icon--" + element.icon} />
+                                            <i className={"ms-Icon ms-Icon--" + element.icon}/>
                                             <span>{element.label}</span>
                                         </div>
                                     );
                                 } else {
                                     return (
                                         <div className={"bar-dropdown-item input-inside"} key={element.key} onChange={element.onChange}>
-                                            <input type="text" placeholder={element.placeholder} />
+                                            <input type="text" placeholder={element.placeholder}/>
                                         </div>
                                     );
                                 }
