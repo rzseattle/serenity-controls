@@ -188,8 +188,13 @@ export class ColumnHelper {
         return new ColumnHelper(data);
     }
 
+<<<<<<< HEAD
     editable(fn, type: string, enabled: boolean): ColumnHelper {
         if (enabled === false) {
+=======
+    editable(fn, type: string, enabled: boolean, selectData: Array | { ( row: any ): any } ): ColumnHelper {
+        if(enabled === false){
+>>>>>>> Added selectable column in helper
             return this.data;
         }
         this.data.template = (value, row, column, rowContainer) => {
@@ -233,7 +238,24 @@ export class ColumnHelper {
                             </div>
                         );
                         break;
+<<<<<<< HEAD
                 }
+=======
+                    case "select":
+                        return (
+                            <div className={"global-input-column"}>
+                                <BSelect options={selectData(row)}
+                                    onChange={() => {
+                                        fn(column, row, changedValue);
+                                        column.inEditState = false;
+                                        rowContainer.forceUpdate();
+                                    }}
+                                />
+                            </div>
+                        );
+                        break;
+                };
+>>>>>>> Added selectable column in helper
             } else {
                 switch (type) {
                     case "text":
