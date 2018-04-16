@@ -143,7 +143,7 @@ export class CommandBar extends React.Component<IProps, any> {
                                 } else {
                                     return (
                                         <div className={"bar-dropdown-item input-inside"} key={element.key} onChange={element.onChange}>
-                                            <input type="text" placeholder={"Wprowadź nazwe nowej grupy produktów"} />
+                                            <input type="text" placeholder={element.placeholder} />
                                         </div>
                                     );
                                 }
