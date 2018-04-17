@@ -2,6 +2,9 @@ import NotificationSystem from "react-notification-system";
 import React from "react";
 import { Copyable } from "frontend/src/ctrl/Copyable";
 import { IModalProps } from "../ctrl/Overlays";
+import RouterException from "../backoffice/RouterException";
+import router from "../backoffice/Router";
+import { RouteVisualization } from "../backoffice/RouteVisualization";
 
 declare var PRODUCTION: boolean;
 declare var window: any;
@@ -51,6 +54,7 @@ interface IProps {
     onLoadEnd(): any;
 
     setPanelOption(name: string, value: string | number | boolean, callback?: () => any): any;
+
     openModal(route, input?: any, modalProps?: Partial<IModalProps>, props?: any): any;
 }
 
@@ -148,11 +152,23 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
                 <NotificationSystem ref={(ns) => (this.notificationSystem = ns)} />
-                {this.props.context.viewServerErrors != null && (
+                {this.props.context.viewServerErrors !== null && (
                     <div style={{ margin: 10, padding: 10, backgroundColor: "white" }}>
-                        <pre>{this.props.context.viewServerErrors.url}</pre>
-                        <pre style={{ maxHeight: 200, overflow: "auto" }}>{JSON.stringify(this.props.context.viewServerErrors.input, null, 2)}</pre>
-                        <div style={{ padding: 10, backgroundColor: "white", margin: 15 }} dangerouslySetInnerHTML={{ __html: this.props.context.viewServerErrors.response }} />
+                        {this.props.context.viewServerErrors.url !== undefined && (
+                            <div>
+                                <pre>{this.props.context.viewServerErrors.url}</pre>
+                                <pre style={{ maxHeight: 200, overflow: "auto" }}>{JSON.stringify(this.props.context.viewServerErrors.input, null, 2)}</pre>
+                                <div style={{ padding: 10, backgroundColor: "white", margin: 15 }} dangerouslySetInnerHTML={{ __html: this.props.context.viewServerErrors.response }} />
+                            </div>
+                        )}
+                        {typeof this.props.context.viewServerErrors === "string" && <div>{this.props.context.viewServerErrors}</div>}
+                        {this.props.context.viewServerErrors instanceof RouterException && (
+                            <div>
+                                {this.props.context.viewServerErrors.message}
+                                <hr />
+                                <RouteVisualization />
+                            </div>
+                        )}
                     </div>
                 )}
 

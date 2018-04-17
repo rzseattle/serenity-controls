@@ -128,7 +128,7 @@ export class BackofficeStore {
             });
             comm.send();
         } catch (e) {
-            this.viewServerErrors = "Error loading route: " + path;
+            this.viewServerErrors = e;
             this.view = null;
             this.dataUpdated();
         }
