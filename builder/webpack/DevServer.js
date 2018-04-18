@@ -1,44 +1,45 @@
-const path = require('path');
-const fs = require('fs');
-const https = require('https');
+const path = require("path");
+const fs = require("fs");
+const https = require("https");
 
-var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
-
-
+var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
     const generateSign = () => {
         const selfsigned = require("selfsigned");
-        const attrs = [{name: "commonName", value: "localhost"}];
+        const attrs = [{ name: "commonName", value: "localhost" }];
         const pems = selfsigned.generate(attrs, {
             algorithm: "sha256",
             keySize: 2048,
-            extensions: [{
-                name: "subjectAltName",
-                altNames: [{
-                    type: 2, // DNS
-                    value: "localhost"
-                }]
-                , cA: true
-            }]
+            extensions: [
+                {
+                    name: "subjectAltName",
+                    altNames: [
+                        {
+                            type: 2, // DNS
+                            value: "localhost",
+                        },
+                    ],
+                    cA: true,
+                },
+            ],
         });
         if (!fs.existsSync(BASE_PATH + "/build/js/ssl")) {
-            fs.mkdirSync(BASE_PATH + "/build/js/ssl")
-            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.crt", pems.cert, {encoding: "utf-8"});
-            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.key", pems.private, {encoding: "utf-8"});
+            fs.mkdirSync(BASE_PATH + "/build/js/ssl");
+            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.crt", pems.cert, { encoding: "utf-8" });
+            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.key", pems.private, { encoding: "utf-8" });
         }
-    }
+    };
 
     generateSign();
-
 
     conf = {};
 
     conf.output = {
-        filename: 'bundle.js',
-        publicPath: 'http' + (HTTPS ? 's' : '') + `://127.0.0.1:${PORT}/`,
-        devtoolModuleFilenameTemplate: function (info) {
+        filename: "bundle.js",
+        publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,
+        devtoolModuleFilenameTemplate: function(info) {
             return path.resolve(BASE_PATH, info.absoluteResourcePath);
-        }
-    }
+        },
+    };
     let devEntries = [];
 
     for (let i in ENTRY_POINTS) {
@@ -46,7 +47,6 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
     }
 
     conf.devServer = {
-
         //https: HTTPS,
         https: {
             key: fs.readFileSync(BASE_PATH + "/build/js/ssl/server.key"),
@@ -57,11 +57,11 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         //pfxPassphrase: 'xxx123',
         hot: true,
         port: PORT,
-        publicPath: 'http' + (HTTPS ? 's' : '') + `://127.0.0.1:${PORT}/`,
-        host: '127.0.0.1',
+        publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,
+        host: "127.0.0.1",
 
-
-        stats: "minimal", /*{
+        stats:
+            "minimal" /*{
             colors: true,
             hash: false,
             version: false,
@@ -76,40 +76,38 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
             errorDetails: false,
             warnings: false,
             publicPath: false
-        },*/
-
+        },*/,
 
         disableHostCheck: true,
 
         headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/javascript'
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/javascript",
         },
 
         before: (app) => {
+            const busboyBodyParser = require("busboy-body-parser");
+            app.use(busboyBodyParser({ limit: "5mb", multi: true }));
 
-            /*const busboyBodyParser = require('busboy-body-parser');
-            app.use(busboyBodyParser({limit: '5mb', multi: true}));*/
-
-
-            app.get('/debug/getFile', function (req, res) {
-                res.header('Access-Control-Allow-Origin', '*');
-                res.send(fs.readFileSync(req.param('file')));
+            app.get("/debug/getFile", function(req, res) {
+                res.header("Access-Control-Allow-Origin", "*");
+                res.send(fs.readFileSync(req.param("file")));
             });
-            app.get('/refreshRoute', function (req, response) {
-                response.header('Access-Control-Allow-Origin', '*');
-                let options = { headers: {'Cookie': 'ARROW_DEBUG_WEBPACK_DEV_SERVER=1'}};
 
-                https.get(
-                    req.param('location') + "/utils/developer/getRoutes",
-                    (res) => {
-                        let routeFile = path.resolve(BASE_PATH + '/data/cache/symfony/route.json');
-                        let file = fs.createWriteStream(routeFile);
-                        res.pipe(file);
-                        response.send(JSON.stringify(["OK"]));
-                    },
-                    options
-                )
+            app.options("/*", function(req, res, next) {
+                res.header("Access-Control-Allow-Origin", "*");
+                res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+                res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
+                res.send(200);
+            });
+
+            app.post("/refreshRoute", function(req, response) {
+                response.header("Access-Control-Allow-Origin", "*");
+                let routeFile = path.resolve(BASE_PATH + "/data/cache/symfony/route.json");
+                let file = fs.writeFileSync(routeFile, req.body.data);
+
+                response.send(JSON.stringify({ status: "OK" }));
+                return;
 
 
             });
@@ -145,44 +143,33 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                     }
                 ));
             });*/
-
-        }
+        },
     };
-    conf.entry = [
-
-        require.resolve('react-hot-loader/patch'),
-
-    ].concat(devEntries);
+    conf.entry = [require.resolve("react-hot-loader/patch")].concat(devEntries);
 
     conf.plugins = [
-
-
+        new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         // enable HMR globally
 
-        new webpack.NamedModulesPlugin(),
         // prints more readable module names in the browser console on HMR updates
 
-        new webpack.NoEmitOnErrorsPlugin(),
+        //new webpack.NoEmitOnErrorsPlugin(),
         // do not emit compiled assets that include errors
         new webpack.DefinePlugin({
             PRODUCTION: JSON.stringify(false),
             LANGUAGE: JSON.stringify(LANGUAGE),
             DEV_PROPERIES: JSON.stringify({
                 app_domain: DOMAIN,
-                build_domain: JSON.stringify('http' + (HTTPS ? 's' : '') + `://localhost:${PORT}/`),
-                project_dir: BASE_PATH
+                build_domain: JSON.stringify("http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`),
+                project_dir: BASE_PATH,
             }),
 
-            'process.env.NODE_ENV': JSON.stringify('development')
-        })
-
-
+            "process.env.NODE_ENV": JSON.stringify("development"),
+        }),
     ];
 
     return conf;
-
-}
-
+};
 
 module.exports = getDevServerConf;

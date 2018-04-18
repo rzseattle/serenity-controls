@@ -17,7 +17,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
 
             const currentRuteFileSize = fs.statSync(routeFile).size;
 
-            if (currentRuteFileSize != lastKnownSizeOfRouteFile) {
+            if (currentRuteFileSize != lastKnownSizeOfRouteFile || true) {
                 lastKnownSizeOfRouteFile = currentRuteFileSize;
 
 
@@ -57,7 +57,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                         }
                     }
                 }
-
+                console.log("podamieniam");
                 ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
                 fs.writeFileSync(targetfilename, ComponentFileContent);
                 fs.writeFileSync(SAVE_SASS_TARGET, SassFileContent);
@@ -78,9 +78,9 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         }
     }
 
-
+    console.log("startuje observera");
     const linkArrowDir = () => {
-
+console.log("uruchamiam");
         newRouteFileGenerator();
     };
 

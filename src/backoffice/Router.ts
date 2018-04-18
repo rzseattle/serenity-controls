@@ -3,8 +3,28 @@ import * as ViewsRoute from "../../../../build/js/tmp/components-route.include.j
 import RouterException from "./RouterException";
 
 class Router {
+    public routes = ViewsRoute.ViewFileMap;
+    public observers = [];
+
+    constructor() {
+        if (module.hot) {
+            module.hot.accept("../../../../build/js/tmp/components-route.include.js", (module, x) => {
+                this.routes = require("../../../../build/js/tmp/components-route.include.js").ViewFileMap;
+                console.log(this.routes);
+                for (const cb of this.observers) {
+                    cb();
+                }
+            });
+            return;
+        }
+    }
+
+    public onRoutesChanges(callback) {
+        this.observers.push(callback);
+    }
+
     public getRouting = () => {
-        return ViewsRoute.ViewFileMap;
+        return this.routes;
     };
 
     public resolve = (path) => {
@@ -16,18 +36,18 @@ class Router {
             return false;
         }
 
-        //dynamic path matching
+        //dynamic path matching 12
         for (const i in ViewsRoute.ViewFileMap) {
             const el = ViewsRoute.ViewFileMap[i];
             if (el.component && i.indexOf("{") != -1) {
                 const regexp = new RegExp(
                     "^" +
-                    i
-                    // repplace all {var} to (.+?)
-                        .replace(/\{.+?\}/g, "(.+?)")
-                        // replace all / to _
-                        .replace(/\//g, "/") +
-                    "$",
+                        i
+                            // repplace all {var} to (.+?)
+                            .replace(/\{.+?\}/g, "(.+?)")
+                            // replace all / to _
+                            .replace(/\//g, "/") +
+                        "$",
                 );
                 if (path.match(regexp) !== null) {
                     let tmp = i.split("/{")[0].split("/");
@@ -55,9 +75,8 @@ class Router {
                 console.log(extendedInfo);*/
             } else {
                 console.error("Route not fount: " + pathInfo);
-                console.log(ViewsRoute.ViewFileMap);
+                // console.log(ViewsRoute.ViewFileMap);
             }
-
 
             throw new RouterException("Route not found :" + path);
         }

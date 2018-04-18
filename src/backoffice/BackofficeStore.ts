@@ -16,6 +16,7 @@ export class BackofficeStore {
             viewData: this.viewData,
             viewServerErrors: this.viewServerErrors,
             isViewLoading: this.isViewLoading,
+            isPackageCompiling: this.isPackageCompiling,
         };
     }
 
@@ -35,6 +36,7 @@ export class BackofficeStore {
     public basePath = browserInput.basePath;
 
     public isViewLoading = true;
+    public isPackageCompiling = false;
 
     public viewServerErrors = null;
     public view: any = null;
@@ -57,6 +59,17 @@ export class BackofficeStore {
             this.viewServerErrors = error;
             this.dataUpdated();
         };
+        if (module.hot) {
+            module.hot.addStatusHandler((status) => {
+                if (status == "check") {
+                    this.isPackageCompiling = true;
+                    this.dataUpdated();
+                } else if (status == "idle") {
+                    this.isPackageCompiling = false;
+                    this.dataUpdated();
+                }
+            });
+        }
     }
 
     public hashChangeHandler = () => {
@@ -103,7 +116,7 @@ export class BackofficeStore {
 
             const comm = new Comm(url);
 
-            comm.setData({ __PROPS_REQUEST__: 1 });
+            comm.setData({__PROPS_REQUEST__: 1});
             comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
                 this.viewServerErrors = errorResponse;
 

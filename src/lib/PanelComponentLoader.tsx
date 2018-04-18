@@ -162,13 +162,14 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                             </div>
                         )}
                         {typeof this.props.context.viewServerErrors === "string" && <div>{this.props.context.viewServerErrors}</div>}
-                        {this.props.context.viewServerErrors instanceof RouterException && (
-                            <div>
-                                {this.props.context.viewServerErrors.message}
-                                <hr />
-                                <RouteVisualization />
-                            </div>
-                        )}
+                        {!PRODUCTION &&
+                            this.props.context.viewServerErrors instanceof RouterException && (
+                                <div>
+                                    {this.props.context.viewServerErrors.message}
+                                    <hr />
+                                    <RouteVisualization />
+                                </div>
+                            )}
                     </div>
                 )}
 

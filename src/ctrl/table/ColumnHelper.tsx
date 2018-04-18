@@ -1,8 +1,8 @@
 import * as React from "react";
-import {ICellTemplate, IColumnData, IEventCallback} from "./Interfaces";
-import {Option} from "../fields/Interfaces";
-import {DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter} from "../Filters";
-import {IFilter} from "frontend/src/ctrl/filters/Intefaces";
+import { ICellTemplate, IColumnData, IEventCallback } from "./Interfaces";
+import { Option } from "../fields/Interfaces";
+import { DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter } from "../Filters";
+import { IFilter } from "frontend/src/ctrl/filters/Intefaces";
 import Icon from "frontend/src/ctrl/Icon";
 
 export class ColumnHelper {
@@ -26,30 +26,31 @@ export class ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
-            filter: [{
-                caption,
-                field,
-                component: NumericFilter,
-            }],
+            filter: [
+                {
+                    caption,
+                    field,
+                    component: NumericFilter,
+                },
+            ],
         }).className("right");
-
     }
 
     public static number(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
-            filter: [{
-                caption,
-                field,
-                component: NumericFilter,
-            }],
+            filter: [
+                {
+                    caption,
+                    field,
+                    component: NumericFilter,
+                },
+            ],
         }).className("right");
-
     }
 
     public static map(field: string, caption: string, options: Option[] | object, multiSelectFilter: boolean = false): ColumnHelper {
-
         return new ColumnHelper({
             field,
             caption,
@@ -64,14 +65,16 @@ export class ColumnHelper {
                     return options[value];
                 }
             },
-            filter: [{
-                field,
-                component: SelectFilter,
-                config: {
-                    content: options,
-                    multiselect: multiSelectFilter,
+            filter: [
+                {
+                    field,
+                    component: SelectFilter,
+                    config: {
+                        content: options,
+                        multiselect: multiSelectFilter,
+                    },
                 },
-            }],
+            ],
         });
     }
 
@@ -79,31 +82,29 @@ export class ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
-            filter: [{
-                caption,
-                // label: caption,
-                field,
-                component: TextFilter,
-                config: {
-                    extendedInfo: true,
+            filter: [
+                {
+                    caption,
+                    // label: caption,
+                    field,
+                    component: TextFilter,
+                    config: {
+                        extendedInfo: true,
+                    },
                 },
-            }],
+            ],
         });
     }
 
     public static link(field: string, caption: string, urlResolver: any): ColumnHelper {
-
-        return ColumnHelper.text("id", "")
-            .onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
-                    const url = urlResolver(row, column, event);
-                    if (e.button == 1) {
-                        window.open(url);
-                    } else {
-                        window.location.href = url;
-                    }
-                },
-            );
-
+        return ColumnHelper.text("id", "").onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
+            const url = urlResolver(row, column, event);
+            if (e.button == 1) {
+                window.open(url);
+            } else {
+                window.location.href = url;
+            }
+        });
     }
 
     public static money(field, caption): ColumnHelper {
@@ -111,10 +112,12 @@ export class ColumnHelper {
             field,
             caption,
             template: (val, row) => parseFloat(val).toFixed(2),
-            filter: [{
-                field,
-                component: NumericFilter,
-            }],
+            filter: [
+                {
+                    field,
+                    component: NumericFilter,
+                },
+            ],
         }).className("right");
     }
 
@@ -123,13 +126,15 @@ export class ColumnHelper {
             field,
             caption,
             template: (val, row) => <a href={"mailto:" + val}>{val}</a>,
-            filter: [{
-                field,
-                component: TextFilter,
-                config: {
-                    extendedInfo: true,
+            filter: [
+                {
+                    field,
+                    component: TextFilter,
+                    config: {
+                        extendedInfo: true,
+                    },
                 },
-            }],
+            ],
         });
     }
 
@@ -138,10 +143,12 @@ export class ColumnHelper {
             field,
             caption,
 
-            filter: [{
-                field,
-                component: DateFilter,
-            }],
+            filter: [
+                {
+                    field,
+                    component: DateFilter,
+                },
+            ],
         });
     }
 
@@ -149,19 +156,17 @@ export class ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
-            classTemplate: (row, column) => ["center", (row[column.field] == "1" ? "darkgreen" : "darkred")],
-            template: (value) => <Icon name={(value == "1" ? "CheckMark" : "Clear")}/>,
-            filter: [{
-                field,
-                component: SwitchFilter,
-                config: {
-                    content: [
-                        {value: 0, label: "Nie"},
-                        {value: 1, label: "Tak"},
-                    ],
+            classTemplate: (row, column) => ["center", row[column.field] == "1" ? "darkgreen" : "darkred"],
+            template: (value) => <Icon name={value == "1" ? "CheckMark" : "Clear"} />,
+            filter: [
+                {
+                    field,
+                    component: SwitchFilter,
+                    config: {
+                        content: [{ value: 0, label: "Nie" }, { value: 1, label: "Tak" }],
+                    },
                 },
-            }],
-
+            ],
         });
     }
 
@@ -184,26 +189,28 @@ export class ColumnHelper {
     }
 
     editable(fn, type: string, enabled: boolean): ColumnHelper {
-        if(enabled === false){
+        if (enabled === false) {
             return this.data;
-        };
+        }
         this.data.template = (value, row, column, rowContainer) => {
             let changedValue = value;
             if (column.inEditState == true) {
-                switch (type){
+                switch (type) {
                     case "text":
                         return (
                             <div className={"global-input-column"}>
-                                <input type="text"
-                                       onChange={(e) => changedValue = e.target.value} defaultValue={value}
-                                       autoFocus={true}
-                                       onBlur={() => {
-                                           if (value !== changedValue){
-                                               fn(column, row, changedValue);
-                                           }
-                                           column.inEditState = false;
-                                           rowContainer.forceUpdate();
-                                       }}
+                                <input
+                                    type="text"
+                                    onChange={(e) => (changedValue = e.target.value)}
+                                    defaultValue={value}
+                                    autoFocus={true}
+                                    onBlur={() => {
+                                        if (value !== changedValue) {
+                                            fn(column, row, changedValue);
+                                        }
+                                        column.inEditState = false;
+                                        rowContainer.forceUpdate();
+                                    }}
                                 />
                             </div>
                         );
@@ -211,41 +218,35 @@ export class ColumnHelper {
                     case "textarea":
                         return (
                             <div className={"global-input-column"}>
-                            <textarea
-                                autoFocus={true}
-                                onChange={(e) => changedValue = e.target.value} defaultValue={value}
-                                onBlur={() => {
-                                    if (value !== changedValue){
-                                        fn(column, row, changedValue);
-                                    }
-                                    column.inEditState = false;
-                                    rowContainer.forceUpdate();
-                                }}
-                            />
+                                <textarea
+                                    autoFocus={true}
+                                    onChange={(e) => (changedValue = e.target.value)}
+                                    defaultValue={value}
+                                    onBlur={() => {
+                                        if (value !== changedValue) {
+                                            fn(column, row, changedValue);
+                                        }
+                                        column.inEditState = false;
+                                        rowContainer.forceUpdate();
+                                    }}
+                                />
                             </div>
                         );
                         break;
-                };
+                }
             } else {
                 switch (type) {
                     case "text":
                         return (
                             <div className={"global-input-column global-input-column-disabled"}>
-                                <input type="text"
-                                       defaultValue={value}
-                                       disabled={true}
-                                />
+                                <input type="text" defaultValue={value} disabled={true} />
                             </div>
                         );
                         break;
                     case "textarea":
                         return (
                             <div className={"global-input-column global-input-column-disabled"}>
-                            <textarea
-                                autoFocus={true}
-                                defaultValue={value}
-                                disabled={true}
-                            />
+                                <textarea autoFocus={true} defaultValue={value} disabled={true} />
                             </div>
                         );
                         break;
@@ -300,8 +301,10 @@ export class ColumnHelper {
         return this;
     }
 
-    public addFilter(filter: IFilter) {
-        this.data.filter.push(filter);
+    public addFilter(filter: IFilter | false) {
+        if (filter !== false) {
+            this.data.filter.push(filter);
+        }
         return this;
     }
 
@@ -354,7 +357,7 @@ export class ColumnHelper {
     }
 
     public set(el: Partial<IColumnData>): ColumnHelper {
-        this.data = {...this.data, ...el};
+        this.data = { ...this.data, ...el };
         return this;
     }
 

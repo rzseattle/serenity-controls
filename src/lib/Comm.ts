@@ -4,7 +4,6 @@ declare var PRODUCTION: any;
 declare var DEV_PROPERIES: any;
 
 class Comm {
-
     public static basePath = "";
     public static errorFallback = null;
 
@@ -32,7 +31,6 @@ class Comm {
     private xhr: XMLHttpRequest;
 
     constructor(url, method = "POST") {
-
         this.url = url;
         this.data = {};
         this.namespace = null;
@@ -70,14 +68,11 @@ class Comm {
     }
 
     public appendFormData(FormData: FormData, data, name = "") {
-
         if (data instanceof FileList) {
-
             for (let i = 0; i < data.length; i++) {
                 // get item
                 const file = data.item(i);
                 FormData.append(name + "[]", file);
-
             }
             return;
         }
@@ -88,7 +83,6 @@ class Comm {
         }
 
         if (typeof data === "object" && data != null) {
-
             Object.entries(data).map(([index, value]) => {
                 if (name == "") {
                     this.appendFormData(FormData, value, index);
@@ -121,19 +115,16 @@ class Comm {
 
     public debugError(error) {
         if (Comm.errorFallback) {
-            Comm.errorFallback(
-                {
-                    url: Comm.basePath + this.url,
-                    input: this.data,
-                    response: error,
-                },
-            );
+            Comm.errorFallback({
+                url: Comm.basePath + this.url,
+                input: this.data,
+                response: error,
+            });
         } else {
             const errorWindow = window.open("", "", "width=800,height=600");
             errorWindow.document.write("<pre>" + error + "</pre>");
             errorWindow.focus();
         }
-
     }
 
     public abort() {
@@ -143,7 +134,6 @@ class Comm {
     }
 
     public send(): XMLHttpRequest {
-
         const data = this.prepareData();
         const formData = new FormData();
         if (this.method == "POST") {
@@ -167,46 +157,15 @@ class Comm {
                 if (this.xhr.readyState == this.xhr.HEADERS_RECEIVED) {
                     const hash = this.xhr.getResponseHeader("ARROW_DEBUG_ROUTE_HASH");
 
-                    const checkCompilationInProgress = (cbNotInCompilation) => {
-                        const url2 = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "isCompilationInProgress");
-
-                        fetch(url2.toString()).then((response) => {
-                            return response.json();
-                        }).then((response) => {
-                            if (response.result) {
-                                console.log("still in compilation ");
-                                setTimeout(() => {
-                                    checkCompilationInProgress(cbNotInCompilation);
-                                }, 100);
-
-                            } else {
-                                cbNotInCompilation();
-                                console.log("not in compilation");
-                            }
-                        });
-                    };
-
                     if (hash != null) {
-                        console.log(hash, "compilation hash");
                         const location = window.location.protocol + "//" + window.location.host + Comm.basePath;
                         const url = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "refreshRoute");
-                        const params = {location, hash};
+                        const params = { location, hash };
                         Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
 
                         fetch(url.toString()).then((response) => {
                             response.json().then((response) => {
-                                if (response.result == 1) {
-                                    //alert("Wait for webpack recompilation  " + JSON.stringify(response));
-                                    setTimeout(() => {
-                                        let inCompilation;
-                                        checkCompilationInProgress(() => {
-                                            alert("Route change detected. Application will restart");
-                                            window.location.reload();
-                                        });
-                                    }, 200);
 
-                                } else {
-                                }
                             });
                         });
                     }
@@ -223,7 +182,6 @@ class Comm {
                     } catch (e) {
                         exceptionOccured = true;
                         if (this.registredEvents.error.length == 0) {
-
                             this.debugError(e.message + "<hr />" + this.xhr.response);
                         } else {
                             if (this.debug) {
@@ -231,7 +189,6 @@ class Comm {
                             }
                             this.callEvent(Comm.EVENTS.ERROR, this.xhr.response);
                         }
-
                     }
 
                     if (!exceptionOccured) {
@@ -243,7 +200,6 @@ class Comm {
                             this.callEvent(Comm.EVENTS.VALIDATION_ERRORS, data);
                         }
                     }
-
                 } else {
                     // 0 == abotreted
                     if (this.xhr.status != 0) {
@@ -275,7 +231,6 @@ class Comm {
         }
 
         return this.xhr;
-
     }
 
     public static __preparePromise(method, url, data, callback): Promise<any> {
@@ -293,7 +248,6 @@ class Comm {
 
             comm.setData(data);
             comm.send();
-
         });
     }
 
@@ -312,4 +266,4 @@ class Comm {
 
 export default Comm;
 
-export {Comm};
+export { Comm };
