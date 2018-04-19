@@ -1,3 +1,5 @@
+import {ideConnector} from "../dev/IDEConnector";
+
 type IResponseCallback = (response: any) => any;
 
 declare var PRODUCTION: any;
@@ -7,8 +9,8 @@ class Comm {
     public static basePath = "";
     public static errorFallback = null;
 
-    public static onStart = null;
-    public static onFinish = null;
+    public static onStart = [];
+    public static onFinish = [];
 
     public static EVENTS = {
         BEFORE_SEND: "beforeSend",
@@ -152,25 +154,15 @@ class Comm {
         };
 
         this.xhr.onreadystatechange = () => {
-            if (!PRODUCTION) {
+            /*if (!PRODUCTION) {
                 //console.log("phpstorm://open?url=file://C:\\dev\\www\\esotiq.com//vendor/arrow/shop/views/admin/orders/orderscontroller/index.component.tsx&line=1")
                 if (this.xhr.readyState == this.xhr.HEADERS_RECEIVED) {
                     const hash = this.xhr.getResponseHeader("ARROW_DEBUG_ROUTE_HASH");
-
                     if (hash != null) {
-                        const location = window.location.protocol + "//" + window.location.host + Comm.basePath;
-                        const url = new URL(JSON.parse(DEV_PROPERIES.build_domain) + "refreshRoute");
-                        const params = { location, hash };
-                        Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
-
-                        fetch(url.toString()).then((response) => {
-                            response.json().then((response) => {
-
-                            });
-                        });
+                        ideConnector.refreshRoute(hash);
                     }
                 }
-            }
+            }*/
 
             if (this.xhr.readyState === 4) {
                 if (this.xhr.status === 200) {
@@ -208,14 +200,19 @@ class Comm {
                     }
                 }
                 this.callEvent(Comm.EVENTS.FINISH, this.xhr);
-                if (Comm.onFinish) {
-                    Comm.onFinish();
+
+                if (Comm.onFinish.length > 0) {
+                    for (const cb of Comm.onFinish) {
+                        cb(this.url, data, this.method);
+                    }
                 }
             }
         };
 
-        if (Comm.onStart) {
-            Comm.onStart();
+        if (Comm.onStart.length > 0) {
+            for (const cb of Comm.onStart) {
+                cb(this.url, data, this.method);
+            }
         }
 
         this.xhr.open(this.method, Comm.basePath + this.url, true);
@@ -266,4 +263,4 @@ class Comm {
 
 export default Comm;
 
-export { Comm };
+export {Comm};

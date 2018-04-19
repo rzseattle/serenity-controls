@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import BackOfficePanel from "frontend/src/backoffice/BackOfficePanel";
-import { BackofficeStore } from "frontend/src/backoffice/BackofficeStore";
+import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
 
 interface IBackOfficeContainerProps {
     route: string;
@@ -24,7 +24,11 @@ export class BackOfficeContainer extends React.Component<IBackOfficeContainerPro
         this.store.externalViewData = props.props;
     }
 
+    public componentWillUnmount() {
+        BackofficeStore.unregisterDebugData(this.props.route, this.store.viewData);
+    }
+
     public render() {
-        return <BackOfficePanel onlyBody={true} isSub={true} store={this.store}  />;
+        return <BackOfficePanel onlyBody={true} isSub={true} store={this.store}/>;
     }
 }

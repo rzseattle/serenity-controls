@@ -3,8 +3,7 @@ import React from "react";
 import { Copyable } from "frontend/src/ctrl/Copyable";
 import { IModalProps } from "../ctrl/Overlays";
 import RouterException from "../backoffice/RouterException";
-import router from "../backoffice/Router";
-import { RouteVisualization } from "../backoffice/RouteVisualization";
+import { RouteVisualization } from "../dev/RouteVisualization";
 
 declare var PRODUCTION: boolean;
 declare var window: any;
@@ -92,7 +91,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
     public componentWillMount() {
         if (!PRODUCTION) {
-            import(/* webpackChunkName = "DebugTool" */ "../utils/DebugTool").then(({ DebugTool }) => {
+            import(/* webpackChunkName = "DebugTool" */ "../dev/DebugTool").then(({ DebugTool }) => {
                 this.DebugTool = DebugTool;
                 this.setState({ debugToolLoaded: true });
             });
@@ -149,7 +148,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
 
         return (
             <div className={ComponentInfo && ComponentInfo.extendedInfo.component}>
-                {!PRODUCTION && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
+                {!PRODUCTION && this.props.isSub == false && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
                 <NotificationSystem ref={(ns) => (this.notificationSystem = ns)} />
                 {this.props.context.viewServerErrors !== null && (

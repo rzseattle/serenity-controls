@@ -1,41 +1,40 @@
 import * as React from "react";
-import { Icon } from "../ctrl/Icon";
-import router from "./Router";
-import { TabPane, Tabs } from "../ctrl/Tabs";
-import { DevProperties } from "../utils/DevProperties";
-import { BForm, BText } from "../layout/BootstrapForm";
+import {Icon} from "../ctrl/Icon";
+import router from "../backoffice/Router";
 
-declare var DEV_PROPERIES: DevProperties;
+import {BForm, BText} from "../layout/BootstrapForm";
+import {ideConnector} from "./IDEConnector";
+
 require("./RouteVsualization.sass");
 declare var module: any;
 
-interface IMenuProps {}
+interface IRouteVisualizationProps {
+}
 
 interface IRouteVisualizationState {
     search: string;
     filteredRoutes: any;
 }
 
-export class RouteVisualization extends React.Component<IMenuProps, IRouteVisualizationState> {
+export class RouteVisualization extends React.Component<IRouteVisualizationProps, IRouteVisualizationState> {
     private routing: any;
 
-    constructor(props: IMenuProps) {
+    constructor(props: IRouteVisualizationProps) {
         super(props);
-        this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({ route: index, ...el }));
-        this.state = { search: "", filteredRoutes: this.routing };
+        this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({route: index, ...el}));
+        this.state = {search: "", filteredRoutes: this.routing};
     }
 
     public componentDidMount() {
         router.onRoutesChanges(() => {
-            console.log(router.getRouting());
-            this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({ route: index, ...el }));
+            this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({route: index, ...el}));
 
-            this.setState({ filteredRoutes: this.routing });
+            this.setState({filteredRoutes: this.routing});
         });
     }
 
     private handleSearchInput = (event) => {
-        this.setState({ search: event.value, filteredRoutes: this.routing.filter((el) => el.route.indexOf(event.value) != -1) });
+        this.setState({search: event.value, filteredRoutes: this.routing.filter((el) => el.route.indexOf(event.value) != -1)});
     };
 
     private parseRouting() {
@@ -68,14 +67,14 @@ export class RouteVisualization extends React.Component<IMenuProps, IRouteVisual
         namespaces = Array.from(new Set(namespaces));
         namespaces = namespaces.map((namespace) => {
             const controllers = controlers.filter((el) => el.namespace == namespace);
-            return { namespace, package: controllers[0].package, controllers };
+            return {namespace, package: controllers[0].package, controllers};
         });
 
         let packages = controlers.reduce((p, c) => p.concat(c.package), []);
         packages = Array.from(new Set(packages));
         packages = packages.map((myPackage) => {
             const pNamespaces = namespaces.filter((el) => el.package == myPackage);
-            return { package: myPackage, namespaces: pNamespaces };
+            return {package: myPackage, namespaces: pNamespaces};
         });
 
         return packages;
@@ -90,7 +89,7 @@ export class RouteVisualization extends React.Component<IMenuProps, IRouteVisual
                     <BForm>
                         {() => (
                             <>
-                                <BText value={this.state.search} onChange={this.handleSearchInput} />
+                                <BText value={this.state.search} onChange={this.handleSearchInput}/>
                             </>
                         )}
                     </BForm>
@@ -110,7 +109,8 @@ export class RouteVisualization extends React.Component<IMenuProps, IRouteVisual
                                             {namespace.controllers.map((controller) => {
                                                 return (
                                                     <div className={"class"} key={controller.pureClass}>
-                                                        <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${controller.file}&line=1`} className={"class-title"}>
+
+                                                        <a onClick={() => ideConnector.openFile(controller.file, 1)} className="class-title">
                                                             {controller.pureClass}
                                                         </a>
                                                         <div className={"routes-container"}>
@@ -118,12 +118,12 @@ export class RouteVisualization extends React.Component<IMenuProps, IRouteVisual
                                                                 return (
                                                                     <React.Fragment key={route.route}>
                                                                         <a
-                                                                            href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}${controller.file}&line=${route._debug.line}`}
+                                                                            onClick={() => ideConnector.openFile(controller.file, route._debug.line)}
                                                                             className={"route"}
                                                                         >
-                                                                            <Icon name={route._debug.templateExists ? "TVMonitor" : "Switch"} /> {route.route}
+                                                                            <Icon name={route._debug.templateExists ? "TVMonitor" : "Switch"}/> {route.route}
                                                                         </a>
-                                                                        <div style={{ fontSize: 10, color: "grey" }}>{route._debug.template}</div>
+                                                                        <div style={{fontSize: 10, color: "grey"}}>{route._debug.template}</div>
                                                                     </React.Fragment>
                                                                 );
                                                             })}

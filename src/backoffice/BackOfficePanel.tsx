@@ -64,8 +64,8 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         this.store.onViewLoad(() => this.handleLoadStart());
         this.store.onViewLoaded(() => this.handleLoadEnd());
 
-        Comm.onStart = this.handleLoadStart;
-        Comm.onFinish = this.handleLoadEnd;
+        Comm.onStart.push(this.handleLoadStart);
+        Comm.onFinish.push(this.handleLoadEnd);
     }
 
     public adjustToSize() {
@@ -207,7 +207,7 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
                         })}
                         {(this.state.contextState.isPackageCompiling) && <Modal show={true}>
                             <div><LoadingIndicator text={"Webpack compilation in progress"}/></div>
-                            
+
                         </Modal>}
                         <PanelComponentLoader
                             context={{

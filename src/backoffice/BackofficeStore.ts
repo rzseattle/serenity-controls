@@ -1,34 +1,92 @@
 import Comm from "../lib/Comm";
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs";
+import BackOfficePanel from "./BackOfficePanel";
 
 declare var window;
+declare var module;
+
 const browserInput = window.reactBackOfficeVar;
 
 export class BackofficeStore {
-    public dataUpdateCb: () => any;
+    public static debugData: { views: Frontend.Debug.DebugDataEntry[], ajax: Frontend.Debug.DebugDataEntry[] } = {views: [], ajax: []};
+    public static debugDataListeners: Frontend.Debug.DebugDataListener[] = [];
+    public static debugViewAjaxInProgress = true;
+    public static registerDebugDataListener = (listener: Frontend.Debug.DebugDataListener) => {
+        BackofficeStore.debugDataListeners.push(listener);
+    };
 
-    public getState() {
-        return {
-            basePath: this.basePath,
-            viewInput: this.viewInput,
-            view: this.view,
-            viewData: this.viewData,
-            viewServerErrors: this.viewServerErrors,
-            isViewLoading: this.isViewLoading,
-            isPackageCompiling: this.isPackageCompiling,
-        };
-    }
-
-    public onDataUpdated(cb) {
-        this.dataUpdateCb = cb;
-    }
-
-    public dataUpdated() {
-        if (this.dataUpdateCb !== undefined) {
-            this.dataUpdateCb();
+    public static debugDataChanged() {
+        for (const listener of BackofficeStore.debugDataListeners) {
+            listener(this.debugData);
         }
     }
+
+    public static registerDebugData(type, url: string, routeInfo: Frontend.Debug.RouteInfo, props) {
+        if (type == "ajax") {
+            for (const index in BackofficeStore.debugData.ajax) {
+                const entry = BackofficeStore.debugData.ajax[index];
+                if (entry.route == routeInfo._routePath) {
+                    BackofficeStore.debugData.ajax.splice(index, 1);
+                }
+            }
+
+
+            BackofficeStore.debugData[type].push({
+                urls: [url],
+                props: [props],
+                route: routeInfo._routePath,
+                routeInfo,
+                instances: 1,
+            });
+            if (BackofficeStore.debugData[type].length > 10) {
+                BackofficeStore.debugData[type] = BackofficeStore.debugData[type].slice(-10);
+            }
+        } else {
+
+            let exists = false;
+            for (const entry of BackofficeStore.debugData[type]) {
+                if (entry.route == routeInfo._routePath) {
+                    exists = true;
+                    entry.urls.push(url);
+                    entry.props.push(props);
+                    entry.instances++;
+                }
+            }
+            if (!exists) {
+                BackofficeStore.debugData[type].push({
+                    urls: [url],
+                    props: [props],
+                    route: routeInfo._routePath,
+                    routeInfo,
+                    instances: 1,
+                });
+            }
+        }
+
+        BackofficeStore.debugDataChanged();
+    }
+
+    public static unregisterDebugData(url, props) {
+        for (const index in BackofficeStore.debugData.views) {
+            const entry = BackofficeStore.debugData.views[index];
+            for (let i = entry.urls.length - 1; i >= 0; i--) {
+                if (entry.urls[i] == url) {
+                    entry.instances--;
+                    if (entry.instances == 0) {
+                        BackofficeStore.debugData.views.splice(index, 1);
+                        break;
+                    }
+
+                    entry.urls.splice(i, 1);
+                    entry.props.splice(i, 1);
+                }
+            }
+        }
+        BackofficeStore.debugDataChanged();
+    }
+
+    public dataUpdateCb: () => any;
 
     public subStore = false;
     // input added to view request
@@ -59,6 +117,17 @@ export class BackofficeStore {
             this.viewServerErrors = error;
             this.dataUpdated();
         };
+
+        Comm.onStart.push((url, data, method) => {
+            if (!BackofficeStore.debugViewAjaxInProgress) {
+                try {
+                    BackofficeStore.registerDebugData("ajax", url, Router.getRouteInfo(url), data);
+                } catch (e) {
+                    console.info("No route found for: " + url);
+                }
+            }
+        });
+
         if (module.hot) {
             module.hot.addStatusHandler((status) => {
                 if (status == "check") {
@@ -72,6 +141,28 @@ export class BackofficeStore {
         }
     }
 
+    public getState() {
+        return {
+            basePath: this.basePath,
+            viewInput: this.viewInput,
+            view: this.view,
+            viewData: this.viewData,
+            viewServerErrors: this.viewServerErrors,
+            isViewLoading: this.isViewLoading,
+            isPackageCompiling: this.isPackageCompiling,
+        };
+    }
+
+    public onDataUpdated(cb) {
+        this.dataUpdateCb = cb;
+    }
+
+    public dataUpdated() {
+        if (this.dataUpdateCb !== undefined) {
+            this.dataUpdateCb();
+        }
+    }
+
     public hashChangeHandler = () => {
         if (window.location.hash != "#") {
             this.changeView(window.location.hash.replace("#", ""));
@@ -79,6 +170,8 @@ export class BackofficeStore {
     };
 
     public changeView = (path: string, input = null, callback: () => any = null) => {
+        const originalPath = path;
+
         try {
             this.isViewLoading = true;
             this.viewServerErrors = null;
@@ -134,12 +227,23 @@ export class BackofficeStore {
                 if (callback) {
                     callback();
                 }
+
+                if (originalPath) {
+                    try {
+                        BackofficeStore.registerDebugData("views", originalPath, Router.getRouteInfo(originalPath), this.viewData);
+                    } catch (e) {
+                        console.error("cos jest ni tak " + originalPath);
+                    }
+                }
             });
             comm.on(Comm.EVENTS.FINISH, () => {
                 this.isViewLoading = false;
                 this.dataUpdated();
             });
+
+            BackofficeStore.debugViewAjaxInProgress = true;
             comm.send();
+            BackofficeStore.debugViewAjaxInProgress = false;
         } catch (e) {
             this.viewServerErrors = e;
             this.view = null;

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "types": "./types/main.d.ts",
   "scripts": {
     "dev": "webpack-dev-server -d ",
     "build": "webpack --env.production --display-error-details",

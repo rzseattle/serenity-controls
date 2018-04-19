@@ -231,6 +231,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
         let p = this.props;
 
         return ReactDOM.createPortal(
+
             <div
                 className={(this.props.layer ? "w-modal-container " : "") + p.className || ""}
                 style={{

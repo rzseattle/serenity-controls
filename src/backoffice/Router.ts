@@ -10,7 +10,7 @@ class Router {
         if (module.hot) {
             module.hot.accept("../../../../build/js/tmp/components-route.include.js", (module, x) => {
                 this.routes = require("../../../../build/js/tmp/components-route.include.js").ViewFileMap;
-                console.log(this.routes);
+                console.log("new routes loaded");
                 for (const cb of this.observers) {
                     cb();
                 }
@@ -27,6 +27,12 @@ class Router {
         return this.routes;
     };
 
+    public getRouteInfo = (path): Frontend.Debug.RouteInfo => {
+        let info = this.resolve(path);
+
+        return info.extendedInfo;
+    }
+
     public resolve = (path) => {
         const pathInfo = path;
         let Component = null;
@@ -39,20 +45,22 @@ class Router {
         //dynamic path matching 12
         for (const i in ViewsRoute.ViewFileMap) {
             const el = ViewsRoute.ViewFileMap[i];
-            if (el.component && i.indexOf("{") != -1) {
+            if (i.indexOf("{") != -1) {
                 const regexp = new RegExp(
                     "^" +
-                        i
-                            // repplace all {var} to (.+?)
-                            .replace(/\{.+?\}/g, "(.+?)")
-                            // replace all / to _
-                            .replace(/\//g, "/") +
-                        "$",
+                    i
+                    // repplace all {var} to (.+?)
+                        .replace(/\{.+?\}/g, "(.+?)")
+                        // replace all / to _
+                        .replace(/\//g, "/") +
+                    "$",
                 );
                 if (path.match(regexp) !== null) {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
-                    Component = ViewsRoute[el.component];
+                    if (el.component) {
+                        Component = ViewsRoute[el.component];
+                    }
                     extendedInfo = el;
                     break;
                 }
@@ -60,14 +68,16 @@ class Router {
                 if (path == i) {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
-                    Component = ViewsRoute[el.component];
+                    if (el.component) {
+                        Component = ViewsRoute[el.component];
+                    }
                     extendedInfo = el;
                     break;
                 }
             }
         }
 
-        if (!Component) {
+        if (!extendedInfo) {
             if (extendedInfo) {
                 console.error("Component file not found:" + pathInfo);
                 console.error("Component file should be:" + extendedInfo._debug.template);
@@ -78,6 +88,8 @@ class Router {
                 // console.log(ViewsRoute.ViewFileMap);
             }
 
+            console.log(extendedInfo);
+            console.log(el);
             throw new RouterException("Route not found :" + path);
         }
 
