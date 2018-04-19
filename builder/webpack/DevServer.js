@@ -112,18 +112,27 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
                 var exec = require('child_process').exec;
                 //<IDE_HOME>\bin\phpstorm.exe C:\MyProject\ --line 3 C:\MyProject\scripts\numbers.js
-                let ideDir = "C:\\Program Files\\JetBrains\\PhpStorm 2018.1" //\\bin\\phpstorm64.exe;
-                let command = `"${ideDir}\\bin\\phpstorm64.exe" ${BASE_PATH} --line ${line} ${BASE_PATH}${file}`;
-                console.log(command)
-                exec(command, function (error, stdout, stderr) {
-                    if (!error) {
-                        console.log("worked");
-                    } else {
-                        console.log("not worked");
-                        console.log(stdout);
-                        console.log(stderr);
+                let ideDir = "C:\\Program Files\\JetBrains\\" //\\bin\\phpstorm64.exe;
+
+                fs.readdirSync(ideDir).forEach(_file => {
+                    console.log(_file);
+                    if (fs.existsSync(ideDir + _file + "\\bin\\phpstorm64.exe")) {
+
+                        let command = `"${ideDir}${_file}\\bin\\phpstorm64.exe" ${BASE_PATH} --line ${line} ${BASE_PATH}${file}`;
+                        console.log(command)
+                        exec(command, function (error, stdout, stderr) {
+                            if (!error) {
+                                console.log("worked");
+                            } else {
+                                console.log("not worked");
+                                console.log(stdout);
+                                console.log(stderr);
+                            }
+                        });
                     }
-                });
+
+                })
+
 
                 return;
             })

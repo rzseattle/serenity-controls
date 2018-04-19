@@ -123,7 +123,7 @@ export class RouteVisualization extends React.Component<IRouteVisualizationProps
                                                                         >
                                                                             <Icon name={route._debug.templateExists ? "TVMonitor" : "Switch"}/> {route.route}
                                                                         </a>
-                                                                        <div style={{fontSize: 10, color: "grey"}}>{route._debug.template}</div>
+                                                                        <div onClick={() => ideConnector.openFile(controller.template, 1)} style={{fontSize: 10, color: "grey"}}>{route._debug.template}</div>
                                                                     </React.Fragment>
                                                                 );
                                                             })}
