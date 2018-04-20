@@ -9,7 +9,7 @@ declare var module;
 const browserInput = window.reactBackOfficeVar;
 
 export class BackofficeStore {
-    public static debugData: { views: Frontend.Debug.DebugDataEntry[], ajax: Frontend.Debug.DebugDataEntry[] } = {views: [], ajax: []};
+    public static debugData: { views: Frontend.Debug.DebugDataEntry[]; ajax: Frontend.Debug.DebugDataEntry[] } = { views: [], ajax: [] };
     public static debugDataListeners: Frontend.Debug.DebugDataListener[] = [];
     public static debugViewAjaxInProgress = true;
     public static registerDebugDataListener = (listener: Frontend.Debug.DebugDataListener) => {
@@ -31,7 +31,6 @@ export class BackofficeStore {
                 }
             }
 
-
             BackofficeStore.debugData[type].push({
                 urls: [url],
                 props: [props],
@@ -43,7 +42,6 @@ export class BackofficeStore {
                 BackofficeStore.debugData[type] = BackofficeStore.debugData[type].slice(-10);
             }
         } else {
-
             let exists = false;
             for (const entry of BackofficeStore.debugData[type]) {
                 if (entry.route == routeInfo._routePath) {
@@ -169,6 +167,7 @@ export class BackofficeStore {
         }
     };
 
+    private currentPath = "";
     public changeView = (path: string, input = null, callback: () => any = null) => {
         const originalPath = path;
 
@@ -178,13 +177,18 @@ export class BackofficeStore {
 
             // for just reloading props
             if (path == null) {
-                if (window.location.hash != "#") {
-                    path = window.location.hash.replace("#", "");
+                if (!this.subStore) {
+                    if (window.location.hash != "#") {
+                        path = window.location.hash.replace("#", "");
+                    } else {
+                        const [base, query] = window.location.href.split("?");
+                        path = window.location.pathname.replace(browserInput.basePath, "") + (query ? "?" + query : "");
+                    }
                 } else {
-                    const [base, query] = window.location.href.split("?");
-                    path = window.location.pathname.replace(browserInput.basePath, "") + (query ? "?" + query : "");
+                    path = this.currentPath;
                 }
             }
+            this.currentPath = path;
 
             let url = "";
             let view: any;
@@ -209,7 +213,7 @@ export class BackofficeStore {
 
             const comm = new Comm(url);
 
-            comm.setData({__PROPS_REQUEST__: 1});
+            comm.setData({ __PROPS_REQUEST__: 1 });
             comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
                 this.viewServerErrors = errorResponse;
 
