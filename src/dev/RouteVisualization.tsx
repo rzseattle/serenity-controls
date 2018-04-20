@@ -29,7 +29,7 @@ export class RouteVisualization extends React.Component<IRouteVisualizationProps
         router.onRoutesChanges(() => {
             this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({route: index, ...el}));
 
-            this.setState({filteredRoutes: this.routing});
+            this.setState({filteredRoutes: this.routing.filter((el) => el.route.indexOf(this.state.search) != -1)});
         });
     }
 
