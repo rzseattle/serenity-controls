@@ -236,7 +236,7 @@ export class BackofficeStore {
                     try {
                         BackofficeStore.registerDebugData("views", originalPath, Router.getRouteInfo(originalPath), this.viewData);
                     } catch (e) {
-                        console.error("cos jest ni tak " + originalPath);
+                        console.error("cos jest ni tak " + originalPath +" "+e);
                     }
                 }
             });

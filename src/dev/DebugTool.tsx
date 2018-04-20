@@ -31,6 +31,7 @@ interface IDebugToolState {
     lastError: any;
     isRoutePanelVisible: boolean;
     openedAjaxData: number[];
+    openedViewData: number[];
 }
 
 //todo js -> ts
@@ -52,6 +53,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
 
             lastError: props.error,
             openedAjaxData: [],
+            openedViewData: [],
 
             debugData: {views: [], ajax: []},
             isRoutePanelVisible: false,
@@ -130,6 +132,13 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
             this.setState({openedAjaxData: this.state.openedAjaxData.concat(index)});
         }
     };
+    private swithViewDataVisible = (index) => {
+        if (this.state.openedViewData.includes(index)) {
+            this.setState({openedViewData: this.state.openedViewData.filter((el) => el != index)});
+        } else {
+            this.setState({openedViewData: this.state.openedViewData.concat(index)});
+        }
+    };
 
     public saveData() {
         window.localStorage.DebugToolData = JSON.stringify({
@@ -172,7 +181,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                         <div>
                             <div className={"section-title"}>Views:</div>
                             <div className={"section"}>
-                                {this.state.debugData.views.map((info) => {
+                                {this.state.debugData.views.map((info, index) => {
                                     return (
                                         <div key={info.routeInfo._routePath}>
                                             {info.routeInfo._routePath}
@@ -184,9 +193,16 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                                                 <Icon name={"Code"}/> .tsx
                                             </a>
 
-                                            <a onClick={() => alert("To implement")} className="btn btn-default btn-sm">
+                                            <a onClick={() => this.swithViewDataVisible(index)} className="btn btn-default btn-sm">
                                                 <Icon name={"Database"}/> props
                                             </a>
+                                            {this.state.openedViewData.includes(index) && (
+                                                <div style={{maxWidth: "600px", overflow: "auto", clear: "both"}}>
+                                                    <pre style={{maxHeight: 300, overflow: "auto"}}>{JSON.stringify(info.props[0], null, 2)}</pre>
+                                                </div>
+                                            )}
+
+
                                         </div>
                                     );
                                 })}
