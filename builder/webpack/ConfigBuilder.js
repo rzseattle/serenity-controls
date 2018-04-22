@@ -19,7 +19,7 @@ module.exports = function(input) {
 
     var conf = {
         context: resolve(__dirname, ""),
-        devtool: input.PRODUCTION ? "source-map" : "cheap-module-source-map",
+        devtool: input.PRODUCTION  ? "source-map" : "cheap-module-source-map",//,
         resolve: {
             extensions: [".js", ".ts", ".tsx"],
             unsafeCache: true,
@@ -122,19 +122,20 @@ module.exports = function(input) {
                                     },
                                 },
                             ],
-                            "@babel/react",
                             "@babel/typescript",
+                            "@babel/react",
                         ],
 
                         plugins: [
+
                             "@babel/plugin-syntax-typescript",
                             "@babel/plugin-syntax-decorators",
                             "@babel/plugin-syntax-jsx",
                             "@babel/plugin-syntax-dynamic-import",
-                            "react-hot-loader/babel",
                             "@babel/proposal-class-properties",
                             "@babel/proposal-object-rest-spread",
-                            "babel-plugin-transform-class-properties",
+                            "react-hot-loader/babel",
+
                         ],
                     },
                 },

@@ -318,21 +318,3 @@ class Body extends React.Component<any, any> {
     }
 }
 
-const RouteElement = (props) => {
-    const element = props.element;
-    const info = ViewsRoute.ViewFileMap[element.path];
-    return (
-        <li>
-            <a href="">{element.name}</a>
-
-            {info && (
-                <div className={"route-be-info"}>
-                    <a href={`phpstorm://open?url=file://${DEV_PROPERIES.project_dir}/${info._debug.file}&line=${info._debug.line}`}>
-                        {info._controller}::{info._method}
-                    </a>
-                </div>
-            )}
-            {element.children.length > 0 && <ul>{element.children.map((el) => <RouteElement key={el.name} element={el}/>)}</ul>}
-        </li>
-    );
-};
