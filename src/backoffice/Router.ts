@@ -7,16 +7,7 @@ class Router {
     public observers = [];
 
     constructor() {
-        if (module.hot) {
-            module.hot.accept("../../../../build/js/tmp/components-route.include.js", (module, x) => {
-                this.routes = require("../../../../build/js/tmp/components-route.include.js").ViewFileMap;
-                console.log("new routes loaded");
-                for (const cb of this.observers) {
-                    cb();
-                }
-            });
-            return;
-        }
+
     }
 
     public onRoutesChanges(callback) {
@@ -31,7 +22,7 @@ class Router {
         let info = this.resolve(path);
 
         return info.extendedInfo;
-    }
+    };
 
     public resolve = (path) => {
         const pathInfo = path;
@@ -103,5 +94,14 @@ class Router {
 }
 
 const router = new Router();
+
+if (module.hot) {
+    module.hot.accept("../../../../build/js/tmp/components-route.include.js", (module, x) => {
+        router.routes = require("../../../../build/js/tmp/components-route.include.js").ViewFileMap;
+        for (const cb of router.observers) {
+            cb();
+        }
+    });
+}
 
 export default router;
