@@ -4,13 +4,13 @@ import { DevProperties } from "./DevProperties";
 declare var DEV_PROPERIES: DevProperties;
 
 class IDEConnector {
-    constructor() {}
-
     public openFile(file, line) {
-        console.log(`Opening file: ${file}:${line}`);
+        const base = Comm.basePath;
+        Comm.basePath = "";
         Comm._post(JSON.parse(DEV_PROPERIES.build_domain) + "openFile", { file, line }).then((devResponse) => {
             console.log("Opening file");
         });
+        Comm.basePath = base;
     }
 
     public refreshRoute() {

@@ -146,6 +146,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             );
         }
 
+        console.log(ComponentInfo);
         return (
             <div className={ComponentInfo && ComponentInfo.extendedInfo.component}>
                 {!PRODUCTION && this.props.isSub == false && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
