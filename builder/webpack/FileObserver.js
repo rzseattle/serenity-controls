@@ -1,10 +1,10 @@
-var chokidar = require('chokidar');
-const fs = require('fs');
-const path = require('path');
-var exec = require('child_process').exec;
+var chokidar = require("chokidar");
+const fs = require("fs");
+const path = require("path");
+var exec = require("child_process").exec;
 
 
-var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
+var setupFileObserver = function(BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
 
     const targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
 
@@ -14,21 +14,24 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         let ComponentFileContent = "";
         let ComponentFileContentMapFilesX = {};
         let SassFileContent = "";
+
         for (i in conf) {
 
             let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
             let sassPath = BASE_PATH + conf[i]._debug.template + ".component.sass";
 
             if (fs.existsSync(componentPath)) {
-                let name = i
+                let name = (i + conf[i]._routePath)
                     .replace("/", "")
                     .replace(/\//g, "_")
                     .replace(/\{/g, "_")
                     .replace(/\}/g, "_")
                     .replace(/\-/g, "_")
                 ;
-                ComponentFileContent += 'import ' + name + ' from \'' + componentPath.replace(/\\/g, '/') + '\';\n';
-                ComponentFileContent += ' export { ' + name + '}; \n';
+
+
+                ComponentFileContent += "import " + name + " from '" + componentPath.replace(/\\/g, "/") + "';\n";
+                ComponentFileContent += " export { " + name + "}; \n";
                 conf[i].component = name;
                 ComponentFileContentMapFilesX[i] = conf[i];
                 if (fs.existsSync(sassPath)) {
@@ -45,13 +48,13 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX)} ;`;
         fs.writeFileSync(targetfilename, ComponentFileContent);
         fs.writeFileSync(SAVE_SASS_TARGET, SassFileContent);
-    }
+    };
 
 
-    let routeFileDir = path.resolve(BASE_PATH + '/data/cache/symfony/');
+    let routeFileDir = path.resolve(BASE_PATH + "/data/cache/symfony/");
     let routeFile = routeFileDir + "/route.json";
 
-    let lastKnownSizeOfRouteFile = -1
+    let lastKnownSizeOfRouteFile = -1;
 
     let newRouteFileGenerator = () => {
         //new router observation
@@ -70,15 +73,15 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         } else {
             console.log("Ni ma pliku wczytuje pusty");
             console.log(routeFileDir + "route.json");
-            fs.writeFile(targetfilename, "export const ViewFileMap = {};", function (err) {
+            fs.writeFile(targetfilename, "export const ViewFileMap = {};", function(err) {
                 if (err) {
                     return console.log(err);
                 } else {
-                    console.log('The file was saved: ' + targetfilename);
+                    console.log("The file was saved: " + targetfilename);
                 }
             });
         }
-    }
+    };
 
     console.log("startuje observera");
     const linkArrowDir = () => {
@@ -95,17 +98,17 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
             ignoreInitial: true,
             awaitWriteFinish: {
                 stabilityThreshold: 200,
-                pollInterval: 100
+                pollInterval: 100,
             },
 
         })
-        .on('add', (event, path) => {
+        .on("add", (event, path) => {
             linkArrowDir();
         })
-        .on('change', (event, path) => {
+        .on("change", (event, path) => {
             linkArrowDir();
         })
-        .on('unlink', (event, path) => {
+        .on("unlink", (event, path) => {
             linkArrowDir();
         });
 
@@ -118,9 +121,9 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 return;
             }
         }
-        let command = "php bin\\console debug:router --json"
+        let command = "php bin\\console debug:router --json";
         console.log("Route check ...");
-        exec(command, {cwd: BASE_PATH}, function (error, stdout, stderr) {
+        exec(command, { cwd: BASE_PATH }, function(error, stdout, stderr) {
             if (!error) {
                 let route = JSON.parse(stdout);
                 const routeSimplyfied = Object.entries(route).map(([index, el]) => [el._controller, el._method, el._routePath, el._package, el._debug.templateExists]);
@@ -128,7 +131,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 if (toEqual != routeEqualizer) {
                     routeEqualizer = toEqual;
                     generateRouteAssetsFromJson(route);
-                }else{
+                } else {
                     console.log("No changes");
                 }
             } else {
@@ -137,7 +140,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 console.log(stderr);
             }
         });
-    }
+    };
 
     annotationChanged(null, null);
 
@@ -156,16 +159,16 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
             },*/
 
         })
-        .on('add', (event, path) => {
+        .on("add", (event, path) => {
             annotationChanged(event, path);
         })
-        .on('change', (event, path) => {
+        .on("change", (event, path) => {
             annotationChanged(event, path);
         })
-        .on('unlink', (event, path) => {
+        .on("unlink", (event, path) => {
             annotationChanged(event, path);
         });
-}
+};
 
 
 module.exports = setupFileObserver;

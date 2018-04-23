@@ -173,7 +173,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                     </div>
                 )}
 
-                {ComponentInfo ? (
+                {ComponentInfo && ComponentInfo.Component ? (
                     <ComponentInfo.Component
                         {...p.context.viewData}
                         reloadProps={this.handleReloadProps}
@@ -202,17 +202,11 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                     )
                 )}
 
-                {ComponentInfo == false &&
-                    p.context.viewComponentName != null && (
+                {ComponentInfo &&
+                    ComponentInfo.Component == null && (
                         <div style={{ padding: 10 }}>
                             <h3>Can't find component </h3>
-                            <pre>Route: "{p.context.viewComponentName}"</pre>
-                            <pre>
-                                Component file: <a href={`phpstorm://open?url=file://${this.state.devComponentFile}&line=1`}>{this.state.devComponentFile}</a>
-                            </pre>
-                            <Copyable>
-                                <pre style={{ backgroundColor: "white", padding: 10, border: "solid 1px grey", fontSize: 11 }} />
-                            </Copyable>
+                            <pre>{JSON.stringify(ComponentInfo, null, 2)}</pre>
                         </div>
                     )}
             </div>
