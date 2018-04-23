@@ -58,7 +58,6 @@ var getLoaders = function(production, input) {
                                 plugins: [
 
                                     "@babel/plugin-syntax-typescript",
-                                    "@babel/plugin-syntax-decorators",
                                     "@babel/plugin-syntax-jsx",
                                     "@babel/plugin-syntax-dynamic-import",
                                     "@babel/proposal-class-properties",

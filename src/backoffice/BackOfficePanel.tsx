@@ -36,7 +36,7 @@ interface IBackOfficePanelState {
     openedWindows: any;
 }
 
-export default class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
+class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     public container: HTMLDivElement;
     public store: BackofficeStore;
 
@@ -228,3 +228,4 @@ export default class BackOfficePanel extends React.Component<IBackOfficePanelPro
         );
     }
 }
+export default BackOfficePanel;
