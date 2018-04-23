@@ -99,49 +99,6 @@ module.exports = function(input) {
             loaders: ["style-loader!css-loader"],
             threadPool: threads,
         }),
-        new HappyPack({
-            id: "tsx",
-            loaders: [
-                {
-                    path: "ts-loader",
-                    query: {
-                        happyPackMode: true,
-                        transpileOnly: true,
-                    },
-                },
-                {
-                    loader: "babel-loader",
-                    options: {
-                        presets: [
-                            [
-                                "@babel/preset-env",
-                                {
-                                    targets: {
-                                        browsers: "last 2 Chrome versions",
-                                        node: "current",
-                                    },
-                                },
-                            ],
-                            "@babel/typescript",
-                            "@babel/react",
-                        ],
-
-                        plugins: [
-
-                            "@babel/plugin-syntax-typescript",
-                            "@babel/plugin-syntax-decorators",
-                            "@babel/plugin-syntax-jsx",
-                            "@babel/plugin-syntax-dynamic-import",
-                            "@babel/proposal-class-properties",
-                            "@babel/proposal-object-rest-spread",
-                            "react-hot-loader/babel",
-
-                        ],
-                    },
-                },
-            ],
-            threadPool: threads,
-        }),
     ]);
 
     if (false) {
@@ -166,7 +123,7 @@ module.exports = function(input) {
             }),
         );
     }
-    conf.plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }));
+    //conf.plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
 

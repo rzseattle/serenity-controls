@@ -1,87 +1,117 @@
-const path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var getLoaders = function (production, input) {
+const path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var getLoaders = function(production, input) {
 
     let loaders =
         {
             rules: [
                 {
                     test: [/\.js$/, /\.es6$/],
-                    exclude: path.resolve(input.BASE_PATH, 'node_modules'),
+                    exclude: path.resolve(input.BASE_PATH, "node_modules"),
                     //loader: 'babel-loader',
                     //dodatkowe ustawienia potrzebne aby babel działał out of home dir ( inaczej nie parsował plików z zewnątrz)
-                    use: 'happypack/loader?id=js',
+                    use: "happypack/loader?id=js",
                     //loaders: 'babel-loader?babelrc=true&cacheDirectory=true&extends=' + require('path').join(__dirname, '/.babelrc'),
 
                 },
 
+                /*   {
+                       test: /\.tsx?$/,
+                       use: 'happypack/loader?id=tsx',
+
+                   },*/
                 {
                     test: /\.tsx?$/,
-                    use: 'happypack/loader?id=tsx',
+                    loaders: [
+                        {
+                            loader: "awesome-typescript-loader", query: {
+                                configFileName: path.resolve(__dirname, "./tsconfig.json"),
+                                useCache: true,
+                                cacheDirectory: "node_modules/.cache/awcache",
+                                forceIsolatedModules: true,
+                                reportFiles: [
+                                    "views/!**!/!*.{ts,tsx}",
+                                    "src/!**!/!*.{ts,tsx}",
+                                ],
 
-                },
-                /*                {
-                                    test: /\.tsx?$/,
-                                    loaders: [
-                                        'react-hot-loader/webpack',
+
+                            },
+                        },{
+                            loader: "babel-loader",
+
+                            options: {
+                                retainLines: true,
+                                presets: [
+                                    [
+                                        "@babel/preset-env",
                                         {
-                                            loader: 'awesome-typescript-loader', query: {
-                                                configFileName: path.resolve(__dirname, './tsconfig.json'),
-                                                useCache: true,
-                                                cacheDirectory: 'node_modules/.cache/awcache',
-                                                forceIsolatedModules: true,
-                                                reportFiles: [
-                                                    "views/!**!/!*.{ts,tsx}",
-                                                    "src/!**!/!*.{ts,tsx}",
-                                                ]
+                                            targets: {
+                                                browsers: "last 2 Chrome versions",
+                                                node: "current",
+                                            },
+                                        },
+                                    ],
+                                    "@babel/typescript",
+                                    "@babel/react",
+                                ],
 
+                                plugins: [
 
-                                            }
-                                        }
-                                    ]
-                                },*/
+                                    "@babel/plugin-syntax-typescript",
+                                    "@babel/plugin-syntax-decorators",
+                                    "@babel/plugin-syntax-jsx",
+                                    "@babel/plugin-syntax-dynamic-import",
+                                    "@babel/proposal-class-properties",
+                                    "@babel/proposal-object-rest-spread",
+                                    "react-hot-loader/babel",
 
-                {test: /\.css/, use: 'happypack/loader?id=css'},
+                                ],
+                            },
+                        },
+                    ],
+                },
+
+                { test: /\.css/, use: "happypack/loader?id=css" },
                 {
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     loaders: [
-                        'file-loader?hash=sha512&digest=hex&name=./cache/[hash].[ext]',
+                        "file-loader?hash=sha512&digest=hex&name=./cache/[hash].[ext]",
                         {
-                            loader: 'image-webpack-loader',
+                            loader: "image-webpack-loader",
                             query: {
                                 mozjpeg: {
-                                    progressive: true
+                                    progressive: true,
                                 },
                                 gifsicle: {
-                                    interlaced: false
+                                    interlaced: false,
                                 },
                                 optipng: {
-                                    optimizationLevel: 4
+                                    optimizationLevel: 4,
                                 },
                                 pngquant: {
-                                    quality: '75-90',
-                                    speed: 3
-                                }
-                            }
-                        }
-                    ]
+                                    quality: "75-90",
+                                    speed: 3,
+                                },
+                            },
+                        },
+                    ],
                 },
                 {
                     test: /\.(ttf|eot|svg|woff|woff2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                    loader: 'url-loader',
+                    loader: "url-loader",
                     options: {
-                        name: 'name=/cache/[hash].[ext]'
-                    }
-                }
-            ]
+                        name: "name=/cache/[hash].[ext]",
+                    },
+                },
+            ],
 
-        }
+        };
 
     if (production) {
 
         loaders.rules.push({
             test: [/\.sass/, /\.scss/],
-            use: ExtractTextPlugin.extract('happypack/loader?id=sass'),
+            use: ExtractTextPlugin.extract("happypack/loader?id=sass"),
         });
 
 
@@ -92,27 +122,27 @@ var getLoaders = function (production, input) {
             {
                 test: /\.sass/,
                 loaders: [
-                    'style-loader',
-                    {loader: 'css-loader', query: {sourceMap: true}},
-                    {loader: 'resolve-url-loader', query: {sourceMap: true}},
+                    "style-loader",
+                    { loader: "css-loader", query: { sourceMap: true } },
+                    { loader: "resolve-url-loader", query: { sourceMap: true } },
                     {
-                        loader: 'sass-loader',
+                        loader: "sass-loader",
                         query: {
                             sourceMap: true,
-                            includePaths: ['node_modules']
-                        }
-                    }
+                            includePaths: ["node_modules"],
+                        },
+                    },
 
 
-                ]
+                ],
 
-            }
+            },
         );
     }
 
     return loaders;
 
-}
+};
 
 
 module.exports = getLoaders;

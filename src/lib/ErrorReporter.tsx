@@ -1,6 +1,7 @@
 import * as React from "react";
 //var sourceMap = require('source-map');
 import {SourceMapConsumer} from 'source-map/dist/source-map.min.js';
+import { ideConnector } from "../dev/IDEConnector";
 
 export default class ErrorReporter extends React.Component<any,any> {
 
@@ -80,13 +81,13 @@ export default class ErrorReporter extends React.Component<any,any> {
             <h3 style={messageCss}>{message}</h3>
             {/*<h4 style={{color: 'black'}}>{currentMethod}()</h4>*/}
             <div style={codeCss}>
-                {this.state.file.map(el => {
+                {this.state.file.map( (el,index) => {
                     if (el.line == line) {
-                        return <div style={{backgroundColor: '#FCCFCF'}}>
+                        return <div style={{backgroundColor: '#FCCFCF'}} key={index}>
                             <div style={{display: 'inline-block', width: 30}}>{el.line} |</div>
                             {el.content}</div>;
                     } else {
-                        return <div style={{backgroundColor: ''}}>
+                        return <div style={{backgroundColor: ''}}  key={index}>
                             <div style={{display: 'inline-block', width: 30}}>{el.line} |</div>
                             {el.content}</div>;
                     }
@@ -94,10 +95,10 @@ export default class ErrorReporter extends React.Component<any,any> {
                 })}
             </div>
             <h4>
-                <a href={`phpstorm://open?url=file://${this.state.stacks[0].source}&line=${this.state.stacks[0].line}`}>{this.state.stacks[0].source}:{this.state.stacks[0].line}</a>
+                <a onClick={() => ideConnector.openFile(this.state.stacks[0].source, this.state.stacks[0].line)}>{this.state.stacks[0].source}:{this.state.stacks[0].line}</a>
             </h4>
             {this.state.stacks.map( (e, index) => <div key={index}>
-                <a style={{color: 'black'}} href={`phpstorm://open?url=file://${e.source}&line=${e.line}`}>{e.source}:{e.line}</a>
+                <a  style={{color: 'black'}} onClick={() => ideConnector.openFile(e.source, e.line)}>{e.source}:{e.line}</a>
             </div>)}
 
         </div>;

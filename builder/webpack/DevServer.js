@@ -37,7 +37,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         filename: "bundle.js",
         publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,
         devtoolModuleFilenameTemplate: function (info) {
-            return path.resolve(BASE_PATH, info.absoluteResourcePath);
+            return path.resolve(BASE_PATH, info.absoluteResourcePath).replace(BASE_PATH, "");
+
         },
     };
     let devEntries = [];
@@ -91,7 +92,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
             app.get("/debug/getFile", function (req, res) {
                 res.header("Access-Control-Allow-Origin", "*");
-                res.send(fs.readFileSync(req.param("file")));
+                res.send(fs.readFileSync(BASE_PATH + req.param("file")));
             });
             app.post("/*", function (req, res, next) {
                 res.header("Access-Control-Allow-Origin", "*");
