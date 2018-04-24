@@ -4,7 +4,7 @@ const path = require("path");
 var exec = require("child_process").exec;
 
 
-var setupFileObserver = function(BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
+var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
 
     const targetfilename = SAVE_COMPONENT_TARGET.replace("components.include", "components-route.include");
 
@@ -73,7 +73,7 @@ var setupFileObserver = function(BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TAR
         } else {
             console.log("Ni ma pliku wczytuje pusty");
             console.log(routeFileDir + "route.json");
-            fs.writeFile(targetfilename, "export const ViewFileMap = {};", function(err) {
+            fs.writeFile(targetfilename, "export const ViewFileMap = {};", function (err) {
                 if (err) {
                     return console.log(err);
                 } else {
@@ -121,9 +121,11 @@ var setupFileObserver = function(BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TAR
                 return;
             }
         }
-        let command = "php bin\\console debug:router --json";
+
+        let command = "php bin/console debug:router --json";
+
         console.log("Route check ...");
-        exec(command, { cwd: BASE_PATH }, function(error, stdout, stderr) {
+        exec(command, {cwd: BASE_PATH}, function (error, stdout, stderr) {
             if (!error) {
                 let route = JSON.parse(stdout);
                 const routeSimplyfied = Object.entries(route).map(([index, el]) => [el._controller, el._method, el._routePath, el._package, el._debug.templateExists]);
