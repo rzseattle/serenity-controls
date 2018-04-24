@@ -2,7 +2,7 @@ import * as React from "react";
 import {Icon} from "../ctrl/Icon";
 import router from "../backoffice/Router";
 
-import {BForm, BText} from "../layout/BootstrapForm";
+import {BForm, BText, BTextarea} from "../layout/BootstrapForm";
 import {ideConnector} from "./IDEConnector";
 
 require("./RouteVsualization.sass");

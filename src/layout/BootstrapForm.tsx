@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
     CheckboxGroup,
     ConnectionsField,
@@ -16,70 +16,143 @@ import {
     Switch,
     Text,
     Textarea,
-    Wysiwyg
-} from '../ctrl/Fields';
-import {FileList, IFileList} from '../ctrl/FileLists';
-import {Shadow} from '../ctrl/Overlays';
-import Comm from '../lib/Comm';
-import {IConnectionsFieldProps} from 'frontend/src/ctrl/fields/ConnectionsField';
-import {Copyable} from 'frontend/src/ctrl/Copyable';
-
+    Wysiwyg,
+} from "../ctrl/Fields";
+import {FileList, IFileList} from "../ctrl/FileLists";
+import {Shadow} from "../ctrl/Overlays";
+import Comm from "../lib/Comm";
+import {IConnectionsFieldProps} from "frontend/src/ctrl/fields/ConnectionsField";
+import {Copyable} from "frontend/src/ctrl/Copyable";
 
 interface IWithBootstrapFormFieldProps {
-    label?: string
-    help?: string
-    errors?: string[]
-    className?: string
-    prefix?: string
-    suffix?: string
-    layoutType?: 'horizontal' | 'default',
-    addInputClass?: boolean,
-    editable?: boolean
-    copyable?: boolean
-    disabledClass?: string
-    labelClass?: string
+    label?: string;
+    help?: string;
+    errors?: string[];
+    className?: string;
+    prefix?: string;
+    suffix?: string;
+    layoutType?: "horizontal" | "default";
+    addInputClass?: boolean;
+    editable?: boolean;
+    copyable?: boolean;
+    disabledClass?: string;
+    labelClass?: string;
+
 }
 
-/*
 
-({addInputClass = true}: IWithBootstrapFormFieldProps = {}) =>
-        <TOriginalProps extends {}>(Component: (React.ComponentClass<TOriginalProps> | React.StatelessComponent<TOriginalProps>)) => {
+const withBootstrapFormField2 = <P extends IWithBootstrapFormFieldProps>(Component: React.ComponentType<P>) => {
+    return class  extends React.Component<P & IWithBootstrapFormFieldProps> {
+        public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
+            layoutType: "default",
+            addInputClass: true
+        };
 
-            type ResultProps = TOriginalProps & IWithBootstrapFormFieldProps;
+        public render() {
+            const props = this.props;
+            const addInputClass = true;
+            const classes = ["form-group"];
 
-            return class HOC extends React.Component<ResultProps, any> {
+            if (this.props.errors) {
+                classes.push("has-error");
+            }
 
-* */
+            let className = addInputClass ? "form-control" : "";
+            if (props.className) {
+                className += " " + props.className;
+            }
 
+            let field;
+
+            const fieldProps: any = {};
+            (Object as any).assign(fieldProps, props, {className});
+
+            if ((this.props.suffix || this.props.prefix) && this.props.editable) {
+                field =
+                    <div className="input-group">
+                        {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
+                        <Component {...props} {...fieldProps} />
+                        {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
+                    </div>;
+
+            } else {
+                field = <Component {...fieldProps} />;
+            }
+            let errors = [];
+            if (props.errors) {
+
+                if (!Array.isArray(props.errors)) {
+                    errors = [props.errors];
+                } else {
+                    errors = props.errors;
+                }
+            }
+
+            if (props.layoutType == "horizontal") {
+
+                return (
+                    <div className={classes.join(" ")}>
+                        {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
+                        <div className="col-sm-10">
+                            {field}
+                            {props.help ?
+                                <span className="help-block">{props.help} </span>
+                                : ""}
+                            {props.errors && this.props.editable ?
+                                <span className="help-block">{errors.join(", ")} </span>
+
+                                : ""}
+                        </div>
+                    </div>
+                );
+            }
+            if (props.layoutType == "default") {
+                return (
+                    <div className={classes.join(" ")}>
+                        {this.props.label && <label className={this.props.labelClass}>{this.props.label} {this.props.copyable &&
+                        <Copyable toCopy={this.props.value}/>}</label>}
+                        {field}
+
+                        {props.help ?
+                            <span className="help-block">{props.help} </span>
+                            : ""}
+                        {props.errors && this.props.editable ?
+                            <span className="help-block">{errors.join(", ")} </span>
+
+                            : ""}
+                        {/*.join(", ")*/}
+                    </div>
+                );
+            }
+        }
+
+    };
+};
 
 const withBootstrapFormField =
 
     ({addInputClass = true}: IWithBootstrapFormFieldProps = {}) => <TOriginalProps extends {}>(Component: React.ComponentType<TOriginalProps>) => {
         return class extends React.Component<TOriginalProps & IWithBootstrapFormFieldProps> {
-            public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
-                layoutType: 'default'
-            }
-
-            render(): JSX.Element {
-                let props = this.props;
 
 
-                let classes = ['form-group'];
+            public render(): JSX.Element {
+                const props = this.props;
+
+                const classes = ["form-group"];
 
                 if (this.props.errors) {
-                    classes.push('has-error');
+                    classes.push("has-error");
                 }
 
-                let className = addInputClass ? 'form-control' : '';
+                let className = addInputClass ? "form-control" : "";
                 if (props.className) {
-                    className += ' ' + props.className;
+                    className += " " + props.className;
                 }
 
                 let field;
 
-
-                let fieldProps: any = {};
-                Object.assign(fieldProps, props, {className: className});
+                const fieldProps: any = {};
+                Object.assign(fieldProps, props, {className});
 
                 if ((this.props.suffix || this.props.prefix) && this.props.editable) {
                     field =
@@ -102,135 +175,134 @@ const withBootstrapFormField =
                     }
                 }
 
-                if (props.layoutType == 'horizontal') {
+                if (props.layoutType == "horizontal") {
 
                     return (
-                        <div className={classes.join(' ')}>
+                        <div className={classes.join(" ")}>
                             {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
                             <div className="col-sm-10">
                                 {field}
                                 {props.help ?
                                     <span className="help-block">{props.help} </span>
-                                    : ''}
+                                    : ""}
                                 {props.errors && this.props.editable ?
-                                    <span className="help-block">{errors.join(', ')} </span>
+                                    <span className="help-block">{errors.join(", ")} </span>
 
-                                    : ''}
+                                    : ""}
                             </div>
                         </div>
-                    )
+                    );
                 }
-                if (props.layoutType == 'default') {
+                if (props.layoutType == "default") {
                     return (
-                        <div className={classes.join(' ')}>
+                        <div className={classes.join(" ")}>
                             {this.props.label && <label className={this.props.labelClass}>{this.props.label} {this.props.copyable &&
                             <Copyable toCopy={this.props.value}/>}</label>}
                             {field}
 
                             {props.help ?
                                 <span className="help-block">{props.help} </span>
-                                : ''}
+                                : ""}
                             {props.errors && this.props.editable ?
-                                <span className="help-block">{errors.join(', ')} </span>
+                                <span className="help-block">{errors.join(", ")} </span>
 
-                                : ''}
+                                : ""}
                             {/*.join(", ")*/}
                         </div>
-                    )
+                    );
                 }
             }
-        }
-    }
+        };
+    };
 
 interface IBFormEvent {
-    form: BForm,
-    inputEvent: Event,
+    form: BForm;
+    inputEvent: Event;
 }
 
 interface IBFormCommEvent {
-    form: BForm,
-    response: any,
+    form: BForm;
+    response: any;
 }
 
 interface IBFormProps {
     /**
      * ( default | inline | horizontal )
      */
-    layoutType?: 'default' | 'horizontal',
+    layoutType?: "default" | "horizontal";
     /**
      * This callback is fired when form input is changed
      * @callback
      * @param {object} keys: inputEvent, form
      */
-    onChange?: { (formEvent: IBFormEvent): any },
+    onChange?: (formEvent: IBFormEvent) => any;
     /**
      * This callback is fired when form input is submited preventin "action send"
      * @callback
      * @param {object} keys: inputEvent, form
      */
-    onSubmit?: { (formEvent: IBFormEvent): any },
+    onSubmit?: (formEvent: IBFormEvent) => any;
     /**
      * This callback is fired to prepare data to sends
      * @callback
      * @param {object} keys: inputEvent, form
      */
-    onBeforeSend?: { (formEvent: IBFormEvent): any },
+    onBeforeSend?: (formEvent: IBFormEvent) => any;
     /**
      * This callback is fired when validation error occured
      * @callback
      * @param {object} keys: response, form
      */
-    onValidatorError?: { (response: IBFormCommEvent): any },
+    onValidatorError?: (response: IBFormCommEvent) => any;
     /**
      * This callback is fired when server error occured
      * @callback
      * @param {object} keys: response, form
      */
-    onError?: { (response: IBFormCommEvent): any },
+    onError?: (response: IBFormCommEvent) => any;
     /**
      * This callback is fired after from submited with success
      * @callback
      * @param {object} keys: response, form
      */
-    onSuccess?: { (response: IBFormCommEvent): any },
+    onSuccess?: (response: IBFormCommEvent) => any;
     /**
      * Input data for form inputs ( key = input name )
      */
-    data?: any,
+    data?: any;
     /**
      * Form target action
      */
-    action?: string,
+    action?: string;
     /**
      * Namespace for all fields in form
      */
-    namespace?: string,
+    namespace?: string;
 
-    editable?: boolean,
+    editable?: boolean;
 
-    loading?: boolean
-    children: { (formConf: any, data: any , form: BForm): any }
-    formErrors?: string[]
-    fieldErrors?: any
-    errors?: any
-    useFormTag?: boolean
+    loading?: boolean;
+    children: (formConf: any, data: any, form: BForm) => any;
+    formErrors?: string[];
+    fieldErrors?: any;
+    errors?: any;
+    useFormTag?: boolean;
 }
 
 interface IBFormState {
-    data: any
-    fieldErrors: any,
-    formErrors: any,
-    isDirty: boolean,
-    loading: boolean
+    data: any;
+    fieldErrors: any;
+    formErrors: any;
+    isDirty: boolean;
+    loading: boolean;
 }
 
 class BForm extends React.Component<IBFormProps, IBFormState> {
-    formTag: HTMLFormElement;
+    public formTag: HTMLFormElement;
     private fieldsValues: {};
 
-
     public static defaultProps: Partial<IBFormProps> = {
-        layoutType: 'default',
+        layoutType: "default",
         editable: true,
         fieldErrors: {},
         formErrors: [],
@@ -244,23 +316,21 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             fieldErrors: props.fieldErrors,
             formErrors: props.formErrors,
             isDirty: false,
-            loading: props.loading || false
+            loading: props.loading || false,
         };
-
 
         //used to setup base data
         this.fieldsValues = {};
     }
 
-
     /**
      * Return form input data
      */
-    getData() {
-        let data = Object.assign(this.state.data, {});
-        let fields = Object.assign(this.fieldsValues, {});
+    public getData() {
+        const data = Object.assign(this.state.data, {});
+        const fields = Object.assign(this.fieldsValues, {});
 
-        for (let i in data) {
+        for (const i in data) {
             if (data[i] == undefined && fields[i] !== undefined) {
                 data[i] = fields[i];
             }
@@ -268,7 +338,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         return data;
     }
 
-    getErrors() {
+    public getErrors() {
         return {fieldErrors: this.state.fieldErrors, formErrors: this.state.formErrors};
     }
 
@@ -276,21 +346,20 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
      * Handle validation error
      * @param {object} response
      */
-    handleValidatorError(response) {
+    public handleValidatorError(response) {
         if (this.props.onValidatorError) {
-            this.props.onValidatorError({form: this, response: response});
+            this.props.onValidatorError({form: this, response});
         }
 
         this.setState({
             fieldErrors: response.fieldErrors,
-            formErrors: response.errors
+            formErrors: response.errors,
         });
 
         this.forceUpdate();
     }
 
-
-    componentWillReceiveProps(nextProps) {
+    public componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
             this.setState({data: nextProps.data});
         }
@@ -298,7 +367,6 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         if (nextProps.loading != undefined) {
             this.setState({loading: nextProps.loading});
         }
-
 
         if (nextProps.fieldErrors) {
             this.setState({fieldErrors: nextProps.fieldErrors});
@@ -313,7 +381,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     }
 
-    componentDidMount() {
+    public componentDidMount() {
 
     }
 
@@ -321,7 +389,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         this.handleSubmit(null);
     }
 
-    handleSubmit(e) {
+    public handleSubmit(e) {
         if (e) {
             e.preventDefault();
         }
@@ -338,22 +406,22 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 data = this.getData();
             }
 
-            comm.on('finish', () => this.setState({loading: false}));
-            comm.on('success', response => {
+            comm.on("finish", () => this.setState({loading: false}));
+            comm.on("success", (response) => {
                 if (this.props.onSuccess) {
-                    this.props.onSuccess({form: this, response: response});
+                    this.props.onSuccess({form: this, response});
                 }
                 this.setState({
                     fieldErrors: {},
-                    formErrors: []
+                    formErrors: [],
                 });
             });
-            comm.on('validationErrors', response => {
+            comm.on("validationErrors", (response) => {
                 this.handleValidatorError(response);
             });
-            comm.on('error', response => {
+            comm.on("error", (response) => {
                 if (this.props.onError) {
-                    this.props.onError({form: this, response: response});
+                    this.props.onError({form: this, response});
                 }
             });
             comm.setData(data);
@@ -364,24 +432,24 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         return false;
     }
 
-    getHtmlNotationNameTranslators(fieldName) {
+    public getHtmlNotationNameTranslators(fieldName) {
 
-        let tmp = fieldName.replace(/\]/g, "")
-        let arrayNotation = tmp.split("[");
+        const tmp = fieldName.replace(/\]/g, "");
+        const arrayNotation = tmp.split("[");
         let dotNotation = arrayNotation.join(".");
 
         let get;
         try {
             dotNotation = dotNotation.replace(/\.([0-9]+)/g, "[$1]");
-            get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}")
+            get = new Function("obj", "try{ return obj." + dotNotation + "; }catch(e){ return undefined;}");
         } catch (e) {
             console.error("try{ return obj." + dotNotation + "; }catch(e){ return undefined;}");
             console.error(e.message);
         }
 
-        let set = (obj, path, endValue) => {
+        const set = (obj, path, endValue) => {
             if (path.length > 1) {
-                let currKey = path.shift();
+                const currKey = path.shift();
                 if (obj[currKey] == undefined) {
                     obj[currKey] = {};
                 }
@@ -389,36 +457,34 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             } else {
                 obj[path[0]] = endValue;
             }
-        }
+        };
 
         return {get, set, arrayNotation};
     }
 
-    handleInputChange(e) {
+    public handleInputChange(e) {
         let name, type, value;
         //custom event data
-
 
         if (e.name !== undefined) {
             name = e.name;
             value = e.value;
             type = e.type;
 
-
         } else {
-            name = e.target.getAttribute('name');
-            type = e.target.getAttribute('type');
+            name = e.target.getAttribute("name");
+            type = e.target.getAttribute("type");
             value = e.target.value;
 
-            if (e.target.type == 'file') {
+            if (e.target.type == "file") {
                 value = e.target.files[0];
             }
         }
 
-        let {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
+        const {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
 
-        if (type == 'checkbox') {
-            let checked = e.target.checked;
+        if (type == "checkbox") {
+            const checked = e.target.checked;
 
             if (!Array.isArray(this.state.data[name])) {
                 if (!checked) {
@@ -430,7 +496,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 if (checked) {
                     this.state.data[name].push(value);
                 } else {
-                    let index = this.state.data[name].indexOf(value);
+                    const index = this.state.data[name].indexOf(value);
                     this.state.data[name].splice(index, 1);
                 }
             }
@@ -448,18 +514,17 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     }
 
-
-    applyToField(name, defaultValue = null) {
+    public applyToField(name, defaultValue = null) {
 
         let value;
-        let {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
+        const {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
 
         value = get(this.state.data);
         if (value === undefined && defaultValue !== false) {
             set(this.state.data, arrayNotation, defaultValue);
         }
         if (get(this.state.fieldErrors) == undefined) {
-            set(this.state.fieldErrors, arrayNotation, null)
+            set(this.state.fieldErrors, arrayNotation, null);
         }
 
         //false - dont track
@@ -470,45 +535,47 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         //console.log(get(this.state.fieldErrors))
 
         return {
-            value: value,
-            name: name,
+            value,
+            name,
             layoutType: this.props.layoutType,
             errors: get(this.state.fieldErrors),
             editable: this.props.editable,
             onChange: (e) => {
                 this.handleInputChange(e);
-            }
+            },
         };
     }
 
-    render() {
+    public render() {
         const layoutType = this.props.layoutType;
 
-        let classes = [];
-        if (layoutType == 'horizontal') {
-            classes.push('form-horizontal');
-        } else if (layoutType == 'default') {
+        const classes = [];
+        if (layoutType == "horizontal") {
+            classes.push("form-horizontal");
+        } else if (layoutType == "default") {
             //classes.push('form-inline');
         }
 
         const Tag = this.props.useFormTag ? "form" : "div";
 
         return (
-            <Tag ref={(form) => this.formTag = form} className={classes.join(' ')}
-                 onSubmit={this.handleSubmit.bind(this)} style={{position: 'relative'}}>
+            <Tag ref={(form) => this.formTag = form} className={classes.join(" ")}
+                 onSubmit={this.handleSubmit.bind(this)} style={{position: "relative"}}>
 
                 {this.state.formErrors.length > 0 &&
                 <ul className="bg-danger ">
-                    {this.state.formErrors.map(el => <li>{el}</li>)}
+                    {this.state.formErrors.map((el) => <li>{el}</li>)}
                 </ul>}
                 {this.props.children(this.applyToField.bind(this), this.getData(), this)}
 
                 <Shadow {...{visible: this.state.loading, loader: true, container: () => this.formTag}} />
             </Tag>
-        )
+        );
     }
 }
 
+
+const BText = withBootstrapFormField2(Text);
 
 const BText = withBootstrapFormField()<ITextProps>(Text);
 const BTextarea = withBootstrapFormField()<ITextareaProps>(Textarea);
@@ -535,5 +602,5 @@ export {
     BConnectionsField,
     BFileList,
     BContainer,
-    withBootstrapFormField
+    withBootstrapFormField,
 };
