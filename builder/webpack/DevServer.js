@@ -2,10 +2,10 @@ const path = require("path");
 const fs = require("fs");
 const https = require("https");
 
-var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
+var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
     const generateSign = () => {
         const selfsigned = require("selfsigned");
-        const attrs = [{name: "commonName", value: "localhost"}];
+        const attrs = [{ name: "commonName", value: "localhost" }];
         const pems = selfsigned.generate(attrs, {
             algorithm: "sha256",
             keySize: 2048,
@@ -24,8 +24,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
         });
         if (!fs.existsSync(BASE_PATH + "/build/js/ssl")) {
             fs.mkdirSync(BASE_PATH + "/build/js/ssl");
-            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.crt", pems.cert, {encoding: "utf-8"});
-            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.key", pems.private, {encoding: "utf-8"});
+            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.crt", pems.cert, { encoding: "utf-8" });
+            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.key", pems.private, { encoding: "utf-8" });
         }
     };
 
@@ -36,9 +36,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
     conf.output = {
         filename: "bundle.js",
         publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,
-        devtoolModuleFilenameTemplate: function (info) {
+        devtoolModuleFilenameTemplate: function(info) {
             return path.resolve(BASE_PATH, info.absoluteResourcePath).replace(BASE_PATH, "");
-
         },
     };
     let devEntries = [];
@@ -88,49 +87,60 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
         before: (app) => {
             const busboyBodyParser = require("busboy-body-parser");
-            app.use(busboyBodyParser({limit: "5mb", multi: true}));
+            app.use(busboyBodyParser({ limit: "5mb", multi: true }));
 
-            app.get("/debug/getFile", function (req, res) {
+            app.get("/debug/getFile", function(req, res) {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.send(fs.readFileSync(BASE_PATH + req.param("file")));
             });
-            app.post("/*", function (req, res, next) {
+            app.post("/*", function(req, res, next) {
                 res.header("Access-Control-Allow-Origin", "*");
                 next();
-            })
+            });
 
-            app.options("/*", function (req, res, next) {
+            app.options("/*", function(req, res, next) {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
                 res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
                 res.send(200);
             });
 
-            app.post("/openFile", function (req, response) {
-                let {file, line} = req.body;
-                console.log("Opening file " + file + ":" + line);
-                response.send(JSON.stringify({status: "OK"}));
+            app.post("/createFile", function(req, response) {
+                let { file, type } = req.body;
+                console.log(file);
+                console.log(type);
+                if (type == "template") {
+                    fs.writeFileSync(BASE_PATH + file, "Automated generated template: " + file);
+                } else if (type == "component") {
+                    fs.writeFileSync(BASE_PATH + file, fs.readFileSync(path.resolve(__dirname, "../templates/component.tsx")));
+                }
 
-                var exec = require('child_process').exec;
+                response.send(JSON.stringify({ status: "OK" }));
+            });
+
+            app.post("/openFile", function(req, response) {
+                let { file, line } = req.body;
+                console.log("Opening file " + file + ":" + line);
+                response.send(JSON.stringify({ status: "OK" }));
+
+                var exec = require("child_process").exec;
                 //<IDE_HOME>\bin\phpstorm.exe C:\MyProject\ --line 3 C:\MyProject\scripts\numbers.js
 
-                let ideDir,fileTest;
+                let ideDir, fileTest;
                 if (/^win/.test(process.platform)) {
-                    ideDir = "C:\\Program Files\\JetBrains\\" //\\bin\\phpstorm64.exe;
+                    ideDir = "C:\\Program Files\\JetBrains\\"; //\\bin\\phpstorm64.exe;
                     fileTest = "\\bin\\phpstorm64.exe";
                 } else {
                     ideDir = "/home/pw/CODE/";
                     fileTest = "/bin/phpstorm.sh";
                 }
 
-
-                fs.readdirSync(ideDir).forEach(_file => {
+                fs.readdirSync(ideDir).forEach((_file) => {
                     console.log(_file);
                     if (fs.existsSync(ideDir + _file + fileTest)) {
-
                         let command = `"${ideDir}${_file}${fileTest}" ${BASE_PATH} --line ${line} ${BASE_PATH}${file}`;
-                        console.log(command)
-                        exec(command, function (error, stdout, stderr) {
+                        console.log(command);
+                        exec(command, function(error, stdout, stderr) {
                             if (!error) {
                                 console.log("worked");
                             } else {
@@ -140,22 +150,18 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                             }
                         });
                     }
-
-                })
-
+                });
 
                 return;
-            })
+            });
 
-            app.post("/refreshRoute", function (req, response) {
+            app.post("/refreshRoute", function(req, response) {
                 response.header("Access-Control-Allow-Origin", "*");
                 let routeFile = path.resolve(BASE_PATH + "/data/cache/symfony/route.json");
                 let file = fs.writeFileSync(routeFile, req.body.data);
 
-                response.send(JSON.stringify({status: "OK"}));
+                response.send(JSON.stringify({ status: "OK" }));
                 return;
-
-
             });
 
             /*app.post('/debug/getRoutes', function (req, res) {

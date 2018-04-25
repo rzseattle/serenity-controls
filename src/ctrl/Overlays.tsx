@@ -28,10 +28,10 @@ class Shadow extends React.Component<IShadowProps, any> {
                     <div className="w-shadow">
                         {this.props.loader && (
                             <span className="loader loader-x3">
-                                <i />
-                                <i />
-                                <i />
-                                <i />
+                                <i/>
+                                <i/>
+                                <i/>
+                                <i/>
                             </span>
                         )}
                     </div>
@@ -43,10 +43,15 @@ class Shadow extends React.Component<IShadowProps, any> {
 
 export interface IModalProps {
     show: boolean;
+
     onShow?(): any;
+
     onHide?(): any;
+
     container?(): HTMLElement;
+
     target?(): HTMLElement;
+
     positionOffset?: number;
     recalculatePosition?: boolean;
     showHideLink?: boolean;
@@ -60,10 +65,12 @@ export interface IModalProps {
     className?: string;
     children: any;
     orientation?: string;
+
     onOrientationChange?(type: string): any;
 }
 
-interface IModalState {}
+interface IModalState {
+}
 
 let modalRoot = document.getElementById("modal-root");
 
@@ -231,7 +238,6 @@ class Modal extends React.Component<IModalProps, IModalState> {
         let p = this.props;
 
         return ReactDOM.createPortal(
-
             <div
                 className={(this.props.layer ? "w-modal-container " : "") + p.className || ""}
                 style={{
@@ -243,7 +249,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
                 <div className="w-modal" ref={(el) => (this.modalBody = el)} onClick={(e) => e.stopPropagation()}>
                     {p.showHideLink && (
                         <a className="w-modal-close" style={{}} onClick={this.handleClose.bind(this)}>
-                            <Icon name="ChromeClose" />
+                            <Icon name="ChromeClose"/>
                         </a>
                     )}
                     {p.title && <div className="w-modal-title">{p.title}</div>}
@@ -356,24 +362,31 @@ export const tooltip = (content, options) => {
     return cleanup;
 };
 
-class Tooltip extends React.Component<any, any> {
-    public static defaultProps = {
-        layer: true,
-        orientation: "bottom left edge",
+interface ITooltipProps {
+    theme?: "light" | "dark";
+    content: () => any;
+    type?: "hover" | "click";
+}
+
+class Tooltip extends React.Component<ITooltipProps, any> {
+    public static defaultProps: Partial<ITooltipProps> = {
+        theme: "dark",
+        type: "hover",
     };
 
     constructor(props) {
         super(props);
         this.state = {
             brakeLeft: 0,
-            orientation: this.props.orientation,
+            //orientation: this.props.orientation,
+            isVisible: false,
         };
     }
 
     componentDidMount() {
-        let targetPos = this.props.target().getBoundingClientRect();
-        let center = Math.round(/*targetPos.left -*/ targetPos.width / 2);
-        this.setState({ brakeLeft: center });
+        //let targetPos = this.props.target().getBoundingClientRect();
+        ///let center = Math.round(/*targetPos.left -*/ targetPos.width / 2);
+        //this.setState({ brakeLeft: center });
     }
 
     componentDidUpdate() {
@@ -382,30 +395,73 @@ class Tooltip extends React.Component<any, any> {
         //this.setState({brakeLeft: center});
     }
 
-    handleBlur() {
-        this.setState({ opened: false });
-    }
+
 
     orientationChange(type) {
         //this.setState({orientation: 'top left edge'})
     }
 
+    private handleMouseEnter = () => {
+        if (this.props.type == "hover") {
+            this.setState({ isVisible: true });
+        }
+    };
+
+    private handleMouseOut = () => {
+        if (this.props.type == "hover") {
+            this.setState({ isVisible: false });
+        }
+    };
+
+    private handleClick = () => {
+        if (this.props.type == "click") {
+            this.setState({ isVisible: true }); // !this.state.isVisible
+        }
+    };
+
+     handleBlur = () => {
+        this.setState({ isVisible: false });
+    };
+
     render() {
-        let p = this.props;
+
+        let { theme, content } = this.props;
+
         return (
-            <Modal
-                show={true}
-                target={this.props.target}
-                shadow={false}
-                layer={this.props.layer}
-                onHide={this.props.onHide}
-                className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
-                onOrientationChange={this.orientationChange.bind(this)}
-                orientation={this.state.orientation}
-            >
-                <div className="w-toolbar-brake" style={{ left: this.state.brakeLeft }} />
-                <div className="w-toolbar-content">{p.children}</div>
-            </Modal>
+            <>
+                <div
+                    onMouseEnter={this.handleMouseEnter}
+                    tabIndex={-1}
+
+                    onBlur={this.handleBlur}
+                    onMouseLeave={this.handleMouseOut}
+                    onClick={this.handleClick}
+                    className={"w-tooltip " + (this.state.isVisible && "w-tooltip-visible")}
+                >
+                    {this.props.children}{" "}
+                    {this.state.isVisible && (
+                        <div className={`w-tooltip-hover w-tooltip-hover-${theme}`} style={{}}>
+                            {content()}
+                        </div>
+                    )}
+                </div>
+
+                {false && (
+                    <Modal
+                        show={true}
+                        target={this.props.target}
+                        shadow={false}
+                        layer={this.props.layer}
+                        onHide={this.props.onHide}
+                        className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
+                        onOrientationChange={this.orientationChange.bind(this)}
+                        orientation={this.state.orientation}
+                    >
+                        <div className="w-toolbar-brake" style={{ left: this.state.brakeLeft }}/>
+                        <div className="w-toolbar-content">{p.children}</div>
+                    </Modal>
+                )}
+            </>
         );
     }
 }

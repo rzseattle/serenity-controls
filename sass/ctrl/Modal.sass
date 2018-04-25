@@ -14,7 +14,6 @@
 .w-modal-confirm
     z-index: 2040
 
-
 .w-modal-shadow
     z-index: auto
     opacity: 0.15
@@ -79,8 +78,31 @@
 .w-shadow-fixed
     position: fixed
 
-
 .w-tooltip
+    position: relative
+    outline: none
+    .w-tooltip-hover
+        position: absolute
+
+        bottom: 100%
+
+        padding: 3px 8px
+
+        z-index: 10000000
+        border-radius: 4px
+        translateX: (-50%)
+
+    .w-tooltip-hover-dark
+        color: white
+        background-color: black
+    .w-tooltip-hover-light
+        color: black
+        background-color: white
+        border: solid 1px grey
+        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
+
+
+//.w-tooltip
     .w-modal
         transform: translateY( 10px )
 
@@ -105,11 +127,10 @@
 
 .w-tooltip-top
     .w-modal
-        transform: translateY( -10px )
+        transform: translateY(-10px)
     .w-toolbar-brake
         top: auto
         bottom: -8px
-
 
 $loader-size: 1
 span.loader, .w-loader > span
@@ -145,7 +166,6 @@ span.loader, .w-loader > span
             left: 0
             bottom: 0
             animation-delay: 1.2s
-
 
 @for $loaderSize from 1 through 4
     span.loader-x#{$loaderSize}

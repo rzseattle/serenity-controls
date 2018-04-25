@@ -14,6 +14,7 @@ declare global {
                     line: string;
                     template: string;
                     templateExists: boolean;
+                    componentExists: boolean;
                 };
             }
 

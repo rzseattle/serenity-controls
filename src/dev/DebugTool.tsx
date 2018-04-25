@@ -1,17 +1,17 @@
 import * as React from "react";
 
-import {TabPane, Tabs} from "../ctrl/Tabs";
+import { TabPane, Tabs } from "../ctrl/Tabs";
 import JSONTree from "react-json-tree";
-import {Modal} from "../ctrl/Overlays";
+import { Modal } from "../ctrl/Overlays";
 import ErrorReporter from "../lib/ErrorReporter";
 import Icon from "frontend/src/ctrl/Icon";
 import Comm from "frontend/src/lib/Comm";
-import {DevProperties} from "./DevProperties";
-import {Copyable} from "frontend/src/ctrl/Copyable";
+import { DevProperties } from "./DevProperties";
+import { Copyable } from "frontend/src/ctrl/Copyable";
 import * as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
-import {ideConnector} from "./IDEConnector";
-import {BackofficeStore} from "../backoffice/BackofficeStore";
-import {RouteVisualization} from "./RouteVisualization";
+import { ideConnector } from "./IDEConnector";
+import { BackofficeStore } from "../backoffice/BackofficeStore";
+import { RouteVisualization } from "./RouteVisualization";
 
 declare var DEV_PROPERIES: DevProperties;
 
@@ -55,7 +55,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
             openedAjaxData: [],
             openedViewData: [],
 
-            debugData: {views: [], ajax: []},
+            debugData: { views: [], ajax: [] },
             isRoutePanelVisible: false,
 
             style: {
@@ -66,7 +66,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
 
         window.onerror = (messageOrEvent, source, lineno, colno, error) => {
             this.state.errors.push(messageOrEvent);
-            this.setState({lastError: error});
+            this.setState({ lastError: error });
             this.forceUpdate();
         };
 
@@ -81,7 +81,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
     }
 
     private debugDataListener = (debugData: { views: Frontend.Debug.DebugDataEntry[]; ajax: Frontend.Debug.DebugDataEntry[] }) => {
-        this.setState({debugData});
+        this.setState({ debugData });
     };
 
     public routeReloadHandler(): any {
@@ -91,7 +91,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
     public _handleKeyDown(e) {
         if (e.keyCode === 27) {
             //esc
-            this.setState({expanded: !this.state.expanded});
+            this.setState({ expanded: !this.state.expanded });
         }
     }
 
@@ -104,11 +104,11 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
     }
 
     public handleExpand() {
-        this.setState({expanded: !this.state.expanded}, this.saveData);
+        this.setState({ expanded: !this.state.expanded }, this.saveData);
     }
 
     public _mouseMove(e) {
-        this.setState({style: {left: e.clientX + 5, top: e.clientY - 5, right: "auto"}});
+        this.setState({ style: { left: e.clientX + 5, top: e.clientY - 5, right: "auto" } });
     }
 
     public _drag(e) {
@@ -127,16 +127,16 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
 
     private swithAjaxDataVisible = (index) => {
         if (this.state.openedAjaxData.includes(index)) {
-            this.setState({openedAjaxData: this.state.openedAjaxData.filter((el) => el != index)});
+            this.setState({ openedAjaxData: this.state.openedAjaxData.filter((el) => el != index) });
         } else {
-            this.setState({openedAjaxData: this.state.openedAjaxData.concat(index)});
+            this.setState({ openedAjaxData: this.state.openedAjaxData.concat(index) });
         }
     };
     private swithViewDataVisible = (index) => {
         if (this.state.openedViewData.includes(index)) {
-            this.setState({openedViewData: this.state.openedViewData.filter((el) => el != index)});
+            this.setState({ openedViewData: this.state.openedViewData.filter((el) => el != index) });
         } else {
-            this.setState({openedViewData: this.state.openedViewData.concat(index)});
+            this.setState({ openedViewData: this.state.openedViewData.concat(index) });
         }
     };
 
@@ -152,7 +152,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
     public render() {
         const s = this.state;
 
-        const {componentInfo} = this.props;
+        const { componentInfo } = this.props;
 
         const extendedInfo = componentInfo ? componentInfo.extendedInfo : null;
         return (
@@ -164,7 +164,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                 {s.expanded && (
                     <div className="expanded">
                         <div className="toolbar btn-toolbar">
-                            <a onClick={() => this.setState({isRoutePanelVisible: true})} className="btn btn-sm btn-default">
+                            <a onClick={() => this.setState({ isRoutePanelVisible: true, expanded: false })} className="btn btn-sm btn-default">
                                 <Icon name={"CustomList"}/> Show routes
                             </a>
 
@@ -197,8 +197,8 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                                                 <Icon name={"Database"}/> props
                                             </a>
                                             {this.state.openedViewData.includes(index) && (
-                                                <div style={{maxWidth: "600px", overflow: "auto", clear: "both"}}>
-                                                    <pre style={{maxHeight: 300, overflow: "auto"}}>{JSON.stringify(info.props[0], null, 2)}</pre>
+                                                <div style={{ maxWidth: "600px", overflow: "auto", clear: "both" }}>
+                                                    <pre style={{ maxHeight: 300, overflow: "auto" }}>{JSON.stringify(info.props[0], null, 2)}</pre>
                                                 </div>
                                             )}
 
@@ -224,7 +224,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
 
                                             {this.state.openedAjaxData.includes(index) && (
                                                 <div>
-                                                    <pre style={{maxHeight: 300, overflow: "auto"}}>{JSON.stringify(info.props[0], null, 2)}</pre>
+                                                    <pre style={{ maxHeight: 300, overflow: "auto" }}>{JSON.stringify(info.props[0], null, 2)}</pre>
                                                 </div>
                                             )}
                                         </div>
@@ -234,14 +234,14 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                         </div>
                     </div>
                 )}
-                <Modal show={this.state.lastError != null} onHide={() => this.setState({lastError: null})} ref={(modal) => (this.errorModal = modal)}>
-                    <div style={{maxWidth: 800}}>
+                <Modal show={this.state.lastError != null} onHide={() => this.setState({ lastError: null })} ref={(modal) => (this.errorModal = modal)}>
+                    <div style={{ maxWidth: 800 }}>
                         <ErrorReporter error={this.state.lastError}/>
                     </div>
                 </Modal>
                 {this.state.isRoutePanelVisible && (
-                    <Modal show={this.state.isRoutePanelVisible} title={"Routes"} showHideLink={true} onHide={() => this.setState({isRoutePanelVisible: false})}>
-                        <div style={{width: "90vw"}}>
+                    <Modal show={this.state.isRoutePanelVisible} title={"Routes"} showHideLink={true} onHide={() => this.setState({ isRoutePanelVisible: false })}>
+                        <div style={{ width: "90vw" }}>
                             <RouteVisualization/>
                         </div>
                     </Modal>

@@ -27,7 +27,7 @@ interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number,
 }
 
-export interface ISelectProps extends IFieldProps {
+interface ISelectProps extends IFieldProps {
     options: IOption[] | { [key: string]: string },
     onChange?: { (changeData: ISelectChangeEvent): any },
     allowClear?: boolean
@@ -138,7 +138,7 @@ class Select extends React.Component<ISelectProps, any> {
     }
 }
 
-export interface ITextProps extends IFieldProps {
+interface ITextProps extends IFieldProps {
     type?: 'text' | 'password',
     value?: string,
     onKeyDown?: any
@@ -180,7 +180,7 @@ class Text extends React.Component<ITextProps, any> {
 
         return (
             <input
-                className={props.className}
+                className={props.className }
                 name={props.name}
                 type={props.type}
                 value={props.value === null ? '' : props.value}
@@ -197,7 +197,7 @@ class Text extends React.Component<ITextProps, any> {
 }
 
 
-export interface ITextareaProps extends IFieldProps {
+interface ITextareaProps extends IFieldProps {
     value?: string,
 }
 
@@ -241,7 +241,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
 }
 
 
-export interface IWysiwygProps extends IFieldProps {
+interface IWysiwygProps extends IFieldProps {
     onLoad?: { (): any },
     value?: string,
 
@@ -421,7 +421,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 }
 
 
-export interface ISwitchProps extends IFieldProps {
+interface ISwitchProps extends IFieldProps {
     options: { value: string | number, label: string }[] | { [key: string]: string },
     value?: number | string,
 }
@@ -500,7 +500,7 @@ class Switch extends React.Component<ISwitchProps, any> {
     }
 }
 
-export interface ICheckboxGroupProps extends IFieldProps {
+interface ICheckboxGroupProps extends IFieldProps {
     options: { value: string | number, label: string }[] | { [key: string]: string },
     value: string[]
     inline: boolean
@@ -597,7 +597,7 @@ let locale;
 let datePicker;
 let moment;
 
-export interface IDateProps extends IFieldProps {
+interface IDateProps extends IFieldProps {
     value: string,
     placeholder?: string;
 }
@@ -684,7 +684,7 @@ class Date extends React.Component<IDateProps, any> {
     }
 }
 
-export interface IFileProps extends IFieldProps {
+interface IFileProps extends IFieldProps {
     value: FileList
 }
 

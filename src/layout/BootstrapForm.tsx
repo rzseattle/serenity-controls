@@ -4,25 +4,16 @@ import {
     ConnectionsField,
     Date,
     File,
-    ICheckboxGroupProps,
-    IDateProps,
-    IFileProps,
-    ISelectProps,
-    ISwitchProps,
-    ITextareaProps,
-    ITextProps,
-    IWysiwygProps,
     Select,
     Switch,
     Text,
     Textarea,
     Wysiwyg,
 } from "../ctrl/Fields";
-import {FileList, IFileList} from "../ctrl/FileLists";
-import {Shadow} from "../ctrl/Overlays";
+import { FileList } from "../ctrl/FileLists";
+import { Shadow } from "../ctrl/Overlays";
 import Comm from "../lib/Comm";
-import {IConnectionsFieldProps} from "frontend/src/ctrl/fields/ConnectionsField";
-import {Copyable} from "frontend/src/ctrl/Copyable";
+import { Copyable } from "frontend/src/ctrl/Copyable";
 
 interface IWithBootstrapFormFieldProps {
     label?: string;
@@ -37,15 +28,17 @@ interface IWithBootstrapFormFieldProps {
     copyable?: boolean;
     disabledClass?: string;
     labelClass?: string;
+    value?: any;
+    forwardedRef?: any;
 
 }
 
 
-const withBootstrapFormField2 = <P extends IWithBootstrapFormFieldProps>(Component: React.ComponentType<P>) => {
+const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Component: React.ComponentType<P>) => {
     return class  extends React.Component<P & IWithBootstrapFormFieldProps> {
         public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
             layoutType: "default",
-            addInputClass: true
+            addInputClass: true,
         };
 
         public render() {
@@ -64,19 +57,23 @@ const withBootstrapFormField2 = <P extends IWithBootstrapFormFieldProps>(Compone
 
             let field;
 
-            const fieldProps: any = {};
-            (Object as any).assign(fieldProps, props, {className});
+
+            let { forwardedRef, ...fieldProps } = this.props as any;
+
+            //const fieldProps: any = {};
+            Object.assign(fieldProps,{ className });
 
             if ((this.props.suffix || this.props.prefix) && this.props.editable) {
+
                 field =
                     <div className="input-group">
                         {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
-                        <Component {...props} {...fieldProps} />
+                        <Component {...props} ref={forwardedRef} {...fieldProps} />
                         {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
                     </div>;
 
             } else {
-                field = <Component {...fieldProps} />;
+                field = <Component ref={forwardedRef} {...fieldProps} />;
             }
             let errors = [];
             if (props.errors) {
@@ -129,91 +126,6 @@ const withBootstrapFormField2 = <P extends IWithBootstrapFormFieldProps>(Compone
     };
 };
 
-const withBootstrapFormField =
-
-    ({addInputClass = true}: IWithBootstrapFormFieldProps = {}) => <TOriginalProps extends {}>(Component: React.ComponentType<TOriginalProps>) => {
-        return class extends React.Component<TOriginalProps & IWithBootstrapFormFieldProps> {
-
-
-            public render(): JSX.Element {
-                const props = this.props;
-
-                const classes = ["form-group"];
-
-                if (this.props.errors) {
-                    classes.push("has-error");
-                }
-
-                let className = addInputClass ? "form-control" : "";
-                if (props.className) {
-                    className += " " + props.className;
-                }
-
-                let field;
-
-                const fieldProps: any = {};
-                Object.assign(fieldProps, props, {className});
-
-                if ((this.props.suffix || this.props.prefix) && this.props.editable) {
-                    field =
-                        <div className="input-group">
-                            {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
-                            <Component {...props} {...fieldProps} />
-                            {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
-                        </div>;
-
-                } else {
-                    field = <Component {...fieldProps} />;
-                }
-                let errors = [];
-                if (props.errors) {
-
-                    if (!Array.isArray(props.errors)) {
-                        errors = [props.errors];
-                    } else {
-                        errors = props.errors;
-                    }
-                }
-
-                if (props.layoutType == "horizontal") {
-
-                    return (
-                        <div className={classes.join(" ")}>
-                            {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
-                            <div className="col-sm-10">
-                                {field}
-                                {props.help ?
-                                    <span className="help-block">{props.help} </span>
-                                    : ""}
-                                {props.errors && this.props.editable ?
-                                    <span className="help-block">{errors.join(", ")} </span>
-
-                                    : ""}
-                            </div>
-                        </div>
-                    );
-                }
-                if (props.layoutType == "default") {
-                    return (
-                        <div className={classes.join(" ")}>
-                            {this.props.label && <label className={this.props.labelClass}>{this.props.label} {this.props.copyable &&
-                            <Copyable toCopy={this.props.value}/>}</label>}
-                            {field}
-
-                            {props.help ?
-                                <span className="help-block">{props.help} </span>
-                                : ""}
-                            {props.errors && this.props.editable ?
-                                <span className="help-block">{errors.join(", ")} </span>
-
-                                : ""}
-                            {/*.join(", ")*/}
-                        </div>
-                    );
-                }
-            }
-        };
-    };
 
 interface IBFormEvent {
     form: BForm;
@@ -339,7 +251,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     }
 
     public getErrors() {
-        return {fieldErrors: this.state.fieldErrors, formErrors: this.state.formErrors};
+        return { fieldErrors: this.state.fieldErrors, formErrors: this.state.formErrors };
     }
 
     /**
@@ -348,7 +260,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
      */
     public handleValidatorError(response) {
         if (this.props.onValidatorError) {
-            this.props.onValidatorError({form: this, response});
+            this.props.onValidatorError({ form: this, response });
         }
 
         this.setState({
@@ -361,22 +273,22 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     public componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
-            this.setState({data: nextProps.data});
+            this.setState({ data: nextProps.data });
         }
 
         if (nextProps.loading != undefined) {
-            this.setState({loading: nextProps.loading});
+            this.setState({ loading: nextProps.loading });
         }
 
         if (nextProps.fieldErrors) {
-            this.setState({fieldErrors: nextProps.fieldErrors});
+            this.setState({ fieldErrors: nextProps.fieldErrors });
         }
         if (nextProps.formErrors) {
-            this.setState({formErrors: nextProps.formErrors});
+            this.setState({ formErrors: nextProps.formErrors });
         }
 
         if (nextProps.errors) {
-            this.setState({fieldErrors: nextProps.errors.fieldErrors || {}, formErrors: nextProps.errors.errors || []});
+            this.setState({ fieldErrors: nextProps.errors.fieldErrors || {}, formErrors: nextProps.errors.errors || [] });
         }
 
     }
@@ -395,7 +307,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         if (this.props.onSubmit) {
-            this.props.onSubmit({inputEvent: e, form: this});
+            this.props.onSubmit({ inputEvent: e, form: this });
         } else if (this.props.action) {
             const comm = new Comm(this.props.action);
 
@@ -406,10 +318,10 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 data = this.getData();
             }
 
-            comm.on("finish", () => this.setState({loading: false}));
+            comm.on("finish", () => this.setState({ loading: false }));
             comm.on("success", (response) => {
                 if (this.props.onSuccess) {
-                    this.props.onSuccess({form: this, response});
+                    this.props.onSuccess({ form: this, response });
                 }
                 this.setState({
                     fieldErrors: {},
@@ -421,11 +333,11 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             });
             comm.on("error", (response) => {
                 if (this.props.onError) {
-                    this.props.onError({form: this, response});
+                    this.props.onError({ form: this, response });
                 }
             });
             comm.setData(data);
-            this.setState({loading: true});
+            this.setState({ loading: true });
             comm.send();
         }
 
@@ -459,7 +371,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             }
         };
 
-        return {get, set, arrayNotation};
+        return { get, set, arrayNotation };
     }
 
     public handleInputChange(e) {
@@ -481,7 +393,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             }
         }
 
-        const {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
+        const { get, set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
 
         if (type == "checkbox") {
             const checked = e.target.checked;
@@ -506,10 +418,10 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
         set(this.fieldsValues, arrayNotation, value);
 
-        this.setState({data: this.state.data, isDirty: true});
+        this.setState({ data: this.state.data, isDirty: true });
 
         if (this.props.onChange) {
-            this.props.onChange({form: this, inputEvent: e});
+            this.props.onChange({ form: this, inputEvent: e });
         }
 
     }
@@ -517,7 +429,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     public applyToField(name, defaultValue = null) {
 
         let value;
-        const {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
+        const { get, set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
 
         value = get(this.state.data);
         if (value === undefined && defaultValue !== false) {
@@ -560,7 +472,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         return (
             <Tag ref={(form) => this.formTag = form} className={classes.join(" ")}
-                 onSubmit={this.handleSubmit.bind(this)} style={{position: "relative"}}>
+                 onSubmit={this.handleSubmit.bind(this)} style={{ position: "relative" }}>
 
                 {this.state.formErrors.length > 0 &&
                 <ul className="bg-danger ">
@@ -568,26 +480,27 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 </ul>}
                 {this.props.children(this.applyToField.bind(this), this.getData(), this)}
 
-                <Shadow {...{visible: this.state.loading, loader: true, container: () => this.formTag}} />
+                <Shadow {...{ visible: this.state.loading, loader: true, container: () => this.formTag }} />
             </Tag>
         );
     }
 }
 
 
-const BText = withBootstrapFormField2(Text);
+//const BText = withBootstrapFormField2(Text);
 
-const BText = withBootstrapFormField()<ITextProps>(Text);
-const BTextarea = withBootstrapFormField()<ITextareaProps>(Textarea);
-const BSelect = withBootstrapFormField()<ISelectProps>(Select);
-const BSwitch = withBootstrapFormField()<ISwitchProps>(Switch);
-const BCheckboxGroup = withBootstrapFormField()<ICheckboxGroupProps>(CheckboxGroup);
-const BDate = withBootstrapFormField()<IDateProps>(Date);
-const BFile = withBootstrapFormField()<IFileProps>(File);
-const BWysiwig = withBootstrapFormField()<IWysiwygProps>(Wysiwyg);
-const BConnectionsField = withBootstrapFormField()<IConnectionsFieldProps>(ConnectionsField);
-const BFileList = withBootstrapFormField()<IFileList>(FileList);
-const BContainer = withBootstrapFormField()((props) => <div>{props.children}</div>);
+const BText = withBootstrapFormField(Text);
+const BTextarea = withBootstrapFormField(Textarea);
+const BSelect = withBootstrapFormField(Select);
+const BSwitch = withBootstrapFormField(Switch);
+const BCheckboxGroup = withBootstrapFormField(CheckboxGroup);
+const BDate = withBootstrapFormField(Date);
+const BFile = withBootstrapFormField(File);
+const BWysiwig = withBootstrapFormField(Wysiwyg);
+const BConnectionsField = withBootstrapFormField(ConnectionsField);
+const BFileList = withBootstrapFormField(FileList);
+const BContainer = withBootstrapFormField((props) => <div>{props.children}</div>);
+
 
 export {
     BForm,
@@ -602,5 +515,5 @@ export {
     BConnectionsField,
     BFileList,
     BContainer,
-    withBootstrapFormField,
+    withBootstrapFormField as withBootstrapFormField,
 };

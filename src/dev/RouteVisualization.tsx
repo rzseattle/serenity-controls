@@ -1,9 +1,12 @@
 import * as React from "react";
-import {Icon} from "../ctrl/Icon";
+import { Icon } from "../ctrl/Icon";
 import router from "../backoffice/Router";
 
-import {BForm, BText, BTextarea} from "../layout/BootstrapForm";
-import {ideConnector} from "./IDEConnector";
+import { BForm, BText, BTextarea } from "../layout/BootstrapForm";
+import { ideConnector } from "./IDEConnector";
+import { Tooltip } from "../ctrl/Overlays";
+import { Copyable } from "../ctrl/Copyable";
+import { Row } from "../layout/BootstrapLayout";
 
 require("./RouteVsualization.sass");
 declare var module: any;
@@ -21,20 +24,20 @@ export class RouteVisualization extends React.Component<IRouteVisualizationProps
 
     constructor(props: IRouteVisualizationProps) {
         super(props);
-        this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({route: index, ...el}));
-        this.state = {search: "", filteredRoutes: this.routing};
+        this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({ route: index, ...el }));
+        this.state = { search: "", filteredRoutes: this.routing };
     }
 
     public componentDidMount() {
         router.onRoutesChanges(() => {
-            this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({route: index, ...el}));
+            this.routing = Object.entries(router.getRouting()).map(([index, el]) => ({ route: index, ...el }));
 
-            this.setState({filteredRoutes: this.routing.filter((el) => el.route.indexOf(this.state.search) != -1)});
+            this.setState({ filteredRoutes: this.routing.filter((el) => el.route.indexOf(this.state.search) != -1) });
         });
     }
 
     private handleSearchInput = (event) => {
-        this.setState({search: event.value, filteredRoutes: this.routing.filter((el) => el.route.indexOf(event.value) != -1)});
+        this.setState({ search: event.value, filteredRoutes: this.routing.filter((el) => el.route.indexOf(event.value) != -1) });
     };
 
     private parseRouting() {
@@ -67,14 +70,14 @@ export class RouteVisualization extends React.Component<IRouteVisualizationProps
         namespaces = Array.from(new Set(namespaces));
         namespaces = namespaces.map((namespace) => {
             const controllers = controlers.filter((el) => el.namespace == namespace);
-            return {namespace, package: controllers[0].package, controllers};
+            return { namespace, package: controllers[0].package, controllers };
         });
 
         let packages = controlers.reduce((p, c) => p.concat(c.package), []);
         packages = Array.from(new Set(packages));
         packages = packages.map((myPackage) => {
             const pNamespaces = namespaces.filter((el) => el.package == myPackage);
-            return {package: myPackage, namespaces: pNamespaces};
+            return { package: myPackage, namespaces: pNamespaces };
         });
 
         return packages;
@@ -85,15 +88,15 @@ export class RouteVisualization extends React.Component<IRouteVisualizationProps
 
         return (
             <div className={"w-route-visualization"}>
-                <div>
+                <Row noGutters={false}>
                     <BForm>
                         {() => (
                             <>
-                                <BText value={this.state.search} onChange={this.handleSearchInput}/>
+                                <BText label={"Search"} value={this.state.search} autoFocus onChange={this.handleSearchInput}/>
                             </>
                         )}
                     </BForm>
-                </div>
+                </Row>
 
                 {packages.map((myPackage) => {
                     return (
@@ -109,21 +112,91 @@ export class RouteVisualization extends React.Component<IRouteVisualizationProps
                                             {namespace.controllers.map((controller) => {
                                                 return (
                                                     <div className={"class"} key={controller.pureClass}>
-
                                                         <a onClick={() => ideConnector.openFile(controller.file, 1)} className="class-title">
                                                             {controller.pureClass}
                                                         </a>
                                                         <div className={"routes-container"}>
-                                                            {controller.routes.map((route) => {
+                                                            {controller.routes.map((route: Frontend.Debug.RouteInfo) => {
                                                                 return (
-                                                                    <React.Fragment key={route.route}>
-                                                                        <a
-                                                                            onClick={() => ideConnector.openFile(controller.file, route._debug.line)}
-                                                                            className={"route"}
+                                                                    <React.Fragment key={route._routePath}>
+                                                                        <Tooltip
+                                                                            theme={"light"}
+                                                                            type={"click"}
+                                                                            content={() => {
+                                                                                let maxLength = 43;
+                                                                                return (
+                                                                                    <>
+                                                                                        {!route._debug.componentExists &&
+                                                                                        !route._debug.templateExists && (
+                                                                                            <div>
+                                                                                                <a className={"btn btn-default btn-sm"} onClick={() => ideConnector.createComponent(route._debug.template + ".component.tsx")}>
+                                                                                                    <Icon name={"Code"}/> Add component
+                                                                                                </a>
+                                                                                                <a className={"btn btn-default btn-sm"} onClick={() => ideConnector.createTemplate(route._debug.template + ".phtml")}>
+                                                                                                    <Icon name={"TVMonitor"}/> Add template
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        )}
+
+                                                                                        {route._debug.componentExists && (
+                                                                                            <>
+                                                                                                <b>
+                                                                                                    <Icon name={"Code"}/> Component
+                                                                                                </b>
+
+                                                                                                <div>
+                                                                                                    <a
+                                                                                                        title={route._debug.template + ".component.tsx"}
+                                                                                                        onClick={() => ideConnector.openFile(route._debug.template + ".component.tsx", 1)}
+                                                                                                    >
+                                                                                                        ...{(route._debug.template + ".component.tsx").substr(-maxLength, maxLength)}
+                                                                                                    </a>
+                                                                                                </div>
+                                                                                            </>
+                                                                                        )}
+                                                                                        {route._debug.templateExists && (
+                                                                                            <>
+                                                                                                <b>
+                                                                                                    <Icon name={"TVMonitor"}/> HTML
+                                                                                                </b>
+
+                                                                                                <div>
+                                                                                                    <a
+                                                                                                        title={route._debug.template + ".phtml"}
+                                                                                                        onClick={() => ideConnector.openFile(route._debug.template + ".phtml", 1)}
+                                                                                                    >
+                                                                                                        {(route._debug.template + ".phtml").substr(-maxLength, maxLength)}
+                                                                                                    </a>
+                                                                                                </div>
+                                                                                            </>
+                                                                                        )}
+                                                                                        <b>
+                                                                                            <Icon name={"Switch"}/> PHP
+                                                                                        </b>
+                                                                                        <div>
+                                                                                            <a
+                                                                                                title={controller.file + ":" + route._debug.line}
+                                                                                                onClick={() => ideConnector.openFile(controller.file, route._debug.line)}
+                                                                                            >
+                                                                                                ...{(controller.file + ":" + route._debug.line).substr(-maxLength, maxLength)}
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </>
+                                                                                );
+                                                                            }}
                                                                         >
-                                                                            <Icon name={route._debug.templateExists ? "TVMonitor" : "Switch"}/> {route.route}
-                                                                        </a>
-                                                                        <div onClick={() => ideConnector.openFile(controller.template, 1)} style={{fontSize: 10, color: "grey"}}>{route._debug.template}</div>
+                                                                            {/*<a
+                                                                                onClick={() => ideConnector.openFile(controller.file, route._debug.line)}
+                                                                                className={"route"}
+                                                                            >*/}
+                                                                            <a>
+                                                                                {route._debug.templateExists && <Icon name={"TVMonitor"}/>}
+                                                                                {route._debug.componentExists && <Icon name={"Code"}/>}
+                                                                                {!route._debug.componentExists && !route._debug.templateExists && <Icon name={"Switch"}/>}
+                                                                                {" " + route._routePath}
+                                                                            </a>
+                                                                            {/*</a>*/}
+                                                                        </Tooltip>
                                                                     </React.Fragment>
                                                                 );
                                                             })}
