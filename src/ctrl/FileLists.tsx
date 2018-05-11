@@ -259,8 +259,12 @@ class FileList extends React.Component<IFileList, any> {
                     title={preview.name}
                     showHideLink={true}
                 >
+                    <input className={"form-control"} type="text" value={preview.path} ref={(el) => this.clipurl = el}/>
+                    <button style={{display: "block"}} className={"btn btn-primary"} onClick={() => {
+                        this.clipurl.select();
+                        document.execCommand("Copy");
+                    }}>{__("Kopiuj link")}</button>
                     <img style={{maxWidth: 800, maxHeight: 600}} src={preview.path}/>
-
                 </Modal>}
             </div>
         )
