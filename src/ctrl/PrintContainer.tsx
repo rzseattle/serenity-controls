@@ -3,16 +3,16 @@ import * as ReactDOM from "react-dom";
 import {Modal} from "frontend/src/ctrl/Overlays";
 import {CommandBar} from "frontend/src/ctrl/CommandBar";
 
-interface PrintContainerProps {
-    title: string;
-    onHide: () => any;
+interface IPrintContainerProps {
+    title?: string;
+    onHide?: () => any;
     onPrint?: () => any;
 }
 
-export class PrintContainer extends React.Component<PrintContainerProps, any> {
+export class PrintContainer extends React.Component<IPrintContainerProps, any> {
     private iframe: HTMLIFrameElement;
 
-    public static defaultProps: Partial<PrintContainerProps> = {
+    public static defaultProps: Partial<IPrintContainerProps> = {
         title: __("Podgląd wydruku"),
     };
 
@@ -54,7 +54,7 @@ export class PrintContainer extends React.Component<PrintContainerProps, any> {
                         /*{key: "f1", label: "Pobierz jako PDF", icon: "PDF"}*/
                     ]}/>
 
-                    <iframe ref={(el) => this.iframe = el}></iframe>
+                    <iframe ref={(el) => this.iframe = el} />
                     {this.state.ready && <MyWindowPortal iframe={this.iframe}>
                         {this.props.children}
                     </MyWindowPortal>}
@@ -99,19 +99,15 @@ class MyWindowPortal extends React.PureComponent<any, any> {
         this.externalWindow = null;
     }
 
-    public componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
-    }
-
     public componentDidMount() {
         const iframe = this.props.iframe;
 
         // STEP 3: open a new browser window and store a reference to it
-        this.externalWindow = iframe.contentWindow; //window.open("", "", "width=600,height=400,left=200,top=200");
+        this.externalWindow = iframe.contentWindow; // window.open("", "", "width=600,height=400,left=200,top=200");
 
         // STEP 4: append the container <div> (that has props.children appended to it) to the body of the new window
         this.externalWindow.document.body.appendChild(this.containerEl);
-        //this.externalWindow.document.body.classList.add("w-print-page");
+        // this.externalWindow.document.body.classList.add("w-print-page");
 
         this.externalWindow.document.title = "A React portal window";
         const style = this.externalWindow.document.createElement("style");
