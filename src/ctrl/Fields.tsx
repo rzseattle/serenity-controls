@@ -117,6 +117,7 @@ class Select extends React.Component<ISelectProps, any> {
                         var dim = select.getBoundingClientRect()
                         dropdown.style.width = dim.width + "px";
                         dropdown.style.top = (dim.height) + "px";
+                        dropdown.style.position = "absolute";
                     }}
 
 
