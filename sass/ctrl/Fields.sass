@@ -205,6 +205,7 @@ input.form-control, select.form-control
         cursor: pointer
         .w-select-placeholder
             color: grey
+            display: inline-block
         i
             float: right
             margin-right: 10px
@@ -217,6 +218,9 @@ input.form-control, select.form-control
 
     position: absolute
     z-index: 10000
+
+    max-height: 400px
+    overflow: auto
     .w-select-item
         padding: 4px
         cursor: pointer
@@ -227,3 +231,8 @@ input.form-control, select.form-control
         background-color: #4484c7
         color: white
 
+    input
+        width: 100%
+        line-height: 34px !important
+        height: 34px !important
+        border-top: 0

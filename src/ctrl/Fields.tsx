@@ -42,11 +42,13 @@ class Select extends React.Component<ISelectProps, any> {
     };
     private dropdown: HTMLDivElement;
     private presenter: HTMLDivElement;
+    private searchField: HTMLDivElement | null;
 
     constructor(props) {
         super(props);
         this.state = {
             dropdownVisible: false,
+            searchedTxt: "",
         };
     }
 
@@ -66,6 +68,10 @@ class Select extends React.Component<ISelectProps, any> {
         )
     }*/
 
+    componentDidMount() {
+        // this.handleDropdownChange();
+    }
+
     public handleOnChange(e) {
         if (this.props.onChange) {
             this.props.onChange({
@@ -74,13 +80,12 @@ class Select extends React.Component<ISelectProps, any> {
                 value: e.target.value,
                 selectedIndex: e.target.selectedIndex,
                 event: e,
-
             });
         }
     }
 
     public handleDropdownChange = () => {
-        this.setState({dropdownVisible: !this.state.dropdownVisible}, () => {
+        this.setState({dropdownVisible: !this.state.dropdownVisible, searchedTxt: ""}, () => {
             if (this.state.dropdownVisible) {
                 const calculator = new PositionCalculator(this.presenter, this.dropdown, {
                     theSameWidth: true,
@@ -89,10 +94,14 @@ class Select extends React.Component<ISelectProps, any> {
                 });
                 calculator.calculate();
                 calculator.calculate();
-                this.dropdown.focus();
+                if (this.searchField) {
+                    this.searchField.focus();
+                } else {
+                    this.dropdown.focus();
+                }
             }
         });
-    }
+    };
 
     public render() {
         const props = this.props;
@@ -101,57 +110,84 @@ class Select extends React.Component<ISelectProps, any> {
             options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
         }
 
+        let selectedIndex: number = -1;
 
-        let selectedIndex: number = 0;
-
-        for (const i  in options) {
+        for (const i in options) {
             if (options[i].value == props.value) {
                 selectedIndex = i;
             }
         }
 
         if (!props.editable) {
-            return <div className={"w-field-presentation w-field-presentation-select " + (props.value ? "" : "w-field-presentation-empty")}>{options[selectedIndex].label}</div>;
+            return (
+                <div className={"w-field-presentation w-field-presentation-select " + (selectedIndex >= 0 ? "" : "w-field-presentation-empty")}>
+
+                    {selectedIndex >= 0 ? options[selectedIndex].label : ""}
+                </div>
+            );
+        }
+
+        let filteredOptions = options;
+        if (this.state.searchedTxt != "") {
+            filteredOptions = filteredOptions.filter((el) => el.label.indexOf(this.state.searchedTxt) !== -1);
         }
 
         return (
             <div className={"w-select"}>
-                <div className={"w-select-result-presenter"} ref={(el) => (this.presenter = el)} onClick={this.handleDropdownChange}>
+                <div
+                    className={"w-select-result-presenter"}
+                    ref={(el) => (this.presenter = el)}
+                    onClick={() => {
+                        if (!this.state.dropdownVisible) {
+                            this.handleDropdownChange();
+                        }
+                    }}
+                >
                     {options[selectedIndex] ? options[selectedIndex].label : <div className={"w-select-placeholder"}>{__("Wybierz")}</div>}
                     <Icon name={"ChevronDown"}/>
                 </div>
 
-                {this.state.dropdownVisible && <Portal>
-                    <div
-                        className={"w-select-overlay"} ref={(el) => (this.dropdown = el)}
-                        tabIndex={-1}
-                        onBlur={this.handleDropdownChange}
-
-                    >
-                        {options.map((el) => (
-                            <div
-                                key={el.value}
-                                className={"w-select-item " + (props.value == el.value ? "w-select-selected" : "")}
-                                onClick={(e) => {
-                                    if (this.props.onChange) {
-                                        this.props.onChange({
-                                            name: this.props.name,
-                                            type: "select",
-                                            value: el.value,
-                                            selectedIndex: null,
-                                            event: null,
-                                        });
-                                        this.handleDropdownChange();
-                                    }
-                                }}
-                            >
-                                {el.label}
-                            </div>
-                        ))}
-                    </div>
-                </Portal>
-                }
-
+                {this.state.dropdownVisible && (
+                    <Portal>
+                        <div
+                            className={"w-select-overlay"}
+                            ref={(el) => (this.dropdown = el)}
+                            tabIndex={-1}
+                            onBlur={() => setTimeout(this.handleDropdownChange, 100)}
+                            onMouseDown={(e) => e.preventDefault()}
+                        >
+                            {options.length > 6 && (
+                                <input
+                                    ref={(el) => (this.searchField = el)}
+                                    type={"text"}
+                                    className={"form-control"}
+                                    onChange={(e) => this.setState({searchedTxt: e.target.value})}
+                                    value={this.state.searchedTxt}
+                                />
+                            )}
+                            {filteredOptions.map((el) => (
+                                <div
+                                    key={el.value}
+                                    className={"w-select-item " + (props.value == el.value ? "w-select-selected" : "")}
+                                    onClick={(e) => {
+                                        if (this.props.onChange) {
+                                            this.props.onChange({
+                                                name: this.props.name,
+                                                type: "select",
+                                                value: el.value,
+                                                selectedIndex: null,
+                                                event: null,
+                                            });
+                                            this.handleDropdownChange();
+                                        }
+                                    }}
+                                >
+                                    {el.label}
+                                </div>
+                            ))}
+                        </div>
+                    </Portal>
+                )}
             </div>
         );
     }
