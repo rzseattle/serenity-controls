@@ -287,6 +287,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
     }
 
     public render() {
+        const {config} = this.props;
         let content;
         if (!Array.isArray(this.props.config.content)) {
             content = Object.entries(this.props.config.content).map(([value, label]) => ({value, label}));
@@ -298,7 +299,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
 
             <div className={"w-filter w-filter-select"}>
                 <select
-                    autoFocus
+                    autoFocus={config.disableAutoFocus === true ? false : true}
                     ref={(el) => this.select = el}
                     multiple={this.props.config.multiselect}
                     size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}

@@ -55,13 +55,19 @@ export class FilterPanel extends React.Component<IFilterPanelProps, IFilterPanel
 
         return <div className="w-filters-panel">
 
-            {filters.map((filter) => {
+            {filters.map((filter, index) => {
                 const Component = filter.component;
                 filter.onChange = (val: IFilterValue) => {
                     this.handleChange(filter, val);
                 };
 
                 filter.value = this.state.value[filter.field];
+
+                if (filter.config !== undefined) {
+                    filter.config.disableAutoFocus = index > 0;
+                } else {
+                    filter.config = { disableAutoFocus: index > 0 };
+                }
 
                 return <div key={filter.field} className="filter-element">
                     <div className="filter-caption">  {filter.caption}</div>
