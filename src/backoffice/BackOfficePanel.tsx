@@ -200,7 +200,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                             return (
                                 <Modal key={index} onHide={() => this.handleCloseWindow(el.route)} {...el.modalProps}>
                                     <div style={{ width: el.modalProps.width ? "auto" : "90vw", paddingBottom: 10, backgroundColor: "#ECECEC" }}>
-                                        <BackOfficeContainer route={el.route} />
+                                        <BackOfficeContainer route={el.route} props={el.props} />
                                     </div>
                                 </Modal>
                             );

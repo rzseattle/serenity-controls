@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import ResizeObserver from "resize-observer-polyfill";
-import { Icon } from "./Icon";
+import {Icon} from "./Icon";
 
 interface IShadowProps {
     visible?: boolean;
@@ -26,10 +26,10 @@ class Shadow extends React.Component<IShadowProps, any> {
                     <div className="w-shadow">
                         {this.props.loader && (
                             <span className="loader loader-x3">
-                                <i />
-                                <i />
-                                <i />
-                                <i />
+                                <i/>
+                                <i/>
+                                <i/>
+                                <i/>
                             </span>
                         )}
                     </div>
@@ -69,7 +69,8 @@ export interface IModalProps {
     onOrientationChange?(type: string): any;
 }
 
-interface IModalState {}
+interface IModalState {
+}
 
 let modalRoot = document.getElementById("modal-root");
 
@@ -115,7 +116,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
 
         const ro = new ResizeObserver((entries, observer) => {
             for (const entry of entries) {
-                const { left, top, width, height } = entry.contentRect;
+                const {left, top, width, height} = entry.contentRect;
 
                 if (this.props.recalculatePosition) {
                     this.calculatePos();
@@ -255,7 +256,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
                 >
                     {p.showHideLink && (
                         <a className="w-modal-close" style={{}} onClick={this.handleClose}>
-                            <Icon name="ChromeClose" />
+                            <Icon name="ChromeClose"/>
                         </a>
                     )}
                     {p.title && <div className="w-modal-title">{p.title}</div>}
@@ -266,6 +267,33 @@ class Modal extends React.Component<IModalProps, IModalState> {
         );
     }
 }
+
+export class Portal extends React.Component<any, any> {
+    public el: HTMLDivElement;
+
+    public static defaultProps = {};
+
+    constructor(props) {
+        super(props);
+        this.el = document.createElement("div");
+        if (modalRoot == null) {
+            modalRoot = document.getElementById("modal-root");
+        }
+    }
+    public componentDidMount() {
+        modalRoot.appendChild(this.el);
+    }
+
+    public componentWillUnmount() {
+        modalRoot.removeChild(this.el);
+    }
+
+    public render() {
+        const p = this.props;
+        return ReactDOM.createPortal(p.children, this.el);
+    }
+}
+
 
 class ConfirmModal extends React.Component<any, any> {
     public promise: Promise<{}>;
@@ -299,8 +327,8 @@ class ConfirmModal extends React.Component<any, any> {
 
         return (
             <Modal {...modalProps} className="w-modal-confirm" show={true}>
-                <div style={{ padding: 15 }}>{this.props.children}</div>
-                <div style={{ padding: 10, paddingTop: 0, textAlign: "right" }}>
+                <div style={{padding: 15}}>{this.props.children}</div>
+                <div style={{padding: 10, paddingTop: 0, textAlign: "right"}}>
                     <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">
                         ok
                     </button>
@@ -321,7 +349,7 @@ interface IConfirmConf {
 }
 
 const confirm = async (message, options: IConfirmConf = {}) => {
-    const props = { ...options };
+    const props = {...options};
 
     const parent = options.container ? options.container() : document.body;
 
@@ -348,7 +376,7 @@ const confirm = async (message, options: IConfirmConf = {}) => {
 };
 
 export const tooltip = (content, options) => {
-    const props = { ...options };
+    const props = {...options};
 
     const parent = document.body;
 
@@ -407,28 +435,28 @@ class Tooltip extends React.Component<ITooltipProps, any> {
 
     private handleMouseEnter = () => {
         if (this.props.type == "hover") {
-            this.setState({ isVisible: true });
+            this.setState({isVisible: true});
         }
     };
 
     private handleMouseOut = () => {
         if (this.props.type == "hover") {
-            this.setState({ isVisible: false });
+            this.setState({isVisible: false});
         }
     };
 
     private handleClick = () => {
         if (this.props.type == "click") {
-            this.setState({ isVisible: true }); // !this.state.isVisible
+            this.setState({isVisible: true}); // !this.state.isVisible
         }
     };
 
     public handleBlur = () => {
-        this.setState({ isVisible: false });
+        this.setState({isVisible: false});
     };
 
     public render() {
-        const { theme, content } = this.props;
+        const {theme, content} = this.props;
 
         return (
             <>
@@ -459,7 +487,7 @@ class Tooltip extends React.Component<ITooltipProps, any> {
                         onOrientationChange={this.orientationChange.bind(this)}
                         orientation={this.state.orientation}
                     >
-                        <div className="w-toolbar-brake" style={{ left: this.state.brakeLeft }} />
+                        <div className="w-toolbar-brake" style={{left: this.state.brakeLeft}}/>
                         <div className="w-toolbar-content">{p.children}</div>
                     </Modal>
                 )}
@@ -468,4 +496,4 @@ class Tooltip extends React.Component<ITooltipProps, any> {
     }
 }
 
-export { Modal, Shadow, Tooltip, confirm };
+export {Modal, Shadow, Tooltip, confirm};

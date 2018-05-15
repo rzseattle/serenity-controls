@@ -194,3 +194,36 @@ input.form-control, select.form-control
 
 
 
+.w-select
+    .w-select-result-presenter
+        height: 28px
+        background-color: white
+        border: 1px solid #cbd5dd
+        line-height: 26px
+        padding-left: 8px
+        color: black
+        cursor: pointer
+        .w-select-placeholder
+            color: grey
+        i
+            float: right
+            margin-right: 10px
+
+.w-select-overlay
+    background-color: white
+    border: 1px solid #cbd5dd
+    outline: none
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
+
+    position: absolute
+    z-index: 10000
+    .w-select-item
+        padding: 4px
+        cursor: pointer
+        &:hover, .w-select-selected
+            background-color: #4484c7
+            color: white
+    .w-select-selected
+        background-color: #4484c7
+        color: white
+
