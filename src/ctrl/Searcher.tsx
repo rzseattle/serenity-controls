@@ -87,7 +87,7 @@ export class Searcher extends React.Component<IProps, any> {
                 }
             }
             if (listIndex >= 10){
-                this.suggestList.scrollTop = this.suggestList.scrollTop + 20;
+                this.suggestList.scrollTop = this.suggestList.scrollTop + 25;
             } else {
                 this.suggestList.scrollTop = 0;
             }
@@ -116,7 +116,7 @@ export class Searcher extends React.Component<IProps, any> {
                 }
             }
             if (listIndex >= 10){
-                this.suggestList.scrollTop = this.suggestList.scrollTop - 20;
+                this.suggestList.scrollTop = this.suggestList.scrollTop - 25;
             } else {
                 this.suggestList.scrollTop = 0;
             }
@@ -176,7 +176,7 @@ export class Searcher extends React.Component<IProps, any> {
                         onBlur={() => {
                             setTimeout(() => {
                                 this.setState({
-                                    listVisible: "none",
+                                    //listVisible: "none",
                                     currentKey: null,
                                 });
                             }, 200);
