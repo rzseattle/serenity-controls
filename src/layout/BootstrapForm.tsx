@@ -360,6 +360,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         const set = (obj, path, endValue) => {
+
             if (path.length > 1) {
                 const currKey = path.shift();
                 if (obj[currKey] == undefined) {
