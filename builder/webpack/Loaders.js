@@ -46,7 +46,10 @@ var getLoaders = function(production, input) {
                                         "@babel/preset-env",
                                         {
                                             targets: {
-                                                browsers: "last 2 Chrome versions",
+                                                browsers: [
+                                                    "last 2 Chrome versions",
+                                                    "chrome >= 50",
+                                                ],
                                                 node: "current",
                                             },
                                         },
