@@ -50,7 +50,7 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
             >
                 <div className="w-print-container-modal">
                     <CommandBar items={[
-                        {key: "f1", label: "Drukuj", icon: "Print", onClick: this.handlePrint},
+                        {key: "f1", label: __("Drukuj"), icon: "Print", onClick: this.handlePrint},
                         /*{key: "f1", label: "Pobierz jako PDF", icon: "PDF"}*/
                     ]}/>
 
