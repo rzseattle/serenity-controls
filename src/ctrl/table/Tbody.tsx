@@ -128,7 +128,7 @@ export class Row extends React.PureComponent<any, any> {
             <>
 
                 <tr {...rowProps} >
-                    {props.selectable && <td className={"w-table-selection-cell"}>
+                    {props.selectable && <td className={"w-table-selection-cell"} onClick={props.onCheck}>
                         <input type="checkbox" onChange={props.onCheck} checked={this.props.isSelected}/>
                     </td>}
                     {columns.map((column, index2) => {

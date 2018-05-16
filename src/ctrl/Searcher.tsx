@@ -176,7 +176,7 @@ export class Searcher extends React.Component<IProps, any> {
                         onBlur={() => {
                             setTimeout(() => {
                                 this.setState({
-                                    //listVisible: "none",
+                                    listVisible: "none",
                                     currentKey: null,
                                 });
                             }, 200);
