@@ -23,8 +23,8 @@ interface IFilterProps {
 }
 
 export interface IFilterComponent {
-    //todo
-    //FILTER_INTERFACE_TEST?: boolean
+    // todo
+    // FILTER_INTERFACE_TEST?: boolean
 
 }
 
@@ -89,7 +89,7 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
         const timeStop = this.state.endTime.format("HH:mm:ss");
 
         const separatorI = '<i class="fa fa-arrow-right"></i>';
-        const calendarI = ""; //'<i class="fa fa-calendar-o"></i>';
+        const calendarI = ""; // '<i class="fa fa-calendar-o"></i>';
         const clockI = '<i class="fa fa-clock-o"></i>';
 
         const val = `${dateStart} ${timeStart} : ${dateStop} ${timeStop}`;
@@ -611,11 +611,11 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 
     public handleChange() {
         clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
+        /*this.timeout = setTimeout(() => {
             if (this.props.onChange) {
                 this.props.onChange(this.getValue());
             }
-        }, 400);
+        }, 400);*/
     }
 
     public handleApply() {
@@ -623,9 +623,13 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
         if (this.state.searchText && this.props.onApply) {
             this.props.onApply(this.getValue());
         }
+        if (this.props.onChange) {
+            this.props.onChange(this.getValue());
+        }
     }
 
-    public handleInputChange(e) {
+    public handleInputChange = (e) => {
+
         this.setState(
             {searchText: e.target.value},
             this.handleChange,
@@ -640,7 +644,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
         );
     }
 
-    public _handleKeyPress(e) {
+    public handleKeyPress = (e) => {
         if (e.key === "Enter") {
             this.handleApply();
         }
@@ -654,7 +658,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 
             <div className={"w-filter w-filter-text "} ref="body">
 
-                <input type="text" value={this.state.searchText} onChange={this.handleInputChange.bind(this)} autoFocus={config.disableAutoFocus === true ? false : true} onKeyPress={this._handleKeyPress.bind(this)}/>
+                <input type="text" value={this.state.searchText}  onChange={this.handleInputChange} autoFocus={config.disableAutoFocus === true ? false : true} onKeyPress={this.handleKeyPress}/>
 
                 {this.props.config.extendedInfo && <select
                     onChange={this.handleSelectChange.bind(this)}
