@@ -16,11 +16,13 @@ export default class Tbody extends React.Component<any, any> {
                 this.props.data,
                 this.props.selection,
                 this.props.columns,
+                this.props.selectable
             ],
             [
                 nextProps.data,
                 nextProps.selection,
                 nextProps.columns,
+                nextProps.selectable,
             ],
         );
     }

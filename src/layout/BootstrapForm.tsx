@@ -33,7 +33,6 @@ interface IWithBootstrapFormFieldProps {
 
 }
 
-
 const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Component: React.ComponentType<P>) => {
     return class  extends React.Component<P & IWithBootstrapFormFieldProps> {
         public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
