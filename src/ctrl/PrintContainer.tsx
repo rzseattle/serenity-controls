@@ -36,7 +36,9 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
     }
 
     public componentDidMount() {
-        this.setState({ready: true});
+        setTimeout(() => {
+            this.setState({ready: true});
+        }, 200);
     }
 
     public render() {
