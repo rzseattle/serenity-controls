@@ -14,7 +14,10 @@ export default class Thead extends React.Component<any, any> {
     }
 
     public shouldComponentUpdate(nextProps, nextState) {
-        return !deepIsEqual([this.props.columns, this.props.filters, this.props.order, this.props.allChecked], [nextProps.columns, nextProps.filters, nextProps.order, nextProps.allChecked]);
+        return !deepIsEqual(
+            [this.props.columns, this.props.filters, this.props.order, this.props.allChecked, this.props.selectable],
+            [nextProps.columns, nextProps.filters, nextProps.order, nextProps.allChecked, nextProps.selectable],
+        );
     }
 
     public handleMouseEnter(index, e) {
@@ -71,7 +74,11 @@ export default class Thead extends React.Component<any, any> {
                                 {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
                                 {el.header.icon && <Icon name={el.header.icon} />}
                                 {el.caption}
-                                {el.filter.length > 0 ? <Component showApply={true} onApply={this.props.onFilterChanged} /> : ""}
+                                {el.filter.length > 0 ? (
+                                    <Component showApply={true} onApply={this.props.onFilterChanged} />
+                                ) : (
+                                    ""
+                                )}
                             </th>
                         );
                     })}
@@ -149,7 +156,12 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                         </div>
                     )}
                     {this.state.show ? (
-                        <div className={"w-filter-openable-body " + (filters.length >= 3 ? "w-filter-openable-body-grid" : "")} ref={(el) => (this.body = el)}>
+                        <div
+                            className={
+                                "w-filter-openable-body " + (filters.length >= 3 ? "w-filter-openable-body-grid" : "")
+                            }
+                            ref={(el) => (this.body = el)}
+                        >
                             {filters.map((entry, index) => {
                                 const Filter = entry.component;
                                 if (entry.config !== undefined) {
@@ -159,8 +171,17 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                                 }
                                 return (
                                     <div key={entry.field}>
-                                        {filters.length > 1 && <div className={"w-filter-openable-title"}>{entry.caption}</div>}
-                                        <Filter caption={entry.caption} showApply={true} field={entry.field} onApply={this.props.onApply} config={entry.config} container={this.container} />
+                                        {filters.length > 1 && (
+                                            <div className={"w-filter-openable-title"}>{entry.caption}</div>
+                                        )}
+                                        <Filter
+                                            caption={entry.caption}
+                                            showApply={true}
+                                            field={entry.field}
+                                            onApply={this.props.onApply}
+                                            config={entry.config}
+                                            container={this.container}
+                                        />
                                     </div>
                                 );
                             })}
