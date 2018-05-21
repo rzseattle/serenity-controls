@@ -222,6 +222,13 @@ export class BackofficeStore {
                 }
             });
             comm.on(Comm.EVENTS.SUCCESS, (data) => {
+
+                if (data.__arrowException !== undefined) {
+                    this.viewServerErrors = data;
+                    this.isViewLoading = false;
+                    return;
+                }
+
                 this.viewData = Object.assign({}, data, this.externalViewData);
                 this.view = view;
 
@@ -236,7 +243,7 @@ export class BackofficeStore {
                     try {
                         BackofficeStore.registerDebugData("views", originalPath, Router.getRouteInfo(originalPath), this.viewData);
                     } catch (e) {
-                        console.error("cos jest ni tak " + originalPath +" "+e);
+                        console.error("cos jest ni tak " + originalPath + " " + e);
                     }
                 }
             });
@@ -251,6 +258,7 @@ export class BackofficeStore {
         } catch (e) {
             this.viewServerErrors = e;
             this.view = null;
+            this.isViewLoading = false;
             this.dataUpdated();
         }
     };

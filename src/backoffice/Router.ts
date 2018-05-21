@@ -80,7 +80,7 @@ class Router {
             }
 
             console.log(extendedInfo);
-            console.log(el);
+
             throw new RouterException("Route not found :" + path);
         }
 
