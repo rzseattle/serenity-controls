@@ -171,6 +171,9 @@ class Comm {
                     try {
                         this.callEvent(Comm.EVENTS.RESPONSE, this.xhr.response);
                         data = JSON.parse(this.xhr.response);
+                        if (data.__arrowException !== undefined) {
+                            throw data
+                        }
                     } catch (e) {
                         exceptionOccured = true;
                         if (this.registredEvents.error.length == 0) {
