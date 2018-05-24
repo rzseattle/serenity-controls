@@ -1,9 +1,10 @@
 import NotificationSystem from "react-notification-system";
 import React from "react";
-import {Copyable} from "frontend/src/ctrl/Copyable";
+
 import {IModalProps} from "../ctrl/Overlays";
 import RouterException from "../backoffice/RouterException";
 import {RouteVisualization} from "../dev/RouteVisualization";
+import {ServerErrorPresenter} from "../dev/ServerErrorPresenter";
 
 declare var PRODUCTION: boolean;
 declare var window: any;
@@ -151,34 +152,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 {!PRODUCTION && this.props.isSub == false && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
                 <NotificationSystem ref={(ns) => (this.notificationSystem = ns)}/>
-                {this.props.context.viewServerErrors !== null && (
-                    <div style={{margin: 10, padding: 10, backgroundColor: "white"}}>
-                        {this.props.context.viewServerErrors.url !== undefined && (
-                            <div>
-                                <pre>{this.props.context.viewServerErrors.url}</pre>
-                                <pre style={{maxHeight: 200, overflow: "auto"}}>{JSON.stringify(this.props.context.viewServerErrors.input, null, 2)}</pre>
-                                <div style={{padding: 10, backgroundColor: "white", margin: 15}} dangerouslySetInnerHTML={{__html: this.props.context.viewServerErrors.response}}/>
-                            </div>
-                        )}
-                        {typeof this.props.context.viewServerErrors === "string" && <div>{this.props.context.viewServerErrors}</div>}
-                        {this.props.context.viewServerErrors.__arrowException !== undefined && <div>
-                            <div><strong>[{this.props.context.viewServerErrors.__arrowException.code}] {this.props.context.viewServerErrors.__arrowException.msg}</strong></div>
-                            <hr/>
-                            <div>{this.props.context.viewServerErrors.__arrowException.file}:{this.props.context.viewServerErrors.__arrowException.line}</div>
-                            <hr/>
-                            <pre>{this.props.context.viewServerErrors.__arrowException.trace}</pre>
-                        </div>}
-                        {!PRODUCTION &&
-                        this.props.context.viewServerErrors instanceof RouterException && (
-                            <div>
-                                {this.props.context.viewServerErrors.message}
-                                <hr/>
-                                <RouteVisualization/>
-                            </div>
-                        )}
-                    </div>
-                )}
-
+                {this.props.context.viewServerErrors && <ServerErrorPresenter error={this.props.context.viewServerErrors} />}
 
                 {ComponentInfo && ComponentInfo.Component ? (
                     <ComponentInfo.Component
@@ -201,7 +175,8 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                         _openModal={this.props.openModal}
                     />
                 ) : (
-                    !this.props.context.isViewLoading && this.props.context.viewServerErrors.__arrowException === undefined &&  (
+                    !this.props.context.isViewLoading && (
+                        (this.props.context.viewServerErrors && this.props.context.viewServerErrors.__arrowException !== undefined) || !this.props.context.viewServerErrors) && (
                         <div style={{padding: 20}}>
                             <h1>404 not found</h1>
                             <div>Selected resource cannot be found</div>

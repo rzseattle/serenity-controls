@@ -167,22 +167,27 @@ class Comm {
             if (this.xhr.readyState === 4) {
                 if (this.xhr.status === 200) {
                     let exceptionOccured = false;
-                    let data;
+                    let data: any;
                     try {
                         this.callEvent(Comm.EVENTS.RESPONSE, this.xhr.response);
                         data = JSON.parse(this.xhr.response);
                         if (data.__arrowException !== undefined) {
-                            throw data
+                            throw data;
                         }
                     } catch (e) {
+
                         exceptionOccured = true;
                         if (this.registredEvents.error.length == 0) {
-                            this.debugError(e.message + "<hr />" + this.xhr.response);
+                            this.debugError(this.xhr.response);
                         } else {
                             if (this.debug) {
-                                this.debugError(e.message + "<hr />" + this.xhr.response);
+                                this.debugError(this.xhr.response);
                             }
-                            this.callEvent(Comm.EVENTS.ERROR, this.xhr.response);
+                            if (data.__arrowException !== undefined) {
+                                this.callEvent(Comm.EVENTS.ERROR, data);
+                            } else {
+                                this.callEvent(Comm.EVENTS.ERROR, this.xhr.response);
+                            }
                         }
                     }
 

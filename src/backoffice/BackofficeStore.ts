@@ -9,7 +9,7 @@ declare var module;
 const browserInput = window.reactBackOfficeVar;
 
 export class BackofficeStore {
-    public static debugData: { views: Frontend.Debug.DebugDataEntry[]; ajax: Frontend.Debug.DebugDataEntry[] } = { views: [], ajax: [] };
+    public static debugData: { views: Frontend.Debug.DebugDataEntry[]; ajax: Frontend.Debug.DebugDataEntry[] } = {views: [], ajax: []};
     public static debugDataListeners: Frontend.Debug.DebugDataListener[] = [];
     public static debugViewAjaxInProgress = true;
     public static registerDebugDataListener = (listener: Frontend.Debug.DebugDataListener) => {
@@ -213,16 +213,14 @@ export class BackofficeStore {
 
             const comm = new Comm(url);
 
-            comm.setData({ __PROPS_REQUEST__: 1 });
+            comm.setData({__PROPS_REQUEST__: 1});
             comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
                 this.viewServerErrors = errorResponse;
-
                 for (const el of this.onViewLoadedArr) {
                     el();
                 }
             });
             comm.on(Comm.EVENTS.SUCCESS, (data) => {
-
                 if (data.__arrowException !== undefined) {
                     this.viewServerErrors = data;
                     this.isViewLoading = false;
@@ -256,6 +254,7 @@ export class BackofficeStore {
             comm.send();
             BackofficeStore.debugViewAjaxInProgress = false;
         } catch (e) {
+
             this.viewServerErrors = e;
             this.view = null;
             this.isViewLoading = false;
