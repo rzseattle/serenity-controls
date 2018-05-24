@@ -45,6 +45,7 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
         return <div className={"w-print-container"}>
 
             <Modal
+                icon={"Search"}
                 show={true}
                 title={this.props.title}
                 showHideLink={true}

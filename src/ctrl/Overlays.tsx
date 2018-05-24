@@ -54,6 +54,7 @@ export interface IModalProps {
     recalculatePosition?: boolean;
     showHideLink?: boolean;
     title?: string;
+    icon?: string;
     shadow?: boolean;
     layer?: boolean;
     width?: string | number;
@@ -259,7 +260,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
                             <Icon name="ChromeClose"/>
                         </a>
                     )}
-                    {p.title && <div className="w-modal-title">{p.title}</div>}
+                    {p.title && <div className="w-modal-title">{p.icon && <Icon name={p.icon}/>} {p.title}</div>}
                     {this.props.show ? p.children : null}
                 </div>
             </div>,
