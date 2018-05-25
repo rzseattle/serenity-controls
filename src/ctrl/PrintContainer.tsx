@@ -112,12 +112,17 @@ class MyWindowPortal extends React.PureComponent<any, any> {
         this.externalWindow.document.body.appendChild(this.containerEl);
         // this.externalWindow.document.body.classList.add("w-print-page");
 
-        this.externalWindow.document.title = "A React portal window";
-        const style = this.externalWindow.document.createElement("style");
-        style.appendChild(this.externalWindow.document.createTextNode("@page { size: auto;  margin: 0mm;  }"));
-        this.externalWindow.document.head.appendChild(style);
+        this.externalWindow.document.title = "";
+        this.externalWindow.document.getElementsByTagName("html")[0].setAttribute("moznomarginboxes", "1");
+        this.externalWindow.document.getElementsByTagName("html")[0].setAttribute("mozdisallowselectionprint", "1");
+
 
         copyStyles(document, this.externalWindow.document);
+
+        const style = this.externalWindow.document.createElement("style");
+        style.appendChild(this.externalWindow.document.createTextNode("@page { size: auto;  margin: 0mm;  }\n"));
+        style.appendChild(this.externalWindow.document.createTextNode("body>div { size: auto;  margin: 0mm;  }\n"));
+        this.externalWindow.document.head.appendChild(style);
 
         // update the state in the parent component if the user closes the
         // new window
