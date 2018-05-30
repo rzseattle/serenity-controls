@@ -66,7 +66,7 @@ export default class Thead extends React.Component<any, any> {
                                 style={{ width: el.width }}
                                 className={classes.join(" ")}
                                 onClick={(e) => {
-                                    el.isSortable && this.props.onCellClicked(index, e);
+                                    el.isSortable  && this.props.onCellClicked(index, e);
                                 }}
                                 onMouseEnter={this.handleMouseEnter.bind(this, index)}
                                 onMouseLeave={this.handleMouseLeave.bind(this, index)}

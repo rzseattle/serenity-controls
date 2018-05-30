@@ -308,6 +308,12 @@ export class ColumnHelper {
         return this;
     }
 
+/*    public setSortField(field: string){
+        this.data.sortField = field;
+        this.data.isSortable = true;
+        return this;
+    }*/
+
     public noFilter(): ColumnHelper {
         this.data.filter = [];
         return this;

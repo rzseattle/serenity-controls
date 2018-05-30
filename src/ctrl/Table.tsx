@@ -377,6 +377,10 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
+    public handleFiltersDeleted(){
+        this.setState({filters: {}});
+    }
+
     public handleFilterChanged(filterValue: IFilterValue) {
         this.state.filters[filterValue.field] = filterValue;
         this.setState({ currentPage: 1, filters: this.state.filters }, this.load);
@@ -407,7 +411,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
         let field = null;
 
-        const _field = column.field;
+        const _field = column.orderField?column.orderField:column.field;
 
         if (this.state.order[_field]) {
             field = this.state.order[_field];
