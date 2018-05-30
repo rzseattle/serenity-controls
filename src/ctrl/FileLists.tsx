@@ -5,6 +5,7 @@ import Dropzone from 'react-dropzone'
 import {IFieldProps} from "./fields/Interfaces";
 import {Icon} from "frontend/src/ctrl/Icon";
 import {Modal} from "frontend/src/ctrl/Overlays";
+import {CommandBar} from "./CommandBar";
 
 interface IFile {
     key: number,
@@ -56,7 +57,7 @@ const ImageBox = SortableElement((props) => {
     return (<div style={style}>
         <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
             <span>
-                <span></span>{file.uploaded ? <img src={file.path} alt=""/> : <Icon name={"Upload"}/>}
+                <span></span>{file.uploaded ? <img src={"https://static.esotiq.com/" + file.path} alt=""/> : <Icon name={"Upload"}/>}
 
                 <div className="w-gallery-on-hover">
                     <a onClick={(e) => {
@@ -259,12 +260,19 @@ class FileList extends React.Component<IFileList, any> {
                     title={preview.name}
                     showHideLink={true}
                 >
-                    <input className={"form-control"} type="text" value={preview.path} ref={(el) => this.clipurl = el}/>
-                    <button style={{display: "block"}} className={"btn btn-primary"} onClick={() => {
-                        this.clipurl.select();
-                        document.execCommand("Copy");
-                    }}>{__("Kopiuj link")}</button>
-                    <img style={{maxWidth: 800, maxHeight: 600}} src={preview.path}/>
+                    <CommandBar items={[
+                        {key: "f0", label: "Kopiuj link", icon: "Copy", onClick: () => {
+                                this.clipurl.select();
+                                document.execCommand("Copy");
+                            }},
+                        {key: "f1", label: "Otwórz w nowym oknie", icon: "OpenInNewWindow", onClick: () => {
+                            window.open("https://static.esotiq.com/" + this.clipurl.value)
+                            }},
+                    ]}/>
+                    <div style={{opacity: 0}}>
+                        <input className={"form-control"} type="text" value={preview.path} ref={(el) => this.clipurl = el}/>
+                    </div>
+                    <img style={{maxWidth: 800, maxHeight: 600}} src={"https://static.esotiq.com/" + preview.path}/>
                 </Modal>}
             </div>
         )
