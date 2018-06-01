@@ -2,6 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import ResizeObserver from "resize-observer-polyfill";
 import {Icon} from "./Icon";
+import {PositionCalculator} from "../lib/PositionCalculator";
 
 interface IShadowProps {
     visible?: boolean;
@@ -281,6 +282,7 @@ export class Portal extends React.Component<any, any> {
             modalRoot = document.getElementById("modal-root");
         }
     }
+
     public componentDidMount() {
         modalRoot.appendChild(this.el);
     }
@@ -376,10 +378,10 @@ const confirm = async (message, options: IConfirmConf = {}) => {
     return promise;
 };
 
-export const tooltip = (content, options) => {
+export const tooltip = (content, options: ITooltipProps) => {
     const props = {...options};
 
-    const parent = document.body;
+    const parent = document.getElementById("modal-root");
 
     const wrapper = parent.appendChild(document.createElement("div"));
     const cleanup = () => {
@@ -399,14 +401,26 @@ export const tooltip = (content, options) => {
 
 interface ITooltipProps {
     theme?: "light" | "dark";
-    content: () => any;
+    content?: () => any;
     type?: "hover" | "click";
+    onHide?: () => any;
+    target: any;
+    targetAt?: string;
+    itemAt?: string;
+    offsetY?: number
+    offsetX?: number
 }
 
 class Tooltip extends React.Component<ITooltipProps, any> {
+    tooltipEl: HTMLDivElement;
     public static defaultProps: Partial<ITooltipProps> = {
         theme: "dark",
         type: "hover",
+        content: null,
+        itemAt: "bottom middle",
+        targetAt: "top middle",
+        offsetX: 0,
+        offsetY: 0,
     };
 
     constructor(props) {
@@ -419,6 +433,26 @@ class Tooltip extends React.Component<ITooltipProps, any> {
     }
 
     public componentDidMount() {
+
+
+        setTimeout(() => {
+            window.requestAnimationFrame(() => {
+                if (this.tooltipEl) {
+                    const calculator = new PositionCalculator(this.props.target(), this.tooltipEl, {
+                        targetAt: this.props.targetAt,
+                        itemAt: this.props.itemAt,
+                        offsetY: this.props.offsetY,
+                        offsetX: this.props.offsetX,
+                    });
+                    calculator.calculate();
+                    calculator.calculate();
+                    this.tooltipEl.style.opacity = "1";
+                    this.tooltipEl.focus();
+                }
+            })
+        }, 0)
+
+
         //let targetPos = this.props.target().getBoundingClientRect();
         ///let center = Math.round(/*targetPos.left -*/ targetPos.width / 2);
         //this.setState({ brakeLeft: center });
@@ -454,45 +488,35 @@ class Tooltip extends React.Component<ITooltipProps, any> {
 
     public handleBlur = () => {
         this.setState({isVisible: false});
+        if (this.props.onHide) {
+            this.props.onHide();
+        }
     };
+
 
     public render() {
         const {theme, content} = this.props;
 
         return (
-            <>
+            <Portal>
                 <div
                     onMouseEnter={this.handleMouseEnter}
                     tabIndex={-1}
                     onBlur={this.handleBlur}
                     onMouseLeave={this.handleMouseOut}
                     onClick={this.handleClick}
-                    className={"w-tooltip " + (this.state.isVisible && "w-tooltip-visible")}
+                    className={"w-tooltip"}
+                    ref={(el) => this.tooltipEl = el}
                 >
-                    {this.props.children}{" "}
-                    {this.state.isVisible && (
-                        <div className={`w-tooltip-hover w-tooltip-hover-${theme}`} style={{}}>
-                            {content()}
-                        </div>
-                    )}
-                </div>
 
-                {false && (
-                    <Modal
-                        show={true}
-                        target={this.props.target}
-                        shadow={false}
-                        layer={this.props.layer}
-                        onHide={this.props.onHide}
-                        className={"w-tooltip " + (this.state.orientation.indexOf("top") != -1 ? "w-tooltip-top" : "")}
-                        onOrientationChange={this.orientationChange.bind(this)}
-                        orientation={this.state.orientation}
-                    >
-                        <div className="w-toolbar-brake" style={{left: this.state.brakeLeft}}/>
-                        <div className="w-toolbar-content">{p.children}</div>
-                    </Modal>
-                )}
-            </>
+
+                    <div className={`w-tooltip-hover w-tooltip-hover-${theme}`} style={{}}>
+                        {this.props.children}{" "}
+                        {content && content()}
+                    </div>
+
+                </div>
+            </Portal>
         );
     }
 }

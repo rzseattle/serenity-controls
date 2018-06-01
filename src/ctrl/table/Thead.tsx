@@ -28,8 +28,7 @@ export default class Thead extends React.Component<any, any> {
         if (el.header.tooltip && this.tooltipCleanup === null) {
             this.tooltipCleanup = tooltip(el.header.tooltip, {
                 target: () => node,
-                layer: false,
-                orientation: "top",
+                offsetY: -10
             });
         }
     }
