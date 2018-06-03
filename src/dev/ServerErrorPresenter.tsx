@@ -35,6 +35,7 @@ export class ServerErrorPresenter extends React.Component<IProps, IState> {
                         </div>
                     )}
                     {typeof error === "string" && <div>{error}</div>}
+                    {typeof error === "object" && error.__arrowException !== undefined && <div><ShowStack input={error}/></div>}
 
                     {!PRODUCTION && error instanceof RouterException && (
                         <div>
@@ -59,7 +60,7 @@ const ShowStack = (props) => {
         try {
             stack = JSON.parse(error);
         } catch (e) {
-            return <div>{error}</div>;
+            return <div><pre>{error}</pre></div>;
         }
     } else {
         stack = error;

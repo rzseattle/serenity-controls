@@ -176,7 +176,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                     />
                 ) : (
                     !this.props.context.isViewLoading && (
-                        (this.props.context.viewServerErrors && this.props.context.viewServerErrors.__arrowException !== undefined) || !this.props.context.viewServerErrors) && (
+                        (this.props.context.viewServerErrors && this.props.context.viewServerErrors.__arrowException === undefined) || !this.props.context.viewServerErrors) && (
                         <div style={{padding: 20}}>
                             <h1>404 not found</h1>
                             <div>Selected resource cannot be found</div>
