@@ -230,13 +230,35 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
 
     constructor(props) {
         super(props);
-        this.state = {value: props.value ? props.value.value : ""};
+        let value: any = "";
+        if (props.value) {
+            value = props.value;
+        }
+        if (props.config.multiselect && value == "") {
+            value = [];
+        }
+
+        this.state = {
+            value
+        };
     }
 
     public componentWillReceiveProps(nextProps) {
-        this.setState({
-            value: nextProps.value ? nextProps.value.value : this.props.config._default,
-        });
+
+        let value: any = "";
+        if (nextProps.value) {
+            value = nextProps.value;
+        }else{
+            value = this.props.config._default;
+        }
+        if (this.props.config.multiselect && value == "") {
+            value = [];
+        }
+
+        this.state = {
+            value
+        };
+
     }
 
     public static defaultProps: Partial<IFilterProps> = {
@@ -246,14 +268,14 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
     public getValue() {
         const select = ReactDOM.findDOMNode(this.select);
 
-        let values = [].filter.call(select.options, function(o) {
+        let values = [].filter.call(select.options, function (o) {
             return o.selected;
-        }).map(function(o) {
+        }).map(function (o) {
             return o.value;
         });
-        const labels = [].filter.call(select.options, function(o) {
+        const labels = [].filter.call(select.options, function (o) {
             return o.selected;
-        }).map(function(o) {
+        }).map(function (o) {
             return o.innerHTML;
         });
 
@@ -270,8 +292,9 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
     }
 
     public handleChange(e) {
+
         this.setState({
-            value: e.target.value,
+            value: this.getValue().value,
         });
         if (this.props.onChange) {
             this.props.onChange(this.getValue());
@@ -315,10 +338,13 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
                             value={el.value}
 
                             onMouseDown={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                e.currentTarget.selected = e.currentTarget.selected ? false : true;
-                                return false;
+
+                                if (this.props.config.multiselect) {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    e.currentTarget.selected = e.currentTarget.selected ? false : true;
+                                    return false;
+                                }
                             }}
                         >{el.label} </option>,
                     )}
@@ -658,7 +684,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
 
             <div className={"w-filter w-filter-text "} ref="body">
 
-                <input type="text" value={this.state.searchText}  onChange={this.handleInputChange} autoFocus={config.disableAutoFocus === true ? false : true} onKeyPress={this.handleKeyPress}/>
+                <input type="text" value={this.state.searchText} onChange={this.handleInputChange} autoFocus={config.disableAutoFocus === true ? false : true} onKeyPress={this.handleKeyPress}/>
 
                 {this.props.config.extendedInfo && <select
                     onChange={this.handleSelectChange.bind(this)}
