@@ -62,7 +62,8 @@ export default class Tbody extends React.Component<any, any> {
 
         return props.data.map((row, index) => {
 
-            const key = row.id != undefined ? row.id : uuidv4();
+            //const key = row.id != undefined ? row.id : uuidv4();
+            const key = uuidv4();
             const even = index % 2 == 0;
 
             return (<Row
