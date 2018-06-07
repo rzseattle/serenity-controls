@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { ICommand } from "../lib/ICommand";
+import BackOfficePanel from "../backoffice/BackOfficePanel";
 
 interface IProps {
     isSearchBoxVisible?: boolean;
@@ -17,7 +18,6 @@ export class CommandBar extends React.Component<IProps, any> {
         items: [],
         rightItems: [],
     };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -65,11 +65,16 @@ export class CommandBar extends React.Component<IProps, any> {
                                             onClick={(event) => {
                                                 const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
 
-                                                const parent = ReactDOM.findDOMNode(this).parentNode.getBoundingClientRect();
+                                                const parent = ReactDOM.findDOMNode(this).parentNode.parentNode.parentNode.parentNode.getBoundingClientRect();
+
+                                                const panelMenu = ReactDOM.findDOMNode(this).parentNode.parentNode.parentNode.parentNode.childNodes[0].getBoundingClientRect();
+
                                                 this.setState({
                                                     dropdownElementList: item.subItems,
-                                                    dropdownPosition: elementPosittion.left,
+                                                    dropdownPosition: elementPosittion.right,
                                                     dropdownLayerHeight: parent.height,
+                                                    elementPosittion,
+                                                    panelMenu,
                                                 });
                                                 if (this.state.dropdownHeight > 1) {
                                                     this.setState({
@@ -128,7 +133,7 @@ export class CommandBar extends React.Component<IProps, any> {
                     />
 
                     {this.state.dropdownShowed == true && (
-                        <div className={"bar-dropdown-list"} style={{ maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition - 60 }}>
+                        <div className={"bar-dropdown-list"} style={{ maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition - (this.state.panelMenu.width + this.state.elementPosittion.width) }}>
                             {this.state.dropdownElementList.map((element) => {
                                 if (element == null) {
                                     return null;

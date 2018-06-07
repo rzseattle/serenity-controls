@@ -4,7 +4,6 @@
     background-color: #F4F4F4
     z-index: 1
     position: relative
-    height: 40px
     border-bottom: solid 1px #c1c1c1
     .search-box
         float: left
@@ -45,23 +44,31 @@
 
     .menu-bar
         display: flex
+        justify-content: center
+        align-items: center
 
         .buttons-left, .buttons-right
             overflow: hidden
             display: -webkit-box
             display: -ms-flexbox
             display: flex
+            align-items: center
             -webkit-box-flex: 1
             -ms-flex: 1 1 auto
 
-            vertical-align: top
-            line-height: 40px
-            max-width: 100%
 
-            a
+            vertical-align: top
+            max-width: 100%
+            min-height: 40px
+            max-height: 90px
+
+            a, button
                 display: inline-flex
                 cursor: pointer
                 padding: 0 8px 0 4px
+                min-height: 40px
+                max-height: 90px
+                align-items: center
 
                 font-size: 14px
                 &:hover
