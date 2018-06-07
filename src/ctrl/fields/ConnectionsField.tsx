@@ -1,32 +1,31 @@
 import * as React from "react";
-import {Modal} from "../Overlays";
+import {Modal, Portal} from "../Overlays";
 import {Icon} from "../Icon";
 import {IFieldChangeEvent, IFieldProps} from "../fields/Interfaces";
+import {PositionCalculator} from "../../lib/PositionCalculator";
 
 export interface IConnectionElement {
     value: string | number;
     label: string;
     icon: string;
     data?: any;
-
 }
 
 export interface IConnectionChangeEvent extends IFieldChangeEvent {
-    items: IConnectionElement[]
+    items: IConnectionElement[];
 }
 
 export interface IConnectionsFieldProps extends IFieldProps {
-    value: string[]
+    value: string[];
     maxItems?: number;
     items?: IConnectionElement[];
     searchResultProvider: (searchString: string, selected: string[]) => Promise<IConnectionElement[]>;
     selectionTemplate?: (elelent: IConnectionElement) => any;
     placeholder?: string;
-    onChange?: { (changeData: IConnectionChangeEvent): any },
+    onChange?: { (changeData: IConnectionChangeEvent): any };
 }
 
 export class ConnectionsField extends React.Component<IConnectionsFieldProps, any> {
-
     public static defaultProps: Partial<IConnectionsFieldProps> = {
         placeholder: __("Dodaj"),
         maxItems: 10000,
@@ -34,6 +33,8 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     };
 
     private input: HTMLInputElement;
+    private dropdown: null;
+    private inputContainer: any;
 
     constructor(props) {
         super(props);
@@ -43,7 +44,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
             search: "",
             searchResult: [],
             loading: false,
-            items: props.items,
+            items: props.items
         };
     }
 
@@ -55,27 +56,42 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         this.setState({selectionOpened: false, search: ""});
     }
 
+    public updateDropdownPosition = () => {
+        if (this.dropdown != null) {
+            const calculator = new PositionCalculator(this.inputContainer, this.dropdown, {
+                theSameWidth: true,
+                targetAt: "bottom middle",
+                itemAt: "top middle"
+            });
+            calculator.calculate();
+            calculator.calculate();
+        }
+    };
+
     public handleInputChange(e) {
         const value = e.target.value;
-        this.setState({
-            search: value,
-            searchResult: [],
-        });
+        this.setState(
+            {
+                search: value,
+                searchResult: []
+            },
+            this.updateDropdownPosition
+        );
         if (value.length > 0) {
             this.setState({
-                loading: true,
+                loading: true
             });
-            this.props.searchResultProvider(value, this.props.maxItems == 1 ? [] : this.getValues())
-                .then((result) => {
-                    this.setState({
+            this.props.searchResultProvider(value, this.props.maxItems == 1 ? [] : this.getValues()).then((result) => {
+                this.setState(
+                    {
                         loading: false,
                         selectedIndex: 0,
-                        searchResult: result,
-                    });
-                });
-
+                        searchResult: result
+                    },
+                    this.updateDropdownPosition
+                );
+            });
         }
-
     }
 
     public getItems() {
@@ -85,7 +101,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     public getValues() {
         if (this.props.maxItems == 1) {
             if (this.state.items.length == 0) {
-                return null
+                return null;
             } else {
                 return this.state.items[0].value;
             }
@@ -94,7 +110,6 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     }
 
     public handleOnChange() {
-
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -108,10 +123,13 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
 
     public handleSelection(el) {
         if (el) {
-            this.setState({
-                items: [...this.state.items, el],
-                search: "",
-            }, this.handleOnChange);
+            this.setState(
+                {
+                    items: [...this.state.items, el],
+                    search: ""
+                },
+                this.handleOnChange
+            );
         }
     }
 
@@ -124,14 +142,15 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     }
 
     public handleElementDelete(value) {
-
-        this.setState({
-            items: this.state.items.filter((el) => el.value != value),
-        }, this.handleOnChange);
+        this.setState(
+            {
+                items: this.state.items.filter((el) => el.value != value)
+            },
+            this.handleOnChange
+        );
     }
 
     public handleInputKeyDown(e) {
-
         e.stopPropagation();
 
         e.nativeEvent.stopImmediatePropagation();
@@ -156,62 +175,66 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         }
     }
 
-
     public render() {
-        return <div className={"w-connections-field " + (this.props.editable ? "" : "w-connections-field-presenter")}>
-
-            {this.state.items.map((el) => <ConnectionsFieldEntry key={el.value} {...el} onDelete={this.handleElementDelete.bind(this)}/>)}
-
+        return (
             <div
-                className="w-connections-field-input"
-                style={{display: this.state.items.length < this.props.maxItems ? "block" : "none"}}>
-                <input
-                    type="text"
-                    ref={(el) => this.input = el}
-                    onFocus={this.handleInputFocus.bind(this)}
-                    onBlur={this.handleInputBlur.bind(this)}
-                    onKeyDown={this.handleInputKeyDown.bind(this)}
-                    placeholder={this.props.placeholder}
-                    value={this.state.search}
-                    onChange={this.handleInputChange.bind(this)}
-                    autoComplete="off"
-                />
-            </div>
-
-
-            <Modal
-                show={this.state.selectionOpened && this.state.search.length > 0}
-                target={() => this.input}
-                shadow={false}
-                className={"app_crm_tasks_edit"}
+                className={"w-connections-field " + (this.props.editable ? "" : "w-connections-field-presenter")}
+                ref={(el) => (this.inputContainer = el)}
             >
-                <div className="w-connections-field-results" style={{
-                    boxShadow: "0 0 5px 0px rgba(0,0,0,0.4)",
-                    border: "1px solid #eaeaea",
-                    width: () => this.input.getBoundingClientRect().width,
-                }}>
-                    {/*To jest test modala {this.state.selectedIndex}*/}
-                    {this.state.loading && <Loader/>}
-                    {
-                        !this.state.loading && this.state.searchResult.length == 0
-                        &&
-                        <div>Brak wyników</div>
-                    }
-                    {
-                        !this.state.loading
-                        &&
-                        <Selection
-                            items={this.state.searchResult}
-                            selectedIndex={this.state.selectedIndex}
-                            selectionChange={this.handleSelectionChange.bind(this)}
-                            elementClicked={this.handleSelectionClick.bind(this)}
-                            elementTemplate={this.props.selectionTemplate}
-                        />
-                    }
-                </div>
-            </Modal>
+                {this.state.items.map((el) => (
+                    <ConnectionsFieldEntry key={el.value} {...el} onDelete={this.handleElementDelete.bind(this)}/>
+                ))}
 
-        </div>;
+                <div
+                    className="w-connections-field-input"
+                    style={{display: this.state.items.length < this.props.maxItems ? "block" : "none"}}
+                >
+                    <input
+                        type="text"
+                        ref={(el) => (this.input = el)}
+                        onFocus={this.handleInputFocus.bind(this)}
+                        onBlur={this.handleInputBlur.bind(this)}
+                        onKeyDown={this.handleInputKeyDown.bind(this)}
+                        placeholder={this.props.placeholder}
+                        value={this.state.search}
+                        onChange={this.handleInputChange.bind(this)}
+                        autoComplete="off"
+                    />
+                </div>
+
+                {this.state.selectionOpened &&
+                this.state.search.length > 0 && (
+                    <Portal>
+                        <div
+                            className="w-connections-field-results"
+                            style={{
+                                boxShadow: "0 0 5px 0px rgba(0,0,0,0.4)",
+                                border: "1px solid #eaeaea",
+                                position: "absolute",
+                                backgroundColor: "white",
+                                overflow: "auto",
+                                maxHeight: 400,
+                                zIndex:10000
+                            }}
+                            ref={(el) => (this.dropdown = el)}
+                        >
+                            {/*To jest test modala {this.state.selectedIndex}*/}
+                            {this.state.loading && <Loader/>}
+                            {!this.state.loading && this.state.searchResult.length == 0 && <div>Brak wyników</div>}
+                            {!this.state.loading && (
+                                <Selection
+                                    items={this.state.searchResult}
+                                    selectedIndex={this.state.selectedIndex}
+                                    selectionChange={this.handleSelectionChange.bind(this)}
+                                    elementClicked={this.handleSelectionClick.bind(this)}
+                                    elementTemplate={this.props.selectionTemplate}
+                                />
+                            )}
+                        </div>
+                    </Portal>
+                )}
+            </div>
+        );
     }
 }
 
@@ -230,17 +253,17 @@ class ConnectionsFieldEntry extends React.Component<IConnectionsFieldEntryProps,
     }
 
     public render() {
-        return <div className="w-connections-field-entry">
-            <div className="prepend">
-                <Icon name={this.props.icon}/>
+        return (
+            <div className="w-connections-field-entry">
+                <div className="prepend">
+                    <Icon name={this.props.icon}/>
+                </div>
+                <div className="content">{this.props.label}</div>
+                <div className="delete" onClick={this.handleDeleteClick.bind(this, this.props.value)}>
+                    <Icon name="Cancel"/>
+                </div>
             </div>
-            <div className="content">
-                {this.props.label}
-            </div>
-            <div className="delete" onClick={this.handleDeleteClick.bind(this, this.props.value)}>
-                <Icon name="Cancel"/>
-            </div>
-        </div>;
+        );
     }
 }
 
@@ -253,37 +276,44 @@ interface ISelectionProps {
 }
 
 class Selection extends React.Component<ISelectionProps, any> {
-
     handleMouseEnter(index, el) {
-        console.log("here");
-        this.props.selectionChange(index, el)
+        this.props.selectionChange(index, el);
     }
 
     handleMouseClick(index, el) {
-        this.props.elementClicked(index, el)
+        this.props.elementClicked(index, el);
     }
 
-
     public render() {
-        return <div className="w-selection">
-            {this.props.items.map((el, index) =>
-                <div
-                    key={el.value}
-                    className={"w-selection-element " + (index == this.props.selectedIndex ? "w-selection-element-selected" : "")}
-                    onMouseEnter={this.handleMouseEnter.bind(this, index, el)}
-                    onMouseDown={this.handleMouseClick.bind(this, index, el)}
-
-
-                >
-                    {this.props.elementTemplate ? this.props.elementTemplate(el) : el.label}
-                </div>,
-            )}
-        </div>;
+        return (
+            <div className="w-selection">
+                {this.props.items.map((el, index) => (
+                    <div
+                        key={el.value}
+                        className={
+                            "w-selection-element " +
+                            (index == this.props.selectedIndex ? "w-selection-element-selected" : "")
+                        }
+                        onMouseEnter={this.handleMouseEnter.bind(this, index, el)}
+                        onMouseDown={this.handleMouseClick.bind(this, index, el)}
+                    >
+                        {this.props.elementTemplate ? this.props.elementTemplate(el) : el.label}
+                    </div>
+                ))}
+            </div>
+        );
     }
 }
 
 const Loader = (props) => {
-    return <div className={" w-loader "}>
-        <span><i></i><i></i><i></i><i></i></span>
-    </div>;
+    return (
+        <div className={" w-loader "}>
+            <span>
+                <i/>
+                <i/>
+                <i/>
+                <i/>
+            </span>
+        </div>
+    );
 };
