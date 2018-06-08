@@ -10,15 +10,15 @@
     "target": "es6",
     "noImplicitAny": true,
     "downlevelIteration": true,
-    "removeComments": true
+    "removeComments": true,
     "noEmit": true,
     "skipLibCheck": true,
     "lib": [
+      "ES2017",
       "DOM",
       "es5",
       "es2015.collection",
       "es2015.iterable",
-      "ES2017",
       "dom.iterable"
     ]
   },
