@@ -65,13 +65,14 @@ export class CommandBar extends React.Component<IProps, any> {
                                             onClick={(event) => {
                                                 const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
 
-                                                const parent = ReactDOM.findDOMNode(this).parentNode.parentNode.parentNode.parentNode.getBoundingClientRect();
+                                                const parent = ReactDOM.findDOMNode(this).getBoundingClientRect();
 
-                                                const panelMenu = ReactDOM.findDOMNode(this).parentNode.parentNode.parentNode.parentNode.childNodes[0].getBoundingClientRect();
+                                                const panelMenu = ReactDOM.findDOMNode(this).parentNode.getBoundingClientRect();
 
+                                                console.log(parent);
                                                 this.setState({
                                                     dropdownElementList: item.subItems,
-                                                    dropdownPosition: elementPosittion.right,
+                                                    dropdownPosition: elementPosittion.left - parent.left,
                                                     dropdownLayerHeight: parent.height,
                                                     elementPosittion,
                                                     panelMenu,
@@ -133,7 +134,7 @@ export class CommandBar extends React.Component<IProps, any> {
                     />
 
                     {this.state.dropdownShowed == true && (
-                        <div className={"bar-dropdown-list"} style={{ maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition - (this.state.panelMenu.width + this.state.elementPosittion.width) }}>
+                        <div className={"bar-dropdown-list"} style={{ maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition }}>
                             {this.state.dropdownElementList.map((element) => {
                                 if (element == null) {
                                     return null;
