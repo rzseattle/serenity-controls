@@ -3,6 +3,8 @@ import {Modal, Portal} from "../Overlays";
 import {Icon} from "../Icon";
 import {IFieldChangeEvent, IFieldProps} from "../fields/Interfaces";
 import {PositionCalculator} from "../../lib/PositionCalculator";
+import {LoadingIndicator} from "../LoadingIndicator";
+import {deepIsEqual} from "../../lib/JSONTools";
 
 export interface IConnectionElement {
     value: string | number;
@@ -33,10 +35,10 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     };
 
     private input: HTMLInputElement;
-    private dropdown: null;
+    private dropdown: null | HTMLElement;
     private inputContainer: any;
 
-    constructor(props) {
+    constructor(props: IConnectionsFieldProps) {
         super(props);
         this.state = {
             selectionOpened: false,
@@ -49,20 +51,20 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         };
     }
 
-    static getDerivedStateFromProps(props, state) {
+    static getDerivedStateFromProps(props: IConnectionsFieldProps, state: any) {
         let ret = {};
-        if (props.items !== state.props.items) {
+
+        if (!deepIsEqual(props.items , state.props.items)) {
             ret = {
                 items: props.items,
-                props: props
-            }
+            };
         }
 
-        if (props.value !== state.props.value) {
+        if (!deepIsEqual(props.value, state.props.value)) {
             ret = {
                 ...ret,
-                value: props.value,
-            }
+                value: props.value
+            };
         }
 
         if (Object.entries(ret).length > 0) {
@@ -92,7 +94,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         }
     };
 
-    public handleInputChange(e) {
+    public handleInputChange( e ) {
         const value = e.target.value;
         this.setState(
             {
@@ -134,7 +136,6 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     }
 
     public handleOnChange = () => {
-
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -144,7 +145,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                 items: this.getItems()
             });
         }
-    }
+    };
 
     public handleSelection(el) {
         if (el) {
@@ -173,7 +174,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                 items: filtered
             },
             () => {
-                this.handleOnChange()
+                this.handleOnChange();
             }
         );
     }
@@ -213,8 +214,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                 }
                 ref={(el) => (this.inputContainer = el)}
             >
-
-                {this.state.items.map((el) => (
+                {this.state.items.map((el: any) => (
                     <ConnectionsFieldEntry key={el.value} {...el} onDelete={this.handleElementDelete.bind(this)}/>
                 ))}
 
@@ -254,7 +254,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                             ref={(el) => (this.dropdown = el)}
                         >
                             {/*To jest test modala {this.state.selectedIndex}*/}
-                            {this.state.loading && <Loader/>}
+                            {this.state.loading && <LoadingIndicator/>}
                             {!this.state.loading && this.state.searchResult.length == 0 && <div>Brak wyników</div>}
                             {!this.state.loading && (
                                 <Selection
@@ -339,16 +339,3 @@ class Selection extends React.Component<ISelectionProps, any> {
         );
     }
 }
-
-const Loader = (props) => {
-    return (
-        <div className={" w-loader "}>
-            <span>
-                <i/>
-                <i/>
-                <i/>
-                <i/>
-            </span>
-        </div>
-    );
-};
