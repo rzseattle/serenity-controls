@@ -69,7 +69,6 @@ export class CommandBar extends React.Component<IProps, any> {
 
                                                 const panelMenu = ReactDOM.findDOMNode(this).parentNode.getBoundingClientRect();
 
-                                                console.log(parent);
                                                 this.setState({
                                                     dropdownElementList: item.subItems,
                                                     dropdownPosition: elementPosittion.left - parent.left,
