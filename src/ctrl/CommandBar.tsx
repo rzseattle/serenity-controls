@@ -9,6 +9,7 @@ interface IProps {
     onSearch?: { (value: string): any };
     items: Array<ICommand>;
     rightItems?: Array<ICommand | null>;
+    zIndex?: number;
 }
 
 export class CommandBar extends React.Component<IProps, any> {
@@ -41,10 +42,10 @@ export class CommandBar extends React.Component<IProps, any> {
         }
         this.setState({ searchedText: event.target.value });
     }
-
     render() {
+        const zIndex = this.props.zIndex != undefined ? this.props.zIndex : 99;
         return (
-            <div className="w-command-bar">
+            <div className="w-command-bar" style={{zIndex: zIndex}}>
                 {this.props.isSearchBoxVisible && (
                     <div className="search-box">
                         <i className="ms-Icon ms-Icon--Search " />
