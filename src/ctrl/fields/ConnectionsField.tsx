@@ -173,7 +173,6 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                 items: filtered
             },
             () => {
-                console.log(this.state.items, "przed odpaleniem");
                 this.handleOnChange()
             }
         );
