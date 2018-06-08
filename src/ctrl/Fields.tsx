@@ -31,7 +31,7 @@ interface ISelectProps extends IFieldProps {
     onChange?: (changeData: ISelectChangeEvent) => any;
     allowClear?: boolean;
     value: string | number;
-    disabledClass: string;
+    disabledClass?: string;
 }
 
 class Select extends React.Component<ISelectProps, any> {

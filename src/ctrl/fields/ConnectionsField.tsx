@@ -29,7 +29,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     public static defaultProps: Partial<IConnectionsFieldProps> = {
         placeholder: __("Dodaj"),
         maxItems: 10000,
-        items: []
+        items: null
     };
 
     private input: HTMLInputElement;
@@ -44,8 +44,32 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
             search: "",
             searchResult: [],
             loading: false,
-            items: props.items
+            items: props.items !== null ? props.items : [],
+            props: this.props
         };
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        let ret = {};
+        if (props.items !== state.props.items) {
+            ret = {
+                items: props.items,
+                props: props
+            }
+        }
+
+        if (props.value !== state.props.value) {
+            ret = {
+                ...ret,
+                value: props.value,
+            }
+        }
+
+        if (Object.entries(ret).length > 0) {
+            return {...ret, props};
+        }
+
+        return null;
     }
 
     public handleInputFocus() {
@@ -109,7 +133,8 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         return this.state.items.reduce((p, c) => p.concat(c.value), []);
     }
 
-    public handleOnChange() {
+    public handleOnChange = () => {
+
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -142,11 +167,15 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     }
 
     public handleElementDelete(value) {
+        let filtered = this.state.items.filter((el) => el.value != value);
         this.setState(
             {
-                items: this.state.items.filter((el) => el.value != value)
+                items: filtered
             },
-            this.handleOnChange
+            () => {
+                console.log(this.state.items, "przed odpaleniem");
+                this.handleOnChange()
+            }
         );
     }
 
@@ -178,12 +207,19 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     public render() {
         return (
             <div
-                className={"w-connections-field " + (this.props.editable ? "" : "w-connections-field-presenter")}
+                className={
+                    "w-connections-field" +
+                    (this.props.editable ? "" : " w-connections-field-presenter") +
+                    (this.state.items.length == 0 ? " w-connections-field-presenter-empty" : "")
+                }
                 ref={(el) => (this.inputContainer = el)}
             >
+
                 {this.state.items.map((el) => (
                     <ConnectionsFieldEntry key={el.value} {...el} onDelete={this.handleElementDelete.bind(this)}/>
                 ))}
+
+                {!this.props.editable && this.state.items.length == 0 && <>{__("Brak powiązań")}</>}
 
                 <div
                     className="w-connections-field-input"
@@ -214,7 +250,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                                 backgroundColor: "white",
                                 overflow: "auto",
                                 maxHeight: 400,
-                                zIndex:10000
+                                zIndex: 10000
                             }}
                             ref={(el) => (this.dropdown = el)}
                         >
