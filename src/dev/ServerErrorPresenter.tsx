@@ -1,55 +1,55 @@
 import * as React from "react";
 import RouterException from "../backoffice/RouterException";
-import {RouteVisualization} from "./RouteVisualization";
+import { RouteVisualization } from "./RouteVisualization";
 
 declare var PRODUCTION: boolean;
 
 interface IProps {
     error: any;
-
 }
 
 interface IState {
-
 }
 
 export class ServerErrorPresenter extends React.Component<IProps, IState> {
-
     constructor(props) {
         super(props);
-
     }
 
     public render() {
-        const {error} = this.props;
+        const { error } = this.props;
+        const style = { margin: 10, padding: 10, backgroundColor: "white" };
 
-        return <div>
-            {error !== null && (
-                <div style={{margin: 10, padding: 10, backgroundColor: "white"}}>
-                    {error.url !== undefined && (
-                        <div>
-                            <ShowStack input={error.response}/>
-                            <pre>{error.url}</pre>
-                            <pre style={{maxHeight: 200, overflow: "auto"}}>{JSON.stringify(error.input, null, 2)}</pre>
+        if (error == null) {
+            return <div>Null error</div>;
+        }
 
-                        </div>
-                    )}
-                    {typeof error === "string" && <div>{error}</div>}
-                    {typeof error === "object" && error.__arrowException !== undefined && <div><ShowStack input={error}/></div>}
-
-                    {!PRODUCTION && error instanceof RouterException && (
-                        <div>
-                            {error.message}
-                            <hr/>
-                            <RouteVisualization/>
-                        </div>
-                    )}
-
+        if (error.url !== undefined) {
+            return (
+                <div style={style}>
+                    <ShowStack input={error.response}/>
+                    <pre>{error.url}</pre>
+                    <pre style={{ maxHeight: 200, overflow: "auto" }}>{JSON.stringify(error.input, null, 2)}</pre>
                 </div>
-            )}
-        </div>;
-    }
+            );
+        }
 
+        if (!PRODUCTION && error instanceof RouterException) {
+            return (
+                <div style={style}>
+                    {error.message}
+                    <hr/>
+                    <RouteVisualization/>
+                </div>
+            );
+        }
+
+        return (
+            <div style={style}>
+                <ShowStack input={error}/>
+            </div>
+        );
+    }
 }
 
 const ShowStack = (props) => {
@@ -71,12 +71,19 @@ const ShowStack = (props) => {
 
     stack = stack.__arrowException;
 
-    return <div>
-        <div><strong>[{stack.code}] {stack.msg}</strong></div>
-        <hr/>
-        <div>{stack.file}:{stack.line}</div>
-        <hr/>
-        <pre>{stack.trace}</pre>
-    </div>;
-
+    return (
+        <div>
+            <div>
+                <strong>
+                    [{stack.code}] {stack.msg}
+                </strong>
+            </div>
+            <hr/>
+            <div>
+                {stack.file}:{stack.line}
+            </div>
+            <hr/>
+            <pre>{stack.trace}</pre>
+        </div>
+    );
 };

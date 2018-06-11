@@ -42,7 +42,7 @@ const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Componen
 
         public render() {
             const props = this.props;
-            const addInputClass = true;
+            const addInputClass = this.props.addInputClass;
             const classes = ["form-group"];
 
             if (this.props.errors) {
