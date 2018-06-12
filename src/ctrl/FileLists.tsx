@@ -7,6 +7,18 @@ import {Icon} from "frontend/src/ctrl/Icon";
 import {Modal} from "frontend/src/ctrl/Overlays";
 import {CommandBar} from "./CommandBar";
 
+let baseUrl = "";
+if (window.location.host.indexOf("esotiq") != -1) {
+    baseUrl = "https://static.esotiq.com/";
+}
+
+let parsePath = (path) => {
+    if (path.charAt(0) != "/") {
+        path = "/" + path;
+    }
+    return baseUrl + path;
+}
+
 interface IFile {
     key: number,
     name: string;
@@ -21,7 +33,7 @@ interface IFile {
 }
 
 
-const DragHandle = SortableHandle(() => <a className="w-gallery-drag"><Icon  name={"SIPMove"} /></a>); //
+const DragHandle = SortableHandle(() => <a className="w-gallery-drag"><Icon name={"SIPMove"}/></a>); //
 
 
 const Progress = (props) => {
@@ -57,7 +69,7 @@ const ImageBox = SortableElement((props) => {
     return (<div style={style}>
         <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
             <span>
-                <span></span>{file.uploaded ? <img src={"https://static.esotiq.com/" + file.path} alt=""/> : <Icon name={"Upload"}/>}
+                <span></span>{file.uploaded ? <img src={parsePath(file.path)} alt=""/> : <Icon name={"Upload"}/>}
 
                 <div className="w-gallery-on-hover">
                     <a onClick={(e) => {
@@ -261,18 +273,22 @@ class FileList extends React.Component<IFileList, any> {
                     showHideLink={true}
                 >
                     <CommandBar items={[
-                        {key: "f0", label: "Kopiuj link", icon: "Copy", onClick: () => {
+                        {
+                            key: "f0", label: "Kopiuj link", icon: "Copy", onClick: () => {
                                 this.clipurl.select();
                                 document.execCommand("Copy");
-                            }},
-                        {key: "f1", label: "Otwórz w nowym oknie", icon: "OpenInNewWindow", onClick: () => {
-                            window.open("https://static.esotiq.com/" + this.clipurl.value)
-                            }},
+                            }
+                        },
+                        {
+                            key: "f1", label: "Otwórz w nowym oknie", icon: "OpenInNewWindow", onClick: () => {
+                                window.open(baseUrl + this.clipurl.value)
+                            }
+                        },
                     ]}/>
                     <div style={{opacity: 0}}>
-                        <input className={"form-control"} type="text" value={preview.path} ref={(el) => this.clipurl = el}/>
+                        <input className={"form-control"} type="text" value={parsePath( preview.path)} ref={(el) => this.clipurl = el}/>
                     </div>
-                    <img style={{maxWidth: 800, maxHeight: 600}} src={"https://static.esotiq.com/" + preview.path}/>
+                    <img style={{maxWidth: 800, maxHeight: 600}} src={parsePath( preview.path)}/>
                 </Modal>}
             </div>
         )
