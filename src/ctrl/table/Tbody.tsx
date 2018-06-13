@@ -1,6 +1,6 @@
 import * as React from "react";
 import {deepIsEqual} from "frontend/src/lib/JSONTools";
-import uuidv4 from "uuid/v4";
+import * as uuidv4 from "uuid/v4";
 import Icon from "../Icon";
 //const uuidv4 = require('uuid/v4');
 

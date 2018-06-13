@@ -1,5 +1,5 @@
-import NotificationSystem from "react-notification-system";
-import React from "react";
+import * as NotificationSystem from "react-notification-system";
+import * as React from "react";
 
 import {IModalProps} from "../ctrl/Overlays";
 import RouterException from "../backoffice/RouterException";
@@ -8,6 +8,7 @@ import {ServerErrorPresenter} from "../dev/ServerErrorPresenter";
 
 declare var PRODUCTION: boolean;
 declare var window: any;
+
 
 export interface IArrowViewComponentProps {
     /**

@@ -255,9 +255,9 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
             value = [];
         }
 
-        this.state = {
+        this.setState(  {
             value
-        };
+        });
 
     }
 
