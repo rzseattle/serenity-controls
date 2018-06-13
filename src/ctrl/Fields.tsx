@@ -129,7 +129,7 @@ class Select extends React.Component<ISelectProps, any> {
 
         let filteredOptions = options;
         if (this.state.searchedTxt != "") {
-            filteredOptions = filteredOptions.filter((el) => el.label.indexOf(this.state.searchedTxt) !== -1);
+            filteredOptions = filteredOptions.filter((el) => el.label.toLowerCase().indexOf(this.state.searchedTxt.toLowerCase()) !== -1);
         }
 
         return (
@@ -143,7 +143,7 @@ class Select extends React.Component<ISelectProps, any> {
                         }
                     }}
                 >
-                    {options[selectedIndex] ? options[selectedIndex].label : <div className={"w-select-placeholder"}>{__("Wybierz")}</div>}
+                    {options[selectedIndex] ? options[selectedIndex].label : <div className={"w-select-placeholder"}>{this.props.placeholder?this.props.placeholder:__("Wybierz")}</div>}
                     <Icon name={"ChevronDown"}/>
                 </div>
 
