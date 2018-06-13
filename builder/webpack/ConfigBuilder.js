@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-var { resolve, basename } = require("path");
+var {resolve, basename} = require("path");
 const fs = require("fs");
 const HappyPack = require("happypack");
 const path = require("path");
@@ -14,12 +14,13 @@ let configDefaults = {
     LANGUAGE: "pl",
 };
 
-module.exports = function(input) {
+module.exports = function (input) {
     input = Object.assign(configDefaults, input);
 
     var conf = {
         context: resolve(__dirname, ""),
-        devtool: input.PRODUCTION  ? "source-map" : "cheap-module-source-map",//,
+        devtool: input.PRODUCTION ? "source-map" : "cheap-module-source-map",//,
+
         resolve: {
             extensions: [".js", ".ts", ".tsx"],
             unsafeCache: true,
@@ -60,14 +61,14 @@ module.exports = function(input) {
         conf[i] = tmp[i];
     }
 
-    let threads = HappyPack.ThreadPool({ size: 4 });
+    let threads = HappyPack.ThreadPool({size: 4});
 
     conf.plugins = conf.plugins.concat([
         new HappyPack({
             id: "sass",
             loaders: [
-                { loader: "css-loader", query: { sourceMap: true } },
-                { loader: "resolve-url-loader", query: { sourceMap: true } },
+                {loader: "css-loader", query: {sourceMap: true}},
+                {loader: "resolve-url-loader", query: {sourceMap: true}},
                 {
                     loader: "sass-loader",
                     query: {
@@ -77,21 +78,6 @@ module.exports = function(input) {
                 },
             ],
 
-            threadPool: threads,
-        }),
-
-        new HappyPack({
-            id: "js",
-            loaders: [
-                {
-                    path: "babel-loader",
-                    query: {
-                        babelrc: true,
-                        cacheDirectory: true,
-                        extends: require("path").join(__dirname, "/.babelrc"),
-                    },
-                },
-            ],
             threadPool: threads,
         }),
         new HappyPack({
@@ -110,9 +96,9 @@ module.exports = function(input) {
                 // Either an absolute path or relative to webpack's options.context.
                 // Sets webpack's recordsPath if not already set.
                 recordsPath: input.BASE_PATH + "/node_modules/.cache/hard-source/[confighash]/records.json",
-                configHash: function(webpackConfig) {
+                configHash: function (webpackConfig) {
                     // node-object-hash on npm can be used to build this.
-                    return require("node-object-hash")({ sort: false }).hash(webpackConfig);
+                    return require("node-object-hash")({sort: false}).hash(webpackConfig);
                 },
                 // Either false, a string, an object, or a project hashing function.
                 environmentHash: {
@@ -131,8 +117,8 @@ module.exports = function(input) {
         conf.plugins.push(new ExtractTextPlugin(`bundle-[hash].css`));
     }
 
-    conf.plugins.push(function() {
-        this.plugin("done", function(stats) {
+    conf.plugins.push(function () {
+        this.plugin("done", function (stats) {
             var stats = stats.toJson();
             //console.log(stats.warnings);
 
@@ -150,7 +136,8 @@ module.exports = function(input) {
                     }
                 }
 
-                fs.writeFile(resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`), JSON.stringify(missingLang, null, 2), function() {});
+                fs.writeFile(resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`), JSON.stringify(missingLang, null, 2), function () {
+                });
             }
 
             return true;
