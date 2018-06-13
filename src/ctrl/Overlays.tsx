@@ -309,7 +309,7 @@ class Modal extends React.Component<IModalProps, IModalState> {
                     style={{
                         width: p.width ? p.width : "auto",
                         height: p.height ? p.height : "auto",
-                        transition: (p.animation == "perspective" || p.animation == "fromUp" || p.animation == "fromDown") ? "transform .3s" : (p.animation == "fade") ? "opacity .2s" : (p.animation == "height") ? "max-height .3s" : "unset",
+                        transition: (p.animation == "perspective" || p.animation == "fromUp" || p.animation == "fromDown") ? "transform .1s" : (p.animation == "fade") ? "opacity .1s" : (p.animation == "height") ? "max-height .1s" : "unset",
                         transform: (p.animation == "perspective") ? "perspective(1000px) rotateX(-90deg) rotateY(0deg) rotateZ(0deg)" : (p.animation == "fromUp") ? "translate(0, -1000px)" : (p.animation == "fromDown") ? "translate(0, 1000px)" : "unset",
                         opacity: p.animation == "fade" ? 0 : "unset",
                         maxHeight: p.animation == "height" ? 0 : "auto",
