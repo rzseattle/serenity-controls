@@ -8,20 +8,53 @@ var getLoaders = function(production, input) {
                 {
                     test: [/\.js$/, /\.es6$/],
                     exclude: path.resolve(input.BASE_PATH, "node_modules"),
-                    //loader: 'babel-loader',
-                    //dodatkowe ustawienia potrzebne aby babel działał out of home dir ( inaczej nie parsował plików z zewnątrz)
-                    use: "happypack/loader?id=js",
-                    //loaders: 'babel-loader?babelrc=true&cacheDirectory=true&extends=' + require('path').join(__dirname, '/.babelrc'),
+                    loaders: [
+                        {
+                            loader: "babel-loader",
+                            /*options: {
+                                babelrc: true,
+                                cacheDirectory: true,
+                                exclude: /(node_modules|bower_components)/,
+                                extends: require("path").join(__dirname, "/.babelrc"),
+                            },*/
+                            options: {
+                                retainLines: true,
+                                presets: [
+                                    [
+                                        "@babel/preset-env",
+                                        {
+                                            targets: {
+                                                browsers: [
+                                                    "last 2 Chrome versions",
+                                                    "chrome >= 50",
+                                                    "ie >= 11"
+                                                ],
+                                                node: "current",
+                                            },
+                                            useBuiltIns: false,
+                                            modules: false
+                                        },
+                                    ],
+                                    "@babel/react",
+                                ],
+
+                                plugins: [
+                                    "@babel/plugin-syntax-jsx",
+                                    "@babel/plugin-syntax-dynamic-import",
+                                    "@babel/proposal-class-properties",
+                                    "@babel/proposal-object-rest-spread",
+                                    "react-hot-loader/babel",
+
+                                ],
+                            },
+
+                        },
+                    ],
 
                 },
 
-                /*   {
-                       test: /\.tsx?$/,
-                       use: 'happypack/loader?id=tsx',
-
-                   },*/
                 {
-                    test: /\.tsx?$/,
+                    test: [/\.tsx/, /\.ts$/],
                     loaders: [
                         {
                             loader: "awesome-typescript-loader", query: {
@@ -33,43 +66,44 @@ var getLoaders = function(production, input) {
                                     "views/!**!/!*.{ts,tsx}",
                                     "src/!**!/!*.{ts,tsx}",
                                 ],
-
-
-                            },
-                        },{
-                            loader: "babel-loader",
-
-                            options: {
-                                retainLines: true,
-                                presets: [
-                                    [
-                                        "@babel/preset-env",
-                                        {
-                                            targets: {
-                                                browsers: [
-                                                    "last 2 Chrome versions",
-                                                    "chrome >= 50",
-                                                ],
-                                                node: "current",
+                                useBabel: true,
+                                babelCore: "@babel/core",
+                                babelOptions: {
+                                    babelrc: false,
+                                    retainLines: true,
+                                    presets: [
+                                        [
+                                            "@babel/preset-env",
+                                            {
+                                                targets: {
+                                                    browsers: [
+                                                        "last 2 Chrome versions",
+                                                        "chrome >= 50",
+                                                        "ie >= 11"
+                                                    ],
+                                                    node: "current",
+                                                },
+                                                useBuiltIns: false,
+                                                modules: false
                                             },
-                                        },
+                                        ],
+                                        "@babel/react",
                                     ],
-                                    "@babel/typescript",
-                                    "@babel/react",
-                                ],
 
-                                plugins: [
+                                    plugins: [
+                                        "@babel/plugin-syntax-jsx",
+                                        "@babel/plugin-syntax-dynamic-import",
+                                        "@babel/proposal-class-properties",
+                                        "@babel/proposal-object-rest-spread",
+                                        "react-hot-loader/babel",
 
-                                    "@babel/plugin-syntax-typescript",
-                                    "@babel/plugin-syntax-jsx",
-                                    "@babel/plugin-syntax-dynamic-import",
-                                    "@babel/proposal-class-properties",
-                                    "@babel/proposal-object-rest-spread",
-                                    "react-hot-loader/babel",
+                                    ],
+                                },
 
-                                ],
+
                             },
                         },
+
                     ],
                 },
 
