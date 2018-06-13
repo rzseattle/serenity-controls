@@ -67,6 +67,8 @@ export interface IModalProps {
     className?: string;
     children: any;
     orientation?: string;
+    animate?: boolean;
+    animation?: string;
 
     onOrientationChange?(type: string): any;
 }
@@ -87,6 +89,8 @@ class Modal extends React.Component<IModalProps, IModalState> {
         recalculatePosition: true,
         shadow: true,
         layer: true,
+        animate: false,
+        animation: "fade",
     };
 
     constructor(props) {
@@ -107,6 +111,24 @@ class Modal extends React.Component<IModalProps, IModalState> {
     public handleClose = () => {
         if (this.props.onHide) {
             this.props.onHide();
+
+            switch (this.props.animation) {
+                case "perspective":
+                    this.modalBody.style.transform = "perspective(1000px) rotateX(-90deg) rotateY(0deg) rotateZ(0deg)";
+                    break;
+                case "fade":
+                    this.modalBody.style.opacity = "0";
+                    break;
+                case "fromUp":
+                    this.modalBody.style.transform = "translate(0, -1000px)";
+                    break;
+                case "fromDown":
+                    this.modalBody.style.transform = "translate(0, 1000px)";
+                    break;
+                case "height":
+                    this.modalBody.style.maxHeight = "0px";
+                    break;
+            }
         }
     };
 
@@ -204,16 +226,24 @@ class Modal extends React.Component<IModalProps, IModalState> {
                 let y = Math.round(Math.min(data.height / 2, window.innerHeight / 2 - 5));
                 x = this.props.left != undefined || this.props.right != undefined ? 0 : x;
                 y = this.props.top != undefined || this.props.bottom != undefined ? 0 : y;
-                node.style.transform = `translate(-${x}px, -${y}px)`;
 
-                if (this.props.left != undefined) {
-                    node.style.left = this.props.left + (Number.isNaN(this.props.left as any) ? "" : "px");
-                }
-                if (this.props.right != undefined) {
-                    node.style.right = this.props.right + (Number.isNaN(this.props.right as any) ? "" : "px");
-                }
-                if (this.props.left == undefined && this.props.right == undefined) {
-                    node.style.left = "50%";
+                if (!this.props.animate) {
+                    node.style.transform = `translate(-${x}px, -${y}px)`;
+                    if (this.props.left == undefined && this.props.right == undefined) {
+                        node.style.left = "50%";
+                    }
+                } else {
+                    node.style.margin = "0 auto";
+                    if (this.props.left != undefined) {
+                        node.style.left = this.props.left + (Number.isNaN(this.props.left as any) ? "" : "px");
+                    }
+                    if (this.props.right != undefined) {
+                        node.style.right = this.props.right + (Number.isNaN(this.props.right as any) ? "" : "px");
+                    }
+                    if (this.props.left == undefined && this.props.right == undefined) {
+                        node.parentNode.style.justifyContent = "center";
+                        node.parentNode.style.alignItems = "center";
+                    }
                 }
 
                 if (this.props.top != undefined) {
@@ -235,14 +265,39 @@ class Modal extends React.Component<IModalProps, IModalState> {
         return nextProps.show || (this.props.show && !nextProps.show);
     }
 
+    public async animate() {
+        alert("works");
+    }
+
     public render() {
         const p = this.props;
+        if (p.show === true) {
+            setTimeout(() => {
+                switch (this.props.animation) {
+                    case "perspective":
+                        this.modalBody.style.transform = "perspective(500px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)";
+                        break;
+                    case "fade":
+                        this.modalBody.style.opacity = "1";
+                        break;
+                    case "fromUp":
+                        this.modalBody.style.transform = "translate(0, 0)";
+                        break;
+                    case "fromDown":
+                        this.modalBody.style.transform = "translate(0, 0)";
+                        break;
+                    case "height":
+                        this.modalBody.style.maxHeight = "1000px";
+                        break;
+                }
+            }, 200);
+        };
 
         return ReactDOM.createPortal(
             <div
                 className={(p.layer ? "w-modal-container " : "") + p.className || ""}
                 style={{
-                    display: p.show ? "block" : "none",
+                    display: (p.animate && p.show) ? "flex" : (p.show) ? "block" : "none",
                     backgroundColor: p.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
                 }}
                 onClick={this.handleClose}
@@ -254,6 +309,10 @@ class Modal extends React.Component<IModalProps, IModalState> {
                     style={{
                         width: p.width ? p.width : "auto",
                         height: p.height ? p.height : "auto",
+                        transition: (p.animation == "perspective" || p.animation == "fromUp" || p.animation == "fromDown") ? "transform .3s" : (p.animation == "fade") ? "opacity .2s" : (p.animation == "height") ? "max-height .3s" : "unset",
+                        transform: (p.animation == "perspective") ? "perspective(1000px) rotateX(-90deg) rotateY(0deg) rotateZ(0deg)" : (p.animation == "fromUp") ? "translate(0, -1000px)" : (p.animation == "fromDown") ? "translate(0, 1000px)" : "unset",
+                        opacity: p.animation == "fade" ? 0 : "unset",
+                        maxHeight: p.animation == "height" ? 0 : "auto",
                     }}
                 >
                     {p.showHideLink && (
