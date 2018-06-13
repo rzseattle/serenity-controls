@@ -98,9 +98,12 @@ export class PositionCalculator {
             y = -itemPositionData.height / 2;
         }
 
-        //console.log([this.item.style.left, this.item.style.top]);
-        this.item.style.left = targetRefPoint[0] + x + this.options.offsetX + correction[0] + "px";
-        this.item.style.top = targetRefPoint[1] + y + this.options.offsetY + correction[1] + "px";
+        let scrollTop  = window.pageYOffset || document.documentElement.scrollTop,
+            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+
+        this.item.style.left = targetRefPoint[0] + x + this.options.offsetX + correction[0] + scrollLeft + "px";
+        this.item.style.top = targetRefPoint[1] + y + this.options.offsetY + correction[1] + scrollTop + "px";
 
     }
 }
