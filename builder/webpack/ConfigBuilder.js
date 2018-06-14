@@ -5,7 +5,7 @@ const HappyPack = require("happypack");
 const path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-
+require("babel-polyfill");
 let configDefaults = {
     HTTPS: false,
     ANALYZE: false,
@@ -41,7 +41,7 @@ module.exports = function (input) {
 
         const getDevServerConf = require("./DevServer.js");
         tmp = getDevServerConf(
-            input.ENTRY_POINTS,
+            input.ENTRY_POINTS.map(el => ['babel-polyfill', el]),
             input.PUBLIC_PATH,
             resolve(input.BASE_PATH, input.PUBLIC_PATH),
             input.BASE_PATH,
