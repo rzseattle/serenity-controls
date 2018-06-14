@@ -483,6 +483,7 @@ class Tooltip extends React.Component<ITooltipProps, any> {
         offsetX: 0,
         offsetY: 0,
     };
+    private _mounted: boolean;
 
     constructor(props) {
         super(props);
@@ -495,6 +496,7 @@ class Tooltip extends React.Component<ITooltipProps, any> {
 
     public componentDidMount() {
 
+        this._mounted = true;
 
         setTimeout(() => {
             window.requestAnimationFrame(() => {
@@ -519,6 +521,10 @@ class Tooltip extends React.Component<ITooltipProps, any> {
         //this.setState({ brakeLeft: center });
     }
 
+    componentWillUnmount() {
+        this._mounted = false;
+    }
+
     public componentDidUpdate() {
         //let targetPos = this.props.target().getBoundingClientRect();
         //let center = Math.round(targetPos.left - ( targetPos.width / 2 ));
@@ -530,14 +536,18 @@ class Tooltip extends React.Component<ITooltipProps, any> {
     }
 
     private handleMouseEnter = () => {
-        if (this.props.type == "hover") {
-            this.setState({isVisible: true});
+        if(this._mounted) {
+            if (this.props.type == "hover") {
+                this.setState({isVisible: true});
+            }
         }
     };
 
     private handleMouseOut = () => {
-        if (this.props.type == "hover") {
-            this.setState({isVisible: false});
+        if(this._mounted) {
+            if (this.props.type == "hover") {
+                this.setState({isVisible: false});
+            }
         }
     };
 
