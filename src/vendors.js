@@ -17,8 +17,6 @@ require('lodash');
 //require('frontend');
 require('react-addons-shallow-compare');
 
-require('selectivity/react');
-require('selectivity/styles/selectivity-react.css');
 
 require('../sass/Vendors.sass');
 
