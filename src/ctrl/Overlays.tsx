@@ -273,22 +273,24 @@ class Modal extends React.Component<IModalProps, IModalState> {
         const p = this.props;
         if (p.show === true) {
             setTimeout(() => {
-                switch (this.props.animation) {
-                    case "perspective":
-                        this.modalBody.style.transform = "perspective(500px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)";
-                        break;
-                    case "fade":
-                        this.modalBody.style.opacity = "1";
-                        break;
-                    case "fromUp":
-                        this.modalBody.style.transform = "translate(0, 0)";
-                        break;
-                    case "fromDown":
-                        this.modalBody.style.transform = "translate(0, 0)";
-                        break;
-                    case "height":
-                        this.modalBody.style.maxHeight = "1000px";
-                        break;
+                if (this.modalBody !== null) {
+                    switch (this.props.animation) {
+                        case "perspective":
+                            this.modalBody.style.transform = "perspective(500px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)";
+                            break;
+                        case "fade":
+                            this.modalBody.style.opacity = "1";
+                            break;
+                        case "fromUp":
+                            this.modalBody.style.transform = "translate(0, 0)";
+                            break;
+                        case "fromDown":
+                            this.modalBody.style.transform = "translate(0, 0)";
+                            break;
+                        case "height":
+                            this.modalBody.style.maxHeight = "1000px";
+                            break;
+                    }
                 }
             }, 200);
         };
