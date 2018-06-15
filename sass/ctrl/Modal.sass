@@ -179,4 +179,119 @@ span.loader, .w-loader > span
             width: (9*$loaderSize)+px
             height: (9*$loaderSize)+px
 
+.animate-shadowIn
+    animation: shadowIn
+    animation-duration: 2s
+.animate-fadeIn
+    animation: shadowIn
+    animation-duration: 0.2s
+.animate-perspective
+    animation: perspective
+    animation-duration: 0.2s
+.animate-perspectiveBounce
+    animation: perspectiveBounce
+    animation-duration: 0.5s
+.animate-fadeInLeft
+    animation-name: fadeInLeft
+    animation-duration: 0.2s
+    animation-fill-mode: both
+.animate-fadeInRight
+    animation-name: fadeInRight
+    animation-duration: 0.2s
+    animation-fill-mode: both
+.animate-fadeInDown
+    animation-name: fadeInDown
+    animation-duration: 0.2s
+    animation-fill-mode: both
+.animate-fadeInUp
+    animation-name: fadeInUp
+    animation-duration: 0.2s
+    animation-fill-mode: both
+.animate-error
+    animation-name: error
+    animation-duration: 0.6s
+    animation-fill-mode: both
 
+@keyframes perspective
+    0%
+        transform: perspective(500px) rotateX(-90deg) rotateY(0deg) rotateZ(0deg)
+    100%
+        transform: perspective(500px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)
+
+@keyframes shadowIn
+    0%
+        opacity: 0
+    100%
+        opacity: 1
+
+@keyframes fadeInLeft
+    0%
+        opacity: 0
+        -webkit-transform: translate3d(-100%, 0, 0)
+        transform: translate3d(-100%, 0, 0)
+    100%
+        opacity: 1
+        -webkit-transform: none
+        transform: none
+
+@keyframes fadeInRight
+    0%
+        opacity: 0
+        -webkit-transform: translate3d(100%, 0, 0)
+        transform: translate3d(100%, 0, 0)
+    100%
+        opacity: 1
+        -webkit-transform: none
+        transform: none
+
+@keyframes fadeInUp
+    0%
+        opacity: 0
+        -webkit-transform: translate3d(0, 100%, 0)
+        transform: translate3d(0, 100%, 0)
+    100%
+        opacity: 1
+        -webkit-transform: none
+        transform: none
+
+@keyframes fadeInDown
+    0%
+        opacity: 0
+        -webkit-transform: translate3d(0, -100%, 0)
+        transform: translate3d(0, -100%, 0)
+    100%
+        opacity: 1
+        -webkit-transform: none
+        transform: none
+
+@keyframes perspectiveBounce
+    0%
+        transform: perspective(400px) rotate3d(1, 0, 0, 90deg)
+        transition-timing-function: ease-in
+        opacity: 0
+    40%
+        transform: perspective(400px) rotate3d(1, 0, 0, -20deg)
+        transition-timing-function: ease-in
+    60%
+        transform: perspective(400px) rotate3d(1, 0, 0, 10deg)
+        opacity: 1
+    80%
+        transform: perspective(400px) rotate3d(1, 0, 0, -5deg)
+    100%
+        transform: perspective(400px)
+
+@keyframes error
+    0%
+        transform: scale3d(1, 1, 1)
+    30%
+        transform: scale3d(1.25, 0.75, 1)
+    40%
+        transform: scale3d(0.75, 1.25, 1)
+    50%
+        transform: scale3d(1.15, 0.85, 1)
+    65%
+        transform: scale3d(.95, 1.05, 1)
+    75%
+        transform: scale3d(1.05, .95, 1)
+    100%
+        transform: scale3d(1, 1, 1)
