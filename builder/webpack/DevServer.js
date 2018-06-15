@@ -201,7 +201,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
             });*/
         },
     };
-    conf.entry = [require.resolve("react-hot-loader/patch")].concat(devEntries);
+    conf.entry = ENTRY_POINTS;
 
     conf.plugins = [
         new webpack.NamedModulesPlugin(),

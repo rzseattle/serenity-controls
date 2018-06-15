@@ -39,9 +39,15 @@ module.exports = function (input) {
             FileObserver(input.BASE_PATH, resolve(input.BASE_PATH, "./build/js/tmp/components.include.js"), resolve(input.BASE_PATH, "./build/js/tmp/components.include.sass"));
         }
 
+        let tmpEntry = {};
+        for (let i in input.ENTRY_POINTS) {
+            tmpEntry[i] =  ['babel-polyfill', input.ENTRY_POINTS[i]]
+        }
+
+
         const getDevServerConf = require("./DevServer.js");
         tmp = getDevServerConf(
-            input.ENTRY_POINTS.map(el => ['babel-polyfill', el]),
+            tmpEntry,
             input.PUBLIC_PATH,
             resolve(input.BASE_PATH, input.PUBLIC_PATH),
             input.BASE_PATH,
