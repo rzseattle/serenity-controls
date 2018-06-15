@@ -31,6 +31,11 @@ module.exports = function (input) {
     const GetLoaders = require("./Loaders.js");
     conf.module = GetLoaders(input.PRODUCTION, input);
 
+    let tmpEntry = {};
+    for (let i in input.ENTRY_POINTS) {
+        tmpEntry[i] =  ['babel-polyfill', input.ENTRY_POINTS[i]]
+    }
+
     let tmp;
     if (!input.PRODUCTION) {
         conf.mode = "development";
@@ -39,10 +44,7 @@ module.exports = function (input) {
             FileObserver(input.BASE_PATH, resolve(input.BASE_PATH, "./build/js/tmp/components.include.js"), resolve(input.BASE_PATH, "./build/js/tmp/components.include.sass"));
         }
 
-        let tmpEntry = {};
-        for (let i in input.ENTRY_POINTS) {
-            tmpEntry[i] =  ['babel-polyfill', input.ENTRY_POINTS[i]]
-        }
+
 
 
         const getDevServerConf = require("./DevServer.js");
@@ -60,7 +62,7 @@ module.exports = function (input) {
     } else {
         conf.mode = "production";
         const getProductionConf = require("./Production.js");
-        tmp = getProductionConf(input.ENTRY_POINTS, input.PUBLIC_PATH, input.PATH, input.BASE_PATH, input.LANGUAGE, input.ANALYZE, webpack);
+        tmp = getProductionConf(tmpEntry, input.PUBLIC_PATH, input.PATH, input.BASE_PATH, input.LANGUAGE, input.ANALYZE, webpack);
     }
 
     for (let i in tmp) {
