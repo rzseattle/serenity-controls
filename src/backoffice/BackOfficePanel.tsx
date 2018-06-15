@@ -172,7 +172,14 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                             </div>
                         )}
 
-                        <Modal show={this.state.userMenuVisible} top={50} right={0} onHide={() => this.setState({ userMenuVisible: false })}>
+                        <Modal
+                            show={this.state.userMenuVisible}
+                            animate={true}
+                            animation={"perspectiveBounce"}
+                            top={50}
+                            right={0}
+                            onHide={() => this.setState({ userMenuVisible: false })}
+                        >
                             <div style={{ width: 200 }} />
                             <div style={{ padding: 10 }}>
                                 {/*<a onClick={() => {
