@@ -9,6 +9,7 @@
     left: 0
     right: 0
     background-color: rgba(0, 0, 0, 0.15)
+    overflow: auto
 
 .w-modal-confirm
     z-index: 2040
@@ -23,13 +24,13 @@
     position: fixed
 
 .w-modal
+
     position: absolute
     background: white
     border: 1px solid rgba(0, 0, 0, 0.3)
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
     display: inline-block
     border-radius: 3px
-    overflow: visible
 
     //transform: translate(-50%, -50%)
 
@@ -177,6 +178,7 @@ span.loader, .w-loader > span
         i
             width: (9*$loaderSize)+px
             height: (9*$loaderSize)+px
+
 
 .animate-shadowIn
     animation: shadowIn
