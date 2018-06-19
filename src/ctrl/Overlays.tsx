@@ -84,6 +84,8 @@ class Modal extends React.Component<IModalProps, IModalState> {
     public modalBody: HTMLDivElement;
     public animationName: string;
     public modalHandler: any;
+    
+
 
     public static defaultProps = {
         show: false,
@@ -322,6 +324,9 @@ class ConfirmModal extends React.Component<IConfirmModalProps, any> {
     public promise: Promise<{}>;
     public promiseReject: any;
     public promiseResolve: any;
+    public static defaultProps: Partial<IConfirmModalProps> = {
+        showCancelLing: true
+    }
 
     constructor(props) {
         super(props);
