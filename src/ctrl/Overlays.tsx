@@ -314,8 +314,11 @@ export class Portal extends React.Component<any, any> {
     }
 }
 
+interface IConfirmModalProps extends IModalProps{
+    showCancelLing?: boolean
+}
 
-class ConfirmModal extends React.Component<any, any> {
+class ConfirmModal extends React.Component<IConfirmModalProps, any> {
     public promise: Promise<{}>;
     public promiseReject: any;
     public promiseResolve: any;
@@ -352,23 +355,18 @@ class ConfirmModal extends React.Component<any, any> {
                     <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">
                         ok
                     </button>
-                    <button onClick={this.handleAbort.bind(this)} className="btn btn-default">
+                    {this.props.showCancelLing && <button onClick={this.handleAbort.bind(this)} className="btn btn-default">
                         anuluj
-                    </button>
+                    </button>}
                 </div>
             </Modal>
         );
     }
 }
 
-interface IConfirmConf {
-    container?: () => HTMLElement;
-    target?: () => HTMLElement;
-    title?: string;
-    showHideLink?: boolean;
-}
 
-const confirm = async (message, options: IConfirmConf = {}) => {
+
+const confirm = async (message, options: Partial<IConfirmModalProps> = {}) => {
     const props = {...options};
 
     const parent = options.container ? options.container() : document.body;
@@ -394,6 +392,13 @@ const confirm = async (message, options: IConfirmConf = {}) => {
 
     return promise;
 };
+
+
+const _alert = async (message, options: IConfirmConf = {}) => {
+    options.showCancelLing = false;
+    return confirm(message, options );
+};
+
 
 export const tooltip = (content, options: ITooltipProps) => {
     const props = {...options};
@@ -538,4 +543,4 @@ class Tooltip extends React.Component<ITooltipProps, any> {
     }
 }
 
-export {Modal, Shadow, Tooltip, confirm};
+export {Modal, Shadow, Tooltip, confirm, _alert};
