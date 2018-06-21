@@ -25,5 +25,6 @@ export interface IFieldChangeEvent {
     name: string
     type: string
     value: any
-    event: Event
+    event: Event,
+    data: any
 }

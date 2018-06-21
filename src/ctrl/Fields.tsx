@@ -640,6 +640,7 @@ class Date extends React.Component<IDateProps, any> {
                 type: "date",
                 value: date.format("YYYY-MM-DD"),
                 event: null,
+                data: date
             });
         }
     }
