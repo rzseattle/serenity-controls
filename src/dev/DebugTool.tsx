@@ -71,7 +71,6 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
         };
 
         this.listeners = {
-            _handleKeyDown: this._handleKeyDown.bind(this),
             _mouseMove: this._mouseMove.bind(this),
             _end: this._end.bind(this),
         };
@@ -88,20 +87,9 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
         ideConnector.refreshRoute();
     }
 
-    public _handleKeyDown(e) {
-        if (e.keyCode === 27) {
-            //esc
-            this.setState({ expanded: !this.state.expanded });
-        }
-    }
 
-    public componentWillMount() {
-        document.addEventListener("keydown", this.listeners._handleKeyDown);
-    }
 
-    public componentWillUnmount() {
-        document.removeEventListener("keydown", this.listeners._handleKeyDown);
-    }
+
 
     public handleExpand() {
         this.setState({ expanded: !this.state.expanded }, this.saveData);
