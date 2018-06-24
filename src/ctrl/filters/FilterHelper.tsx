@@ -72,6 +72,8 @@ export class FilterHelper {
             component: SwitchFilter,
         });
     }
+    
+    
 
     public get(): IFilter {
         return this.data;

@@ -247,7 +247,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
 
         let value: any = "";
         if (nextProps.value) {
-            value = nextProps.value;
+            value = nextProps.value.value;
         }else{
             value = this.props.config._default;
         }
@@ -296,6 +296,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
         this.setState({
             value: this.getValue().value,
         });
+
         if (this.props.onChange) {
             this.props.onChange(this.getValue());
         }
