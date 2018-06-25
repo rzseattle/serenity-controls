@@ -122,7 +122,7 @@ module.exports = function (input) {
                 recordsPath: input.BASE_PATH + "/node_modules/.cache/hard-source/[confighash]/records.json",
                 configHash: function (webpackConfig) {
                     // node-object-hash on npm can be used to build this.
-                    return require("node-object-hash")({sort: false}).hash(webpackConfig);
+                    return require("node-object-hash")({sort: false}).hash(webpackConfig) + input.LANGUAGE;
                 },
                 // Either false, a string, an object, or a project hashing function.
                 environmentHash: {
