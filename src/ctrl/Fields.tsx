@@ -55,11 +55,18 @@ class Select extends React.Component<ISelectProps, ISelectState> {
 
     constructor(props: ISelectProps) {
         super(props);
+
+
+        let options = props.options;
+        if (!Array.isArray(props.options)) {
+            options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
+        }
+
         this.state = {
             dropdownVisible: false,
             searchedTxt: "",
             highlightedIndex: -1,
-            filteredOptions: props.options
+            filteredOptions: options
         };
     }
 
@@ -100,11 +107,17 @@ class Select extends React.Component<ISelectProps, ISelectState> {
     }
 
     public handleDropdownChange = () => {
+
+        let options = this.props.options;
+        if (!Array.isArray(options)) {
+            options = Object.entries(options).map(([key, val]) => ({value: key, label: val}));
+        }
+
         this.setState(
             {
                 dropdownVisible: !this.state.dropdownVisible,
                 searchedTxt: "",
-                filteredOptions: this.props.options
+                filteredOptions: options
             },
             () => {
                 if (this.state.dropdownVisible) {
