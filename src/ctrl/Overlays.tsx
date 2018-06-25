@@ -548,4 +548,4 @@ class Tooltip extends React.Component<ITooltipProps, any> {
     }
 }
 
-export {Modal, Shadow, Tooltip, confirm, _alert};
+export {Modal, Shadow, Tooltip, confirm, confirm as _confirm, _alert};
