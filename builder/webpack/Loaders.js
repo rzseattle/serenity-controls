@@ -19,6 +19,7 @@ var getLoaders = function(production, input) {
                             },*/
                             options: {
                                 retainLines: true,
+                                exclude: /(node_modules|bower_components)/,
                                 presets: [
                                     [
                                         "@babel/preset-env",
@@ -59,18 +60,21 @@ var getLoaders = function(production, input) {
                         {
                             loader: "awesome-typescript-loader", query: {
                                 configFileName: path.resolve(__dirname, "./tsconfig.json"),
-                                useCache: true,
                                 cacheDirectory: "node_modules/.cache/awcache",
+                                noImplicitAny: true,
+                                transpileOnly: true,
                                 forceIsolatedModules: true,
                                 reportFiles: [
-                                    "views/!**!/!*.{ts,tsx}",
-                                    "src/!**!/!*.{ts,tsx}",
+                                    "views/**/*.{ts,tsx}",
+                                    "vendor/arrow/**/*.{ts,tsx}",
+                                    "node_modules_shared/src/**/*.{ts,tsx}",
                                 ],
                                 useBabel: true,
                                 babelCore: "@babel/core",
                                 babelOptions: {
                                     babelrc: false,
                                     retainLines: true,
+                                    exclude: /(node_modules|bower_components)/,
                                     presets: [
                                         [
                                             "@babel/preset-env",

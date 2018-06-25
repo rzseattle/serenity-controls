@@ -4,7 +4,11 @@ const fs = require("fs");
 const HappyPack = require("happypack");
 const path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+//var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const { CheckerPlugin } = require('awesome-typescript-loader')
+
+
+
 require("babel-polyfill");
 let configDefaults = {
     HTTPS: false,
@@ -17,6 +21,14 @@ let configDefaults = {
 module.exports = function (input) {
     input = Object.assign(configDefaults, input);
 
+
+    if(input.PRODUCTION ){
+        process.env.NODE_ENV = "production";
+    }else{
+        process.env.NODE_ENV = "development";
+    }
+
+
     var conf = {
         context: resolve(__dirname, ""),
         devtool: input.PRODUCTION ? "source-map" : "cheap-module-source-map",//,
@@ -28,6 +40,10 @@ module.exports = function (input) {
             cacheWithContext: false,
         },
     };
+
+
+
+
     const GetLoaders = require("./Loaders.js");
     conf.module = GetLoaders(input.PRODUCTION, input);
 
@@ -95,7 +111,7 @@ module.exports = function (input) {
         }),
     ]);
 
-    if (false) {
+    if (true) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({
@@ -118,6 +134,7 @@ module.exports = function (input) {
         );
     }
     //conf.plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }));
+    //conf.plugins.push( new CheckerPlugin());
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
 
