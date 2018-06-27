@@ -19,7 +19,7 @@ var getLoaders = function(production, input) {
                             },*/
                             options: {
                                 retainLines: true,
-                                exclude: /(node_modules|bower_components)/,
+                                //exclude: /(node_modules|bower_components)/,
                                 presets: [
                                     [
                                         "@babel/preset-env",
@@ -28,7 +28,8 @@ var getLoaders = function(production, input) {
                                                 browsers: [
                                                     "last 2 Chrome versions",
                                                     "chrome >= 50",
-                                                    "ie >= 11"
+                                                    "ie >= 11",
+                                                    "safari >= 8"
                                                 ],
                                                 node: "current",
                                             },
@@ -74,16 +75,16 @@ var getLoaders = function(production, input) {
                                 babelOptions: {
                                     babelrc: false,
                                     retainLines: true,
-                                    exclude: /(node_modules|bower_components)/,
+                                    //exclude: /(node_modules|bower_components)/,
                                     presets: [
                                         [
                                             "@babel/preset-env",
                                             {
                                                 targets: {
                                                     browsers: [
-                                                        "last 2 Chrome versions",
                                                         "chrome >= 50",
-                                                        "ie >= 11"
+                                                        "ie >= 11",
+                                                        "safari >= 8"
                                                     ],
                                                     node: "current",
                                                 },
