@@ -674,7 +674,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
     }
 
     public handleOnChange(e) {
-        let value: string[] = this.props.value.slice(0);
+        let value: string[] = this.props.value?this.props.value.slice(0):[];
         if (e.target.checked) {
             value.push(e.target.value);
         } else {

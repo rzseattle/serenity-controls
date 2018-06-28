@@ -3,7 +3,6 @@ import {ideConnector} from "../dev/IDEConnector";
 type IResponseCallback = (response: any) => any;
 
 declare var PRODUCTION: any;
-declare var DEV_PROPERIES: any;
 
 class Comm {
     public static basePath = "";
@@ -137,6 +136,12 @@ class Comm {
 
     public send(): XMLHttpRequest {
         const data = this.prepareData();
+
+        if (!PRODUCTION) {
+            console.log( "Frontend Comm dev debug. Sending on: " + Comm.basePath + this.url );
+            console.log( data );
+        }
+
         const formData = new FormData();
         if (this.method == "POST") {
             this.appendFormData(formData, data);
@@ -183,11 +188,9 @@ class Comm {
                             if (this.debug) {
                                 this.debugError(this.xhr.response);
                             }
-                            if (data.__arrowException !== undefined) {
-                                this.callEvent(Comm.EVENTS.ERROR, data);
-                            } else {
-                                this.callEvent(Comm.EVENTS.ERROR, this.xhr.response);
-                            }
+
+                            this.callEvent(Comm.EVENTS.ERROR, this.xhr.response);
+
                         }
                     }
 

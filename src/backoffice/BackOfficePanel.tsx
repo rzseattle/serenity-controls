@@ -115,9 +115,11 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                 props
             })
         });
+
+        return route;
     };
 
-    public handleCloseWindow(route: any): any {
+    public handleCloseWindow = (route: any): any => {
         this.setState({
             openedWindows: this.state.openedWindows.filter((el) => el.route != route)
         });
@@ -262,6 +264,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                             onLoadEnd={this.handleLoadEnd}
                             setPanelOption={this.handleSetPanelOption}
                             openModal={this.handleOpenWindow}
+                            closeModal={this.handleCloseWindow}
                             isSub={this.props.isSub}
                         />
                     </div>

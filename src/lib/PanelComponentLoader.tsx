@@ -43,7 +43,9 @@ export interface IArrowViewComponentProps {
 
     _isSub: boolean;
 
-    _openModal(route, input?: any, modalProps?: Partial<IModalProps>, props?: any): any;
+    _openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string;
+
+    _closeModal( modalId: string ): any;
 }
 
 interface IProps {
@@ -56,7 +58,9 @@ interface IProps {
 
     setPanelOption(name: string, value: string | number | boolean, callback?: () => any): any;
 
-    openModal(route, input?: any, modalProps?: Partial<IModalProps>, props?: any): any;
+    openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): any;
+
+    closeModal(modalId: string): any;
 }
 
 interface IState {
@@ -174,6 +178,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                             alert("Not implemented");
                         }}
                         _openModal={this.props.openModal}
+                        _closeModal={this.props.closeModal}
                     />
                 ) : (
                     !this.props.context.isViewLoading && (

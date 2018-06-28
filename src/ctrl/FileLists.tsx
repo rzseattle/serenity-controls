@@ -233,7 +233,7 @@ class FileList extends React.Component<IFileList, any> {
 
                 <div className={" " + (type == "gallery" ? "w-file-list-gallery" : "w-file-list-files")}>
                     {/*{deleted.map((el) => <div>Do usuni�cia: {el.name}</div>)}*/}
-                    {value && type == "filelist" ? value.map((el, index) => <div className="w-file-list-element" key={el.name}>
+                    {value && Array.isArray(value) && type == "filelist" ? value.map((el, index) => <div className="w-file-list-element" key={el.name}>
                         <div className="w-file-list-name">
                             <a onClick={this.handleFileClick.bind(this, index)}><Icon name={this.isImage(el.path) ? "Photo2" : "TextDocument"}/>{el.name}</a>
                             {!el.uploaded && <div className="w-file-list-upload-info">Plik zostanie załadowany po zapisaniu formularza</div>}
