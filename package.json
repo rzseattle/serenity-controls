@@ -16,7 +16,8 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
-    "inputmask": "^3.3.11",
+    "hotkeys-js": "^3.3.5",
+    "inputmask": "^4.0.0",
     "moment": "^2.22.1",
     "nprogress": "^0.2.0",
     "office-ui-fabric-core": "^7.1.0",
@@ -26,11 +27,10 @@
     "react-dates": "^12.7.0",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.3",
-    "react-json-tree": "^0.11.0",
-    "hotkeys-js": "^3.3.5",
     "react-hot-keys": "^1.2.0",
+    "react-json-tree": "^0.11.0",
     "react-notification-system": "^0.2.15",
-    "react-sortable-hoc": "^0.6.8",
+    "react-sortable-hoc": "^0.8.3",
     "resize-observer-polyfill": "^1.5.0",
     "scriptjs": "^2.5.8",
     "uuid": "^3.1.0"
@@ -63,17 +63,18 @@
     "chokidar": "^2.0.0",
     "connect-timeout": "^1.9.0",
     "css-loader": "^0.28.7",
-    "eslint": "^4.13.0",
+    "eslint": "^5.0.1",
     "express": "^4.16.2",
     "express-fileupload": "^0.4.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.5",
     "happypack": "^5.0.0-beta.3",
+    "hard-source-webpack-plugin": "^0.10.1",
     "i18n-webpack-plugin": "^1.0.0",
     "image-webpack-loader": "^4.0.0",
     "mkdirp": "^0.5.1",
     "node-sass": "^4.7.2",
-    "prettier": "1.13.5",
+    "prettier": "1.13.7",
     "react-hot-loader": "^4.1.1",
     "react-json-tree": "^0.11.0",
     "resize-observer-polyfill": "^1.5.0",
@@ -88,7 +89,6 @@
     "webpack": "^4.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-cli": "^3.0.1",
-    "webpack-dev-server": "^3.1.1",
-    "hard-source-webpack-plugin": "^0.9.0"
+    "webpack-dev-server": "^3.1.1"
   }
 }
