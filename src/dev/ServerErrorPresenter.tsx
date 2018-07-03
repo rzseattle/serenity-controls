@@ -82,6 +82,10 @@ const ShowStack = (props) => {
             <div>
                 {stack.file}:{stack.line}
             </div>
+            <pre>
+                {JSON.stringify(stack.parameters, null, 2)}
+            </pre>
+
             <hr/>
             <pre>{stack.trace}</pre>
         </div>

@@ -84,19 +84,24 @@ class Comm {
         }
 
         if (typeof data === "object" && data != null) {
-            Object.entries(data).map(([index, value]) => {
-                if (name == "") {
-                    this.appendFormData(FormData, value, index);
-                } else {
-                    //test for array in field name
-                    const openBracket = index.indexOf("[");
-                    let newName = name + "[" + index + "]";
-                    if (openBracket != -1) {
-                        newName = name + "[" + index.slice(0, openBracket) + "]" + index.slice(openBracket);
+            if(Array.isArray(data) && data.length == 0){
+                // for emtpty arrays sending empty value
+                FormData.append(name,  "" );
+            }else {
+                Object.entries(data).map(([index, value]) => {
+                    if (name == "") {
+                        this.appendFormData(FormData, value, index);
+                    } else {
+                        // test for array in field name
+                        const openBracket = index.indexOf("[");
+                        let newName = name + "[" + index + "]";
+                        if (openBracket != -1) {
+                            newName = name + "[" + index.slice(0, openBracket) + "]" + index.slice(openBracket);
+                        }
+                        this.appendFormData(FormData, value, newName);
                     }
-                    this.appendFormData(FormData, value, newName);
-                }
-            });
+                });
+            }
         } else {
             //if (data && data != null) {
             FormData.append(name, data == null ? "" : data);

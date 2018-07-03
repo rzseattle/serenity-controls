@@ -775,7 +775,8 @@ interface IDateProps extends IFieldProps {
 
 class Date extends React.Component<IDateProps, any> {
     public static defaultProps = {
-        editable: true
+        editable: true,
+        placeholder: __("Podaj datę")
     };
 
     constructor(props) {
