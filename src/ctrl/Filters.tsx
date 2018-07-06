@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {IFilter, IFilterValue} from "./filters/Intefaces";
-
+import * as moment  from "moment";
 import "react-dates/lib/css/_datepicker.css";
 import {BConnectionsField} from "../layout/BootstrapForm";
 import {Switch} from "./Fields";
 import {Icon} from "./Icon";
 
-let moment;
+
 let locale;
 let datePicker;
 
@@ -59,12 +59,12 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
     public componentWillMount() {
 
         Promise.all([
-            import("moment"),
+
             import("moment/locale/pl"),
             import("react-dates"),
 
         ]).then((imported) => {
-            [moment, locale, datePicker/*, timePicker*/] = imported;
+            [ locale, datePicker/*, timePicker*/] = imported;
             this.setState({
                 startDate: moment(),
                 endDate: moment(),

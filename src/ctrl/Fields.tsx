@@ -433,9 +433,8 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
     public initializeEditor() {
         Promise.all([import("scriptjs")]).then((imported) => {
-            //https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.7.3/plugins/justify/icons/hidpi/justifyblock.png
 
-            imported[0]("https://cdn.ckeditor.com/4.7.3/full/ckeditor.js", () => {
+            imported[0].default("https://cdn.ckeditor.com/4.7.3/full/ckeditor.js", () => {
                 this.setState({libsLoaded: true});
                 const config: any = {
                     toolbar: [
