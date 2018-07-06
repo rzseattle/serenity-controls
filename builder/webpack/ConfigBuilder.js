@@ -111,7 +111,7 @@ module.exports = function (input) {
         }),
     ]);
 
-    if (false) {
+    if (true) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({
