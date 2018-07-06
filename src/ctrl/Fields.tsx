@@ -47,7 +47,8 @@ class Select extends React.Component<ISelectProps, ISelectState> {
         options: [],
         editable: true,
         allowClear: false,
-        autoFocus: false
+        autoFocus: false,
+        style: {},
     };
     private dropdown: HTMLDivElement;
     private presenter: HTMLDivElement;
@@ -101,7 +102,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
                 type: "select",
                 value: e.target.value,
                 selectedIndex: e.target.selectedIndex,
-                event: e
+                event: e,
             });
         }
     }
@@ -208,7 +209,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
         return (
-            <div className={"w-select"}>
+            <div className={"w-select"} style={props.style}>
                 <div
                     className={"w-select-result-presenter"}
                     ref={(el) => (this.presenter = el)}
