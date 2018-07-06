@@ -1,6 +1,17 @@
 const path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var getLoaders = function(production, input) {
+var getLoaders = function (production, input) {
+
+    const browsers = [
+        "last 2 Chrome versions"
+    ].concat(
+        production ? [
+            "ie >= 11",
+            "safari >= 8"
+        ] : []
+    );
+
+    console.log("Dev version using only chrome target");
 
     let loaders =
         {
@@ -25,12 +36,7 @@ var getLoaders = function(production, input) {
                                         "@babel/preset-env",
                                         {
                                             targets: {
-                                                browsers: [
-                                                    "last 2 Chrome versions",
-                                                    "chrome >= 50",
-                                                    "ie >= 11",
-                                                    "safari >= 8"
-                                                ],
+                                                browsers,
                                                 node: "current",
                                             },
                                             useBuiltIns: false,
@@ -81,11 +87,7 @@ var getLoaders = function(production, input) {
                                             "@babel/preset-env",
                                             {
                                                 targets: {
-                                                    browsers: [
-                                                        "chrome >= 50",
-                                                        "ie >= 11",
-                                                        "safari >= 8"
-                                                    ],
+                                                    browsers,
                                                     node: "current",
                                                 },
                                                 useBuiltIns: false,
@@ -112,7 +114,7 @@ var getLoaders = function(production, input) {
                     ],
                 },
 
-                { test: /\.css/, use: "happypack/loader?id=css" },
+                {test: /\.css/, use: "happypack/loader?id=css"},
                 {
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     loaders: [
@@ -164,8 +166,8 @@ var getLoaders = function(production, input) {
                 test: /\.sass/,
                 loaders: [
                     "style-loader",
-                    { loader: "css-loader", query: { sourceMap: true } },
-                    { loader: "resolve-url-loader", query: { sourceMap: true } },
+                    {loader: "css-loader", query: {sourceMap: true}},
+                    {loader: "resolve-url-loader", query: {sourceMap: true}},
                     {
                         loader: "sass-loader",
                         query: {
