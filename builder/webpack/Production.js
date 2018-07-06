@@ -8,6 +8,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
     conf.entry = ENTRY_POINTS;
     conf.output = {
         filename: `bundle-${LANGUAGE}-[id]-[hash].min.js`,
+        chunkFilename: '[name].bundle.js',
         path: PATH,
         publicPath: PUBLIC_PATH
     };
@@ -27,8 +28,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
 
         new webpack.ContextReplacementPlugin(/moment[\\/]locale$/, /^\.\/(pl)$/),
 
-
-        new webpack.optimize.OccurrenceOrderPlugin(),
+        //new webpack.optimize.OccurrenceOrderPlugin(),
 
 
     ];

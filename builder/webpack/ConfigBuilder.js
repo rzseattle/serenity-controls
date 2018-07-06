@@ -5,8 +5,7 @@ const HappyPack = require("happypack");
 const path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const { CheckerPlugin } = require('awesome-typescript-loader')
-
+const {CheckerPlugin} = require('awesome-typescript-loader')
 
 
 require("babel-polyfill");
@@ -22,9 +21,9 @@ module.exports = function (input) {
     input = Object.assign(configDefaults, input);
 
 
-    if(input.PRODUCTION ){
+    if (input.PRODUCTION) {
         process.env.NODE_ENV = "production";
-    }else{
+    } else {
         process.env.NODE_ENV = "development";
     }
 
@@ -39,9 +38,12 @@ module.exports = function (input) {
             modules: ["node_modules"],
             cacheWithContext: false,
         },
+        /*optimization: {
+            splitChunks: {
+                chunks: 'all'
+            }
+        }*/
     };
-
-
 
 
     const GetLoaders = require("./Loaders.js");
@@ -49,7 +51,7 @@ module.exports = function (input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] =  ['babel-polyfill', input.ENTRY_POINTS[i]]
+        tmpEntry[i] = ['babel-polyfill', input.ENTRY_POINTS[i]]
     }
 
     let tmp;
@@ -59,8 +61,6 @@ module.exports = function (input) {
             const FileObserver = require("./FileObserver.js");
             FileObserver(input.BASE_PATH, resolve(input.BASE_PATH, "./build/js/tmp/components.include.js"), resolve(input.BASE_PATH, "./build/js/tmp/components.include.sass"));
         }
-
-
 
 
         const getDevServerConf = require("./DevServer.js");
@@ -111,7 +111,7 @@ module.exports = function (input) {
         }),
     ]);
 
-    if (true) {
+    if (false) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({
