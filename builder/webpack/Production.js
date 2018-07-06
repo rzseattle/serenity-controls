@@ -8,7 +8,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
     conf.entry = ENTRY_POINTS;
     conf.output = {
         filename: `bundle-${LANGUAGE}-[id]-[hash].min.js`,
-        chunkFilename: 'chunk-[name]-${LANGUAGE}-[hash].bundle.js',
+        chunkFilename: `chunk-[name]-${LANGUAGE}-[hash].bundle.js`,
         path: PATH,
         publicPath: PUBLIC_PATH
     };
