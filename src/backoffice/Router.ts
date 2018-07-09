@@ -1,4 +1,4 @@
-//declare var Views: any;
+// declare var Views: any;
 import * as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
 import RouterException from "./RouterException";
 
@@ -19,12 +19,12 @@ class Router {
     };
 
     public getRouteInfo = (path): Frontend.Debug.RouteInfo => {
-        let info = this.resolve(path);
+        const info = this.resolve(path);
 
         return info.extendedInfo;
     };
 
-    public resolve = (path) => {
+    public async resolve(path) {
         const pathInfo = path;
         let Component = null;
         let extendedInfo = null;
@@ -33,7 +33,7 @@ class Router {
             return false;
         }
 
-        //dynamic path matching 12
+        // dynamic path matching 12
         for (const i in ViewsRoute.ViewFileMap) {
             const el = ViewsRoute.ViewFileMap[i];
             if (i.indexOf("{") != -1) {
@@ -50,7 +50,8 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        Component = ViewsRoute[el.component];
+                        const result = await ViewsRoute[el.namespace + "_export"]();
+                        Component = result[el.index].default;
                     }
                     extendedInfo = el;
                     break;
@@ -60,7 +61,8 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        Component = ViewsRoute[el.component];
+                        const result = await ViewsRoute[el.namespace + "_export"]();
+                        Component = result[el.index].default;
                     }
                     extendedInfo = el;
                     break;
@@ -90,7 +92,7 @@ class Router {
             Component,
             extendedInfo,
         };
-    };
+    }
 }
 
 const router = new Router();

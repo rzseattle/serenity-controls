@@ -1,17 +1,10 @@
 const path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var getLoaders = function (production, input) {
 
-    const browsers = [
-        "last 2 Chrome versions"
-    ].concat(
-        production ? [
-            "ie >= 11",
-            "safari >= 8"
-        ] : []
-    );
-
-    console.log("Dev version using only chrome target");
+    console.log("Building for:");
+    console.log(input.BROWSERS);
 
     let loaders =
         {
@@ -29,17 +22,18 @@ var getLoaders = function (production, input) {
                                 extends: require("path").join(__dirname, "/.babelrc"),
                             },*/
                             options: {
+                                cacheDirectory: true,
                                 retainLines: true,
-                                //exclude: /(node_modules|bower_components)/,
+                                exclude: /(node_modules|bower_components)/,
                                 presets: [
                                     [
                                         "@babel/preset-env",
                                         {
                                             targets: {
-                                                browsers,
+                                                browsers: input.BROWSERS,
                                                 node: "current",
                                             },
-                                            useBuiltIns: false,
+                                            useBuiltIns: "entry",
                                             modules: false
                                         },
                                     ],
@@ -68,6 +62,7 @@ var getLoaders = function (production, input) {
                             loader: "awesome-typescript-loader", query: {
                                 configFileName: path.resolve(__dirname, "./tsconfig.json"),
                                 cacheDirectory: "node_modules/.cache/awcache",
+                                useCache: true,
                                 noImplicitAny: true,
                                 transpileOnly: true,
                                 forceIsolatedModules: true,
@@ -81,16 +76,15 @@ var getLoaders = function (production, input) {
                                 babelOptions: {
                                     babelrc: false,
                                     retainLines: true,
-                                    //exclude: /(node_modules|bower_components)/,
                                     presets: [
                                         [
                                             "@babel/preset-env",
                                             {
                                                 targets: {
-                                                    browsers,
+                                                    browsers: input.BROWSERS,
                                                     node: "current",
                                                 },
-                                                useBuiltIns: false,
+                                                useBuiltIns: "entry",
                                                 modules: false
                                             },
                                         ],
@@ -114,7 +108,25 @@ var getLoaders = function (production, input) {
                     ],
                 },
 
-                {test: /\.css/, use: "happypack/loader?id=css"},
+                //{test: /\.css/, use: "happypack/loader?id=css"},
+
+                {
+                    test: /\.(sa|sc|c)ss$/,
+                    use: [
+                        !production ? 'style-loader' : MiniCssExtractPlugin.loader,
+                        {loader: "css-loader", query: {sourceMap: true}},
+                        {loader: "resolve-url-loader", query: {sourceMap: true}},
+                        //'postcss-loader',
+                        {
+                            loader: "sass-loader",
+                            query: {
+                                sourceMap: true,
+                                includePaths: ["node_modules"],
+                            },
+                        },
+                    ],
+                },
+
                 {
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     loaders: [
@@ -150,37 +162,39 @@ var getLoaders = function (production, input) {
 
         };
 
-    if (production) {
+    if(false) {
+        if (production) {
 
-        loaders.rules.push({
-            test: [/\.sass/, /\.scss/],
-            use: ExtractTextPlugin.extract("happypack/loader?id=sass"),
-        });
-
-
-    } else {
+            loaders.rules.push({
+                test: [/\.sass/, /\.scss/],
+                use: ExtractTextPlugin.extract("happypack/loader?id=sass"),
+            });
 
 
-        loaders.rules.push(
-            {
-                test: /\.sass/,
-                loaders: [
-                    "style-loader",
-                    {loader: "css-loader", query: {sourceMap: true}},
-                    {loader: "resolve-url-loader", query: {sourceMap: true}},
-                    {
-                        loader: "sass-loader",
-                        query: {
-                            sourceMap: true,
-                            includePaths: ["node_modules"],
+        } else {
+
+
+            loaders.rules.push(
+                {
+                    test: /\.sass/,
+                    loaders: [
+                        "style-loader",
+                        {loader: "css-loader", query: {sourceMap: true}},
+                        {loader: "resolve-url-loader", query: {sourceMap: true}},
+                        {
+                            loader: "sass-loader",
+                            query: {
+                                sourceMap: true,
+                                includePaths: ["node_modules"],
+                            },
                         },
-                    },
 
 
-                ],
+                    ],
 
-            },
-        );
+                },
+            );
+        }
     }
 
     return loaders;

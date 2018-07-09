@@ -1,11 +1,9 @@
 import * as React from "react";
-//import Inputmask from 'inputmask';
+// import Inputmask from 'inputmask';
 import Dropzone from "react-dropzone";
 
 import {ConnectionsField} from "./fields/ConnectionsField";
 import {Icon} from "./Icon";
-
-import "react-dates/lib/css/_datepicker.css";
 
 import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
 import {Portal} from "./Overlays";
@@ -57,7 +55,6 @@ class Select extends React.Component<ISelectProps, ISelectState> {
     constructor(props: ISelectProps) {
         super(props);
 
-
         let options = props.options;
         if (!Array.isArray(props.options)) {
             options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
@@ -67,7 +64,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
             dropdownVisible: false,
             searchedTxt: "",
             highlightedIndex: -1,
-            filteredOptions: options
+            filteredOptions: options,
         };
     }
 
@@ -87,7 +84,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
         )
     }*/
 
-    componentDidMount() {
+    public componentDidMount() {
         // this.handleDropdownChange();
 
         if (this.props.autoFocus) {
@@ -118,14 +115,14 @@ class Select extends React.Component<ISelectProps, ISelectState> {
             {
                 dropdownVisible: !this.state.dropdownVisible,
                 searchedTxt: "",
-                filteredOptions: options
+                filteredOptions: options,
             },
             () => {
                 if (this.state.dropdownVisible) {
                     const calculator = new PositionCalculator(this.presenter, this.dropdown, {
                         theSameWidth: true,
                         targetAt: "bottom left",
-                        itemAt: "top left"
+                        itemAt: "top left",
                     });
                     calculator.calculate();
                     calculator.calculate();
@@ -135,7 +132,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
                         this.dropdown.focus();
                     }
                 }
-            }
+            },
         );
     };
 
@@ -145,18 +142,18 @@ class Select extends React.Component<ISelectProps, ISelectState> {
             this.setState({highlightedIndex: Math.max(0, this.state.highlightedIndex - 1)});
         } else if (keyName == "down") {
             this.setState({
-                highlightedIndex: Math.min(this.state.filteredOptions.length - 1, this.state.highlightedIndex + 1)
+                highlightedIndex: Math.min(this.state.filteredOptions.length - 1, this.state.highlightedIndex + 1),
             });
         } else if (keyName == "enter") {
             if (this.props.onChange) {
-                let el = this.state.filteredOptions[this.state.highlightedIndex];
+                const el = this.state.filteredOptions[this.state.highlightedIndex];
                 if (el !== undefined) {
                     this.props.onChange({
                         name: this.props.name,
                         type: "select",
                         value: el.value,
                         selectedIndex: null,
-                        event: e
+                        event: e,
                     });
                     this.handleDropdownChange();
                 }
@@ -169,14 +166,14 @@ class Select extends React.Component<ISelectProps, ISelectState> {
         let filteredOptions = this.props.options;
         if (this.state.searchedTxt != "") {
             filteredOptions = filteredOptions.filter(
-                (el) => el.label.toLowerCase().indexOf(this.state.searchedTxt.toLowerCase()) !== -1
+                (el) => el.label.toLowerCase().indexOf(this.state.searchedTxt.toLowerCase()) !== -1,
             );
         }
 
         this.setState({
             searchedTxt: e.target.value,
             highlightedIndex: e.target.value.length > 0 ? 0 : -1,
-            filteredOptions
+            filteredOptions,
         });
     };
 
@@ -264,7 +261,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
                                                     type: "select",
                                                     value: el.value,
                                                     selectedIndex: null,
-                                                    event: null
+                                                    event: null,
                                                 });
                                                 this.handleDropdownChange();
                                             }
@@ -293,7 +290,7 @@ class Text extends React.Component<ITextProps, any> {
         value: "",
         editable: true,
         type: "text",
-        autoFocus: false
+        autoFocus: false,
     };
 
     public handleOnChange(e) {
@@ -302,14 +299,14 @@ class Text extends React.Component<ITextProps, any> {
                 name: this.props.name,
                 type: "text",
                 value: e.target.value,
-                event: e
+                event: e,
             });
         }
     }
 
     public componentDidMount() {
-        //const $input_elem = ReactDOM.findDOMNode(this.refs.field);
-        //Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
+        // const $input_elem = ReactDOM.findDOMNode(this.refs.field);
+        // Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
     }
 
     public render() {
@@ -353,7 +350,7 @@ interface ITextareaProps extends IFieldProps {
 class Textarea extends React.Component<ITextareaProps, any> {
     public static defaultProps: Partial<ITextareaProps> = {
         value: "",
-        editable: true
+        editable: true,
     };
 
     public handleOnChange(e) {
@@ -362,7 +359,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
                 name: this.props.name,
                 type: "textarea",
                 value: e.target.value,
-                event: e
+                event: e,
             });
         }
     }
@@ -399,7 +396,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     public static defaultProps: Partial<IWysiwygProps> = {
         value: "",
         editable: true,
-        style: {}
+        style: {},
     };
     private id: string;
 
@@ -407,7 +404,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         super(props);
         this.id = "fields-wysiwyg-" + (Math.random() * 10000000).toFixed(0);
         this.state = {
-            libsLoaded: false
+            libsLoaded: false,
         };
     }
 
@@ -418,7 +415,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                 name: this.props.name,
                 type: "wysiwyg",
                 value,
-                event
+                event,
             });
         }
     }
@@ -426,7 +423,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     public handleOnLoad() {
         CKEDITOR.instances[this.id].setData(this.props.value);
 
-        //just textarea replacement making value of editor and value of form not equal
+        // just textarea replacement making value of editor and value of form not equal
         if (this.props.onLoad) {
             this.props.onLoad();
         }
@@ -443,22 +440,22 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                         {name: "styles", items: ["Format"]},
                         {
                             name: "basicstyles",
-                            items: ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "RemoveFormat"]
+                            items: ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "RemoveFormat"],
                         },
-                        //{name: 'colors', items: ['TextColor', 'BGColor']},
+                        // {name: 'colors', items: ['TextColor', 'BGColor']},
                         {name: "align", items: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"]},
                         {
                             name: "paragraph",
-                            items: ["NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote"]
+                            items: ["NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote"],
                         },
                         "/",
                         {name: "styles", items: ["HorizontalRule"]},
                         {name: "links", items: ["Link", "Unlink"]},
                         {name: "insert", items: ["Image", "Table"]},
-                        {name: "tools", items: ["Maximize", "Source"]}
+                        {name: "tools", items: ["Maximize", "Source"]},
                     ],
                     extraPlugins: "justify",
-                    enterMode: CKEDITOR.ENTER_P
+                    enterMode: CKEDITOR.ENTER_P,
                 };
                 if (this.props.style.height) {
                     config.height = this.props.style.height;
@@ -572,26 +569,26 @@ interface ISwitchProps extends IFieldProps {
 
 class Switch extends React.Component<ISwitchProps, any> {
     public static defaultProps: Partial<ISwitchProps> = {
-        editable: true
+        editable: true,
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            value: props.value
+            value: props.value,
         };
     }
 
     public handleOnChange(value, event) {
         this.setState({value});
 
-        //this.refs.hidden.value = date;
+        // this.refs.hidden.value = date;
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
                 type: "switch",
                 value,
-                event
+                event,
             });
         }
     }
@@ -665,7 +662,7 @@ interface ICheckboxGroupProps extends IFieldProps {
 class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
     public static defaultProps: Partial<ICheckboxGroupProps> = {
         value: [],
-        editable: true
+        editable: true,
     };
 
     constructor(props) {
@@ -674,7 +671,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
     }
 
     public handleOnChange = (e) => {
-        let value: string[] = this.props.value?this.props.value.slice(0):[];
+        let value: string[] = this.props.value ? this.props.value.slice(0) : [];
         if (e.target.checked) {
             value.push(e.target.value);
         } else {
@@ -686,7 +683,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                 name: this.props.name,
                 type: "checkboxgroup",
                 value,
-                event: e
+                event: e,
             });
         }
     }
@@ -698,7 +695,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                 const elements = [];
 
                 for (const i in props.value) {
-                    const element = props.options.filter(function (v, index) {
+                    const element = props.options.filter(function(v, index) {
                         return v.value == props.value[i];
                     });
                     elements.push(<li key={element[0].value}>{element[0].label}</li>);
@@ -776,7 +773,7 @@ interface IDateProps extends IFieldProps {
 class Date extends React.Component<IDateProps, any> {
     public static defaultProps = {
         editable: true,
-        placeholder: __("Podaj datę")
+        placeholder: __("Podaj datę"),
     };
 
     constructor(props) {
@@ -784,20 +781,25 @@ class Date extends React.Component<IDateProps, any> {
         this.state = {
             value: null,
             date: null,
-            libsLoaded: false
+            libsLoaded: false,
         };
     }
 
     public componentWillMount() {
-        Promise.all([import("moment"), import("moment/locale/pl"), import("react-dates")]).then((imported) => {
-            [moment, locale, datePicker /*, timePicker*/] = imported;
-
+        Promise.all([
+            import("moment"),
+            import("moment/locale/pl"),
+            import("react-dates"),
+            import("react-dates/lib/css/_datepicker.css"),
+        ]).then((imported) => {
+            moment = imported[0].default;
+            datePicker = imported[2].default;
             this.setState({
                 date:
                     this.props.value && this.props.value != "0000-00-00"
                         ? moment(this.props.value, "YYYY-MM-DD")
                         : null,
-                libsLoaded: true
+                libsLoaded: true,
             });
         });
     }
@@ -805,19 +807,20 @@ class Date extends React.Component<IDateProps, any> {
     public handleOnChange(date) {
         this.setState({date, value: date});
 
-        //this.refs.hidden.value = date;
+        // this.refs.hidden.value = date;
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
                 type: "date",
                 value: date.format("YYYY-MM-DD"),
                 event: null,
-                data: date
+                data: date,
             });
         }
     }
 
     public render() {
+
         const props = this.props;
 
         if (!props.editable) {
@@ -866,7 +869,7 @@ class File extends React.Component<IFileProps, any> {
                 name: this.props.name,
                 type: "file",
                 value: e,
-                event: e
+                event: e,
             });
         }
     }

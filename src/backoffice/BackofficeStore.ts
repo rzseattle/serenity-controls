@@ -205,54 +205,59 @@ export class BackofficeStore {
                 url = purePath + (query ? "?" + query : "");
             }
 
-            if (!this.subStore) {
-                window.removeEventListener("hashchange", this.hashChangeHandler);
-                window.location.hash = url;
-                setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
-            }
 
-            const comm = new Comm(url);
+            view.then((view) => {
 
-            comm.setData({__PROPS_REQUEST__: 1});
-            comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
-                this.viewServerErrors = errorResponse;
-                for (const el of this.onViewLoadedArr) {
-                    el();
-                }
-            });
-            comm.on(Comm.EVENTS.SUCCESS, (data) => {
-                if (data.__arrowException !== undefined) {
-                    this.viewServerErrors = data;
-                    this.isViewLoading = false;
-                    return;
+                if (!this.subStore) {
+                    window.removeEventListener("hashchange", this.hashChangeHandler);
+                    window.location.hash = url;
+                    setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
                 }
 
-                this.viewData = Object.assign({}, data, this.externalViewData);
-                this.view = view;
+                const comm = new Comm(url);
 
-                for (const el of this.onViewLoadedArr) {
-                    el();
-                }
-                if (callback) {
-                    callback();
-                }
-
-                if (originalPath) {
-                    try {
-                        BackofficeStore.registerDebugData("views", originalPath, Router.getRouteInfo(originalPath), this.viewData);
-                    } catch (e) {
-                        console.error("cos jest ni tak " + originalPath + " " + e);
+                comm.setData({__PROPS_REQUEST__: 1});
+                comm.on(Comm.EVENTS.ERROR, (errorResponse) => {
+                    this.viewServerErrors = errorResponse;
+                    for (const el of this.onViewLoadedArr) {
+                        el();
                     }
-                }
-            });
-            comm.on(Comm.EVENTS.FINISH, () => {
-                this.isViewLoading = false;
-                this.dataUpdated();
-            });
+                });
+                comm.on(Comm.EVENTS.SUCCESS, (data) => {
+                    if (data.__arrowException !== undefined) {
+                        this.viewServerErrors = data;
+                        this.isViewLoading = false;
+                        return;
+                    }
 
-            BackofficeStore.debugViewAjaxInProgress = true;
-            comm.send();
-            BackofficeStore.debugViewAjaxInProgress = false;
+                    this.viewData = Object.assign({}, data, this.externalViewData);
+                    this.view = view;
+
+                    for (const el of this.onViewLoadedArr) {
+                        el();
+                    }
+                    if (callback) {
+                        callback();
+                    }
+
+                    if (originalPath) {
+                        try {
+                            BackofficeStore.registerDebugData("views", originalPath, Router.getRouteInfo(originalPath), this.viewData);
+                        } catch (e) {
+                            console.error("cos jest ni tak " + originalPath + " " + e);
+                        }
+                    }
+                });
+                comm.on(Comm.EVENTS.FINISH, () => {
+                    this.isViewLoading = false;
+                    this.dataUpdated();
+                });
+
+                BackofficeStore.debugViewAjaxInProgress = true;
+                comm.send();
+                BackofficeStore.debugViewAjaxInProgress = false;
+
+            });
         } catch (e) {
 
             this.viewServerErrors = e;

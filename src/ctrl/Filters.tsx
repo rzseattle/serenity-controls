@@ -1,12 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {IFilter, IFilterValue} from "./filters/Intefaces";
-import * as moment  from "moment";
-import "react-dates/lib/css/_datepicker.css";
 import {BConnectionsField} from "../layout/BootstrapForm";
 import {Switch} from "./Fields";
 import {Icon} from "./Icon";
-
+import {LoadingIndicator} from "./LoadingIndicator";
 
 let locale;
 let datePicker;
@@ -59,12 +57,15 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
     public componentWillMount() {
 
         Promise.all([
-
+            import("moment"),
             import("moment/locale/pl"),
             import("react-dates"),
+            import("react-dates/lib/css/_datepicker.css"),
 
-        ]).then((imported) => {
-            [ locale, datePicker/*, timePicker*/] = imported;
+        ]).then(([ moment, locale, datePickerImp]) => {
+            moment = moment.default;
+            datePicker = datePickerImp.default;
+
             this.setState({
                 startDate: moment(),
                 endDate: moment(),
@@ -142,7 +143,7 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
 
         if (this.state.libsLoaded == false) {
             return <div className={"w-filter w-filter-date"}>
-                <div><i className="fa fa-cog fa-spin"></i></div>
+                <LoadingIndicator/>
             </div>;
         }
 
@@ -239,7 +240,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
         }
 
         this.state = {
-            value
+            value,
         };
     }
 
@@ -248,7 +249,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
         let value: any = "";
         if (nextProps.value) {
             value = nextProps.value.value;
-        }else{
+        } else {
             value = this.props.config._default;
         }
         if (this.props.config.multiselect && value == "") {
@@ -256,7 +257,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
         }
 
         this.setState(  {
-            value
+            value,
         });
 
     }
@@ -268,14 +269,14 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
     public getValue() {
         const select = ReactDOM.findDOMNode(this.select);
 
-        let values = [].filter.call(select.options, function (o) {
+        let values = [].filter.call(select.options, function(o) {
             return o.selected;
-        }).map(function (o) {
+        }).map(function(o) {
             return o.value;
         });
-        const labels = [].filter.call(select.options, function (o) {
+        const labels = [].filter.call(select.options, function(o) {
             return o.selected;
-        }).map(function (o) {
+        }).map(function(o) {
             return o.innerHTML;
         });
 

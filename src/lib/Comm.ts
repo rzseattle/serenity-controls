@@ -1,5 +1,3 @@
-import {ideConnector} from "../dev/IDEConnector";
-
 type IResponseCallback = (response: any) => any;
 
 declare var PRODUCTION: any;

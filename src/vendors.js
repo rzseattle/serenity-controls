@@ -4,11 +4,11 @@ require('react-dom');
 //require('react-dates');
 //require('react-dates/lib/css/_datepicker.css');
 
-require('react-dropzone');
+//require('react-dropzone');
 require('react-notification-system');
 require('resize-observer-polyfill');
 
-require('moment');
+
 require('uuid');
 
 //require('inputmask');

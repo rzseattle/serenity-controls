@@ -1,25 +1,32 @@
 const webpack = require("webpack");
-var {resolve, basename} = require("path");
+var { resolve, basename } = require("path");
 const fs = require("fs");
-const HappyPack = require("happypack");
+//const HappyPack = require("happypack");
 const path = require("path");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+var RuntimeAnalyzerPlugin = require("webpack-runtime-analyzer");
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const {CheckerPlugin} = require('awesome-typescript-loader')
+const { CheckerPlugin } = require("awesome-typescript-loader");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+const extractor = require("./RouteExtractor.js");
 
-require("babel-polyfill");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+
+//require("babel-polyfill");
+
 let configDefaults = {
     HTTPS: false,
     ANALYZE: false,
     PORT: 3000,
     USE_FRAMEWORK_OBSERVERS: true,
     LANGUAGE: "pl",
+    BROWSERS: null
 };
 
-module.exports = function (input) {
+module.exports = function(input) {
     input = Object.assign(configDefaults, input);
-
 
     if (input.PRODUCTION) {
         process.env.NODE_ENV = "production";
@@ -27,41 +34,39 @@ module.exports = function (input) {
         process.env.NODE_ENV = "development";
     }
 
+    if (input.BROWSERS == null) {
+        input.BROWSERS = ["last 2 Chrome versions"].concat(input.PRODUCTION ? ["ie >= 11", "safari >= 8"] : []);
+    }
 
     var conf = {
         context: resolve(__dirname, ""),
-        devtool: input.PRODUCTION ? "source-map" : "cheap-module-source-map",//,
+        devtool: input.PRODUCTION ? "cheap-module-eval-source-map" : "cheap-module-source-map", //,
 
         resolve: {
             extensions: [".js", ".ts", ".tsx"],
             unsafeCache: true,
-            modules: ["node_modules"],
-            cacheWithContext: false,
-        },
-        /*optimization: {
-            splitChunks: {
-                chunks: 'all'
-            }
-        }*/
+            modules: ["node_modules"]
+        }
     };
-
 
     const GetLoaders = require("./Loaders.js");
     conf.module = GetLoaders(input.PRODUCTION, input);
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = ['babel-polyfill', input.ENTRY_POINTS[i]]
+        tmpEntry[i] = [/*'babel-polyfill',*/ input.ENTRY_POINTS[i]];
     }
 
     let tmp;
+    let fileComponent = resolve(input.BASE_PATH, "./build/js/tmp/components-route.include.js");
+    let fileSass = resolve(input.BASE_PATH, "./build/js/tmp/components.include.sass");
+
     if (!input.PRODUCTION) {
         conf.mode = "development";
         if (input.USE_FRAMEWORK_OBSERVERS) {
             const FileObserver = require("./FileObserver.js");
-            FileObserver(input.BASE_PATH, resolve(input.BASE_PATH, "./build/js/tmp/components.include.js"), resolve(input.BASE_PATH, "./build/js/tmp/components.include.sass"));
+            FileObserver(input.BASE_PATH, fileComponent, fileSass);
         }
-
 
         const getDevServerConf = require("./DevServer.js");
         tmp = getDevServerConf(
@@ -73,18 +78,30 @@ module.exports = function (input) {
             input.PORT || 3000,
             input.DOMAIN,
             input.LANGUAGE,
-            webpack,
+            webpack
         );
     } else {
         conf.mode = "production";
+
+        extractor(input.BASE_PATH, fileComponent, fileSass, true);
+
         const getProductionConf = require("./Production.js");
-        tmp = getProductionConf(tmpEntry, input.PUBLIC_PATH, input.PATH, input.BASE_PATH, input.LANGUAGE, input.ANALYZE, webpack);
+        tmp = getProductionConf(
+            tmpEntry,
+            input.PUBLIC_PATH,
+            input.PATH,
+            input.BASE_PATH,
+            input.LANGUAGE,
+            input.ANALYZE,
+            webpack
+        );
     }
 
     for (let i in tmp) {
         conf[i] = tmp[i];
     }
 
+    /*
     let threads = HappyPack.ThreadPool({size: 4});
 
     conf.plugins = conf.plugins.concat([
@@ -111,6 +128,8 @@ module.exports = function (input) {
         }),
     ]);
 
+    */
+
     if (true) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
@@ -120,30 +139,70 @@ module.exports = function (input) {
                 // Either an absolute path or relative to webpack's options.context.
                 // Sets webpack's recordsPath if not already set.
                 recordsPath: input.BASE_PATH + "/node_modules/.cache/hard-source/[confighash]/records.json",
-                configHash: function (webpackConfig) {
+                configHash: function(webpackConfig) {
                     // node-object-hash on npm can be used to build this.
-                    return require("node-object-hash")({sort: false}).hash(webpackConfig) + input.LANGUAGE;
+                    return require("node-object-hash")({ sort: false }).hash(webpackConfig) + input.LANGUAGE;
                 },
                 // Either false, a string, an object, or a project hashing function.
                 environmentHash: {
                     root: process.cwd(),
                     directories: [],
-                    files: ["package-lock.json", "yarn.lock"],
-                },
-            }),
+                    files: ["package-lock.json", "yarn.lock"]
+                }
+            })
         );
     }
-    //conf.plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }));
-    //conf.plugins.push( new CheckerPlugin());
+
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
 
+    /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
+        // Can be `standalone` or `publisher`.
+        // In `standalone` mode analyzer will start rempl server in exclusive publisher mode.
+        // In `publisher` mode you should start rempl on your own.
+        mode: 'standalone',
+        // Port that will be used in `standalone` mode to start rempl server.
+        // When set to `0` a random port will be chosen.
+        port: 81,
+        // Automatically open analyzer in the default browser. Works for `standalone` mode only.
+        open: false,
+        // Use analyzer only when Webpack run in a watch mode. Set it to `false` to use plugin
+        // in any Webpack mode. Take into account that a building process will not be terminated
+        // when done since the plugin holds a connection to the rempl server. The only way
+        // to terminate building process is using `ctrl+c` like in a watch mode.
+        //watchModeOnly: true
+    }));
+*/
+
     if (input.PRODUCTION) {
-        conf.plugins.push(new ExtractTextPlugin(`bundle-[hash].css`));
+        conf.plugins.push(
+            new MiniCssExtractPlugin({
+                // Options similar to the same options in webpackOptions.output
+                // both options are optional
+                filename: "bundle-[hash].css",
+                chunkFilename: "[id].[hash].css"
+            })
+        );
+
+        conf.optimization = {
+            minimizer: [
+                new UglifyJsPlugin({
+                    cache: true,
+                    parallel: true,
+                    sourceMap: true // set to true if you want JS source maps
+                }),
+                new OptimizeCSSAssetsPlugin({
+                    cssProcessorOptions: { safe: true, discardComments: { removeAll: true }, zindex: false }
+                })
+            ]
+            /*splitChunks: {
+                chunks: 'all'
+            },*/
+        };
     }
 
-    conf.plugins.push(function () {
-        this.plugin("done", function (stats) {
+    conf.plugins.push(function() {
+        this.plugin("done", function(stats) {
             var stats = stats.toJson();
             //console.log(stats.warnings);
 
@@ -161,8 +220,11 @@ module.exports = function (input) {
                     }
                 }
 
-                fs.writeFile(resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`), JSON.stringify(missingLang, null, 2), function () {
-                });
+                fs.writeFile(
+                    resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`),
+                    JSON.stringify(missingLang, null, 2),
+                    function() {}
+                );
             }
 
             return true;

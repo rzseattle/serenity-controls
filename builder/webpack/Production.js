@@ -1,4 +1,4 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+//const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const fs = require('fs');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -15,7 +15,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
     conf.plugins = [
         new webpack.HashedModuleIdsPlugin(),
         new webpack.optimize.ModuleConcatenationPlugin(),
-        new ExtractTextPlugin({filename: 'bundle-[hash].css', allChunks: true}),
+        //new ExtractTextPlugin({filename: 'bundle-[hash].css', allChunks: true}),
 
 
         new webpack.DefinePlugin({
@@ -41,7 +41,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
             this.plugin("after-emit", function (compilation, callback) {
                 var stats = compilation.getStats().toJson();
                 if (stats) {
-                    let content = stats.assetsByChunkName.admin[0] + "|" + compilation.getStats().hash
+                    let content = stats.assetsByChunkName.admin[1] + "|" + compilation.getStats().hash
                     fs.writeFile(PATH + `/compilation-hash-${LANGUAGE}.txt`, content, function () {
                         callback();
                     });
