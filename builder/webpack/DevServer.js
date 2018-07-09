@@ -135,7 +135,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                     ideDir = "C:\\Program Files\\JetBrains\\"; //\\bin\\phpstorm64.exe;
                     fileTest = "\\bin\\phpstorm64.exe";
                 } else {
-                    ideDir = "/home/pw/CODE/";
+                    ideDir = "/home/artur/dev/PhpStorm-182.3458.35";
                     fileTest = "/bin/phpstorm.sh";
                 }
 

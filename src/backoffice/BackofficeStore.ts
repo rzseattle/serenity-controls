@@ -2,6 +2,7 @@ import Comm from "../lib/Comm";
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs";
 import BackOfficePanel from "./BackOfficePanel";
+import { hot } from 'react-hot-loader'
 
 declare var window;
 declare var module;
@@ -22,7 +23,9 @@ export class BackofficeStore {
         }
     }
 
-    public static registerDebugData(type, url: string, routeInfo: Frontend.Debug.RouteInfo, props) {
+    public static registerDebugData(type: string, url: string, routeInfo: Frontend.Debug.RouteInfo, props) {
+
+
         if (type == "ajax") {
             for (const index in BackofficeStore.debugData.ajax) {
                 const entry = BackofficeStore.debugData.ajax[index];
@@ -208,6 +211,8 @@ export class BackofficeStore {
 
             view.then((view) => {
 
+
+
                 if (!this.subStore) {
                     window.removeEventListener("hashchange", this.hashChangeHandler);
                     window.location.hash = url;
@@ -242,7 +247,11 @@ export class BackofficeStore {
 
                     if (originalPath) {
                         try {
-                            BackofficeStore.registerDebugData("views", originalPath, Router.getRouteInfo(originalPath), this.viewData);
+                            Router.getRouteInfo(originalPath).then((routeData: Frontend.Debug.RouteInfo) => {
+                                BackofficeStore.registerDebugData("views", originalPath, routeData, this.viewData);
+                            })
+
+
                         } catch (e) {
                             console.error("cos jest ni tak " + originalPath + " " + e);
                         }
@@ -258,6 +267,9 @@ export class BackofficeStore {
                 BackofficeStore.debugViewAjaxInProgress = false;
 
             });
+
+            view.then((view) => {
+
         } catch (e) {
 
             this.viewServerErrors = e;

@@ -64,7 +64,7 @@ interface ITableState {
     currentPage: number;
     countAll: number;
     fixedLayout: boolean; // props.fixedLayout,
-    columns: IColumnData[];
+    columns: IColumnData[] | ColumnHelper[] ;
     //bodyHeight: this.props.initHeight,
     allChecked: boolean;
     selection: any[];
@@ -92,10 +92,10 @@ class Table extends React.Component<ITableProps, ITableState> {
     public state: ITableState;
     private tooltipTimeout: number;
 
-    constructor(props) {
+    constructor(props: ITableProps) {
         super(props);
 
-        const columns: IColumnData[] = props.columns;
+        const columns: IColumnData[] | ColumnHelper[] = props.columns;
         for (const i in columns) {
             columns[i] = this.prepareColumnData(columns[i]);
         }
@@ -258,7 +258,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         return should;
     }*/
 
-    public componentWillReceiveProps(nextProps) {
+    public componentWillReceiveProps(nextProps: ITableProps) {
         const columns = [...nextProps.columns];
         for (const i in columns) {
             columns[i] = this.prepareColumnData(columns[i]);
@@ -474,7 +474,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    public handleCheckClicked(index) {
+    public handleCheckClicked(index: number | string) {
         let s = this.state.selection;
         if (index == "all") {
             if (!this.state.allChecked) {
@@ -503,7 +503,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
 
         if (this.props.onSelectionChange) {
-            const tmp = [];
+            const tmp: any = [];
             s.forEach((index) => tmp.push(this.state.data[index]));
             this.props.onSelectionChange(tmp);
         }
@@ -511,18 +511,21 @@ class Table extends React.Component<ITableProps, ITableState> {
         this.setState({ selection: s });
     }
 
-    private prepareColumnData(inData: IColumnData): IColumnData {
+    private prepareColumnData(inData: IColumnData | ColumnHelper): IColumnData {
         if (inData === null) {
             return null;
         }
 
+        let columnData: IColumnData = null;
         if (inData instanceof ColumnHelper) {
-            inData = inData.get();
+            columnData = inData.get();
+        }else{
+            columnData = inData;
         }
 
         let data: IColumnData = {
             field: null,
-            caption: inData.caption == undefined ? inData.field : inData.caption,
+            caption: columnData.caption == undefined ? columnData.field : columnData.caption,
             isSortable: true,
             display: true,
             toolTip: null,
@@ -548,8 +551,8 @@ class Table extends React.Component<ITableProps, ITableState> {
             filter: [
                 {
                     component: TextFilter,
-                    field: inData.field,
-                    caption: inData.field,
+                    field: columnData.field,
+                    caption: columnData.field,
                 },
             ],
         };
@@ -557,7 +560,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         data = { ...data, ...inData };
 
         data.orderField = data.orderField || data.field;
-        data.filter.forEach((el) => (el.field = el.field || inData.field));
+        data.filter.forEach((el) => (el.field = el.field || columnData.field));
 
         return data;
     }

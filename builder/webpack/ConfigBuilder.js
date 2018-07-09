@@ -130,7 +130,7 @@ module.exports = function(input) {
 
     */
 
-    if (true) {
+    if (false) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({

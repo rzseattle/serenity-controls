@@ -60,9 +60,10 @@ generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_T
             }
             namespace[tmpNamespace].push(componentPath.replace(/\\/g, "/"));
 
-            //ComponentFileContent += "export const " + name + "_fn = () =>  import('" + componentPath.replace(/\\/g, "/") + "');\n";
-            //ComponentFileContent += "const " + name + "_fn = () =>  import " + name + " from '" + componentPath.replace(/\\/g, "/") + "';\n";
-            //ComponentFileContent += " export { " + name + "_fn}; \n";
+            if (!production) {
+                ComponentFileContent += "import " + name + " from '" + componentPath.replace(/\\/g, "/") + "';\n";
+                ComponentFileContent += " export { " + name + "}; \n";
+            }
             conf[i].component = name;
             conf[i].index = namespace[tmpNamespace].length - 1;
             conf[i].namespace = tmpNamespace;
@@ -83,9 +84,11 @@ generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_T
         }
     }
 
-    Object.entries(namespace).map(function ([namespace, entries]) {
-        ComponentFileContent += "export const " + namespace + "_export = () => Promise.all([ \t\n" + entries.map(entry => "import( /* webpackChunkName: \""+namespace+"\" */   '" + entry + "')").join(",\t\n") + "\n\t]);";
-    });
+    if(production) {
+        Object.entries(namespace).map(function ([namespace, entries]) {
+            ComponentFileContent += "export const " + namespace + "_export = () => Promise.all([ \t\n" + entries.map(entry => "import( /* webpackChunkName: \"" + namespace + "_ns\" */   '" + entry + "')").join(",\t\n") + "\n\t]);";
+        });
+    }
 
     ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX, null, 2)} ;`;
     fs.writeFileSync(SAVE_COMPONENT_TARGET, ComponentFileContent);

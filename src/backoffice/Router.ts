@@ -2,6 +2,9 @@
 import * as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
 import RouterException from "./RouterException";
 
+declare var PRODUCTION: any;
+
+
 class Router {
     public routes = ViewsRoute.ViewFileMap;
     public observers = [];
@@ -18,9 +21,9 @@ class Router {
         return this.routes;
     };
 
-    public getRouteInfo = (path): Frontend.Debug.RouteInfo => {
-        const info = this.resolve(path);
+    public async getRouteInfo(path): Frontend.Debug.RouteInfo {
 
+        const info = await this.resolve(path);
         return info.extendedInfo;
     };
 
@@ -50,8 +53,12 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        const result = await ViewsRoute[el.namespace + "_export"]();
-                        Component = result[el.index].default;
+                        if (PRODUCTION) {
+                            const result = await ViewsRoute[el.namespace + "_export"]();
+                            Component = result[el.index].default;
+                        } else {
+                            Component = ViewsRoute[el.component];
+                        }
                     }
                     extendedInfo = el;
                     break;
@@ -61,8 +68,12 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        const result = await ViewsRoute[el.namespace + "_export"]();
-                        Component = result[el.index].default;
+                        if (PRODUCTION) {
+                            const result = await ViewsRoute[el.namespace + "_export"]();
+                            Component = result[el.index].default;
+                        } else {
+                            Component = ViewsRoute[el.component];
+                        }
                     }
                     extendedInfo = el;
                     break;
