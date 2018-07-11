@@ -296,11 +296,13 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     }
 
-    public submit() {
-        this.handleSubmit(null);
+    public submit( tmpCallbacks ) {
+
+
+        this.handleSubmit(null, tmpCallbacks);
     }
 
-    public handleSubmit(e) {
+    public handleSubmit(e, tmpCallbacks = {}) {
         if (e) {
             e.preventDefault();
         }
@@ -326,6 +328,10 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                     fieldErrors: {},
                     formErrors: [],
                 });
+
+                if(tmpCallbacks[Comm.EVENTS.SUCCESS]){
+                    tmpCallbacks[Comm.EVENTS.SUCCESS]({ form: this, response });
+                }
             });
             comm.on("validationErrors", (response) => {
                 this.handleValidatorError(response);

@@ -249,7 +249,7 @@ export class BackofficeStore {
                         try {
                             Router.getRouteInfo(originalPath).then((routeData: Frontend.Debug.RouteInfo) => {
                                 BackofficeStore.registerDebugData("views", originalPath, routeData, this.viewData);
-                            })
+                            });
 
 
                         } catch (e) {

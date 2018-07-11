@@ -16,7 +16,7 @@ import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
 import {LoadingIndicator} from "../ctrl/LoadingIndicator";
 import {Select} from "../ctrl/Fields";
 
-import Hotkeys from 'react-hot-keys';
+import Hotkeys from "react-hot-keys";
 
 NProgress.configure({parent: ".w-panel-body"});
 
@@ -45,10 +45,13 @@ interface IBackOfficePanelState {
 class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     public container: HTMLDivElement;
     public store: BackofficeStore;
+    private callbacks = {
+        onceAfterUpdate: [],
+    };
 
     public static defaultProps: Partial<IBackOfficePanelProps> = {
         onlyBody: false,
-        isSub: false
+        isSub: false,
     };
 
     constructor(props: IBackOfficePanelProps) {
@@ -65,7 +68,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
             onlyBody: this.props.onlyBody,
             contextState: this.store.getState(),
             openedWindows: [],
-            navigationWindowOpened: false
+            navigationWindowOpened: false,
         };
 
         this.store.onViewLoad(() => this.handleLoadStart());
@@ -112,8 +115,8 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                 route,
                 input,
                 modalProps,
-                props
-            })
+                props,
+            }),
         });
 
         return route;
@@ -121,7 +124,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
 
     public handleCloseWindow = (route: any): any => {
         this.setState({
-            openedWindows: this.state.openedWindows.filter((el) => el.route != route)
+            openedWindows: this.state.openedWindows.filter((el) => el.route != route),
         });
     }
 
@@ -144,6 +147,26 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
             });
         }
     }
+
+    public componentDidUpdate() {
+
+        for (const callback of this.callbacks.onceAfterUpdate) {
+            callback();
+        }
+        this.callbacks.onceAfterUpdate = [];
+    }
+
+    public handleChangeView = (input = {}, callback: () => any) => {
+        this.handleLoadStart();
+
+        this.store.changeView(null, input, () => {
+            this.handleLoadEnd();
+            if (callback) {
+                // callback have to run after update not when data is recived
+                this.callbacks.onceAfterUpdate.push(callback);
+            }
+        });
+    };
 
     public handleLoadStart = () => {
         NProgress.start();
@@ -238,7 +261,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                                         style={{
                                             width: el.modalProps.width ? "auto" : "90vw",
                                             paddingBottom: 10,
-                                            backgroundColor: "#ECECEC"
+                                            backgroundColor: "#ECECEC",
                                         }}
                                     >
                                         <BackOfficeContainer route={el.route} props={el.props}/>
@@ -258,12 +281,13 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                                 ...this.state.contextState,
                                 changeView: this.store.changeView,
                                 onViewLoad: this.store.onViewLoad,
-                                onViewLoaded: this.store.onViewLoaded
+                                onViewLoaded: this.store.onViewLoaded,
                             }}
                             onLoadStart={this.handleLoadStart}
                             onLoadEnd={this.handleLoadEnd}
                             setPanelOption={this.handleSetPanelOption}
                             openModal={this.handleOpenWindow}
+                            changeView={this.handleChangeView}
                             closeModal={this.handleCloseWindow}
                             isSub={this.props.isSub}
                         />
@@ -278,20 +302,20 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                                         return p.concat(
                                             c.elements.map((el) => {
                                                 return {label: c.title + " -> " + el.title, value: el.route};
-                                            })
+                                            }),
                                         );
                                     }, [])}
                                     value={null}
                                     autoFocus={true}
                                     onChange={(e) => {
                                         this.setState({
-                                            navigationWindowOpened: false
+                                            navigationWindowOpened: false,
                                         });
 
                                         this.handleNavigateTo({
                                             title: "---",
-                                            route: e.value
-                                        })
+                                            route: e.value,
+                                        });
                                     }}
                                 />
                             </div>

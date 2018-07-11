@@ -105,13 +105,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     }
 
     public handleReloadProps = (input = {}, callback: () => any) => {
-        this.props.onLoadStart();
-        this.props.context.changeView(null, input, () => {
-            this.props.onLoadEnd();
-            if (callback) {
-                callback();
-            }
-        });
+        this.props.changeView(input, callback);
     };
 
     public handleGoTo = (path, input = {}, callback = null) => {
