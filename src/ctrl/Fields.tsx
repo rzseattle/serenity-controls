@@ -2,12 +2,12 @@ import * as React from "react";
 // import Inputmask from 'inputmask';
 import Dropzone from "react-dropzone";
 
-import {ConnectionsField} from "./fields/ConnectionsField";
-import {Icon} from "./Icon";
+import { ConnectionsField } from "./fields/ConnectionsField";
+import { Icon } from "./Icon";
 
-import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
-import {Portal} from "./Overlays";
-import {PositionCalculator} from "../lib/PositionCalculator";
+import { IFieldChangeEvent, IFieldProps, IOption } from "./fields/Interfaces";
+import { Portal } from "./Overlays";
+import { PositionCalculator } from "../lib/PositionCalculator";
 import Hotkeys from "react-hot-keys";
 
 const checkIncludes = (options, value) => {
@@ -57,7 +57,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
 
         let options = props.options;
         if (!Array.isArray(props.options)) {
-            options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
+            options = Object.entries(props.options).map(([key, val]) => ({ value: key, label: val }));
         }
 
         this.state = {
@@ -108,7 +108,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
 
         let options = this.props.options;
         if (!Array.isArray(options)) {
-            options = Object.entries(options).map(([key, val]) => ({value: key, label: val}));
+            options = Object.entries(options).map(([key, val]) => ({ value: key, label: val }));
         }
 
         this.setState(
@@ -139,7 +139,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
     private onKeyDown = (keyName, e, handle) => {
         e.preventDefault();
         if (keyName == "up") {
-            this.setState({highlightedIndex: Math.max(0, this.state.highlightedIndex - 1)});
+            this.setState({ highlightedIndex: Math.max(0, this.state.highlightedIndex - 1) });
         } else if (keyName == "down") {
             this.setState({
                 highlightedIndex: Math.min(this.state.filteredOptions.length - 1, this.state.highlightedIndex + 1),
@@ -181,7 +181,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
         const props = this.props;
         let options = props.options;
         if (!Array.isArray(props.options)) {
-            options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
+            options = Object.entries(props.options).map(([key, val]) => ({ value: key, label: val }));
         }
 
         let selectedIndex: number = -1;
@@ -409,7 +409,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     public handleOnChange(value, event) {
-        this.setState({value});
+        this.setState({ value });
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -433,26 +433,26 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         Promise.all([import("scriptjs")]).then((imported) => {
 
             imported[0].default("https://cdn.ckeditor.com/4.7.3/full/ckeditor.js", () => {
-                this.setState({libsLoaded: true});
+                this.setState({ libsLoaded: true });
                 const config: any = {
                     toolbar: [
-                        {name: "clipboard", items: ["Undo", "Redo"]},
-                        {name: "styles", items: ["Format"]},
+                        { name: "clipboard", items: ["Undo", "Redo"] },
+                        { name: "styles", items: ["Format"] },
                         {
                             name: "basicstyles",
                             items: ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "RemoveFormat"],
                         },
                         // {name: 'colors', items: ['TextColor', 'BGColor']},
-                        {name: "align", items: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"]},
+                        { name: "align", items: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"] },
                         {
                             name: "paragraph",
                             items: ["NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote"],
                         },
                         "/",
-                        {name: "styles", items: ["HorizontalRule"]},
-                        {name: "links", items: ["Link", "Unlink"]},
-                        {name: "insert", items: ["Image", "Table"]},
-                        {name: "tools", items: ["Maximize", "Source"]},
+                        { name: "styles", items: ["HorizontalRule"] },
+                        { name: "links", items: ["Link", "Unlink"] },
+                        { name: "insert", items: ["Image", "Table"] },
+                        { name: "tools", items: ["Maximize", "Source"] },
                     ],
                     extraPlugins: "justify",
                     enterMode: CKEDITOR.ENTER_P,
@@ -533,7 +533,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
             return (
                 <div
                     className="w-field-presentation w-field-presentation-wysiwyg"
-                    dangerouslySetInnerHTML={{__html: props.value}}
+                    dangerouslySetInnerHTML={{ __html: props.value }}
                 />
             );
         }
@@ -580,7 +580,7 @@ class Switch extends React.Component<ISwitchProps, any> {
     }
 
     public handleOnChange(value, event) {
-        this.setState({value});
+        this.setState({ value });
 
         // this.refs.hidden.value = date;
         if (this.props.onChange) {
@@ -686,7 +686,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                 event: e,
             });
         }
-    }
+    };
 
     public render() {
         const props = this.props;
@@ -792,6 +792,7 @@ class Date extends React.Component<IDateProps, any> {
             import("react-dates"),
             import("react-dates/lib/css/_datepicker.css"),
         ]).then((imported) => {
+            console.log("ustawiam " + this.props.value);
             moment = imported[0].default;
             datePicker = imported[2].default;
             this.setState({
@@ -804,15 +805,25 @@ class Date extends React.Component<IDateProps, any> {
         });
     }
 
+
+    componentWillReceiveProps(nextProps: Readonly<IDateProps>, nextContext: any): void {
+        this.setState({
+            date:
+                nextProps.value && nextProps.value != "0000-00-00"
+                    ? moment(nextProps.value, "YYYY-MM-DD")
+                    : null,
+        });
+    }
+
     public handleOnChange(date) {
-        this.setState({date, value: date});
+        this.setState({ date, value: date });
 
         // this.refs.hidden.value = date;
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
                 type: "date",
-                value: date.format("YYYY-MM-DD"),
+                value: date ? date.format("YYYY-MM-DD") : null,
                 event: null,
                 data: date,
             });
@@ -844,7 +855,7 @@ class Date extends React.Component<IDateProps, any> {
                     date={this.state.date}
                     onDateChange={(date) => this.handleOnChange(date)}
                     focused={this.state.focused}
-                    onFocusChange={({focused}) => this.setState({focused})}
+                    onFocusChange={({ focused }) => this.setState({ focused })}
                     isOutsideRange={() => false}
                     disabled={props.disabled}
                     placeholder={props.placeholder}
@@ -917,4 +928,4 @@ class File extends React.Component<IFileProps, any> {
     }
 }
 
-export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField};
+export { Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField };

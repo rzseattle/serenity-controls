@@ -4,7 +4,7 @@ const fs = require("fs");
 //const HappyPack = require("happypack");
 const path = require("path");
 
-var RuntimeAnalyzerPlugin = require("webpack-runtime-analyzer");
+
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const { CheckerPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");

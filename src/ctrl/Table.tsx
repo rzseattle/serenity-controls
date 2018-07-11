@@ -64,7 +64,7 @@ interface ITableState {
     currentPage: number;
     countAll: number;
     fixedLayout: boolean; // props.fixedLayout,
-    columns: IColumnData[] | ColumnHelper[] ;
+    columns: IColumnData[];
     //bodyHeight: this.props.initHeight,
     allChecked: boolean;
     selection: any[];
@@ -92,10 +92,10 @@ class Table extends React.Component<ITableProps, ITableState> {
     public state: ITableState;
     private tooltipTimeout: number;
 
-    constructor(props: ITableProps) {
+    constructor(props) {
         super(props);
 
-        const columns: IColumnData[] | ColumnHelper[] = props.columns;
+        const columns: IColumnData[] = props.columns;
         for (const i in columns) {
             columns[i] = this.prepareColumnData(columns[i]);
         }
@@ -258,7 +258,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         return should;
     }*/
 
-    public componentWillReceiveProps(nextProps: ITableProps) {
+    public componentWillReceiveProps(nextProps) {
         const columns = [...nextProps.columns];
         for (const i in columns) {
             columns[i] = this.prepareColumnData(columns[i]);
@@ -474,7 +474,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    public handleCheckClicked(index: number | string) {
+    public handleCheckClicked(index) {
         let s = this.state.selection;
         if (index == "all") {
             if (!this.state.allChecked) {
@@ -503,7 +503,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
 
         if (this.props.onSelectionChange) {
-            const tmp: any = [];
+            const tmp = [];
             s.forEach((index) => tmp.push(this.state.data[index]));
             this.props.onSelectionChange(tmp);
         }
@@ -511,21 +511,18 @@ class Table extends React.Component<ITableProps, ITableState> {
         this.setState({ selection: s });
     }
 
-    private prepareColumnData(inData: IColumnData | ColumnHelper): IColumnData {
+    private prepareColumnData(inData: IColumnData): IColumnData {
         if (inData === null) {
             return null;
         }
 
-        let columnData: IColumnData = null;
         if (inData instanceof ColumnHelper) {
-            columnData = inData.get();
-        }else{
-            columnData = inData;
+            inData = inData.get();
         }
 
         let data: IColumnData = {
             field: null,
-            caption: columnData.caption == undefined ? columnData.field : columnData.caption,
+            caption: inData.caption == undefined ? inData.field : inData.caption,
             isSortable: true,
             display: true,
             toolTip: null,
@@ -551,8 +548,8 @@ class Table extends React.Component<ITableProps, ITableState> {
             filter: [
                 {
                     component: TextFilter,
-                    field: columnData.field,
-                    caption: columnData.field,
+                    field: inData.field,
+                    caption: inData.field,
                 },
             ],
         };
@@ -560,7 +557,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         data = { ...data, ...inData };
 
         data.orderField = data.orderField || data.field;
-        data.filter.forEach((el) => (el.field = el.field || columnData.field));
+        data.filter.forEach((el) => (el.field = el.field || inData.field));
 
         return data;
     }
@@ -596,44 +593,44 @@ class Table extends React.Component<ITableProps, ITableState> {
                         />
                     )}
                     <tbody className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}>
-                        {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError} />}
-                        {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1} />}
-                        {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
-                        {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
-                        {/*this.state.firstLoaded && */}
-                        {this.state.data.length > 0 && (
-                            <Tbody
-                                rowClassTemplate={this.props.rowClassTemplate}
-                                rowStyleTemplate={this.props.rowStyleTemplate}
-                                selection={deepCopy(this.state.selection)}
-                                onCheck={this.handleCheckClicked.bind(this)}
-                                selectable={this.props.selectable}
-                                columns={columns}
-                                filters={this.state.filters}
-                                order={this.state.order}
-                                loading={this.state.loading}
-                                data={this.state.data}
-                                infoRow={this.props.infoRow}
-                            />
-                        )}
+                    {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError} />}
+                    {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1} />}
+                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
+                    {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
+                    {/*this.state.firstLoaded && */}
+                    {this.state.data.length > 0 && (
+                        <Tbody
+                            rowClassTemplate={this.props.rowClassTemplate}
+                            rowStyleTemplate={this.props.rowStyleTemplate}
+                            selection={deepCopy(this.state.selection)}
+                            onCheck={this.handleCheckClicked.bind(this)}
+                            selectable={this.props.selectable}
+                            columns={columns}
+                            filters={this.state.filters}
+                            order={this.state.order}
+                            loading={this.state.loading}
+                            data={this.state.data}
+                            infoRow={this.props.infoRow}
+                        />
+                    )}
                     </tbody>
 
                     {this.props.showFooter && (
                         <tfoot>
-                            {this.state.firstLoaded && (
-                                <Footer
-                                    columns={columns}
-                                    count={this.state.countAll}
-                                    onPage={this.state.onPage}
-                                    onPageChanged={this.handleOnPageChangepage.bind(this)}
-                                    currentPage={this.state.currentPage}
-                                    currentPageChanged={this.handleCurrentPageChange.bind(this)}
-                                    bodyResizeStart={this.handleBodyResizeStart.bind(this)}
-                                    bodyResize={this.handleBodyResize.bind(this)}
-                                    bodyResizeEnd={this.handleBodyResizeEnd.bind(this)}
-                                    parent={this}
-                                />
-                            )}
+                        {this.state.firstLoaded && (
+                            <Footer
+                                columns={columns}
+                                count={this.state.countAll}
+                                onPage={this.state.onPage}
+                                onPageChanged={this.handleOnPageChangepage.bind(this)}
+                                currentPage={this.state.currentPage}
+                                currentPageChanged={this.handleCurrentPageChange.bind(this)}
+                                bodyResizeStart={this.handleBodyResizeStart.bind(this)}
+                                bodyResize={this.handleBodyResize.bind(this)}
+                                bodyResizeEnd={this.handleBodyResizeEnd.bind(this)}
+                                parent={this}
+                            />
+                        )}
                         </tfoot>
                     )}
                 </table>
