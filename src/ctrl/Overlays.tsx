@@ -84,8 +84,6 @@ class Modal extends React.Component<IModalProps, IModalState> {
     public modalBody: HTMLDivElement;
     public animationName: string;
     public modalHandler: any;
-    
-
 
     public static defaultProps = {
         show: false,
@@ -316,8 +314,8 @@ export class Portal extends React.Component<any, any> {
     }
 }
 
-interface IConfirmModalProps extends IModalProps{
-    showCancelLing?: boolean
+interface IConfirmModalProps extends IModalProps {
+    showCancelLing?: boolean;
 }
 
 class ConfirmModal extends React.Component<IConfirmModalProps, any> {
@@ -325,27 +323,20 @@ class ConfirmModal extends React.Component<IConfirmModalProps, any> {
     public promiseReject: any;
     public promiseResolve: any;
     public static defaultProps: Partial<IConfirmModalProps> = {
-        showCancelLing: true
-    }
+        showCancelLing: true,
+    };
 
     constructor(props) {
         super(props);
-        this.promiseResolve = this.promiseReject = null;
-        this.promise = new Promise((resolve, reject) => {
-            this.promiseResolve = resolve;
-            this.promiseReject = reject;
-        });
+
     }
 
-    public handleAbort() {
-        this.promiseReject();
+    public handleAbort = () => {
         this.props.cleanup();
     }
 
-    public handleConfirm() {
+    public handleConfirm = () => {
         this.props.onOk();
-        this.promiseResolve();
-
         this.props.cleanup();
     }
 
@@ -355,12 +346,12 @@ class ConfirmModal extends React.Component<IConfirmModalProps, any> {
 
         return (
             <Modal {...modalProps} className="w-modal-confirm" show={true}>
-                <div style={{padding: 15}}>{this.props.children}</div>
+                <div style={{padding: 15, borderTop: "solid #0078d7 10px"}}>{this.props.children}</div>
                 <div style={{padding: 10, paddingTop: 0, textAlign: "right"}}>
-                    <button onClick={this.handleConfirm.bind(this)} className="btn btn-primary">
+                    <button onClick={this.handleConfirm} className="btn btn-primary">
                         ok
                     </button>
-                    {this.props.showCancelLing && <button onClick={this.handleAbort.bind(this)} className="btn btn-default">
+                    {this.props.showCancelLing && <button onClick={this.handleAbort} className="btn btn-default">
                         anuluj
                     </button>}
                 </div>
@@ -369,23 +360,25 @@ class ConfirmModal extends React.Component<IConfirmModalProps, any> {
     }
 }
 
-
-
 const confirm = async (message, options: Partial<IConfirmModalProps> = {}) => {
     const props = {...options};
 
     const parent = options.container ? options.container() : document.body;
 
     const wrapper = parent.appendChild(document.createElement("div"));
+
+    let resolver, rejector;
+
+    const promise = new Promise((resolve, reject) => {
+        resolver = resolve;
+        rejector = reject;
+    });
+
     const cleanup = () => {
         ReactDOM.unmountComponentAtNode(wrapper);
         wrapper.remove();
+        rejector();
     };
-
-    let resolver;
-    const promise = new Promise((resolve, reject) => {
-        resolver = resolve;
-    });
 
     const x: any = (
         <ConfirmModal {...props} onOk={resolver} cleanup={cleanup}>
@@ -398,12 +391,10 @@ const confirm = async (message, options: Partial<IConfirmModalProps> = {}) => {
     return promise;
 };
 
-
 const _alert = async (message, options: IConfirmConf = {}) => {
     options.showCancelLing = false;
-    return confirm(message, options );
+    return confirm(message, options);
 };
-
 
 export const tooltip = (content, options: ITooltipProps) => {
     const props = {...options};
@@ -434,12 +425,12 @@ interface ITooltipProps {
     target: any;
     targetAt?: string;
     itemAt?: string;
-    offsetY?: number
-    offsetX?: number
+    offsetY?: number;
+    offsetX?: number;
 }
 
 class Tooltip extends React.Component<ITooltipProps, any> {
-    tooltipEl: HTMLDivElement;
+    public tooltipEl: HTMLDivElement;
     public static defaultProps: Partial<ITooltipProps> = {
         theme: "dark",
         type: "hover",
@@ -454,13 +445,12 @@ class Tooltip extends React.Component<ITooltipProps, any> {
         super(props);
         this.state = {
             brakeLeft: 0,
-            //orientation: this.props.orientation,
+            // orientation: this.props.orientation,
             isVisible: false,
         };
     }
 
     public componentDidMount() {
-
 
         setTimeout(() => {
             window.requestAnimationFrame(() => {
@@ -476,23 +466,22 @@ class Tooltip extends React.Component<ITooltipProps, any> {
                     this.tooltipEl.style.opacity = "1";
                     this.tooltipEl.focus();
                 }
-            })
-        }, 0)
+            });
+        }, 0);
 
-
-        //let targetPos = this.props.target().getBoundingClientRect();
-        ///let center = Math.round(/*targetPos.left -*/ targetPos.width / 2);
-        //this.setState({ brakeLeft: center });
+        // let targetPos = this.props.target().getBoundingClientRect();
+        /// let center = Math.round(/*targetPos.left -*/ targetPos.width / 2);
+        // this.setState({ brakeLeft: center });
     }
 
     public componentDidUpdate() {
-        //let targetPos = this.props.target().getBoundingClientRect();
-        //let center = Math.round(targetPos.left - ( targetPos.width / 2 ));
-        //this.setState({brakeLeft: center});
+        // let targetPos = this.props.target().getBoundingClientRect();
+        // let center = Math.round(targetPos.left - ( targetPos.width / 2 ));
+        // this.setState({brakeLeft: center});
     }
 
     public orientationChange(type) {
-        //this.setState({orientation: 'top left edge'})
+        // this.setState({orientation: 'top left edge'})
     }
 
     private handleMouseEnter = () => {
@@ -520,7 +509,6 @@ class Tooltip extends React.Component<ITooltipProps, any> {
         }
     };
 
-
     public render() {
         const {theme, content} = this.props;
 
@@ -535,7 +523,6 @@ class Tooltip extends React.Component<ITooltipProps, any> {
                     className={"w-tooltip"}
                     ref={(el) => this.tooltipEl = el}
                 >
-
 
                     <div className={`w-tooltip-hover w-tooltip-hover-${theme}`} style={{}}>
                         {this.props.children}{" "}
