@@ -12,6 +12,7 @@ import * as ViewsRoute from "../../../../build/js/tmp/components-route.include.j
 import { ideConnector } from "./IDEConnector";
 import { BackofficeStore } from "../backoffice/BackofficeStore";
 import { RouteVisualization } from "./RouteVisualization";
+import PrintJSON from "../utils/PrintJSON";
 
 declare var DEV_PROPERIES: DevProperties;
 
@@ -143,6 +144,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
         const { componentInfo } = this.props;
 
         const extendedInfo = componentInfo ? componentInfo.extendedInfo : null;
+
         return (
             <div className={"w-debug-tool"} tabIndex={1} style={this.state.style}>
                 <div className="main-icon" onClick={this.handleExpand.bind(this)} onMouseDown={this._drag.bind(this)} onMouseUp={() => clearTimeout(this.dragTimeout)}>
@@ -170,6 +172,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                             <div className={"section-title"}>Views:</div>
                             <div className={"section"}>
                                 {this.state.debugData.views.map((info, index) => {
+
                                     return (
                                         <div key={info.routeInfo._routePath}>
                                             {info.routeInfo._routePath}
@@ -186,7 +189,9 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                                             </a>
                                             {this.state.openedViewData.includes(index) && (
                                                 <div style={{ maxWidth: "600px", overflow: "auto", clear: "both" }}>
-                                                    <pre style={{ maxHeight: 300, overflow: "auto" }}>{JSON.stringify(info.props[0], null, 2)}</pre>
+                                                    <div style={{ maxHeight: 300, overflow: "auto" }}>
+                                                        <PrintJSON json={info.props[0]}/>
+                                                     </div>
                                                 </div>
                                             )}
 
@@ -199,6 +204,8 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
                             <div className={"section-title"}>API Call:</div>
                             <div className={"section"}>
                                 {this.state.debugData.ajax.map((info, index) => {
+
+
                                     return (
                                         <div key={info.routeInfo._routePath}>
                                             {info.urls[0]}

@@ -1,19 +1,22 @@
+import {ReactElement, StatelessComponent} from "react";
+
 declare var window: any;
 declare var PRODUCTION: any;
 import * as React from "react";
-import { TextFilter } from "./Filters";
-import { ColumnHelper } from "./table/ColumnHelper";
+import {TextFilter} from "./Filters";
+import {ColumnHelper} from "./table/ColumnHelper";
 import FiltersPresenter from "./table/FiltersPresenter";
 import Tbody from "./table/Tbody";
 import Footer from "./table/Footer";
-import { ICellTemplate, IColumnData, IFilterValue, IOrder } from "./table/Interfaces";
-import { EmptyResult, Error, Loading } from "./table/placeholders";
-import { deepCopy } from "frontend/src/lib/JSONTools";
+import {ICellTemplate, IColumnData, IFilterValue, IOrder} from "./table/Interfaces";
+import {EmptyResult, Error, Loading} from "./table/placeholders";
+import {deepCopy} from "frontend/src/lib/JSONTools";
 import Thead from "frontend/src/ctrl/table/Thead";
 import Comm from "frontend/src/lib/Comm";
-import { Datasource } from "frontend/src/lib/Datasource";
+import {Datasource} from "frontend/src/lib/Datasource";
 
-interface IDataQuery {}
+interface IDataQuery {
+}
 
 interface ITableDataInput {
     data: any[];
@@ -29,6 +32,12 @@ type ISelectionChangeEvent = (selected: any[]) => any;
 type IRowClassTemplate = (row: any, index: number) => string;
 
 type IRowStyleTemplate = (row: any, index: number) => any;
+
+interface IGroupByData {
+    field?: string;
+    equalizer?: (prevRow, nextRow) => boolean;
+    labelProvider?: (nextRow, prevRow) => string | ReactElement<any> | StatelessComponent;
+}
 
 interface ITableProps {
     dataProvider?: IDataProvider;
@@ -50,6 +59,7 @@ interface ITableProps {
     onDataChange?: (data: any, count: number) => any;
     data?: ITableDataInput;
     infoRow?: ICellTemplate;
+    groupBy?: IGroupByData[];
 }
 
 interface ITableState {
@@ -65,7 +75,7 @@ interface ITableState {
     countAll: number;
     fixedLayout: boolean; // props.fixedLayout,
     columns: IColumnData[];
-    //bodyHeight: this.props.initHeight,
+    // bodyHeight: this.props.initHeight,
     allChecked: boolean;
     selection: any[];
     tooltipData: any;
@@ -80,11 +90,12 @@ class Table extends React.Component<ITableProps, ITableState> {
         rememberState: false,
         additionalConditions: {},
         filters: null,
-        data: { data: [], countAll: 0, debug: "" },
+        data: {data: [], countAll: 0, debug: ""},
         rowClassTemplate: null,
         rowStyleTemplate: null,
         infoRow: null,
         onSelectionChange: null,
+        groupBy: [],
     };
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
@@ -100,7 +111,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             columns[i] = this.prepareColumnData(columns[i]);
         }
 
-        //console.log(columns);
+        // console.log(columns);
 
         this.state = {
             loading: false,
@@ -115,18 +126,18 @@ class Table extends React.Component<ITableProps, ITableState> {
             countAll: this.props.data.countAll,
             fixedLayout: false, // props.fixedLayout,
             columns,
-            //bodyHeight: this.props.initHeight,
+            // bodyHeight: this.props.initHeight,
             allChecked: false,
             selection: [],
             tooltipData: null,
         };
 
-        //helpers
+        // helpers
         this.tmpDragStartY = 0;
         this.xhrConnection = null;
 
-        const hashCode = function(s) {
-            return s.split("").reduce(function(a, b) {
+        const hashCode = function (s) {
+            return s.split("").reduce(function (a, b) {
                 a = (a << 5) - a + b.charCodeAt(0);
                 return a & a;
             }, 0);
@@ -140,9 +151,9 @@ class Table extends React.Component<ITableProps, ITableState> {
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
             const local = JSON.parse(window.localStorage[this.hashCode]);
             let filters = deepCopy(this.state.filters);
-            //for controlable filters u cant overwrite them when table is mounting
-            filters = { ...filters, ...local.filters };
-            this.setState({ ...this.state, ...local, firstLoaded: false, filters }, () => {
+            // for controlable filters u cant overwrite them when table is mounting
+            filters = {...filters, ...local.filters};
+            this.setState({...this.state, ...local, firstLoaded: false, filters}, () => {
                 if (this.props.onFiltersChange) {
                     this.props.onFiltersChange(deepCopy(this.state.filters));
                 }
@@ -160,7 +171,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             window.localStorage[this.hashCode] = JSON.stringify({
                 onPage: state.onPage,
                 currentPage: state.currentPage,
-                //bodyHeight: state.bodyHeight,
+                // bodyHeight: state.bodyHeight,
                 filters: state.filters,
                 order: state.order,
                 fixedLayout: state.fixedLayout,
@@ -264,7 +275,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             columns[i] = this.prepareColumnData(columns[i]);
         }
         if (JSON.stringify(columns) != JSON.stringify(this.state.columns)) {
-            this.setState({ columns });
+            this.setState({columns});
         }
 
         if (nextProps.filters) {
@@ -285,13 +296,13 @@ class Table extends React.Component<ITableProps, ITableState> {
         const trimmedData = [...this.state.columns];
 
         for (let i = 0; i < trimmedData.length; i++) {
-            trimmedData[i] = { ...trimmedData[i] };
+            trimmedData[i] = {...trimmedData[i]};
             trimmedData[i].filter = null;
             trimmedData[i].events = null;
         }
 
         return {
-            //need to deep clone and events remove
+            // need to deep clone and events remove
             columns: JSON.parse(JSON.stringify(trimmedData)),
             filters: this.state.filters,
             order: this.state.order,
@@ -301,14 +312,14 @@ class Table extends React.Component<ITableProps, ITableState> {
         };
     }
 
-    public load() {
+    public load = () => {
         this.state.dataSourceError = "";
 
         if (this.props.onSelectionChange !== null) {
             this.props.onSelectionChange([]);
         }
 
-        this.setState({ loading: true });
+        this.setState({loading: true});
 
         const setStateAfterLoad = (input, callback = null) => {
             this.setState(
@@ -338,10 +349,10 @@ class Table extends React.Component<ITableProps, ITableState> {
                 setStateAfterLoad(data);
             });
             comm.setData(this.getRequestData());
-            comm.on(Comm.EVENTS.FINISH, () => this.setState({ loading: false }));
+            comm.on(Comm.EVENTS.FINISH, () => this.setState({loading: false}));
             this.xhrConnection = comm.send();
         } else if (this.props.dataSource) {
-            const { dataSource } = this.props;
+            const {dataSource} = this.props;
             dataSource.observe((result) => {
                 setStateAfterLoad(result);
             });
@@ -377,13 +388,13 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
     }
 
-    public handleFiltersDeleted(){
+    public handleFiltersDeleted() {
         this.setState({filters: {}});
     }
 
     public handleFilterChanged(filterValue: IFilterValue) {
         this.state.filters[filterValue.field] = filterValue;
-        this.setState({ currentPage: 1, filters: this.state.filters }, this.load);
+        this.setState({currentPage: 1, filters: this.state.filters}, this.load);
         if (this.props.onFiltersChange) {
             this.props.onFiltersChange(deepCopy(this.state.filters));
         }
@@ -391,7 +402,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
     public handleFilterDelete(key) {
         delete this.state.filters[key];
-        this.setState({ currentPage: 1, filters: this.state.filters }, this.load);
+        this.setState({currentPage: 1, filters: this.state.filters}, this.load);
         if (this.props.onFiltersChange) {
             this.props.onFiltersChange(deepCopy(this.state.filters));
         }
@@ -411,7 +422,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
         let field = null;
 
-        const _field = column.orderField?column.orderField:column.field;
+        const _field = column.orderField ? column.orderField : column.field;
 
         if (this.state.order[_field]) {
             field = this.state.order[_field];
@@ -423,21 +434,21 @@ class Table extends React.Component<ITableProps, ITableState> {
             };
         }
 
-        field = { ...field, dir: field.dir == "asc" ? "desc" : "asc" };
+        field = {...field, dir: field.dir == "asc" ? "desc" : "asc"};
 
         this.state.order[_field] = field;
 
-        this.setState({ order: this.state.order }, this.load);
+        this.setState({order: this.state.order}, this.load);
     }
 
     public handleOnPageChangepage(onPage) {
-        this.setState({ onPage, currentPage: 1 }, this.load);
+        this.setState({onPage, currentPage: 1}, this.load);
     }
 
     public handleCurrentPageChange(page) {
         const newPage = Math.max(1, Math.min(Math.ceil(this.state.countAll / this.state.onPage), page));
         if (newPage != this.state.currentPage) {
-            this.setState({ currentPage: newPage, selection: [], allChecked: false }, () => this.load());
+            this.setState({currentPage: newPage, selection: [], allChecked: false}, () => this.load());
         }
     }
 
@@ -449,26 +460,26 @@ class Table extends React.Component<ITableProps, ITableState> {
 
     public handleBodyResizeStart(e) {
         this.tmpDragStartY = e.clientY;
-        //this.tmpCurrHeight = this.state.bodyHeight;
+        // this.tmpCurrHeight = this.state.bodyHeight;
     }
 
     public handleBodyResize(e) {
         if (e.clientY) {
-            //this.setState({bodyHeight:  this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
+            // this.setState({bodyHeight:  this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
         }
     }
 
     public handleBodyResizeEnd(e) {
-        //this.setState({bodyHeight: this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
+        // this.setState({bodyHeight: this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
     }
 
     public handleKeyDown(e) {
-        //right
+        // right
         if (e.keyCode == 39) {
             this.handleCurrentPageChange(this.state.currentPage + 1);
         }
 
-        //left
+        // left
         if (e.keyCode == 37) {
             this.handleCurrentPageChange(this.state.currentPage - 1);
         }
@@ -486,7 +497,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             } else {
                 s = [];
             }
-            this.setState({ allChecked: !this.state.allChecked });
+            this.setState({allChecked: !this.state.allChecked});
         } else {
             const selected = s.indexOf(index);
             if (selected == -1) {
@@ -508,7 +519,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             this.props.onSelectionChange(tmp);
         }
 
-        this.setState({ selection: s });
+        this.setState({selection: s});
     }
 
     private prepareColumnData(inData: IColumnData): IColumnData {
@@ -554,7 +565,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             ],
         };
 
-        data = { ...data, ...inData };
+        data = {...data, ...inData};
 
         data.orderField = data.orderField || data.field;
         data.filter.forEach((el) => (el.field = el.field || inData.field));
@@ -569,14 +580,14 @@ class Table extends React.Component<ITableProps, ITableState> {
             <div className={"w-table " + (this.state.loading ? "w-table-loading" : "")} tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
                 <div className="w-table-loader">
                     <span>
-                        <i />
-                        <i />
-                        <i />
-                        <i />
+                        <i/>
+                        <i/>
+                        <i/>
+                        <i/>
                     </span>
                 </div>
                 <div className="w-table-top">
-                    <FiltersPresenter order={this.state.order} filters={this.state.filters} FilterDelete={this.handleFilterDelete.bind(this)} orderDelete={this.handleOrderDelete.bind(this)} />
+                    <FiltersPresenter order={this.state.order} filters={this.state.filters} FilterDelete={this.handleFilterDelete.bind(this)} orderDelete={this.handleOrderDelete.bind(this)}/>
                 </div>
 
                 <table>
@@ -593,9 +604,9 @@ class Table extends React.Component<ITableProps, ITableState> {
                         />
                     )}
                     <tbody className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}>
-                    {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError} />}
-                    {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1} />}
-                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
+                    {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
+                    {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
+                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
                     {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
                     {/*this.state.firstLoaded && */}
                     {this.state.data.length > 0 && (
@@ -611,6 +622,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                             loading={this.state.loading}
                             data={this.state.data}
                             infoRow={this.props.infoRow}
+                            groupBy={this.props.groupBy}
                         />
                     )}
                     </tbody>
@@ -629,6 +641,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                                 bodyResize={this.handleBodyResize.bind(this)}
                                 bodyResizeEnd={this.handleBodyResizeEnd.bind(this)}
                                 parent={this}
+                                reload={this.load}
                             />
                         )}
                         </tfoot>
@@ -641,4 +654,4 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 }
 
-export { Table, ColumnHelper, ColumnHelper as Column };
+export {Table, ColumnHelper, ColumnHelper as Column};

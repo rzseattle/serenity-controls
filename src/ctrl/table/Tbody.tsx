@@ -2,7 +2,7 @@ import * as React from "react";
 import {deepIsEqual} from "frontend/src/lib/JSONTools";
 import * as uuidv4 from "uuid/v4";
 import Icon from "../Icon";
-//const uuidv4 = require('uuid/v4');
+// const uuidv4 = require('uuid/v4');
 
 export default class Tbody extends React.Component<any, any> {
     constructor(props) {
@@ -16,7 +16,7 @@ export default class Tbody extends React.Component<any, any> {
                 this.props.data,
                 this.props.selection,
                 this.props.columns,
-                this.props.selectable
+                this.props.selectable,
             ],
             [
                 nextProps.data,
@@ -25,6 +25,23 @@ export default class Tbody extends React.Component<any, any> {
                 nextProps.selectable,
             ],
         );
+    }
+
+    public groupByGetInfo = (row1, row2) => {
+        const info = [];
+        for (const group of this.props.groupBy) {
+            if (group.field !== undefined) {
+                if (row1 === null || row1[group.field] != row2[group.field]) {
+                    info.push({label: row2[group.field]});
+                }
+            } else if (group.equalizer !== undefined) {
+                if (row1 === null || group.equalizer(row1, row2)) {
+                    info.push({label: group.labelProvider(row2, row1)});
+                }
+            }
+        }
+
+        return info;
     }
 
     public render() {
@@ -60,13 +77,15 @@ export default class Tbody extends React.Component<any, any> {
 
         }
 
+        let lastRow = null;
+
         return props.data.map((row, index) => {
 
-            //const key = row.id != undefined ? row.id : uuidv4();
+            // const key = row.id != undefined ? row.id : uuidv4();
             const key = uuidv4();
             const even = index % 2 == 0;
 
-            return (<Row
+            const _row = <Row
                 key={key}
                 even={even}
                 _key={key}
@@ -78,11 +97,23 @@ export default class Tbody extends React.Component<any, any> {
                 isSelected={this.props.selection.includes(index)}
                 onCheck={() => this.props.onCheck(index)}
                 cache={cache}
-
-
                 infoRow={this.props.infoRow}
+            />;
 
-            />);
+            if (this.props.groupBy.length > 0) {
+                const groupData = this.groupByGetInfo(lastRow, row);
+                if (groupData.length > 0) {
+                    lastRow = row;
+                    return <>
+                        <tr key={key + "group"}>
+                            <td style={{backgroundColor: "grey", color: "white"}} colSpan={columns.length + 1}>{groupData.map((el) => el.label)}</td>
+                        </tr>
+                        {_row}
+                    </>;
+                }
+
+            }
+            return _row;
 
         });
 
