@@ -4,7 +4,6 @@ import RouterException from "./RouterException";
 
 declare var PRODUCTION: any;
 
-
 class Router {
     public routes = ViewsRoute.ViewFileMap;
     public observers = [];
@@ -22,10 +21,20 @@ class Router {
     };
 
     public async getRouteInfo(path): Frontend.Debug.RouteInfo {
+        if (path.indexOf("?") != -1) {
+            const purePath = path.split("?")[0];
+            path = purePath;
+        }
 
-        const info = await this.resolve(path);
-        return info.extendedInfo;
-    };
+        try {
+            const info = await this.resolve(path);
+            return info.extendedInfo;
+        } catch (e) {
+            console.log(`[RouteInfo] No info for '${path}' found`);
+            return null;
+        }
+
+    }
 
     public async resolve(path) {
         const pathInfo = path;
@@ -82,19 +91,13 @@ class Router {
         }
 
         if (!extendedInfo) {
-            if (extendedInfo) {
-                console.error("Component file not found:" + pathInfo);
-                console.error("Component file should be:" + extendedInfo._debug.template);
-                /*console.error("Additional info");
-                console.log(extendedInfo);*/
-            } else {
-                console.error("Route not fount: " + pathInfo);
-                // console.log(ViewsRoute.ViewFileMap);
-            }
 
-            console.log(extendedInfo);
+            throw new RouterException(`Route not found: '${path}'`);
+        }
 
-            throw new RouterException("Route not found :" + path);
+        if (!Component && extendedInfo) {
+            console.error("Component file not found:" + pathInfo);
+            console.error("Component file should be:" + extendedInfo._debug.template);
         }
 
         return {

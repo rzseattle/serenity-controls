@@ -2,7 +2,7 @@ import Comm from "../lib/Comm";
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs";
 import BackOfficePanel from "./BackOfficePanel";
-import { hot } from 'react-hot-loader'
+import {hot} from "react-hot-loader";
 
 declare var window;
 declare var module;
@@ -24,7 +24,6 @@ export class BackofficeStore {
     }
 
     public static registerDebugData(type: string, url: string, routeInfo: Frontend.Debug.RouteInfo, props) {
-
 
         if (type == "ajax") {
             for (const index in BackofficeStore.debugData.ajax) {
@@ -121,10 +120,9 @@ export class BackofficeStore {
 
         Comm.onStart.push((url, data, method) => {
             if (!BackofficeStore.debugViewAjaxInProgress) {
-                try {
+                const routeData = Router.getRouteInfo(url);
+                if (routeData !== null) {
                     BackofficeStore.registerDebugData("ajax", url, Router.getRouteInfo(url), data);
-                } catch (e) {
-                    console.info("No route found for: " + url);
                 }
             }
         });
@@ -208,10 +206,7 @@ export class BackofficeStore {
                 url = purePath + (query ? "?" + query : "");
             }
 
-
             view.then((view) => {
-
-
 
                 if (!this.subStore) {
                     window.removeEventListener("hashchange", this.hashChangeHandler);
@@ -251,7 +246,6 @@ export class BackofficeStore {
                                 BackofficeStore.registerDebugData("views", originalPath, routeData, this.viewData);
                             });
 
-
                         } catch (e) {
                             console.error("cos jest ni tak " + originalPath + " " + e);
                         }
@@ -267,8 +261,6 @@ export class BackofficeStore {
                 BackofficeStore.debugViewAjaxInProgress = false;
 
             });
-
-            view.then((view) => {
 
         } catch (e) {
 
