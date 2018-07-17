@@ -10,20 +10,9 @@ export default class Tbody extends React.Component<any, any> {
     }
 
     public shouldComponentUpdate(nextProps, nextState) {
-
         return !deepIsEqual(
-            [
-                this.props.data,
-                this.props.selection,
-                this.props.columns,
-                this.props.selectable,
-            ],
-            [
-                nextProps.data,
-                nextProps.selection,
-                nextProps.columns,
-                nextProps.selectable,
-            ],
+            [this.props.data, this.props.selection, this.props.columns, this.props.selectable],
+            [nextProps.data, nextProps.selection, nextProps.columns, nextProps.selectable]
         );
     }
 
@@ -42,7 +31,7 @@ export default class Tbody extends React.Component<any, any> {
         }
 
         return info;
-    }
+    };
 
     public render() {
         const props = this.props;
@@ -63,8 +52,8 @@ export default class Tbody extends React.Component<any, any> {
                 cache[index].classes.push("w-table-filtered");
             }
             if (
-                column.events.click && column.events.click.length > 0 ||
-                column.events.mouseUp && column.events.mouseUp.length > 0
+                (column.events.click && column.events.click.length > 0) ||
+                (column.events.mouseUp && column.events.mouseUp.length > 0)
             ) {
                 cache[index].classes.push("w-table-cell-clickable");
             }
@@ -74,72 +63,68 @@ export default class Tbody extends React.Component<any, any> {
             if (column.width) {
                 cache[index].style = {width: column.width};
             }
-
         }
 
-        let lastRow = null;
+        let lastRow: any = null;
 
         return props.data.map((row, index) => {
-
             // const key = row.id != undefined ? row.id : uuidv4();
             const key = uuidv4();
             const even = index % 2 == 0;
 
-            const _row = <Row
-                key={key}
-                even={even}
-                _key={key}
-                columns={columns}
-                row={row}
-                rowClassTemplate={props.rowClassTemplate}
-                rowStyleTemplate={props.rowStyleTemplate}
-                selectable={this.props.selectable}
-                isSelected={this.props.selection.includes(index)}
-                onCheck={() => this.props.onCheck(index)}
-                cache={cache}
-                infoRow={this.props.infoRow}
-            />;
+            const _row = (
+                <Row
+                    key={key}
+                    even={even}
+                    _key={key}
+                    columns={columns}
+                    row={row}
+                    rowClassTemplate={props.rowClassTemplate}
+                    rowStyleTemplate={props.rowStyleTemplate}
+                    selectable={this.props.selectable}
+                    isSelected={this.props.selection.includes(index)}
+                    onCheck={() => this.props.onCheck(index)}
+                    cache={cache}
+                    infoRow={this.props.infoRow}
+                />
+            );
 
             if (this.props.groupBy.length > 0) {
                 const groupData = this.groupByGetInfo(lastRow, row);
                 if (groupData.length > 0) {
                     lastRow = row;
-                    return <>
-                        <tr key={key + "group"}>
-                            <td style={{backgroundColor: "grey", color: "white"}} colSpan={columns.length + 1}>{groupData.map((el) => el.label)}</td>
-                        </tr>
-                        {_row}
-                    </>;
+                    return [
+                        <tr key={key + "_group"}>
+                            <td style={{backgroundColor: "grey", color: "white"}} colSpan={columns.length + 1}>
+                                {groupData.map((el) => <React.Fragment key={uuidv4()}>{el.label}</React.Fragment>)}
+                            </td>
+                        </tr>,
+                        _row,
+                    ];
                 }
-
             }
             return _row;
-
         });
-
     }
 }
 
 export class Row extends React.PureComponent<any, any> {
-
     public packFn = (val, column, row) => {
         let templateResult = false;
         if (column.template !== null) {
             templateResult = column.template(val, row, column, this);
-
         }
         return (
             <>
                 {column.icon !== null && <Icon name={column.icon}/>}
                 {column.prepend !== null && column.prepend}
-                {templateResult !== false ? templateResult : (val ? val : column.default)}
+                {templateResult !== false ? templateResult : val ? val : column.default}
                 {column.append !== null && column.append}
             </>
         );
-    }
+    };
 
     public render() {
-
         const props = this.props;
         const {columns, row, cache, _key} = this.props;
 
@@ -160,14 +145,19 @@ export class Row extends React.PureComponent<any, any> {
 
         return (
             <>
-
-                <tr {...rowProps} >
-                    {props.selectable && <td className={"w-table-selection-cell"} onClick={props.onCheck}>
-                        <input type="checkbox" onChange={(event) => {
-                            event.stopPropagation();
-                            props.onCheck;
-                        }} checked={this.props.isSelected}/>
-                    </td>}
+                <tr {...rowProps}>
+                    {props.selectable && (
+                        <td className={"w-table-selection-cell"} onClick={props.onCheck}>
+                            <input
+                                type="checkbox"
+                                onChange={(event) => {
+                                    event.stopPropagation();
+                                    props.onCheck;
+                                }}
+                                checked={this.props.isSelected}
+                            />
+                        </td>
+                    )}
                     {columns.map((column, index2) => {
                         let style = cache[index2].style;
                         if (column.styleTemplate !== null) {
@@ -226,25 +216,22 @@ export class Row extends React.PureComponent<any, any> {
                         }
 
                         return (
-                            <td
-                                key={_key + index2}
-                                {...cellProps}
-                            >
+                            <td key={_key + index2} {...cellProps}>
                                 {this.packFn(row[column.field] ? row[column.field] : column.default, column, row)}
                             </td>
                         );
                     })}
                 </tr>
 
-                {props.infoRow != null && <tr className={"w-table-info-row"} {...rowProps}>
-                    <td colSpan={12}>{props.infoRow(row)}</td>
-                </tr>}
+                {props.infoRow != null && (
+                    <tr className={"w-table-info-row"} {...rowProps}>
+                        <td colSpan={12}>{props.infoRow(row)}</td>
+                    </tr>
+                )}
             </>
         );
     }
-
 }
 
 const Cell = (props) => {
-
 };

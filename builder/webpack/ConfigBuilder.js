@@ -192,7 +192,7 @@ module.exports = function(input) {
                     sourceMap: true // set to true if you want JS source maps
                 }),
                 new OptimizeCSSAssetsPlugin({
-                    cssProcessorOptions: { safe: true, discardComments: { removeAll: true }, zindex: false }
+                    cssProcessorOptions: { "postcss-safe-parser": true, discardComments: { removeAll: true }, zindex: false }
                 })
             ]
             /*splitChunks: {

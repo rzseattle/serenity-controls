@@ -73,8 +73,10 @@
     "hard-source-webpack-plugin": "^0.11.0",
     "i18n-webpack-plugin": "^1.0.0",
     "image-webpack-loader": "^4.0.0",
+    "mini-css-extract-plugin": "^0.4.1",
     "mkdirp": "^0.5.1",
     "node-sass": "^4.9.2",
+    "optimize-css-assets-webpack-plugin": "^5.0.0",
     "prettier": "1.13.7",
     "react-hot-loader": "^4.1.1",
     "react-json-tree": "^0.11.0",
@@ -90,8 +92,6 @@
     "webpack": "^4.15.1",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-cli": "^3.0.1",
-    "webpack-dev-server": "^3.1.1",
-    "mini-css-extract-plugin": "^0.4.1",
-    "optimize-css-assets-webpack-plugin": "^4.0.3"
+    "webpack-dev-server": "^3.1.1"
   }
 }

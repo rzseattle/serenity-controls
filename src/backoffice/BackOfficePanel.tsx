@@ -256,7 +256,12 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                     <div className="w-panel-body" style={{position: "relative"}}>
                         {this.state.openedWindows.map((el, index) => {
                             return (
-                                <Modal key={index} onHide={() => this.handleCloseWindow(el.route)} {...el.modalProps}>
+                                <Modal key={index} {...el.modalProps} onHide={() => {
+                                    if(el.modalProps.onHide !== undefined){
+                                        el.modalProps.onHide();
+                                    }
+                                    this.handleCloseWindow(el.route);
+                                }} >
                                     <div
                                         style={{
                                             width: el.modalProps.width ? "auto" : "90vw",

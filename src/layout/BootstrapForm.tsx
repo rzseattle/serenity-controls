@@ -14,9 +14,11 @@ import { FileList } from "../ctrl/FileLists";
 import { Shadow } from "../ctrl/Overlays";
 import Comm from "../lib/Comm";
 import { Copyable } from "frontend/src/ctrl/Copyable";
+import Icon from "../ctrl/Icon";
 
 interface IWithBootstrapFormFieldProps {
     label?: string;
+    onInfoClick?: (value) => any;
     help?: string;
     errors?: string[];
     className?: string;
@@ -56,11 +58,10 @@ const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Componen
 
             let field;
 
+            const { forwardedRef, ...fieldProps } = this.props as any;
 
-            let { forwardedRef, ...fieldProps } = this.props as any;
-
-            //const fieldProps: any = {};
-            Object.assign(fieldProps,{ className });
+            // const fieldProps: any = {};
+            Object.assign(fieldProps, { className });
 
             if ((this.props.suffix || this.props.prefix) && this.props.editable) {
 
@@ -105,8 +106,11 @@ const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Componen
             if (props.layoutType == "default") {
                 return (
                     <div className={classes.join(" ")}>
-                        {this.props.label && <label className={this.props.labelClass}>{this.props.label} {this.props.copyable &&
-                        <Copyable toCopy={this.props.value}/>}</label>}
+                        {this.props.label && <label className={this.props.labelClass}>{this.props.label}
+                        {this.props.copyable && <Copyable toCopy={this.props.value}/>}
+
+                            {props.onInfoClick && <a style={{float: "right"}} onClick={props.onInfoClick}><Icon name={"OpenInNewWindow"}/></a>}
+                        </label>}
                         {field}
 
                         {props.help ?
@@ -124,7 +128,6 @@ const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Componen
 
     };
 };
-
 
 interface IBFormEvent {
     form: BForm;
@@ -230,7 +233,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             loading: props.loading || false,
         };
 
-        //used to setup base data
+        // used to setup base data
         this.fieldsValues = {};
     }
 
@@ -298,7 +301,6 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     public submit( tmpCallbacks ) {
 
-
         this.handleSubmit(null, tmpCallbacks);
     }
 
@@ -329,7 +331,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                     formErrors: [],
                 });
 
-                if(tmpCallbacks[Comm.EVENTS.SUCCESS]){
+                if (tmpCallbacks[Comm.EVENTS.SUCCESS]) {
                     tmpCallbacks[Comm.EVENTS.SUCCESS]({ form: this, response });
                 }
             });
@@ -382,7 +384,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     public handleInputChange(e) {
         let name, type, value;
-        //custom event data
+        // custom event data
 
         if (e.name !== undefined) {
             name = e.name;
@@ -445,12 +447,12 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             set(this.state.fieldErrors, arrayNotation, null);
         }
 
-        //false - dont track
+        // false - dont track
         if (defaultValue !== false) {
             set(this.fieldsValues, arrayNotation, this.props.data ? this.props.data[name] || defaultValue : defaultValue);
         }
 
-        //console.log(get(this.state.fieldErrors))
+        // console.log(get(this.state.fieldErrors))
 
         return {
             value,
@@ -471,7 +473,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         if (layoutType == "horizontal") {
             classes.push("form-horizontal");
         } else if (layoutType == "default") {
-            //classes.push('form-inline');
+            // classes.push('form-inline');
         }
 
         const Tag = this.props.useFormTag ? "form" : "div";
@@ -492,8 +494,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     }
 }
 
-
-//const BText = withBootstrapFormField2(Text);
+// const BText = withBootstrapFormField2(Text);
 
 const BText = withBootstrapFormField(Text);
 const BTextarea = withBootstrapFormField(Textarea);
@@ -506,7 +507,6 @@ const BWysiwig = withBootstrapFormField(Wysiwyg);
 const BConnectionsField = withBootstrapFormField(ConnectionsField);
 const BFileList = withBootstrapFormField(FileList);
 const BContainer = withBootstrapFormField((props) => <div>{props.children}</div>);
-
 
 export {
     BForm,
