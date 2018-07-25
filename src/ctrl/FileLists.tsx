@@ -4,8 +4,14 @@ import { arrayMove, SortableContainer, SortableElement, SortableHandle } from "r
 import Dropzone from "react-dropzone";
 import { IFieldProps } from "./fields/Interfaces";
 import { Icon } from "frontend/src/ctrl/Icon";
-import { Modal } from "frontend/src/ctrl/Overlays";
+import { _alert, Modal } from "frontend/src/ctrl/Overlays";
 import { CommandBar } from "./CommandBar";
+import PrintJSON from "../utils/PrintJSON";
+
+import { printFile } from "../utils/FilePrinter";
+import {LoadingIndicator} from "./LoadingIndicator";
+import {ImageViewer} from "./files/viewers/ImageViewer";
+import {PDFViewer} from "./files/viewers/PDFViewer";
 
 let baseUrl = "";
 if (window.location.host.indexOf("esotiq") != -1) {
@@ -19,7 +25,7 @@ const parsePath = (path) => {
     return baseUrl + path;
 };
 
-interface IFile {
+export interface IFile {
     key: number;
     name: string;
     size: number;
@@ -117,23 +123,44 @@ export interface IFileList extends IFieldProps {
     buttonTitle?: string;
     maxLength?: number;
     itemStyle?: any;
+    downloadConnector?: (file: IFile) => string;
 }
 
+export interface IFileViewerProps {
+    file: IFile;
+}
+
+
 class FileList extends React.Component<IFileList, any> {
+    public viewerRegistry = [];
     public static defaultProps: Partial<IFileList> = {
         type: "filelist",
         maxLength: null,
-        buttonTitle: "Dodaj",
+        buttonTitle: __("Dodaj"),
         itemStyle: {},
+        downloadConnector: (file: IFile) => file.path,
     };
 
-    public constructor(props) {
+    public constructor(props: IFileList) {
         super(props);
 
         this.state = {
             filesDeleted: [],
             preview: null,
+            numPages: null,
+            viewers: {},
         };
+
+        this.viewerRegistry = [
+            {
+                filter: /.(jpg|jpeg|png|gif)$/i,
+                viewer: ImageViewer,
+            },
+            {
+                filter: /.(pdf)$/i,
+                viewer: PDFViewer,
+            },
+        ];
     }
 
     public handleFileAdd(addedFiles: Array<File & { preview: string }>) {
@@ -165,18 +192,8 @@ class FileList extends React.Component<IFileList, any> {
         this.handleChange(currFiles);
     }
 
-    public componentWillReceiveProps(nextProps) {
-        // this.setState({filesDeleted: []});
-        // console.log(nextProps);
-    }
-
     public handleFileClick(index) {
-        const el = this.props.value[index];
-        if (this.isImage(el.path)) {
-            this.setState({ preview: el });
-        } else {
-            alert("Brak podglądu do tego rodzaju plików");
-        }
+        this.handleViewRequest(index);
     }
 
     public handleMoveFile(moveEvent) {
@@ -222,10 +239,35 @@ class FileList extends React.Component<IFileList, any> {
         return path.match(/.(jpg|jpeg|png|gif)$/i);
     }
 
+    public handleViewRequest = (index) => {
+        const el = this.props.value[index];
+        el.path = parsePath(this.props.downloadConnector(el));
+
+        console.log(el);
+
+        let viewer = null;
+        for (const element of this.viewerRegistry) {
+            if ((el.name && el.name.match(element.filter)) || el.path.match(element.filter)) {
+                viewer = element.viewer;
+                break;
+            }
+        }
+
+        if (viewer === null) {
+            _alert("Brak podglądu do tego rodzaju plików");
+            return;
+        }
+
+        this.setState({ preview: el, viewer });
+
+        return;
+    };
+
     public render() {
-        const { value, type, maxLength } = this.props;
+        const { value, type, maxLength, downloadConnector } = this.props;
         const { preview } = this.state;
         const deleted = this.state.filesDeleted;
+        const ViewerComponent = this.state.viewer;
 
         return (
             <div className="w-file-list">
@@ -248,7 +290,7 @@ class FileList extends React.Component<IFileList, any> {
                               <div className="w-file-list-element" key={el.name}>
                                   <div className="w-file-list-name">
                                       <a onClick={this.handleFileClick.bind(this, index)}>
-                                          <Icon name={this.isImage(el.path) ? "Photo2" : "TextDocument"} />
+                                          <Icon name={this.isImage(el.name) ? "Photo2" : "TextDocument"} />
                                           {el.name}
                                       </a>
                                       {!el.uploaded && (
@@ -258,7 +300,7 @@ class FileList extends React.Component<IFileList, any> {
                                       )}
                                   </div>
                                   <div className="w-file-list-size">
-                                      <a href={el.path} download={true}>
+                                      <a href={downloadConnector(el)} download={true}>
                                           <Icon name={"Download"} />
                                       </a>
                                   </div>
@@ -285,9 +327,7 @@ class FileList extends React.Component<IFileList, any> {
                                 useDragHandle={true}
                                 lockToContainerEdges={true}
                                 onDelete={this.handleFileRemove.bind(this)}
-                                onClick={(index) => {
-                                    this.setState({ preview: value[index] });
-                                }}
+                                onClick={this.handleViewRequest}
                                 itemStyle={this.props.itemStyle}
                             />
                         )}
@@ -302,9 +342,19 @@ class FileList extends React.Component<IFileList, any> {
                         onHide={() => this.setState({ preview: null })}
                         title={preview.name}
                         showHideLink={true}
+                        width={1000}
                     >
                         <CommandBar
                             items={[
+                                {
+                                    key: "f3",
+                                    label: "Drukuj",
+                                    icon: "Print",
+                                    onClick: () => {
+                                        // window.open(parsePath(this.props.downloadConnector(preview)));
+                                        printFile(preview);
+                                    },
+                                },
                                 {
                                     key: "f0",
                                     label: "Kopiuj link",
@@ -319,20 +369,20 @@ class FileList extends React.Component<IFileList, any> {
                                     label: "Otwórz w nowym oknie",
                                     icon: "OpenInNewWindow",
                                     onClick: () => {
-                                        window.open(baseUrl + this.clipurl.value);
+                                        window.open(parsePath(this.props.downloadConnector(preview)));
                                     },
                                 },
                             ]}
                         />
-                        <div style={{ opacity: 0 }}>
+                        <div style={{ opacity: 0, height: 1, overflow: "hidden" }}>
                             <input
                                 className={"form-control"}
                                 type="text"
-                                value={parsePath(preview.path)}
+                                value={parsePath(this.props.downloadConnector(preview))}
                                 ref={(el) => (this.clipurl = el)}
                             />
                         </div>
-                        <img style={{ maxWidth: 800, maxHeight: 600 }} src={parsePath(preview.path)} />
+                        <ViewerComponent file={preview} />
                     </Modal>
                 )}
             </div>

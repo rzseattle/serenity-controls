@@ -17,6 +17,7 @@ import {LoadingIndicator} from "../ctrl/LoadingIndicator";
 import {Select} from "../ctrl/Fields";
 
 import Hotkeys from "react-hot-keys";
+import {deepIsEqual} from "../lib/JSONTools";
 
 NProgress.configure({parent: ".w-panel-body"});
 
@@ -77,6 +78,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
         Comm.onStart.push(this.handleLoadStart);
         Comm.onFinish.push(this.handleLoadEnd);
     }
+
 
     public adjustToSize() {
         if (this.container) {
@@ -183,6 +185,8 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
     };
 
     public render() {
+
+
         return (
             <div className="w-panel-container" ref={(container) => (this.container = container)}>
                 {!this.state.onlyBody && (
