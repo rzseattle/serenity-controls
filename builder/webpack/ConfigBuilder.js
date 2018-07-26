@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 var { resolve, basename } = require("path");
 const fs = require("fs");
-//const HappyPack = require("happypack");
+const HappyPack = require("happypack");
 const path = require("path");
 
 
@@ -101,15 +101,17 @@ module.exports = function(input) {
         conf[i] = tmp[i];
     }
 
-    /*
+
     let threads = HappyPack.ThreadPool({size: 4});
 
     conf.plugins = conf.plugins.concat([
         new HappyPack({
             id: "sass",
             loaders: [
+                !input.PRODUCTION ? 'style-loader' : MiniCssExtractPlugin.loader,
                 {loader: "css-loader", query: {sourceMap: true}},
                 {loader: "resolve-url-loader", query: {sourceMap: true}},
+                //'postcss-loader',
                 {
                     loader: "sass-loader",
                     query: {
@@ -121,14 +123,9 @@ module.exports = function(input) {
 
             threadPool: threads,
         }),
-        new HappyPack({
-            id: "css",
-            loaders: ["style-loader!css-loader"],
-            threadPool: threads,
-        }),
     ]);
 
-    */
+
 
     if (false) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
@@ -199,6 +196,16 @@ module.exports = function(input) {
                 chunks: 'all'
             },*/
         };
+    }else{
+        //incremental build optymalization
+        conf.optimization = {
+            removeAvailableModules: false,
+            removeEmptyChunks: false,
+            splitChunks: false,
+        }
+        /*conf.output = {
+            pathinfo: false
+        }*/
     }
 
     conf.plugins.push(function() {

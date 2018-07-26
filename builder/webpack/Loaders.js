@@ -108,10 +108,9 @@ var getLoaders = function (production, input) {
                     ],
                 },
 
-                //{test: /\.css/, use: "happypack/loader?id=css"},
-
                 {
                     test: /\.(sa|sc|c)ss$/,
+                    //use: "happypack/loader?id=sass"
                     use: [
                         !production ? 'style-loader' : MiniCssExtractPlugin.loader,
                         {loader: "css-loader", query: {sourceMap: true}},
@@ -161,41 +160,6 @@ var getLoaders = function (production, input) {
             ],
 
         };
-
-    if(false) {
-        if (production) {
-
-            loaders.rules.push({
-                test: [/\.sass/, /\.scss/],
-                use: ExtractTextPlugin.extract("happypack/loader?id=sass"),
-            });
-
-
-        } else {
-
-
-            loaders.rules.push(
-                {
-                    test: /\.sass/,
-                    loaders: [
-                        "style-loader",
-                        {loader: "css-loader", query: {sourceMap: true}},
-                        {loader: "resolve-url-loader", query: {sourceMap: true}},
-                        {
-                            loader: "sass-loader",
-                            query: {
-                                sourceMap: true,
-                                includePaths: ["node_modules"],
-                            },
-                        },
-
-
-                    ],
-
-                },
-            );
-        }
-    }
 
     return loaders;
 
