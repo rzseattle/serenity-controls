@@ -12,3 +12,19 @@ export const printFile = ( file: IFile ) => {
     };
 
 };
+
+
+
+export const printFileFromURL = ( url: string ) => {
+
+    const pwin = window.open(url, "_blank");
+
+    pwin.onload = function() {
+        pwin.focus();
+        pwin.print();
+
+        setTimeout(pwin.close, 0);
+    };
+
+};
+
