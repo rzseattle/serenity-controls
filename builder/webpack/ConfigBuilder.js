@@ -35,7 +35,7 @@ module.exports = function(input) {
     }
 
     if (input.BROWSERS == null) {
-        input.BROWSERS = ["last 2 Chrome versions"].concat(input.PRODUCTION ? ["ie >= 11", "safari >= 8"] : []);
+        input.BROWSERS = ["last 2 Chrome versions"].concat( []);
     }
 
     var conf = {

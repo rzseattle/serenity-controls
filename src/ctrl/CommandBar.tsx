@@ -20,6 +20,7 @@ export class CommandBar extends React.Component<IProps, any> {
         items: [],
         rightItems: [],
     };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -35,25 +36,31 @@ export class CommandBar extends React.Component<IProps, any> {
         };
     }
 
-    handleSearchKeyDown(event) {
+    handleSearchChange = (event) => {
+        this.setState({ searchedText: event.target.value });
+        if (this.props.onSearchChange) {
+            this.props.onSearchChange(event.target.value);
+        }
+    };
+
+    handleSearchKeyDown = (event) => {
+        console.log(event.keyCode );
         if (event.keyCode == 13) {
             if (this.props.onSearch) {
                 this.props.onSearch(event.target.value);
             }
         }
-        this.setState({ searchedText: event.target.value });
-        if (this.props.onSearchChange) {
-            this.props.onSearchChange(event.target.value);
-        }
-    }
+
+    };
+
     render() {
         const zIndex = this.props.zIndex != undefined ? this.props.zIndex : 99;
         return (
-            <div className="w-command-bar" style={{zIndex: zIndex}}>
+            <div className="w-command-bar" style={{ zIndex: zIndex }}>
                 {this.props.isSearchBoxVisible && (
                     <div className="search-box">
-                        <i className="ms-Icon ms-Icon--Search " />
-                        <input type="text" onChange={this.handleSearchKeyDown.bind(this)} placeholder="Szukaj..." autoFocus />
+                        <i className="ms-Icon ms-Icon--Search "/>
+                        <input type="text" onChange={this.handleSearchKeyDown} onKeyUp={this.handleSearchKeyDown} placeholder="Szukaj..." autoFocus/>
                     </div>
                 )}
                 <div className="menu-bar">
@@ -98,13 +105,13 @@ export class CommandBar extends React.Component<IProps, any> {
                                                 }
                                             }}
                                         >
-                                            <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label} <i className={"ms-Icon ms-Icon--ChevronDown"} />
+                                            <i className={"ms-Icon ms-Icon--" + item.icon}/> {item.label} <i className={"ms-Icon ms-Icon--ChevronDown"}/>
                                         </button>
                                     );
                                 } else {
                                     return (
                                         <a key={item.key} onClick={item.onClick}>
-                                            <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label}
+                                            <i className={"ms-Icon ms-Icon--" + item.icon}/> {item.label}
                                         </a>
                                     );
                                 }
@@ -117,7 +124,7 @@ export class CommandBar extends React.Component<IProps, any> {
                             if (item !== null && item !== false) {
                                 return (
                                     <a key={item.key} onClick={item.onClick} className="ms-font-m">
-                                        <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label}
+                                        <i className={"ms-Icon ms-Icon--" + item.icon}/> {item.label}
                                     </a>
                                 );
                             }
