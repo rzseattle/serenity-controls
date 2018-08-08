@@ -44,7 +44,6 @@ export class CommandBar extends React.Component<IProps, any> {
     };
 
     handleSearchKeyDown = (event) => {
-        console.log(event.keyCode );
         if (event.keyCode == 13) {
             if (this.props.onSearch) {
                 this.props.onSearch(event.target.value);
@@ -60,7 +59,7 @@ export class CommandBar extends React.Component<IProps, any> {
                 {this.props.isSearchBoxVisible && (
                     <div className="search-box">
                         <i className="ms-Icon ms-Icon--Search "/>
-                        <input type="text" onChange={this.handleSearchKeyDown} onKeyUp={this.handleSearchKeyDown} placeholder="Szukaj..." autoFocus/>
+                        <input type="text" onChange={this.handleSearchChange} onKeyUp={this.handleSearchKeyDown} placeholder="Szukaj..." autoFocus/>
                     </div>
                 )}
                 <div className="menu-bar">
