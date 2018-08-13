@@ -63,7 +63,7 @@ class Tabs extends React.Component<ITabsProps, ITabsState> {
                                 <Icon name={child.props.icon}/>
                                 : null}
                             {child.props.title}
-                            {child.props.badge != undefined ? <div className="w-tabs-badge">({child.props.badge})</div> : null}
+                            {child.props.badge != undefined ? <div className="w-tabs-badge">{child.props.badge}</div> : null}
                             {child.props.onClose && <a onClick={(e) =>{
                                 e.stopPropagation();
                                 child.props.onClose(index);
