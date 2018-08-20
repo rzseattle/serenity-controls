@@ -283,6 +283,7 @@ interface ITextProps extends IFieldProps {
     type?: "text" | "password";
     value?: string;
     onKeyDown?: any;
+    charLimit?: any;
 }
 
 class Text extends React.Component<ITextProps, any> {
@@ -291,19 +292,31 @@ class Text extends React.Component<ITextProps, any> {
         editable: true,
         type: "text",
         autoFocus: false,
+        charLimit: false,
     };
 
     public handleOnChange(e) {
         if (this.props.onChange) {
-            this.props.onChange({
-                name: this.props.name,
-                type: "text",
-                value: e.target.value,
-                event: e,
-            });
+            if (this.props.charLimit) {
+                if (e.target.value.length <= this.props.charLimit) {
+                    this.props.onChange({
+                        name: this.props.name,
+                        type: "text",
+                        value: e.target.value,
+                        event: e,
+                    });
+                }
+            } else {
+                this.props.onChange({
+                    name: this.props.name,
+                    type: "text",
+                    value: e.target.value,
+                    event: e,
+                });
+            }
         }
     }
-
+    
     public componentDidMount() {
         // const $input_elem = ReactDOM.findDOMNode(this.refs.field);
         // Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
@@ -327,18 +340,28 @@ class Text extends React.Component<ITextProps, any> {
         }
 
         return (
-            <input
-                className={props.className}
-                name={props.name}
-                type={props.type}
-                value={props.value === null ? "" : props.value}
-                onChange={this.handleOnChange.bind(this)}
-                placeholder={props.placeholder}
-                disabled={props.disabled}
-                style={props.style}
-                autoFocus={props.autoFocus}
-                onKeyDown={props.onKeyDown}
-            />
+            <div>
+                <input
+                    className={props.className}
+                    name={props.name}
+                    type={props.type}
+                    value={props.value === null ? "" : props.value}
+                    onChange={this.handleOnChange.bind(this)}
+                    placeholder={props.placeholder}
+                    disabled={props.disabled}
+                    style={props.style}
+                    autoFocus={props.autoFocus}
+                    onKeyDown={props.onKeyDown}
+                />
+                {props.charLimit &&
+                    <div>
+                        <span style={{
+                            color: props.charLimit - props.value.length == 0 && "red",
+                            fontSize: "0.9em",
+                        }}>Pozostało znaków: <span>{props.charLimit - props.value.length}</span></span>
+                    </div>
+                }
+            </div>
         );
     }
 }
