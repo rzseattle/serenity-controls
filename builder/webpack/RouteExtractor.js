@@ -76,12 +76,14 @@ generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_T
                 delete conf[i]._debug;
             }
 
-            ComponentFileContentMapFilesX[i] = conf[i];
+
             if (fs.existsSync(sassPath)) {
                 SassFileContent += `.${name}\n`;
                 SassFileContent += `    @import "${sassPath.replace(/\\/g, "/")}";\n`;
             }
         }
+
+        ComponentFileContentMapFilesX[i] = conf[i];
     }
 
     if(production) {
