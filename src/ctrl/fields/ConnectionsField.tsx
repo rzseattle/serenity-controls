@@ -10,6 +10,9 @@ export interface IConnectionElement {
     value: string | number;
     label: string;
     icon: string;
+    backgroundColor?: string;
+    textColor?: string;
+    showIcon?: boolean;
     data?: any;
 }
 
@@ -54,7 +57,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
     static getDerivedStateFromProps(props: IConnectionsFieldProps, state: any) {
         let ret = {};
 
-        if (!deepIsEqual(props.items , state.props.items)) {
+        if (!deepIsEqual(props.items, state.props.items)) {
             ret = {
                 items: props.items,
             };
@@ -94,7 +97,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
         }
     };
 
-    public handleInputChange( e ) {
+    public handleInputChange(e) {
         const value = e.target.value;
         this.setState(
             {
@@ -277,6 +280,7 @@ interface IConnectionsFieldEntryProps {
     icon: string;
     label: string;
     value: string | number;
+    color?: string;
     onDelete: (value: string) => any;
 }
 
@@ -289,11 +293,11 @@ class ConnectionsFieldEntry extends React.Component<IConnectionsFieldEntryProps,
 
     public render() {
         return (
-            <div className="w-connections-field-entry">
-                <div className="prepend">
+            <div className="w-connections-field-entry" style={{backgroundColor: this.props.backgroundColor}}>
+                {this.props.showIcon !== false ? <div className="prepend">
                     <Icon name={this.props.icon}/>
-                </div>
-                <div className="content">{this.props.label}</div>
+                </div>:<div style={{width: 20}} />}
+                <div className="content" style={{color: this.props.textColor}}>{this.props.label}</div>
                 <div className="delete" onClick={this.handleDeleteClick.bind(this, this.props.value)}>
                     <Icon name="Cancel"/>
                 </div>
