@@ -83,7 +83,7 @@ module.exports = function(input) {
     } else {
         conf.mode = "production";
 
-        extractor(input.BASE_PATH, fileComponent, fileSass, true);
+        extractor(input.BASE_PATH, fileComponent, fileSass, false);
 
         const getProductionConf = require("./Production.js");
         tmp = getProductionConf(

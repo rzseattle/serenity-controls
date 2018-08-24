@@ -62,7 +62,7 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        if (PRODUCTION) {
+                        if (PRODUCTION && false) {
                             const result = await ViewsRoute[el.namespace + "_export"]();
                             Component = result[el.index].default;
                         } else {
@@ -77,7 +77,7 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        if (PRODUCTION) {
+                        if (PRODUCTION && false) {
                             const result = await ViewsRoute[el.namespace + "_export"]();
                             Component = result[el.index].default;
                         } else {
