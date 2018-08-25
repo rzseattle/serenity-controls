@@ -320,6 +320,8 @@ export class Portal extends React.Component<any, any> {
 
 interface IConfirmModalProps extends IModalProps {
     showCancelLing?: boolean;
+    primaryButton?: 'cancel' | 'ok';
+
 }
 
 class ConfirmModal extends React.Component<IConfirmModalProps, any> {
@@ -328,9 +330,10 @@ class ConfirmModal extends React.Component<IConfirmModalProps, any> {
     public promiseResolve: any;
     public static defaultProps: Partial<IConfirmModalProps> = {
         showCancelLing: true,
+        primaryButton: 'ok',
     };
 
-    constructor(props) {
+    constructor(props: IConfirmModalProps) {
         super(props);
 
     }
@@ -352,10 +355,10 @@ class ConfirmModal extends React.Component<IConfirmModalProps, any> {
             <Modal {...modalProps} className="w-modal-confirm" show={true}>
                 <div style={{padding: 15, borderTop: "solid #0078d7 10px"}}>{this.props.children}</div>
                 <div style={{padding: 10, paddingTop: 0, textAlign: "right"}}>
-                    <button onClick={this.handleConfirm} className="btn btn-primary">
+                    <button onClick={this.handleConfirm} className={"btn btn-" + (this.props.primaryButton == "ok"?"primary":"default")}>
                         ok
                     </button>
-                    {this.props.showCancelLing && <button onClick={this.handleAbort} className="btn btn-default">
+                    {this.props.showCancelLing && <button onClick={this.handleAbort} className={"btn btn-" + (this.props.primaryButton == "cancel"?"primary":"default")}>
                         anuluj
                     </button>}
                 </div>
