@@ -51,3 +51,22 @@ function x(clone, obj) {
         clone[i] = (typeof obj[i] == "object" && obj[i] !== null) ? x(obj[i].constructor(), obj[i]) : obj[i];
     return clone;
 }
+
+
+
+export function deepExtend(target, source) {
+    Object.keys(source).forEach(function(key) {
+        var value = source[key];
+        var dest = target[key];
+        var sourceType = typeof value;
+        var destType = typeof target[key];
+
+        if (Array.isArray(value) && Array.isArray(dest))
+            target[key] = dest.concat(value);
+        else if (sourceType === destType && sourceType === 'object')
+            deepExtend(dest, value);
+        else
+            target[key] = value;
+    });
+    return target;
+}

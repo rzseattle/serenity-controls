@@ -5,6 +5,8 @@ import {IFieldChangeEvent, IFieldProps} from "../fields/Interfaces";
 import {PositionCalculator} from "../../lib/PositionCalculator";
 import {LoadingIndicator} from "../LoadingIndicator";
 import {deepIsEqual} from "../../lib/JSONTools";
+import i18n from "frontend/src/utils/I18n";
+import {Trans} from "react-i18next";
 
 export interface IConnectionElement {
     value: string | number;
@@ -32,7 +34,7 @@ export interface IConnectionsFieldProps extends IFieldProps {
 
 export class ConnectionsField extends React.Component<IConnectionsFieldProps, any> {
     public static defaultProps: Partial<IConnectionsFieldProps> = {
-        placeholder: __("Dodaj"),
+
         maxItems: 10000,
         items: null
     };
@@ -221,7 +223,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                     <ConnectionsFieldEntry key={el.value} {...el} onDelete={this.handleElementDelete.bind(this)}/>
                 ))}
 
-                {!this.props.editable && this.state.items.length == 0 && <>{__("Brak powiązań")}</>}
+                {!this.props.editable && this.state.items.length == 0 && <Trans  i18nKey="frontend:noConnections" />}
 
                 <div
                     className="w-connections-field-input"
@@ -233,7 +235,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, an
                         onFocus={this.handleInputFocus.bind(this)}
                         onBlur={this.handleInputBlur.bind(this)}
                         onKeyDown={this.handleInputKeyDown.bind(this)}
-                        placeholder={this.props.placeholder}
+                        placeholder={this.props.placeholder ? this.props.placeholder : i18n.t("frontend:add")}
                         value={this.state.search}
                         onChange={this.handleInputChange.bind(this)}
                         autoComplete="off"
@@ -296,7 +298,7 @@ class ConnectionsFieldEntry extends React.Component<IConnectionsFieldEntryProps,
             <div className="w-connections-field-entry" style={{backgroundColor: this.props.backgroundColor}}>
                 {this.props.showIcon !== false ? <div className="prepend">
                     <Icon name={this.props.icon}/>
-                </div>:<div style={{width: 20}} />}
+                </div> : <div style={{width: 20}}/>}
                 <div className="content" style={{color: this.props.textColor}}>{this.props.label}</div>
                 <div className="delete" onClick={this.handleDeleteClick.bind(this, this.props.value)}>
                     <Icon name="Cancel"/>

@@ -1,14 +1,15 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ICommand } from "../lib/ICommand";
+import {ICommand} from "../lib/ICommand";
 import BackOfficePanel from "../backoffice/BackOfficePanel";
+import i18n from "frontend/src/utils/I18n";
 
 interface IProps {
     isSearchBoxVisible?: boolean;
     searchPlaceholderText?: string;
-    onSearch?: { (value: string): any };
-    onSearchChange?: { (value: string): any };
-    items: Array<ICommand>;
+    onSearch?: (value: string) => any;
+    onSearchChange?: (value: string) => any;
+    items: ICommand[];
     rightItems?: Array<ICommand | null>;
     zIndex?: number;
 }
@@ -16,7 +17,7 @@ interface IProps {
 export class CommandBar extends React.Component<IProps, any> {
     public static defaultProps: Partial<IProps> = {
         isSearchBoxVisible: false,
-        searchPlaceholderText: __("Szukaj"),
+        searchPlaceholderText: null,
         items: [],
         rightItems: [],
     };
@@ -36,14 +37,14 @@ export class CommandBar extends React.Component<IProps, any> {
         };
     }
 
-    handleSearchChange = (event) => {
-        this.setState({ searchedText: event.target.value });
+    public handleSearchChange = (event) => {
+        this.setState({searchedText: event.target.value});
         if (this.props.onSearchChange) {
             this.props.onSearchChange(event.target.value);
         }
     };
 
-    handleSearchKeyDown = (event) => {
+    public handleSearchKeyDown = (event) => {
         if (event.keyCode == 13) {
             if (this.props.onSearch) {
                 this.props.onSearch(event.target.value);
@@ -52,14 +53,20 @@ export class CommandBar extends React.Component<IProps, any> {
 
     };
 
-    render() {
+    public render() {
         const zIndex = this.props.zIndex != undefined ? this.props.zIndex : 99;
         return (
-            <div className="w-command-bar" style={{ zIndex: zIndex }}>
+            <div className="w-command-bar" style={{zIndex}}>
                 {this.props.isSearchBoxVisible && (
                     <div className="search-box">
                         <i className="ms-Icon ms-Icon--Search "/>
-                        <input type="text" onChange={this.handleSearchChange} onKeyUp={this.handleSearchKeyDown} placeholder="Szukaj..." autoFocus/>
+                        <input
+                            type="text"
+                            onChange={this.handleSearchChange}
+                            onKeyUp={this.handleSearchKeyDown}
+                            placeholder={this.props.searchPlaceholderText ? this.props.searchPlaceholderText : i18n.t("frontend:search") + "..."}
+                            autoFocus={true}
+                        />
                     </div>
                 )}
                 <div className="menu-bar">
@@ -67,8 +74,8 @@ export class CommandBar extends React.Component<IProps, any> {
                         {this.props.items.map((item: ICommand | false, index: number) => {
                             if (item !== null && item !== false) {
                                 if (item.subItems !== undefined) {
-                                    let dropdownHeight = "100px";
-                                    let dropdownVisible = "1";
+                                    const dropdownHeight = "100px";
+                                    const dropdownVisible = "1";
                                     return (
                                         <button
                                             className={"bar-dropdown"}
@@ -132,7 +139,7 @@ export class CommandBar extends React.Component<IProps, any> {
                     </div>
                     <div
                         className={"dropdown-layer"}
-                        style={{ display: this.state.dropdownLayerVisible, height: this.state.dropdownLayerHeight }}
+                        style={{display: this.state.dropdownLayerVisible, height: this.state.dropdownLayerHeight}}
                         onClick={() => {
                             this.setState({
                                 dropdownLayerVisible: "none",
@@ -144,7 +151,7 @@ export class CommandBar extends React.Component<IProps, any> {
                     />
 
                     {this.state.dropdownShowed == true && (
-                        <div className={"bar-dropdown-list"} style={{ maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition }}>
+                        <div className={"bar-dropdown-list"} style={{maxHeight: this.state.dropdownHeight, opacity: this.state.dropdownVisible, left: this.state.dropdownPosition}}>
                             {this.state.dropdownElementList.map((element) => {
                                 if (element == null) {
                                     return null;

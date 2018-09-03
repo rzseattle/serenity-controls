@@ -12,7 +12,7 @@ import { printFile } from "../utils/FilePrinter";
 import {LoadingIndicator} from "./LoadingIndicator";
 import {ImageViewer} from "./files/viewers/ImageViewer";
 import {PDFViewer} from "./files/viewers/PDFViewer";
-
+import i18n from "frontend/src/utils/I18n";
 let baseUrl = "";
 if (window.location.host.indexOf("esotiq") != -1) {
     baseUrl = "https://static.esotiq.com/";
@@ -130,13 +130,12 @@ export interface IFileViewerProps {
     file: IFile;
 }
 
-
 class FileList extends React.Component<IFileList, any> {
     public viewerRegistry = [];
     public static defaultProps: Partial<IFileList> = {
         type: "filelist",
         maxLength: null,
-        buttonTitle: __("Dodaj"),
+
         itemStyle: {},
         downloadConnector: (file: IFile) => file.path,
     };
@@ -243,7 +242,6 @@ class FileList extends React.Component<IFileList, any> {
         const el = this.props.value[index];
         el.path = parsePath(this.props.downloadConnector(el));
 
-        console.log(el);
 
         let viewer = null;
         for (const element of this.viewerRegistry) {
@@ -278,7 +276,7 @@ class FileList extends React.Component<IFileList, any> {
                         onDrop={this.handleFileAdd.bind(this)}
                     >
                         <span>
-                            <Icon name={"Add"} /> {this.props.buttonTitle}{" "}
+                            <Icon name={"Add"} /> {this.props.buttonTitle ? this.props.buttonTitle : i18n.t("frontend:add")}{" "}
                         </span>
                     </Dropzone>
                 )}

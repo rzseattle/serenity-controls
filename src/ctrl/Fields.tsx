@@ -9,6 +9,8 @@ import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
 import {Portal} from "./Overlays";
 import {PositionCalculator} from "../lib/PositionCalculator";
 import Hotkeys from "react-hot-keys";
+import i18n from "frontend/src/utils/I18n";
+
 
 const checkIncludes = (options, value) => {
     const element = options.filter((element) => {
@@ -176,7 +178,6 @@ class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
 
-
         this.setState({
             searchedTxt: e.target.value,
             highlightedIndex: e.target.value.length > 0 ? 0 : -1,
@@ -228,7 +229,7 @@ class Select extends React.Component<ISelectProps, ISelectState> {
                         options[selectedIndex].label
                     ) : (
                         <div className={"w-select-placeholder"}>
-                            {this.props.placeholder ? this.props.placeholder : __("Wybierz")}
+                            {this.props.placeholder ? this.props.placeholder : i18n.t("frontend:fields.select.choose")}
                         </div>
                     )}
                     <Icon name={"ChevronDown"}/>
@@ -324,7 +325,7 @@ class Text extends React.Component<ITextProps, any> {
             }
         }
     }
-    
+
     public componentDidMount() {
         // const $input_elem = ReactDOM.findDOMNode(this.refs.field);
         // Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
@@ -362,12 +363,12 @@ class Text extends React.Component<ITextProps, any> {
                     onKeyDown={props.onKeyDown}
                 />
                 {props.charLimit &&
-                    <div>
+                <div>
                         <span style={{
                             color: props.charLimit - props.value.length == 0 && "red",
                             fontSize: "0.9em",
                         }}>Pozostało znaków: <span>{props.charLimit - props.value.length}</span></span>
-                    </div>
+                </div>
                 }
             </div>
         );
@@ -804,7 +805,7 @@ interface IDateProps extends IFieldProps {
 class Date extends React.Component<IDateProps, any> {
     public static defaultProps = {
         editable: true,
-        placeholder: __("Podaj datę"),
+
     };
 
     constructor(props) {
@@ -895,7 +896,7 @@ class Date extends React.Component<IDateProps, any> {
                     onFocusChange={({focused}) => this.setState({focused})}
                     isOutsideRange={() => false}
                     disabled={props.disabled}
-                    placeholder={props.placeholder}
+                    placeholder={props.placeholder ? props.placeholder : i18n.t("frontend:fields.date.fillDate")}
                 />
             </div>
         );

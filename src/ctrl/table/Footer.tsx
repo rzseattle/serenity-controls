@@ -1,5 +1,6 @@
 import * as React from "react";
 import Icon from "frontend/src/ctrl/Icon";
+import { Trans} from "react-i18next";
 
 export default class Footer extends React.Component<any, any> {
     constructor(props) {
@@ -69,7 +70,7 @@ export default class Footer extends React.Component<any, any> {
                     </div>
 
                     <div className="w-table-footer-onpage-select">
-                        <span>{__("Na stronie")}: </span>
+                        <span><Trans ns="frontend" i18nKey="table.footer.onPage">Na stronie</Trans>: </span>
                         <select value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
                             {[10, 25, 50, 100, 500].map((x, i) => (
                                 <option key={"onpageval" + x} value={x}>

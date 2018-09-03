@@ -17,7 +17,10 @@ import {LoadingIndicator} from "../ctrl/LoadingIndicator";
 import {Select} from "../ctrl/Fields";
 
 import Hotkeys from "react-hot-keys";
-import {deepIsEqual} from "../lib/JSONTools";
+
+import i18n from "frontend/src/utils/I18n";
+import {configGet} from "frontend/src/lib/Config";
+import { Trans} from "react-i18next";
 
 NProgress.configure({parent: ".w-panel-body"});
 
@@ -78,7 +81,6 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
         Comm.onStart.push(this.handleLoadStart);
         Comm.onFinish.push(this.handleLoadEnd);
     }
-
 
     public adjustToSize() {
         if (this.container) {
@@ -186,7 +188,6 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
 
     public render() {
 
-
         return (
             <div className="w-panel-container" ref={(container) => (this.container = container)}>
                 {!this.state.onlyBody && (
@@ -207,6 +208,16 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                             </div>
                             {this.props.user.login}
                         </div>
+                        <div className="app-lang-change">
+                            {configGet("translations.languages").map( (lang) => <a
+                                key={lang}
+                                onClick={() => {
+                                    i18n.changeLanguage(lang, () => this.forceUpdate());
+                                }}>{lang}
+                            </a>)}
+
+                        </div>
+
                         {false && (
                             <div
                                 className={
@@ -240,7 +251,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                             </div>
                             <div style={{padding: 10}}>
                                 <a href={Comm.basePath + "/access/logout"}>
-                                    <Icon name="SignOut"/> {__("Wyloguj się")}
+                                    <Icon name="SignOut"/> <Trans ns="frontend" i18nKey="logout" />
                                 </a>
                             </div>
                         </Modal>
@@ -261,7 +272,7 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
                         {this.state.openedWindows.map((el, index) => {
                             return (
                                 <Modal key={index} {...el.modalProps} onHide={() => {
-                                    if(el.modalProps.onHide !== undefined){
+                                    if (el.modalProps.onHide !== undefined) {
                                         el.modalProps.onHide();
                                     }
                                     this.handleCloseWindow(el.route);

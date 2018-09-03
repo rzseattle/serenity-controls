@@ -2,6 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Modal} from "frontend/src/ctrl/Overlays";
 import {CommandBar} from "frontend/src/ctrl/CommandBar";
+import i18n from "frontend/src/utils/I18n";
 
 interface IPrintContainerProps {
     title?: string;
@@ -12,9 +13,6 @@ interface IPrintContainerProps {
 export class PrintContainer extends React.Component<IPrintContainerProps, any> {
     private iframe: HTMLIFrameElement;
 
-    public static defaultProps: Partial<IPrintContainerProps> = {
-        title: __("Podgląd wydruku"),
-    };
 
     constructor(props) {
         super(props);
@@ -47,17 +45,17 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
             <Modal
                 icon={"Search"}
                 show={true}
-                title={this.props.title}
+                title={this.props.title ? this.props.title : i18n.t("frontend:printContainer.printPreview")}
                 showHideLink={true}
                 onHide={this.props.onHide}
             >
                 <div className="w-print-container-modal">
                     <CommandBar items={[
-                        {key: "f1", label: __("Drukuj"), icon: "Print", onClick: this.handlePrint},
+                        {key: "f1", label: i18n.t("frontend:print"), icon: "Print", onClick: this.handlePrint},
                         /*{key: "f1", label: "Pobierz jako PDF", icon: "PDF"}*/
                     ]}/>
 
-                    <iframe ref={(el) => this.iframe = el} />
+                    <iframe ref={(el) => this.iframe = el}/>
                     {this.state.ready && <MyWindowPortal iframe={this.iframe}>
                         {this.props.children}
                     </MyWindowPortal>}

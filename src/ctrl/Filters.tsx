@@ -5,6 +5,9 @@ import {BConnectionsField} from "../layout/BootstrapForm";
 import {Switch} from "./Fields";
 import {Icon} from "./Icon";
 import {LoadingIndicator} from "./LoadingIndicator";
+import {fI18n} from "../utils/I18n";
+import {Trans} from "react-i18next";
+
 
 let locale;
 let datePicker;
@@ -62,7 +65,7 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
             import("react-dates"),
             import("react-dates/lib/css/_datepicker.css"),
 
-        ]).then(([ moment, locale, datePickerImp]) => {
+        ]).then(([moment, locale, datePickerImp]) => {
             moment = moment.default;
             datePicker = datePickerImp.default;
 
@@ -108,11 +111,11 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
         } else if (this.state.choiceType == "exists") {
             condition = ">";
             applyVal = "0000-00-00 00:00:00";
-            label = __("Data ustalona");
+            label = fI18n.t("frontend:filters.date.dateIsSet");
         } else if (this.state.choiceType == "not-exists") {
             condition = "IN";
             applyVal = ["0000-00-00 00:00:00", null, ""];
-            label = __("Data nie ustalona");
+            label = fI18n.t("frontend:filters.date.dateIsNotSet");
         }
 
         return {
@@ -216,7 +219,7 @@ class DateFilter extends AbstractFilter implements IFilterComponent {
                 </div>
 
                 {this.props.showApply && <div>
-                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
+                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>{fI18n.t("frontend:filters.apply")}</button>
                 </div>}
             </div>
 
@@ -256,7 +259,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
             value = [];
         }
 
-        this.setState(  {
+        this.setState({
             value,
         });
 
@@ -269,14 +272,14 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
     public getValue() {
         const select = ReactDOM.findDOMNode(this.select);
 
-        let values = [].filter.call(select.options, function(o) {
+        let values = [].filter.call(select.options, function (o) {
             return o.selected;
-        }).map(function(o) {
+        }).map(function (o) {
             return o.value;
         });
-        const labels = [].filter.call(select.options, function(o) {
+        const labels = [].filter.call(select.options, function (o) {
             return o.selected;
-        }).map(function(o) {
+        }).map(function (o) {
             return o.innerHTML;
         });
 
@@ -332,7 +335,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
                     value={this.state.value}
                 >
                     {this.props.config.multiselect ? "" :
-                        <option key={"-1default"} value="">{__("Wybierz opcję")}</option>
+                        <option key={"-1default"} value=""><Trans i18nKey="frontend:filters.select.chooseOption"/></option>
                     }
                     {content.map((el) =>
                         <option
@@ -352,7 +355,7 @@ class SelectFilter extends AbstractFilter implements IFilterComponent {
                     )}
                 </select>
                 {this.props.showApply && <div>
-                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
+                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>{fI18n.t("frontend:filters.apply")}</button>
                 </div>}
                 {/*<pre>{JSON.stringify(this.props.content, null, 2)} {Object.keys(this.props.content).length}</pre>*/}
             </div>
@@ -408,7 +411,7 @@ class SwitchFilter extends AbstractFilter implements IFilterComponent {
             <div className="w-filter w-filter-switch" ref="body">
                 <Switch options={this.props.config.content} value={this.state.value} onChange={(e) => this.setState({value: e.value}, this.handleChange)}/>
                 {this.props.showApply && <div>
-                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
+                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>{fI18n.t("frontend:filters.apply")}</button>
                 </div>}
                 {/*<pre>{JSON.stringify(this.props, null, 2)}</pre>*/}
             </div>
@@ -479,14 +482,14 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
 
     public render() {
         const options = {
-            "LIKE": __("zawiera"),
-            "==": __("równa"),
-            "<": __("mniejsza"),
-            "<=": __("mniejsza równa"),
-            ">": __("większa"),
-            ">=": __("większa równia"),
-            "<x<": __("pomiędzy"),
-            "IN": __("wiele wartości ( rozdziel enterem )"),
+            "LIKE": fI18n.t("frontend:filters.numeric.like"),
+            "==": fI18n.t("frontend:filters.numeric.equal"),
+            "<": fI18n.t("frontend:filters.numeric.smaller"),
+            "<=": fI18n.t("frontend:filters.numeric.smallerEqual"),
+            ">": fI18n.t("frontend:filters.numeric.greater"),
+            ">=": fI18n.t("frontend:filters.numeric.greaterEqual"),
+            "<x<": fI18n.t("frontend:filters.numeric.between"),
+            "IN": fI18n.t("frontend:filters.numeric.in"),
         };
 
         const {config} = this.props;
@@ -517,7 +520,7 @@ class NumericFilter extends AbstractFilter implements IFilterComponent {
                     )}
                 </select>
                 {this.props.showApply && <div>
-                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
+                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>{fI18n.t("frontend:filters.apply")}</button>
                 </div>}
                 {/*<pre>{JSON.stringify(this.props, null, 2)}</pre>*/}
             </div>
@@ -586,7 +589,7 @@ class ConnectionFilter extends AbstractFilter implements IFilterComponent {
                 />
 
                 {this.props.showApply && <div>
-                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
+                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>{fI18n.t("frontend:filters.apply")}</button>
                 </div>}
             </div>
 
@@ -609,14 +612,13 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
             searchText: props.value ? props.value.value : "",
         };
         this.options = {
-            "LIKE": __("zawiera"),
-            "==": __("równy"),
-            "!=": __("różne"),
-            "NOT LIKE": __("nie zawiera"),
-            "^%": __("zaczyna się od"),
-            "%$": __("kończy się na"),
+            "LIKE": fI18n.t("frontend:filters.text.like"),
+            "==": fI18n.t("frontend:filters.text.equals"),
+            "!=": fI18n.t("frontend:filters.text.differentThan"),
+            "NOT LIKE": fI18n.t("frontend:filters.text.notLike"),
+            "^%": fI18n.t("frontend:filters.text.startsWith"),
+            "%$": fI18n.t("frontend:filters.text.endsWith"),
         };
-
     }
 
     public componentWillReceiveProps(nextProps) {
@@ -699,7 +701,7 @@ class TextFilter extends AbstractFilter implements IFilterComponent {
                 </select>}
 
                 {this.props.showApply && <div>
-                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>Zastosuj</button>
+                    <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>{fI18n.t("frontend:filters.apply")}</button>
                 </div>}
             </div>
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import i18n from "frontend/src/utils/I18n";
 interface ICommentsProps {
     children: any;
     commentAdded: { (comment: string): boolean }
@@ -50,15 +50,15 @@ class Comments extends React.Component<ICommentsProps, any> {
                 </div>
                 <textarea
 
-                    placeholder={__("Dodaj komentarz")}
+                    placeholder={i18n.t("frontend:comments.addComment")}
                     rows={this.state.rows}
                     ref={(el) => this.textarea = el} style={{width: '100%'}}
                     onFocus={this.handleTextareaFocus.bind(this)}
                     onChange={this.handleRowCalc.bind(this)}
                 />
                 {this.state.addMode && <div className="clearfix">
-                    <a className="btn btn-primary pull-right" onClick={this.handleAddComment.bind(this)}>{__("Dodaj")}</a>
-                    <a className="btn pull-right" onClick={this.handleCommentCancel.bind(this)}>{__("Anuluj")}</a>
+                    <a className="btn btn-primary pull-right" onClick={this.handleAddComment.bind(this)}>{i18n.t("frontend:add")}</a>
+                    <a className="btn pull-right" onClick={this.handleCommentCancel.bind(this)}>{i18n.t("frontend:cancel")}</a>
                 </div>}
 
             </div>
