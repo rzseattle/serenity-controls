@@ -76,7 +76,6 @@
     "file-loader": "^1.1.5",
     "happypack": "^5.0.0-beta.3",
     "hard-source-webpack-plugin": "^0.12.0",
-    "i18n-webpack-plugin": "^1.0.0",
     "image-webpack-loader": "^4.0.0",
     "mini-css-extract-plugin": "^0.4.1",
     "mkdirp": "^0.5.1",

@@ -208,7 +208,7 @@ module.exports = function(input) {
         }*/
     }
 
-    conf.plugins.push(function() {
+   /* conf.plugins.push(function() {
         this.plugin("done", function(stats) {
             var stats = stats.toJson();
             //console.log(stats.warnings);
@@ -236,7 +236,7 @@ module.exports = function(input) {
 
             return true;
         });
-    });
+    });*/
 
     return conf;
 };

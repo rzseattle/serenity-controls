@@ -1,13 +1,4 @@
-declare var LANGUAGE: string;
-
-export let langs: any = {};
-
+import {fI18n} from "./I18n";
 export const translate = (str: string): string => {
-    if (langs[LANGUAGE] != undefined) {
-        if (langs[LANGUAGE][str] != undefined) {
-            return langs[LANGUAGE][str];
-        }
-    }
-
-    return str;
+    return fI18n.t(str);
 };
