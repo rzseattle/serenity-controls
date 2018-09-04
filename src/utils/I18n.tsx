@@ -39,7 +39,7 @@ const instance = i18n
     .use(reactI18nextModule)
     .init({
         fallbackLng: configGet("translations.defaultLanguage"),
-        debug: true,
+        debug: !PRODUCTION,
         saveMissing: true,
         ns: [
             "translation",
