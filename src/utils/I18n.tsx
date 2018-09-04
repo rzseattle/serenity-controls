@@ -5,6 +5,8 @@ import {reactI18nextModule} from "react-i18next";
 import {configGet} from "frontend/src/lib/Config";
 import Comm from "../lib/Comm";
 
+declare var PRODUCTION: any;
+
 const XHR = {
     type: "backend",
     init(services, backendOptions, i18nextOptions) {
@@ -44,10 +46,12 @@ const instance = i18n
             "frontend",
         ],
         missingKeyHandler(lng, ns, key, fallbackValue) {
-            console.log("to jest key: " + key);
-            console.log("to jest wartość: " + fallbackValue);
-            console.log("to jest ns: " + ns);
-            console.log("to jest lang: " + lng);
+            if(!PRODUCTION) {
+                console.log("to jest key: " + key);
+                console.log("to jest wartość: " + fallbackValue);
+                console.log("to jest ns: " + ns);
+                console.log("to jest lang: " + lng);
+            }
         },
         react: {
             wait: true,
