@@ -63,7 +63,7 @@ var getLoaders = function (production, input) {
                         {
                             loader: "awesome-typescript-loader", query: {
                                 configFileName: path.resolve(__dirname, "./tsconfig.json"),
-                                cacheDirectory: "node_modules/.cache/awcache",
+                                cacheDirectory: input.NODE_CACHE_DIR + "/awcache",
                                 useCache: true,
                                 noImplicitAny: true,
                                 transpileOnly: true,

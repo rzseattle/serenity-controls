@@ -22,7 +22,8 @@ let configDefaults = {
     PORT: 3000,
     USE_FRAMEWORK_OBSERVERS: true,
     LANGUAGE: "pl",
-    BROWSERS: null
+    BROWSERS: null,
+    NODE_CACHE_DIR: "node_modules/.cache",
 };
 
 module.exports = function(input) {
