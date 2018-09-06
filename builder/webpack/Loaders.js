@@ -22,7 +22,7 @@ var getLoaders = function (production, input) {
                                 extends: require("path").join(__dirname, "/.babelrc"),
                             },*/
                             options: {
-                                cacheDirectory: true,
+                                cacheDirectory: input.NODE_CACHE_DIR + "/babelcache",
                                 retainLines: true,
                                 exclude: /(node_modules|bower_components)/,
                                 presets: [
