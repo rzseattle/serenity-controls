@@ -9,21 +9,31 @@ const extractor = function (basePath, targetComponentFile, targetSassFile, produ
     console.log("Route check ...");
     exec(command, {cwd: basePath}, function (error, stdout, stderr) {
         if (!error) {
-            let route = JSON.parse(stdout);
-            const routeSimplyfied = Object.entries(route).map(([index, el]) => [
-                el._controller,
-                el._method,
-                el._routePath,
-                el._package,
-                el._debug.templateExists,
-                el._debug.componentExists
-            ]);
-            const toEqual = JSON.stringify(routeSimplyfied);
-            if (toEqual != routeEqualizer) {
-                routeEqualizer = toEqual;
-                generateRouteAssetsFromJson(route, targetComponentFile, targetSassFile, basePath, production);
-            } else {
-                console.log("No changes");
+
+            try {
+                let route = JSON.parse(stdout);
+                const routeSimplyfied = Object.entries(route).map(([index, el]) => [
+                    el._controller,
+                    el._method,
+                    el._routePath,
+                    el._package,
+                    el._debug.templateExists,
+                    el._debug.componentExists
+                ]);
+                const toEqual = JSON.stringify(routeSimplyfied);
+                if (toEqual != routeEqualizer) {
+                    routeEqualizer = toEqual;
+                    generateRouteAssetsFromJson(route, targetComponentFile, targetSassFile, basePath, production);
+                } else {
+                    console.log("No changes");
+                }
+            }catch (e) {
+                console.log("Routes extract problem");
+                console.log(stdout);
+                console.log("------------------");
+                console.log(basePath+"/"+command);
+
+                throw "Can't extract routes";
             }
         } else {
             console.log("not worked");
