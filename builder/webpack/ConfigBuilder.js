@@ -141,7 +141,7 @@ module.exports = function (input) {
                 environmentHash: {
                     root: process.cwd(),
                     directories: [],
-                    files: ["package-lock.json", "yarn.lock"]
+                    files: [ "yarn.lock"]
                 }
             })
         );
