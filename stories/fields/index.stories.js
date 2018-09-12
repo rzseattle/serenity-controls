@@ -6,16 +6,11 @@ import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar} 
 import {Text, Switch, Select, CheckboxGroup, Textarea, Date, Wysiwyg} from '../../src/ctrl/Fields'
 
 
-const formImport = `
-        ~~~js
-        import { Text, Switch, Select, CheckboxGroup, Textarea } from "frontend/lib/ctrl/Fields"
-        ~~~
-        `;
+
 
 storiesOf('Fields', module)
-    .addWithInfo(
+    .add(
         'All fields',
-        'Tutaj opis',
         () => (
             <Panel>
                 <table className="storyTable">

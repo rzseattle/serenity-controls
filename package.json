@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server -d ",
     "build": "webpack --env.production --display-error-details",
-    "storybook": "start-storybook -p 6006 ",
+    "storybook": "start-storybook -p 6006",
     "server": "nodemon ./stories/server.js",
     "build-storybook": "build-storybook"
   },
@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0-beta.52",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.52",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.52",
@@ -30,9 +31,7 @@
     "@types/react-i18next": "^7.8.2",
     "@types/react-notification-system": "^0.2.35",
     "awesome-typescript-loader": "^5.0.0",
-    "babel-cli": "^7.0.0-beta.3",
     "babel-loader": "^8.0.0-beta.2",
-    "babel-plugin-transform-class-properties": "^7.0.0-beta.3",
     "babel-plugin-transform-react-constant-elements": "^6.23.0",
     "babel-plugin-transform-react-inline-elements": "^6.22.0",
     "babel-polyfill": "^6.26.0",
@@ -50,7 +49,7 @@
     "happypack": "^5.0.0-beta.3",
     "hard-source-webpack-plugin": "^0.12.0",
     "hotkeys-js": "^3.3.5",
-    "i18next": "^11.6.0",
+    "i18next": "^11.9.0",
     "image-webpack-loader": "^4.0.0",
     "inputmask": "^4.0.0",
     "mini-css-extract-plugin": "^0.4.1",
@@ -85,16 +84,20 @@
     "url-loader": "^1.0.1",
     "uuid": "^3.1.0",
     "webpack": "^4.15.1",
-
     "webpack-cli": "^3.0.1",
     "webpack-dev-server": "^3.1.1"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^3.4.2",
-    "@storybook/addon-info": "^3.4.2",
-    "@storybook/react": "^3.4.2",
+    "@storybook/addon-actions": "^4.0.0-alpha.21",
+    "@storybook/addon-info": "^4.0.0-alpha.21",
+    "@storybook/addon-links": "^4.0.0-alpha.21",
+    "@storybook/addon-storysource": "^4.0.0-alpha.21",
+    "@storybook/addons": "^4.0.0-alpha.21",
+    "@storybook/react": "^4.0.0-alpha.21",
     "chokidar": "^2.0.0",
     "mkdirp": "^0.5.1",
-    "webpack-bundle-analyzer": "^3.0.1"
+    "react-docgen-typescript-loader": "^2.2.0",
+    "string-replace-loader": "^2.1.1",
+    "webpack-bundle-analyzer": "^3.0.2"
   }
 }

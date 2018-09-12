@@ -1,17 +1,7 @@
 import React from 'react';
 
 
-require('font-awesome-webpack');
 require('./Stories.sass');
-
-
-
-
-
-
-
-
-
 require('./fields/')
 require('./form/')
 require('./panel/')
