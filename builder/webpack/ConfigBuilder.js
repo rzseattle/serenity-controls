@@ -1,12 +1,12 @@
 const webpack = require("webpack");
-var { resolve, basename } = require("path");
+var {resolve, basename} = require("path");
 const fs = require("fs");
 const HappyPack = require("happypack");
 const path = require("path");
 
 
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const { CheckerPlugin } = require("awesome-typescript-loader");
+const {CheckerPlugin} = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
@@ -26,7 +26,7 @@ let configDefaults = {
     NODE_CACHE_DIR: "node_modules/.cache",
 };
 
-module.exports = function(input) {
+module.exports = function (input) {
     input = Object.assign(configDefaults, input);
 
     if (input.PRODUCTION) {
@@ -36,7 +36,7 @@ module.exports = function(input) {
     }
 
     if (input.BROWSERS == null) {
-        input.BROWSERS = ["last 2 Chrome versions"].concat( []);
+        input.BROWSERS = ["last 2 Chrome versions"].concat([]);
     }
 
     var conf = {
@@ -127,20 +127,16 @@ module.exports = function(input) {
     ]);
 
 
-
-    if (false) {
+    if (input.PRODUCTION) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({
                 // Either an absolute path or relative to webpack's options.context.
-                cacheDirectory: input.BASE_PATH + "/node_modules/.cache/hard-source/[confighash]",
+                cacheDirectory: input.NODE_CACHE_DIR + "/hard-source/[confighash]",
                 // Either an absolute path or relative to webpack's options.context.
                 // Sets webpack's recordsPath if not already set.
-                recordsPath: input.BASE_PATH + "/node_modules/.cache/hard-source/[confighash]/records.json",
-                configHash: function(webpackConfig) {
-                    // node-object-hash on npm can be used to build this.
-                    return require("node-object-hash")({ sort: false }).hash(webpackConfig) + input.LANGUAGE;
-                },
+                recordsPath: input.NODE_CACHE_DIR + "/hard-source/[confighash]/records.json",
+
                 // Either false, a string, an object, or a project hashing function.
                 environmentHash: {
                     root: process.cwd(),
@@ -190,14 +186,14 @@ module.exports = function(input) {
                     sourceMap: true // set to true if you want JS source maps
                 }),
                 new OptimizeCSSAssetsPlugin({
-                    cssProcessorOptions: { "postcss-safe-parser": true, discardComments: { removeAll: true }, zindex: false }
+                    cssProcessorOptions: {"postcss-safe-parser": true, discardComments: {removeAll: true}, zindex: false}
                 })
             ]
             /*splitChunks: {
                 chunks: 'all'
             },*/
         };
-    }else{
+    } else {
         //incremental build optymalization
         conf.optimization = {
             removeAvailableModules: false,
@@ -209,35 +205,35 @@ module.exports = function(input) {
         }*/
     }
 
-   /* conf.plugins.push(function() {
-        this.plugin("done", function(stats) {
-            var stats = stats.toJson();
-            //console.log(stats.warnings);
+    /* conf.plugins.push(function() {
+         this.plugin("done", function(stats) {
+             var stats = stats.toJson();
+             //console.log(stats.warnings);
 
-            let missingLang = {};
-            if (stats.warnings && stats.warnings.length) {
-                for (let i in stats.warnings) {
-                    let el = "" + stats.warnings[i];
-                    if (el.indexOf("Missing localization: ") != -1) {
-                        let lines = ("" + el).split("\n");
-                        for (let x = 0; x < lines.length; x++) {
-                            if (lines[x].indexOf("Missing localization: ") == 0) {
-                                missingLang[lines[x].replace("Missing localization: ", "")] = "";
-                            }
-                        }
-                    }
-                }
+             let missingLang = {};
+             if (stats.warnings && stats.warnings.length) {
+                 for (let i in stats.warnings) {
+                     let el = "" + stats.warnings[i];
+                     if (el.indexOf("Missing localization: ") != -1) {
+                         let lines = ("" + el).split("\n");
+                         for (let x = 0; x < lines.length; x++) {
+                             if (lines[x].indexOf("Missing localization: ") == 0) {
+                                 missingLang[lines[x].replace("Missing localization: ", "")] = "";
+                             }
+                         }
+                     }
+                 }
 
-                fs.writeFile(
-                    resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`),
-                    JSON.stringify(missingLang, null, 2),
-                    function() {}
-                );
-            }
+                 fs.writeFile(
+                     resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`),
+                     JSON.stringify(missingLang, null, 2),
+                     function() {}
+                 );
+             }
 
-            return true;
-        });
-    });*/
+             return true;
+         });
+     });*/
 
     return conf;
 };
