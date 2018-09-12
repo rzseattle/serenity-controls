@@ -4,7 +4,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const {resolve} = require('path');
 const publicPath = '/vendor/arrow/engine/assets/dist/';
 const AssetsPlugin = require('assets-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // One-liner for current directory, ignores .dotfiles
