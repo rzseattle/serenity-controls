@@ -11,7 +11,6 @@ import {PositionCalculator} from "../lib/PositionCalculator";
 import Hotkeys from "react-hot-keys";
 import i18n from "frontend/src/utils/I18n";
 
-
 const checkIncludes = (options, value) => {
     const element = options.filter((element) => {
         if (element.value !== undefined) {
@@ -177,7 +176,6 @@ class Select extends React.Component<ISelectProps, ISelectState> {
             );
         }
 
-
         this.setState({
             searchedTxt: e.target.value,
             highlightedIndex: e.target.value.length > 0 ? 0 : -1,
@@ -191,7 +189,6 @@ class Select extends React.Component<ISelectProps, ISelectState> {
         if (!Array.isArray(props.options)) {
             options = Object.entries(props.options).map(([key, val]) => ({value: key, label: val}));
         }
-
 
         let selectedIndex: number = -1;
 
@@ -727,7 +724,7 @@ class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                 const elements = [];
 
                 for (const i in props.value) {
-                    const element = props.options.filter(function (v, index) {
+                    const element = props.options.filter(function(v, index) {
                         return v.value == props.value[i];
                     });
                     elements.push(<li key={element[0].value}>{element[0].label}</li>);
@@ -837,8 +834,7 @@ class Date extends React.Component<IDateProps, any> {
         });
     }
 
-
-    componentWillReceiveProps(nextProps: Readonly<IDateProps>, nextContext: any): void {
+    public componentWillReceiveProps(nextProps: Readonly<IDateProps>, nextContext: any): void {
         Promise.all([
             import("moment"),
             import("moment/locale/pl"),
@@ -846,11 +842,12 @@ class Date extends React.Component<IDateProps, any> {
             moment = imported[0].default;
             this.setState({
                 date:
-                    nextProps.value && nextProps.value != "0000-00-00"
+                    (nextProps.value && nextProps.value != "0000-00-00"
                         ? moment(nextProps.value, "YYYY-MM-DD")
-                        : null,
+                        : null
+                    ),
             });
-        };
+        });
     }
 
     public handleOnChange(date) {

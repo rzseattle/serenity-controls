@@ -10,10 +10,10 @@ import {
     Textarea,
     Wysiwyg,
 } from "../ctrl/Fields";
-import { FileList } from "../ctrl/FileLists";
-import { Shadow } from "../ctrl/Overlays";
+import {FileList} from "../ctrl/FileLists";
+import {Shadow} from "../ctrl/Overlays";
 import Comm from "../lib/Comm";
-import { Copyable } from "frontend/src/ctrl/Copyable";
+import {Copyable} from "../ctrl/Copyable";
 import Icon from "../ctrl/Icon";
 
 interface IWithBootstrapFormFieldProps {
@@ -35,63 +35,87 @@ interface IWithBootstrapFormFieldProps {
 
 }
 
-const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Component: React.ComponentType<P>) => {
-    return class  extends React.Component<P & IWithBootstrapFormFieldProps> {
-        public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
-            layoutType: "default",
-            addInputClass: true,
-        };
+const withBootstrapFormField =
+    <P extends IWithBootstrapFormFieldProps, S>(
+        Component: React.ComponentType<P>,
+    ): React.Component<P & IWithBootstrapFormFieldProps> => {
+        return class  extends React.Component<P & IWithBootstrapFormFieldProps> {
+            public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
+                layoutType: "default",
+                addInputClass: true,
+            };
 
-        public render() {
-            const props = this.props;
-            const addInputClass = this.props.addInputClass;
-            const classes = ["form-group"];
+            public render() {
+                const props = this.props;
+                const addInputClass = this.props.addInputClass;
+                const classes = ["form-group"];
 
-            if (this.props.errors) {
-                classes.push("has-error");
-            }
-
-            let className = addInputClass ? "form-control" : "";
-            if (props.className) {
-                className += " " + props.className;
-            }
-
-            let field;
-
-            const { forwardedRef, ...fieldProps } = this.props as any;
-
-            // const fieldProps: any = {};
-            Object.assign(fieldProps, { className });
-
-            if ((this.props.suffix || this.props.prefix) && this.props.editable) {
-
-                field =
-                    <div className="input-group">
-                        {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
-                        <Component {...props} ref={forwardedRef} {...fieldProps} />
-                        {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
-                    </div>;
-
-            } else {
-                field = <Component ref={forwardedRef} {...fieldProps} />;
-            }
-            let errors = [];
-            if (props.errors) {
-
-                if (!Array.isArray(props.errors)) {
-                    errors = [props.errors];
-                } else {
-                    errors = props.errors;
+                if (this.props.errors) {
+                    classes.push("has-error");
                 }
-            }
 
-            if (props.layoutType == "horizontal") {
+                let className = addInputClass ? "form-control" : "";
+                if (props.className) {
+                    className += " " + props.className;
+                }
 
-                return (
-                    <div className={classes.join(" ")}>
-                        {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
-                        <div className="col-sm-10">
+                let field;
+
+                const {forwardedRef, ...fieldProps} = this.props as any;
+
+                // const fieldProps: any = {};
+                Object.assign(fieldProps, {className});
+
+                if ((this.props.suffix || this.props.prefix) && this.props.editable) {
+
+                    field =
+                        <div className="input-group">
+                            {this.props.prefix && <div className="input-group-addon">{this.props.prefix}</div>}
+                            <Component {...props} ref={forwardedRef} {...fieldProps} />
+                            {this.props.suffix && <div className="input-group-addon">{this.props.suffix}</div>}
+                        </div>;
+
+                } else {
+                    field = <Component ref={forwardedRef} {...fieldProps} />;
+                }
+                let errors = [];
+                if (props.errors) {
+
+                    if (!Array.isArray(props.errors)) {
+                        errors = [props.errors];
+                    } else {
+                        errors = props.errors;
+                    }
+                }
+
+                if (props.layoutType == "horizontal") {
+
+                    return (
+                        <div className={classes.join(" ")}>
+                            {this.props.label && <label className="col-sm-2 control-label">{props.label}</label>}
+                            <div className="col-sm-10">
+                                {field}
+                                {props.help ?
+                                    <span className="help-block">{props.help} </span>
+                                    : ""}
+                                {props.errors && this.props.editable ?
+                                    <span className="help-block">{errors.join(", ")} </span>
+
+                                    : ""}
+                            </div>
+                        </div>
+                    );
+                }
+                if (props.layoutType == "default") {
+                    return (
+                        <div className={classes.join(" ")}>
+                            {this.props.label && <label className={this.props.labelClass}>{this.props.label}
+                                {this.props.copyable && <Copyable toCopy={this.props.value}/>}
+
+                                {props.onInfoClick && <a style={{float: "right"}} onClick={props.onInfoClick}><Icon name={"OpenInNewWindow"}/></a>}
+                            </label>}
                             {field}
+
                             {props.help ?
                                 <span className="help-block">{props.help} </span>
                                 : ""}
@@ -99,35 +123,14 @@ const withBootstrapFormField = <P extends IWithBootstrapFormFieldProps>(Componen
                                 <span className="help-block">{errors.join(", ")} </span>
 
                                 : ""}
+                            {/*.join(", ")*/}
                         </div>
-                    </div>
-                );
+                    );
+                }
             }
-            if (props.layoutType == "default") {
-                return (
-                    <div className={classes.join(" ")}>
-                        {this.props.label && <label className={this.props.labelClass}>{this.props.label}
-                        {this.props.copyable && <Copyable toCopy={this.props.value}/>}
 
-                            {props.onInfoClick && <a style={{float: "right"}} onClick={props.onInfoClick}><Icon name={"OpenInNewWindow"}/></a>}
-                        </label>}
-                        {field}
-
-                        {props.help ?
-                            <span className="help-block">{props.help} </span>
-                            : ""}
-                        {props.errors && this.props.editable ?
-                            <span className="help-block">{errors.join(", ")} </span>
-
-                            : ""}
-                        {/*.join(", ")*/}
-                    </div>
-                );
-            }
-        }
-
+        };
     };
-};
 
 interface IBFormEvent {
     form: BForm;
@@ -253,7 +256,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     }
 
     public getErrors() {
-        return { fieldErrors: this.state.fieldErrors, formErrors: this.state.formErrors };
+        return {fieldErrors: this.state.fieldErrors, formErrors: this.state.formErrors};
     }
 
     /**
@@ -262,7 +265,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
      */
     public handleValidatorError(response) {
         if (this.props.onValidatorError) {
-            this.props.onValidatorError({ form: this, response });
+            this.props.onValidatorError({form: this, response});
         }
 
         this.setState({
@@ -275,42 +278,38 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
     public componentWillReceiveProps(nextProps) {
         if (nextProps.data) {
-            this.setState({ data: nextProps.data });
+            this.setState({data: nextProps.data});
         }
 
         if (nextProps.loading != undefined) {
-            this.setState({ loading: nextProps.loading });
+            this.setState({loading: nextProps.loading});
         }
 
         if (nextProps.fieldErrors) {
-            this.setState({ fieldErrors: nextProps.fieldErrors });
+            this.setState({fieldErrors: nextProps.fieldErrors});
         }
         if (nextProps.formErrors) {
-            this.setState({ formErrors: nextProps.formErrors });
+            this.setState({formErrors: nextProps.formErrors});
         }
 
         if (nextProps.errors) {
-            this.setState({ fieldErrors: nextProps.errors.fieldErrors || {}, formErrors: nextProps.errors.errors || [] });
+            this.setState({fieldErrors: nextProps.errors.fieldErrors || {}, formErrors: nextProps.errors.errors || []});
         }
 
     }
 
-    public componentDidMount() {
-
-    }
-
-    public submit( tmpCallbacks ) {
+    public submit(tmpCallbacks) {
 
         this.handleSubmit(null, tmpCallbacks);
     }
 
-    public handleSubmit(e, tmpCallbacks = {}) {
+    public handleSubmit = (e, tmpCallbacks = {})  => {
         if (e) {
             e.preventDefault();
         }
 
         if (this.props.onSubmit) {
-            this.props.onSubmit({ inputEvent: e, form: this });
+            this.props.onSubmit({inputEvent: e, form: this});
         } else if (this.props.action) {
             const comm = new Comm(this.props.action);
 
@@ -321,10 +320,10 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 data = this.getData();
             }
 
-            comm.on("finish", () => this.setState({ loading: false }));
+            comm.on("finish", () => this.setState({loading: false}));
             comm.on("success", (response) => {
                 if (this.props.onSuccess) {
-                    this.props.onSuccess({ form: this, response });
+                    this.props.onSuccess({form: this, response});
                 }
                 this.setState({
                     fieldErrors: {},
@@ -332,7 +331,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
                 });
 
                 if (tmpCallbacks[Comm.EVENTS.SUCCESS]) {
-                    tmpCallbacks[Comm.EVENTS.SUCCESS]({ form: this, response });
+                    tmpCallbacks[Comm.EVENTS.SUCCESS]({form: this, response});
                 }
             });
             comm.on("validationErrors", (response) => {
@@ -340,11 +339,11 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             });
             comm.on("error", (response) => {
                 if (this.props.onError) {
-                    this.props.onError({ form: this, response });
+                    this.props.onError({form: this, response});
                 }
             });
             comm.setData(data);
-            this.setState({ loading: true });
+            this.setState({loading: true});
             comm.send();
         }
 
@@ -379,11 +378,13 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             }
         };
 
-        return { get, set, arrayNotation };
+        return {get, set, arrayNotation};
     }
 
     public handleInputChange(e) {
-        let name, type, value;
+        let name;
+        let type;
+        let value;
         // custom event data
 
         if (e.name !== undefined) {
@@ -401,7 +402,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             }
         }
 
-        const { get, set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
+        const {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
 
         if (type == "checkbox") {
             const checked = e.target.checked;
@@ -426,10 +427,10 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
         set(this.fieldsValues, arrayNotation, value);
 
-        this.setState({ data: this.state.data, isDirty: true });
+        this.setState({data: this.state.data, isDirty: true});
 
         if (this.props.onChange) {
-            this.props.onChange({ form: this, inputEvent: e });
+            this.props.onChange({form: this, inputEvent: e});
         }
 
     }
@@ -437,7 +438,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
     public applyToField(name, defaultValue = null) {
 
         let value;
-        const { get, set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
+        const {get, set, arrayNotation} = this.getHtmlNotationNameTranslators(name);
 
         value = get(this.state.data);
         if (value === undefined && defaultValue !== false) {
@@ -480,15 +481,15 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
 
         return (
             <Tag ref={(form) => this.formTag = form} className={classes.join(" ")}
-                 onSubmit={this.handleSubmit.bind(this)} style={{ position: "relative" }}>
+                 onSubmit={this.handleSubmit} style={{position: "relative"}}>
 
                 {this.state.formErrors.length > 0 &&
                 <ul className="bg-danger ">
-                    {this.state.formErrors.map((el) => <li>{el}</li>)}
+                    {this.state.formErrors.map((el) => <li key={el}>{el}</li>)}
                 </ul>}
                 {this.props.children(this.applyToField.bind(this), this.getData(), this)}
 
-                <Shadow {...{ visible: this.state.loading, loader: true, container: () => this.formTag }} />
+                <Shadow {...{visible: this.state.loading, loader: true, container: () => this.formTag}} />
             </Tag>
         );
     }

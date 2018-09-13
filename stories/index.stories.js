@@ -7,21 +7,13 @@ import { linkTo } from '@storybook/addon-links';
 import {withInfo} from "@storybook/addon-info"
 
 require('./Stories.sass');
-import { Button, Welcome } from '@storybook/react/demo';
 
 
-storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')} />);
 
-storiesOf('Button', module)
-  .addDecorator(withInfo)
-  .add('with text', () => <Button onClick={action('clicked')}>Hello Button</Button>)
-  .add('with some emoji', () => (
-    <Button onClick={action('clicked')}>
-      <span role="img" aria-label="so cool">
-        😀 😎 👍 💯
-      </span>
-    </Button>
-  ));
+
+
+
 
 require('./panel/index.stories');
-require('./panel/index.stories');
+
+require('./fields/filesList.stories');
