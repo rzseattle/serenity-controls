@@ -41,7 +41,8 @@ module.exports = function (input) {
 
     var conf = {
         context: resolve(__dirname, ""),
-        devtool: input.PRODUCTION ? "cheap-module-eval-source-map" : "cheap-module-source-map", //,
+        //devtool: input.PRODUCTION ? "cheap-module-eval-source-map" : "cheap-module-source-map", //,
+        devtool: false,
 
         resolve: {
             extensions: [".js", ".ts", ".tsx"],
@@ -127,7 +128,7 @@ module.exports = function (input) {
     ]);
 
 
-    if (input.PRODUCTION) {
+    //if (input.PRODUCTION) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({
@@ -145,10 +146,21 @@ module.exports = function (input) {
                 }
             })
         );
-    }
+    //}
 
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
+    conf.plugins.push(new webpack.SourceMapDevToolPlugin({
+        filename: '[file].map',
+        moduleFilenameTemplate: '[resource-path]',
+        fallbackModuleFilenameTemplate: '[resource-path]',
+        append: null,
+        module: true,
+        columns: true,
+        lineToLine: false,
+        noSources: false,
+        namespace: ''
+    }));
 
     /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
         // Can be `standalone` or `publisher`.

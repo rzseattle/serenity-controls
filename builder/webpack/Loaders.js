@@ -75,6 +75,7 @@ var getLoaders = function (production, input) {
                                 ],
                                 useBabel: true,
                                 babelCore: "@babel/core",
+
                                 babelOptions: {
                                     babelrc: false,
                                     retainLines: true,

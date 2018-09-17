@@ -92,7 +92,8 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
             app.get("/debug/getFile", function (req, res) {
                 res.header("Access-Control-Allow-Origin", "*");
-                res.send(fs.readFileSync(BASE_PATH + req.param("file")));
+                //res.send(fs.readFileSync(BASE_PATH + req.param("file")));
+                res.send(fs.readFileSync(req.param("file")));
             });
             app.post("/*", function (req, res, next) {
                 res.header("Access-Control-Allow-Origin", "*");
@@ -108,7 +109,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
             app.post("/createFile", function (req, response) {
                 let {file, type} = req.body;
-                let dir = path.dirname(BASE_PATH +file);
+                let dir = path.dirname(BASE_PATH + file);
                 if (!fs.existsSync(dir)) {
                     mkdirp.sync(dir);
                 }
@@ -139,10 +140,12 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                     fileTest = "/bin/phpstorm.sh";
                 }
 
+
                 fs.readdirSync(ideDir).forEach((_file) => {
                     console.log(_file);
                     if (fs.existsSync(ideDir + _file + fileTest)) {
-                        let command = `"${ideDir}${_file}${fileTest}" ${BASE_PATH} --line ${line} ${BASE_PATH}${file}`;
+                        let command = `"${ideDir}${_file}${fileTest}" ${BASE_PATH} --line ${line} ${file}`;
+                        //let command = `"${ideDir}${_file}${fileTest}" ${BASE_PATH} --line ${line} ${BASE_PATH}${file}`;
                         console.log(command);
                         exec(command, function (error, stdout, stderr) {
                             if (!error) {
