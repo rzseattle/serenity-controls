@@ -1,13 +1,25 @@
 import * as React from "react";
-import { Icon } from "frontend/src/ctrl/Icon";
+import { Icon } from "./Icon";
 
 type ITabsCallback = (index: number, e: any) => any;
 
 interface ITabsProps {
-    children: JSX.Element[] | any[];
+    /**
+     * On tab change
+     */
     onTabChange?: ITabsCallback;
+    /**
+     * starting active tab
+     */
     defaultActiveTab?: number;
+    /**
+     * Controled active tab
+     */
     activeTab?: number;
+    /**
+     * All tabs will be mounted at component mount. Tab change will be faster.
+     * Recommended only if needed.
+     */
     mountAllTabs?: boolean;
 }
 
@@ -15,15 +27,16 @@ interface ITabsState {
     currentTab: number;
 }
 
-class Tabs extends React.Component<ITabsProps, ITabsState> {
+export class Tabs extends React.Component<ITabsProps, ITabsState> {
     public static defaultProps: Partial<ITabsProps> = {
-        mountAllTabs: false
+        mountAllTabs: false,
+        defaultActiveTab: 0,
     };
 
     constructor(props: ITabsProps) {
         super(props);
         this.state = {
-            currentTab: props.activeTab || props.defaultActiveTab || 0
+            currentTab: props.activeTab || props.defaultActiveTab,
         };
     }
 
@@ -101,15 +114,26 @@ class Tabs extends React.Component<ITabsProps, ITabsState> {
 }
 
 interface ITabPaneProps {
+    /**
+     * Tab title
+     */
     title: string;
+    /**
+     * Tab badge
+     */
     badge?: string | number;
+    /**
+     * Tab icon
+     */
     icon?: string;
-    children?: any;
+
+    /**
+     * If specyfied tab will display close button
+     * @param index
+     */
     onClose?: (index: number) => any;
 }
 
-const TabPane: React.StatelessComponent<ITabPaneProps> = (props) => {
+export const TabPane: React.StatelessComponent<ITabPaneProps> = (props) => {
     return <div className="tab-pane">{props.children}</div>;
 };
-
-export { Tabs, TabPane };

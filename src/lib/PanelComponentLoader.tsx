@@ -75,7 +75,7 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     public notificationSystem: NotificationSystem.System;
     public DebugTool: any = null;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             log: [],

@@ -10,7 +10,8 @@ const webpack = require("webpack");
 var TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 module.exports = {
-    resolve: {
+  //devtool: "cheap-module-source-map",
+  resolve: {
         extensions: [".js", ".ts", ".tsx"],
         alias: {
             frontend: path.resolve(__dirname, "../")
@@ -38,7 +39,7 @@ module.exports = {
                         loader: "sass-loader",
                         query: {
                             sourceMap: true,
-                            includePaths: ["node_modules"]
+                            //includePaths: ["node_modules"]
                         }
                     }
                 ]
@@ -51,14 +52,14 @@ module.exports = {
                             configFileName: path.resolve(__dirname, "../builder/webpack/tsconfig.json"),
                             cacheDirectory: path.resolve(__dirname, "../node_modules/.cache/awcache"),
 
+
                             useCache: true,
                             noImplicitAny: true,
                             transpileOnly: true,
                             forceIsolatedModules: true,
                             reportFiles: [
-                                "views/**/*.{ts,tsx}",
-                                "vendor/arrow/**/*.{ts,tsx}",
-                                "node_modules_shared/src/**/*.{ts,tsx}"
+                                "stories/**/*.{ts,tsx}",
+                                "src/**/*.{ts,tsx}",
                             ],
                             useBabel: true,
                             babelCore: "@babel/core",
@@ -141,11 +142,11 @@ module.exports = {
                 "NODE_ENV": JSON.stringify("production")
             }
         }),
-        new TypedocWebpackPlugin({
+        /*new TypedocWebpackPlugin({
             name: 'Contoso',
             //mode: 'file',
             ignoreCompilerErrors: true,
             out: path.resolve(__dirname, '../docs'),
-        }, path.resolve(__dirname, '../src'))
+        }, path.resolve(__dirname, '../src'))*/
     ]
 };

@@ -4,13 +4,35 @@
     "baseUrl": ".",
     "jsx": "react",
     "allowJs": true,
-    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-
-
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es6",
+    "importHelpers": true,
+    "noImplicitAny": true,
+    "downlevelIteration": true,
+    "removeComments": true,
+    "noEmit": true,
+    "skipLibCheck": true,
     "lib": [
+      "ES2017",
+      "ES2015",
       "DOM",
-      "ES2017"
+      "es5",
+      "es2015.promise",
+      "es2015.collection",
+      "es2015.iterable",
+      "dom.iterable"
     ]
-  }
+  },
+  "exclude": [
+    "resources",
+    "vendor",
+    "assets",
+    "data"
+  ],
+  "include": [
+    "./src/**/*",
+    "./stories/**/*"
+  ],
 }

@@ -36,3 +36,4 @@ storybook-static/
 stories/form/uploaded/
 
 *.bak
+/docs/

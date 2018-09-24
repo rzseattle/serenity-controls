@@ -1,33 +1,14 @@
-import React, {Component, StatelessComponent} from "react";
-import {storiesOf} from "@storybook/react";
-import {action, decorateAction} from "@storybook/addon-actions";
+import * as React from "react";
+import { storiesOf } from "@storybook/react";
 
-import {BFileList} from "../../src/layout/BootstrapForm";
-import {FileList} from "../../src/ctrl/FileLists";
+import { BaseX, Test2 } from "./example";
+import { BFileList } from "../../src/layout/BootstrapForm";
 
-/**
- *
- * @param xxx
- * @constructor
- * @return FileList
- */
-const XXX: StatelessComponent<{test: any}> = (xxx ): StatelessComponent<{test: any}>  => {
-    const Comp = xxx;
-    return (props) => {
+storiesOf("Files fieds", module).add("File list", () => (
+    <>
+        <BaseX base={"1"} />
 
-        return <pre>{JSON.stringify(props)} <Comp /></pre>;
-    };
-}
-
-/** */
-const CFile: FileList = XXX(FileList);
-
-storiesOf("Files fieds", module)
-    .add(
-        "File list",
-        () => (
-            <>
-                <BFileList   />
-                <CFile test={"1"}/>
-            </>
-        ));
+        <Test2 base={"asd"} loading={true} />
+        <BFileList  />
+    </>
+));
