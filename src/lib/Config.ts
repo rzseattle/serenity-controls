@@ -1,4 +1,4 @@
-import {deepExtend} from "./JSONTools";
+import { deepExtend } from "./JSONTools";
 
 const config = {
     translations: {
@@ -8,17 +8,17 @@ const config = {
     },
 };
 
-export const configGet = (path, fallbackVal) => {
+export const configGet = (path: string, fallbackVal: any = null) => {
     const result = fetchFromObject(config, path);
     return result != undefined ? result : fallbackVal;
 };
 
-export const configSet = (newConfig) => {
+export const configSet = (newConfig: any) => {
     deepExtend(config, newConfig);
 };
 
-function fetchFromObject(obj, key) {
-    key = (key !== undefined) ? key : "";
+function fetchFromObject(obj: any, key: string): any {
+    key = key !== undefined ? key : "";
 
     if (typeof obj === "undefined") {
         return undefined;
@@ -32,4 +32,3 @@ function fetchFromObject(obj, key) {
 
     return obj[key];
 }
-

@@ -3,11 +3,14 @@ import { storiesOf } from "@storybook/react";
 
 import { TabPane, Tabs } from "../../src/ctrl/Tabs";
 import Panel from "../../src/ctrl/Panel";
-import { withKnobs, text, boolean, number, radios } from "@storybook/addon-knobs";
+// @ts-ignore
+import { withKnobs, radios } from "@storybook/addon-knobs";
+import { LoaderContainer } from "../../src/ctrl/LoaderContainer";
+import { Datasource } from "../../src/lib/Datasource";
 
 const options = {
-      "Tab 1": "1",
-      "Tab 2": "2",
+    "Tab 1": "1",
+    "Tab 2": "2",
 };
 
 const action = (info: string) => alert(info);
@@ -74,7 +77,7 @@ storiesOf("Tab", module)
     .add("Controlled tabs", () => (
         <>
             <Panel>
-                <Tabs activeTab={radios("Active tab", options, "1") - 1} >
+                <Tabs activeTab={radios("Active tab", options, "1") - 1}>
                     <TabPane title="Tab1">{text1}</TabPane>
                     <TabPane title="Tab2">{text2}</TabPane>
                 </Tabs>
@@ -93,26 +96,41 @@ storiesOf("Tab", module)
             </Tabs>
         </Panel>
     ))
-    .add("Mounted at start", () => (
-        <Panel>
-            <h4>Without mount on start - tab render every time</h4>
-            <Tabs>
-                <TabPane title="Tab1" badge="1">
-                    {new Date().toISOString()}
-                </TabPane>
-                <TabPane title="Tab2" badge="2">
-                    {new Date().toISOString()}
-                </TabPane>
-            </Tabs>
+    .add("Mounted at start", () => {
+        const fn = () =>
+            new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({ date: new Date().toISOString() });
+                }, 1000);
+            });
 
-            <h4>With mount on start</h4>
-            <Tabs mountAllTabs={true}>
-                <TabPane title="Tab1" badge="1">
-                    {new Date().toISOString()}
-                </TabPane>
-                <TabPane title="Tab2" badge="2">
-                    {new Date().toISOString()}
-                </TabPane>
-            </Tabs>
-        </Panel>
-    ));
+        return (
+            <Panel>
+                <h4>Without mount on start - tab render every time (default)</h4>
+                <Tabs>
+                    <TabPane title="Tab1">
+                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                    </TabPane>
+                    <TabPane title="Tab2">
+                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                    </TabPane>
+                    <TabPane title="Tab3">
+                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                    </TabPane>
+                </Tabs>
+
+                <h4>Mount all tabs on start</h4>
+                <Tabs mountAllTabs={true}>
+                    <TabPane title="Tab1">
+                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                    </TabPane>
+                    <TabPane title="Tab2">
+                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                    </TabPane>
+                    <TabPane title="Tab3">
+                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                    </TabPane>
+                </Tabs>
+            </Panel>
+        );
+    });

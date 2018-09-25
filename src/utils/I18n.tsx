@@ -1,8 +1,8 @@
 import * as i18n from "i18next";
 // import * as LanguageDetector from "i18next-browser-languagedetector";
-import {reactI18nextModule} from "react-i18next";
+import { reactI18nextModule } from "react-i18next";
 
-import {configGet} from "frontend/src/lib/Config";
+import { configGet } from "../lib/Config";
 import Comm from "../lib/Comm";
 
 declare var PRODUCTION: any;
@@ -13,7 +13,7 @@ const XHR = {
         /* use services and options */
     },
     read(language, namespace, callback) {
-        import( "../../../../build/js/lang/i18." + language + ".ts" ).then(function(result) {
+        import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
             } else {
@@ -41,12 +41,9 @@ const instance = i18n
         fallbackLng: configGet("translations.defaultLanguage"),
         debug: !PRODUCTION,
         saveMissing: true,
-        ns: [
-            "translation",
-            "frontend",
-        ],
+        ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
-            if(!PRODUCTION) {
+            if (!PRODUCTION) {
                 console.log("to jest key: " + key);
                 console.log("to jest wartość: " + fallbackValue);
                 console.log("to jest ns: " + ns);
@@ -56,10 +53,8 @@ const instance = i18n
         react: {
             wait: true,
         },
-    });​
-
+    });
 instance.on("languageChanged", function(lng) {
-
     Comm._get(configGet("translations.backendLangChanged").replace("{{lng}}", lng));
 });
 const fI18n = instance;

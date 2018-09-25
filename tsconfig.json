@@ -29,7 +29,8 @@
     "resources",
     "vendor",
     "assets",
-    "data"
+    "data",
+    "node_modules"
   ],
   "include": [
     "./src/**/*",

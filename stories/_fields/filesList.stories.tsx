@@ -3,6 +3,7 @@ import { storiesOf } from "@storybook/react";
 
 import { BaseX, Test2 } from "./example";
 import { BFileList } from "../../src/layout/BootstrapForm";
+import { LoaderContainer } from "../../src/ctrl/LoaderContainer";
 
 storiesOf("Files fieds", module).add("File list", () => (
     <>
@@ -10,5 +11,6 @@ storiesOf("Files fieds", module).add("File list", () => (
 
         <Test2 base={"asd"} loading={true} />
         <BFileList  />
+
     </>
 ));

@@ -2,7 +2,6 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import Panel from "../../src/ctrl/Panel";
 
-
 storiesOf("Panel", module)
   .add(
     "Base",
@@ -23,7 +22,7 @@ storiesOf("Panel", module)
   .add(
     "No padding",
     () => (
-      <Panel noPadding>
+      <Panel noPadding={true}>
 
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
@@ -56,7 +55,7 @@ storiesOf("Panel", module)
     () => (
       <Panel title="Panel title" toolbar={[
         <a href="" className="btn btn-default btn-xs">Button 1</a>,
-        <a href="" className="btn btn-primary btn-xs">Button 2</a>
+        <a href="" className="btn btn-primary btn-xs">Button 2</a>,
       ]}>
 
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.

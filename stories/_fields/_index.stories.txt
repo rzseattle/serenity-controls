@@ -24,7 +24,7 @@ storiesOf('Fields', module)
                         <td><Switch options={{1: 'One', 2: 'Two', 3: 'Three'}} value="2"/></td>
                     </tr>
                     <tr>
-                        <td>Select [options as object]</td>
+                        <td>Select [options as object] 1</td>
                         <td><Select options={{1: 'One', 2: 'Two', 3: 'Three'}} value="3"/></td>
                     </tr>
                     <tr>

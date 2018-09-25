@@ -1,66 +1,83 @@
 import * as React from "react";
-import {Datasource} from "frontend/src/lib/Datasource";
-import {LoadingIndicator} from "frontend/src/ctrl/LoadingIndicator";
-import {Shadow} from "frontend/src/ctrl/Overlays";
+import { Datasource } from "../lib/Datasource";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { Shadow } from "./Overlays";
+import PrintJSON from "../utils/PrintJSON";
 
 interface ILoaderContainerProps {
+    /**
+     * Datasource object
+     */
     datasource: Datasource;
-    children: { (result: any): any }
-    debug?: boolean
-    indicatorText?: string
-    prerender?: boolean
+    children: (result: any) => any;
+    /**
+     * Displays loaded data on bottom of container
+     */
+    debug?: boolean;
+    /**
+     * Text to show while loading
+     */
+    indicatorText?: string;
+
+    /**
+     * Displays content with not loaded data and refreshing it after data are loaded
+     */
+    prerender?: boolean;
 }
 
-
 export class LoaderContainer extends React.Component<ILoaderContainerProps, any> {
-
     public static defaultProps: Partial<ILoaderContainerProps> = {
         debug: false,
         prerender: false,
-        indicatorText: null
+        indicatorText: null,
     };
 
-    constructor(props) {
+    constructor(props: ILoaderContainerProps) {
         super(props);
         this.state = {
             loaded: false,
-            data: null
-        }
-
+            data: null,
+        };
     }
 
-    load = () => {
-        this.setState({
+    public load = () => {
+        this.setState(
+            {
                 loaded: false,
-                data: null
+                data: null,
             },
-            () => this.props.datasource.resolve()
+            () => this.props.datasource.resolve(),
         );
-    }
+    };
 
-    componentDidMount() {
-        this.props.datasource.observe((result) => {
+    public componentDidMount() {
+        this.props.datasource.observe((result: any) => {
             this.setState({
                 loaded: true,
-                data: result
+                data: result,
             });
         });
-        //setTimeout(() => this.props.datasource.resolve() , 200)
+        // setTimeout(() => this.props.datasource.resolve() , 200)
         this.props.datasource.resolve();
     }
 
-
-    render() {
-        let {prerender, debug, indicatorText} = this.props
-        let {loaded} = this.state
+    public render() {
+        const { prerender, debug, indicatorText } = this.props;
+        const { loaded } = this.state;
 
         return (
-            <div style={{position: "relative"}}>
-                {!loaded && prerender && <Shadow loader={true}/>}
-                {!loaded && !prerender && <LoadingIndicator text={indicatorText}/>}
+            <div style={{ position: "relative" }}>
+                {!loaded && prerender && <Shadow loader={true} />}
+                {!loaded && !prerender && <LoadingIndicator text={indicatorText} />}
                 {(loaded || (!loaded && prerender)) && this.props.children(this.state.data)}
-                {debug && <pre>{JSON.stringify(this.state.data, null, 2)}</pre>}
+                {debug && (
+                    <div style={{ padding: 10, margin: 5, border: "solid 1px grey" }}>
+                        <b>Debug:</b>
+                        <br />
+                        <PrintJSON json={this.state.data} />
+                    </div>
+                )}
             </div>
-        )
+        );
     }
 }

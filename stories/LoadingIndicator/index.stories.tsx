@@ -1,7 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { BFileList } from "../../src/layout/BootstrapForm";
 import { LoadingIndicator } from "../../src/ctrl/LoadingIndicator";
 
 storiesOf("Loading indicator", module)
@@ -28,7 +27,7 @@ storiesOf("Loading indicator", module)
                 <LoadingIndicator size={2} />
                 <h4>Size 3</h4>
                 <LoadingIndicator size={3} />
-                <h4>Size 5</h4>
+                <h4>Size 4</h4>
                 <LoadingIndicator size={4} />
             </div>
         </>

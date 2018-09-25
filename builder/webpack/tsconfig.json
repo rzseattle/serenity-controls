@@ -29,5 +29,6 @@
     "vendor",
     "assets",
     "data"
+    //"node_modules"
   ]
 }

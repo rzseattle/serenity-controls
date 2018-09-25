@@ -1,76 +1,75 @@
-import {Comm} from "frontend/src/lib/Comm";
+import { Comm } from "../lib/Comm";
 
-const isPromise = function (obj) {
-    return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
-}
+const isPromise = (obj: any) => {
+    return !!obj && (typeof obj === "object" || typeof obj === "function") && typeof obj.then === "function";
+};
 
-export class Datasource {
-
-    private source: string | Promise<any> | Function;
+export class Datasource<T> {
+    private source: string | Promise<T> | ((input: any) => T);
     private input: any;
-    private eventsReady: { (result: any): any }[] = [];
-    private filters = {
-        map: []
-    }
+    private eventsReady: Array<(result: any) => any> = [];
+    private filters: { map: any[] } = { map: [] };
 
-
-    constructor(source: string | Promise<any> | Function, input = {}) {
+    constructor(source: string | Promise<T> | ((input: any) => T), input = {}) {
         this.source = source;
         this.input = input;
     }
 
-    public static from(source: string | Promise<any> | Function, input = {}) {
-        return new Datasource(source, input);
+    public static from<T>(source: string | Promise<T> | ((input: any) => T), input = {}) {
+        return new Datasource<T>(source, input);
     }
 
-    observe(fn: { (result: any): any }) {
+    public observe(fn: (result: T) => any): Datasource<T> {
         this.eventsReady.push(fn);
+        return this;
     }
 
-    runReady(result) {
-        for (let i = 0; i < this.filters.map.length; i++) {
-            result = result.map(this.filters.map[i]);
+    public runReady(result: any) {
+        for (const map of this.filters.map) {
+            result = result.map(map);
         }
-
-        for (let i = 0; i < this.eventsReady.length; i++) {
-            this.eventsReady[i](result);
+        for (const event of this.eventsReady) {
+            event(result);
         }
     }
 
-    processResult(result) {
+    public processResult(result: T) {
         if (typeof result == "function" || isPromise(result) || typeof result == "string") {
-            var obj = new Datasource(result, this.input);
-            obj.observe((result) => {
-                this.runReady(result);
+            const obj = new Datasource<T>(result as any, this.input);
+
+            obj.observe((subResult: T) => {
+                this.runReady(subResult);
             });
             obj.resolve();
+        } else if (result instanceof Datasource) {
+            result.observe((subResult: T) => {
+                this.runReady(subResult);
+            });
+            result.resolve();
         } else {
             this.runReady(result);
         }
     }
 
-    resolve = () => {
-        let result;
+    public resolve = () => {
         if (typeof this.source == "function") {
             this.processResult(this.source(this.input));
         }
-        //check is promise
+        // check is promise
         if (isPromise(this.source)) {
-            (this.source as Promise<any>).then((result) => {
-                this.processResult(result);
-            })
-        }
-
-        if (typeof this.source == "string") {
-
-            Comm._post(this.source, this.input).then((result) => {
+            (this.source as Promise<any>).then((result: T) => {
                 this.processResult(result);
             });
         }
-    }
 
-    map(fn: { (result: any): any }) {
+        if (typeof this.source == "string") {
+            Comm._get(this.source, this.input).then((result: T) => {
+                this.processResult(result);
+            });
+        }
+    };
+
+    public map(fn: (result: any) => any) {
         this.filters.map.push(fn);
     }
-
 }
