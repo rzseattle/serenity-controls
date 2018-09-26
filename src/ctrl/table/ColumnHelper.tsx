@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ICellTemplate, IColumnData, IEventCallback } from "./Interfaces";
-import { Option } from "../fields/Interfaces";
+import { IOption, Option } from "../fields/Interfaces";
 import { DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter } from "../Filters";
 import { IFilter } from "frontend/src/ctrl/filters/Intefaces";
 import Icon from "frontend/src/ctrl/Icon";
@@ -50,7 +50,7 @@ export class ColumnHelper {
         }).className("right");
     }
 
-    public static map(field: string, caption: string, options: Option[] | object, multiSelectFilter: boolean = false): ColumnHelper {
+    public static map(field: string, caption: string, options: IOption[] | object, multiSelectFilter: boolean = false): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,

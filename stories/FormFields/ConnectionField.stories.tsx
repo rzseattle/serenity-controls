@@ -1,34 +1,227 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-
-import { TabPane, Tabs } from "../../src/ctrl/Tabs";
 import Panel from "../../src/ctrl/Panel";
-// @ts-ignore
-import { withKnobs, radios } from "@storybook/addon-knobs";
-import { LoaderContainer } from "../../src/ctrl/LoaderContainer";
-import { Datasource } from "../../src/lib/Datasource";
-import { ConnectionsField, IConnectionElement } from "../../src/ctrl/fields/ConnectionsField";
+import { ConnectionsField, IConnectionFieldInput } from "../../src/ctrl/fields/ConnectionsField/ConnectionsField";
+import IConnectionElement from "../../src/ctrl/fields/ConnectionsField/IConnectionElement";
+import Comm from "../../src/lib/Comm";
+import { Row } from "../../src/layout/BootstrapLayout";
+require("./ConnectionField.stories.sass");
 
-const options = {
-    "Tab 1": "1",
-    "Tab 2": "2",
-};
-
-const action = (info: string) => alert(info);
-
-storiesOf("Connection Field", module).add("Base", () => {
-    const fn = (searchString: string, selected: string[]) => {
-        return Datasource.from<IConnectionElement[]>((input) => {
-            return [{ label: "xxx", value: 1 }, { label: "yyy", value: 2 }, { label: "ccc", value: 3 }].filter((el) => {
-                console.log(selected.includes(el.value + ""));
-                return !selected.includes(el.value + "") && el.label.indexOf(searchString) !== -1;
-            });
+const dataSource = (input: IConnectionFieldInput) =>
+    new Promise<IConnectionElement[]>((resolve) => {
+        Comm._get("https://jsonplaceholder.typicode.com/users").then((result: any[]) => {
+            const value: IConnectionElement[] = result
+                .map((el) => ({
+                    value: el.id,
+                    label: el.name,
+                    data: el,
+                }))
+                .filter((el) => {
+                    return (
+                        (!(input.selected as number[]).includes(el.value) &&
+                            input.requestType == "search" &&
+                            el.label.toLowerCase().indexOf(input.searchString.toLowerCase()) !== -1) ||
+                        ((input.selected as number[]).includes(el.value) && input.requestType == "getItems")
+                    );
+                });
+            resolve(value);
         });
-    };
+    });
 
-    return (
-        <Panel>
-            <ConnectionsField  searchResultProvider={fn} editable={true} />
-        </Panel>
-    );
-});
+storiesOf("Connection Field", module)
+    .add("Base", () => {
+        return (
+            <Panel>
+                <ConnectionsField value={[1, 2, 3]} fillItems={true} searchResultProvider={dataSource} />
+            </Panel>
+        );
+    })
+
+    .add("With icons", () => {
+        const icons = ["Accounts", "AddOnlineMeeting", "AirplaneSolid", "Broom"];
+        let count = 0;
+        const localDataSource = (input: IConnectionFieldInput) => {
+            return new Promise<IConnectionElement[]>((resolve) => {
+                dataSource(input).then((result: IConnectionElement[]) => {
+                    resolve(
+                        result.map((el, index) => {
+                            return { ...el, icon: icons[count++] };
+                        }),
+                    );
+                });
+            });
+        };
+
+        return (
+            <Panel>
+                <ConnectionsField value={[1, 2, 3]} fillItems={true} searchResultProvider={localDataSource} />
+            </Panel>
+        );
+    })
+    .add("With custom classes", () => {
+        const classes: string[] = ["class1", "class2", "class3"];
+        let count = 0;
+        const localDataSource = (input: IConnectionFieldInput) => {
+            return new Promise<IConnectionElement[]>((resolve) => {
+                dataSource(input).then((result: IConnectionElement[]) => {
+                    resolve(
+                        result.map((el, index) => {
+                            return { ...el, className: classes[count++] };
+                        }),
+                    );
+                });
+            });
+        };
+
+        return (
+            <Panel>
+                <ConnectionsField value={[1, 2, 3]} fillItems={true} searchResultProvider={localDataSource} />
+            </Panel>
+        );
+    })
+
+    .add("Vertical presentation", () => {
+        return (
+            <Panel>
+                <div style={{ width: 300 }}>
+                    <ConnectionsField
+                        value={[1, 2, 3]}
+                        fillItems={true}
+                        searchResultProvider={dataSource}
+                        verticalDisplay={true}
+                    />
+                </div>
+            </Panel>
+        );
+    })
+    .add("Selection template", () => {
+        return (
+            <Panel>
+                <div style={{ width: 300 }}>
+                    <ConnectionsField
+                        searchResultProvider={dataSource}
+                        verticalDisplay={true}
+                        selectionTemplate={(el) => (
+                            <div>
+                                <b>{el.label}</b>
+                                <div>
+                                    <small>{el.data.email}</small>
+                                </div>
+                                <div>
+                                    <small>phone: {el.data.phone}</small>
+                                </div>
+                            </div>
+                        )}
+                    />
+                </div>
+            </Panel>
+        );
+    })
+    .add("Item template", () => {
+        return (
+            <Panel>
+                <div style={{ width: 300 }}>
+                    <ConnectionsField
+                        searchResultProvider={dataSource}
+                        verticalDisplay={true}
+                        value={[1, 2, 3]}
+                        fillItems={true}
+                        itemTemplate={(el) => (
+                            <div style={{ padding: "5px 10px" }}>
+                                <b>{el.label}</b>
+                                <div>
+                                    <small>{el.data.email}</small>
+                                </div>
+                                <div>
+                                    <small>phone: {el.data.phone}</small>
+                                </div>
+                            </div>
+                        )}
+                    />
+                </div>
+                <div style={{ marginTop: 50 }}>
+                    <ConnectionsField
+                        searchResultProvider={dataSource}
+                        value={[1, 2, 3]}
+                        fillItems={true}
+                        itemTemplate={(el) => (
+                            <div style={{ padding: "5px 10px" }}>
+                                <b>{el.label}</b>
+                                <div>
+                                    <small>{el.data.email}</small>
+                                </div>
+                                <div>
+                                    <small>phone: {el.data.phone}</small>
+                                </div>
+                            </div>
+                        )}
+                    />
+                </div>
+            </Panel>
+        );
+    })
+    .add("Item clickable", () => {
+        return (
+            <Panel>
+                <div style={{ width: 300 }}>
+                    <ConnectionsField
+                        searchResultProvider={dataSource}
+                        verticalDisplay={true}
+                        value={[1, 2, 3]}
+                        fillItems={true}
+                        onItemClick={(el) => alert(el.label)}
+                        itemTemplate={(el) => (
+                            <div style={{ padding: "5px 10px" }}>
+                                <b>{el.label}</b>
+                                <div>
+                                    <small>{el.data.email}</small>
+                                </div>
+                                <div>
+                                    <small>phone: {el.data.phone}</small>
+                                </div>
+                            </div>
+                        )}
+                    />
+                </div>
+            </Panel>
+        );
+    })
+    .add("Search without phrase entered", () => {
+        return (
+            <Panel>
+                <div style={{ width: 300 }}>
+                    <ConnectionsField
+                        searchResultProvider={dataSource}
+                        verticalDisplay={true}
+                        searchWithoutPhrase={true}
+                        selectionTemplate={(el) => (
+                            <div>
+                                <b>{el.label}</b>
+                                <div>
+                                    <small>{el.data.email}</small>
+                                </div>
+                                <div>
+                                    <small>phone: {el.data.phone}</small>
+                                </div>
+                            </div>
+                        )}
+                    />
+                </div>
+            </Panel>
+        );
+    })
+    .add("Debug", () => {
+        return (
+            <Panel>
+                <div style={{ width: 300 }}>
+                    <ConnectionsField
+                        value={[1, 2, 3]}
+                        fillItems={true}
+                        searchResultProvider={dataSource}
+                        verticalDisplay={true}
+                        debug={true}
+                    />
+                </div>
+            </Panel>
+        );
+    });

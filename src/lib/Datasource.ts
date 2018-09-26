@@ -4,19 +4,24 @@ const isPromise = (obj: any) => {
     return !!obj && (typeof obj === "object" || typeof obj === "function") && typeof obj.then === "function";
 };
 
-export class Datasource<T> {
+export class Datasource<T, I = {}> {
     private source: string | Promise<T> | ((input: any) => T);
-    private input: any;
-    private eventsReady: Array<(result: any) => any> = [];
-    private filters: { map: any[] } = { map: [] };
+    private input: I;
+    private eventsReady: Array<(result: T) => any> = [];
+    private filters: { map: any[]; filter: any[] } = { map: [], filter: [] };
 
-    constructor(source: string | Promise<T> | ((input: any) => T), input = {}) {
+    constructor(source: string | Promise<T> | ((input: I) => T), input: I = null) {
         this.source = source;
         this.input = input;
     }
 
-    public static from<T>(source: string | Promise<T> | ((input: any) => T), input = {}) {
+    public static from<T, I = {}>(source: string | Promise<T> | ((input: I) => T), input: I = null) {
         return new Datasource<T>(source, input);
+    }
+
+    public setInput(input: I) {
+        this.input = input;
+        return this;
     }
 
     public observe(fn: (result: T) => any): Datasource<T> {
@@ -25,11 +30,16 @@ export class Datasource<T> {
     }
 
     public runReady(result: any) {
+        let processedResult: T;
+
         for (const map of this.filters.map) {
-            result = result.map(map);
+            processedResult = result.map(map);
+        }
+        for (const filter of this.filters.filter) {
+            processedResult = result.map(filter);
         }
         for (const event of this.eventsReady) {
-            event(result);
+            event(processedResult ? processedResult : result);
         }
     }
 
@@ -71,5 +81,9 @@ export class Datasource<T> {
 
     public map(fn: (result: any) => any) {
         this.filters.map.push(fn);
+    }
+
+    public filter(fn: (result: any) => any) {
+        this.filters.filter.push(fn);
     }
 }

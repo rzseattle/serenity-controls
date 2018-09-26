@@ -1,6 +1,6 @@
 import {IFilter} from "../filters/Intefaces";
 import {ConnectionFilter, DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter} from "../Filters";
-import {Option} from "../fields/Interfaces";
+import { IOption, Option } from "../fields/Interfaces";
 
 export class FilterHelper {
     private data: IFilter;
@@ -49,7 +49,7 @@ export class FilterHelper {
         });
     }
 
-    public static select(field, caption, content: Option[], multi: boolean = false, defaultValue = "") {
+    public static select(field, caption, content: IOption[], multi: boolean = false, defaultValue = "") {
         return new FilterHelper({
             field,
             caption,
@@ -62,7 +62,7 @@ export class FilterHelper {
         });
     }
 
-    public static switch(field, caption, content: Option[]) {
+    public static switch(field, caption, content: IOption[]) {
         return new FilterHelper({
             field,
             caption,
