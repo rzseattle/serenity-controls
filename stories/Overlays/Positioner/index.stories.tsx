@@ -30,13 +30,6 @@ const LayerStyle: React.CSSProperties = {
 
 export class PositionPairHelper extends React.Component<IPositionPairHelperProps> {
     public relativeTo = React.createRef<HTMLDivElement>();
-    constructor(props: IPositionPairHelperProps) {
-        super(props);
-        this.state = {
-            opened: false,
-        };
-    }
-
     public render() {
         return (
             <>
@@ -58,14 +51,12 @@ const presets = Object.entries(RelativePositionPresets).map(([key, value]) => {
 storiesOf("Positioner", module)
     .addDecorator(withKnobs)
     .add("Relative", () => {
-        console.log(select("preset", presets, presets[0]));
+        // @ts-ignore
+        const options = RelativePositionPresets[select("preset", presets, presets[0])];
         return (
             <>
                 <div style={{ margin: "100px auto", paddingBottom: 200 }}>
-                    <PositionPairHelper
-                        options={RelativePositionPresets[select("preset", presets, presets[0])]}
-                        presetName={select("preset", presets, presets[0])}
-                    />
+                    <PositionPairHelper options={options} presetName={select("preset", presets, presets[0])} />
                 </div>
             </>
         );
