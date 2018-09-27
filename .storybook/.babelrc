@@ -1,32 +1,41 @@
 {
-  "presets": [
-    //"stage-0",
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "browsers": [
-            "last 1 Chrome versions",
-            "last 1 Firefox versions",
-            "last 1 Edge versions"
-          ],
-          "node": "current"
-        },
-        "useBuiltIns": "entry",
-        "modules": false
-      }
+    "presets": [
+        //"stage-0",
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "browsers": ["last 1 Chrome versions", "last 1 Firefox versions", "last 1 Edge versions"],
+                    "node": "current"
+                },
+                "useBuiltIns": "entry",
+                "modules": false
+            }
+        ],
+        "@babel/react"
     ],
-    "@babel/react"
+    "plugins": [
+         [
+            "react-css-modules",
+            {
+                "context": "C:\\dev\\www\\frontend\\src",
+                "filetypes": {
+                    ".sass": {
+                        "syntax": "postcss-sass"
+                    }
+                },
+                "webpackHotModuleReloading": true,
+                "handleMissingStyleName": "throw"
+            }
+        ],
+        "transform-react-constant-elements",
+        "transform-react-inline-elements",
+        "@babel/plugin-syntax-jsx",
 
-  ],
-  "plugins": [
-    "transform-react-constant-elements",
-    "transform-react-inline-elements",
-    "@babel/plugin-syntax-jsx",
+        "@babel/proposal-class-properties",
+        "@babel/proposal-object-rest-spread",
+        "@babel/plugin-syntax-dynamic-import",
+        "react-hot-loader/babel"
 
-    "@babel/proposal-class-properties",
-    "@babel/proposal-object-rest-spread",
-    "@babel/plugin-syntax-dynamic-import",
-    "react-hot-loader/babel"
-  ]
+    ]
 }

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "baseUrl": ".",
     "jsx": "react",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

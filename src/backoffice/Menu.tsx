@@ -10,9 +10,9 @@ export interface IMenuSection {
 }
 
 export interface IMenuElement {
-    icon: string; //"fa-shopping-cart"
-    route: string; //"app/shop/orders/index"
-    title: string; //"Zamówienia"
+    icon: string;
+    route: string;
+    title: string;
 }
 
 interface IMenuProps {
@@ -26,7 +26,7 @@ interface IMenuState {
     expanded: boolean;
 }
 
-export class Menu extends React.Component<IMenuProps, IMenuState> {
+export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
     constructor(props: IMenuProps) {
         super(props);
         if (window.localStorage.backofficeMenuOpened === undefined) {

@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Datasource } from "../lib/Datasource";
 import { LoadingIndicator } from "./LoadingIndicator";
-import { Shadow } from "./Overlays";
+
 import PrintJSON from "../utils/PrintJSON";
+import Shadow from "./overlays/Shadow";
 
 interface ILoaderContainerProps {
     /**

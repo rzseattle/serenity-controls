@@ -37,5 +37,7 @@ require("./LoadingIndicator/index.stories");
 require("./Tabs/index.stories.tsx");
 require("./LoadingContainer/index.stories");
 require("./FormFields/index.stories");
+require("./Overlays/Shadow/index.stories");
+require("./Overlays/Modal/index.stories");
 
 //require("./fields/filesList.stories");

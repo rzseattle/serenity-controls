@@ -1,5 +1,6 @@
 import * as React from "react";
 import Icon from "./Icon";
+import { ReactElement } from "react";
 
 interface IPanelProps {
     /**
@@ -17,7 +18,7 @@ interface IPanelProps {
     /**
      * Toolbar elements
      */
-    toolbar?: any[];
+    //toolbar?: JSX.Element;
 
     /**
      * Icon
@@ -25,19 +26,17 @@ interface IPanelProps {
     icon?: string;
 }
 
-export default class Panel extends React.Component<IPanelProps, any> {
+export default class Panel extends React.PureComponent<IPanelProps> {
     public static defaultProps: Partial<IPanelProps> = {
         noPadding: false,
         noBottomMargin: true,
-        children: null,
         title: "",
-        toolbar: [],
         icon: "",
     };
 
-    render() {
+    public render() {
         const props = this.props;
-        let classes = ["w-panel"];
+        const classes = ["w-panel"];
         if (this.props.noPadding) {
             classes.push("panel-no-padding");
         }
@@ -47,14 +46,12 @@ export default class Panel extends React.Component<IPanelProps, any> {
         return (
             <div className={classes.join(" ")}>
                 <div className="panel-body ">
-                    {props.title ? (
+                    {props.title && (
                         <div className="title ">
                             {props.icon && <Icon name={props.icon} />}
                             {props.title}
-                            <div className="panel-toolbar">{props.toolbar}</div>
+                            {/*<div className="panel-toolbar">{props.toolbar}</div>*/}
                         </div>
-                    ) : (
-                        ""
                     )}
                     {props.children}
                 </div>
