@@ -6,6 +6,7 @@ import "./Modal.sass";
 import ResizeObserver from "resize-observer-polyfill";
 import { Portal } from "./Portal";
 import ReactDOM from "react-dom";
+import { Positioner } from "./Positioner";
 
 export interface IModalProps {
     show: boolean;
@@ -92,22 +93,6 @@ export class Modal extends React.Component<IModalProps> {
 
         ro.observe(ReactDOM.findDOMNode(this.modalBody) as Element);
         this.isObserved = true;
-
-        /* if (false) {
-
-             let s = {opacity: 1, top: 49};
-             const node = ReactDOM.findDOMNode(this.modalBody);
-             TweenLite.to(s, 0.2, {
-                 opacity: 1,
-                 top: 50,
-                 ease: Power4.easeInOut,
-                 onUpdate: () => {
-                     node.style['opacity'] = s.opacity;
-                     node.style['top'] = s.top + '%';
-
-                 }
-             });
-         }*/
     };
 
     public calculatePosition() {
@@ -134,6 +119,7 @@ export class Modal extends React.Component<IModalProps> {
     }
 
     public calculatePos() {
+        return;
         const container = this.props.container ? this.props.container() : document.body;
         const containerSize = container.getBoundingClientRect();
 
@@ -213,21 +199,21 @@ export class Modal extends React.Component<IModalProps> {
     public render() {
         const p = this.props;
         return (
-            <Portal>
-                <div
-                    ref={(el) => (this.modalHandler = el)}
-                    style={{
-                        display: p.animate && p.show ? "flex" : p.show ? "block" : "unset",
-                        visibility: p.animate && p.show ? "visible" : p.show ? "visible" : "hidden",
-                        backgroundColor: p.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
-                    }}
-                    className={
-                        (p.layer ? "w-modal-container " : "") +
-                            (p.animate && p.show ? "animate-fadeIn " : "") +
-                            p.className || ""
-                    }
-                    onClick={this.handleClose}
-                >
+            <div
+                ref={(el) => (this.modalHandler = el)}
+                style={{
+                    display: p.show ? "block" : "none",
+                    visibility: p.show ? "visible" : "hidden",
+                    backgroundColor: p.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
+                }}
+                className={
+                    (p.layer ? "w-modal-container " : "") +
+                        (p.animate && p.show ? "animate-fadeIn " : "") +
+                        p.className || ""
+                }
+                onClick={this.handleClose}
+            >
+                <Positioner>
                     <div
                         className={`w-modal animate-${this.animationName}`}
                         ref={(el) => (this.modalBody = el)}
@@ -249,8 +235,8 @@ export class Modal extends React.Component<IModalProps> {
                         )}
                         {this.props.show ? p.children : null}
                     </div>
-                </div>
-            </Portal>
+                </Positioner>
+            </div>
         );
     }
 }

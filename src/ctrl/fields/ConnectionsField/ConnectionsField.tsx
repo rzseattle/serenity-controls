@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Portal } from "../../Overlays";
+
 
 import { IFieldChangeEvent, IFieldProps } from "../../fields/Interfaces";
 import { PositionCalculator } from "../../../lib/PositionCalculator";
@@ -11,6 +11,7 @@ import IConnectionElement from "./IConnectionElement";
 import ConnectionsFieldSelectionElement from "./ConnectionsFieldSelectionElement";
 import { ConnectionsFieldEntry } from "./ConnectionsFieldEntry";
 import PrintJSON from "../../../utils/PrintJSON";
+import {Portal} from "../../overlays/Portal";
 
 export interface IConnectionChangeEvent extends IFieldChangeEvent {
     items: IConnectionElement[];

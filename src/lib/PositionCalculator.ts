@@ -1,9 +1,9 @@
-interface IPositionCalculatorOptions {
+export interface IPositionCalculatorOptions {
     itemAt: string;
-    targetAt: string;
-    offsetX: number;
-    offsetY: number;
-    theSameWidth: boolean;
+    relativeToAt: string;
+    offsetX?: number;
+    offsetY?: number;
+    theSameWidth?: boolean;
 }
 
 export class PositionCalculator {
@@ -12,7 +12,7 @@ export class PositionCalculator {
     private options: IPositionCalculatorOptions;
     private defaults: IPositionCalculatorOptions = {
         itemAt: "top left",
-        targetAt: "top left",
+        relativeToAt: "top left",
         offsetX: 0,
         offsetY: 0,
         theSameWidth: false,
@@ -21,12 +21,13 @@ export class PositionCalculator {
     constructor(target: HTMLElement, item: HTMLElement, options: Partial<IPositionCalculatorOptions> = {}) {
         this.item = item;
         this.target = target;
-        this.options = {...this.defaults, ...options};
+        this.options = { ...this.defaults, ...options };
     }
 
     private getRefPoint(config: string, position: ClientRect): number[] {
         const [vertical, horizontal] = config.split(" ");
-        let x, y: number;
+        let x: number;
+        let y: number;
 
         if (horizontal == "left") {
             x = position.left;
@@ -69,7 +70,7 @@ export class PositionCalculator {
 
     public calculate() {
         const targetPositionData = this.target.getBoundingClientRect();
-        const targetRefPoint = this.getRefPoint(this.options.targetAt, targetPositionData);
+        const targetRefPoint = this.getRefPoint(this.options.relativeToAt, targetPositionData);
 
         if (this.options.theSameWidth) {
             this.item.style.width = targetPositionData.width + "px";
@@ -81,7 +82,8 @@ export class PositionCalculator {
         const correction = [0, 0];
 
         const [vertical, horizontal] = this.options.itemAt.split(" ");
-        let x, y: number;
+        let x: number;
+        let y: number;
 
         if (horizontal == "left") {
             x = 0;
@@ -98,12 +100,12 @@ export class PositionCalculator {
             y = -itemPositionData.height / 2;
         }
 
-        let scrollTop  = window.pageYOffset || document.documentElement.scrollTop,
-            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
-
-        this.item.style.left = targetRefPoint[0] + x + this.options.offsetX + correction[0] + scrollLeft + "px";
-        this.item.style.top = targetRefPoint[1] + y + this.options.offsetY + correction[1] + scrollTop + "px";
-
+        return {
+            left: targetRefPoint[0] + x + this.options.offsetX  + correction[0] + scrollLeft,
+            top: targetRefPoint[1] + y + this.options.offsetY + correction[1] + scrollTop,
+        };
     }
 }

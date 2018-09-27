@@ -9,10 +9,10 @@ const path = require("path");
 const webpack = require("webpack");
 
 var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
-const context = path.resolve(__dirname, "src");
+//const context = path.resolve(__dirname, "src");
 module.exports = {
     devtool: "cheap-module-source-map",
-    context: context,
+    //context: context,
     resolve: {
         extensions: [".js", ".ts", ".tsx"],
         alias: {
@@ -91,7 +91,7 @@ module.exports = {
                                 ],
 
                                 plugins: [
-                                    [
+                                    /*[
                                         "react-css-modules",
                                         {
                                             context,
@@ -103,7 +103,7 @@ module.exports = {
                                             webpackHotModuleReloading: true,
                                             handleMissingStyleName: "throw",
                                         },
-                                    ],
+                                    ],*/
                                     "transform-react-constant-elements",
                                     "transform-react-inline-elements",
                                     "@babel/plugin-syntax-jsx",
