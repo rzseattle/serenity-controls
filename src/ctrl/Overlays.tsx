@@ -6,32 +6,7 @@ import { PositionCalculator } from "../lib/PositionCalculator";
 import { LoadingIndicator } from "./LoadingIndicator";
 
 
-export class Portal extends React.PureComponent {
-    public el: HTMLDivElement;
-    private modalRoot: HTMLElement;
 
-    public static defaultProps = {};
-
-    constructor(props = {}) {
-        super(props);
-        this.el = document.createElement("div");
-
-        this.modalRoot = document.getElementById("modal-root");
-    }
-
-    public componentDidMount() {
-        this.modalRoot.appendChild(this.el);
-    }
-
-    public componentWillUnmount() {
-        this.modalRoot.removeChild(this.el);
-    }
-
-    public render() {
-        const p = this.props;
-        return ReactDOM.createPortal(p.children, this.el);
-    }
-}
 
 interface IConfirmModalProps extends IModalProps {
     showCancelLing?: boolean;

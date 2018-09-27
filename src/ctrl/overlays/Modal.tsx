@@ -1,10 +1,11 @@
 import Icon from "../Icon";
 
 import React from "react";
-import ReactDOM from "react-dom";
 
 import "./Modal.sass";
 import ResizeObserver from "resize-observer-polyfill";
+import { Portal } from "./Portal";
+import ReactDOM from "react-dom";
 
 export interface IModalProps {
     show: boolean;
@@ -45,7 +46,6 @@ export class Modal extends React.Component<IModalProps> {
     public modalBody: HTMLDivElement;
     public animationName: string;
     public modalHandler: any;
-    private modalRoot: HTMLElement;
 
     public static defaultProps = {
         show: false,
@@ -90,8 +90,9 @@ export class Modal extends React.Component<IModalProps> {
             }
         });
 
-        ro.observe(ReactDOM.findDOMNode(this.modalBody));
+        ro.observe(ReactDOM.findDOMNode(this.modalBody) as Element);
         this.isObserved = true;
+
         /* if (false) {
 
              let s = {opacity: 1, top: 49};
@@ -121,15 +122,9 @@ export class Modal extends React.Component<IModalProps> {
     }
 
     public componentDidMount() {
-        this.modalRoot = document.getElementById("modal-root");
-        this.modalRoot.appendChild(this.el);
         if (this.props.show) {
             this.handleShow();
         }
-    }
-
-    public componentWillUnmount() {
-        this.modalRoot.removeChild(this.el);
     }
 
     public componentDidUpdate() {
@@ -142,13 +137,13 @@ export class Modal extends React.Component<IModalProps> {
         const container = this.props.container ? this.props.container() : document.body;
         const containerSize = container.getBoundingClientRect();
 
-        const node = ReactDOM.findDOMNode(this.modalBody);
+        const node = ReactDOM.findDOMNode(this.modalBody) as HTMLElement;
 
         if (node) {
             const data = node.getBoundingClientRect();
 
             if (this.props.target) {
-                const target = ReactDOM.findDOMNode(this.props.target());
+                const target = this.props.target();
                 const targetData = target.getBoundingClientRect();
                 let left = targetData.left;
                 if (left + data.width > containerSize.width) {
@@ -169,40 +164,42 @@ export class Modal extends React.Component<IModalProps> {
                 node.style.top = top + "px";
                 node.style.left = left + "px";
             } else {
+                const { left, right, top, bottom } = this.props;
+
                 let x: number = Math.round(Math.min(data.width / 2, window.innerWidth / 2 - 5));
                 let y = Math.round(Math.min(data.height / 2, window.innerHeight / 2 - 5));
                 x = this.props.left != undefined || this.props.right != undefined ? 0 : x;
                 y = this.props.top != undefined || this.props.bottom != undefined ? 0 : y;
 
-                /*if (!this.props.animate) {
+                if (left == undefined && right == undefined && top == undefined && bottom == undefined) {
                     node.style.transform = `translate(-${x}px, -${y}px)`;
-                    if (this.props.left == undefined && this.props.right == undefined) {
-                        node.style.left = "50%";
-                    }
-                } else {*/
-                node.style.margin = "0 auto";
-                if (this.props.left != undefined) {
-                    node.style.left = this.props.left + (Number.isNaN(this.props.left as any) ? "" : "px");
-                }
-
-                if (this.props.right != undefined) {
-                    node.style.right = this.props.right + (Number.isNaN(this.props.right as any) ? "" : "px");
-                }
-                if (this.props.left == undefined && this.props.right == undefined) {
-                    node.parentNode.style.justifyContent = "center";
-                    node.parentNode.style.alignItems = "center";
-                }
-                //}
-
-                if (this.props.top != undefined) {
-                    node.style.top = this.props.top + (Number.isNaN(this.props.top as any) ? "" : "px");
-                }
-                if (this.props.bottom != undefined) {
-                    node.style.bottom = this.props.bottom + (Number.isNaN(this.props.bottom as any) ? "" : "px");
-                }
-
-                if (this.props.top == undefined && this.props.bottom == undefined) {
                     node.style.top = "50%";
+                    node.style.left = "50%";
+                } else {
+                    node.style.margin = "0 auto";
+                    if (this.props.left != undefined) {
+                        node.style.left = this.props.left + (Number.isNaN(this.props.left as any) ? "" : "px");
+                    }
+
+                    if (this.props.right != undefined) {
+                        node.style.right = this.props.right + (Number.isNaN(this.props.right as any) ? "" : "px");
+                    }
+                    if (this.props.left == undefined && this.props.right == undefined) {
+                        node.parentNode.style.justifyContent = "center";
+                        node.parentNode.style.alignItems = "center";
+                    }
+                    // }
+
+                    if (this.props.top != undefined) {
+                        node.style.top = this.props.top + (Number.isNaN(this.props.top as any) ? "" : "px");
+                    }
+                    if (this.props.bottom != undefined) {
+                        node.style.bottom = this.props.bottom + (Number.isNaN(this.props.bottom as any) ? "" : "px");
+                    }
+
+                    if (this.props.top == undefined && this.props.bottom == undefined) {
+                        node.style.top = "50%";
+                    }
                 }
             }
         }
@@ -215,44 +212,45 @@ export class Modal extends React.Component<IModalProps> {
 
     public render() {
         const p = this.props;
-        return ReactDOM.createPortal(
-            <div
-                ref={(el) => (this.modalHandler = el)}
-                style={{
-                    display: p.animate && p.show ? "flex" : p.show ? "block" : "unset",
-                    visibility: p.animate && p.show ? "visible" : p.show ? "visible" : "hidden",
-                    backgroundColor: p.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
-                }}
-                className={
-                    (p.layer ? "w-modal-container " : "") +
-                        (p.animate && p.show ? "animate-fadeIn " : "") +
-                        p.className || ""
-                }
-                onClick={this.handleClose}
-            >
+        return (
+            <Portal>
                 <div
-                    className={`w-modal animate-${this.animationName}`}
-                    ref={(el) => (this.modalBody = el)}
-                    onClick={(e) => e.stopPropagation()}
+                    ref={(el) => (this.modalHandler = el)}
                     style={{
-                        width: p.width ? p.width : "auto",
-                        height: p.height ? p.height : "auto",
+                        display: p.animate && p.show ? "flex" : p.show ? "block" : "unset",
+                        visibility: p.animate && p.show ? "visible" : p.show ? "visible" : "hidden",
+                        backgroundColor: p.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
                     }}
+                    className={
+                        (p.layer ? "w-modal-container " : "") +
+                            (p.animate && p.show ? "animate-fadeIn " : "") +
+                            p.className || ""
+                    }
+                    onClick={this.handleClose}
                 >
-                    {p.showHideLink && (
-                        <a className="w-modal-close" style={{}} onClick={this.handleClose}>
-                            <Icon name="ChromeClose" />
-                        </a>
-                    )}
-                    {p.title && (
-                        <div className="w-modal-title">
-                            {p.icon && <Icon name={p.icon} />} {p.title}
-                        </div>
-                    )}
-                    {this.props.show ? p.children : null}
+                    <div
+                        className={`w-modal animate-${this.animationName}`}
+                        ref={(el) => (this.modalBody = el)}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                            width: p.width ? p.width : "auto",
+                            height: p.height ? p.height : "auto",
+                        }}
+                    >
+                        {p.showHideLink && (
+                            <a className="w-modal-close" style={{}} onClick={this.handleClose}>
+                                <Icon name="ChromeClose" />
+                            </a>
+                        )}
+                        {p.title && (
+                            <div className="w-modal-title">
+                                {p.icon && <Icon name={p.icon} />} {p.title}
+                            </div>
+                        )}
+                        {this.props.show ? p.children : null}
+                    </div>
                 </div>
-            </div>,
-            this.el,
+            </Portal>
         );
     }
 }
