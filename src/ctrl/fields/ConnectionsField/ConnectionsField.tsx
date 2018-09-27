@@ -1,8 +1,7 @@
 import * as React from "react";
 
-
 import { IFieldChangeEvent, IFieldProps } from "../../fields/Interfaces";
-import { PositionCalculator } from "../../../lib/PositionCalculator";
+
 import { LoadingIndicator } from "../../LoadingIndicator";
 import { deepIsEqual } from "../../../lib/JSONTools";
 import i18n from "../../../utils/I18n";
@@ -11,7 +10,8 @@ import IConnectionElement from "./IConnectionElement";
 import ConnectionsFieldSelectionElement from "./ConnectionsFieldSelectionElement";
 import { ConnectionsFieldEntry } from "./ConnectionsFieldEntry";
 import PrintJSON from "../../../utils/PrintJSON";
-import {Portal} from "../../overlays/Portal";
+
+import { Positioner, RelativePositionPresets } from "../../overlays/Positioner";
 
 export interface IConnectionChangeEvent extends IFieldChangeEvent {
     items: IConnectionElement[];
@@ -113,8 +113,8 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
     };
 
     private input: HTMLInputElement;
-    private dropdown: null | HTMLElement;
-    private inputContainer: any;
+    private inputContainer = React.createRef<HTMLDivElement>();
+    //private inputContainer: any;
 
     constructor(props: IConnectionsFieldProps) {
         super(props);
@@ -183,27 +183,12 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
         this.setState({ selectionOpened: false, search: "" });
     };
 
-    public updateDropdownPosition = () => {
-        if (this.dropdown != null) {
-            const calculator = new PositionCalculator(this.inputContainer, this.dropdown, {
-                theSameWidth: true,
-                targetAt: "bottom middle",
-                itemAt: "top middle",
-            });
-            calculator.calculate();
-            calculator.calculate();
-        }
-    };
-
     public handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
-        this.setState(
-            {
-                search: value,
-                searchResult: [],
-            },
-            this.updateDropdownPosition,
-        );
+        this.setState({
+            search: value,
+            searchResult: [],
+        });
 
         if (value.length > 0 || this.props.searchWithoutPhrase) {
             this.setState({
@@ -216,14 +201,11 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                     requestType: "search",
                 })
                 .then((result) => {
-                    this.setState(
-                        {
-                            loading: false,
-                            selectedIndex: 0,
-                            searchResult: result,
-                        },
-                        this.updateDropdownPosition,
-                    );
+                    this.setState({
+                        loading: false,
+                        selectedIndex: 0,
+                        searchResult: result,
+                    });
                 });
         }
     };
@@ -316,7 +298,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                         (this.props.editable ? "" : " w-connections-field-presenter") +
                         (this.state.items.length == 0 ? " w-connections-field-presenter-empty" : "")
                     }
-                    ref={(el) => (this.inputContainer = el)}
+                    ref={this.inputContainer}
                 >
                     {this.state.items.map((el: any) => (
                         <ConnectionsFieldEntry
@@ -352,8 +334,11 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
 
                     {this.state.selectionOpened &&
                         (this.state.search.length > 0 || this.props.searchWithoutPhrase) && (
-                            <Portal>
-                                <div className="w-connections-field-results" ref={(el) => (this.dropdown = el)}>
+                            <Positioner
+                                relativeTo={() => this.inputContainer.current}
+                                relativeSettings={{ ...RelativePositionPresets.bottomMiddle, theSameWidth: true }}
+                            >
+                                <div className="w-connections-field-results">
                                     {/*To jest test modala {this.state.selectedIndex}*/}
                                     {this.state.loading && <LoadingIndicator />}
                                     {!this.state.loading &&
@@ -368,7 +353,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                                         />
                                     )}
                                 </div>
-                            </Portal>
+                            </Positioner>
                         )}
                 </div>
                 {this.props.debug && (
