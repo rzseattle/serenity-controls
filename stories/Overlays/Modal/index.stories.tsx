@@ -1,11 +1,13 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import Panel from "../../../src/ctrl/Panel";
-import Shadow from "../../../src/ctrl/overlays/Shadow";
 
 import "./Modal.stories.sass";
 import { Modal } from "../../../src/ctrl/overlays/Modal";
 import { MoreTextHelper } from "./MoreTextHelper";
+import { RelativePositionPresets } from "../../../src/ctrl/overlays/Positioner";
+import { LoaderContainer } from "../../../src/ctrl/LoaderContainer";
+import { Datasource } from "../../../src/lib/Datasource";
+import Comm from "../../../src/lib/Comm";
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
@@ -15,6 +17,61 @@ const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ves
         porttitor odio augue eu risus. Nunc sollicitudin vitae libero a dapibus. Etiam nec imperdiet lectus. Vestibulum facilisis augue at viverra auctor. Proin maximus tortor vitae sem pretium feugiat.
         Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
 
+class OpenTest extends React.Component {
+    private buttonRef;
+
+    public state = {
+        opened: false,
+    };
+
+    public render() {
+        const promise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // returning URL to load
+                Comm._get("https://jsonplaceholder.typicode.com/users").then((result) => {
+                    resolve(result);
+                });
+            }, 1500);
+        });
+        return (
+            <>
+                <a
+                    className={"btn btn-primary"}
+                    onClick={() => this.setState({ opened: true })}
+                    ref={(el) => (this.buttonRef = el)}
+                >
+                    Open modal
+                </a>
+
+                <Modal
+                    show={this.state.opened}
+                    onHide={() => this.setState({ opened: false })}
+                    animation={"from-up"}
+                    shadow={false}
+                    width={400}
+                    target={() => this.buttonRef}
+                    relativePositionConf={RelativePositionPresets.bottomLeft}
+                >
+                    <div style={{ padding: 10 }}>
+                        <LoaderContainer promise={promise}>
+                            {(data) => (
+                                <ul>
+                                    {data.map((el: any) => (
+                                        <li key={el.id}>
+                                            {el.name}, email
+                                            {el.email}{" "}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </LoaderContainer>
+                    </div>
+                </Modal>
+            </>
+        );
+    }
+}
+
 storiesOf("Modal", module)
     .add("Base", () => (
         <Modal show={true} width={400} height={400}>
@@ -23,61 +80,75 @@ storiesOf("Modal", module)
     ))
     .add("Positioning", () => (
         <>
-            <Modal show={true} left={0} top={0} width={500}>
+            <Modal show={true} bottom={0} right={0} width={500}>
+                <h4>Modal 1</h4>
                 {text}
             </Modal>
-            <Modal show={true} bottom={0} right={0}>
+            <Modal show={true} top={0} right={0}>
+                <h4>Modal 2</h4>
                 {text}
             </Modal>
-            <Modal show={true} top={100} right={100} width={200}>
+            <Modal show={true} top={100} right={100} width={300}>
+                <h4>Modal 3</h4>
                 {text}
             </Modal>
         </>
     ))
     .add("Reposition on size change", () => (
-        <Modal show={true}>
-            {text}
-            <hr />
-            <MoreTextHelper text={text} />
+        <Modal show={true} width={600}>
+            <div style={{ padding: 10 }}>
+                {text}
+                <hr />
+                <MoreTextHelper text={text} />
+            </div>
         </Modal>
     ))
     .add("Disabled reposiotion on size change", () => (
-        <Modal show={true} recalculatePosition={false}>
-            {text}
-            <hr />
-            <MoreTextHelper text={text} />
+        <Modal show={true} recalculatePosition={false} width={600}>
+            <div style={{ padding: 10 }}>
+                {text}
+                <hr />
+                <MoreTextHelper text={text} />
+            </div>
         </Modal>
     ))
     .add("With title", () => (
-        <Modal show={true} title={"Test title"}>
+        <Modal show={true} title={"Test title"} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
     .add("With close link", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true}>
+        <Modal show={true} title={"Test title"} showHideLink={true} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
     .add("Icon", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"}>
+        <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
     .add("Without shadow", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"} shadow={false}>
+        <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"} shadow={false} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
     .add("Without shadow and back layer", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"} shadow={false} layer={false}>
+        <Modal
+            show={true}
+            title={"Test title"}
+            showHideLink={true}
+            icon={"Mail"}
+            shadow={false}
+            layer={false}
+            width={600}
+        >
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
     .add("Relative positioning", () => (
         <div>
-            To będzie to
-            <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"} shadow={false} layer={false}>
-                <div style={{ padding: 10 }}>{text}</div>
-            </Modal>
+            <div style={{ padding: 10 }}>
+                <OpenTest />
+            </div>
         </div>
     ));

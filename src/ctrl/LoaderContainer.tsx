@@ -9,7 +9,7 @@ interface ILoaderContainerProps {
     /**
      * Datasource object
      */
-    datasource: Datasource;
+    promise: Promise<any>;
     children: (result: any) => any;
     /**
      * Displays loaded data on bottom of container
@@ -41,25 +41,22 @@ export class LoaderContainer extends React.Component<ILoaderContainerProps, any>
         };
     }
 
-    public load = () => {
+    /*public load = () => {
         this.setState(
             {
                 loaded: false,
                 data: null,
             },
-            () => this.props.datasource.resolve(),
         );
-    };
+    };*/
 
     public componentDidMount() {
-        this.props.datasource.observe((result: any) => {
+        this.props.promise.then((result: any) => {
             this.setState({
                 loaded: true,
                 data: result,
             });
         });
-        // setTimeout(() => this.props.datasource.resolve() , 200)
-        this.props.datasource.resolve();
     }
 
     public render() {

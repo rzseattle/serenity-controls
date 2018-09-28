@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { withKnobs, select } from "@storybook/addon-knobs";
+import { withKnobs, select, number } from "@storybook/addon-knobs";
 import { Positioner, RelativePositionPresets } from "../../../src/ctrl/overlays/Positioner";
 import { IPositionCalculatorOptions } from "../../../src/lib/PositionCalculator";
 
@@ -50,14 +50,70 @@ const presets = Object.entries(RelativePositionPresets).map(([key, value]) => {
 
 storiesOf("Positioner", module)
     .addDecorator(withKnobs)
-    .add("Relative", () => {
+    .add("Relative with presets", () => {
+        const presetSelected = select("preset", presets, presets[0]);
+
         // @ts-ignore
-        const options = RelativePositionPresets[select("preset", presets, presets[0])];
+        const options: IPositionCalculatorOptions = { ...RelativePositionPresets[presetSelected] };
+
+        options.offsetX = number("Offset X", 0);
+        options.offsetY = number("Offset Y", 0);
+
         return (
             <>
                 <div style={{ margin: "100px auto", paddingBottom: 200 }}>
-                    <PositionPairHelper options={options} presetName={select("preset", presets, presets[0])} />
+                    <PositionPairHelper options={options} presetName={presetSelected} />
                 </div>
+            </>
+        );
+    })
+    .add("Relative manual", () => {
+        const positionsHorizontal = ["left", "middle", "right"];
+        const positionsVertical = ["top", "middle", "bottom"];
+
+        // @ts-ignore
+        const options: IPositionCalculatorOptions = {
+            relativeToAt:
+                select("Relative to element handle vertical", positionsVertical, "middle") +
+                " " +
+                select("Relative to element handle horizontal", positionsHorizontal, "middle"),
+            itemAt:
+                select("Layer handle vertical", positionsVertical, "middle") +
+                " " +
+                select("Layer handle horizontal", positionsHorizontal, "middle"),
+            offsetX: number("Offset X", 0),
+            offsetY: number("Offset Y", 0),
+        };
+
+        return (
+            <>
+                <div style={{ margin: "100px auto", paddingBottom: 200 }}>
+                    <PositionPairHelper options={options} presetName={""} />
+                </div>
+            </>
+        );
+    })
+    .add("Relative manual (to cursor)", () => {
+        const positionsHorizontal = ["left", "middle", "right"];
+        const positionsVertical = ["top", "middle", "bottom"];
+
+        // @ts-ignore
+        const options: IPositionCalculatorOptions = {
+            relativeToAt: "middle middle",
+
+            itemAt:
+                select("Layer handle vertical", positionsVertical, "top") +
+                " " +
+                select("Layer handle horizontal", positionsHorizontal, "left"),
+            offsetX: number("Offset X", 10),
+            offsetY: number("Offset Y", 10),
+        };
+
+        return (
+            <>
+                <Positioner relativeTo={"cursor"} relativeSettings={options}>
+                    <div style={LayerStyle} />
+                </Positioner>
             </>
         );
     });

@@ -8,7 +8,7 @@ export interface IPositionCalculatorOptions {
 
 export class PositionCalculator {
     private item: HTMLElement;
-    private target: HTMLElement;
+    private target: HTMLElement | ClientRect;
     private options: IPositionCalculatorOptions;
     private defaults: IPositionCalculatorOptions = {
         itemAt: "top left",
@@ -18,7 +18,11 @@ export class PositionCalculator {
         theSameWidth: false,
     };
 
-    constructor(target: HTMLElement, item: HTMLElement, options: Partial<IPositionCalculatorOptions> = {}) {
+    constructor(
+        target: HTMLElement | ClientRect,
+        item: HTMLElement,
+        options: Partial<IPositionCalculatorOptions> = {},
+    ) {
         this.item = item;
         this.target = target;
         this.options = { ...this.defaults, ...options };
@@ -61,22 +65,37 @@ export class PositionCalculator {
                     corr[0] -= clientRect.left;
                     corr[1] -= clientRect.top;
                 } else {
-                    //console.log(style.position);
+                    // console.log(style.position);
                 }
             }
         }
         return corr;
     }
 
-    public calculate() {
-        const targetPositionData = this.target.getBoundingClientRect();
+    public calculate(): React.CSSProperties {
+        let targetPositionData;
+        // this.target == ClientRect
+        // @ts-ignore
+        if (this.target.width !== undefined) {
+            targetPositionData = this.target;
+        } else {
+            // @ts-ignore
+            targetPositionData = this.target.getBoundingClientRect();
+        }
         const targetRefPoint = this.getRefPoint(this.options.relativeToAt, targetPositionData);
 
-        if (this.options.theSameWidth) {
-            this.item.style.width = targetPositionData.width + "px";
-        }
+        let styles: React.CSSProperties = {};
 
-        const itemPositionData = this.item.getBoundingClientRect();
+        let itemPositionData = this.item.getBoundingClientRect();
+
+        if (this.options.theSameWidth) {
+            styles.width = targetPositionData.width;
+            itemPositionData = { ...itemPositionData };
+            // @ts-ignore
+            itemPositionData.width = targetPositionData.width;
+            // @ts-ignore
+            itemPositionData.right = itemPositionData.width + targetPositionData.width;
+        }
 
         // const correction = this.getItemContainerPositionCorrection();
         const correction = [0, 0];
@@ -103,9 +122,24 @@ export class PositionCalculator {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
-        return {
-            left: targetRefPoint[0] + x + this.options.offsetX  + correction[0] + scrollLeft,
+        styles = {
+            ...styles,
+            left: targetRefPoint[0] + x + this.options.offsetX + correction[0] + scrollLeft,
             top: targetRefPoint[1] + y + this.options.offsetY + correction[1] + scrollTop,
         };
+
+        if (styles.left < 0) {
+            styles.left = 0;
+        } else if (styles.left as number + itemPositionData.width > window.innerWidth) {
+            styles.left = window.innerWidth - itemPositionData.width;
+        }
+
+        if (styles.top < 0) {
+            styles.top = 0;
+        } else if (styles.top as number + itemPositionData.height > window.innerHeight) {
+            styles.top = window.innerHeight - itemPositionData.height;
+        }
+
+        return styles;
     }
 }

@@ -22,7 +22,7 @@ addDecorator((story) => (
         <I18nextProvider i18n={i18n}>
             <div className="w-panel-container">
                 <div className="w-panel-body-container">
-                    <div className="w-panel-body" style={{ paddingBottom: 10 }}>
+                    <div className="w-panel-body" >
                         {story()}
                     </div>
                 </div>

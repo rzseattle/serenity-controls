@@ -4,6 +4,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import { Icon } from "./Icon";
 import { PositionCalculator } from "../lib/PositionCalculator";
 import { LoadingIndicator } from "./LoadingIndicator";
+import { IModalProps, Modal } from "./overlays/Modal";
 
 
 
