@@ -131,7 +131,20 @@ module.exports = function (input) {
     //if (input.PRODUCTION) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
-          ya
+           new HardSourceWebpackPlugin({
+                // Either an absolute path or relative to webpack's options.context.
+                cacheDirectory: input.NODE_CACHE_DIR + "/hard-source/[confighash]",
+                // Either an absolute path or relative to webpack's options.context.
+                // Sets webpack's recordsPath if not already set.
+                recordsPath: input.NODE_CACHE_DIR + "/hard-source/[confighash]/records.json",
+
+                // Either false, a string, an object, or a project hashing function.
+                environmentHash: {
+                    root: process.cwd(),
+                    directories: [],
+                    files: [ "yarn.lock"]
+                }
+            })
         );
     //}
 
