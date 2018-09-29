@@ -39,6 +39,7 @@ require("./LoadingContainer/index.stories");
 require("./FormFields/index.stories");
 require("./Overlays/Shadow/index.stories");
 require("./Overlays/Modal/index.stories");
+require("./Overlays/ConfirmDialog/index.stories");
 require("./Overlays/Positioner/index.stories");
 
 //require("./fields/filesList.stories");
