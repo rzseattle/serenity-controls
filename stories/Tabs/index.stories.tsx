@@ -103,32 +103,33 @@ storiesOf("Tab", module)
                     resolve({ date: new Date().toISOString() });
                 }, 1000);
             });
+        // todo nie działa jak należy
 
         return (
             <Panel>
                 <h4>Without mount on start - tab render every time (default)</h4>
                 <Tabs>
                     <TabPane title="Tab1">
-                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
                     </TabPane>
                     <TabPane title="Tab2">
-                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
                     </TabPane>
                     <TabPane title="Tab3">
-                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
                     </TabPane>
                 </Tabs>
 
                 <h4>Mount all tabs on start</h4>
                 <Tabs mountAllTabs={true}>
                     <TabPane title="Tab1">
-                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
                     </TabPane>
                     <TabPane title="Tab2">
-                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
                     </TabPane>
                     <TabPane title="Tab3">
-                        <LoaderContainer datasource={Datasource.from(fn)}>{(data) => data.date}</LoaderContainer>
+                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
                     </TabPane>
                 </Tabs>
             </Panel>

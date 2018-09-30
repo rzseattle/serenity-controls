@@ -37,6 +37,8 @@ require("./LoadingIndicator/index.stories");
 require("./Tabs/index.stories.tsx");
 require("./LoadingContainer/index.stories");
 require("./FormFields/index.stories");
+require("./Table/index.stories");
+require("./filters/index.stories");
 require("./Overlays/Shadow/index.stories");
 require("./Overlays/Modal/index.stories");
 require("./Overlays/ConfirmDialog/index.stories");

@@ -1,20 +1,24 @@
 import { IModalProps, Modal } from "./Modal";
 import * as React from "react";
 import ReactDOM from "react-dom";
+import { fI18n } from "../../utils/I18n";
+import "./ConfirmDialog.sass";
+import { RelativePositionPresets } from "./Positioner";
 
 interface IConfirmModalProps extends IModalProps {
     showCancelLing?: boolean;
+    onOk: () => any;
+    cleanup: () => any;
 }
 
 class ConfirmDialog extends React.Component<IConfirmModalProps, any> {
     public promise: Promise<{}>;
-    public promiseReject: any;
-    public promiseResolve: any;
+
     public static defaultProps: Partial<IConfirmModalProps> = {
         showCancelLing: true,
     };
 
-    constructor(props) {
+    constructor(props: IConfirmModalProps) {
         super(props);
     }
 
@@ -33,14 +37,19 @@ class ConfirmDialog extends React.Component<IConfirmModalProps, any> {
 
         return (
             <Modal {...modalProps} className="w-modal-confirm" show={true}>
-                <div style={{ padding: 15, borderTop: "solid #0078d7 10px" }}>{this.props.children}</div>
+                <div
+                    style={{ padding: 15 }}
+                    className={this.props.target !== undefined ? "" : "w-modal-confirm-top-border"}
+                >
+                    {this.props.children}
+                </div>
                 <div style={{ padding: 10, paddingTop: 0, textAlign: "right" }}>
                     <button onClick={this.handleConfirm} className="btn btn-primary">
-                        ok
+                        {fI18n.t("Tak")}
                     </button>
                     {this.props.showCancelLing && (
                         <button onClick={this.handleAbort} className="btn btn-default">
-                            anuluj
+                            {fI18n.t("Anuluj")}
                         </button>
                     )}
                 </div>
@@ -49,14 +58,15 @@ class ConfirmDialog extends React.Component<IConfirmModalProps, any> {
     }
 }
 
-export const confirmDialog = async (message, options: Partial<IConfirmModalProps> = {}) => {
+export const confirmDialog = async (message: string, options: Partial<IConfirmModalProps> = {}) => {
     const props = { ...options };
 
     const parent = options.container ? options.container() : document.body;
 
     const wrapper = parent.appendChild(document.createElement("div"));
 
-    let resolver, rejector;
+    let resolver: () => any;
+    let rejector: () => any;
 
     const promise = new Promise((resolve, reject) => {
         resolver = resolve;
@@ -69,6 +79,12 @@ export const confirmDialog = async (message, options: Partial<IConfirmModalProps
         rejector();
     };
 
+    if (props.target !== undefined) {
+        props.animation = props.animation || "from-up";
+        props.shadow = props.shadow || false;
+        props.relativePositionConf = props.relativePositionConf || RelativePositionPresets.bottomLeft;
+    }
+
     const x: any = (
         <ConfirmDialog {...props} onOk={resolver} cleanup={cleanup}>
             <div>{message}</div>
@@ -78,4 +94,9 @@ export const confirmDialog = async (message, options: Partial<IConfirmModalProps
     ReactDOM.render(x, wrapper);
 
     return promise;
+};
+
+export const alertDialog = async (message: string, options: Partial<IConfirmModalProps> = {}) => {
+    options.showCancelLing = false;
+    return confirmDialog(message, options);
 };

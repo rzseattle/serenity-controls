@@ -1,3 +1,9 @@
+.filter-modal
+    //background-color: red !important
+    border-radius: 0  !important
+    padding: 5px
+    overflow: visible !important
+
 .w-filter-openable
     display: inline-block
     outline: none
@@ -13,19 +19,17 @@
             background-color: white
             color: darkred
 
-
-
     .w-filter-openable-body
         background-color: white
         width: 100%
         z-index: 5
         padding: 0px 10px 10px
-        position: absolute
+
         box-shadow: 0 0px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)
         border: solid 1px #c5c5c5
         width: 330px
         margin-top: -1px
-        z-index: 20
+
         i
             font-size: 18px
             font-weight: lighter
@@ -38,8 +42,8 @@
 
     .w-filter-openable-body-grid
         width: 600px
-        >div
-            width: calc( 50% - 10px )
+        > div
+            width: calc(50% - 10px)
             float: left
             &:nth-child(odd)
                 clear: both
@@ -54,12 +58,16 @@
             border-bottom: none
             z-index: 30
 
-
     th &
         height: 100%
 
 .w-filter
     text-align: left
+
+    .w-filter-title
+        color: #005A9D
+        font-weight: bold
+        margin-bottom: -7px
 
     .w-filter-apply
         border: solid 1px lightgrey
@@ -70,14 +78,4 @@
         &:hover
             background-color: #dbdbdb
 
-
-
-    @import "DateFilter"
-    @import "SelectFilter"
-    @import "NumericFilter"
-    @import "SwitchFilter"
-    @import "TextFilter"
-    @import "MultiFilter"
-
-
-@import "FilterPanel"
+//@import "FilterPanel"

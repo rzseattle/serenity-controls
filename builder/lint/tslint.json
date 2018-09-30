@@ -17,6 +17,9 @@
         "object-literal-sort-keys": false,
         "jsx-no-bind": true,
         "member-ordering": false,
-        "semicolon": [true, "always", "ignore-bound-class-methods"]
+        "semicolon": [true, "always", "ignore-bound-class-methods"],
+        "forin": false,
+        "no-bitwise": false,
+        "radix": false
     }
 }

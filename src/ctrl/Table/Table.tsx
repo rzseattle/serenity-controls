@@ -1,31 +1,36 @@
-import {ReactElement, StatelessComponent} from "react";
+import { ReactElement, StatelessComponent } from "react";
 
 declare var window: any;
 declare var PRODUCTION: any;
 import * as React from "react";
-import {TextFilter} from "./Filters";
-import {ColumnHelper} from "./table/ColumnHelper";
-import FiltersPresenter from "./table/FiltersPresenter";
-import Tbody from "./table/Tbody";
-import Footer from "./table/Footer";
-import {ICellTemplate, IColumnData, IFilterValue, IOrder} from "./table/Interfaces";
-import {EmptyResult, Error, Loading} from "./table/placeholders";
-import {deepCopy} from "frontend/src/lib/JSONTools";
-import Thead from "frontend/src/ctrl/table/Thead";
-import Comm from "frontend/src/lib/Comm";
-import {Datasource} from "frontend/src/lib/Datasource";
+import { ColumnHelper } from "./ColumnHelper";
+import FiltersPresenter from "./FiltersPresenter";
+import Tbody from "./Tbody";
+import Footer from "./Footer";
+import { ICellTemplate, IColumnData, IFilterValue, IOrder } from "./Interfaces";
+import { EmptyResult, Error, Loading } from "./placeholders";
 
-interface IDataQuery {
+import Comm from "../../lib/Comm";
+import Thead from "./Thead";
+import { deepCopy, deepIsEqual } from "../../lib/JSONTools";
+import TextFilter from "../filters/TextFilter";
+import {LoadingIndicator} from "../LoadingIndicator";
+
+export interface IDataQuery {
+    columns: IColumnData[];
+    filters: { [key: string]: IFilterValue };
+    order: { [index: string]: IOrder };
+    onPage: number;
+    currentPage: number;
+    additionalConditions: any;
 }
 
-interface ITableDataInput {
+export interface ITableDataInput {
     data: any[];
     countAll?: number;
     debug?: string;
-    decorator?: (requestData: IDataQuery, data: ITableDataInput) => ITableDataInput | Promise<ITableDataInput>;
+    decorator?: (requestData: IDataQuery, data: ITableDataInput) => Promise<ITableDataInput>;
 }
-
-type IDataProvider = (requestData: IDataQuery) => ITableDataInput | Promise<ITableDataInput>;
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
@@ -35,14 +40,13 @@ type IRowStyleTemplate = (row: any, index: number) => any;
 
 interface IGroupByData {
     field?: string;
-    equalizer?: (prevRow, nextRow) => boolean;
-    labelProvider?: (nextRow, prevRow) => string | ReactElement<any> | StatelessComponent;
+    equalizer?: (prevRow: any, nextRow: any) => boolean;
+    labelProvider?: (nextRow: any, prevRow: any) => string | ReactElement<any> | StatelessComponent;
 }
 
 interface ITableProps {
-    dataProvider?: IDataProvider;
     remoteURL?: string;
-    dataSource?: Datasource;
+    dataProvider?: (input: IDataQuery) => Promise<ITableDataInput>;
     selectable?: boolean;
     onSelectionChange?: ISelectionChangeEvent;
     controlKey?: string;
@@ -67,7 +71,7 @@ interface ITableState {
     firstLoaded: boolean;
     data: any[];
     dataSourceError: string;
-    dataSourceDebug: boolean;
+    dataSourceDebug: boolean | string;
     filters: { [key: string]: IFilterValue };
     order: { [key: string]: IOrder };
     onPage: number;
@@ -90,7 +94,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         rememberState: false,
         additionalConditions: {},
         filters: null,
-        data: {data: [], countAll: 0, debug: ""},
+        data: { data: [], countAll: 0, debug: "" },
         rowClassTemplate: null,
         rowStyleTemplate: null,
         infoRow: null,
@@ -103,12 +107,12 @@ class Table extends React.Component<ITableProps, ITableState> {
     public state: ITableState;
     private tooltipTimeout: number;
 
-    constructor(props) {
+    constructor(props: ITableProps) {
         super(props);
 
-        const columns: IColumnData[] = props.columns;
-        for (const i in columns) {
-            columns[i] = this.prepareColumnData(columns[i]);
+        const processedColumns: IColumnData[] = [];
+        for (const i in props.columns) {
+            processedColumns[i] = this.prepareColumnData(props.columns[i]);
         }
 
         // console.log(columns);
@@ -125,7 +129,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             currentPage: 1,
             countAll: this.props.data.countAll,
             fixedLayout: false, // props.fixedLayout,
-            columns,
+            columns: processedColumns,
             // bodyHeight: this.props.initHeight,
             allChecked: false,
             selection: [],
@@ -136,13 +140,18 @@ class Table extends React.Component<ITableProps, ITableState> {
         this.tmpDragStartY = 0;
         this.xhrConnection = null;
 
-        const hashCode = function (s) {
-            return s.split("").reduce(function (a, b) {
+        const hashCode = (s: any) => {
+            return s.split("").reduce((a: any, b: any) => {
                 a = (a << 5) - a + b.charCodeAt(0);
                 return a & a;
             }, 0);
         };
-        this.hashCode = hashCode(this.props.controlKey + (window.CONTROLS_BASE_LOCATION != undefined ? window.CONTROLS_BASE_LOCATION : window.location.pathname + window.location.hash.split("?")[0]));
+        this.hashCode = hashCode(
+            this.props.controlKey +
+                (window.CONTROLS_BASE_LOCATION != undefined
+                    ? window.CONTROLS_BASE_LOCATION
+                    : window.location.pathname + window.location.hash.split("?")[0]),
+        );
 
         this.tooltipTimeout = null;
     }
@@ -152,8 +161,8 @@ class Table extends React.Component<ITableProps, ITableState> {
             const local = JSON.parse(window.localStorage[this.hashCode]);
             let filters = deepCopy(this.state.filters);
             // for controlable filters u cant overwrite them when table is mounting
-            filters = {...filters, ...local.filters};
-            this.setState({...this.state, ...local, firstLoaded: false, filters}, () => {
+            filters = { ...filters, ...local.filters };
+            this.setState({ ...this.state, ...local, firstLoaded: false, filters }, () => {
                 if (this.props.onFiltersChange) {
                     this.props.onFiltersChange(deepCopy(this.state.filters));
                 }
@@ -165,7 +174,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         return this.state.data;
     }
 
-    public componentDidUpdate(prevProps) {
+    public componentDidUpdate(prevProps: ITableProps) {
         const state = this.state;
         if (this.props.rememberState) {
             window.localStorage[this.hashCode] = JSON.stringify({
@@ -183,7 +192,7 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     public componentDidMount() {
-        if (this.props.remoteURL || this.props.dataProvider || this.props.dataSource) {
+        if (this.props.remoteURL || this.props.dataProvider) {
             this.load();
         }
     }
@@ -269,13 +278,14 @@ class Table extends React.Component<ITableProps, ITableState> {
         return should;
     }*/
 
-    public componentWillReceiveProps(nextProps) {
+    public componentWillReceiveProps(nextProps: ITableProps) {
         const columns = [...nextProps.columns];
+        const preparedColumns: IColumnData[] = [];
         for (const i in columns) {
-            columns[i] = this.prepareColumnData(columns[i]);
+            preparedColumns[i] = this.prepareColumnData(columns[i]);
         }
-        if (JSON.stringify(columns) != JSON.stringify(this.state.columns)) {
-            this.setState({columns});
+        if (!deepIsEqual(columns, this.state.columns)) {
+            this.setState({ columns: preparedColumns });
         }
 
         if (nextProps.filters) {
@@ -296,7 +306,7 @@ class Table extends React.Component<ITableProps, ITableState> {
         const trimmedData = [...this.state.columns];
 
         for (let i = 0; i < trimmedData.length; i++) {
-            trimmedData[i] = {...trimmedData[i]};
+            trimmedData[i] = { ...trimmedData[i] };
             trimmedData[i].filter = null;
             trimmedData[i].events = null;
         }
@@ -319,13 +329,13 @@ class Table extends React.Component<ITableProps, ITableState> {
             this.props.onSelectionChange([]);
         }
 
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        const setStateAfterLoad = (input, callback = null) => {
+        const setStateAfterLoad = (input: ITableDataInput, callback: () => any = null) => {
             this.setState(
                 {
                     data: input.data.slice(0),
-                    countAll: 0 + parseInt(input.countAll),
+                    countAll: parseInt("" + input.countAll),
                     loading: false,
                     dataSourceDebug: input.debug ? input.debug : false,
                     firstLoaded: true,
@@ -349,37 +359,25 @@ class Table extends React.Component<ITableProps, ITableState> {
                 setStateAfterLoad(data);
             });
             comm.setData(this.getRequestData());
-            comm.on(Comm.EVENTS.FINISH, () => this.setState({loading: false}));
+            comm.on(Comm.EVENTS.FINISH, () => this.setState({ loading: false }));
             this.xhrConnection = comm.send();
-        } else if (this.props.dataSource) {
-            const {dataSource} = this.props;
-            dataSource.observe((result) => {
-                setStateAfterLoad(result);
-            });
-            dataSource.resolve();
         } else if (this.props.dataProvider) {
             const result = this.props.dataProvider(this.getRequestData());
 
-            if (result instanceof Promise) {
-                result.then((data) => {
-                    setStateAfterLoad(data, () => {
-                        if (data.decorator != undefined) {
-                            const result = data.decorator(this.getRequestData(), deepCopy(data));
-                            if (result instanceof Promise) {
-                                result.then((data) => {
-                                    setStateAfterLoad(data);
-                                });
-                            } else {
-                                setStateAfterLoad(result);
-                            }
-                        }
-                    });
+            result.then((data) => {
+                setStateAfterLoad(data, () => {
+                    if (data.decorator != undefined) {
+                        data.decorator(this.getRequestData(), deepCopy(data)).then(
+                            (decoratorResult: ITableDataInput) => {
+                                setStateAfterLoad(decoratorResult);
+                            },
+                        );
+                    }
+                    setStateAfterLoad(data);
                 });
-            } else {
-                setStateAfterLoad(result);
-            }
+            });
         }
-    }
+    };
 
     public handleStateRemove() {
         delete window.localStorage[this.hashCode];
@@ -389,31 +387,31 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 
     public handleFiltersDeleted() {
-        this.setState({filters: {}});
+        this.setState({ filters: {} });
     }
 
-    public handleFilterChanged(filterValue: IFilterValue) {
+    public handleFilterChanged = (filterValue: IFilterValue) => {
         this.state.filters[filterValue.field] = filterValue;
-        this.setState({currentPage: 1, filters: this.state.filters}, this.load);
+        this.setState({ currentPage: 1, filters: this.state.filters }, this.load);
         if (this.props.onFiltersChange) {
             this.props.onFiltersChange(deepCopy(this.state.filters));
         }
-    }
+    };
 
-    public handleFilterDelete(key) {
+    public handleFilterDelete = (key: string) => {
         delete this.state.filters[key];
-        this.setState({currentPage: 1, filters: this.state.filters}, this.load);
+        this.setState({ currentPage: 1, filters: this.state.filters }, this.load);
         if (this.props.onFiltersChange) {
             this.props.onFiltersChange(deepCopy(this.state.filters));
         }
-    }
+    };
 
-    public handleOrderDelete(field) {
+    public handleOrderDelete = (field: string) => {
         delete this.state.order[field];
         this.setState({}, this.load);
-    }
+    };
 
-    public headClicked(index, e) {
+    public headClicked = (index: number) => {
         const column = this.state.columns.filter((c) => c !== null && c.display === true)[index];
 
         if (!column.orderField) {
@@ -422,10 +420,10 @@ class Table extends React.Component<ITableProps, ITableState> {
 
         let field = null;
 
-        const _field = column.orderField ? column.orderField : column.field;
+        const fieldName = column.orderField ? column.orderField : column.field;
 
-        if (this.state.order[_field]) {
-            field = this.state.order[_field];
+        if (this.state.order[fieldName]) {
+            field = this.state.order[fieldName];
         } else {
             field = {
                 caption: column.caption,
@@ -434,46 +432,25 @@ class Table extends React.Component<ITableProps, ITableState> {
             };
         }
 
-        field = {...field, dir: field.dir == "asc" ? "desc" : "asc"};
+        field = { ...field, dir: field.dir == "asc" ? "desc" : "asc" };
 
-        this.state.order[_field] = field;
+        this.state.order[fieldName] = field;
 
-        this.setState({order: this.state.order}, this.load);
-    }
+        this.setState({ order: this.state.order }, this.load);
+    };
 
-    public handleOnPageChangepage(onPage) {
-        this.setState({onPage, currentPage: 1}, this.load);
-    }
+    public handleOnPageChangepage = (onPage: number) => {
+        this.setState({ onPage, currentPage: 1 }, this.load);
+    };
 
-    public handleCurrentPageChange(page) {
+    public handleCurrentPageChange = (page: number) => {
         const newPage = Math.max(1, Math.min(Math.ceil(this.state.countAll / this.state.onPage), page));
         if (newPage != this.state.currentPage) {
-            this.setState({currentPage: newPage, selection: [], allChecked: false}, () => this.load());
+            this.setState({ currentPage: newPage, selection: [], allChecked: false }, () => this.load());
         }
-    }
+    };
 
-    public toggleFixedLayout() {
-        this.setState({
-            fixedLayout: !this.state.fixedLayout,
-        });
-    }
-
-    public handleBodyResizeStart(e) {
-        this.tmpDragStartY = e.clientY;
-        // this.tmpCurrHeight = this.state.bodyHeight;
-    }
-
-    public handleBodyResize(e) {
-        if (e.clientY) {
-            // this.setState({bodyHeight:  this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
-        }
-    }
-
-    public handleBodyResizeEnd(e) {
-        // this.setState({bodyHeight: this.tmpCurrHeight + (-this.tmpDragStartY + e.clientY)});
-    }
-
-    public handleKeyDown(e) {
+    public handleKeyDown = (e: React.KeyboardEvent) => {
         // right
         if (e.keyCode == 39) {
             this.handleCurrentPageChange(this.state.currentPage + 1);
@@ -483,21 +460,21 @@ class Table extends React.Component<ITableProps, ITableState> {
         if (e.keyCode == 37) {
             this.handleCurrentPageChange(this.state.currentPage - 1);
         }
-    }
+    };
 
-    public handleCheckClicked(index) {
+    public handleCheckClicked = (index: string | number) => {
         let s = this.state.selection;
         if (index == "all") {
             if (!this.state.allChecked) {
-                this.state.data.forEach((el, index) => {
-                    if (s.indexOf(index) == -1) {
-                        s.push(index);
+                this.state.data.forEach((el, itemIndex: number) => {
+                    if (s.indexOf(itemIndex) == -1) {
+                        s.push(itemIndex);
                     }
                 });
             } else {
                 s = [];
             }
-            this.setState({allChecked: !this.state.allChecked});
+            this.setState({ allChecked: !this.state.allChecked });
         } else {
             const selected = s.indexOf(index);
             if (selected == -1) {
@@ -514,26 +491,29 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
 
         if (this.props.onSelectionChange) {
-            const tmp = [];
-            s.forEach((index) => tmp.push(this.state.data[index]));
+            const tmp: any[] = [];
+            s.forEach((indexSelection: any) => tmp.push(this.state.data[indexSelection]));
             this.props.onSelectionChange(tmp);
         }
 
-        this.setState({selection: s});
-    }
+        this.setState({ selection: s });
+    };
 
-    private prepareColumnData(inData: IColumnData): IColumnData {
+    private prepareColumnData(inData: IColumnData | ColumnHelper): IColumnData {
         if (inData === null) {
             return null;
         }
+        let column: IColumnData;
 
         if (inData instanceof ColumnHelper) {
-            inData = inData.get();
+            column = inData.get();
+        } else {
+            column = inData;
         }
 
         let data: IColumnData = {
             field: null,
-            caption: inData.caption == undefined ? inData.field : inData.caption,
+            caption: column.caption === undefined ? column.field : column.caption,
             isSortable: true,
             display: true,
             toolTip: null,
@@ -559,16 +539,16 @@ class Table extends React.Component<ITableProps, ITableState> {
             filter: [
                 {
                     component: TextFilter,
-                    field: inData.field,
-                    caption: inData.field,
+                    field: column.field,
+                    caption: column.field,
                 },
             ],
         };
 
-        data = {...data, ...inData};
+        data = { ...data, ...column };
 
         data.orderField = data.orderField || data.field;
-        data.filter.forEach((el) => (el.field = el.field || inData.field));
+        data.filter.forEach((el) => (el.field = el.field || column.field));
 
         return data;
     }
@@ -577,17 +557,21 @@ class Table extends React.Component<ITableProps, ITableState> {
         const columns = deepCopy(this.state.columns);
 
         return (
-            <div className={"w-table " + (this.state.loading ? "w-table-loading" : "")} tabIndex={0} onKeyDown={this.handleKeyDown.bind(this)}>
+            <div
+                className={"w-table " + (this.state.loading ? "w-table-loading" : "")}
+                tabIndex={0}
+                onKeyDown={this.handleKeyDown}
+            >
                 <div className="w-table-loader">
-                    <span>
-                        <i/>
-                        <i/>
-                        <i/>
-                        <i/>
-                    </span>
+                    <LoadingIndicator/>
                 </div>
                 <div className="w-table-top">
-                    <FiltersPresenter order={this.state.order} filters={this.state.filters} FilterDelete={this.handleFilterDelete.bind(this)} orderDelete={this.handleOrderDelete.bind(this)}/>
+                    <FiltersPresenter
+                        order={this.state.order}
+                        filters={this.state.filters}
+                        FilterDelete={this.handleFilterDelete}
+                        orderDelete={this.handleOrderDelete}
+                    />
                 </div>
 
                 <table>
@@ -597,53 +581,53 @@ class Table extends React.Component<ITableProps, ITableState> {
                             columns={columns}
                             order={deepCopy(this.state.order)}
                             filters={deepCopy(this.state.filters)}
-                            onFilterChanged={this.handleFilterChanged.bind(this)}
-                            onCellClicked={this.headClicked.bind(this)}
-                            onCheckAllClicked={this.handleCheckClicked.bind(this, "all")}
+                            onFilterChanged={this.handleFilterChanged}
+                            onCellClicked={this.headClicked}
+                            onCheckAllClicked={() => this.handleCheckClicked("all")}
                             allChecked={this.state.allChecked}
                         />
                     )}
                     <tbody className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}>
-                    {this.state.dataSourceError != "" && <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>}
-                    {!this.state.loading && this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1}/>}
-                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
-                    {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
-                    {/*this.state.firstLoaded && */}
-                    {this.state.data.length > 0 && (
-                        <Tbody
-                            rowClassTemplate={this.props.rowClassTemplate}
-                            rowStyleTemplate={this.props.rowStyleTemplate}
-                            selection={deepCopy(this.state.selection)}
-                            onCheck={this.handleCheckClicked.bind(this)}
-                            selectable={this.props.selectable}
-                            columns={columns}
-                            filters={this.state.filters}
-                            order={this.state.order}
-                            loading={this.state.loading}
-                            data={this.state.data}
-                            infoRow={this.props.infoRow}
-                            groupBy={this.props.groupBy}
-                        />
-                    )}
+                        {this.state.dataSourceError != "" && (
+                            <Error colspan={columns.length + 1} error={this.state.dataSourceError} />
+                        )}
+                        {!this.state.loading &&
+                            this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1} />}
+                        {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
+                        {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
+                        {/*this.state.firstLoaded && */}
+                        {this.state.data.length > 0 && (
+                            <Tbody
+                                rowClassTemplate={this.props.rowClassTemplate}
+                                rowStyleTemplate={this.props.rowStyleTemplate}
+                                selection={deepCopy(this.state.selection)}
+                                onCheck={this.handleCheckClicked}
+                                selectable={this.props.selectable}
+                                columns={columns}
+                                filters={this.state.filters}
+                                order={this.state.order}
+                                loading={this.state.loading}
+                                data={this.state.data}
+                                infoRow={this.props.infoRow}
+                                groupBy={this.props.groupBy}
+                            />
+                        )}
                     </tbody>
 
                     {this.props.showFooter && (
                         <tfoot>
-                        {this.state.firstLoaded && (
-                            <Footer
-                                columns={columns}
-                                count={this.state.countAll}
-                                onPage={this.state.onPage}
-                                onPageChanged={this.handleOnPageChangepage.bind(this)}
-                                currentPage={this.state.currentPage}
-                                currentPageChanged={this.handleCurrentPageChange.bind(this)}
-                                bodyResizeStart={this.handleBodyResizeStart.bind(this)}
-                                bodyResize={this.handleBodyResize.bind(this)}
-                                bodyResizeEnd={this.handleBodyResizeEnd.bind(this)}
-                                parent={this}
-                                reload={this.load}
-                            />
-                        )}
+                            {this.state.firstLoaded && (
+                                <Footer
+                                    columns={columns}
+                                    count={this.state.countAll}
+                                    onPage={this.state.onPage}
+                                    onPageChanged={this.handleOnPageChangepage}
+                                    currentPage={this.state.currentPage}
+                                    currentPageChanged={this.handleCurrentPageChange}
+                                    parent={this}
+                                    reload={this.load}
+                                />
+                            )}
                         </tfoot>
                     )}
                 </table>
@@ -654,4 +638,4 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 }
 
-export {Table, ColumnHelper, ColumnHelper as Column};
+export { Table, ColumnHelper, ColumnHelper as Column };

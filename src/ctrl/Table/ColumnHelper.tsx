@@ -1,9 +1,15 @@
 import * as React from "react";
 import { ICellTemplate, IColumnData, IEventCallback } from "./Interfaces";
-import { IOption, Option } from "../fields/Interfaces";
-import { DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter } from "../Filters";
-import { IFilter } from "frontend/src/ctrl/filters/Intefaces";
-import Icon from "frontend/src/ctrl/Icon";
+import { IOption } from "../fields/Interfaces";
+
+import { IFilter } from "../filters/Intefaces";
+import Icon from "../Icon";
+
+import NumericFilter from "../filters/NumericFilter";
+import SelectFilter from "../filters/SelectFilter";
+import TextFilter from "../filters/TextFilter";
+import DateFilter from "../filters/DateFilter";
+import SwitchFilter from "../filters/SwitchFilter";
 
 export class ColumnHelper {
     protected data: IColumnData;
@@ -31,6 +37,9 @@ export class ColumnHelper {
                     caption,
                     field,
                     component: NumericFilter,
+                    config: {
+                        showFilterOptions: true,
+                    },
                 },
             ],
         }).className("right");
@@ -45,12 +54,20 @@ export class ColumnHelper {
                     caption,
                     field,
                     component: NumericFilter,
+                    config: {
+                        showFilterOptions: true,
+                    },
                 },
             ],
         }).className("right");
     }
 
-    public static map(field: string, caption: string, options: IOption[] | object, multiSelectFilter: boolean = false): ColumnHelper {
+    public static map(
+        field: string,
+        caption: string,
+        options: IOption[] | object,
+        multiSelectFilter: boolean = false,
+    ): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
@@ -89,7 +106,7 @@ export class ColumnHelper {
                     field,
                     component: TextFilter,
                     config: {
-                        extendedInfo: true,
+                        showFilterOptions: true,
                     },
                 },
             ],
@@ -115,7 +132,11 @@ export class ColumnHelper {
             filter: [
                 {
                     field,
+                    caption,
                     component: NumericFilter,
+                    config: {
+                        showFilterOptions: true,
+                    },
                 },
             ],
         }).className("right");
@@ -129,9 +150,10 @@ export class ColumnHelper {
             filter: [
                 {
                     field,
+                    caption,
                     component: TextFilter,
                     config: {
-                        extendedInfo: true,
+                        showFilterOptions: true,
                     },
                 },
             ],
@@ -308,11 +330,11 @@ export class ColumnHelper {
         return this;
     }
 
-/*    public setSortField(field: string){
-        this.data.sortField = field;
-        this.data.isSortable = true;
-        return this;
-    }*/
+    /*    public setSortField(field: string){
+            this.data.sortField = field;
+            this.data.isSortable = true;
+            return this;
+        }*/
 
     public noFilter(): ColumnHelper {
         this.data.filter = [];

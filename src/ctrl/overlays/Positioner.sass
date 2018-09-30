@@ -1,6 +1,6 @@
 .w-positioner
     position: absolute
-    overflow: hidden
+    //overflow: hidden
 
     .w-position-animation-none
     .w-position-animation-fade-in
@@ -8,7 +8,7 @@
         width: 100%
         height: 100%
     .w-position-animation-from-up
-        animation: fromUp 0.8s
+        animation: fromUp 0.3s ease-out
 
 @keyframes fadein
     from
@@ -18,8 +18,8 @@
 
 @keyframes fromUp
     from
-        transform: translateY(-30%)
-        opacity: 0
+        transform: translateY(-10px)
+        opacity: 0.5
     to
         transform: translateY(0)
         opacity: 1

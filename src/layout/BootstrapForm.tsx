@@ -1,14 +1,13 @@
 import * as React from "react";
 import { CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg } from "../ctrl/Fields";
 import { FileList } from "../ctrl/FileLists";
-import { Shadow } from "../ctrl/Overlays";
+
 import Comm from "../lib/Comm";
 import { Copyable } from "../ctrl/Copyable";
 import Icon from "../ctrl/Icon";
-import { IFieldChangeEvent } from '../ctrl/fields/Interfaces';
+import { IFieldChangeEvent } from "../ctrl/fields/Interfaces";
 import { any } from "prop-types";
-
-
+import Shadow from "../ctrl/overlays/Shadow";
 
 interface IWithBootstrapFormFieldProps {
     /**
@@ -21,7 +20,7 @@ interface IWithBootstrapFormFieldProps {
     className?: string;
     prefix?: string;
     suffix?: string;
-    layoutType?: string; //"horizontal" | "default";
+    layoutType?: string; // "horizontal" | "default";
     addInputClass: boolean;
     editable?: boolean;
     copyable?: boolean;
@@ -238,7 +237,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
      */
     public getData() {
         const data = Object.assign(this.state.data, {});
-        const fields:  { [index: string]: any } = Object.assign(this.fieldsValues, {});
+        const fields: { [index: string]: any } = Object.assign(this.fieldsValues, {});
 
         for (const i in data) {
             if (data[i] == undefined && fields[i] !== undefined) {
@@ -293,11 +292,11 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         }
     }
 
-    public submit(tmpCallbacks: {[index:string]: (  ) => any }) {
+    public submit(tmpCallbacks: {[index: string]: (  ) => any }) {
         this.handleSubmit(null, tmpCallbacks);
     }
 
-    public handleSubmit = (e: React.FormEvent, tmpCallbacks: {[index:string]: ( { form: BForm; response: any} ) =>any} = {}) => {
+    public handleSubmit = (e: React.FormEvent, tmpCallbacks: {[index: string]: ( { form: BForm; response: any} ) =>any} = {}) => {
         if (e) {
             e.preventDefault();
         }
@@ -307,14 +306,12 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         } else if (this.props.action) {
             const comm = new Comm(this.props.action);
 
-            let data:{[index:string]:any}  = {};
+            let data: {[index: string]: any}  = {};
             if (this.props.namespace) {
                 data[this.props.namespace] = this.getData();
             } else {
                 data = this.getData();
             }
-
-            
 
             comm.on("finish", () => this.setState({ loading: false }));
             comm.on("success", (response) => {
@@ -477,7 +474,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             <Tag
                 ref={(form: HTMLElement) => (this.formTag = form)}
                 className={classes.join(" ")}
-                onSubmit={(e: React.FormEvent) =>{ 
+                onSubmit={(e: React.FormEvent) => {
                     this.handleSubmit(e);
                     return false;
                 }}
@@ -485,7 +482,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
             >
                 {this.state.formErrors.length > 0 && (
                     <ul className="bg-danger ">
-                        {this.state.formErrors.map((el:string) => (
+                        {this.state.formErrors.map((el: string) => (
                             <li key={el}>{el}</li>
                         ))}
                     </ul>

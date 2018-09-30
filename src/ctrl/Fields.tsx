@@ -2,7 +2,7 @@ import * as React from "react";
 // import Inputmask from 'inputmask';
 import Dropzone from "react-dropzone";
 
-import {ConnectionsField} from "./fields/ConnectionsField";
+import {ConnectionsField} from "./fields/ConnectionsField/ConnectionsField";
 import {Icon} from "./Icon";
 
 import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
@@ -592,7 +592,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 }
 
 interface ISwitchProps extends IFieldProps {
-    options: Array<{ value: string | number; label: string }> | { [key: string]: string };
+    options: IOption[] | { [key: string]: string };
     value?: number | string;
 }
 

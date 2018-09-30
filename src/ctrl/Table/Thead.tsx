@@ -4,8 +4,10 @@ import { deepIsEqual } from "frontend/src/lib/JSONTools";
 import { Icon } from "frontend/src/ctrl/Icon";
 import { tooltip } from "frontend/src/ctrl/Overlays";
 import { IFilter } from "frontend/src/ctrl/filters/Intefaces";
+import { Modal } from "../overlays/Modal";
+import { RelativePositionPresets } from "../overlays/Positioner";
 
-export default class Thead extends React.Component<any, any> {
+export default class Thead extends React.PureComponent<any, any> {
     public tooltipCleanup: any;
 
     constructor(props) {
@@ -13,12 +15,12 @@ export default class Thead extends React.Component<any, any> {
         this.tooltipCleanup = null;
     }
 
-    public shouldComponentUpdate(nextProps, nextState) {
+    /*public shouldComponentUpdate(nextProps, nextState) {
         return !deepIsEqual(
             [this.props.columns, this.props.filters, this.props.order, this.props.allChecked, this.props.selectable],
             [nextProps.columns, nextProps.filters, nextProps.order, nextProps.allChecked, nextProps.selectable],
         );
-    }
+    }*/
 
     public handleMouseEnter(index, e) {
         e.stopPropagation();
@@ -28,7 +30,7 @@ export default class Thead extends React.Component<any, any> {
         if (el.header.tooltip && this.tooltipCleanup === null) {
             this.tooltipCleanup = tooltip(el.header.tooltip, {
                 target: () => node,
-                offsetY: -10
+                offsetY: -10,
             });
         }
     }
@@ -65,7 +67,7 @@ export default class Thead extends React.Component<any, any> {
                                 style={{ width: el.width }}
                                 className={classes.join(" ")}
                                 onClick={(e) => {
-                                    el.isSortable  && this.props.onCellClicked(index, e);
+                                    el.isSortable && this.props.onCellClicked(index, e);
                                 }}
                                 onMouseEnter={this.handleMouseEnter.bind(this, index)}
                                 onMouseLeave={this.handleMouseLeave.bind(this, index)}
@@ -73,10 +75,8 @@ export default class Thead extends React.Component<any, any> {
                                 {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
                                 {el.header.icon && <Icon name={el.header.icon} />}
                                 {el.caption}
-                                {el.filter.length > 0 ? (
+                                {el.filter.length > 0 && (
                                     <Component showApply={true} onApply={this.props.onFilterChanged} />
-                                ) : (
-                                    ""
                                 )}
                             </th>
                         );
@@ -88,10 +88,12 @@ export default class Thead extends React.Component<any, any> {
 }
 
 const withFilterOpenLayer = (filters: IFilter[]) => {
-    return class FilterOpenableContainer extends React.Component<any, any> {
+    return class FilterOpenableContainer extends React.PureComponent<any, any> {
         public container: HTMLDivElement;
         public body: HTMLDivElement;
         public hideTimeout: any;
+
+        public triggerRef = React.createRef();
 
         constructor(props) {
             super(props);
@@ -107,31 +109,16 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                 const data = this.body.getBoundingClientRect();
                 if (data.right > window.innerWidth) {
                     this.body.style.right = "0px";
-                } else {
                 }
             }
             return true;
         }
 
-        public handleTriggerClicked(e) {
+        public handleTriggerClicked = (e) => {
             e.stopPropagation();
+            e.nativeEvent.stopImmediatePropagation();
             this.setState({ show: !this.state.show });
-        }
-
-        public onFocus(e) {
-            clearTimeout(this.hideTimeout);
-            this.hideTimeout = null;
-        }
-
-        public onBlur(e) {
-            // todo wymienić daty ( tracące focus ) i zmienić timeout na dużo niższy
-            const currentTarget = e.target;
-            this.hideTimeout = setTimeout(() => {
-                if (!currentTarget.contains(document.activeElement)) {
-                    this.setState({ show: false });
-                }
-            }, 300);
-        }
+        };
 
         public render() {
             const additionalHack = {
@@ -142,51 +129,54 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                     className={"w-filter-openable " + (this.state.show ? "w-filter-openable-opened " : "")}
                     ref={(el) => (this.container = el)}
                     {...additionalHack}
-                    onBlur={this.onBlur.bind(this)}
-                    onFocus={this.onFocus.bind(this)}
-                    onFocusCapture={this.onFocus.bind(this)}
-                    onClick={(e) => e.stopPropagation()}
                 >
-                    {this.props.inline ? (
-                        ""
-                    ) : (
-                        <div className="w-filter-openable-trigger" onClick={this.handleTriggerClicked.bind(this)}>
-                            <i className="ms-Icon ms-Icon--Filter" />
-                        </div>
-                    )}
-                    {this.state.show ? (
-                        <div
-                            className={
-                                "w-filter-openable-body " + (filters.length >= 3 ? "w-filter-openable-body-grid" : "")
-                            }
-                            ref={(el) => (this.body = el)}
+                    <div
+                        className="w-filter-openable-trigger"
+                        onClick={this.handleTriggerClicked}
+                        ref={this.triggerRef}
+                    >
+                        <i className="ms-Icon ms-Icon--Filter" />
+                    </div>
+
+                    {this.state.show && (
+                        <Modal
+                            show={true}
+                            onHide={() => this.setState({ show: false })}
+                            target={() => this.triggerRef.current}
+                            animation={"from-up"}
+                            shadow={false}
+                            relativePositionConf={RelativePositionPresets.bottomRight}
+                            className={"filter-modal"}
                         >
-                            {filters.map((entry, index) => {
-                                const Filter = entry.component;
-                                if (entry.config !== undefined) {
-                                    entry.config.disableAutoFocus = index > 0;
-                                } else {
-                                    entry.config = { disableAutoFocus: index > 0 };
+                            <div
+                                className={
+                                    "w-filter-openable-body " +
+                                    (filters.length >= 3 ? "w-filter-openable-body-grid" : "")
                                 }
-                                return (
-                                    <div key={entry.field}>
-                                        {filters.length > 1 && (
-                                            <div className={"w-filter-openable-title"}>{entry.caption}</div>
-                                        )}
-                                        <Filter
-                                            caption={entry.caption}
-                                            showApply={true}
-                                            field={entry.field}
-                                            onApply={this.props.onApply}
-                                            config={entry.config}
-                                            container={this.container}
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        ""
+                                ref={(el) => (this.body = el)}
+                            >
+                                {filters.map((entry, index) => {
+                                    const Filter = entry.component;
+                                    if (entry.config !== undefined) {
+                                        entry.config.disableAutoFocus = index > 0;
+                                    } else {
+                                        entry.config = { disableAutoFocus: index > 0 };
+                                    }
+                                    return (
+                                        <div key={entry.field}>
+                                            <Filter
+                                                caption={entry.caption}
+                                                showApply={true}
+                                                field={entry.field}
+                                                onApply={this.props.onApply}
+                                                config={entry.config}
+                                                container={this.container}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </Modal>
                     )}
                 </div>
             );

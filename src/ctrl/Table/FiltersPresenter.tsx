@@ -11,7 +11,7 @@ export default function(props) {
                         <div>
                             <Icon name={el.dir == "asc" ? "SortDown" : "SortUp"} />
                         </div>
-                        <div className="caption">{el.caption}</div>-
+                        <div className="caption">{el.caption}</div>
                         <div className="remove" onClick={(e) => props.orderDelete(field)}>
                             <Icon name={"Clear"} />
                         </div>

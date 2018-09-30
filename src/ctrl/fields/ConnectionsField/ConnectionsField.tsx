@@ -13,6 +13,8 @@ import PrintJSON from "../../../utils/PrintJSON";
 
 import { Positioner, RelativePositionPresets } from "../../overlays/Positioner";
 
+import "./ConnectionsField.sass";
+
 export interface IConnectionChangeEvent extends IFieldChangeEvent {
     items: IConnectionElement[];
 }

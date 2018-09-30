@@ -11,40 +11,45 @@ interface IConfirmHelperProps {
     options?: IPositionCalculatorOptions;
 }
 
-export class ConfirmHelper extends React.Component<IConfirmHelperProps> {
-    public relativeTo = React.createRef<HTMLDivElement>();
-    public render() {
-        return (
-            <>
-                <div>
-                    <a
-                        className={"btn btn-primary"}
-                        onClick={() => {
-                            confirmDialog("Are you sure ?").then((result) => {
-                                alert(result);
-                            });
-                        }}
-                    >
-                        Click to confirm
-                    </a>
-                </div>
-            </>
-        );
-    }
-}
-
 const presets = Object.entries(RelativePositionPresets).map(([key, value]) => {
     return key;
 });
 
 storiesOf("Confirm Dialog", module)
-    .addDecorator(withKnobs)
-    .add("Default", () => {
-        // @ts-ignore
-        const options = RelativePositionPresets[select("preset", presets, presets[0])];
+    .add("Promise with confirm", () => {
         return (
             <>
-                <ConfirmHelper options={options} presetName={select("preset", presets, presets[0])} />
+                <a
+                    className={"btn btn-primary"}
+                    onClick={() => {
+                        confirmDialog("Are you sure ?").then(() => {
+                            alert("Ok clicked!!");
+                        });
+                    }}
+                >
+                    Click to confirm
+                </a>
+            </>
+        );
+    })
+    .add("Attached to element", () => {
+        return (
+            <>
+                <a
+                    className={"btn btn-primary"}
+                    onClick={(e) => {
+                        e.persist();
+                        confirmDialog("Are you sure ?", {
+                            target: () => {
+                                return e.currentTarget;
+                            },
+                        }).then(() => {
+                            alert("Ok clicked!!");
+                        });
+                    }}
+                >
+                    Click to confirm
+                </a>
             </>
         );
     });

@@ -53,7 +53,9 @@ export class Modal extends React.PureComponent<IModalProps> {
         super(props);
     }
 
-    public handleClose = () => {
+    public handleClose = (e) => {
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
         if (this.props.onHide) {
             this.props.onHide();
         }
@@ -110,7 +112,6 @@ export class Modal extends React.PureComponent<IModalProps> {
                             }}
                             className="w-modal-container"
                             onClick={this.handleClose}
-
                         />
                     </Positioner>
                 )}
@@ -122,7 +123,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                     animation={this.props.animation}
                 >
                     <div
-                        className={`w-modal`}
+                        className={`w-modal ` + (p.className !== undefined && p.className)}
                         ref={(el) => (this.modalBody = el)}
                         onClick={(e) => e.stopPropagation()}
                         style={{ width: p.width ? p.width : "auto", height: p.height ? p.height : "auto" }}
