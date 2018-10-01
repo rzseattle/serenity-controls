@@ -4,15 +4,17 @@ import { arrayMove, SortableContainer, SortableElement, SortableHandle } from "r
 import Dropzone from "react-dropzone";
 import { IFieldProps } from "./fields/Interfaces";
 import { Icon } from "frontend/src/ctrl/Icon";
-import { _alert, Modal } from "frontend/src/ctrl/Overlays";
+
 import { CommandBar } from "./CommandBar";
-import PrintJSON from "../utils/PrintJSON";
+
 
 import { printFile } from "../utils/FilePrinter";
-import {LoadingIndicator} from "./LoadingIndicator";
+
 import {ImageViewer} from "./files/viewers/ImageViewer";
 import {PDFViewer} from "./files/viewers/PDFViewer";
 import i18n from "frontend/src/utils/I18n";
+import {Modal} from "./overlays/Modal";
+import {alertDialog} from "./overlays/ConfirmDialog";
 let baseUrl = "";
 if (window.location.host.indexOf("esotiq") != -1) {
     baseUrl = "https://static.esotiq.com/";
@@ -170,7 +172,7 @@ class FileList extends React.Component<IFileList, any> {
             }
             const el = addedFiles[i];
             if (this.props.type == "gallery" && !this.isImage(el.name)) {
-                alert(`"${el.name}" to nie plik graficzny`);
+                alertDialog(`"${el.name}" to nie plik graficzny`);
                 continue;
             }
 
@@ -252,7 +254,7 @@ class FileList extends React.Component<IFileList, any> {
         }
 
         if (viewer === null) {
-            _alert("Brak podglądu do tego rodzaju plików");
+            alertDialog("Brak podglądu do tego rodzaju plików");
             return;
         }
 

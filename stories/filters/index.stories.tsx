@@ -70,22 +70,40 @@ storiesOf("Filters", module)
         "Select",
 
         () => (
-            <div style={containerStyle}>
-                <SelectFilter
-                    caption={"Name"}
-                    field="someFieldName"
-                    showApply={true}
-                    config={{
-                        content: [
-                            { value: "1", label: "Option 1" },
-                            { value: "2", label: "Option 2" },
-                            { value: "3", label: "Option 3" },
-                            { value: "4", label: "Option 5" },
-                        ],
-                    }}
-                    onApply={onApply}
-                />
-            </div>
+            <>
+                <div style={containerStyle}>
+                    <SelectFilter
+                        caption={"Name"}
+                        field="someFieldName"
+                        showApply={true}
+                        config={{
+                            content: [
+                                { value: "1", label: "Option 1" },
+                                { value: "2", label: "Option 2" },
+                                { value: "3", label: "Option 3" },
+                                { value: "4", label: "Option 5" },
+                            ],
+                        }}
+                        onApply={onApply}
+                    />
+                    <br/><br/><br/>
+                    <SelectFilter
+                        caption={"Name (multiselect)"}
+                        field="someFieldName"
+                        showApply={true}
+                        config={{
+                            content: [
+                                { value: "1", label: "Option 1" },
+                                { value: "2", label: "Option 2" },
+                                { value: "3", label: "Option 3" },
+                                { value: "4", label: "Option 5" },
+                            ],
+                            multiselect: true,
+                        }}
+                        onApply={onApply}
+                    />
+                </div>
+            </>
         ),
     )
     .add(

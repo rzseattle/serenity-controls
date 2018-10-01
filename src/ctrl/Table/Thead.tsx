@@ -2,10 +2,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { deepIsEqual } from "frontend/src/lib/JSONTools";
 import { Icon } from "frontend/src/ctrl/Icon";
-import { tooltip } from "frontend/src/ctrl/Overlays";
 import { IFilter } from "frontend/src/ctrl/filters/Intefaces";
 import { Modal } from "../overlays/Modal";
 import { RelativePositionPresets } from "../overlays/Positioner";
+import { IColumnData } from "./Interfaces";
 
 export default class Thead extends React.PureComponent<any, any> {
     public tooltipCleanup: any;
@@ -24,7 +24,7 @@ export default class Thead extends React.PureComponent<any, any> {
 
     public handleMouseEnter(index, e) {
         e.stopPropagation();
-        const el = this.props.columns.filter((el) => el !== null && el.display === true)[index];
+/*        const el = this.props.columns.filter((column: IColumnData) => column !== null && column.display === true)[index];
         const node = ReactDOM.findDOMNode(this).querySelector(`th:nth-child(${index + 1})`);
 
         if (el.header.tooltip && this.tooltipCleanup === null) {
@@ -32,15 +32,15 @@ export default class Thead extends React.PureComponent<any, any> {
                 target: () => node,
                 offsetY: -10,
             });
-        }
+        }*/
     }
 
     public handleMouseLeave(index, e) {
-        const el = this.props.columns.filter((el) => el !== null && el.display === true)[index];
+        /*const el = this.props.columns.filter((el: IColumnData) => el !== null && el.display === true)[index];
         if (el.header.tooltip) {
             this.tooltipCleanup();
             this.tooltipCleanup = null;
-        }
+        }*/
     }
 
     public render() {
@@ -52,30 +52,30 @@ export default class Thead extends React.PureComponent<any, any> {
                             <input type="checkbox" checked={this.props.allChecked} />
                         </th>
                     ) : null}
-                    {this.props.columns.filter((el) => el !== null && el.display === true).map((el, index) => {
-                        const Component = el.filter.length > 0 ? withFilterOpenLayer(el.filter) : null;
+                    {this.props.columns.filter((el) => el !== null && el.display === true).map((column, index) => {
+                        const Component = column.filter.length > 0 ? withFilterOpenLayer(column.filter) : null;
                         const classes = [];
-                        if (this.props.order[el.field] !== undefined) {
-                            classes.push("w-table-sorted w-table-sorted-" + this.props.order[el.field].dir);
+                        if (this.props.order[column.field] !== undefined) {
+                            classes.push("w-table-sorted w-table-sorted-" + this.props.order[column.field].dir);
                         }
-                        if (this.props.filters[el.field] !== undefined) {
+                        if (this.props.filters[column.field] !== undefined) {
                             classes.push("w-table-filtered");
                         }
                         return (
                             <th
                                 key={index}
-                                style={{ width: el.width }}
+                                style={{ width: column.width }}
                                 className={classes.join(" ")}
                                 onClick={(e) => {
-                                    el.isSortable && this.props.onCellClicked(index, e);
+                                    column.isSortable && this.props.onCellClicked(index, e);
                                 }}
                                 onMouseEnter={this.handleMouseEnter.bind(this, index)}
                                 onMouseLeave={this.handleMouseLeave.bind(this, index)}
                             >
                                 {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
-                                {el.header.icon && <Icon name={el.header.icon} />}
-                                {el.caption}
-                                {el.filter.length > 0 && (
+                                {column.header.icon && <Icon name={column.header.icon} />}
+                                {column.caption}
+                                {column.filter.length > 0 && (
                                     <Component showApply={true} onApply={this.props.onFilterChanged} />
                                 )}
                             </th>

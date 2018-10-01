@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CheckboxGroup, ConnectionsField, Date, File, Select, Switch, Text, Textarea, Wysiwyg } from "../ctrl/Fields";
+import { CheckboxGroup, ConnectionsField, Date, File,  Switch, Text, Textarea, Wysiwyg } from "../ctrl/Fields";
 import { FileList } from "../ctrl/FileLists";
 
 import Comm from "../lib/Comm";
@@ -8,6 +8,8 @@ import Icon from "../ctrl/Icon";
 import { IFieldChangeEvent } from "../ctrl/fields/Interfaces";
 import { any } from "prop-types";
 import Shadow from "../ctrl/overlays/Shadow";
+import {Select} from "../ctrl/fields/Select";
+import {FormEvent} from "react";
 
 interface IWithBootstrapFormFieldProps {
     /**
@@ -372,7 +374,7 @@ class BForm extends React.Component<IBFormProps, IBFormState> {
         return { get, set, arrayNotation };
     }
 
-    public handleInputChange(e: Event | IFieldChangeEvent ) {
+    public handleInputChange(e: FormEvent ) {
         let name;
         let type;
         let value;

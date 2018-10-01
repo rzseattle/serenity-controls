@@ -20,13 +20,15 @@ const baseColumns = [
         .addFilter(FilterHelper.text("first_name", "First name").get())
         .addFilter(FilterHelper.text("last_name", "Last name").get()),
     Col.hidden("last_name"),
-    Col.text("gender", "Gender").addFilter(
-        FilterHelper.select("gender", "Gender", [
-            { value: "0", label: "All" },
-            { value: "Female", label: "Female" },
-            { value: "Male", label: "Male" },
-        ]).get(),
-    ),
+    Col.text("gender", "Gender")
+        .noFilter()
+        .addFilter(
+            FilterHelper.select("gender", "Gender", [
+                { value: "0", label: "All" },
+                { value: "Female", label: "Female" },
+                { value: "Male", label: "Male" },
+            ]).get(),
+        ),
     Col.text("ip_address", "Ip").className("right"),
     Col.date("date", "Date"),
     Col.money("price", "Price")

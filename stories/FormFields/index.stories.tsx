@@ -1,1 +1,2 @@
-require("./ConnectionField.stories");
+import "./SelectField.stories";
+import "./ConnectionField.stories";
