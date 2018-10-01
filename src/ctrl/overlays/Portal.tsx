@@ -1,19 +1,29 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 
-export class Portal extends React.PureComponent {
-    public el: HTMLDivElement;
+interface IPortalProps {
+    container?: () => HTMLElement;
+}
+
+export class Portal extends React.PureComponent<IPortalProps> {
+    public el: HTMLElement;
     private modalRoot: HTMLElement;
 
     public static defaultProps = {};
 
-    constructor(props = {}) {
+    constructor(props: IPortalProps) {
         super(props);
+
         this.el = document.createElement("div");
     }
 
     public componentDidMount() {
-        this.modalRoot = document.getElementById("modal-root");
+        if (this.props.container != undefined) {
+            this.modalRoot = this.props.container();
+        } else {
+            this.modalRoot = document.getElementById("modal-root");
+        }
+
         this.modalRoot.style.height = window.innerHeight + "px";
         this.modalRoot.style.width = window.innerWidth + "px";
         this.modalRoot.style.overflow = "auto";

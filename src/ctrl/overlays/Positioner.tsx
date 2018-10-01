@@ -85,6 +85,8 @@ interface IPositionerProps {
     };
     trackResize?: boolean;
     animation?: string;
+
+    container?: () => HTMLElement;
 }
 
 export class Positioner extends React.PureComponent<IPositionerProps> {
@@ -262,43 +264,11 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
                 actual = newPosition;
             }
         }, 1000);
-
-        return;
-
-        const data = this.positionElement.getBoundingClientRect();
-
-        const calculatePos1 = () => {
-            const calculator = new PositionCalculator(window.self.document.documentElement, this.positionElement, {
-                relativeToAt: "middle middle",
-                itemAt: "middle middle",
-            });
-
-            const result = calculator.calculate();
-            if (result.top < 0) {
-                result.top = 0;
-            }
-
-            this.applyStyles(result);
-            /*this.setState({
-                positionStyle: result,
-            });*/
-        };
-        calculatePos();
-
-        this.positionObserver = window.setInterval(() => {
-            if (this.positionElement == null) {
-                return;
-            }
-            const newPosition = this.positionElement.getBoundingClientRect();
-            if (newPosition.width != data.width || newPosition.height != data.height) {
-                calculatePos();
-            }
-        }, 1000);
     }
 
     public render() {
         return (
-            <Portal>
+            <Portal container={this.props.container}>
                 <div
                     className="w-positioner"
                     ref={(el) => {

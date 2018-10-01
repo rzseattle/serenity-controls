@@ -37,7 +37,6 @@ export interface IModalProps {
 }
 
 export class Modal extends React.PureComponent<IModalProps> {
-    public el: HTMLElement;
     public modalBody: HTMLDivElement;
 
     public static defaultProps = {
@@ -48,6 +47,7 @@ export class Modal extends React.PureComponent<IModalProps> {
         layer: true,
         animation: "fade-in",
     };
+    private modalContainer: HTMLDivElement;
 
     constructor(props: IModalProps) {
         super(props);
@@ -111,6 +111,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                             style={{
                                 backgroundColor: p.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
                             }}
+                            ref={(el) => (this.modalContainer = el)}
                             className="w-modal-container"
                             onClick={this.handleClose}
                         />
@@ -122,6 +123,10 @@ export class Modal extends React.PureComponent<IModalProps> {
                     relativeTo={p.target}
                     relativeSettings={p.relativePositionConf}
                     animation={this.props.animation}
+                    container={() => {
+                        console.log("przekazuje");
+                        return this.modalContainer;
+                    }}
                 >
                     <div
                         className={`w-modal ` + (p.className !== undefined && p.className)}
