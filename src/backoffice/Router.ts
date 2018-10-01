@@ -96,8 +96,8 @@ class Router {
         }
 
         if (!Component && extendedInfo) {
-            console.error("Component file not found:" + pathInfo);
-            console.error("Component file should be:" + extendedInfo._debug.template);
+            //console.error("Component file not found:" + pathInfo);
+            //console.error("Component file should be:" + extendedInfo._debug.template);
         }
 
         return {
