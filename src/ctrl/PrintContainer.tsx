@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {Modal} from "frontend/src/ctrl/Overlays";
 import {CommandBar} from "frontend/src/ctrl/CommandBar";
 import i18n from "frontend/src/utils/I18n";
+import {Modal} from "./overlays/Modal";
 
 interface IPrintContainerProps {
     title?: string;

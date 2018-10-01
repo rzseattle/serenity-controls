@@ -1,13 +1,10 @@
 import * as NotificationSystem from "react-notification-system";
 import * as React from "react";
 
-import {IModalProps} from "../ctrl/Overlays";
-import RouterException from "../backoffice/RouterException";
-import {RouteVisualization} from "../dev/RouteVisualization";
-import {ServerErrorPresenter} from "../dev/ServerErrorPresenter";
+import { ServerErrorPresenter } from "../dev/ServerErrorPresenter";
+import { IModalProps } from "../ctrl/overlays/Modal";
 
 declare var PRODUCTION: boolean;
-declare var window: any;
 
 
 export interface IArrowViewComponentProps {
@@ -45,7 +42,7 @@ export interface IArrowViewComponentProps {
 
     _openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string;
 
-    _closeModal( modalId: string ): any;
+    _closeModal(modalId: string): any;
 }
 
 interface IProps {
@@ -90,16 +87,16 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
         // Display fallback UI
         /*if (!PRODUCTION) {
         }*/
-        this.setState({hasError: true, error});
+        this.setState({ hasError: true, error });
         // You can also log the error to an error reporting service
         // logErrorToMyService(error, info);
     }
 
     public componentWillMount() {
         if (!PRODUCTION) {
-            import(/* webpackChunkName = "DebugTool" */ "../dev/DebugTool").then(({DebugTool}) => {
+            import(/* webpackChunkName = "DebugTool" */ "../dev/DebugTool").then(({ DebugTool }) => {
                 this.DebugTool = DebugTool;
-                this.setState({debugToolLoaded: true});
+                this.setState({ debugToolLoaded: true });
             });
         }
     }
@@ -113,12 +110,12 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
     };
 
     public handleNotification = (message, title = "", options: Partial<NotificationSystem.Notification> = {}) => {
-        const data: NotificationSystem.Notification = {title, message, ...{level: "success", ...options}};
+        const data: NotificationSystem.Notification = { title, message, ...{ level: "success", ...options } };
         this.notificationSystem.addNotification(data);
     };
 
     public handleLog = (message) => {
-        this.state.log.push({msg: message});
+        this.state.log.push({ msg: message });
         this.setState(null);
     };
 
@@ -150,8 +147,10 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
             <div className={ComponentInfo && ComponentInfo.extendedInfo.component}>
                 {!PRODUCTION && this.props.isSub == false && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
-                <NotificationSystem ref={(ns) => (this.notificationSystem = ns)}/>
-                {this.props.context.viewServerErrors && <ServerErrorPresenter error={this.props.context.viewServerErrors} />}
+                <NotificationSystem ref={(ns) => (this.notificationSystem = ns)} />
+                {this.props.context.viewServerErrors && (
+                    <ServerErrorPresenter error={this.props.context.viewServerErrors} />
+                )}
 
                 {ComponentInfo && ComponentInfo.Component ? (
                     <ComponentInfo.Component
@@ -175,9 +174,11 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                         _closeModal={this.props.closeModal}
                     />
                 ) : (
-                    !this.props.context.isViewLoading && (
-                        (this.props.context.viewServerErrors && this.props.context.viewServerErrors.__arrowException === undefined) || !this.props.context.viewServerErrors) && (
-                        <div style={{padding: 20}}>
+                    !this.props.context.isViewLoading &&
+                    ((this.props.context.viewServerErrors &&
+                        this.props.context.viewServerErrors.__arrowException === undefined) ||
+                        !this.props.context.viewServerErrors) && (
+                        <div style={{ padding: 20 }}>
                             <h1>404 not found</h1>
                             <div>Selected resource cannot be found</div>
                         </div>
@@ -185,12 +186,12 @@ export default class PanelComponentLoader extends React.Component<IProps, IState
                 )}
 
                 {ComponentInfo &&
-                ComponentInfo.Component == null && (
-                    <div style={{padding: 10}}>
-                        <h3>Can't find component </h3>
-                        <pre>{JSON.stringify(ComponentInfo, null, 2)}</pre>
-                    </div>
-                )}
+                    ComponentInfo.Component == null && (
+                        <div style={{ padding: 10 }}>
+                            <h3>Can't find component </h3>
+                            <pre>{JSON.stringify(ComponentInfo, null, 2)}</pre>
+                        </div>
+                    )}
             </div>
         );
     }
@@ -207,7 +208,7 @@ class ErrorReporterLoader extends React.Component<any, any> {
 
     public componentDidMount() {
         import("./ErrorReporter").then((Reporter) => {
-            this.setState({loaded: true, component: Reporter.default});
+            this.setState({ loaded: true, component: Reporter.default });
         });
     }
 
@@ -216,7 +217,7 @@ class ErrorReporterLoader extends React.Component<any, any> {
             return <div>Loading ...</div>;
         } else {
             const Component = this.state.component;
-            return <Component error={this.props.error}/>;
+            return <Component error={this.props.error} />;
         }
     }
 }

@@ -14,7 +14,8 @@ import Comm from "../../lib/Comm";
 import Thead from "./Thead";
 import { deepCopy, deepIsEqual } from "../../lib/JSONTools";
 import TextFilter from "../filters/TextFilter";
-import {LoadingIndicator} from "../LoadingIndicator";
+import { LoadingIndicator } from "../LoadingIndicator";
+import { confirmDialog } from "../overlays/ConfirmDialog";
 
 export interface IDataQuery {
     columns: IColumnData[];
@@ -85,7 +86,7 @@ interface ITableState {
     tooltipData: any;
 }
 
-class Table extends React.Component<ITableProps, ITableState> {
+export default class Table extends React.Component<ITableProps, ITableState> {
     public static defaultProps: Partial<ITableProps> = {
         onPage: 25,
         columns: [],
@@ -381,7 +382,7 @@ class Table extends React.Component<ITableProps, ITableState> {
 
     public handleStateRemove() {
         delete window.localStorage[this.hashCode];
-        if (confirm("Wyczyszczono dane tabelki, czy chcesz odświeżyć stronę?")) {
+        if (confirmDialog("Wyczyszczono dane tabelki, czy chcesz odświeżyć stronę?")) {
             window.location.reload();
         }
     }
@@ -432,7 +433,7 @@ class Table extends React.Component<ITableProps, ITableState> {
             };
         }
 
-        field = { ...field, dir: field.dir == "asc" ? "desc" : "asc" };
+        field = { field: field.field, dir: field.dir == "asc" ? "desc" : "asc" };
 
         this.state.order[fieldName] = field;
 
@@ -505,10 +506,12 @@ class Table extends React.Component<ITableProps, ITableState> {
         }
         let column: IColumnData;
 
-        if (inData instanceof ColumnHelper) {
-            column = inData.get();
+        // if (inData instanceof ColumnHelper) {
+        // @ts-ignore
+        if (typeof inData.get === "function") {
+            column = (inData as ColumnHelper).get();
         } else {
-            column = inData;
+            column = inData as IColumnData;
         }
 
         let data: IColumnData = {
@@ -563,7 +566,7 @@ class Table extends React.Component<ITableProps, ITableState> {
                 onKeyDown={this.handleKeyDown}
             >
                 <div className="w-table-loader">
-                    <LoadingIndicator/>
+                    <LoadingIndicator />
                 </div>
                 <div className="w-table-top">
                     <FiltersPresenter
@@ -638,4 +641,4 @@ class Table extends React.Component<ITableProps, ITableState> {
     }
 }
 
-export { Table, ColumnHelper, ColumnHelper as Column };
+export { Table, ColumnHelper as Column };

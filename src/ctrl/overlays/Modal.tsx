@@ -30,8 +30,8 @@ export interface IModalProps {
     className?: string;
     children: any;
     orientation?: string;
-    relativePositionConf: IPositionCalculatorOptions;
-    animation: string;
+    relativePositionConf?: IPositionCalculatorOptions;
+    animation?: string;
 
     onOrientationChange?(type: string): any;
 }
@@ -53,7 +53,7 @@ export class Modal extends React.PureComponent<IModalProps> {
         super(props);
     }
 
-    public handleClose = (e) => {
+    public handleClose = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
         if (this.props.onHide) {
@@ -63,6 +63,7 @@ export class Modal extends React.PureComponent<IModalProps> {
 
     public handleShow = () => {
         if (this.props.onShow) {
+            document.body.style.overflow = "hidden";
             this.props.onShow();
         }
     };

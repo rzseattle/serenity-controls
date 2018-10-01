@@ -41,7 +41,6 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
             import("react-dates/lib/css/_datepicker.css"),
             import("react-dates/initialize"),
         ]).then(([moment, locale, datePickerImp]) => {
-            console.log(datePickerImp);
 
             // @ts-ignore
             moment = moment.default;

@@ -1,14 +1,10 @@
 import * as React from "react";
-// import Inputmask from 'inputmask';
 import Dropzone from "react-dropzone";
 
 import {ConnectionsField} from "./fields/ConnectionsField/ConnectionsField";
-import {Icon} from "./Icon";
 
 import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
-import {Portal} from "./Overlays";
-import {PositionCalculator} from "../lib/PositionCalculator";
-import Hotkeys from "react-hot-keys";
+
 import i18n from "frontend/src/utils/I18n";
 
 const checkIncludes = (options, value) => {
@@ -560,10 +556,11 @@ class Date extends React.Component<IDateProps, any> {
             import("moment/locale/pl"),
             import("react-dates"),
             import("react-dates/lib/css/_datepicker.css"),
+            import("react-dates/initialize"),
         ]).then((imported) => {
 
             moment = imported[0].default;
-            datePicker = imported[2].default;
+            datePicker = imported[2];
             this.setState({
                 date:
                     this.props.value && this.props.value != "0000-00-00"

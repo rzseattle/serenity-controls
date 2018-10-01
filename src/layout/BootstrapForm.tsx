@@ -208,7 +208,7 @@ interface IBFormState {
     loading: boolean;
 }
 
-class BForm extends React.Component<IBFormProps, IBFormState> {
+export class BForm extends React.Component<IBFormProps, IBFormState> {
     public formTag: HTMLElement;
     private fieldsValues: {};
 

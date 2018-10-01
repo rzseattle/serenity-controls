@@ -4,9 +4,10 @@ import router from "../backoffice/Router";
 
 import {BForm, BText, BTextarea} from "../layout/BootstrapForm";
 import {ideConnector} from "./IDEConnector";
-import {tooltip, Tooltip} from "../ctrl/Overlays";
-import {Copyable} from "../ctrl/Copyable";
+
+
 import {Row} from "../layout/BootstrapLayout";
+import {tooltip} from "../ctrl/overlays/Tooltip";
 
 require("./RouteVsualization.sass");
 declare var module: any;

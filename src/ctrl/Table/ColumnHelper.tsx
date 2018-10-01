@@ -11,7 +11,7 @@ import TextFilter from "../filters/TextFilter";
 import DateFilter from "../filters/DateFilter";
 import SwitchFilter from "../filters/SwitchFilter";
 
-export class ColumnHelper {
+export default class ColumnHelper {
     protected data: IColumnData;
 
     constructor(initData: Partial<IColumnData>) {
@@ -393,3 +393,5 @@ export class ColumnHelper {
         return this.data;
     }
 }
+
+export {ColumnHelper}

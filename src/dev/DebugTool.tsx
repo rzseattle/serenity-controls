@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { TabPane, Tabs } from "../ctrl/Tabs";
 import JSONTree from "react-json-tree";
-import { Modal } from "../ctrl/Overlays";
 import ErrorReporter from "../lib/ErrorReporter";
 import Icon from "frontend/src/ctrl/Icon";
 import Comm from "frontend/src/lib/Comm";
@@ -13,6 +12,7 @@ import { ideConnector } from "./IDEConnector";
 import { BackofficeStore } from "../backoffice/BackofficeStore";
 import { RouteVisualization } from "./RouteVisualization";
 import PrintJSON from "../utils/PrintJSON";
+import {Modal} from "../ctrl/overlays/Modal";
 
 declare var DEV_PROPERIES: DevProperties;
 

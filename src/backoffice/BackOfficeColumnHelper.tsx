@@ -1,8 +1,9 @@
 import * as React from "react";
 import { ColumnHelper } from "frontend/src/ctrl/table/ColumnHelper";
 import { Icon } from "frontend/src/ctrl/Icon";
-import { confirm } from "frontend/src/ctrl/Overlays";
+
 import Comm from "frontend/src/lib/Comm";
+import {confirmDialog} from "../ctrl/overlays/ConfirmDialog";
 
 export class BackOfficeColumnHelper extends ColumnHelper {
     static goto;
@@ -33,7 +34,7 @@ export class BackOfficeColumnHelper extends ColumnHelper {
             .noFilter()
             .className("center darkred")
             .onClick((row) => {
-                confirm(confirmMessage(row), {
+                confirmDialog(confirmMessage(row), {
                     title: __("Czy na pewno usunąć?"),
                     showHideLink: false,
                 }).then(() => {

@@ -1,6 +1,7 @@
 import * as React from "react";
 import Icon from "./Icon";
-import { ReactElement } from "react";
+
+import "./Panel.sass";
 
 interface IPanelProps {
     /**

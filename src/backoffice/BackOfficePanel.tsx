@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Icon} from "../ctrl/Icon";
 import PanelComponentLoader from "../lib/PanelComponentLoader";
-import {IModalProps, Modal} from "../ctrl/Overlays";
+
 
 import {IMenuSection, Menu} from "frontend/src/backoffice/Menu";
 import {BackOfficeContainer} from "frontend/src/backoffice/BackOfficeContainer";
@@ -14,13 +14,15 @@ import hotkeys from "hotkeys-js";
 
 import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
 import {LoadingIndicator} from "../ctrl/LoadingIndicator";
-import {Select} from "../ctrl/Fields";
+
 
 import Hotkeys from "react-hot-keys";
 
 import i18n from "frontend/src/utils/I18n";
 import {configGet} from "frontend/src/lib/Config";
 import { Trans} from "react-i18next";
+import {IModalProps, Modal} from "../ctrl/overlays/Modal";
+import {Select} from "../ctrl/fields/Select";
 
 NProgress.configure({parent: ".w-panel-body"});
 
@@ -236,7 +238,6 @@ class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOffice
 
                         <Modal
                             show={this.state.userMenuVisible}
-                            animate={true}
                             animation={"perspectiveBounce"}
                             top={50}
                             right={0}
