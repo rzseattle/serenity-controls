@@ -24,9 +24,6 @@ export class Portal extends React.PureComponent<IPortalProps> {
             this.modalRoot = document.getElementById("modal-root");
         }
 
-        this.modalRoot.style.height = window.innerHeight + "px";
-        this.modalRoot.style.width = window.innerWidth + "px";
-        this.modalRoot.style.overflow = "auto";
         this.modalRoot.appendChild(this.el);
     }
 
