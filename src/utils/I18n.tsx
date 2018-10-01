@@ -39,22 +39,20 @@ const instance = i18n
     .use(reactI18nextModule)
     .init({
         fallbackLng: configGet("translations.defaultLanguage"),
-        debug: !PRODUCTION,
+        //debug: !PRODUCTION,
+        debug: false,
         saveMissing: true,
         ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
             if (!PRODUCTION) {
-                console.log("to jest key: " + key);
-                console.log("to jest wartość: " + fallbackValue);
-                console.log("to jest ns: " + ns);
-                console.log("to jest lang: " + lng);
+                console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
             }
         },
         react: {
             wait: true,
         },
     });
-instance.on("languageChanged", function(lng) {
+instance.on("languageChanged", (lng) => {
     Comm._get(configGet("translations.backendLangChanged").replace("{{lng}}", lng));
 });
 const fI18n = instance;
