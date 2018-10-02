@@ -374,7 +374,7 @@ export default class ColumnHelper {
         return this;
     }
 
-    public styleTemplate(fn: (row: any, column: IColumnData) => any) {
+    public styleTemplate(fn: (row: any, column: IColumnData) => React.CSSProperties) {
         this.data.styleTemplate = fn;
         return this;
     }
