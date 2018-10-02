@@ -394,4 +394,4 @@ export default class ColumnHelper {
     }
 }
 
-export {ColumnHelper}
+export { ColumnHelper };
