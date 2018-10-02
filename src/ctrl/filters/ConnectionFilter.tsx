@@ -1,11 +1,18 @@
 import * as React from "react";
-import { IFilterComponent } from "./Filters";
 import { fI18n } from "../../utils/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
-import {BConnectionsField} from "../../layout/BootstrapForm";
+import "./ConnectionField.sass";
+import {ConnectionsField} from "../fields/ConnectionsField/ConnectionsField";
 
-export default class ConnectionFilter extends AbstractFilter implements IFilterComponent {
-    constructor(props: IFilterProps) {
+interface IConnectionFilterProps extends IFilterProps {
+    config: {
+        showFilterOptions?: boolean;
+        disableAutoFocus?: boolean;
+    };
+}
+
+export default class ConnectionFilter extends AbstractFilter<IConnectionFilterProps> {
+    constructor(props: IConnectionFilterProps) {
         super(props);
         this.state = {
             searchValue: null,
@@ -24,7 +31,7 @@ export default class ConnectionFilter extends AbstractFilter implements IFilterC
         };
     }
 
-    public handleChange(event) {
+    public handleChange = (event) => {
         this.setState(
             {
                 searchValue: event.value,
@@ -52,13 +59,15 @@ export default class ConnectionFilter extends AbstractFilter implements IFilterC
     }
 
     public render() {
+        const { config, caption } = this.props;
         return (
-            <div className={"w-filter w-filter-text "} ref="body">
-                <BConnectionsField
+            <div className={"w-filter w-filter-connection-field "}>
+                {caption != "" && <div className={"w-filter-title"}>{caption}</div>}
+                <ConnectionsField
                     {...this.props.config}
                     editable={true}
                     items={[]}
-                    onChange={this.handleChange.bind(this)}
+                    onChange={this.handleChange}
                 />
 
                 {this.props.showApply && (

@@ -14,7 +14,7 @@ interface ITextFilterProps extends IFilterProps {
 export default class TextFilter extends AbstractFilter<ITextFilterProps> {
     public options: { [index: string]: string };
 
-    public input = React.createRef();
+    public input = React.createRef<HTMLInputElement>();
 
     public static defaultProps: Partial<ITextFilterProps> = {
         caption: "",

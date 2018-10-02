@@ -1,12 +1,11 @@
 const webpack = require("webpack");
-var {resolve, basename} = require("path");
+var { resolve, basename } = require("path");
 const fs = require("fs");
 const HappyPack = require("happypack");
 const path = require("path");
 
-
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const {CheckerPlugin} = require("awesome-typescript-loader");
+const { CheckerPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
@@ -26,7 +25,7 @@ let configDefaults = {
     NODE_CACHE_DIR: "node_modules/.cache",
 };
 
-module.exports = function (input) {
+module.exports = function(input) {
     input = Object.assign(configDefaults, input);
 
     if (input.PRODUCTION) {
@@ -47,8 +46,8 @@ module.exports = function (input) {
         resolve: {
             extensions: [".js", ".ts", ".tsx"],
             unsafeCache: true,
-            modules: ["node_modules"]
-        }
+            modules: ["node_modules"],
+        },
     };
 
     const GetLoaders = require("./Loaders.js");
@@ -80,7 +79,7 @@ module.exports = function (input) {
             input.PORT || 3000,
             input.DOMAIN,
             input.LANGUAGE,
-            webpack
+            webpack,
         );
     } else {
         conf.mode = "production";
@@ -95,7 +94,7 @@ module.exports = function (input) {
             input.BASE_PATH,
             input.LANGUAGE,
             input.ANALYZE,
-            webpack
+            webpack,
         );
     }
 
@@ -103,16 +102,15 @@ module.exports = function (input) {
         conf[i] = tmp[i];
     }
 
-
-    let threads = HappyPack.ThreadPool({size: 4});
+    let threads = HappyPack.ThreadPool({ size: 4 });
 
     conf.plugins = conf.plugins.concat([
         new HappyPack({
             id: "sass",
             loaders: [
-                !input.PRODUCTION ? 'style-loader' : MiniCssExtractPlugin.loader,
-                {loader: "css-loader", query: {sourceMap: true}},
-                {loader: "resolve-url-loader", query: {sourceMap: true}},
+                !input.PRODUCTION ? "style-loader" : MiniCssExtractPlugin.loader,
+                { loader: "css-loader", query: { sourceMap: true } },
+                { loader: "resolve-url-loader", query: { sourceMap: true } },
                 //'postcss-loader',
                 {
                     loader: "sass-loader",
@@ -127,11 +125,10 @@ module.exports = function (input) {
         }),
     ]);
 
-
     if (true) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
-           new HardSourceWebpackPlugin({
+            new HardSourceWebpackPlugin({
                 // Either an absolute path or relative to webpack's options.context.
                 cacheDirectory: input.NODE_CACHE_DIR + "/hard-source/[confighash]",
                 // Either an absolute path or relative to webpack's options.context.
@@ -142,26 +139,29 @@ module.exports = function (input) {
                 environmentHash: {
                     root: process.cwd(),
                     directories: [],
-                    files: [ "yarn.lock"]
-                }
-            })
+                    files: ["yarn.lock"],
+                },
+            }),
         );
     }
 
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
-    if(true) {
-        conf.plugins.push(new webpack.SourceMapDevToolPlugin({
-            filename: '[file].map',
-            moduleFilenameTemplate: '[resource-path]',
-            fallbackModuleFilenameTemplate: '[resource-path]',
-            append: null,
-            module: true,
-            columns: true,
-            lineToLine: false,
-            noSources: false,
-            namespace: ''
-        }));
+    if (!input.PRODUCTION) {
+        conf.plugins.push(
+            new webpack.SourceMapDevToolPlugin({
+                filename: "[file].map",
+                moduleFilenameTemplate: "[resource-path]",
+                fallbackModuleFilenameTemplate: "[resource-path]",
+                append: null,
+                module: true,
+                columns: true,
+                lineToLine: false,
+                noSources: false,
+                namespace: "",
+                exclude: ["node_modules/*.js"],
+            }),
+        );
     }
 
     /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
@@ -188,8 +188,8 @@ module.exports = function (input) {
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
                 filename: "bundle-[hash].css",
-                chunkFilename: "[id].[hash].css"
-            })
+                chunkFilename: "[id].[hash].css",
+            }),
         );
 
         conf.optimization = {
@@ -197,12 +197,16 @@ module.exports = function (input) {
                 new UglifyJsPlugin({
                     cache: true,
                     parallel: true,
-                    sourceMap: true // set to true if you want JS source maps
+                    sourceMap: true, // set to true if you want JS source maps
                 }),
                 new OptimizeCSSAssetsPlugin({
-                    cssProcessorOptions: {"postcss-safe-parser": true, discardComments: {removeAll: true}, zindex: false}
-                })
-            ]
+                    cssProcessorOptions: {
+                        "postcss-safe-parser": true,
+                        discardComments: { removeAll: true },
+                        zindex: false,
+                    },
+                }),
+            ],
             /*splitChunks: {
                 chunks: 'all'
             },*/
@@ -213,7 +217,7 @@ module.exports = function (input) {
             removeAvailableModules: false,
             removeEmptyChunks: false,
             splitChunks: false,
-        }
+        };
         /*conf.output = {
             pathinfo: false
         }*/

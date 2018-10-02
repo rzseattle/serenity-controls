@@ -1,36 +1,9 @@
 const path = require("path");
 const fs = require("fs");
-const https = require("https");
 const mkdirp = require("mkdirp");
 
 var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
-    const generateSign = () => {
-        const selfsigned = require("selfsigned");
-        const attrs = [{name: "commonName", value: "localhost"}];
-        const pems = selfsigned.generate(attrs, {
-            algorithm: "sha256",
-            keySize: 2048,
-            extensions: [
-                {
-                    name: "subjectAltName",
-                    altNames: [
-                        {
-                            type: 2, // DNS
-                            value: "localhost",
-                        },
-                    ],
-                    cA: true,
-                },
-            ],
-        });
-        if (!fs.existsSync(BASE_PATH + "/build/js/ssl")) {
-            fs.mkdirSync(BASE_PATH + "/build/js/ssl");
-            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.crt", pems.cert, {encoding: "utf-8"});
-            fs.writeFileSync(BASE_PATH + "/build/js/ssl/server.key", pems.private, {encoding: "utf-8"});
-        }
-    };
 
-    generateSign();
 
     conf = {};
 
@@ -48,14 +21,6 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
     }
 
     conf.devServer = {
-        //https: HTTPS,
-        https: {
-            key: fs.readFileSync(BASE_PATH + "/build/js/ssl/server.key"),
-            cert: fs.readFileSync(BASE_PATH + "/build/js/ssl/server.crt"),
-            //ca: fs.readFileSync("./cert2.pem"),
-        },
-        //pfx: resolve(__dirname, './cert2.pfx'),
-        //pfxPassphrase: 'xxx123',
         hot: true,
         port: PORT,
         publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,

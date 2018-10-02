@@ -22,6 +22,7 @@ var getLoaders = function(production, input) {
                         options: {
                             cacheDirectory: input.NODE_CACHE_DIR + "/babelcache",
                             retainLines: true,
+
                             exclude: /(node_modules|bower_components)/,
                             presets: [
                                 [
@@ -76,6 +77,7 @@ var getLoaders = function(production, input) {
                             babelOptions: {
                                 babelrc: false,
                                 retainLines: true,
+                                //exclude: /(node_modules|bower_components)/,
                                 presets: [
                                     [
                                         "@babel/preset-env",
