@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ColumnHelper } from "frontend/src/ctrl/table/ColumnHelper";
+import { ColumnHelper } from "frontend/src/ctrl/Table/ColumnHelper";
 import { Icon } from "frontend/src/ctrl/Icon";
 
 import Comm from "frontend/src/lib/Comm";
