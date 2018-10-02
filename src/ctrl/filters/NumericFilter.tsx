@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import {fI18n} from "../../utils/I18n";
-import AbstractFilter, {IFilterProps} from "./AbstractFilter";
+import { fI18n } from "../../utils/I18n";
+import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./NumericFilter.sass";
 
@@ -9,6 +9,7 @@ interface INumericFilterProps extends IFilterProps {
     config: {
         showFilterOptions?: boolean;
         disableAutoFocus?: boolean;
+        disableLikeFilter?: boolean;
     };
 }
 
@@ -17,10 +18,9 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     public input1: HTMLInputElement;
     public input3: HTMLTextAreaElement;
 
-
     constructor(props: INumericFilterProps) {
         super(props);
-        this.state = {option: "LIKE"};
+        this.state = { option: props.config.disableLikeFilter ? "==" : "LIKE" };
     }
 
     public componentDidMount(): void {
@@ -59,7 +59,7 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     }
 
     public handleApply = () => {
-        this.setState({show: false});
+        this.setState({ show: false });
 
         if (this.props.onApply) {
             this.props.onApply(this.getValue());
@@ -77,6 +77,8 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     };
 
     public render() {
+        const { config, caption } = this.props;
+
         const options = {
             "LIKE": fI18n.t("frontend:filters.numeric.like"),
             "==": fI18n.t("frontend:filters.numeric.equal"),
@@ -88,7 +90,9 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
             "IN": fI18n.t("frontend:filters.numeric.in"),
         };
 
-        const {config, caption} = this.props;
+        if (config.disableLikeFilter == true) {
+            delete options.LIKE;
+        }
 
         return (
             <div className="w-filter w-filter-numeric">
@@ -103,18 +107,18 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
                         onKeyPress={this.handleKeyPress}
                     />
                 ) : (
-                    <textarea autoFocus={config.disableAutoFocus === true} ref={(el) => (this.input3 = el)}/>
+                    <textarea autoFocus={config.disableAutoFocus === true} ref={(el) => (this.input3 = el)} />
                 )}
 
                 {this.state.option == "<x<" && (
                     <div className="w-filter-label">
                         {fI18n.t("frontend:filters.to")}
-                        <input type="text" ref={(el) => (this.input2 = el)} onKeyPress={this.handleKeyPress}/>
+                        <input type="text" ref={(el) => (this.input2 = el)} onKeyPress={this.handleKeyPress} />
                     </div>
                 )}
                 {this.props.config.showFilterOptions && (
                     <select
-                        onChange={(e) => this.setState({option: e.currentTarget.value})}
+                        onChange={(e) => this.setState({ option: e.currentTarget.value })}
                         value={this.state.option}
                     >
                         {Object.entries(options).map(([key, val]) => (

@@ -27,11 +27,16 @@ export class FilterHelper {
         });
     }
 
-    public static number(field: string, caption: string) {
+    public static number(field: string, caption: string, config = {}) {
         return new FilterHelper({
             field,
             caption,
             component: NumericFilter,
+            config: {
+                showFilterOptions: true,
+                disableLikeFilter: false,
+                ...config,
+            },
         });
     }
 
