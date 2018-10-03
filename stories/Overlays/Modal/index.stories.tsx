@@ -18,7 +18,7 @@ const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ves
         Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
 
 class OpenTest extends React.Component {
-    private buttonRef;
+    private buttonRef: HTMLAnchorElement;
 
     public state = {
         opened: false,

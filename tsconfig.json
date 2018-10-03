@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "lib",
+    "outDir": "lib",
     "sourceMap": true,
     "jsx": "react",
     "allowJs": true,
@@ -11,8 +16,9 @@
     "noImplicitAny": true,
     "downlevelIteration": true,
     "removeComments": true,
-    "noEmit": true,
+
     "skipLibCheck": true,
+    "types": ["reflect-metadata"],
     "lib": [
       "ES2017",
       "ES2015",
@@ -24,6 +30,7 @@
       "dom.iterable"
     ]
   },
+
   "exclude": [
     "resources",
     "vendor",

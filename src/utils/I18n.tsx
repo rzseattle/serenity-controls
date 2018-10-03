@@ -13,10 +13,12 @@ const XHR = {
         /* use services and options */
     },
     read(language, namespace, callback) {
-        import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
+      import("../../translations/i18n.pl").then(function(result) {
+      //  import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
             } else {
+
                 callback(null, result.lang[namespace]);
             }
         });
