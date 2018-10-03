@@ -1,11 +1,11 @@
 const webpack = require("webpack");
-var { resolve, basename } = require("path");
+var {resolve, basename} = require("path");
 const fs = require("fs");
 const HappyPack = require("happypack");
 const path = require("path");
 
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const { CheckerPlugin } = require("awesome-typescript-loader");
+const {CheckerPlugin} = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
@@ -25,7 +25,88 @@ let configDefaults = {
     NODE_CACHE_DIR: "node_modules/.cache",
 };
 
-module.exports = function(input) {
+module.exports = function (input) {
+    const dllFile = resolve(input.BASE_PATH, "./public/assets/dist/dll-manifest.json");
+
+    const GetLoaders = require("./Loaders.js");
+    if (process.argv.includes("--env.mode=dll")) {
+
+        //if (process.env.mode == "dll") {
+        return {
+            mode: "production",
+            devtool: "none",
+            context: resolve(__dirname, ""),
+            resolve: {
+                extensions: [".js", ".json", ".css", ".ts", ".tsx"],
+                modules: [__dirname, "node_modules"],
+            },
+
+            /*entry: {
+                react: ["react", "react-dom"],
+                pdf: ["react-pdf"],
+                dates: ["react-dates"],
+                i18Next: ["react-i18next"],
+                hotKeys: ["react-hot-keys"],
+            },*/
+            /*optimization: {
+                splitChunks: {
+                    // include all types of chunks
+
+                    maxSize: 500000
+
+                },
+
+            },*/
+
+
+            module: GetLoaders(true, input),
+            entry: {
+                react: ["react", "react-dom", "react-dates", "react-hot-keys", "react-pdf", "amcharts3", "nprogress", "i18next", "react-i18next", "frontend"],
+
+
+            },
+            output: {
+                filename: `[name]-[hash].dll.js`,
+                path: resolve(input.BASE_PATH, "./public/assets/dist/"),
+                library: "[name]",
+                chunkFilename: `chunk-[name]-[hash].dll.js`,
+                publicPath: input.PUBLIC_PATH,
+            },
+
+            plugins: [
+                new webpack.DllPlugin({
+                    name: "[name]",
+                    path: dllFile,
+                }),
+
+                new MiniCssExtractPlugin({
+                    // Options similar to the same options in webpackOptions.output
+                    // both options are optional
+                    filename: "bundle-[hash].css",
+                    chunkFilename: "[id].[hash].css",
+                }),
+
+            ],
+            optimization: {
+                minimizer: [
+                    new UglifyJsPlugin({
+                        cache: true,
+                        parallel: true,
+                        sourceMap: false, // set to true if you want JS source maps
+                    }),
+                    new OptimizeCSSAssetsPlugin({
+                        cssProcessorOptions: {
+                            "postcss-safe-parser": true,
+                            discardComments: {removeAll: true},
+                            zindex: false,
+                        },
+                    }),
+                ],
+            }
+
+        };
+    }
+
     input = Object.assign(configDefaults, input);
 
     if (input.PRODUCTION) {
@@ -50,7 +131,7 @@ module.exports = function(input) {
         },
     };
 
-    const GetLoaders = require("./Loaders.js");
+
     conf.module = GetLoaders(input.PRODUCTION, input);
 
     let tmpEntry = {};
@@ -102,28 +183,28 @@ module.exports = function(input) {
         conf[i] = tmp[i];
     }
 
-    let threads = HappyPack.ThreadPool({ size: 4 });
+    /*    let threads = HappyPack.ThreadPool({size: 4});
 
-    conf.plugins = conf.plugins.concat([
-        new HappyPack({
-            id: "sass",
-            loaders: [
-                !input.PRODUCTION ? "style-loader" : MiniCssExtractPlugin.loader,
-                { loader: "css-loader", query: { sourceMap: true } },
-                { loader: "resolve-url-loader", query: { sourceMap: true } },
-                //'postcss-loader',
-                {
-                    loader: "sass-loader",
-                    query: {
-                        sourceMap: true,
-                        includePaths: ["node_modules"],
+        conf.plugins = conf.plugins.concat([
+            new HappyPack({
+                id: "sass",
+                loaders: [
+                    MiniCssExtractPlugin.loader,
+                    {loader: "css-loader", query: {sourceMap: true}},
+                    {loader: "resolve-url-loader", query: {sourceMap: true}},
+                    //'postcss-loader',
+                    {
+                        loader: "sass-loader",
+                        query: {
+                            sourceMap: true,
+                            includePaths: ["node_modules"],
+                        },
                     },
-                },
-            ],
+                ],
 
-            threadPool: threads,
-        }),
-    ]);
+                threadPool: threads,
+            }),
+        ]);*/
 
     if (true) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
@@ -164,6 +245,13 @@ module.exports = function(input) {
         );
     }
 
+    conf.plugins.push(
+        new webpack.DllReferencePlugin({
+            context: resolve(__dirname, ""),
+            manifest: dllFile,
+        }),
+    );
+
     /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
         // Can be `standalone` or `publisher`.
         // In `standalone` mode analyzer will start rempl server in exclusive publisher mode.
@@ -202,7 +290,7 @@ module.exports = function(input) {
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
                         "postcss-safe-parser": true,
-                        discardComments: { removeAll: true },
+                        discardComments: {removeAll: true},
                         zindex: false,
                     },
                 }),
@@ -254,4 +342,29 @@ module.exports = function(input) {
      });*/
 
     return conf;
+
+    console.log(path.resolve(input.PATH, "./library"));
+    return [
+        {
+            mode: "production",
+            context: process.cwd(),
+            resolve: {
+                extensions: [".js", ".jsx", ".json", ".less", ".css"],
+                modules: [__dirname, "node_modules"],
+            },
+
+            entry: {
+                library: ["react", "react-dom"],
+            },
+            output: {
+                filename: `[name]-[hash].dll.js`,
+                path: path.resolve(input.PATH, "./library"),
+                library: "[name]",
+                chunkFilename: `chunk-[name]-[hash].dll.js`,
+                publicPath: input.PUBLIC_PATH,
+            },
+        },
+
+        conf,
+    ];
 };

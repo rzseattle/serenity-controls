@@ -5,7 +5,7 @@ interface IPortalProps {
     container?: () => HTMLElement;
 }
 
-export class Portal extends React.PureComponent<IPortalProps> {
+export default class Portal extends React.PureComponent<IPortalProps> {
     public el: HTMLElement;
     private modalRoot: HTMLElement;
 

@@ -21,6 +21,14 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
     }
 
     conf.devServer = {
+        //https: HTTPS,
+        https: {
+            key: fs.readFileSync(BASE_PATH + "/build/js/ssl/server.key"),
+            cert: fs.readFileSync(BASE_PATH + "/build/js/ssl/server.crt"),
+            //ca: fs.readFileSync("./cert2.pem"),
+        },
+        //pfx: resolve(__dirname, './cert2.pfx'),
+        //pfxPassphrase: 'xxx123',
         hot: true,
         port: PORT,
         publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,

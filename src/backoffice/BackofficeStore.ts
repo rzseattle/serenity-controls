@@ -1,15 +1,14 @@
 import Comm from "../lib/Comm";
 import Router from "frontend/src/backoffice/Router";
 import * as qs from "qs";
-import BackOfficePanel from "./BackOfficePanel";
-import {hot} from "react-hot-loader";
+
 
 declare var window;
 declare var module;
 
 const browserInput = window.reactBackOfficeVar;
 
-export class BackofficeStore {
+export default class BackofficeStore {
     public static debugData: { views: Frontend.Debug.DebugDataEntry[]; ajax: Frontend.Debug.DebugDataEntry[] } = {views: [], ajax: []};
     public static debugDataListeners: Frontend.Debug.DebugDataListener[] = [];
     public static debugViewAjaxInProgress = true;
@@ -279,3 +278,5 @@ export class BackofficeStore {
         this.onViewLoadedArr.push(callback);
     };
 }
+
+export {BackofficeStore}

@@ -14,7 +14,7 @@ interface IProps {
     zIndex?: number;
 }
 
-export class CommandBar extends React.PureComponent<IProps> {
+export default class CommandBar extends React.PureComponent<IProps> {
     public static defaultProps: Partial<IProps> = {
         isSearchBoxVisible: false,
         searchPlaceholderText: null,
@@ -178,3 +178,5 @@ export class CommandBar extends React.PureComponent<IProps> {
         );
     }
 }
+
+export {CommandBar};

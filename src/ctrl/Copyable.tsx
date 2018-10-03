@@ -5,7 +5,7 @@ interface ICopyableProps {
     toCopy?: string;
 }
 
-export class Copyable extends React.Component<ICopyableProps, any> {
+export default class Copyable extends React.Component<ICopyableProps, any> {
     node: HTMLSpanElement;
     nodeToCopy: HTMLSpanElement;
 
@@ -60,3 +60,4 @@ export class Copyable extends React.Component<ICopyableProps, any> {
         );
     }
 }
+export{Copyable};
