@@ -23,7 +23,7 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
     public getValue() {
         return {
             field: this.props.field,
-            value: this.state.searchValue,
+            value: this.state.searchValue[0],
             condition: "=",
             caption: this.props.caption,
             labelCaptionSeparator: " :",
@@ -68,6 +68,7 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
                     editable={true}
                     items={[]}
                     onChange={this.handleChange}
+                    searchWithoutPhrase={true}
                 />
 
                 {this.props.showApply && (

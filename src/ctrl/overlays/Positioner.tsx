@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Portal } from "./Portal";
+import Portal from "./Portal";
 import { IPositionCalculatorOptions, PositionCalculator } from "../../lib/PositionCalculator";
 import { deepCopy, deepIsEqual } from "../../lib/JSONTools";
 import ResizeObserver from "resize-observer-polyfill";
@@ -287,5 +287,3 @@ export const AbsolutePositionPresets = {
     fullTop: { top: "auto", left: "auto" },
     top: { top: "auto", left: "auto" },
 };
-
-

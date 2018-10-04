@@ -245,12 +245,14 @@ module.exports = function (input) {
         );
     }
 
-    conf.plugins.push(
-        new webpack.DllReferencePlugin({
-            context: resolve(__dirname, ""),
-            manifest: dllFile,
-        }),
-    );
+    if (false) {
+        conf.plugins.push(
+            new webpack.DllReferencePlugin({
+                context: resolve(__dirname, ""),
+                manifest: dllFile,
+            }),
+        );
+    }
 
     /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
         // Can be `standalone` or `publisher`.

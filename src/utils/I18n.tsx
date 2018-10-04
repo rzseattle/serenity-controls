@@ -47,7 +47,10 @@ const instance = i18n
         ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
             if (!PRODUCTION) {
-                console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
+
+                if( lng != "pl") {
+                    console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
+                }
             }
         },
         react: {
