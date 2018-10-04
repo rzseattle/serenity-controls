@@ -294,9 +294,9 @@ module.exports = function(input) {
                     sourceMap: true, // set to true if you want JS source maps
 
 
-                    uglifyOptions:{
+                    /*uglifyOptions:{
                     comments: false,
-                    }
+                    }*/
                 }),
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
