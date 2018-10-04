@@ -292,9 +292,11 @@ module.exports = function(input) {
                     cache: true,
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
-                    output: {
-                        comments: false,
-                    },
+
+
+                    uglifyOptions:{
+                    comments: false,
+                    }
                 }),
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
