@@ -1,7 +1,6 @@
 // declare var Views: any;
-//import * as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
+import * as ViewsRoute from "../../../../build/js/tmp/components-route.include.js";
 
-ViewsRoute = {};
 
 import RouterException from "./RouterException";
 
