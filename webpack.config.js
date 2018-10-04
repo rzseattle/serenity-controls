@@ -14,9 +14,12 @@ const config = {
     NODE_CACHE_DIR: path.resolve(__dirname, "./node_modules/.cache"),
 };
 
-module.exports = function(env = {}) {
+const dependencies = Object.keys(require("./package").dependencies);
+
+module.exports = function (env = {}) {
     return {
         mode: "production",
+        devtool: "source-maps",
         resolve: {
             extensions: [".js", ".json", ".css", ".ts", ".tsx"],
             modules: [__dirname, "node_modules"],
@@ -25,13 +28,19 @@ module.exports = function(env = {}) {
             },
         },
 
-        entry: ["./src/index.js"],
+        entry: {
+            table: "./src/ctrl/Table/index.ts",
+            overlays: "./src/ctrl/overlays/index.ts",
+            filters: "./src/ctrl/filters/index.ts"
+        },
+
         output: {
-            filename: `./index.min.js`,
-            chunkFilename: `chunk-[name]-[hash].bundle.js`,
+            filename: `[name].js`,
+            chunkFilename: '[name]-[id].[hash:8].js',
             path: path.resolve(__dirname, "./lib"),
             publicPath: "",
         },
+        externals: dependencies,
         module: GetLoaders(true, config),
         optimization: {
             minimizer: [
@@ -43,7 +52,7 @@ module.exports = function(env = {}) {
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
                         "postcss-safe-parser": true,
-                        discardComments: { removeAll: true },
+                        discardComments: {removeAll: true},
                         zindex: false,
                     },
                 }),
@@ -54,8 +63,11 @@ module.exports = function(env = {}) {
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: "bundle-[hash].css",
-                chunkFilename: "[id].[hash].css",
+                filename: "[name]-[hash].css",
+                chunkFilename: "[name]-[id].[hash].css",
+            }),
+            new webpack.optimize.LimitChunkCountPlugin({
+                maxChunks: 1,
             }),
         ],
     };

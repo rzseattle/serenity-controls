@@ -9,7 +9,8 @@
         "build": "webpack --env.production --display-error-details",
         "storybook": "start-storybook -p 6006",
         "server": "nodemon ./stories/server.js",
-        "build-storybook": "build-storybook"
+        "build-storybook": "build-storybook",
+        "postinstall": "webpack"
     },
     "keywords": [],
     "author": "",
