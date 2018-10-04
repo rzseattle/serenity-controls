@@ -13,12 +13,11 @@ const XHR = {
         /* use services and options */
     },
     read(language, namespace, callback) {
-      import("../../translations/i18n.pl").then(function(result) {
-      //  import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
+        //import("../../translations/i18n.pl").then(function(result) {
+        import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
             } else {
-
                 callback(null, result.lang[namespace]);
             }
         });
@@ -40,6 +39,7 @@ const instance = i18n
     // .use(LanguageDetector)
     .use(reactI18nextModule)
     .init({
+        //lng: configGet("translations.defaultLanguage"),
         fallbackLng: configGet("translations.defaultLanguage"),
         //debug: !PRODUCTION,
         debug: false,
@@ -47,10 +47,9 @@ const instance = i18n
         ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
             if (!PRODUCTION) {
-
-                if( lng != "pl") {
-                    console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
-                }
+                //if( lng != "pl") {
+                console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
+                //}
             }
         },
         react: {
