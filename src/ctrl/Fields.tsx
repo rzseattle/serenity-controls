@@ -1,9 +1,9 @@
 import * as React from "react";
 import Dropzone from "react-dropzone";
 
-import {ConnectionsField} from "./fields/ConnectionsField/ConnectionsField";
+import { ConnectionsField } from "./fields/ConnectionsField/ConnectionsField";
 
-import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
+import { IFieldChangeEvent, IFieldProps, IOption } from "./fields/Interfaces";
 
 import i18n from "../utils/I18n";
 
@@ -92,14 +92,18 @@ class Text extends React.Component<ITextProps, any> {
                     autoFocus={props.autoFocus}
                     onKeyDown={props.onKeyDown}
                 />
-                {props.charLimit &&
-                <div>
-                        <span style={{
-                            color: props.charLimit - props.value.length == 0 && "red",
-                            fontSize: "0.9em",
-                        }}>Pozostało znaków: <span>{props.charLimit - props.value.length}</span></span>
-                </div>
-                }
+                {props.charLimit && (
+                    <div>
+                        <span
+                            style={{
+                                color: props.charLimit - props.value.length == 0 && "red",
+                                fontSize: "0.9em",
+                            }}
+                        >
+                            Pozostało znaków: <span>{props.charLimit - props.value.length}</span>
+                        </span>
+                    </div>
+                )}
             </div>
         );
     }
@@ -171,7 +175,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     public handleOnChange(value, event) {
-        this.setState({value});
+        this.setState({ value });
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -193,28 +197,35 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
     public initializeEditor() {
         Promise.all([import("scriptjs")]).then((imported) => {
-
             imported[0].default("https://cdn.ckeditor.com/4.7.3/full/ckeditor.js", () => {
-                this.setState({libsLoaded: true});
+                this.setState({ libsLoaded: true });
                 const config: any = {
                     toolbar: [
-                        {name: "clipboard", items: ["Undo", "Redo"]},
-                        {name: "styles", items: ["Format"]},
+                        { name: "clipboard", items: ["Undo", "Redo"] },
+                        { name: "styles", items: ["Format"] },
                         {
                             name: "basicstyles",
-                            items: ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "RemoveFormat"],
+                            items: [
+                                "Bold",
+                                "Italic",
+                                "Underline",
+                                "Strike",
+                                "Subscript",
+                                "Superscript",
+                                "RemoveFormat",
+                            ],
                         },
                         // {name: 'colors', items: ['TextColor', 'BGColor']},
-                        {name: "align", items: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"]},
+                        { name: "align", items: ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"] },
                         {
                             name: "paragraph",
                             items: ["NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote"],
                         },
                         "/",
-                        {name: "styles", items: ["HorizontalRule"]},
-                        {name: "links", items: ["Link", "Unlink"]},
-                        {name: "insert", items: ["Image", "Table"]},
-                        {name: "tools", items: ["Maximize", "Source"]},
+                        { name: "styles", items: ["HorizontalRule"] },
+                        { name: "links", items: ["Link", "Unlink"] },
+                        { name: "insert", items: ["Image", "Table"] },
+                        { name: "tools", items: ["Maximize", "Source"] },
                     ],
                     extraPlugins: "justify",
                     enterMode: CKEDITOR.ENTER_P,
@@ -295,7 +306,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
             return (
                 <div
                     className="w-field-presentation w-field-presentation-wysiwyg"
-                    dangerouslySetInnerHTML={{__html: props.value}}
+                    dangerouslySetInnerHTML={{ __html: props.value }}
                 />
             );
         }
@@ -304,7 +315,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
             return (
                 <div className={"w-filter w-filter-date"}>
                     <div>
-                        <i className="fa fa-cog fa-spin"/>
+                        <i className="fa fa-cog fa-spin" />
                     </div>
                 </div>
             );
@@ -342,7 +353,7 @@ class Switch extends React.Component<ISwitchProps, any> {
     }
 
     public handleOnChange(value, event) {
-        this.setState({value});
+        this.setState({ value });
 
         // this.refs.hidden.value = date;
         if (this.props.onChange) {
@@ -535,7 +546,6 @@ interface IDateProps extends IFieldProps {
 class Date extends React.Component<IDateProps, any> {
     public static defaultProps = {
         editable: true,
-
     };
 
     constructor(props) {
@@ -555,7 +565,6 @@ class Date extends React.Component<IDateProps, any> {
             import("react-dates/lib/css/_datepicker.css"),
             import("react-dates/initialize"),
         ]).then((imported) => {
-
             moment = imported[0].default;
             datePicker = imported[2];
             this.setState({
@@ -569,23 +578,16 @@ class Date extends React.Component<IDateProps, any> {
     }
 
     public componentWillReceiveProps(nextProps: Readonly<IDateProps>, nextContext: any): void {
-        Promise.all([
-            import("moment"),
-            import("moment/locale/pl"),
-        ]).then((imported) => {
+        Promise.all([import("moment"), import("moment/locale/pl")]).then((imported) => {
             moment = imported[0].default;
             this.setState({
-                date:
-                    (nextProps.value && nextProps.value != "0000-00-00"
-                        ? moment(nextProps.value, "YYYY-MM-DD")
-                        : null
-                    ),
+                date: nextProps.value && nextProps.value != "0000-00-00" ? moment(nextProps.value, "YYYY-MM-DD") : null,
             });
         });
     }
 
     public handleOnChange(date) {
-        this.setState({date, value: date});
+        this.setState({ date, value: date });
 
         // this.refs.hidden.value = date;
         if (this.props.onChange) {
@@ -600,7 +602,6 @@ class Date extends React.Component<IDateProps, any> {
     }
 
     public render() {
-
         const props = this.props;
 
         if (!props.editable) {
@@ -610,7 +611,7 @@ class Date extends React.Component<IDateProps, any> {
             return (
                 <div className={"w-filter w-filter-date"}>
                     <div>
-                        <i className="fa fa-cog fa-spin"/>
+                        <i className="fa fa-cog fa-spin" />
                     </div>
                 </div>
             );
@@ -624,7 +625,7 @@ class Date extends React.Component<IDateProps, any> {
                     date={this.state.date}
                     onDateChange={(date) => this.handleOnChange(date)}
                     focused={this.state.focused}
-                    onFocusChange={({focused}) => this.setState({focused})}
+                    onFocusChange={({ focused }) => this.setState({ focused })}
                     isOutsideRange={() => false}
                     disabled={props.disabled}
                     placeholder={props.placeholder ? props.placeholder : i18n.t("frontend:fields.date.fillDate")}
@@ -665,36 +666,36 @@ class File extends React.Component<IFileProps, any> {
                     onDrop={this.handleFileAdd.bind(this)}
                 >
                     <span>
-                        <i className="fa fa-plus-circle"/>
+                        <i className="fa fa-plus-circle" />
                         Kliknij lub przeciągnij tu plik
                     </span>
                 </Dropzone>
                 {props.value &&
-                Array.isArray(props.value) && (
-                    <div className="w-file-dropzone-up-list">
-                        {props.value.map((el) => (
-                            <div>
+                    Array.isArray(props.value) && (
+                        <div className="w-file-dropzone-up-list">
+                            {props.value.map((el) => (
                                 <div>
-                                    <a href={el.preview || el.path} target="_blank">
-                                        <div className="w-file-dropzone-up-list-icon">
-                                            {el.type.indexOf("image") != -1 && (
-                                                <img src={el.preview || el.path} alt=""/>
-                                            )}
-                                            {el.type.indexOf("image") == -1 && <i className="fa fa-file"/>}
-                                        </div>
-                                        <div className="w-file-dropzone-up-list-name">{el.name}</div>
-                                        <div className="w-file-dropzone-up-list-status">
-                                            <i className={"fa fa-" + (el.preview ? "upload" : "check")}/>
-                                        </div>
-                                    </a>
+                                    <div>
+                                        <a href={el.preview || el.path} target="_blank">
+                                            <div className="w-file-dropzone-up-list-icon">
+                                                {el.type.indexOf("image") != -1 && (
+                                                    <img src={el.preview || el.path} alt="" />
+                                                )}
+                                                {el.type.indexOf("image") == -1 && <i className="fa fa-file" />}
+                                            </div>
+                                            <div className="w-file-dropzone-up-list-name">{el.name}</div>
+                                            <div className="w-file-dropzone-up-list-status">
+                                                <i className={"fa fa-" + (el.preview ? "upload" : "check")} />
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                            ))}
+                        </div>
+                    )}
             </div>
         );
     }
 }
 
-export {Text, Select, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField};
+export { Text, Switch, CheckboxGroup, Textarea, Date, File, Wysiwyg, ConnectionsField };

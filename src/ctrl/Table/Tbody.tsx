@@ -138,6 +138,15 @@ export default class Tbody extends React.Component<ITbodyProps> {
 }
 
 export class Row extends React.PureComponent<any, any> {
+    public data: { [index: string]: any } = {};
+
+    public setData(index: string, data: any) {
+        this.data[index] = data;
+    }
+    public getData(index: string, defaultVal: any) {
+        return this.data[index] || defaultVal;
+    }
+
     public packFn = (val: any, column: IColumnData, row: any) => {
         let templateResult: any = false;
         if (column.template !== null) {

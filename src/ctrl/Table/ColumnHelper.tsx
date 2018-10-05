@@ -109,10 +109,9 @@ export default class ColumnHelper {
     }
 
     public static link(field: string, caption: string, urlResolver: any): ColumnHelper {
-        return ColumnHelper.text("id", "")
-          .onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
+        return ColumnHelper.text("id", "").onMouseUp((row, column, rowComponent, cell, event) => {
             const url = urlResolver(row, column, event);
-            if (e.button == 1) {
+            if (event.button == 1) {
                 window.open(url);
             } else {
                 window.location.href = url;
@@ -120,11 +119,11 @@ export default class ColumnHelper {
         });
     }
 
-    public static money(field, caption): ColumnHelper {
+    public static money(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
-            template: (val, row) => parseFloat(val).toFixed(2),
+            template: (val) => parseFloat(val).toFixed(2),
             filter: [
                 {
                     field,
@@ -138,11 +137,11 @@ export default class ColumnHelper {
         }).className("right");
     }
 
-    public static email(field, caption): ColumnHelper {
+    public static email(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
-            template: (val, row) => <a href={"mailto:" + val}>{val}</a>,
+            template: (val) => <a href={"mailto:" + val}>{val}</a>,
             filter: [
                 {
                     field,
@@ -156,7 +155,7 @@ export default class ColumnHelper {
         });
     }
 
-    public static date(field, caption): ColumnHelper {
+    public static date(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
@@ -170,7 +169,7 @@ export default class ColumnHelper {
         });
     }
 
-    public static bool(field, caption): ColumnHelper {
+    public static bool(field: string, caption: string): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
@@ -188,7 +187,7 @@ export default class ColumnHelper {
         });
     }
 
-    public static hidden(field): ColumnHelper {
+    public static hidden(field: string): ColumnHelper {
         return new ColumnHelper({
             field,
             display: false,
@@ -202,17 +201,23 @@ export default class ColumnHelper {
         }).noFilter();
     }
 
-    public static custom(data): ColumnHelper {
+    public static custom(data: IColumnData): ColumnHelper {
         return new ColumnHelper(data);
     }
 
-    public editable(fn, type: string, enabled: boolean): ColumnHelper {
+    public editable(
+        fn: (columnt: IColumnData, row: any, changedValue: any) => any,
+        type: string,
+        enabled: boolean,
+    ): ColumnHelper {
         if (enabled === false) {
-            return this.data;
+            return this;
         }
         this.data.template = (value, row, column, rowContainer) => {
+            const columnsInEditState = rowContainer.getData("columnsInEdit", {});
+            const isInEditState = columnsInEditState[column.field] === true;
             let changedValue = value;
-            if (column.inEditState == true) {
+            if (isInEditState) {
                 switch (type) {
                     case "text":
                         return (
@@ -226,7 +231,9 @@ export default class ColumnHelper {
                                         if (value !== changedValue) {
                                             fn(column, row, changedValue);
                                         }
-                                        column.inEditState = false;
+
+                                        delete columnsInEditState[column.field];
+                                        rowContainer.setData("columnsInEdit", columnsInEditState);
                                         rowContainer.forceUpdate();
                                     }}
                                 />
@@ -244,7 +251,8 @@ export default class ColumnHelper {
                                         if (value !== changedValue) {
                                             fn(column, row, changedValue);
                                         }
-                                        column.inEditState = false;
+                                        delete columnsInEditState[column.field];
+                                        rowContainer.setData("columnsInEdit", columnsInEditState);
                                         rowContainer.forceUpdate();
                                     }}
                                 />
@@ -272,7 +280,9 @@ export default class ColumnHelper {
             }
         };
         this.data.events.click.push((row, column, rowContainer) => {
-            column.inEditState = true;
+            const columnsInEditState = rowContainer.getData("columnsInEdit", {});
+            columnsInEditState[column.field] = true;
+            rowContainer.setData("columnsInEdit", columnsInEditState);
             rowContainer.forceUpdate();
         });
         return this;
