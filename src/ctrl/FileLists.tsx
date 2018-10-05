@@ -164,7 +164,7 @@ class FileList extends React.Component<IFileList, any> {
         ];
     }
 
-    public handleFileAdd(addedFiles: Array<File & { preview: string }>) {
+    public handleFileAdd = (addedFiles: Array<File & { preview: string }>) => {
         const currFiles = this.props.value ? this.props.value.slice() : [];
         for (let i = 0; i < addedFiles.length; i++) {
             if (this.props.maxLength && i >= this.props.maxLength) {
@@ -191,7 +191,7 @@ class FileList extends React.Component<IFileList, any> {
         }
 
         this.handleChange(currFiles);
-    }
+    };
 
     public handleFileClick(index) {
         this.handleViewRequest(index);
@@ -271,11 +271,7 @@ class FileList extends React.Component<IFileList, any> {
         return (
             <div className="w-file-list">
                 {(!maxLength || (value && value.length < maxLength) || !value) && (
-                    <Dropzone
-                        className="dropzone"
-                        activeClassName="w-gallery-add-active"
-                        onDrop={this.handleFileAdd.bind(this)}
-                    >
+                    <Dropzone className="dropzone" activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd}>
                         <span>
                             <Icon name={"Add"} />{" "}
                             {this.props.buttonTitle ? this.props.buttonTitle : i18n.t("frontend:add")}{" "}

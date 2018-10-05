@@ -19,12 +19,13 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
         this.state = {};
     }
 
-    public handleOnChange = (e) => {
+    public handleOnChange = (e: React.FormEvent<HTMLInputElement>) => {
+        const el = e.target as HTMLInputElement;
         let value: string[] = this.props.value ? this.props.value.slice(0) : [];
-        if (e.target.checked) {
-            value.push(e.target.value);
+        if (el.checked) {
+            value.push(el.value);
         } else {
-            value = value.filter((el) => el != e.target.value);
+            value = value.filter((element) => element != el.value);
         }
 
         if (this.props.onChange) {
@@ -44,7 +45,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                 const elements = [];
 
                 for (const i in props.value) {
-                    const element = props.options.filter(function(v, index) {
+                    const element = props.options.filter((v, index) => {
                         return v.value == props.value[i];
                     });
                     elements.push(<li key={element[0].value}>{element[0].label}</li>);
@@ -69,7 +70,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
             }
         }
 
-        const gen = (value, label) => {
+        const gen = (value: string, label: string) => {
             const field = (
                 <input
                     type="checkbox"
@@ -83,7 +84,6 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
             if (props.inline == true) {
                 return (
                     <label className="checkbox-inline" key={value}>
-                        {" "}
                         {field}
                         {label}
                     </label>

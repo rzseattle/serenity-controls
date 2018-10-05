@@ -1,16 +1,17 @@
 import { IFieldProps, IOption } from "./Interfaces";
+import React from "react";
 
 interface ISwitchProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
     value?: number | string;
 }
 
-export default class Switch extends React.Component<ISwitchProps, any> {
+export default class Switch extends React.Component<ISwitchProps> {
     public static defaultProps: Partial<ISwitchProps> = {
         editable: true,
     };
 
-    constructor(props) {
+    constructor(props: ISwitchProps) {
         super(props);
         this.state = {
             value: props.value,
