@@ -7,14 +7,14 @@ import { Icon } from "frontend/src/ctrl/Icon";
 
 import { CommandBar } from "./CommandBar";
 
-
 import { printFile } from "../utils/FilePrinter";
 
-import {ImageViewer} from "./files/viewers/ImageViewer";
-import {PDFViewer} from "./files/viewers/PDFViewer";
+import { ImageViewer } from "./files/viewers/ImageViewer";
+import { PDFViewer } from "./files/viewers/PDFViewer";
 import i18n from "frontend/src/utils/I18n";
-import {Modal} from "./overlays/Modal";
-import {alertDialog} from "./overlays/ConfirmDialog";
+import { Modal } from "./overlays/Modal";
+import { alertDialog } from "./overlays/ConfirmDialog";
+
 let baseUrl = "";
 if (window.location.host.indexOf("esotiq") != -1) {
     baseUrl = "https://static.esotiq.com/";
@@ -67,10 +67,10 @@ const ImageBox = SortableElement((props) => {
 
     if (!file.uploaded) {
         /*let reader = new FileReader();
-        reader.addEventListener("load", function () {
-            preview.src = reader.result;
-        }, false);
-        reader.readAsDataURL(file.nativeObj);*/
+    reader.addEventListener("load", function () {
+        preview.src = reader.result;
+    }, false);
+    reader.readAsDataURL(file.nativeObj);*/
     }
 
     return (
@@ -244,7 +244,6 @@ class FileList extends React.Component<IFileList, any> {
         const el = this.props.value[index];
         el.path = parsePath(this.props.downloadConnector(el));
 
-
         let viewer = null;
         for (const element of this.viewerRegistry) {
             if ((el.name && el.name.match(element.filter)) || el.path.match(element.filter)) {
@@ -278,7 +277,8 @@ class FileList extends React.Component<IFileList, any> {
                         onDrop={this.handleFileAdd.bind(this)}
                     >
                         <span>
-                            <Icon name={"Add"} /> {this.props.buttonTitle ? this.props.buttonTitle : i18n.t("frontend:add")}{" "}
+                            <Icon name={"Add"} />{" "}
+                            {this.props.buttonTitle ? this.props.buttonTitle : i18n.t("frontend:add")}{" "}
                         </span>
                     </Dropzone>
                 )}

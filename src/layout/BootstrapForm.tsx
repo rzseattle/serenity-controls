@@ -1,15 +1,13 @@
 import * as React from "react";
-import { CheckboxGroup, ConnectionsField, Date, File,  Switch, Text, Textarea, Wysiwyg } from "../ctrl/Fields";
+import { FormEvent } from "react";
+import { CheckboxGroup, ConnectionsField, Date, File, Switch, Text, Textarea, Wysiwyg } from "../ctrl/Fields";
 import { FileList } from "../ctrl/FileLists";
 
-import Comm from "../lib/Comm";
+import Comm, { CommEvents } from "../lib/Comm";
 import { Copyable } from "../ctrl/Copyable";
 import Icon from "../ctrl/Icon";
-import { IFieldChangeEvent } from "../ctrl/fields/Interfaces";
-import { any } from "prop-types";
 import Shadow from "../ctrl/overlays/Shadow";
-import {Select} from "../ctrl/fields/Select";
-import {FormEvent} from "react";
+import { Select } from "../ctrl/fields/Select";
 
 interface IWithBootstrapFormFieldProps {
     /**
@@ -294,7 +292,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         }
     }
 
-    public submit(tmpCallbacks: {[index: string]: (  ) => any }) {
+    public submit(tmpCallbacks: { [index: string]: () => any }) {
         this.handleSubmit(null, tmpCallbacks);
     }
 
@@ -305,19 +303,19 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         if (this.props.onSubmit) {
-            this.props.onSubmit({ inputEvent: e, form: this });
+            this.props.onSubmit({ form: this, inputEvent: e as FormEvent<HTMLFormElement> });
         } else if (this.props.action) {
             const comm = new Comm(this.props.action);
 
-            let data: {[index: string]: any}  = {};
+            let data: { [index: string]: any } = {};
             if (this.props.namespace) {
                 data[this.props.namespace] = this.getData();
             } else {
                 data = this.getData();
             }
 
-            comm.on("finish", () => this.setState({ loading: false }));
-            comm.on("success", (response) => {
+            comm.on(CommEvents.FINISH, () => this.setState({ loading: false }));
+            comm.on(CommEvents.SUCCESS, (response) => {
                 if (this.props.onSuccess) {
                     this.props.onSuccess({ form: this, response });
                 }
@@ -326,14 +324,14 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                     formErrors: [],
                 });
 
-                if (tmpCallbacks[Comm.EVENTS.SUCCESS]) {
-                    tmpCallbacks[Comm.EVENTS.SUCCESS]({ form: this, response });
+                if (tmpCallbacks[CommEvents.SUCCESS]) {
+                    tmpCallbacks[CommEvents.SUCCESS]({ form: this, response });
                 }
             });
-            comm.on("validationErrors", (response) => {
+            comm.on(CommEvents.VALIDATION_ERRORS, (response) => {
                 this.handleValidatorError(response);
             });
-            comm.on("error", (response) => {
+            comm.on(CommEvents.ERROR, (response) => {
                 if (this.props.onError) {
                     this.props.onError({ form: this, response });
                 }
@@ -346,7 +344,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         return false;
     };
 
-    public getHtmlNotationNameTranslators(fieldName) {
+    public getHtmlNotationNameTranslators(fieldName: string) {
         const tmp = fieldName.replace(/\]/g, "");
         const arrayNotation = tmp.split("[");
         let dotNotation = arrayNotation.join(".");
@@ -375,7 +373,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         return { get, set, arrayNotation };
     }
 
-    public handleInputChange(e: FormEvent ) {
+    public handleInputChange(e: FormEvent<HTMLInputElement>) {
         let name;
         let type;
         let value;
@@ -386,12 +384,13 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value = e.value;
             type = e.type;
         } else {
-            name = e.target.getAttribute("name");
-            type = e.target.getAttribute("type");
-            value = e.target.value;
+            const el = e.target as HTMLInputElement;
+            name = el.getAttribute("name");
+            type = el.getAttribute("type");
+            value = el.value;
 
-            if (e.target.type == "file") {
-                value = e.target.files[0];
+            if (el.type == "file") {
+                value = e.files[0];
             }
         }
 

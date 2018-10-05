@@ -2,8 +2,7 @@ import * as React from "react";
 
 import { fI18n } from "../../utils/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
-import { Switch } from "../Fields";
-import { IOption } from "../fields/Interfaces";
+import { Switch, IOption } from "../Fields";
 
 import "./SwitchFilter.sass";
 
@@ -51,7 +50,7 @@ export default class SwitchFilter extends AbstractFilter<ISwitchFilterProps> {
     };
 
     public render() {
-        const {caption} = this.props;
+        const { caption } = this.props;
         return (
             <div className="w-filter w-filter-switch">
                 {caption != "" && <div className={"w-filter-title"}>{caption}</div>}

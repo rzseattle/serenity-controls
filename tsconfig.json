@@ -36,5 +36,8 @@
     },
 
     "exclude": ["resources", "vendor", "assets", "data", "node_modules"],
-    "include": ["./src/ctrl/table/**/*"]
+    "include": [
+        "./src/ctrl/table/**/*",
+        "./stories/**/*"
+    ]
 }

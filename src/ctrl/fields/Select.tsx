@@ -7,6 +7,7 @@ import { Positioner, RelativePositionPresets } from "../overlays/Positioner";
 
 import "./Select.sass";
 import i18n from "../../utils/I18n";
+import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
