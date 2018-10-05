@@ -40,7 +40,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
         };
     }
 
-    public handleTabChange(index: number, e) {
+    public handleTabChange(index: number, e: React.MouseEvent) {
         if (this.props.onTabChange) {
             this.props.onTabChange(index, e);
         }

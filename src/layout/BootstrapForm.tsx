@@ -298,7 +298,8 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         this.handleSubmit(null, tmpCallbacks);
     }
 
-    public handleSubmit = (e: React.FormEvent, tmpCallbacks: {[index: string]: ( { form: BForm; response: any} ) =>any} = {}) => {
+    //todo check type { ([index: string]:  { form: BForm; response: any} ) => any}
+    public handleSubmit = (e: React.FormEvent, tmpCallbacks: any = {}) => {
         if (e) {
             e.preventDefault();
         }

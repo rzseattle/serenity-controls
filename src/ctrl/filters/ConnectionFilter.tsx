@@ -2,7 +2,8 @@ import * as React from "react";
 import { fI18n } from "../../utils/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 import "./ConnectionField.sass";
-import {ConnectionsField} from "../fields/ConnectionsField/ConnectionsField";
+import { ConnectionsField, IConnectionChangeEvent } from "../fields/ConnectionsField/ConnectionsField";
+import { IFieldChangeEvent } from "../fields/Interfaces";
 
 interface IConnectionFilterProps extends IFilterProps {
     config: {
@@ -31,7 +32,7 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
         };
     }
 
-    public handleChange = (event) => {
+    public handleChange = (event: IConnectionChangeEvent) => {
         this.setState(
             {
                 searchValue: event.value,
@@ -43,16 +44,16 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
                 }
             },
         );
-    }
+    };
 
-    public handleApply() {
+    public handleApply = () => {
         this.setState({ show: false });
         if (this.state.searchValue && this.props.onApply) {
             this.props.onApply(this.getValue());
         }
-    }
+    };
 
-    public _handleKeyPress(e) {
+    public _handleKeyPress(e: React.KeyboardEvent) {
         if (e.key === "Enter") {
             this.handleApply();
         }
@@ -64,7 +65,7 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
             <div className={"w-filter w-filter-connection-field "}>
                 {caption != "" && <div className={"w-filter-title"}>{caption}</div>}
                 <ConnectionsField
-                    {...this.props.config}
+                    {...config}
                     editable={true}
                     items={[]}
                     onChange={this.handleChange}
@@ -73,7 +74,7 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
 
                 {this.props.showApply && (
                     <div>
-                        <button className="w-filter-apply" onClick={this.handleApply.bind(this)}>
+                        <button className="w-filter-apply" onClick={this.handleApply}>
                             {fI18n.t("frontend:filters.apply")}
                         </button>
                     </div>

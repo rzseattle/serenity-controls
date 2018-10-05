@@ -16,7 +16,7 @@ const config = {
 
 const dependencies = Object.keys(require("./package").dependencies);
 
-module.exports = function (env = {}) {
+module.exports = function(env = {}) {
     return {
         mode: "production",
         devtool: "source-maps",
@@ -30,18 +30,44 @@ module.exports = function (env = {}) {
 
         entry: {
             table: "./src/ctrl/Table/index.ts",
-            overlays: "./src/ctrl/overlays/index.ts",
-            filters: "./src/ctrl/filters/index.ts"
+            //overlays: "./src/ctrl/overlays/index.ts",
+            //filters: "./src/ctrl/filters/index.ts",
         },
 
         output: {
             filename: `[name].js`,
-            chunkFilename: '[name]-[id].[hash:8].js',
+            chunkFilename: "[name]-[id].[hash:8].js",
             path: path.resolve(__dirname, "./lib"),
             publicPath: "",
         },
         externals: dependencies,
-        module: GetLoaders(true, config),
+        module: {
+            rules: [
+                {
+                    // Include ts, tsx, and js files.
+                    test: /\.(tsx?)|(js)|(ts)$/,
+                    exclude: /node_modules/,
+                    loader: "babel-loader",
+                },
+                {
+                    test: /\.(sa|sc|c)ss$/,
+                    //use: "happypack/loader?id=sass"
+                    use: [
+                         MiniCssExtractPlugin.loader,
+                        { loader: "css-loader", query: { sourceMap: true } },
+                        { loader: "resolve-url-loader", query: { sourceMap: true } },
+                        //'postcss-loader',
+                        {
+                            loader: "sass-loader",
+                            query: {
+                                sourceMap: true,
+                                includePaths: ["node_modules"],
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         optimization: {
             minimizer: [
                 new UglifyJsPlugin({
@@ -52,7 +78,7 @@ module.exports = function (env = {}) {
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
                         "postcss-safe-parser": true,
-                        discardComments: {removeAll: true},
+                        discardComments: { removeAll: true },
                         zindex: false,
                     },
                 }),
@@ -63,7 +89,7 @@ module.exports = function (env = {}) {
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: "[name]-[hash].css",
+                filename: "[name].css",
                 chunkFilename: "[name]-[id].[hash].css",
             }),
             new webpack.optimize.LimitChunkCountPlugin({

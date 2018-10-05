@@ -9,12 +9,12 @@ declare var PRODUCTION: any;
 
 const XHR = {
     type: "backend",
-    init(services, backendOptions, i18nextOptions) {
+    init(services: any, backendOptions: any, i18nextOptions: any) {
         /* use services and options */
     },
-    read(language, namespace, callback) {
-        //import("../../translations/i18n.pl").then(function(result) {
-        import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
+    read(language: string, namespace: string, callback: any) {
+        import("../../translations/i18n.pl").then(function(result: any) {
+            // import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
             } else {
@@ -22,14 +22,14 @@ const XHR = {
             }
         });
     },
-    readMulti(languages, namespaces, callback) {
+    readMulti(language: string, namespace: string, callback: any) {
         throw new Error("Unsupported I18n readMulti");
     },
     // only used in backends acting as cache layer
-    save(language, namespace, data) {
+    save(language: string, namespace: string, data: any) {
         // store the translations
     },
-    create(languages, namespace, key, fallbackValue) {
+    create(language: string, namespace: string, key: string, fallbackValue: string) {
         /* save the missing translation */
     },
 };
@@ -39,17 +39,17 @@ const instance = i18n
     // .use(LanguageDetector)
     .use(reactI18nextModule)
     .init({
-        //lng: configGet("translations.defaultLanguage"),
+        // lng: configGet("translations.defaultLanguage"),
         fallbackLng: configGet("translations.defaultLanguage"),
-        //debug: !PRODUCTION,
+        // debug: !PRODUCTION,
         debug: false,
         saveMissing: true,
         ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
             if (!PRODUCTION) {
-                //if( lng != "pl") {
+                // if( lng != "pl") {
                 console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
-                //}
+                // }
             }
         },
         react: {

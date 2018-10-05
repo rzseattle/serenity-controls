@@ -1,5 +1,4 @@
 import * as React from "react";
-import {ICommand} from "../lib/ICommand";
 
 interface IProps {
     children: any;

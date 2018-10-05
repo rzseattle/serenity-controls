@@ -1,6 +1,6 @@
 import { deepExtend } from "./JSONTools";
 
-const config = {
+const config: any = {
     translations: {
         defaultLanguage: "pl",
         languages: [],

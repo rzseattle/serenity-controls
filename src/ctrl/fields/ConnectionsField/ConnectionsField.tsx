@@ -116,7 +116,6 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
 
     private input: HTMLInputElement;
     private inputContainer = React.createRef<HTMLDivElement>();
-    //private inputContainer: any;
 
     constructor(props: IConnectionsFieldProps) {
         super(props);
@@ -335,9 +334,9 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                     )}
 
                     {this.state.selectionOpened &&
-                        (this.state.search.length > 0 || this.props.searchWithoutPhrase)  && (
+                        (this.state.search.length > 0 || this.props.searchWithoutPhrase) && (
                             <Positioner
-                                relativeTo={() => this.inputContainer.current }
+                                relativeTo={() => this.inputContainer.current}
                                 relativeSettings={{ ...RelativePositionPresets.bottomMiddle, theSameWidth: true }}
                             >
                                 <div className="w-connections-field-results">

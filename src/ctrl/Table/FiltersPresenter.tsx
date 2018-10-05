@@ -1,8 +1,8 @@
 import * as React from "react";
-import Icon from "frontend/src/ctrl/Icon";
+import Icon from "../Icon";
 
-export default function(props) {
-    let isVisible = Object.entries(props.order).length > 0 || Object.entries(props.filters).length > 0;
+export default function(props: any) {
+    const isVisible: boolean = Object.entries(props.order).length > 0 || Object.entries(props.filters).length > 0;
     return (
         <div className={"w-table-presenter " + (!isVisible ? "w-table-presenter-hidden" : "")}>
             <div className="w-table-presenter-inner">

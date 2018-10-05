@@ -1,30 +1,41 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { deepIsEqual } from "frontend/src/lib/JSONTools";
-import { Icon } from "frontend/src/ctrl/Icon";
-import { IFilter } from "frontend/src/ctrl/filters/Intefaces";
+
+import { Icon } from "../Icon";
+import { IFilter } from "../filters/Intefaces";
 import { Modal } from "../overlays/Modal";
 import { RelativePositionPresets } from "../overlays/Positioner";
-import { IColumnData } from "./Interfaces";
+import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
 
-export default class Thead extends React.PureComponent<any, any> {
+interface ITheadProps {
+    selectable: boolean;
+    columns: IColumnData[];
+    order: { [index: string]: IOrder };
+    filters: { [index: string]: IFilterValue };
+    onCheckAllClicked: () => any;
+    allChecked: boolean;
+    onCellClicked: (index: number, e: React.MouseEvent) => any;
+    onFilterChanged: (value: IFilterValue) => any;
+}
+
+export default class Thead extends React.PureComponent<ITheadProps, any> {
     public tooltipCleanup: any;
 
-    constructor(props) {
+    constructor(props: ITheadProps) {
         super(props);
         this.tooltipCleanup = null;
     }
 
-    /*public shouldComponentUpdate(nextProps, nextState) {
+    /*
+    public shouldComponentUpdate(nextProps, nextState) {
         return !deepIsEqual(
             [this.props.columns, this.props.filters, this.props.order, this.props.allChecked, this.props.selectable],
             [nextProps.columns, nextProps.filters, nextProps.order, nextProps.allChecked, nextProps.selectable],
         );
-    }*/
+    }
 
-    public handleMouseEnter(index, e) {
+    public handleMouseEnter(index: number, e) {
         e.stopPropagation();
-/*        const el = this.props.columns.filter((column: IColumnData) => column !== null && column.display === true)[index];
+            const el = this.props.columns.filter((column: IColumnData) => column !== null && column.display === true)[index];
         const node = ReactDOM.findDOMNode(this).querySelector(`th:nth-child(${index + 1})`);
 
         if (el.header.tooltip && this.tooltipCleanup === null) {
@@ -32,17 +43,17 @@ export default class Thead extends React.PureComponent<any, any> {
                 target: () => node,
                 offsetY: -10,
             });
-        }*/
+
     }
 
     public handleMouseLeave(index, e) {
-        /*const el = this.props.columns.filter((el: IColumnData) => el !== null && el.display === true)[index];
+        const el = this.props.columns.filter((el: IColumnData) => el !== null && el.display === true)[index];
         if (el.header.tooltip) {
             this.tooltipCleanup();
             this.tooltipCleanup = null;
-        }*/
+        }
     }
-
+    */
     public render() {
         return (
             <thead>
@@ -67,10 +78,12 @@ export default class Thead extends React.PureComponent<any, any> {
                                 style={{ width: column.width }}
                                 className={classes.join(" ")}
                                 onClick={(e) => {
-                                    column.isSortable && this.props.onCellClicked(index, e);
+                                    if (column.isSortable) {
+                                        this.props.onCellClicked(index, e);
+                                    }
                                 }}
-                                onMouseEnter={this.handleMouseEnter.bind(this, index)}
-                                onMouseLeave={this.handleMouseLeave.bind(this, index)}
+                                /*onMouseEnter={this.handleMouseEnter.bind(this, index)}*/
+                                /*onMouseLeave={this.handleMouseLeave.bind(this, index)}*/
                             >
                                 {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
                                 {column.header.icon && <Icon name={column.header.icon} />}
@@ -93,9 +106,9 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
         public body: HTMLDivElement;
         public hideTimeout: any;
 
-        public triggerRef = React.createRef();
+        public triggerRef = React.createRef<HTMLDivElement>();
 
-        constructor(props) {
+        constructor(props: any) {
             super(props);
             this.state = {
                 show: false,
@@ -104,7 +117,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
             this.hideTimeout = null;
         }
 
-        public componentDidUpdate(nextProps, nextState) {
+        public componentDidUpdate(nextProps: any, nextState: any) {
             if (this.state.show == true) {
                 const data = this.body.getBoundingClientRect();
                 if (data.right > window.innerWidth) {
@@ -114,7 +127,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
             return true;
         }
 
-        public handleTriggerClicked = (e) => {
+        public handleTriggerClicked = (e: React.MouseEvent) => {
             e.stopPropagation();
             e.nativeEvent.stopImmediatePropagation();
             this.setState({ show: !this.state.show });

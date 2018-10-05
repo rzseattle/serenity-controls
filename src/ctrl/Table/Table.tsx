@@ -10,7 +10,7 @@ import Footer from "./Footer";
 import { ICellTemplate, IColumnData, IFilterValue, IOrder } from "./Interfaces";
 import { EmptyResult, Error, Loading } from "./placeholders";
 
-import Comm from "../../lib/Comm";
+import Comm, { CommEvents } from "../../lib/Comm";
 import Thead from "./Thead";
 import { deepCopy, deepIsEqual } from "../../lib/JSONTools";
 import TextFilter from "../filters/TextFilter";
@@ -35,11 +35,11 @@ export interface ITableDataInput {
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
-type IRowClassTemplate = (row: any, index: number) => string;
+export type IRowClassTemplate = (row: any, index: number) => string;
 
-type IRowStyleTemplate = (row: any, index: number) => any;
+export type IRowStyleTemplate = (row: any, index: number) => any;
 
-interface IGroupByData {
+export interface IGroupByData {
     field?: string;
     equalizer?: (prevRow: any, nextRow: any) => boolean;
     labelProvider?: (nextRow: any, prevRow: any) => string | ReactElement<any> | StatelessComponent;
@@ -356,11 +356,11 @@ export default class Table extends React.Component<ITableProps, ITableState> {
             }
 
             const comm = new Comm(this.props.remoteURL, "PUT");
-            comm.on(Comm.EVENTS.SUCCESS, (data) => {
+            comm.on(CommEvents.SUCCESS, (data) => {
                 setStateAfterLoad(data);
             });
             comm.setData(this.getRequestData());
-            comm.on(Comm.EVENTS.FINISH, () => this.setState({ loading: false }));
+            comm.on(CommEvents.FINISH, () => this.setState({ loading: false }));
             this.xhrConnection = comm.send();
         } else if (this.props.dataProvider) {
             const result = this.props.dataProvider(this.getRequestData());
@@ -440,7 +440,7 @@ export default class Table extends React.Component<ITableProps, ITableState> {
         this.setState({ order: this.state.order }, this.load);
     };
 
-    public handleOnPageChangepage = (onPage: number) => {
+    public handleOnPageChange = (onPage: number) => {
         this.setState({ onPage, currentPage: 1 }, this.load);
     };
 
@@ -624,10 +624,9 @@ export default class Table extends React.Component<ITableProps, ITableState> {
                                     columns={columns}
                                     count={this.state.countAll}
                                     onPage={this.state.onPage}
-                                    onPageChanged={this.handleOnPageChangepage}
+                                    onPageChanged={this.handleOnPageChange}
                                     currentPage={this.state.currentPage}
                                     currentPageChanged={this.handleCurrentPageChange}
-                                    parent={this}
                                     reload={this.load}
                                 />
                             )}

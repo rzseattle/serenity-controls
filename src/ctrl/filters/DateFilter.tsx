@@ -16,7 +16,7 @@ interface IDateFilterProps extends IFilterProps {
 }
 export default class DateFilter extends AbstractFilter<IDateFilterProps> {
     public datepicker: any;
-    public choiceTypes: { [index: string]: string } = { "<x<in": "range", ">": "exists", IN: "not-exists" };
+    public choiceTypes: { [index: string]: string } = { "<x<in": "range", ">": "exists", "IN": "not-exists" };
 
     constructor(props: IDateFilterProps) {
         super(props);
@@ -36,9 +36,12 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
     public componentWillMount() {
         Promise.all([
             import("moment"), // @ts-ignore
-            import("moment/locale/pl"), // @ts-ignore
-            import("react-dates"), // @ts-ignore
+          // @ts-ignore
+            import("moment/locale/pl"),
+            import("react-dates"),
+            // @ts-ignore
             import("react-dates/lib/css/_datepicker.css"),
+            // @ts-ignore
             import("react-dates/initialize"),
         ]).then(([moment, locale, datePickerImp]) => {
 

@@ -1,8 +1,7 @@
-export interface ICommand{
-
+export interface ICommand {
     key: string;
     icon?: string;
     label: string;
-    onClick?: ( event ) => any;
+    onClick?: (event: React.MouseEvent) => any;
     subItems?: ICommand[];
 }

@@ -1,13 +1,24 @@
 import * as React from "react";
-import Icon from "frontend/src/ctrl/Icon";
-import { Trans} from "react-i18next";
+import Icon from "../Icon";
+import { Trans } from "react-i18next";
+import { IColumnData } from "./Interfaces";
 
-export default class Footer extends React.Component<any, any> {
-    constructor(props) {
+interface IFooterProps {
+    count: number;
+    onPage: number;
+    currentPage: number;
+    columns: IColumnData[];
+    onPageChanged: (page: number) => any;
+    currentPageChanged: (page: number) => any;
+    reload: () => any;
+}
+
+export default class Footer extends React.Component<IFooterProps> {
+    constructor(props: IFooterProps) {
         super(props);
     }
 
-    public shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps: IFooterProps, nextState: IFooterProps) {
         return true;
         /*return !deepIsEqual(
             [
@@ -31,7 +42,7 @@ export default class Footer extends React.Component<any, any> {
         const leftRightCount = 0;
 
         const from = Math.max(1, Math.min(pages - leftRightCount * 2, Math.max(1, props.currentPage - leftRightCount)));
-        const arr = (function (a, b) {
+        const arr = ((a: number, b: number[]) => {
             while (a--) {
                 b[a] = a + from;
             }
@@ -43,10 +54,10 @@ export default class Footer extends React.Component<any, any> {
                 <td colSpan={props.columns.length + 1} className="w-table-footer-main">
                     <div className="w-table-pager">
                         <div onClick={(e) => props.currentPageChanged(1)}>
-                            <Icon name={"DoubleChevronLeft12"}/>
+                            <Icon name={"DoubleChevronLeft12"} />
                         </div>
                         <div onClick={(e) => props.currentPageChanged(Math.max(1, props.currentPage - 1))}>
-                            <Icon name={"ChevronLeft"}/>
+                            <Icon name={"ChevronLeft"} />
                         </div>
                         {arr.map((el, i) => (
                             <div
@@ -58,10 +69,10 @@ export default class Footer extends React.Component<any, any> {
                             </div>
                         ))}
                         <div onClick={(e) => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}>
-                            <Icon name={"ChevronRight"}/>
+                            <Icon name={"ChevronRight"} />
                         </div>
                         <div onClick={(e) => props.currentPageChanged(pages)}>
-                            <Icon name={"DoubleChevronRight12"}/>
+                            <Icon name={"DoubleChevronRight12"} />
                         </div>
                     </div>
 
@@ -70,7 +81,12 @@ export default class Footer extends React.Component<any, any> {
                     </div>
 
                     <div className="w-table-footer-onpage-select">
-                        <span><Trans ns="frontend" i18nKey="table.footer.onPage">Na stronie</Trans>: </span>
+                        <span>
+                            <Trans ns="frontend" i18nKey="table.footer.onPage">
+                                Na stronie
+                            </Trans>
+                            :{" "}
+                        </span>
                         <select value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
                             {[10, 25, 50, 100, 500].map((x, i) => (
                                 <option key={"onpageval" + x} value={x}>
@@ -82,15 +98,18 @@ export default class Footer extends React.Component<any, any> {
 
                     <div className="w-table-buttons">
                         {/*<button title="Usuń zmiany" onClick={table.handleStateRemove.bind(table)}><i className="fa fa-eraser"></i></button>*/}
-                        <button title="Odśwież" onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            this.props.reload();
-                        }}>
-                            <Icon name={"Sync"}/>
+                        <button
+                            title="Odśwież"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                this.props.reload();
+                            }}
+                        >
+                            <Icon name={"Sync"} />
                         </button>
                         {/*<button title="Zmień sposób wyświetlania" onClick={table.toggleFixedLayout.bind(table)}><i className="fa fa-window-restore"></i></button>*/}
-                        <div
+                        {/*<div
                             title="Przesuń i upuść aby zmienić rozmiar tabeli"
                             className="w-table-footer-drag"
                             onDragStart={(e) => {
@@ -104,9 +123,9 @@ export default class Footer extends React.Component<any, any> {
                             }}
                             draggable={true}
                         >
-                            <i className="fa fa-arrows-v"/>
+                            <i className="fa fa-arrows-v" />
                         </div>
-                        {/*{table.state.loading ? <button className="w-table-loading-indicator"><i className="fa fa-spinner fa-spin"></i></button> : ''}*/}
+                        {table.state.loading ? <button className="w-table-loading-indicator"><i className="fa fa-spinner fa-spin"></i></button> : ''}*/}
                     </div>
                 </td>
             </tr>

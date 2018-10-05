@@ -65,7 +65,7 @@ export class LoaderContainer extends React.Component<ILoaderContainerProps, any>
 
         return (
             <div style={{ position: "relative" }}>
-                {!loaded && prerender && <Shadow loader={true} />}
+                {!loaded && prerender && <Shadow showLoadingIndicator={true} />}
                 {!loaded && !prerender && <LoadingIndicator text={indicatorText} />}
                 {(loaded || (!loaded && prerender)) && this.props.children(this.state.data)}
                 {debug && (

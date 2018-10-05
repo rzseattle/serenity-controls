@@ -5,7 +5,7 @@ import {ConnectionsField} from "./fields/ConnectionsField/ConnectionsField";
 
 import {IFieldChangeEvent, IFieldProps, IOption} from "./fields/Interfaces";
 
-import i18n from "frontend/src/utils/I18n";
+import i18n from "../utils/I18n";
 
 const checkIncludes = (options, value) => {
     const element = options.filter((element) => {
@@ -17,9 +17,6 @@ const checkIncludes = (options, value) => {
     });
     return element.length > 0;
 };
-
-
-
 
 interface ITextProps extends IFieldProps {
     type?: "text" | "password";

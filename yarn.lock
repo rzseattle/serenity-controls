@@ -711,7 +711,7 @@
     "@babel/plugin-transform-react-jsx-self" "^7.0.0"
     "@babel/plugin-transform-react-jsx-source" "^7.0.0"
 
-"@babel/preset-typescript@^7.0.0-beta.52":
+"@babel/preset-typescript@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@babel/preset-typescript/-/preset-typescript-7.1.0.tgz#49ad6e2084ff0bfb5f1f7fb3b5e76c434d442c7f"
   integrity sha512-LYveByuF9AOM8WrsNne5+N79k1YxjNB6gmpCQsnuSBAcV8QUeB+ZUxQzL7Rz7HksPbahymKkq2qBR+o36ggFZA==
@@ -1240,6 +1240,14 @@
   resolved "https://registry.yarnpkg.com/@types/react-css-modules/-/react-css-modules-4.6.2.tgz#ff6451cb848d5e49c074ce9820bb52073e028f82"
   integrity sha512-jRgAsH//g6BHS/cINR90HE2GJWGZe5tLYilxFMY1zTns4BvQ8DUXMQg5333HVSGoj7bjkDLK/whrgfzdAattHg==
 
+"@types/react-dates@^17.1.2":
+  version "17.1.2"
+  resolved "https://registry.yarnpkg.com/@types/react-dates/-/react-dates-17.1.2.tgz#f4851c8e572bb9a36e26e301ce2cc335f6f7a668"
+  integrity sha512-uyTYbPtdTFLOqH1Vx3vuC3NjZP4YlpHXQs4IqAEnLsqMbRpnneZsFwF1Y8jaeCazGVZL/JnRcLxZtCyu4kx+mA==
+  dependencies:
+    "@types/react" "*"
+    moment ">=2.17.1"
+
 "@types/react-dom@^16.0.8":
   version "16.0.8"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.8.tgz#6e1366ed629cadf55860cbfcc25db533f5d2fa7d"
@@ -1298,6 +1306,13 @@
   dependencies:
     "@types/react" "*"
     "@types/webpack-env" "*"
+
+"@types/uuid@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.4.tgz#7af69360fa65ef0decb41fd150bf4ca5c0cefdf5"
+  integrity sha512-tPIgT0GUmdJQNSHxp0X2jnpQfBSTfGxUMc/2CXBU2mnyTFVYVa2ojpoQ74w0U2yn2vw3jnC640+77lkFFpdVDw==
+  dependencies:
+    "@types/node" "*"
 
 "@types/webpack-env@*":
   version "1.13.6"
@@ -7817,7 +7832,7 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
-moment@*, moment@>=1.6.0, moment@^2.22.1:
+moment@*, moment@>=1.6.0, moment@>=2.17.1, moment@^2.22.1:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=

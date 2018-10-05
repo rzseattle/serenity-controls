@@ -2,14 +2,8 @@ import * as React from "react";
 import { ICellTemplate, IColumnData, IEventCallback } from "./Interfaces";
 import { IOption } from "../fields/Interfaces";
 
-import { IFilter } from "../filters/Intefaces";
+import { IFilter, NumericFilter, TextFilter, DateFilter, SwitchFilter, SelectFilter } from "../filters";
 import Icon from "../Icon";
-
-import NumericFilter from "../filters/NumericFilter";
-import SelectFilter from "../filters/SelectFilter";
-import TextFilter from "../filters/TextFilter";
-import DateFilter from "../filters/DateFilter";
-import SwitchFilter from "../filters/SwitchFilter";
 
 export default class ColumnHelper {
     protected data: IColumnData;
@@ -65,13 +59,13 @@ export default class ColumnHelper {
     public static map(
         field: string,
         caption: string,
-        options: IOption[] | object,
+        options: IOption[] | { [index: string]: string | number } | { [index: number]: string | number },
         multiSelectFilter: boolean = false,
     ): ColumnHelper {
         return new ColumnHelper({
             field,
             caption,
-            template: (value) => {
+            template: (value: string | number) => {
                 if (Array.isArray(options)) {
                     const res = options.filter((e) => e.value == value);
                     if (res.length > 0) {
@@ -79,6 +73,7 @@ export default class ColumnHelper {
                     }
                     return "---";
                 } else {
+                    // @ts-ignore
                     return options[value];
                 }
             },
@@ -114,7 +109,8 @@ export default class ColumnHelper {
     }
 
     public static link(field: string, caption: string, urlResolver: any): ColumnHelper {
-        return ColumnHelper.text("id", "").onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
+        return ColumnHelper.text("id", "")
+          .onMouseUp((row, column, e: React.MouseEvent<HTMLElement>) => {
             const url = urlResolver(row, column, event);
             if (e.button == 1) {
                 window.open(url);
@@ -210,7 +206,7 @@ export default class ColumnHelper {
         return new ColumnHelper(data);
     }
 
-    editable(fn, type: string, enabled: boolean): ColumnHelper {
+    public editable(fn, type: string, enabled: boolean): ColumnHelper {
         if (enabled === false) {
             return this.data;
         }
@@ -282,7 +278,7 @@ export default class ColumnHelper {
         return this;
     }
 
-    className(className: string): ColumnHelper {
+    public className(className: string): ColumnHelper {
         this.data.class = [className];
         return this;
     }

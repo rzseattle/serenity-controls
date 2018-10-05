@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {CommandBar} from "frontend/src/ctrl/CommandBar";
-import i18n from "frontend/src/utils/I18n";
-import {Modal} from "./overlays/Modal";
+import { CommandBar } from "./CommandBar";
+import i18n from "../utils/I18n";
+import { Modal } from "./overlays/Modal";
 
 interface IPrintContainerProps {
     title?: string;
@@ -13,17 +13,14 @@ interface IPrintContainerProps {
 export class PrintContainer extends React.Component<IPrintContainerProps, any> {
     private iframe: HTMLIFrameElement;
 
-
-    constructor(props) {
+    constructor(props: IPrintContainerProps) {
         super(props);
         this.state = {
             ready: false,
         };
     }
 
-    public print() {
-
-    }
+    public print() {}
 
     public handlePrint = () => {
         this.iframe.focus();
@@ -31,48 +28,56 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
         if (this.props.onPrint) {
             this.props.onPrint();
         }
-    }
+    };
 
     public componentDidMount() {
         setTimeout(() => {
-            this.setState({ready: true});
+            this.setState({ ready: true });
         }, 200);
     }
 
     public render() {
-        return <div className={"w-print-container"}>
+        return (
+            <div className={"w-print-container"}>
+                <Modal
+                    icon={"Search"}
+                    show={true}
+                    title={this.props.title ? this.props.title : i18n.t("frontend:printContainer.printPreview")}
+                    showHideLink={true}
+                    onHide={this.props.onHide}
+                >
+                    <div className="w-print-container-modal">
+                        <CommandBar
+                            items={[
+                                {
+                                    key: "f1",
+                                    label: i18n.t("frontend:print"),
+                                    icon: "Print",
+                                    onClick: this.handlePrint,
+                                },
+                                /*{key: "f1", label: "Pobierz jako PDF", icon: "PDF"}*/
+                            ]}
+                        />
 
-            <Modal
-                icon={"Search"}
-                show={true}
-                title={this.props.title ? this.props.title : i18n.t("frontend:printContainer.printPreview")}
-                showHideLink={true}
-                onHide={this.props.onHide}
-            >
-                <div className="w-print-container-modal">
-                    <CommandBar items={[
-                        {key: "f1", label: i18n.t("frontend:print"), icon: "Print", onClick: this.handlePrint},
-                        /*{key: "f1", label: "Pobierz jako PDF", icon: "PDF"}*/
-                    ]}/>
-
-                    <iframe ref={(el) => this.iframe = el}/>
-                    {this.state.ready && <MyWindowPortal iframe={this.iframe}>
-                        {this.props.children}
-                    </MyWindowPortal>}
-                </div>
-            </Modal>
-
-        </div>;
+                        <iframe ref={(el) => (this.iframe = el)} />
+                        {this.state.ready && (
+                            <MyWindowPortal iframe={this.iframe}>{this.props.children}</MyWindowPortal>
+                        )}
+                    </div>
+                </Modal>
+            </div>
+        );
     }
 }
 
-export const PrintPage = (props) => {
+export const PrintPage = (props: { children: any }) => {
     return <div className={"w-print-page"}>{props.children}</div>;
 };
 
-function copyStyles(sourceDoc, targetDoc) {
+function copyStyles(sourceDoc: Document, targetDoc: Document) {
     Array.from(sourceDoc.styleSheets).forEach((styleSheet: any) => {
-        if (styleSheet.cssRules) { // true for inline styles
+        if (styleSheet.cssRules) {
+            // true for inline styles
             const newStyleEl = sourceDoc.createElement("style");
 
             Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
@@ -80,7 +85,8 @@ function copyStyles(sourceDoc, targetDoc) {
             });
 
             targetDoc.head.appendChild(newStyleEl);
-        } else if (styleSheet.href) { // true for stylesheets loaded from a URL
+        } else if (styleSheet.href) {
+            // true for stylesheets loaded from a URL
             const newLinkEl = sourceDoc.createElement("link");
             newLinkEl.rel = "stylesheet";
             newLinkEl.href = styleSheet.href;
@@ -93,7 +99,7 @@ class MyWindowPortal extends React.PureComponent<any, any> {
     private externalWindow: Window;
     private containerEl: HTMLDivElement;
 
-    constructor(props) {
+    constructor(props: any) {
         super(props);
 
         this.containerEl = document.createElement("div"); // STEP 1: create an empty div
@@ -113,7 +119,6 @@ class MyWindowPortal extends React.PureComponent<any, any> {
         this.externalWindow.document.title = "";
         this.externalWindow.document.getElementsByTagName("html")[0].setAttribute("moznomarginboxes", "1");
         this.externalWindow.document.getElementsByTagName("html")[0].setAttribute("mozdisallowselectionprint", "1");
-
 
         copyStyles(document, this.externalWindow.document);
 

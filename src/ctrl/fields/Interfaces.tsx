@@ -19,7 +19,7 @@ export interface IFieldProps {
   /**
    * On change event
    */
-  onChange?: { (changeData: IFieldChangeEvent): any };
+  onChange?: (changeData: IFieldChangeEvent) => any;
   /**
    * Is field disabled
    */

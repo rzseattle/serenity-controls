@@ -1,10 +1,10 @@
-export * from "./AbstractFilter";
-export * from "./ConnectionFilter";
-export * from "./DateFilter";
 export * from "./FilterHelper";
 export * from "./FilterPanel";
 export * from "./Intefaces";
-export * from "./NumericFilter";
-export * from "./SelectFilter";
-export * from "./SwitchFilter";
-export * from "./TextFilter";
+export { default as NumericFilter } from "./NumericFilter";
+export { default as SelectFilter } from "./SelectFilter";
+export { default as SwitchFilter } from "./SwitchFilter";
+export { default as TextFilter } from "./TextFilter";
+export { default as AbstractFilter } from "./AbstractFilter";
+export { default as ConnectionFilter } from "./ConnectionFilter";
+export { default as DateFilter } from "./DateFilter";

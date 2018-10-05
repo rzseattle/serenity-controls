@@ -1,8 +1,8 @@
 import * as React from "react";
-import {IFileViewerProps} from "../../FileLists";
+import { IFileViewerProps } from "../../FileLists";
 
-export class ImageViewer extends React.Component<IFileViewerProps, any> {
-    constructor(props) {
+export class ImageViewer extends React.Component<IFileViewerProps> {
+    constructor(props: IFileViewerProps) {
         super(props);
     }
 

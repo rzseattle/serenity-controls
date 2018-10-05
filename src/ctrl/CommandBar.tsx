@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {ICommand} from "../lib/ICommand";
-import BackOfficePanel from "../backoffice/BackOfficePanel";
-import i18n from "frontend/src/utils/I18n";
+
+import i18n from "../utils/I18n";
 
 interface IProps {
     isSearchBoxVisible?: boolean;
@@ -22,7 +22,7 @@ export default class CommandBar extends React.PureComponent<IProps> {
         rightItems: [],
     };
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             searchedText: "",
@@ -34,6 +34,7 @@ export default class CommandBar extends React.PureComponent<IProps> {
             dropdownPosition: null,
             dropdownElementList: null,
             dropdownLayerHeight: "0px",
+
         };
     }
 
@@ -80,8 +81,8 @@ export default class CommandBar extends React.PureComponent<IProps> {
                                         <button
                                             className={"bar-dropdown"}
                                             key={item.key}
-                                            onClick={(event) => {
-                                                const elementPosittion = ReactDOM.findDOMNode(event.target).getBoundingClientRect();
+                                            onClick={(event: React.MouseEvent) => {
+                                                const elementPosittion = (ReactDOM.findDOMNode(event.currentTarget) as Element).getBoundingClientRect();
 
                                                 const parent = ReactDOM.findDOMNode(this).getBoundingClientRect();
 

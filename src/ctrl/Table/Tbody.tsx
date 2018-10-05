@@ -1,31 +1,56 @@
 import * as React from "react";
-import {deepIsEqual} from "frontend/src/lib/JSONTools";
+import { deepIsEqual } from "../../lib/JSONTools";
 import * as uuidv4 from "uuid/v4";
 import Icon from "../Icon";
+import { ICellTemplate, IColumnData, IOrder } from "./Interfaces";
+import { IFilterValue } from "../filters/Intefaces";
+import { IGroupByData, IRowClassTemplate, IRowStyleTemplate } from "./Table";
+
 // const uuidv4 = require('uuid/v4');
 
-export default class Tbody extends React.Component<any, any> {
-    constructor(props) {
+interface ITbodyProps {
+    data: any[];
+    selection: any[];
+    columns: IColumnData[];
+    selectable: boolean;
+
+    order: { [index: string]: IOrder };
+    filters: { [index: string]: IFilterValue };
+
+    groupBy?: IGroupByData[];
+
+    rowClassTemplate: IRowClassTemplate;
+
+    rowStyleTemplate: IRowStyleTemplate;
+
+    infoRow: ICellTemplate;
+
+    onCheck: (index: string | number) => any;
+    loading: boolean;
+}
+
+export default class Tbody extends React.Component<ITbodyProps> {
+    constructor(props: ITbodyProps) {
         super(props);
     }
 
-    public shouldComponentUpdate(nextProps, nextState) {
+    public shouldComponentUpdate(nextProps: ITbodyProps, nextState: ITbodyProps) {
         return !deepIsEqual(
             [this.props.data, this.props.selection, this.props.columns, this.props.selectable],
-            [nextProps.data, nextProps.selection, nextProps.columns, nextProps.selectable]
+            [nextProps.data, nextProps.selection, nextProps.columns, nextProps.selectable],
         );
     }
 
-    public groupByGetInfo = (row1, row2) => {
+    public groupByGetInfo = (row1: any, row2: any) => {
         const info = [];
         for (const group of this.props.groupBy) {
             if (group.field !== undefined) {
                 if (row1 === null || row1[group.field] != row2[group.field]) {
-                    info.push({label: row2[group.field]});
+                    info.push({ label: row2[group.field] });
                 }
             } else if (group.equalizer !== undefined) {
                 if (row1 === null || group.equalizer(row1, row2)) {
-                    info.push({label: group.labelProvider(row2, row1)});
+                    info.push({ label: group.labelProvider(row2, row1) });
                 }
             }
         }
@@ -38,8 +63,8 @@ export default class Tbody extends React.Component<any, any> {
 
         const columns = props.columns.filter((el) => el !== null && el.display === true);
 
-        const {order, filters} = this.props;
-        const cache = {};
+        const { order, filters } = this.props;
+        const cache: any = {};
 
         for (let index = 0; index < columns.length; index++) {
             const column = columns[index];
@@ -61,7 +86,7 @@ export default class Tbody extends React.Component<any, any> {
 
             cache[index].style = null;
             if (column.width) {
-                cache[index].style = {width: column.width};
+                cache[index].style = { width: column.width };
             }
         }
 
@@ -72,7 +97,7 @@ export default class Tbody extends React.Component<any, any> {
             const key = uuidv4();
             const even = index % 2 == 0;
 
-            const _row = (
+            const rowToOutput = (
                 <Row
                     key={key}
                     even={even}
@@ -93,30 +118,34 @@ export default class Tbody extends React.Component<any, any> {
                 const groupData = this.groupByGetInfo(lastRow, row);
                 if (groupData.length > 0) {
                     lastRow = row;
-                    return [
-                        <tr key={key + "_group"}>
-                            <td style={{backgroundColor: "grey", color: "white"}} colSpan={columns.length + 1}>
-                                {groupData.map((el) => <React.Fragment key={uuidv4()}>{el.label}</React.Fragment>)}
-                            </td>
-                        </tr>,
-                        _row,
-                    ];
+                    return (
+                        <>
+                            <tr key={key + "_group"}>
+                                <td style={{ backgroundColor: "grey", color: "white" }} colSpan={columns.length + 1}>
+                                    {groupData.map((el) => (
+                                        <React.Fragment key={uuidv4()}>{el.label}</React.Fragment>
+                                    ))}
+                                </td>
+                            </tr>
+                            {rowToOutput}
+                        </>
+                    );
                 }
             }
-            return _row;
+            return rowToOutput;
         });
     }
 }
 
 export class Row extends React.PureComponent<any, any> {
-    public packFn = (val, column, row) => {
-        let templateResult = false;
+    public packFn = (val: any, column: IColumnData, row: any) => {
+        let templateResult: any = false;
         if (column.template !== null) {
             templateResult = column.template(val, row, column, this);
         }
         return (
             <>
-                {column.icon !== null && <Icon name={column.icon}/>}
+                {column.icon !== null && <Icon name={column.icon} />}
                 {column.prepend !== null && column.prepend}
                 {templateResult !== false ? templateResult : val ? val : column.default}
                 {column.append !== null && column.append}
@@ -126,7 +155,7 @@ export class Row extends React.PureComponent<any, any> {
 
     public render() {
         const props = this.props;
-        const {columns, row, cache, _key} = this.props;
+        const { columns, row, cache, _key } = this.props;
 
         const rowProps: any = {};
         if (props.infoRow != null) {
@@ -152,16 +181,16 @@ export class Row extends React.PureComponent<any, any> {
                                 type="checkbox"
                                 onChange={(event) => {
                                     event.stopPropagation();
-                                    props.onCheck;
+                                    props.onCheck();
                                 }}
                                 checked={this.props.isSelected}
                             />
                         </td>
                     )}
-                    {columns.map((column, index2) => {
+                    {columns.map((column: IColumnData, index2: number) => {
                         let style = cache[index2].style;
                         if (column.styleTemplate !== null) {
-                            style = {...style, ...column.styleTemplate(row, column)};
+                            style = { ...style, ...column.styleTemplate(row, column) };
                         }
                         let className = null;
                         if (column.classTemplate !== null) {
@@ -181,30 +210,30 @@ export class Row extends React.PureComponent<any, any> {
                         }
 
                         if (column.events.click.length > 0) {
-                            cellProps.onClick = (event) => {
+                            cellProps.onClick = (event: React.MouseEvent) => {
                                 column.events.click.map((callback) => {
                                     callback.bind(this)(row, column, this, event.target, event);
                                 });
                             };
                         }
                         if (column.events.mouseUp.length > 0) {
-                            cellProps.onMouseUp = (event) => {
+                            cellProps.onMouseUp = (event: React.MouseEvent) => {
                                 column.events.mouseUp.map((callback) => {
                                     callback.bind(this)(row, column, this, event.target, event);
                                 });
                             };
-                            cellProps.onContextMenu = (e) => e.preventDefault();
+                            cellProps.onContextMenu = (e: React.MouseEvent) => e.preventDefault();
                         }
 
                         if (column.events.enter.length > 0) {
-                            cellProps.onMouseEnter = (event) => {
+                            cellProps.onMouseEnter = (event: React.MouseEvent) => {
                                 column.events.enter.map((callback) => {
                                     callback.bind(this)(row, column, this, event.target);
                                 });
                             };
                         }
                         if (column.events.leave.length > 0) {
-                            cellProps.onMouseLeave = (event) => {
+                            cellProps.onMouseLeave = (event: React.MouseEvent) => {
                                 column.events.leave.map((callback) => {
                                     callback.bind(this)(row, column, this, event.target);
                                 });
@@ -232,6 +261,3 @@ export class Row extends React.PureComponent<any, any> {
         );
     }
 }
-
-const Cell = (props) => {
-};
