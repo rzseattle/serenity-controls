@@ -1,5 +1,5 @@
 import React from 'react';
-import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile} from '../../src/layout/BootstrapForm'
+import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile} from '../../src/ctrl/form/BForm'
 import {Text} from '../../src/ctrl/Fields'
 
 class FunctionRender extends React.Component {

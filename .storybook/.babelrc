@@ -15,19 +15,7 @@
         "@babel/react"
     ],
     "plugins": [
-/*         [
-            "react-css-modules",
-            {
-                "context": "C:\\dev\\www\\frontend\\src",
-                "filetypes": {
-                    ".sass": {
-                        "syntax": "postcss-sass"
-                    }
-                },
-                "webpackHotModuleReloading": true,
-                "handleMissingStyleName": "throw"
-            }
-        ],*/
+
         "transform-react-constant-elements",
         "transform-react-inline-elements",
         "@babel/plugin-syntax-jsx",

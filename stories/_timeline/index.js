@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react'
-import {Timeline, TimelineItem} from '../../src/ctrl/Timeline';
-import Panel from '../../src/ctrl/Panel';
+import {Timeline, TimelineItem} from '../../src/ctrl/complex/Timeline';
+import Panel from '../../src/ctrl/common/Panel';
 
 const importInfo = `
         ~~~js

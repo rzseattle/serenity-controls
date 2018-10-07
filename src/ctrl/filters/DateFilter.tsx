@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { fI18n } from "../../utils/I18n";
+import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./DateFilter.sass";
 import { LoadingIndicator } from "../common/LoadingIndicator";
-import Icon from "../Icon";
+import { Icon } from "../common";
 import { Positioner } from "../overlays/Positioner";
 
 interface IDateFilterProps extends IFilterProps {
@@ -16,7 +16,7 @@ interface IDateFilterProps extends IFilterProps {
 }
 export default class DateFilter extends AbstractFilter<IDateFilterProps> {
     public datepicker: any;
-    public choiceTypes: { [index: string]: string } = { "<x<in": "range", ">": "exists", "IN": "not-exists" };
+    public choiceTypes: { [index: string]: string } = { "<x<in": "range", ">": "exists", IN: "not-exists" };
 
     constructor(props: IDateFilterProps) {
         super(props);
@@ -34,17 +34,17 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
     }
 
     public componentWillMount() {
+        // prettier-ignore
         Promise.all([
-            import("moment"), // @ts-ignore
-          // @ts-ignore
+            import("moment"),
+            // @ts-ignore
             import("moment/locale/pl"),
-            import("react-dates"),
+            import("react-dates"), // @ts-ignore
             // @ts-ignore
             import("react-dates/lib/css/_datepicker.css"),
             // @ts-ignore
-            import("react-dates/initialize"),
+            import( "react-dates/initialize"),
         ]).then(([moment, locale, datePickerImp]) => {
-
             // @ts-ignore
             moment = moment.default;
             this.datepicker = datePickerImp.DateRangePicker;
@@ -139,32 +139,32 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
             <div className={"w-filter w-filter-date"}>
                 {caption != "" && <div className={"w-filter-title"}>{caption}</div>}
                 {/*<Positioner>*/}
-                    <div style={{ display: s.choiceType != "range" ? "none" : "block" }} >
-                        <this.datepicker
-                            startDate={this.state.startDate}
-                            startDateId="your_unique_start_date_id"
-                            endDateId="your_unique_end_date_id"
-                            endDate={this.state.endDate}
-                            onDatesChange={({ startDate, endDate }: any) => {
-                                this.setState({ startDate, endDate }, () => {
-                                    if (startDate && endDate) {
-                                        this.handleChange();
-                                    }
-                                });
-                            }}
-                            focusedInput={this.state.focusedInput}
-                            onFocusChange={(focusedInput: any) => {
-                                this.setState({ focusedInput });
-                            }}
-                            startDatePlaceholderText="Data od"
-                            endDatePlaceholderText="Data do"
-                            minimumNights={0}
-                            isOutsideRange={() => {
-                                return false;
-                            }}
-                            renderCalendarInfo={() => false}
-                        />
-                    </div>
+                <div style={{ display: s.choiceType != "range" ? "none" : "block" }}>
+                    <this.datepicker
+                        startDate={this.state.startDate}
+                        startDateId="your_unique_start_date_id"
+                        endDateId="your_unique_end_date_id"
+                        endDate={this.state.endDate}
+                        onDatesChange={({ startDate, endDate }: any) => {
+                            this.setState({ startDate, endDate }, () => {
+                                if (startDate && endDate) {
+                                    this.handleChange();
+                                }
+                            });
+                        }}
+                        focusedInput={this.state.focusedInput}
+                        onFocusChange={(focusedInput: any) => {
+                            this.setState({ focusedInput });
+                        }}
+                        startDatePlaceholderText="Data od"
+                        endDatePlaceholderText="Data do"
+                        minimumNights={0}
+                        isOutsideRange={() => {
+                            return false;
+                        }}
+                        renderCalendarInfo={() => false}
+                    />
+                </div>
                 {/*</Positioner>*/}
                 <div className="w-filter-date-exists">
                     <div>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IFilterValue } from "../table/Interfaces";
+import { IFilterValue } from "../filters";
 import { IFilter } from "../filters/Intefaces";
 import { FilterHelper } from "../filters/FilterHelper";
 
@@ -10,7 +10,6 @@ interface IFilterPanelProps {
     filters: any;
     onChange?: (filter: IFilterValue, filters: { [key: string]: IFilterValue }) => any;
     onApply?: (filters: { [key: string]: IFilterValue }) => any;
-
 }
 
 interface IFilterPanelState {

@@ -1,5 +1,4 @@
 import * as React from "react";
-import Icon from "../Icon";
 
 // @ts-ignore
 import Hotkeys from "react-hot-keys";
@@ -7,13 +6,14 @@ import Hotkeys from "react-hot-keys";
 import { Positioner, RelativePositionPresets } from "../overlays/Positioner";
 
 import "./Select.sass";
-import i18n from "../../utils/I18n";
+import i18n from "../lib/I18n";
 import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
+import { Icon } from "../common";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
 }
-interface ISelectProps extends IFieldProps {
+export interface ISelectProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
     onChange?: (changeData: ISelectChangeEvent) => any;
     allowClear?: boolean;

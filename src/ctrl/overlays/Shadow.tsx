@@ -23,8 +23,8 @@ interface IShadowProps {
     customClass?: string;
 }
 
-export default class Shadow extends React.PureComponent<IShadowProps> {
-    public static defaultProps: IShadowProps = {
+export class Shadow extends React.PureComponent<IShadowProps> {
+    public static defaultProps: Partial<IShadowProps> = {
         visible: true,
         showLoadingIndicator: false,
     };

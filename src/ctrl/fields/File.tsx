@@ -2,7 +2,7 @@ import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 import Dropzone from "react-dropzone";
 
-interface IFileProps extends IFieldProps {
+export interface IFileProps extends IFieldProps {
     value: FileList;
 }
 
@@ -59,4 +59,6 @@ export class File extends React.Component<IFileProps, any> {
             </div>
         );
     }
+
+
 }

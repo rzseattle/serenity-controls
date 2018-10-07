@@ -6,8 +6,9 @@
 // When you add this file, we won't add the default configurations which is similar
 // to "React Create App". This only has babel loader to load JavaScript.
 const path = require("path");
+const fs = require("fs");
 const webpack = require("webpack");
-
+const rc = fs.readFileSync("./.babelrc");
 var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 //const context = path.resolve(__dirname, "src");
 module.exports = {
@@ -137,10 +138,7 @@ module.exports = {
                 loaders: [
                     {
                         loader: "babel-loader",
-                        options: {
-                            retainLines: true,
-                            exclude: /(node_modules|bower_components)/,
-                        },
+                        options: JSON.parse(rc),
                     },
                 ],
             },

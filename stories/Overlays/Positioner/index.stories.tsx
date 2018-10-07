@@ -2,8 +2,8 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { withKnobs, select, number } from "@storybook/addon-knobs";
-import { Positioner, RelativePositionPresets } from "../../../src/ctrl/overlays/Positioner";
-import { IPositionCalculatorOptions } from "../../../src/lib/PositionCalculator";
+import {Positioner, RelativePositionPresets} from "../../../src/ctrl/overlays";
+import {IPositionCalculatorOptions} from "../../../src/ctrl/lib";
 
 interface IPositionPairHelperProps {
     presetName: string;

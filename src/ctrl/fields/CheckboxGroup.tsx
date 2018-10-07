@@ -2,7 +2,7 @@ import { checkIncludes } from "./Utils";
 import { IFieldProps, IOption } from "./Interfaces";
 import React from "react";
 
-interface ICheckboxGroupProps extends IFieldProps {
+export interface ICheckboxGroupProps extends IFieldProps {
     options: Array<{ value: string | number; label: string }> | { [key: string]: string };
     value: string[];
     inline: boolean;

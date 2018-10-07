@@ -1,7 +1,7 @@
 import * as React from "react";
 import Portal from "./Portal";
-import { IPositionCalculatorOptions, PositionCalculator } from "../../lib/PositionCalculator";
-import { deepCopy, deepIsEqual } from "../../lib/JSONTools";
+import { IPositionCalculatorOptions, PositionCalculator } from "../lib/PositionCalculator";
+import { deepCopy, deepIsEqual } from "../lib/JSONTools";
 import ResizeObserver from "resize-observer-polyfill";
 
 import "./Positioner.sass";

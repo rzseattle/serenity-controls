@@ -3,7 +3,7 @@ import { ICellTemplate, IColumnData, IEventCallback } from "./Interfaces";
 import { IOption } from "../fields/Interfaces";
 
 import { IFilter, NumericFilter, TextFilter, DateFilter, SwitchFilter, SelectFilter } from "../filters";
-import Icon from "../Icon";
+import {Icon} from "../common";
 
 export default class ColumnHelper {
     protected data: IColumnData;

@@ -33,6 +33,11 @@ module.exports = function(env = {}) {
             Overlays: "./src/ctrl/overlays/index.ts",
             Filters: "./src/ctrl/filters/index.ts",
             Common: "./src/ctrl/common/index.ts",
+            Files: "./src/ctrl/files/index.ts",
+            Utils: "./src/ctrl/utils/index.ts",
+            Lib: "./src/ctrl/lib/index.ts",
+            Backoffice: "./src/ctrl/backoffice/index.ts",
+            Layout: "./src/ctrl/layout/index.ts",
         },
 
         output: {

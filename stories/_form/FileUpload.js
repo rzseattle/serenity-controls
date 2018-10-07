@@ -1,5 +1,5 @@
 import React from 'react';
-import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, withBootstrapFormField} from '../../src/layout/BootstrapForm'
+import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, withBootstrapFormField} from '../../src/ctrl/form/BForm'
 
 export default class FileUpload extends React.Component {
 

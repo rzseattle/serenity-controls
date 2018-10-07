@@ -1,10 +1,10 @@
 import * as React from "react";
-import { deepIsEqual } from "../../lib/JSONTools";
+import { deepIsEqual } from "../lib/JSONTools";
 import * as uuidv4 from "uuid/v4";
-import Icon from "../Icon";
 import { ICellTemplate, IColumnData, IOrder } from "./Interfaces";
 import { IFilterValue } from "../filters/Intefaces";
 import { IGroupByData, IRowClassTemplate, IRowStyleTemplate } from "./Table";
+import {Icon} from "../common";
 
 // const uuidv4 = require('uuid/v4');
 

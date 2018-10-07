@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react'
-import Panel from '../../src/ctrl/Panel';
+import Panel from '../../src/ctrl/common/Panel';
 import {GalleryBase} from './galery';
 import { withKnobs, text, boolean, number } from '@storybook/addon-knobs';
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import Panel from "../../src/ctrl/Panel";
+import Panel from "../../src/ctrl/common/Panel";
 import { IOption } from "../../src/ctrl/fields/Interfaces";
 import { Select } from "../../src/ctrl/fields/Select";
 

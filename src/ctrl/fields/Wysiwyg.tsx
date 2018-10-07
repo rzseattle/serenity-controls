@@ -3,7 +3,7 @@ import * as React from "react";
 
 const CKEDITOR: any = undefined;
 
-interface IWysiwygProps extends IFieldProps {
+export interface IWysiwygProps extends IFieldProps {
     onLoad?: () => any;
     value?: string;
 }

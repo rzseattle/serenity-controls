@@ -1,8 +1,8 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action, decorateAction} from '@storybook/addon-actions';
-import Panel from '../../src/ctrl/Panel';
-import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig} from '../../src/layout/BootstrapForm'
+import Panel from '../../src/ctrl/common/Panel';
+import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, BWysiwig} from '../../src/ctrl/form/BForm'
 import {DataBinding} from './DataBinding'
 import {FunctionRender} from './FunctionRender'
 import FileUpload from './FileUpload'

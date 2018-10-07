@@ -1,14 +1,15 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import TextFilter from "../../src/ctrl/filters/TextFilter";
-import { IFilterValue } from "../../src/ctrl/Table/Interfaces";
-import NumericFilter from "../../src/ctrl/filters/NumericFilter";
-import { Switch } from "../../src/ctrl/Fields";
-import SwitchFilter from "../../src/ctrl/filters/SwitchFilter";
-import SelectFilter from "../../src/ctrl/filters/SelectFilter";
-import DateFilter from "../../src/ctrl/filters/DateFilter";
-import { FilterPanel } from "../../src/ctrl/filters/FilterPanel";
-import { FilterHelper } from "../../src/ctrl/filters/FilterHelper";
+import {
+    DateFilter,
+    FilterHelper,
+    FilterPanel,
+    IFilterValue,
+    NumericFilter,
+    SelectFilter,
+    SwitchFilter,
+    TextFilter,
+} from "../../src/ctrl/filters";
 
 const onApply = (input: IFilterValue) => alert(input.value + " " + input.condition);
 
@@ -86,7 +87,9 @@ storiesOf("Filters", module)
                         }}
                         onApply={onApply}
                     />
-                    <br/><br/><br/>
+                    <br />
+                    <br />
+                    <br />
                     <SelectFilter
                         caption={"Name (multiselect)"}
                         field="someFieldName"

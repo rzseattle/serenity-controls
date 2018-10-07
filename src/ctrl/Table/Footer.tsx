@@ -1,7 +1,7 @@
 import * as React from "react";
-import Icon from "../Icon";
 import { Trans } from "react-i18next";
 import { IColumnData } from "./Interfaces";
+import {Icon} from "../common";
 
 interface IFooterProps {
     count: number;

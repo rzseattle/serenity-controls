@@ -1,7 +1,7 @@
 import { IModalProps, Modal } from "./Modal";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { fI18n } from "../../utils/I18n";
+import { fI18n } from "../lib/I18n";
 import "./ConfirmDialog.sass";
 import { RelativePositionPresets } from "./Positioner";
 

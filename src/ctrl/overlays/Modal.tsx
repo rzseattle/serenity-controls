@@ -1,8 +1,8 @@
 import React from "react";
 import "./Modal.sass";
-import Icon from "../Icon";
 import { Positioner } from "./Positioner";
-import { IPositionCalculatorOptions } from "../../lib/PositionCalculator";
+import { IPositionCalculatorOptions } from "../lib/PositionCalculator";
+import {Icon} from "../common";
 
 export interface IModalProps {
     show: boolean;
@@ -124,7 +124,6 @@ export class Modal extends React.PureComponent<IModalProps> {
                     relativeSettings={p.relativePositionConf}
                     animation={this.props.animation}
                     container={() => {
-                        console.log("przekazuje");
                         return this.modalContainer;
                     }}
                 >

@@ -1,12 +1,9 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { TabPane, Tabs } from "../../src/ctrl/Tabs";
-import Panel from "../../src/ctrl/Panel";
 // @ts-ignore
 import { withKnobs, radios } from "@storybook/addon-knobs";
-import { LoaderContainer } from "../../src/ctrl/LoaderContainer";
-import { Datasource } from "../../src/lib/Datasource";
+import {Panel, Placeholder, TabPane, Tabs} from "../../src/ctrl/common";
 
 const options = {
     "Tab 1": "1",
@@ -110,26 +107,26 @@ storiesOf("Tab", module)
                 <h4>Without mount on start - tab render every time (default)</h4>
                 <Tabs>
                     <TabPane title="Tab1">
-                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
+                        <Placeholder promise={fn()}>{(data) => data.date}</Placeholder>
                     </TabPane>
                     <TabPane title="Tab2">
-                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
+                        <Placeholder promise={fn()}>{(data) => data.date}</Placeholder>
                     </TabPane>
                     <TabPane title="Tab3">
-                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
+                        <Placeholder promise={fn()}>{(data) => data.date}</Placeholder>
                     </TabPane>
                 </Tabs>
 
                 <h4>Mount all tabs on start</h4>
                 <Tabs mountAllTabs={true}>
                     <TabPane title="Tab1">
-                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
+                        <Placeholder promise={fn()}>{(data) => data.date}</Placeholder>
                     </TabPane>
                     <TabPane title="Tab2">
-                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
+                        <Placeholder promise={fn()}>{(data) => data.date}</Placeholder>
                     </TabPane>
                     <TabPane title="Tab3">
-                        <LoaderContainer promise={fn()}>{(data) => data.date}</LoaderContainer>
+                        <Placeholder promise={fn()}>{(data) => data.date}</Placeholder>
                     </TabPane>
                 </Tabs>
             </Panel>

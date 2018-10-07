@@ -37,7 +37,7 @@
 
     "exclude": ["resources", "vendor", "assets", "data", "node_modules"],
     "include": [
-        "./src/ctrl/table/**/*",
+        "./src/**/*",
         "./stories/**/*"
     ]
 }

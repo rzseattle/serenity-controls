@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { fI18n } from "../../utils/I18n";
+import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 

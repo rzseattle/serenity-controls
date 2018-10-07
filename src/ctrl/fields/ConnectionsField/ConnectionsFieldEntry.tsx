@@ -1,6 +1,6 @@
-import Icon from "../../Icon";
 import * as React from "react";
 import IConnectionElement from "./IConnectionElement";
+import {Icon} from "../../common";
 
 interface IConnectionsFieldEntryProps {
     item: IConnectionElement;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {withBootstrapFormField, BForm} from '../../src/layout/BootstrapForm'
+import {withBootstrapFormField, BForm} from '../../src/ctrl/form/BForm'
 import {Select, Text, Textarea} from '../../src/ctrl/Fields'
 
  class SurroundElements extends React.Component {

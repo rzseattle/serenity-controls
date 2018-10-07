@@ -1,7 +1,7 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 
-interface ITextProps extends IFieldProps {
+export interface ITextProps extends IFieldProps {
     type?: "text" | "password";
     value?: string;
     onKeyDown?: any;

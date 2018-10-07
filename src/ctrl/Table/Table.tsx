@@ -10,9 +10,9 @@ import Footer from "./Footer";
 import { ICellTemplate, IColumnData, IFilterValue, IOrder } from "./Interfaces";
 import { EmptyResult, Error, Loading } from "./placeholders";
 
-import Comm, { CommEvents } from "../../lib/Comm";
+import { Comm, CommEvents } from "../lib/Comm";
 import Thead from "./Thead";
-import { deepCopy, deepIsEqual } from "../../lib/JSONTools";
+import { deepCopy, deepIsEqual } from "../lib/JSONTools";
 import TextFilter from "../filters/TextFilter";
 import { LoadingIndicator } from "../common/LoadingIndicator";
 import { confirmDialog } from "../overlays/ConfirmDialog";

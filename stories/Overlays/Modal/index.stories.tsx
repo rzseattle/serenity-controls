@@ -2,12 +2,10 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import "./Modal.stories.sass";
-import { Modal } from "../../../src/ctrl/overlays/Modal";
 import { MoreTextHelper } from "./MoreTextHelper";
-import { RelativePositionPresets } from "../../../src/ctrl/overlays/Positioner";
-import { LoaderContainer } from "../../../src/ctrl/LoaderContainer";
-import { Datasource } from "../../../src/lib/Datasource";
-import Comm from "../../../src/lib/Comm";
+import { Comm } from "../../../src/ctrl/lib";
+import { Modal, RelativePositionPresets } from "../../../src/ctrl/overlays";
+import { Placeholder } from "../../../src/ctrl/common";
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
@@ -53,7 +51,7 @@ class OpenTest extends React.Component {
                     relativePositionConf={RelativePositionPresets.bottomLeft}
                 >
                     <div style={{ padding: 10 }}>
-                        <LoaderContainer promise={promise}>
+                        <Placeholder promise={promise}>
                             {(data) => (
                                 <ul>
                                     {data.map((el: any) => (
@@ -64,7 +62,7 @@ class OpenTest extends React.Component {
                                     ))}
                                 </ul>
                             )}
-                        </LoaderContainer>
+                        </Placeholder>
                     </div>
                 </Modal>
             </>

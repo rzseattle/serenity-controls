@@ -1,11 +1,11 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 
-interface ITextareaProps extends IFieldProps {
+export interface ITextareaProps extends IFieldProps {
     value?: string;
 }
 
-class Textarea extends React.Component<ITextareaProps, any> {
+export class Textarea extends React.PureComponent<ITextareaProps> {
     public static defaultProps: Partial<ITextareaProps> = {
         value: "",
         editable: true,

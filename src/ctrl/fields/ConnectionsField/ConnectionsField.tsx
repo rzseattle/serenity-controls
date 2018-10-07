@@ -3,17 +3,17 @@ import * as React from "react";
 import { IFieldChangeEvent, IFieldProps } from "../Interfaces";
 
 import { LoadingIndicator } from "../../common/LoadingIndicator";
-import { deepIsEqual } from "../../../lib/JSONTools";
-import i18n from "../../../utils/I18n";
+import { deepIsEqual } from "../../lib/JSONTools";
+import i18n from "../../lib/I18n";
 import { Trans } from "react-i18next";
 import IConnectionElement from "./IConnectionElement";
 import ConnectionsFieldSelectionElement from "./ConnectionsFieldSelectionElement";
 import { ConnectionsFieldEntry } from "./ConnectionsFieldEntry";
-import PrintJSON from "../../../utils/PrintJSON";
 
 import { Positioner, RelativePositionPresets } from "../../overlays";
 
 import "./ConnectionsField.sass";
+import {PrintJSON} from "../../utils";
 
 export interface IConnectionChangeEvent extends IFieldChangeEvent {
     items: IConnectionElement[];

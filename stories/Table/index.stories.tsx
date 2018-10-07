@@ -1,8 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Table, Column as Col, IDataQuery, ITableDataInput } from "../../src/ctrl/Table/Table";
+import { Table, Column as Col, IDataQuery, ITableDataInput } from "../../src/ctrl/Table";
 import { mockData } from "./MOCK_DATA";
-import { FilterHelper } from "../../src/ctrl/filters/FilterHelper";
+import {FilterHelper} from "../../src/ctrl/filters";
 
 const baseColumns = [
     Col.id("id", "Id"),
@@ -50,6 +50,7 @@ const provider = (query: IDataQuery) => {
         });
     });
 };
+
 
 storiesOf("Table", module).add(
     "Base",

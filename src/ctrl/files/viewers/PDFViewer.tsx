@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IFileViewerProps } from "../../FileLists";
+import { IFileViewerProps } from "../../fields/FileList/FileLists";
 import { LoadingIndicator } from "../../common/LoadingIndicator";
 
 interface IPDFViewerState {
