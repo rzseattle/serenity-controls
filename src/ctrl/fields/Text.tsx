@@ -1,3 +1,5 @@
+import { IFieldProps } from "./Interfaces";
+import * as React from "react";
 
 interface ITextProps extends IFieldProps {
     type?: "text" | "password";
@@ -6,7 +8,7 @@ interface ITextProps extends IFieldProps {
     charLimit?: any;
 }
 
-class Text extends React.Component<ITextProps, any> {
+export class Text extends React.Component<ITextProps> {
     public static defaultProps: Partial<ITextProps> = {
         value: "",
         editable: true,
@@ -15,7 +17,7 @@ class Text extends React.Component<ITextProps, any> {
         charLimit: false,
     };
 
-    public handleOnChange(e) {
+    public handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (this.props.onChange) {
             if (this.props.charLimit) {
                 if (e.target.value.length <= this.props.charLimit) {
@@ -35,7 +37,7 @@ class Text extends React.Component<ITextProps, any> {
                 });
             }
         }
-    }
+    };
 
     public componentDidMount() {
         // const $input_elem = ReactDOM.findDOMNode(this.refs.field);
@@ -66,7 +68,7 @@ class Text extends React.Component<ITextProps, any> {
                     name={props.name}
                     type={props.type}
                     value={props.value === null ? "" : props.value}
-                    onChange={this.handleOnChange.bind(this)}
+                    onChange={this.handleOnChange}
                     placeholder={props.placeholder}
                     disabled={props.disabled}
                     style={props.style}

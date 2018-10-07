@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Datasource } from "../lib/Datasource";
-import { LoadingIndicator } from "./LoadingIndicator";
+import { LoadingIndicator } from "./common/LoadingIndicator";
 
 import PrintJSON from "../utils/PrintJSON";
 import Shadow from "./overlays/Shadow";

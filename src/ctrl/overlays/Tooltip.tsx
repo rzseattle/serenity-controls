@@ -1,4 +1,4 @@
-import { LoadingIndicator } from "../LoadingIndicator";
+import { LoadingIndicator } from "../common/LoadingIndicator";
 import * as React from "react";
 import "./Shadow.sass";
 import { alertDialog } from "./ConfirmDialog";

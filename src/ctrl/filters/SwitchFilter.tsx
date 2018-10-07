@@ -2,9 +2,10 @@ import * as React from "react";
 
 import { fI18n } from "../../utils/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
-import { Switch, IOption } from "../Fields";
+
 
 import "./SwitchFilter.sass";
+import {IOption, Switch} from "../fields";
 
 interface ISwitchFilterProps extends IFilterProps {
     config: {

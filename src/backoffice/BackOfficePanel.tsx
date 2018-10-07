@@ -13,7 +13,7 @@ import Comm from "frontend/src/lib/Comm";
 import hotkeys from "hotkeys-js";
 
 import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
-import {LoadingIndicator} from "../ctrl/LoadingIndicator";
+import {LoadingIndicator} from "../ctrl/common/LoadingIndicator";
 
 
 import Hotkeys from "react-hot-keys";

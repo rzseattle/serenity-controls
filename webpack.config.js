@@ -29,18 +29,24 @@ module.exports = function(env = {}) {
         },
 
         entry: {
-            table: "./src/ctrl/Table/index.ts",
-            //overlays: "./src/ctrl/overlays/index.ts",
-            //filters: "./src/ctrl/filters/index.ts",
+            Table: "./src/ctrl/Table/index.ts",
+            Overlays: "./src/ctrl/overlays/index.ts",
+            Filters: "./src/ctrl/filters/index.ts",
+            Common: "./src/ctrl/common/index.ts",
         },
 
         output: {
-            filename: `[name].js`,
-            chunkFilename: "[name]-[id].[hash:8].js",
             path: path.resolve(__dirname, "./lib"),
-            publicPath: "",
+
+            filename: "Frontend.[name].js",
+            library: ["Frontend", "[name]"],
+            libraryTarget: "umd",
         },
-        externals: dependencies,
+        externals: dependencies.concat([
+            "moment/locale/pl",
+            "react-dates/lib/css/_datepicker.css",
+            "react-dates/initialize",
+        ]),
         module: {
             rules: [
                 {
@@ -53,7 +59,7 @@ module.exports = function(env = {}) {
                     test: /\.(sa|sc|c)ss$/,
                     //use: "happypack/loader?id=sass"
                     use: [
-                         MiniCssExtractPlugin.loader,
+                        MiniCssExtractPlugin.loader,
                         { loader: "css-loader", query: { sourceMap: true } },
                         { loader: "resolve-url-loader", query: { sourceMap: true } },
                         //'postcss-loader',
@@ -92,9 +98,9 @@ module.exports = function(env = {}) {
                 filename: "[name].css",
                 chunkFilename: "[name]-[id].[hash].css",
             }),
-            new webpack.optimize.LimitChunkCountPlugin({
+            /*new webpack.optimize.LimitChunkCountPlugin({
                 maxChunks: 1,
-            }),
+            }),*/
         ],
     };
 };

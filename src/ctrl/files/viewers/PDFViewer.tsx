@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IFileViewerProps } from "../../FileLists";
-import { LoadingIndicator } from "../../LoadingIndicator";
+import { LoadingIndicator } from "../../common/LoadingIndicator";
 
 interface IPDFViewerState {
     numPages: number;

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import BackOfficePanel from "frontend/src/backoffice/BackOfficePanel";
 import {BackofficeStore} from "frontend/src/backoffice/BackofficeStore";
-import {LoadingIndicator} from "../ctrl/LoadingIndicator";
+import {LoadingIndicator} from "../ctrl/common/LoadingIndicator";
 
 interface IBackOfficeContainerProps {
     route: string;

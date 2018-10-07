@@ -14,7 +14,7 @@ import Comm, { CommEvents } from "../../lib/Comm";
 import Thead from "./Thead";
 import { deepCopy, deepIsEqual } from "../../lib/JSONTools";
 import TextFilter from "../filters/TextFilter";
-import { LoadingIndicator } from "../LoadingIndicator";
+import { LoadingIndicator } from "../common/LoadingIndicator";
 import { confirmDialog } from "../overlays/ConfirmDialog";
 
 export interface IDataQuery {

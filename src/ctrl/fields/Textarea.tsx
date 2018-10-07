@@ -1,3 +1,5 @@
+import { IFieldProps } from "./Interfaces";
+import * as React from "react";
 
 interface ITextareaProps extends IFieldProps {
     value?: string;
@@ -9,7 +11,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
         editable: true,
     };
 
-    public handleOnChange(e) {
+    public handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -18,7 +20,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
                 event: e,
             });
         }
-    }
+    };
 
     public render() {
         const props = this.props;
@@ -33,7 +35,7 @@ class Textarea extends React.Component<ITextareaProps, any> {
             <textarea
                 className={props.className}
                 name={props.name}
-                onChange={this.handleOnChange.bind(this)}
+                onChange={this.handleOnChange}
                 placeholder={props.placeholder}
                 value={props.value === null ? "" : props.value}
                 disabled={props.disabled}

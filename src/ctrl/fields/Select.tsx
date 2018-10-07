@@ -1,6 +1,7 @@
 import * as React from "react";
 import Icon from "../Icon";
 
+// @ts-ignore
 import Hotkeys from "react-hot-keys";
 
 import { Positioner, RelativePositionPresets } from "../overlays/Positioner";
@@ -21,7 +22,7 @@ interface ISelectProps extends IFieldProps {
 }
 
 interface ISelectState {
-    filteredOptions: IOption[] | { [key: string]: string };
+    filteredOptions: IOption[];
     dropdownVisible: boolean;
     searchedTxt: string;
     highlightedIndex: number;
@@ -51,7 +52,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             dropdownVisible: false,
             searchedTxt: "",
             highlightedIndex: -1,
-            filteredOptions: options,
+            filteredOptions: options as IOption[],
         };
     }
 
@@ -79,7 +80,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
     }
 
-    public handleOnChange(e) {
+    /*    public handleOnChange(e ) {
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -89,7 +90,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 event: e,
             });
         }
-    }
+    }*/
 
     public handleDropdownChange = () => {
         let options = this.props.options;
@@ -115,7 +116,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         );
     };
 
-    private onKeyDown = (keyName, e, handle) => {
+    private onKeyDown = (keyName: string, e: React.KeyboardEvent, handle: any) => {
         e.preventDefault();
         if (keyName == "up") {
             this.setState({ highlightedIndex: Math.max(0, this.state.highlightedIndex - 1) });
@@ -141,15 +142,17 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     };
 
     private searchTextChanged = (e: any) => {
-        let filteredOptions = this.props.options;
+        let filteredOptions: IOption[];
 
-        if (!Array.isArray(filteredOptions)) {
-            filteredOptions = Object.entries(filteredOptions).map(([key, val]) => ({ value: key, label: val }));
+        if (!Array.isArray(this.props.options)) {
+            filteredOptions = Object.entries(this.props.options).map(([key, val]) => ({ value: key, label: val }));
+        } else {
+            filteredOptions = this.props.options;
         }
 
         if (this.state.searchedTxt != "") {
             filteredOptions = filteredOptions.filter(
-                (el) => el.label.toLowerCase().indexOf(this.state.searchedTxt.toLowerCase()) !== -1,
+                (el) => ("" + el.label).toLowerCase().indexOf(this.state.searchedTxt.toLowerCase()) !== -1,
             );
         }
 
@@ -166,11 +169,12 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         if (!Array.isArray(props.options)) {
             options = Object.entries(props.options).map(([key, val]) => ({ value: key, label: val }));
         }
+        const parsetOptions = options as IOption[];
 
         let selectedIndex: number = -1;
 
-        for (const i in options) {
-            if (options[i].value == props.value) {
+        for (let i = 0; i < parsetOptions.length; i++) {
+            if (parsetOptions[i].value == props.value) {
                 selectedIndex = i;
             }
         }
@@ -183,7 +187,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         (selectedIndex >= 0 ? "" : "w-field-presentation-empty")
                     }
                 >
-                    {selectedIndex >= 0 ? options[selectedIndex].label : ""}
+                    {selectedIndex >= 0 ? parsetOptions[selectedIndex].label : ""}
                 </div>
             );
         }
@@ -199,8 +203,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         }
                     }}
                 >
-                    {options[selectedIndex] ? (
-                        options[selectedIndex].label
+                    {parsetOptions[selectedIndex] ? (
+                        parsetOptions[selectedIndex].label
                     ) : (
                         <div className={"w-select-placeholder"}>
                             {this.props.placeholder ? this.props.placeholder : i18n.t("frontend:fields.select.choose")}
@@ -214,7 +218,6 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         relativeTo={() => this.presenter}
                         animation={"from-up"}
                         relativeSettings={{ ...RelativePositionPresets.bottomLeft, theSameWidth: true }}
-                        width="100%"
                     >
                         <div
                             className={"w-select-overlay"}
@@ -224,7 +227,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             onMouseDown={(e) => e.preventDefault()}
                         >
                             <Hotkeys keyName="up,down,enter" onKeyDown={this.onKeyDown}>
-                                {options.length > 6 && (
+                                {parsetOptions.length > 6 && (
                                     <input
                                         ref={(el) => (this.searchField = el)}
                                         type={"text"}

@@ -3,7 +3,6 @@ import { fI18n } from "../../utils/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 import "./ConnectionField.sass";
 import { ConnectionsField, IConnectionChangeEvent } from "../fields/ConnectionsField/ConnectionsField";
-import { IFieldChangeEvent } from "../fields/Interfaces";
 
 interface IConnectionFilterProps extends IFilterProps {
     config: {

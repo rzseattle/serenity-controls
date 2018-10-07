@@ -1,5 +1,5 @@
 import { checkIncludes } from "./Utils";
-import { IFieldProps } from "./Interfaces";
+import { IFieldProps, IOption } from "./Interfaces";
 import React from "react";
 
 interface ICheckboxGroupProps extends IFieldProps {
@@ -8,16 +8,11 @@ interface ICheckboxGroupProps extends IFieldProps {
     inline: boolean;
 }
 
-export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
+export class CheckboxGroup extends React.PureComponent<ICheckboxGroupProps, any> {
     public static defaultProps: Partial<ICheckboxGroupProps> = {
         value: [],
         editable: true,
     };
-
-    constructor(props: ICheckboxGroupProps) {
-        super(props);
-        this.state = {};
-    }
 
     public handleOnChange = (e: React.FormEvent<HTMLInputElement>) => {
         const el = e.target as HTMLInputElement;
@@ -45,7 +40,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                 const elements = [];
 
                 for (const i in props.value) {
-                    const element = props.options.filter((v, index) => {
+                    const element = props.options.filter((v) => {
                         return v.value == props.value[i];
                     });
                     elements.push(<li key={element[0].value}>{element[0].label}</li>);
@@ -70,7 +65,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
             }
         }
 
-        const gen = (value: string, label: string) => {
+        const gen = (value: string | number, label: string | number) => {
             const field = (
                 <input
                     type="checkbox"
@@ -101,7 +96,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
         return (
             <div>
                 {Array.isArray(props.options)
-                    ? props.options.map((el) => gen(el.value, el.label))
+                    ? props.options.map((el: IOption) => gen(el.value, el.label))
                     : Object.entries(props.options).map(([value, label]) => gen(value, label))}
             </div>
         );

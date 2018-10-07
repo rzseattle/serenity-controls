@@ -6,7 +6,7 @@ interface ISwitchProps extends IFieldProps {
     value?: number | string;
 }
 
-export default class Switch extends React.Component<ISwitchProps> {
+export class Switch extends React.Component<ISwitchProps> {
     public static defaultProps: Partial<ISwitchProps> = {
         editable: true,
     };
@@ -18,7 +18,7 @@ export default class Switch extends React.Component<ISwitchProps> {
         };
     }
 
-    public handleOnChange(value, event) {
+    public handleOnChange = (value: string | number, event: React.MouseEvent) => {
         this.setState({ value });
 
         // this.refs.hidden.value = date;
@@ -30,7 +30,7 @@ export default class Switch extends React.Component<ISwitchProps> {
                 event,
             });
         }
-    }
+    };
 
     public render() {
         const props = this.props;
@@ -70,12 +70,12 @@ export default class Switch extends React.Component<ISwitchProps> {
             }
         }
 
-        const gen = (value, label) => {
+        const gen = (value: string | number, label: string | number) => {
             return (
                 <div key={value}>
                     <div
                         className={"w-switch-label " + (props.value == value ? "w-switch-active" : "")}
-                        onClick={this.handleOnChange.bind(this, value)}
+                        onClick={(event) => this.handleOnChange(value, event)}
                     >
                         {label}
                     </div>

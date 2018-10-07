@@ -4,7 +4,7 @@ import { fI18n } from "../../utils/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./DateFilter.sass";
-import { LoadingIndicator } from "../LoadingIndicator";
+import { LoadingIndicator } from "../common/LoadingIndicator";
 import Icon from "../Icon";
 import { Positioner } from "../overlays/Positioner";
 

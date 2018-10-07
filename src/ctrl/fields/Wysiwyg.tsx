@@ -1,9 +1,14 @@
+import { IFieldProps } from "./Interfaces";
+import * as React from "react";
+
+const CKEDITOR: any = undefined;
+
 interface IWysiwygProps extends IFieldProps {
     onLoad?: () => any;
     value?: string;
 }
 
-class Wysiwyg extends React.Component<IWysiwygProps, any> {
+export class Wysiwyg extends React.Component<IWysiwygProps, any> {
     public static defaultProps: Partial<IWysiwygProps> = {
         value: "",
         editable: true,
@@ -11,7 +16,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     };
     private id: string;
 
-    constructor(props) {
+    constructor(props: IWysiwygProps) {
         super(props);
         this.id = "fields-wysiwyg-" + (Math.random() * 10000000).toFixed(0);
         this.state = {
@@ -19,7 +24,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         };
     }
 
-    public handleOnChange(value, event) {
+    public handleOnChange(value: string, event: any) {
         this.setState({ value });
         if (this.props.onChange) {
             this.props.onChange({
@@ -41,6 +46,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     public initializeEditor() {
+        // @ts-ignore
         Promise.all([import("scriptjs")]).then((imported) => {
             imported[0].default("https://cdn.ckeditor.com/4.7.3/full/ckeditor.js", () => {
                 this.setState({ libsLoaded: true });
@@ -85,7 +91,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                 CKEDITOR.replace(this.id, config);
                 config.width = 500;
 
-                CKEDITOR.instances[this.id].on("change", (e) => {
+                CKEDITOR.instances[this.id].on("change", (e: any) => {
                     const data = CKEDITOR.instances[this.id].getData();
                     if (data != this.props.value && this.isInputTextChanged(this.props.value)) {
                         this.handleOnChange(data, e);
@@ -97,7 +103,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         });
     }
 
-    public isInputTextChanged(input) {
+    public isInputTextChanged(input: string) {
         const data = CKEDITOR.instances[this.id].getData();
 
         if (input == null) {
@@ -116,7 +122,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         }
     }
 
-    public componentDidUpdate(prevProps, prevState) {
+    public componentDidUpdate(prevProps: any, prevState: any) {
         if (prevProps.editable == false && this.props.editable == true) {
             this.initializeEditor();
         }
@@ -125,7 +131,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
         }
     }
 
-    public componentWillReceiveProps(nextProps, currentProps) {
+    public componentWillReceiveProps(nextProps: IWysiwygProps, currentProps: IWysiwygProps) {
         if (
             typeof CKEDITOR != "undefined" &&
             CKEDITOR.instances[this.id] != undefined &&

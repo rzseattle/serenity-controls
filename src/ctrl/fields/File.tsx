@@ -1,14 +1,13 @@
+import { IFieldProps } from "./Interfaces";
+import * as React from "react";
+import Dropzone from "react-dropzone";
 
 interface IFileProps extends IFieldProps {
     value: FileList;
 }
 
-class File extends React.Component<IFileProps, any> {
-    constructor(props) {
-        super(props);
-    }
-
-    public handleFileAdd(e) {
+export class File extends React.Component<IFileProps, any> {
+    public handleFileAdd = (e: any) => {
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -17,7 +16,7 @@ class File extends React.Component<IFileProps, any> {
                 event: e,
             });
         }
-    }
+    };
 
     public render() {
         const props = this.props;
@@ -27,7 +26,7 @@ class File extends React.Component<IFileProps, any> {
                     style={{}}
                     className="w-file-dropzone"
                     activeClassName="w-gallery-add-active"
-                    onDrop={this.handleFileAdd.bind(this)}
+                    onDrop={this.handleFileAdd}
                 >
                     <span>
                         <i className="fa fa-plus-circle" />
