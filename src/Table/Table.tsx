@@ -86,7 +86,7 @@ interface ITableState {
     tooltipData: any;
 }
 
-export default class Table extends React.Component<ITableProps, ITableState> {
+export class Table extends React.Component<ITableProps, ITableState> {
     public static defaultProps: Partial<ITableProps> = {
         onPage: 25,
         columns: [],
@@ -639,5 +639,3 @@ export default class Table extends React.Component<ITableProps, ITableState> {
         );
     }
 }
-
-export { Table, ColumnHelper as Column };

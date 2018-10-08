@@ -72,6 +72,7 @@ module.exports = {
                             babelOptions: {
                                 babelrc: false,
                                 retainLines: true,
+
                                 presets: [
                                     [
                                         "@babel/preset-env",
@@ -122,19 +123,19 @@ module.exports = {
                             tsconfigPath: path.resolve(__dirname, "../builder/webpack/tsconfig.json"),
                         },
                     },
-                    {
+                   /* {
                         loader: "string-replace-loader",
                         options: {
                             search: "../../../../build/js/lang/i18",
                             replace: "frontend/translations/i18n",
                             flags: "",
                         },
-                    },
+                    },*/
                 ],
             },
             {
                 test: [/\.js$/, /\.es6$/],
-                exclude: /(node_modules|bower_components)/,
+                exclude: /node_modules/,
                 loaders: [
                     {
                         loader: "babel-loader",
@@ -152,7 +153,7 @@ module.exports = {
                 NODE_ENV: JSON.stringify("production"),
             },
         }),
-        /* new HardSourceWebpackPlugin({
+         new HardSourceWebpackPlugin({
             // Either an absolute path or relative to webpack's options.context.
             cacheDirectory: path.resolve(__dirname, "../node_modules/hard-source/[confighash]"),
             // Either an absolute path or relative to webpack's options.context.
@@ -165,7 +166,7 @@ module.exports = {
                 directories: [],
                 files: ["yarn.lock"],
             },
-        }),*/
+        }),
         /*new TypedocWebpackPlugin({
             name: 'Contoso',
             //mode: 'file',

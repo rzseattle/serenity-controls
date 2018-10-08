@@ -2,10 +2,10 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
-import {Comm} from "../../src/ctrl/lib";
-import {Placeholder} from "../../src/ctrl/common";
+import { Comm } from "../../src/ctrl/lib";
+import { Placeholder } from "../../src/ctrl/common";
 
-storiesOf("Loading container", module)
+storiesOf("Placeholder", module)
     .addDecorator(withKnobs)
     .add("From URL", () => (
         <>
@@ -69,11 +69,7 @@ storiesOf("Loading container", module)
         });
         return (
             <>
-                <Placeholder
-                    promise={promise}
-                    debug={boolean("Debug", false)}
-                    indicatorText={"Custom loading text"}
-                >
+                <Placeholder promise={promise} debug={boolean("Debug", false)} indicatorText={"Custom loading text"}>
                     {(data) => <h1>{data.bar}</h1>}
                 </Placeholder>
             </>

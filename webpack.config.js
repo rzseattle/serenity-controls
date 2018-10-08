@@ -51,6 +51,9 @@ module.exports = function(env = {}) {
             "moment/locale/pl",
             "react-dates/lib/css/_datepicker.css",
             "react-dates/initialize",
+            "nprogress/nprogress.js",
+            "nprogress/nprogress.css",
+            "source-map/dist/source-map.min.js",
         ]),
         module: {
             rules: [

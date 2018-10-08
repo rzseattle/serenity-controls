@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "noEmit": true,
+        "noEmit": false,
         "declaration": true,
         "declarationMap": true,
         "declarationDir": "lib",
@@ -37,7 +37,7 @@
 
     "exclude": ["resources", "vendor", "assets", "data", "node_modules"],
     "include": [
-        "./src/**/*",
-        "./stories/**/*"
+        "./src/**/*"//,
+        //"./stories/**/*"
     ]
 }
