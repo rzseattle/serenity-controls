@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import router, { IRouteElement } from "./Router";
+import { router, IRouteElement } from "./Router";
 
 import "./RouteVsualization.sass";
 declare var module: any;

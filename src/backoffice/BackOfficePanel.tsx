@@ -1,7 +1,7 @@
 import * as React from "react";
 import PanelComponentLoader from "./PanelComponentLoader";
 
-import { IMenuElement, IMenuSection, Menu } from "src/ctrl/backoffice/Menu";
+import { IMenuElement, IMenuSection, Menu } from "./Menu";
 
 // @ts-ignore
 import * as NProgress from "nprogress/nprogress.js";
@@ -9,7 +9,6 @@ import "nprogress/nprogress.css";
 
 import hotkeys from "hotkeys-js";
 
-import { BackofficeStore } from "src/ctrl/backoffice/BackofficeStore";
 import { LoadingIndicator } from "../common/LoadingIndicator";
 
 // @ts-ignore
@@ -22,6 +21,7 @@ import { fI18n, Comm } from "../lib";
 import { Icon } from "../common";
 import { configGet } from "./Config";
 import { BackOfficeContainer } from "./BackOfficeContainer";
+import { BackofficeStore } from "./BackofficeStore";
 
 NProgress.configure({ parent: ".w-panel-body" });
 

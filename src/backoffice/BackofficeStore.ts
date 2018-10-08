@@ -1,7 +1,7 @@
-import Router, { IRouteElement } from "src/ctrl/backoffice/Router";
 // @ts-ignore
 import * as qs from "qs";
 import { Comm, CommEvents } from "../lib";
+import { IRouteElement, router } from "./Router";
 
 declare var window: any;
 declare var module: any;
@@ -23,7 +23,7 @@ export type DebugDataListener = (
 
 const browserInput = window.reactBackOfficeVar;
 
-export default class BackofficeStore {
+class BackofficeStore {
     public static debugData: {
         views: IDebugDataEntry[];
         ajax: IDebugDataEntry[];
@@ -139,9 +139,9 @@ export default class BackofficeStore {
 
         Comm.onStart.push((url, data, method) => {
             if (!BackofficeStore.debugViewAjaxInProgress) {
-                const routeData = Router.getRouteInfo(url);
+                const routeData = router.getRouteInfo(url);
                 if (routeData !== null) {
-                    Router.getRouteInfo(url).then((result) => {
+                    router.getRouteInfo(url).then((result) => {
                         BackofficeStore.registerDebugData("ajax", url, result, data);
                     });
                 }
@@ -216,12 +216,12 @@ export default class BackofficeStore {
             let view: any;
             // check path contains query string
             if (path.indexOf("?") == -1) {
-                view = Router.resolve(path);
+                view = router.resolve(path);
                 const query = qs.stringify(input);
                 url = path + (query ? "?" + query : "");
             } else {
                 const [purePath, pathQueryString] = path.split("?");
-                view = Router.resolve(purePath);
+                view = router.resolve(purePath);
                 const partOfInput = qs.parse(pathQueryString);
                 const query = qs.stringify(Object.assign({}, partOfInput, input));
                 url = purePath + (query ? "?" + query : "");
@@ -262,7 +262,7 @@ export default class BackofficeStore {
 
                     if (originalPath) {
                         try {
-                            Router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
+                            router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
                                 BackofficeStore.registerDebugData("views", originalPath, routeData, this.viewData);
                             });
                         } catch (e) {

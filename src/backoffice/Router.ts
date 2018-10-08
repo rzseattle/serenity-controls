@@ -131,6 +131,4 @@ class Router {
     }
 }
 
-const router = new Router();
-
-export default router;
+export const router = new Router();
