@@ -8,7 +8,7 @@
         "dev": "webpack-dev-server -d ",
         "build:babel": "babel --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
         "build:tsc": "tsc --emitDeclarationOnly --project ./ --outDir ./lib ",
-        "build": "rimraf lib/* && yarn run build:babel && yarn run build:tsc",
+        "build": "rimraf lib/* && yarn run build:babel && yarn run build:tsc && node sass-copy.js",
         "storybook": "start-storybook -p 6006",
         "server": "nodemon ./stories/server.js",
         "build-storybook": "build-storybook"
@@ -118,6 +118,7 @@
         "@types/uuid": "^3.4.4",
         "chokidar": "^2.0.0",
         "mkdirp": "^0.5.1",
+        "node-glob": "^1.2.0",
         "react-docgen-typescript-loader": "^3.0.0",
         "rimraf": "^2.6.2",
         "string-replace-loader": "^2.1.1",
