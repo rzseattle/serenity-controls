@@ -64,7 +64,7 @@ interface IState {
     devComponentFile: string;
 }
 
-export default class PanelComponentLoader extends React.Component<IProps, IState> {
+export class PanelComponentLoader extends React.Component<IProps, IState> {
     public notificationSystem: NotificationSystem.System;
     public DebugTool: any = null;
 
