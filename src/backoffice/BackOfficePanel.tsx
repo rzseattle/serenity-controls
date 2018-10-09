@@ -1,5 +1,4 @@
 import * as React from "react";
-import PanelComponentLoader from "./PanelComponentLoader";
 
 import { IMenuElement, IMenuSection, Menu } from "./Menu";
 
@@ -22,6 +21,7 @@ import { Icon } from "../common";
 import { configGet } from "./Config";
 import { BackOfficeContainer } from "./BackOfficeContainer";
 import { BackofficeStore } from "./BackofficeStore";
+import { PanelComponentLoader } from "./PanelComponentLoader";
 
 NProgress.configure({ parent: ".w-panel-body" });
 
