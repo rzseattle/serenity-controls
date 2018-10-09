@@ -126,7 +126,7 @@ module.exports = function(input) {
 
     var conf = {
         context: resolve(__dirname, ""),
-        //devtool: input.PRODUCTION ? "cheap-module-eval-source-map" : "cheap-module-source-map", //,
+        devtool: input.PRODUCTION ? "cheap-module-eval-source-map" : "cheap-module-eval-source-map", //,
         devtool: false,
 
         resolve: {
@@ -140,7 +140,7 @@ module.exports = function(input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = [/*'babel-polyfill',*/ input.ENTRY_POINTS[i]];
+        tmpEntry[i] = ['babel-polyfill', input.ENTRY_POINTS[i]];
     }
 
     let tmp;
@@ -232,7 +232,7 @@ module.exports = function(input) {
 
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
-    if (!input.PRODUCTION) {
+    if (!input.PRODUCTION && false) {
         conf.plugins.push(
             new webpack.SourceMapDevToolPlugin({
                 filename: "[file].map",
