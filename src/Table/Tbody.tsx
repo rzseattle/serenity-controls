@@ -4,7 +4,7 @@ import * as uuidv4 from "uuid/v4";
 import { ICellTemplate, IColumnData, IOrder } from "./Interfaces";
 import { IFilterValue } from "../filters/Intefaces";
 import { IGroupByData, IRowClassTemplate, IRowStyleTemplate } from "./Table";
-import {Icon} from "../common";
+import {Icon} from "../Icon";
 
 // const uuidv4 = require('uuid/v4');
 

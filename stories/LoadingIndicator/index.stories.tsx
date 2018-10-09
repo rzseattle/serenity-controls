@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import {LoadingIndicator} from "../../src/ctrl/common";
+import { LoadingIndicator } from "../../src/LoadingIndicator";
 
 
 storiesOf("Loading indicator", module)

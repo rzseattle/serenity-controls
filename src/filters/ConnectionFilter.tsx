@@ -1,8 +1,7 @@
 import * as React from "react";
 import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
-import "./ConnectionField.sass";
-import { ConnectionsField, IConnectionChangeEvent } from "../fields/ConnectionsField/ConnectionsField";
+import { ConnectionsField, IConnectionChangeEvent } from "../ConnectionsField";
 
 interface IConnectionFilterProps extends IFilterProps {
     config: {

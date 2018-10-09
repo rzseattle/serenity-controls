@@ -1,8 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Table, Column as Col, IDataQuery, ITableDataInput } from "../../src/ctrl/Table";
+import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput } from "../../src/Table";
 import { mockData } from "./MOCK_DATA";
-import {FilterHelper} from "../../src/ctrl/filters";
+import { FilterHelper } from "../../src/filters";
 
 const baseColumns = [
     Col.id("id", "Id"),
@@ -14,7 +14,7 @@ const baseColumns = [
             </div>
         ))
         .onClick((row, column, event) => {
-            alert(row[column.field] + " Cell:" + event.target);
+            // alert(row[column.field] + " Cell:" + (event as React.MouseEvent<HTMLTableCellElement>).target);
         })
         .noFilter()
         .addFilter(FilterHelper.text("first_name", "First name").get())
@@ -43,14 +43,13 @@ const baseColumns = [
 
 const provider = (query: IDataQuery) => {
     return new Promise<ITableDataInput>((resolve) => {
-        resolve({
-            data: mockData.slice((query.currentPage - 1) * query.onPage, query.currentPage * query.onPage),
+        /*resolve({
+            data: [], //(mockData.slice((query.currentPage - 1) * query.onPage, query.currentPage * query.onPage) as any[]),
             countAll: mockData.length,
             debug: false,
-        });
+        });*/
     });
 };
-
 
 storiesOf("Table", module).add(
     "Base",

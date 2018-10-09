@@ -2,8 +2,8 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { withKnobs, text, boolean, number } from "@storybook/addon-knobs";
-import { Comm } from "../../src/ctrl/lib";
-import { Placeholder } from "../../src/ctrl/common";
+import { Placeholder } from "../../src/Placeholder";
+import { Comm } from "../../src/lib";
 
 storiesOf("Placeholder", module)
     .addDecorator(withKnobs)

@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import { IFilter } from "../filters/Intefaces";
-import { Modal } from "../overlays/Modal";
-import { RelativePositionPresets } from "../overlays/Positioner";
+import { Modal } from "../Modal";
+import { RelativePositionPresets } from "../Positioner";
 import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
-import {Icon} from "../common";
+import {Icon} from "../Icon";
 
 interface ITheadProps {
     selectable: boolean;

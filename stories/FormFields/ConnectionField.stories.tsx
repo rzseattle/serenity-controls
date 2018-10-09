@@ -1,12 +1,11 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { ConnectionsField, IConnectionFieldInput } from "../../src/ctrl/fields/ConnectionsField/ConnectionsField";
-import IConnectionElement from "../../src/ctrl/fields/ConnectionsField/IConnectionElement";
-
 import "./ConnectionField.stories.sass";
-import { Comm } from "../../src/ctrl/lib";
-import { Panel } from "../../src/ctrl/common";
+import { ConnectionsField, IConnectionFieldInput } from "../../src/ConnectionsField";
+import IConnectionElement from "../../src/ConnectionsField/IConnectionElement";
+import { Comm } from "../../src/lib";
+import { Panel } from "../../src/Panel";
 
 const dataSource = (input: IConnectionFieldInput) =>
     new Promise<IConnectionElement[]>((resolve) => {

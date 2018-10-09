@@ -1,7 +1,6 @@
 import * as React from "react";
 
-
-import { LoadingIndicator } from "../common/LoadingIndicator";
+import { LoadingIndicator } from "../LoadingIndicator";
 import { BackOfficePanel } from "./BackOfficePanel";
 import { BackofficeStore } from "./BackofficeStore";
 

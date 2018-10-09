@@ -12,7 +12,5 @@ export * from "./Wysiwyg";
 
 export * from "./CheckboxGroup";
 
-export * from "./ConnectionsField/ConnectionsField";
 export * from "./File";
 
-export * from "./FileList/FileLists";

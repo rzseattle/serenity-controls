@@ -9,7 +9,7 @@ import {
     SelectFilter,
     SwitchFilter,
     TextFilter,
-} from "../../src/ctrl/filters";
+} from "../../src/filters";
 
 const onApply = (input: IFilterValue) => alert(input.value + " " + input.condition);
 

@@ -2,7 +2,7 @@ import * as NotificationSystem from "react-notification-system";
 import * as React from "react";
 
 import { ServerErrorPresenter } from "./ServerErrorPresenter";
-import { IModalProps } from "../overlays/Modal";
+import { IModalProps } from "../Modal";
 import { ErrorInfo } from "react";
 
 declare var PRODUCTION: boolean;

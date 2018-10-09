@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Icon} from "../common";
+import {Icon} from "../Icon";
 
 export default function(props: any) {
     const isVisible: boolean = Object.entries(props.order).length > 0 || Object.entries(props.filters).length > 0;

@@ -3,9 +3,10 @@ import { storiesOf } from "@storybook/react";
 
 import "./Modal.stories.sass";
 import { MoreTextHelper } from "./MoreTextHelper";
-import { Comm } from "../../../src/ctrl/lib";
-import { Modal, RelativePositionPresets } from "../../../src/ctrl/overlays";
-import { Placeholder } from "../../../src/ctrl/common";
+import { Comm } from "../../../src/lib";
+import { Modal } from "../../../src/Modal";
+import { RelativePositionPresets } from "../../../src/Positioner";
+import { Placeholder } from "../../../src/Placeholder";
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi

@@ -4,9 +4,8 @@ import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./DateFilter.sass";
-import { LoadingIndicator } from "../common/LoadingIndicator";
-import { Icon } from "../common";
-import { Positioner } from "../overlays/Positioner";
+import { LoadingIndicator } from "../LoadingIndicator";
+import { Icon } from "../Icon";
 
 interface IDateFilterProps extends IFilterProps {
     config: {

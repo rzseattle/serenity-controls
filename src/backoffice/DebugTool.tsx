@@ -1,15 +1,14 @@
 import * as React from "react";
 
-import { TabPane, Tabs } from "../common/Tabs";
+import { TabPane, Tabs } from "../Tabs";
 import ErrorReporter from "./ErrorReporter";
 import { DevProperties } from "./DevProperties";
 import { ideConnector } from "./IDEConnector";
 import { BackofficeStore, IDebugDataEntry } from "./BackofficeStore";
 import { RouteVisualization } from "./RouteVisualization";
-import { Modal } from "../overlays/Modal";
-import { Icon } from "../common";
-import { PrintJSON } from "../utils";
-import { IRouteElement } from "./Router";
+import { Modal } from "../Modal";
+import { Icon } from "../Icon";
+import { PrintJSON } from "../PrintJSON";
 
 declare var DEV_PROPERIES: DevProperties;
 

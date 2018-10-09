@@ -3,11 +3,11 @@ import * as React from "react";
 // @ts-ignore
 import Hotkeys from "react-hot-keys";
 
-import { Positioner, RelativePositionPresets } from "../overlays/Positioner";
+import { Positioner, RelativePositionPresets } from "../Positioner";
 
 import "./Select.sass";
 import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
-import { Icon } from "../common";
+import { Icon } from "../Icon";
 import { fI18n } from "../lib";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon } from "../common";
+import { Icon } from "../Icon";
 
 export interface IMenuSection {
     active: boolean;

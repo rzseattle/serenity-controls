@@ -8,16 +8,16 @@ import "nprogress/nprogress.css";
 
 import hotkeys from "hotkeys-js";
 
-import { LoadingIndicator } from "../common/LoadingIndicator";
+import { LoadingIndicator } from "../LoadingIndicator";
 
 // @ts-ignore
 import Hotkeys from "react-hot-keys";
 
 import { Trans } from "react-i18next";
-import { IModalProps, Modal } from "../overlays/Modal";
+import { IModalProps, Modal } from "../Modal";
 import { Select } from "../fields/Select";
 import { fI18n, Comm } from "../lib";
-import { Icon } from "../common";
+import { Icon } from "../Icon";
 import { configGet } from "./Config";
 import { BackOfficeContainer } from "./BackOfficeContainer";
 import { BackofficeStore } from "./BackofficeStore";
