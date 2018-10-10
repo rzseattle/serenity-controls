@@ -33,7 +33,7 @@ module.exports = function(input) {
         //if (process.env.mode == "dll") {
         return {
             mode: "production",
-            devtool: "none",
+            devtool: "cheap-module-eval-source-map",
             context: resolve(__dirname, ""),
             resolve: {
                 extensions: [".js", ".json", ".css", ".ts", ".tsx"],

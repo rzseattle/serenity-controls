@@ -86,6 +86,8 @@ class Router {
                             const result = await this.routes[el.namespace + "_export"]();
                             Component = result[el.index].default;
                         } else {
+                            // alert(el.component);
+                            Component = el.component;
                             Component = this.routes[el.component];
                         }
                     }
@@ -103,7 +105,8 @@ class Router {
                             const result = await this.routes[el.namespace + "_export"]();
                             Component = result[el.index].default;
                         } else {
-                            Component = this.routes[el.component];
+                            Component = el.component;
+                            // Component = this.routes[el.component];
                         }
                     }
                     extendedInfo = el;

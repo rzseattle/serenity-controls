@@ -7,14 +7,30 @@ import { Comm } from "./Comm";
 
 declare var PRODUCTION: any;
 
+class LangContainer {
+    public langs: { [index: string]: () => Promise<any> } = {};
+    public add = (lang: string, getter: (() => Promise<any>)) => {
+        this.langs[lang] = getter;
+    };
+
+    public get = (lang: string, callback: ((result: any) => any)) => {
+        if (this.langs[lang] !== undefined) {
+            this.langs[lang]().then((result) => callback(result));
+        } else {
+            alert("Language is not defined");
+        }
+    };
+}
+
+const langContainer = new LangContainer();
+
 const XHR = {
     type: "backend",
     init(services: any, backendOptions: any, i18nextOptions: any) {
         /* use services and options */
     },
     read(language: string, namespace: string, callback: any) {
-        import("../translations/i18n.pl").then(function(result: any) {
-            // import("../../../../build/js/lang/i18." + language + ".ts").then(function(result) {
+        langContainer.get(language, (result) => {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
             } else {
@@ -47,9 +63,9 @@ const instance = i18n
         ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
             if (!PRODUCTION) {
-                // if( lng != "pl") {
-                console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
-                // }
+                if (lng[0] != "pl") {
+                    console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
+                }
             }
         },
         react: {
@@ -57,7 +73,7 @@ const instance = i18n
         },
     });
 instance.on("languageChanged", (lng) => {
-    //Comm._get(configGet("translations.backendLangChanged").replace("{{lng}}", lng));
+    Comm._get(configGet("translations.backendLangChanged").replace("{{lng}}", lng));
 });
 const fI18n = instance;
-export { fI18n };
+export { fI18n, langContainer };

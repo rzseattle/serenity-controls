@@ -1,8 +1,6 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 
-const CKEDITOR: any = undefined;
-
 export interface IWysiwygProps extends IFieldProps {
     onLoad?: () => any;
     value?: string;
@@ -37,6 +35,7 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
     }
 
     public handleOnLoad() {
+        // @ts-ignore
         CKEDITOR.instances[this.id].setData(this.props.value);
 
         // just textarea replacement making value of editor and value of form not equal
@@ -79,6 +78,7 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
                         { name: "tools", items: ["Maximize", "Source"] },
                     ],
                     extraPlugins: "justify",
+                    // @ts-ignore
                     enterMode: CKEDITOR.ENTER_P,
                 };
                 if (this.props.style.height) {
@@ -87,23 +87,25 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
                 config.allowedContent = true;
                 config.extraAllowedContent = "iframe[*]";
-
+                // @ts-ignore
                 CKEDITOR.replace(this.id, config);
                 config.width = 500;
-
+                // @ts-ignore
                 CKEDITOR.instances[this.id].on("change", (e: any) => {
+                    // @ts-ignore
                     const data = CKEDITOR.instances[this.id].getData();
                     if (data != this.props.value && this.isInputTextChanged(this.props.value)) {
                         this.handleOnChange(data, e);
                     }
                 });
-
+                // @ts-ignore
                 CKEDITOR.instances[this.id].on("instanceReady", () => this.handleOnLoad());
             });
         });
     }
 
     public isInputTextChanged(input: string) {
+        // @ts-ignore
         const data = CKEDITOR.instances[this.id].getData();
 
         if (input == null) {
@@ -127,25 +129,33 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
             this.initializeEditor();
         }
         if (prevProps.editable == true && this.props.editable == false) {
+            // @ts-ignore
             CKEDITOR.instances[this.id].destroy();
         }
     }
 
     public componentWillReceiveProps(nextProps: IWysiwygProps, currentProps: IWysiwygProps) {
         if (
+            // @ts-ignore
             typeof CKEDITOR != "undefined" &&
+            // @ts-ignore
             CKEDITOR.instances[this.id] != undefined &&
             nextProps.value &&
+            // @ts-ignore
             nextProps.value != CKEDITOR.instances[this.id].getData() &&
             this.isInputTextChanged(nextProps.value)
         ) {
+            // @ts-ignore
             CKEDITOR.instances[this.id].setData(nextProps.value);
         }
     }
 
     public componentWillUnmount() {
+        // @ts-ignore
         if (typeof CKEDITOR != "undefined") {
+            // @ts-ignore
             if (CKEDITOR.instances[this.id] != undefined) {
+                // @ts-ignore
                 CKEDITOR.instances[this.id].destroy();
             }
         }

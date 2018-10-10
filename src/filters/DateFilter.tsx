@@ -172,7 +172,7 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
                                 checked={s.choiceType == "range"}
                                 onChange={(e) => this.setState({ choiceType: "range" }, this.handleChange)}
                                 type="checkbox"
-                            />{" "}
+                            />
                             <Icon name={"ScrollUpDown"} /> Według wybou
                         </label>
                     </div>
@@ -182,7 +182,7 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
                                 checked={s.choiceType == "exists"}
                                 onChange={(e) => this.setState({ choiceType: "exists" }, this.handleChange)}
                                 type="checkbox"
-                            />{" "}
+                            />
                             <Icon name={"CheckMark"} /> Data ustalona
                         </label>
                     </div>

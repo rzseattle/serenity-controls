@@ -5,7 +5,7 @@ interface IIconProps {
     size?: number;
 }
 
-export const Icon: React.StatelessComponent<IIconProps> = (props) => {
+const Icon: React.StatelessComponent<IIconProps> = (props) => {
     if (props.size != undefined) {
         let add: any = {};
         add = { style: { fontSize: props.size } };
@@ -13,6 +13,8 @@ export const Icon: React.StatelessComponent<IIconProps> = (props) => {
     }
     return <i className={"ms-Icon ms-Icon--" + props.name} aria-hidden="true" />;
 };
+
+export { Icon };
 
 /*
  let icons = [

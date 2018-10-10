@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import Navbar from "frontend/src/ctrl/common/Navbar";
+import { Navbar } from "frontend/src/ctrl/common/Navbar";
 import { Row } from "frontend/src/ctrl/layout/Row";
 import { IArrowViewComponentProps } from "frontend/src/ctrl/backoffice/PanelComponentLoader";
 

@@ -5,8 +5,7 @@ interface IProps {
     toolbar?: any[];
 }
 
-export default (props: IProps) => {
-
+export const Navbar = (props: IProps) => {
     const children = Array.isArray(props.children) ? props.children : [props.children];
 
     return (
@@ -14,24 +13,20 @@ export default (props: IProps) => {
             <ol>
                 {children.map((child, key) => {
                     if (child !== null) {
-                        return <li key={key} className={"ms-font-m " + (key + 1 == props.children.length ? "active" : "")}>
-                            {child}
-                            <i className="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"/>
-                        </li>;
+                        return (
+                            <li key={key} className={"ms-font-m " + (key + 1 == props.children.length ? "active" : "")}>
+                                {child}
+                                <i className="ms-Icon ms-Icon--ChevronRight" aria-hidden="true" />
+                            </li>
+                        );
                     }
                     return null;
                 })}
             </ol>
 
-            <div style={{float: "right"}}>
-                <div style={{display: "table-cell", height: "50px", verticalAlign: "middle"}}>
-                    {props.toolbar}
-                </div>
+            <div style={{ float: "right" }}>
+                <div style={{ display: "table-cell", height: "50px", verticalAlign: "middle" }}>{props.toolbar}</div>
             </div>
         </div>
-
-    )
-}
-
-
-
+    );
+};

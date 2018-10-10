@@ -3,13 +3,12 @@ const fs = require("fs");
 const path = require("path");
 let routeEqualizer = "";
 
-const extractor = function (basePath, targetComponentFile, targetSassFile, production = false) {
+const extractor = function(basePath, targetComponentFile, targetSassFile, production = false) {
     let command = "php bin/console debug:router --json";
 
     console.log("Route check ...");
-    exec(command, {cwd: basePath}, function (error, stdout, stderr) {
+    exec(command, { cwd: basePath }, function(error, stdout, stderr) {
         if (!error) {
-
             try {
                 let route = JSON.parse(stdout);
                 const routeSimplyfied = Object.entries(route).map(([index, el]) => [
@@ -18,7 +17,7 @@ const extractor = function (basePath, targetComponentFile, targetSassFile, produ
                     el._routePath,
                     el._package,
                     el._debug.templateExists,
-                    el._debug.componentExists
+                    el._debug.componentExists,
                 ]);
                 const toEqual = JSON.stringify(routeSimplyfied);
                 if (toEqual != routeEqualizer) {
@@ -27,11 +26,11 @@ const extractor = function (basePath, targetComponentFile, targetSassFile, produ
                 } else {
                     console.log("No changes");
                 }
-            }catch (e) {
+            } catch (e) {
                 console.log("Routes extract problem");
                 console.log(stdout);
                 console.log("------------------");
-                console.log(basePath+"/"+command);
+                console.log(basePath + "/" + command);
 
                 throw "Can't extract routes";
             }
@@ -43,7 +42,7 @@ const extractor = function (basePath, targetComponentFile, targetSassFile, produ
     });
 };
 
-generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET, BASE_PATH, production) {
+generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET, BASE_PATH, production) {
     let ComponentFileContent = "";
     let ComponentFileContentMapFilesX = {};
     let SassFileContent = "";
@@ -62,7 +61,6 @@ generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_T
                 .replace(/\}/g, "_")
                 .replace(/\-/g, "_");
 
-
             let tmpNamespace = name.split("_")[0];
 
             if (namespace[tmpNamespace] === undefined) {
@@ -72,9 +70,10 @@ generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_T
 
             if (!production) {
                 ComponentFileContent += "import " + name + " from '" + componentPath.replace(/\\/g, "/") + "';\n";
-                ComponentFileContent += " export { " + name + "}; \n";
+                //ComponentFileContent += " export { " + name + "}; \n";
             }
-            conf[i].component = name;
+            conf[i].component = "||" + name + "||";
+            conf[i].componentName = name;
             conf[i].index = namespace[tmpNamespace].length - 1;
             conf[i].namespace = tmpNamespace;
 
@@ -86,7 +85,6 @@ generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_T
                 delete conf[i]._debug;
             }
 
-
             if (fs.existsSync(sassPath)) {
                 SassFileContent += `.${name}\n`;
                 SassFileContent += `    @import "${sassPath.replace(/\\/g, "/")}";\n`;
@@ -96,13 +94,22 @@ generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_T
         ComponentFileContentMapFilesX[i] = conf[i];
     }
 
-    if(production) {
-        Object.entries(namespace).map(function ([namespace, entries]) {
-            ComponentFileContent += "export const " + namespace + "_export = () => Promise.all([ \t\n" + entries.map(entry => "import( /* webpackChunkName: \"" + namespace + "_ns\" */   '" + entry + "')").join(",\t\n") + "\n\t]);";
+    if (production) {
+        Object.entries(namespace).map(function([namespace, entries]) {
+            ComponentFileContent +=
+                "export const " +
+                namespace +
+                "_export = () => Promise.all([ \t\n" +
+                entries
+                    .map((entry) => 'import( /* webpackChunkName: "' + namespace + "_ns\" */   '" + entry + "')")
+                    .join(",\t\n") +
+                "\n\t]);";
         });
     }
 
-    ComponentFileContent += `\nexport const ViewFileMap = ${JSON.stringify(ComponentFileContentMapFilesX, null, 2)} ;`;
+    let txt = JSON.stringify(ComponentFileContentMapFilesX, null, 2);
+    txt = txt.replace(/\|\|\"/g, "").replace(/\"\|\|/g, "");
+    ComponentFileContent += `\nexport const ViewFileMap = ${txt} ;`;
     fs.writeFileSync(SAVE_COMPONENT_TARGET, ComponentFileContent);
     fs.writeFileSync(SAVE_SASS_TARGET, SassFileContent);
 };
