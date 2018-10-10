@@ -4,6 +4,7 @@ const path = require("path");
 let routeEqualizer = "";
 
 const extractor = function(basePath, targetComponentFile, targetSassFile, production = false) {
+    production = false;
     let command = "php bin/console debug:router --json";
 
     console.log("Route check ...");

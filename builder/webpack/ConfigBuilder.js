@@ -126,7 +126,7 @@ module.exports = function(input) {
 
     var conf = {
         context: resolve(__dirname, ""),
-        devtool: input.PRODUCTION ? "cheap-module-eval-source-map" : "cheap-module-eval-source-map", //,
+        devtool: input.PRODUCTION ? "none" : "cheap-module-eval-source-map", //,
         devtool: false,
 
         resolve: {

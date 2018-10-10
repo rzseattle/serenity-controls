@@ -80,7 +80,7 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        if (PRODUCTION) {
+                        if (PRODUCTION && false) {
                             // todo ogarnąć typowanie asynchroniczne
                             // @ts-ignore
                             const result = await this.routes[el.namespace + "_export"]();
@@ -99,7 +99,7 @@ class Router {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
                     if (el.component) {
-                        if (PRODUCTION) {
+                        if (PRODUCTION && false) {
                             // todo ogarnąć typowanie asynchroniczne
                             // @ts-ignore
                             const result = await this.routes[el.namespace + "_export"]();
