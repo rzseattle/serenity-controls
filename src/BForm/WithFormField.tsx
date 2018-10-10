@@ -2,7 +2,7 @@ import * as React from "react";
 import { Copyable } from "../Copyable";
 import { Icon } from "../Icon";
 
-export interface IWithBootstrapFormFieldProps {
+export interface IwithFormFieldProps {
     /**
      * Label of field
      */
@@ -24,8 +24,8 @@ export interface IWithBootstrapFormFieldProps {
 }
 
 export const withFormField = <P extends object>(Component: React.ComponentType<P>) =>
-    class WithBootstrap extends React.Component<P & IWithBootstrapFormFieldProps, any> {
-        public static defaultProps: Partial<IWithBootstrapFormFieldProps> = {
+    class WithBootstrap extends React.Component<P & IwithFormFieldProps, any> {
+        public static defaultProps: Partial<IwithFormFieldProps> = {
             layoutType: "default",
             addInputClass: true,
         };

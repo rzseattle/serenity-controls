@@ -6,7 +6,7 @@
     "types": "./lib/index.d.ts",
     "scripts": {
         "dev": "webpack-dev-server -d ",
-        "build:babel": "babel --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
+        "build:babel": "babel --watch --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
         "build:tsc": "tsc --emitDeclarationOnly --project ./ --outDir ./lib ",
         "build": "rimraf lib/* && yarn run build:babel && yarn run build:tsc && node sass-copy.js",
         "postinstall": "yarn run build",

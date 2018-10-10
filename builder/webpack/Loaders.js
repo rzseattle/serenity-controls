@@ -8,7 +8,7 @@ var getLoaders = function(production, input) {
     let loaders = {
         rules: [
             {
-                test: [/\.js$/, /\.es6$/],
+                test: [/\.js$/, /\.es6$/, /\.tsx/, /\.ts$/],
                 exclude: path.resolve(input.BASE_PATH, "node_modules"),
                 loaders: [
                     {
@@ -36,12 +36,13 @@ var getLoaders = function(production, input) {
                                         modules: false,
                                     },
                                 ],
+                                "@babel/preset-typescript",
                                 "@babel/react",
                             ],
 
                             plugins: [
-                                "transform-react-constant-elements",
-                                "transform-react-inline-elements",
+                                /*"transform-react-constant-elements",
+                                "transform-react-inline-elements",*/
                                 "@babel/plugin-syntax-jsx",
                                 "@babel/plugin-syntax-dynamic-import",
 
@@ -54,7 +55,7 @@ var getLoaders = function(production, input) {
                 ],
             },
 
-            {
+            /*{
                 test: [/\.tsx/, /\.ts$/],
                 loaders: [
                     {
@@ -70,9 +71,9 @@ var getLoaders = function(production, input) {
                             transpileOnly: true,
                             forceIsolatedModules: true,
                             reportFiles: [
-                                "views/**/*.{ts,tsx}",
-                                "vendor/arrow/**/*.{ts,tsx}",
-                                "node_modules_shared/src/**/*.{ts,tsx}",
+                                "views/!**!/!*.{ts,tsx}",
+                                "vendor/arrow/!**!/!*.{ts,tsx}",
+                                "node_modules_shared/src/!**!/!*.{ts,tsx}",
                             ],
                             useBabel: true,
                             babelCore: "@babel/core",
@@ -109,7 +110,7 @@ var getLoaders = function(production, input) {
                         },
                     },
                 ],
-            },
+            },*/
 
             {
                 test: /\.(sa|sc|c)ss$/,

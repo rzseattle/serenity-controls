@@ -1,4 +1,6 @@
-import * as NotificationSystem from "react-notification-system";
+import NotificationSystem from "react-notification-system";
+
+
 import * as React from "react";
 
 import { ServerErrorPresenter } from "./ServerErrorPresenter";

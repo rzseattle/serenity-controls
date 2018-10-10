@@ -1,5 +1,4 @@
 import * as React from "react";
-import "./Shadow.sass";
 import { alertDialog } from "../ConfirmDialog";
 
 interface ITooltipProps {

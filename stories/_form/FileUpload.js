@@ -1,5 +1,5 @@
 import React from 'react';
-import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, withBootstrapFormField} from '../../src/ctrl/form/BForm'
+import {BForm, BText, BSwitch, BSelect, BCheckboxGroup, BTextarea, BButtonsBar, BDate, BFile, withFormField} from '../../src/ctrl/form/BForm'
 
 export default class FileUpload extends React.Component {
 
@@ -37,7 +37,7 @@ export default class FileUpload extends React.Component {
 
         const server = 'http://localhost:3001';
 
-        let OInput = withBootstrapFormField((props) => <input type="file" {...props} onChange={this.handleFileChange.bind(this)}/>, false)
+        let OInput = withFormField((props) => <input type="file" {...props} onChange={this.handleFileChange.bind(this)}/>, false)
 
         return (
             <BForm

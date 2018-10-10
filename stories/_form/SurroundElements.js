@@ -1,5 +1,5 @@
 import React from 'react';
-import {withBootstrapFormField, BForm} from '../../src/ctrl/form/BForm'
+import {withFormField, BForm} from '../../src/ctrl/form/BForm'
 import {Select, Text, Textarea} from '../../src/ctrl/Fields'
 
  class SurroundElements extends React.Component {
@@ -18,9 +18,9 @@ import {Select, Text, Textarea} from '../../src/ctrl/Fields'
 
     render() {
 
-        const WrappedText = withBootstrapFormField(Text);
-        const WrappedSelect = withBootstrapFormField( Select );
-        const WrappedTextarea = withBootstrapFormField( Textarea );
+        const WrappedText = withFormField(Text);
+        const WrappedSelect = withFormField( Select );
+        const WrappedTextarea = withFormField( Textarea );
 
 
         return (
