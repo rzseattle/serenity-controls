@@ -98,7 +98,13 @@
         "uuid": "^3.1.0",
         "webpack": "^4.20.2",
         "webpack-cli": "^3.1.2",
-        "webpack-dev-server": "^3.1.1"
+        "webpack-dev-server": "^3.1.1",
+        "@types/moment": "^2.13.0",
+        "@types/qs": "^6.5.1",
+        "@types/react-css-modules": "^4.6.2",
+        "@types/react-dates": "^17.1.2",
+        "@types/react-dom": "^16.0.9",
+        "@types/uuid": "^3.4.4"
     },
     "devDependencies": {
         "@storybook/addon-actions": "^4.0.0-alpha.22",
@@ -109,15 +115,11 @@
         "@storybook/addon-viewport": "^4.0.0-alpha.22",
         "@storybook/addons": "^4.0.0-alpha.21",
         "@storybook/react": "^4.0.0-alpha.21",
-        "@types/moment": "^2.13.0",
-        "@types/qs": "^6.5.1",
-        "@types/react-css-modules": "^4.6.2",
-        "@types/react-dates": "^17.1.2",
-        "@types/react-dom": "^16.0.9",
+
         "@types/storybook__addon-actions": "^3.4.1",
         "@types/storybook__addon-knobs": "^3.4.1",
         "@types/storybook__react": "^3.0.9",
-        "@types/uuid": "^3.4.4",
+
         "chokidar": "^2.0.0",
         "mkdirp": "^0.5.1",
         "node-glob": "^1.2.0",
