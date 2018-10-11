@@ -133,7 +133,6 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
                         },
                     }}
                 />
-                <textarea disabled={true} value={draftToHtml(convertToRaw(editorState.getCurrentContent()))} />
             </>
         );
     }
