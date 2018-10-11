@@ -10,12 +10,36 @@ const values: IOption[] = mockData.slice(0, 30).map((el) => ({
     label: el.first_name + " " + el.last_name,
 }));
 
+class TMP extends React.Component<any, any> {
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            value: "xxx",
+        };
+    }
+
+    public render() {
+        return (
+            <>
+                <a
+                    onClick={() => {
+                        this.setState({ value: "bbb" });
+                    }}
+                >
+                    xxx
+                </a>
+                <Wysiwyg value={this.state.value} onChange={(ev) => this.setState({ value: ev.value })} />
+            </>
+        );
+    }
+}
+
 storiesOf("Wysiwig Field", module)
     .addDecorator(withKnobs)
     .add("Base", () => {
         return (
             <Panel>
-                <Wysiwyg value={text("Label", "Hello Storybook")} onChange={(ev) => console.log(ev.value)} />
+                <TMP />
             </Panel>
         );
     });

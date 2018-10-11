@@ -2,9 +2,11 @@ import React from "react";
 import { addDecorator } from "@storybook/react";
 import { configSet } from "../src/backoffice/Config";
 import "./Stories.sass";
-import { fI18n } from "../src/lib";
+import { fI18n, langContainer } from "../src/lib";
 
 import { I18nextProvider } from "react-i18next"; // the initialized i18next instance
+
+langContainer.add("pl", () => import("../src/translations/i18n.pl"));
 
 const config = {
     translations: {

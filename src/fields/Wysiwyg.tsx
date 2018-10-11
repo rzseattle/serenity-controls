@@ -1,10 +1,16 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
+import "./Wysiwyg.sass";
+// @ts-ignore
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+// @ts-ignore
+import { Editor } from "react-draft-wysiwyg";
+// @ts-ignore
+import draftToHtml from "draftjs-to-html";
+// @ts-ignore
+import htmlToDraft from "html-to-draftjs";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-// @ts-ignore
-import CKEditor from "@ckeditor/ckeditor5-react";
-// @ts-ignore
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { LoadingIndicator } from "../LoadingIndicator";
 
 export interface IWysiwygProps extends IFieldProps {
@@ -12,10 +18,7 @@ export interface IWysiwygProps extends IFieldProps {
     value?: string;
 }
 
-export class Wysiwyg extends React.PureComponent<IWysiwygProps, any> {
-    private editor: any;
-    private initialValue: string;
-
+export class Wysiwyg extends React.Component<IWysiwygProps, any> {
     public static defaultProps: Partial<IWysiwygProps> = {
         editable: true,
         style: {},
@@ -25,11 +28,46 @@ export class Wysiwyg extends React.PureComponent<IWysiwygProps, any> {
     constructor(props: IWysiwygProps) {
         super(props);
 
+        const html = props.value;
+        const contentBlock = htmlToDraft(html);
+        let editorState = EditorState.createEmpty();
+
+        if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            editorState = EditorState.createWithContent(contentState);
+        }
+
         this.state = {
             libsLoaded: false,
-            value: props.value,
+            value: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+            editorState,
+            prevValue: props.value,
         };
-        this.initialValue = props.value;
+    }
+
+    public static getDerivedStateFromProps(props: IWysiwygProps, state) {
+        if (props.value !== state.prevValue) {
+            if (props.value != state.value) {
+                const html = props.value;
+                const contentBlock = htmlToDraft(html);
+
+                if (contentBlock) {
+                    const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                    const editorState = EditorState.createWithContent(contentState);
+
+                    return {
+                        value: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+                        editorState,
+                        prevValue: props.value,
+                    };
+                }
+            }
+
+            return {
+                prevValue: props.value,
+            };
+        }
+        return null;
     }
 
     public handleOnChange(value: string, event: any) {
@@ -43,11 +81,16 @@ export class Wysiwyg extends React.PureComponent<IWysiwygProps, any> {
         }
     }
 
-    public componentDidUpdate(prevProps: IWysiwygProps) {
-        this.setState({ value: this.props.value }, () => {
-            this.editor.setData(this.props.value);
-        });
-    }
+    public onEditorStateChange = (editorState: any) => {
+        const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        this.setState(
+            {
+                value,
+                editorState,
+            },
+            () => this.handleOnChange(value, null),
+        );
+    };
 
     public render() {
         const props = this.props;
@@ -64,19 +107,34 @@ export class Wysiwyg extends React.PureComponent<IWysiwygProps, any> {
             return <LoadingIndicator />;
         }
 
+        const { editorState } = this.state;
         return (
-            <CKEditor
-                editor={ClassicEditor}
-                data={this.initialValue}
-                onInit={(editor: any) => {
-                    this.editor = editor;
-                    editor.ui.view.editable.editableElement.style.minHeight = '300px';
-                }}
-                onChange={(event: any, editor: any) => {
-                    const data = editor.getData();
-                    this.handleOnChange(data, event);
-                }}
-            />
+            <>
+                <Editor
+                    editorState={editorState}
+                    editorClassName="w-wysiwyg-editor"
+                    toolbarClassName="w-wysiwyg-toolbar"
+                    onEditorStateChange={this.onEditorStateChange}
+                    toolbar={{
+                        options: [
+                            "inline",
+                            "blockType",
+                            "fontSize",
+                            "list",
+                            "textAlign",
+                            "link",
+                            "image",
+                            "remove",
+                            "history",
+                        ],
+                        inline: {
+                            options: ["bold", "italic", "underline", "strikethrough", "superscript", "subscript"],
+                            inDropdown: true,
+                        },
+                    }}
+                />
+                <textarea disabled={true} value={draftToHtml(convertToRaw(editorState.getCurrentContent()))} />
+            </>
         );
     }
 }
