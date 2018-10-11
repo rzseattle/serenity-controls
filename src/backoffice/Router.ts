@@ -73,6 +73,7 @@ class Router {
                     break;
                 }
             } else {
+                console.log(path +" == " + i);
                 if (path == i) {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
