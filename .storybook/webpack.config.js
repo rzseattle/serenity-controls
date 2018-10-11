@@ -48,7 +48,7 @@ module.exports = {
                         loader: "sass-loader",
                         query: {
                             sourceMap: true,
-                            //includePaths: ["node_modules"]
+                            includePaths: ["node_modules"]
                         },
                     },
                 ],
@@ -153,7 +153,7 @@ module.exports = {
                 NODE_ENV: JSON.stringify("production"),
             },
         }),
-         new HardSourceWebpackPlugin({
+         /*new HardSourceWebpackPlugin({
             // Either an absolute path or relative to webpack's options.context.
             cacheDirectory: path.resolve(__dirname, "../node_modules/hard-source/[confighash]"),
             // Either an absolute path or relative to webpack's options.context.
@@ -166,7 +166,7 @@ module.exports = {
                 directories: [],
                 files: ["yarn.lock"],
             },
-        }),
+        }),*/
         /*new TypedocWebpackPlugin({
             name: 'Contoso',
             //mode: 'file',

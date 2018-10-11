@@ -35,7 +35,8 @@ addDecorator((story) => {
 
 require("./Panel/index.stories");
 require("./LoadingIndicator/index.stories");
-require("./FormFields/ConnectionField.stories");
+require("./FormFields/index.stories");
+
 require("./Tabs/index.stories.tsx");
 require("./Placeholder/index.stories");
 require("./Overlays/Modal/index.stories");

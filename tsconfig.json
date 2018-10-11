@@ -42,6 +42,6 @@
     "exclude": ["resources", "vendor", "assets", "data", "node_modules"],
     "include": [
         "./src/**/*"
-        //, "./stories/**/*"
+        , "./stories/**/*"
     ]
 }
