@@ -45,7 +45,7 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
         };
     }
 
-    public static getDerivedStateFromProps(props: IWysiwygProps, state) {
+    public static getDerivedStateFromProps(props: IWysiwygProps, state: any) {
         if (props.value !== state.prevValue) {
             if (props.value != state.value) {
                 const html = props.value;
