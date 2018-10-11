@@ -88,7 +88,7 @@ class Router {
                         } else {
                             // alert(el.component);
                             Component = el.component;
-                            Component = this.routes[el.component];
+                            //Component = this.routes[el.component];
                         }
                     }
                     extendedInfo = el;

@@ -1,6 +1,5 @@
 import NotificationSystem from "react-notification-system";
 
-
 import * as React from "react";
 
 import { ServerErrorPresenter } from "./ServerErrorPresenter";
@@ -146,7 +145,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         }
 
         return (
-            <div className={ComponentInfo && ComponentInfo.extendedInfo.component}>
+            <div className={ComponentInfo && ComponentInfo.extendedInfo.componentName}>
                 {!PRODUCTION && this.props.isSub == false && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
 
                 <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)} />

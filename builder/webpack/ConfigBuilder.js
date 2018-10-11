@@ -127,7 +127,7 @@ module.exports = function(input) {
     var conf = {
         context: resolve(__dirname, ""),
         devtool: input.PRODUCTION ? "none" : "cheap-module-eval-source-map", //,
-        devtool: false,
+        // devtool: false,
 
         resolve: {
             extensions: [".js", ".ts", ".tsx"],

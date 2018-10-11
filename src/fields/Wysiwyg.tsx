@@ -27,8 +27,8 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
 
     constructor(props: IWysiwygProps) {
         super(props);
-
-        const html = props.value;
+        const proposedValue = props.value !== null ? props.value : "";
+        const html = proposedValue;
         const contentBlock = htmlToDraft(html);
         let editorState = EditorState.createEmpty();
 
@@ -41,14 +41,15 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
             libsLoaded: false,
             value: draftToHtml(convertToRaw(editorState.getCurrentContent())),
             editorState,
-            prevValue: props.value,
+            prevValue: proposedValue,
         };
     }
 
     public static getDerivedStateFromProps(props: IWysiwygProps, state: any) {
-        if (props.value !== state.prevValue) {
-            if (props.value != state.value) {
-                const html = props.value;
+        const proposedValue = props.value !== null ? props.value : "";
+        if (proposedValue !== state.prevValue) {
+            if (proposedValue != state.value) {
+                const html = proposedValue;
                 const contentBlock = htmlToDraft(html);
 
                 if (contentBlock) {
@@ -58,13 +59,13 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
                     return {
                         value: draftToHtml(convertToRaw(editorState.getCurrentContent())),
                         editorState,
-                        prevValue: props.value,
+                        prevValue: proposedValue,
                     };
                 }
             }
 
             return {
-                prevValue: props.value,
+                prevValue: proposedValue,
             };
         }
         return null;
@@ -112,6 +113,7 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
             <>
                 <Editor
                     editorState={editorState}
+                    wrapperClassName="w-wysiwyg-wrapper"
                     editorClassName="w-wysiwyg-editor"
                     toolbarClassName="w-wysiwyg-toolbar"
                     onEditorStateChange={this.onEditorStateChange}
