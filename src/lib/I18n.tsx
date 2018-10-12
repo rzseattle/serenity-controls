@@ -17,7 +17,7 @@ class LangContainer {
         if (this.langs[lang] !== undefined) {
             this.langs[lang]().then((result) => callback(result));
         } else {
-            alert("Language is not defined");
+            console.log(`Lang ${lang} is not defined`);
         }
     };
 }
