@@ -29,16 +29,19 @@ interface ITbodyProps {
     loading: boolean;
 }
 
-export default class Tbody extends React.Component<ITbodyProps> {
+export default class Tbody extends React.PureComponent<ITbodyProps> {
     constructor(props: ITbodyProps) {
         super(props);
     }
 
     public shouldComponentUpdate(nextProps: ITbodyProps, nextState: ITbodyProps) {
-        return !deepIsEqual(
+        const ret = !deepIsEqual(
             [this.props.data, this.props.selection, this.props.columns, this.props.selectable],
             [nextProps.data, nextProps.selection, nextProps.columns, nextProps.selectable],
+            true,
         );
+
+        return ret;
     }
 
     public groupByGetInfo = (row1: any, row2: any) => {
@@ -143,6 +146,7 @@ export class Row extends React.PureComponent<any, any> {
     public setData(index: string, data: any) {
         this.data[index] = data;
     }
+
     public getData(index: string, defaultVal: any) {
         return this.data[index] || defaultVal;
     }

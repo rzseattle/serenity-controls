@@ -2,7 +2,7 @@ export const deepCopy = (obj: any) => {
     return x(Array.isArray(obj) ? [] : {}, obj);
 };
 
-export const deepIsEqual = (a: any, b: any) => {
+export const deepIsEqual = (a: any, b: any, ignoreFunctions: boolean = false) => {
     if (a === b) {
         return true;
     }
@@ -16,7 +16,7 @@ export const deepIsEqual = (a: any, b: any) => {
             return false;
         }
         for (i = 0; i < a.length; i++) {
-            if (!deepIsEqual(a[i], b[i])) {
+            if (!deepIsEqual(a[i], b[i], ignoreFunctions)) {
                 return false;
             }
         }
@@ -57,11 +57,14 @@ export const deepIsEqual = (a: any, b: any) => {
         }
 
         for (i = 0; i < keys.length; i++) {
-            if (!deepIsEqual(a[keys[i]], b[keys[i]])) {
+            if (!deepIsEqual(a[keys[i]], b[keys[i]], ignoreFunctions)) {
                 return false;
             }
         }
+        return true;
+    }
 
+    if (typeof a === "function" && typeof b === "function" && ignoreFunctions) {
         return true;
     }
 

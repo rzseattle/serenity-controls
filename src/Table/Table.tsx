@@ -285,7 +285,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         for (const i in columns) {
             preparedColumns[i] = this.prepareColumnData(columns[i]);
         }
-        if (!deepIsEqual(columns, this.state.columns)) {
+        if (!deepIsEqual(preparedColumns, this.state.columns)) {
             this.setState({ columns: preparedColumns });
         }
 
