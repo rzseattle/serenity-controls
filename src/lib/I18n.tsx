@@ -1,9 +1,9 @@
 import * as i18n from "i18next";
 // import * as LanguageDetector from "i18next-browser-languagedetector";
-import { reactI18nextModule } from "react-i18next";
+import {reactI18nextModule} from "react-i18next";
 
-import { configGet } from "../backoffice/Config";
-import { Comm } from "./Comm";
+import {configGet} from "../backoffice/Config";
+import {Comm} from "./Comm";
 
 declare var PRODUCTION: any;
 
@@ -15,7 +15,9 @@ class LangContainer {
 
     public get = (lang: string, callback: ((result: any) => any)) => {
         if (this.langs[lang] !== undefined) {
-            this.langs[lang]().then((result) => callback(result));
+            this.langs[lang]().then((result) => {
+                callback(result);
+            });
         } else {
             console.log(`Lang ${lang} is not defined`);
         }
@@ -62,11 +64,11 @@ const instance = i18n
         saveMissing: true,
         ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
-            if (!PRODUCTION) {
-                if (lng[0] != "pl") {
-                    console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
-                }
-            }
+            //if (!PRODUCTION) {
+            //if (lng[0] != "pl") {
+            console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
+            //}
+            //}
         },
         react: {
             wait: true,
@@ -76,4 +78,4 @@ instance.on("languageChanged", (lng) => {
     Comm._get(configGet("translations.backendLangChanged").replace("{{lng}}", lng));
 });
 const fI18n = instance;
-export { fI18n, langContainer };
+export {fI18n, langContainer};

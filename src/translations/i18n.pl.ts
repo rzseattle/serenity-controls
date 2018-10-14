@@ -1,60 +1,64 @@
 export const lang = {
-    translations: {
-      logout: "Wyloguj się",
-      search: "Szukaj",
-      add: "Dodaj",
-      cancel: "Anuluj",
-      print: "Drukuj",
+    frontend: {
+        logout: "Wyloguj się",
+        search: "Szukaj",
+        add: "Dodaj",
+        cancel: "Anuluj",
+        print: "Drukuj",
 
-      fields: {
-        select: {
-          choose: "Wybierz",
+        fields: {
+            select: {
+                choose: "Wybierz",
+            },
+            checkboxgroup: {
+                selectAll: "Wybierz wszystkie",
+                deselectAll: "Odznacz wrzystkie",
+            },
+            date: {
+                fillDate: "Podaj datę",
+            },
+            connectionField: {
+                noConnections: "Brak powiązań",
+            },
         },
-        date: {
-          fillDate: "Podaj datę",
+        filters: {
+            apply: "Zastosuj",
+            date: {
+                dateIsSet: "Data ustalona",
+                dateIsNotSet: "Data nie ustalona",
+            },
+            select: {
+                chooseOption: "Wybierz opcję",
+            },
+            numeric: {
+                like: "zawiera",
+                equal: "równa",
+                smaller: "mniejsza",
+                smallerEqual: "mniejsza równa",
+                greater: "większa",
+                greaterEqual: "większa równia",
+                between: "pomiędzy",
+                in: "wiele wartości ( rozdziel enterem )",
+            },
+            text: {
+                like: "zawiera",
+                equals: "równa",
+                differentThan: "różne",
+                notLike: "nie zawiera",
+                startsWith: "zaczyna się od",
+                endsWith: "kończy się na",
+            },
         },
-        connectionField: {
-          noConnections: "Brak powiązań",
+        comments: {
+            addComment: "Dodaj komentarz",
         },
-      },
-      filters: {
-        apply: "Zastosuj",
-        date: {
-          dateIsSet: "Data ustalona",
-          dateIsNotSet: "Data nie ustalona",
+        printContainer: {
+            printPreview: "Podgląd wydruku",
         },
-        select: {
-          chooseOption: "Wybierz opcję",
+        table: {
+            footer: {
+                onPage: "Na stronie",
+            },
         },
-        numeric: {
-          like: "zawiera",
-          equal: "równa",
-          smaller: "mniejsza",
-          smallerEqual: "mniejsza równa",
-          greater: "większa",
-          greaterEqual: "większa równia",
-          between: "pomiędzy",
-          in: "wiele wartości ( rozdziel enterem )",
-        },
-        text: {
-          like: "zawiera",
-          equals: "równa",
-          differentThan: "różne",
-          notLike: "nie zawiera",
-          startsWith: "zaczyna się od",
-          endsWith: "kończy się na",
-        },
-      },
-      comments: {
-        addComment: "Dodaj komentarz",
-      },
-      printContainer: {
-        printPreview: "Podgląd wydruku",
-      },
-      table: {
-        footer: {
-          onPage: "Na stronie",
-        },
-      },
     },
-}
+};

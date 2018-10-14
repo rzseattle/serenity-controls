@@ -10,11 +10,11 @@ const values: IOption[] = mockData.slice(0, 30).map((el) => ({
     label: el.first_name + " " + el.last_name,
 }));
 
-class TMP extends React.Component<any, any> {
+class WysiwigDemo extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
-            value: "xxx",
+            value: "This is wysig value",
         };
     }
 
@@ -23,10 +23,11 @@ class TMP extends React.Component<any, any> {
             <>
                 <a
                     onClick={() => {
-                        this.setState({ value: "bbb" });
+                        this.setState({ value: "Changed value" });
                     }}
+                    className="btn btn-default"
                 >
-                    xxx
+                    Change content of wyswig
                 </a>
                 <Wysiwyg value={this.state.value} onChange={(ev) => this.setState({ value: ev.value })} />
             </>
@@ -34,12 +35,33 @@ class TMP extends React.Component<any, any> {
     }
 }
 
-storiesOf("Wysiwig Field", module)
+storiesOf("Field: Wysiwig ", module)
     .addDecorator(withKnobs)
     .add("Base", () => {
         return (
             <Panel>
-                <TMP />
+                <div style={{ height: 800 }}>
+                    <WysiwigDemo />
+                </div>
             </Panel>
         );
-    });
+    })
+    .add("Controled", () => {
+        return (
+            <Panel>
+                <div style={{ height: 800 }}>
+                    <Wysiwyg value={text("Content", "This is default content")}  />
+                </div>
+            </Panel>
+        );
+    })
+    .add("Not editable", () => {
+        return (
+            <Panel>
+                <div style={{ height: 800 }}>
+                    <Wysiwyg value={text("Content", "This is default content")}  editable={false} />
+                </div>
+            </Panel>
+        );
+    })
+;

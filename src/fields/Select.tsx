@@ -19,6 +19,8 @@ export interface ISelectProps extends IFieldProps {
     allowClear?: boolean;
     value: string | number;
     disabledClass?: string;
+    showSearchField?: boolean;
+    minLengthToShowSearchField?: number;
 }
 
 interface ISelectState {
@@ -34,6 +36,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         editable: true,
         allowClear: false,
         autoFocus: false,
+        showSearchField: true,
+        minLengthToShowSearchField: 6,
         style: {},
     };
     private dropdown: HTMLDivElement;
@@ -80,18 +84,6 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
     }
 
-    /*    public handleOnChange(e ) {
-        if (this.props.onChange) {
-            this.props.onChange({
-                name: this.props.name,
-                type: "select",
-                value: e.target.value,
-                selectedIndex: e.target.selectedIndex,
-                event: e,
-            });
-        }
-    }*/
-
     public handleDropdownChange = () => {
         let options = this.props.options;
         if (!Array.isArray(options)) {
@@ -116,6 +108,23 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         );
     };
 
+    private handleChange = (value: any) => {
+        if (this.props.onChange) {
+            this.props.onChange({
+                name: this.props.name,
+                type: "select",
+                value,
+                selectedIndex: null,
+                event: null,
+            });
+        }
+    };
+
+    private handleClear = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        this.handleChange(null);
+    };
+
     private onKeyDown = (keyName: string, e: React.KeyboardEvent, handle: any) => {
         e.preventDefault();
         if (keyName == "up") {
@@ -125,18 +134,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 highlightedIndex: Math.min(this.state.filteredOptions.length - 1, this.state.highlightedIndex + 1),
             });
         } else if (keyName == "enter") {
-            if (this.props.onChange) {
-                const el = this.state.filteredOptions[this.state.highlightedIndex];
-                if (el !== undefined) {
-                    this.props.onChange({
-                        name: this.props.name,
-                        type: "select",
-                        value: el.value,
-                        selectedIndex: null,
-                        event: e,
-                    });
-                    this.handleDropdownChange();
-                }
+            const el = this.state.filteredOptions[this.state.highlightedIndex];
+            if (el !== undefined) {
+                this.handleChange(el.value);
+
+                this.handleDropdownChange();
             }
         }
     };
@@ -210,6 +212,12 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             {this.props.placeholder ? this.props.placeholder : fI18n.t("frontend:fields.select.choose")}
                         </div>
                     )}
+                    {props.allowClear &&
+                        props.value !== null && (
+                            <div className="w-select-clear" onClick={this.handleClear}>
+                                <Icon name={"ChromeClose"} />
+                            </div>
+                        )}
                     <Icon name={"ChevronDown"} />
                 </div>
 
@@ -227,15 +235,16 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             onMouseDown={(e) => e.preventDefault()}
                         >
                             <Hotkeys keyName="up,down,enter" onKeyDown={this.onKeyDown}>
-                                {parsetOptions.length > 6 && (
-                                    <input
-                                        ref={(el) => (this.searchField = el)}
-                                        type={"text"}
-                                        className={"form-control"}
-                                        onChange={this.searchTextChanged}
-                                        value={this.state.searchedTxt}
-                                    />
-                                )}
+                                {parsetOptions.length > props.minLengthToShowSearchField &&
+                                    props.showSearchField && (
+                                        <input
+                                            ref={(el) => (this.searchField = el)}
+                                            type={"text"}
+                                            className={"form-control"}
+                                            onChange={this.searchTextChanged}
+                                            value={this.state.searchedTxt}
+                                        />
+                                    )}
                                 {this.state.filteredOptions.map((el, index) => (
                                     <div
                                         key={el.value}
@@ -246,15 +255,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                                                 : "")
                                         }
                                         onClick={(e) => {
-                                            if (this.props.onChange) {
-                                                this.props.onChange({
-                                                    name: this.props.name,
-                                                    type: "select",
-                                                    value: el.value,
-                                                    selectedIndex: null,
-                                                    event: e,
-                                                });
-                                            }
+                                            this.handleChange(el.value);
                                             this.handleDropdownChange();
                                         }}
                                     >

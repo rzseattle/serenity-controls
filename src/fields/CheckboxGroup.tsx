@@ -1,103 +1,131 @@
-import { checkIncludes } from "./Utils";
+import { checkIncludes, toOptions } from "./Utils";
 import { IFieldProps, IOption } from "./Interfaces";
 import React from "react";
+import { Checkbox } from "./Checkbox";
+import "./CheckboxGroup.sass";
+import { deepCopy, fI18n } from "../lib";
 
 export interface ICheckboxGroupProps extends IFieldProps {
-    options: Array<{ value: string | number; label: string }> | { [key: string]: string };
-    value: string[];
-    inline: boolean;
+    options: IOption[] | { [key: string]: string };
+    value: string[] | number[];
+    columns?: "none" | "horizontal" | "vertical";
+    columnsCount?: number;
+    selectTools?: boolean;
 }
 
 export class CheckboxGroup extends React.PureComponent<ICheckboxGroupProps, any> {
     public static defaultProps: Partial<ICheckboxGroupProps> = {
         value: [],
         editable: true,
+        columns: "none",
+        columnsCount: 4,
+        selectTools: false,
     };
 
-    public handleOnChange = (e: React.FormEvent<HTMLInputElement>) => {
-        const el = e.target as HTMLInputElement;
-        let value: string[] = this.props.value ? this.props.value.slice(0) : [];
-        if (el.checked) {
-            value.push(el.value);
-        } else {
-            value = value.filter((element) => element != el.value);
-        }
-
+    public fireOnChangeExternal(values: any[]) {
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
                 type: "checkboxgroup",
-                value,
-                event: e,
+                value: values,
+                event: null,
             });
         }
+    }
+
+    public handleOnChange = (value: string | number, on: boolean) => {
+        let values = this.props.value;
+        if (on) {
+            (values as string[]).push(value as string);
+        } else {
+            values = (values as string[]).filter((element: string | number) => element != value);
+        }
+
+        this.fireOnChangeExternal(values);
+    };
+
+    public selectAll = () => {
+        const options = toOptions(this.props.options);
+        const values = options.map((el) => el.value);
+        this.fireOnChangeExternal(values);
+    };
+
+    public deselectAll = () => {
+        this.fireOnChangeExternal([]);
     };
 
     public render() {
         const props = this.props;
+
+        const options = toOptions(props.options);
+
         if (!props.editable) {
-            if (Array.isArray(props.options)) {
-                const elements = [];
+            const elements = [];
 
-                for (const i in props.value) {
-                    const element = props.options.filter((v) => {
-                        return v.value == props.value[i];
-                    });
-                    elements.push(<li key={element[0].value}>{element[0].label}</li>);
-                }
-
-                if (elements.length > 0) {
-                    return <ul className="w-field-presentation w-field-presentation-checkboxgroup">{elements}</ul>;
-                }
-
-                return (
-                    <div className="w-field-presentation w-field-presentation-checkboxgroup">
-                        {props.value.join(",")}
-                    </div>
-                );
-            } else {
-                return (
-                    <ul className="w-field-presentation w-field-presentation-checkboxgroup">
-                        {/*{props.value.map(val => <li key={val}>{props.options[val]}</li>)}*/}
-                        TODO
-                    </ul>
-                );
+            for (const i in props.value) {
+                const element = options.filter((v) => {
+                    return v.value == props.value[i];
+                });
+                elements.push(<li key={element[0].value}>{element[0].label}</li>);
             }
+
+            if (elements.length > 0) {
+                return <ul className="w-field-presentation w-field-presentation-checkboxgroup">{elements}</ul>;
+            }
+
+            return (
+                <div className="w-field-presentation w-field-presentation-checkboxgroup">{props.value.join(",")}</div>
+            );
         }
+
+        const columnWidth: React.CSSProperties =
+            props.columns != "none" ? { width: 100 / props.columnsCount + "%" } : {};
+
+        const columDivider = Math.ceil(options.length / props.columnsCount);
 
         const gen = (value: string | number, label: string | number) => {
             const field = (
-                <input
-                    type="checkbox"
-                    name={props.name}
+                <Checkbox
+                    checked={checkIncludes(props.value, value)}
                     value={value}
-                    checked={props.value && checkIncludes(props.value, value)}
-                    onChange={this.handleOnChange}
-                    disabled={props.disabled}
+                    label={label as string}
+                    onChange={(ev) => {
+                        this.handleOnChange(value, ev.data.checked);
+                    }}
                 />
             );
-            if (props.inline == true) {
-                return (
-                    <label className="checkbox-inline" key={value}>
-                        {field}
-                        {label}
-                    </label>
-                );
-            } else {
-                return (
-                    <div className="checkbox" key={value}>
-                        <label>
-                            {field} {label}
-                        </label>
-                    </div>
-                );
-            }
+
+            return <div style={props.columns == "horizontal" ? columnWidth : {}}> {field}</div>;
         };
+
         return (
-            <div>
-                {Array.isArray(props.options)
-                    ? props.options.map((el: IOption) => gen(el.value, el.label))
-                    : Object.entries(props.options).map(([value, label]) => gen(value, label))}
+            <div className="w-checkboxgroup">
+                <div
+                    className={
+                        "w-checkboxgroup-container" + (props.columns != "none" && " w-checkboxgroup-container-inline")
+                    }
+                >
+                    {props.columns != "vertical" && options.map((el: IOption) => gen(el.value, el.label))}
+
+                    {props.columns == "vertical" &&
+                        Array.from({ length: props.columnsCount }, (v, k) => k).map((el) => {
+                            return (
+                                <div key={el} style={columnWidth}>
+                                    {options
+                                        .slice(el * columDivider, columDivider * (el + 1))
+                                        .map((item: IOption) => gen(item.value, item.label))}
+                                </div>
+                            );
+                        })}
+                </div>
+
+                {props.selectTools && (
+                    <div className="w-checkboxgroup-tools">
+                        <hr />
+                        <a onClick={this.selectAll}>{fI18n.t("frontend:fields.checkboxgroup.selectAll")}</a> |
+                        <a onClick={this.deselectAll}>{fI18n.t("frontend:fields.checkboxgroup.deselectAll")}</a>
+                    </div>
+                )}
             </div>
         );
     }

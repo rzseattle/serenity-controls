@@ -5,11 +5,11 @@ addDecorator(withInfo);
 const req = require.context("../stories", true, /.stories.tsx$/);
 function loadStories() {
     req.keys().forEach((filename) => {
-        console.log(filename);
+        //console.log(filename);
         if (filename == "./index.stories.tsx") {
             req(filename);
         } else {
-            console.log(filename, "dabug");
+            //console.log(filename, "dabug");
         }
     });
 }

@@ -1,8 +1,8 @@
-import {IFieldProps} from "./Interfaces";
+import { IFieldProps } from "./Interfaces";
 import * as React from "react";
-import {fI18n} from "../lib/I18n";
-import {Moment} from "moment";
-
+import { fI18n } from "../lib/I18n";
+import { Moment } from "moment";
+import "./Date.sass";
 let datePicker: any = null;
 let moment: any = null;
 
@@ -64,7 +64,7 @@ export class Date extends React.Component<IDateProps, any> {
     }
 
     public handleOnChange(date: Moment) {
-        this.setState({date, value: date});
+        this.setState({ date, value: date });
 
         // this.refs.hidden.value = date;
         if (this.props.onChange) {
@@ -88,7 +88,7 @@ export class Date extends React.Component<IDateProps, any> {
             return (
                 <div className={"w-filter w-filter-date"}>
                     <div>
-                        <i className="fa fa-cog fa-spin"/>
+                        <i className="fa fa-cog fa-spin" />
                     </div>
                 </div>
             );
@@ -102,7 +102,7 @@ export class Date extends React.Component<IDateProps, any> {
                     date={this.state.date}
                     onDateChange={(date: Moment) => this.handleOnChange(date)}
                     focused={this.state.focused}
-                    onFocusChange={({focused}: any) => this.setState({focused})}
+                    onFocusChange={({ focused }: any) => this.setState({ focused })}
                     isOutsideRange={() => false}
                     disabled={props.disabled}
                     placeholder={props.placeholder ? props.placeholder : fI18n.t("frontend:fields.date.fillDate")}

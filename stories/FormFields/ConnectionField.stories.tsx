@@ -28,7 +28,7 @@ const dataSource = (input: IConnectionFieldInput) =>
         });
     });
 
-storiesOf("Connection Field", module)
+storiesOf("Field: Connection", module)
     .add("Base", () => {
         return (
             <Panel>
@@ -224,4 +224,21 @@ storiesOf("Connection Field", module)
                 </div>
             </Panel>
         );
-    });
+    })
+    .add("Not editable", () => {
+        return (
+            <Panel>
+                <div style={{ width: 300 }}>
+                    <ConnectionsField
+                        value={[1, 2, 3]}
+                        fillItems={true}
+                        searchResultProvider={dataSource}
+                        verticalDisplay={true}
+                        editable={false}
+                    />
+                </div>
+            </Panel>
+        );
+    })
+
+;

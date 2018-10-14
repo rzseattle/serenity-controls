@@ -6,7 +6,15 @@ import { fI18n, langContainer } from "../src/lib";
 
 import { I18nextProvider } from "react-i18next"; // the initialized i18next instance
 
-langContainer.add("pl", () => import("../src/translations/i18n.pl"));
+langContainer.add(
+    "pl",
+    () =>
+        new Promise((resolve) => {
+            import("../src/translations/i18n.pl").then((result) => {
+                resolve({ lang: result.lang });
+            });
+        }),
+);
 
 const config = {
     translations: {
@@ -18,24 +26,26 @@ const config = {
 
 configSet(config);
 
-// i18n.changeLanguage("pl");
+//fI18n.changeLanguage("pl");
 
 addDecorator((story) => {
     return (
         <>
-            <I18nextProvider i18n={fI18n}>
-                <div className="w-panel-container">
-                    <div className="w-panel-body-container">
-                        <div className="w-panel-body">{story()}</div>
+            <div className="w-panel-container">
+                <div className="w-panel-body-container">
+                    <div className="w-panel-body">
+                        <I18nextProvider i18n={fI18n}>{story()}</I18nextProvider>
                     </div>
                 </div>
-            </I18nextProvider>
+            </div>
+
             <div id="modal-root" />
         </>
     );
 });
 
-require("./Panel/index.stories");
+import "./Panel/index.stories";
+
 require("./LoadingIndicator/index.stories");
 require("./FormFields/index.stories");
 
