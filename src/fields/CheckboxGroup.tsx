@@ -1,9 +1,9 @@
-import { checkIncludes, toOptions } from "./Utils";
-import { IFieldProps, IOption } from "./Interfaces";
+import {checkIncludes, toOptions} from "./Utils";
+import {IFieldProps, IOption} from "./Interfaces";
 import React from "react";
-import { Checkbox } from "./Checkbox";
+import {Checkbox} from "./Checkbox";
 import "./CheckboxGroup.sass";
-import { deepCopy, fI18n } from "../lib";
+import {deepCopy, deepIsEqual, fI18n} from "../lib";
 
 export interface ICheckboxGroupProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
@@ -13,7 +13,7 @@ export interface ICheckboxGroupProps extends IFieldProps {
     selectTools?: boolean;
 }
 
-export class CheckboxGroup extends React.PureComponent<ICheckboxGroupProps, any> {
+export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
     public static defaultProps: Partial<ICheckboxGroupProps> = {
         value: [],
         editable: true,
@@ -21,6 +21,17 @@ export class CheckboxGroup extends React.PureComponent<ICheckboxGroupProps, any>
         columnsCount: 4,
         selectTools: false,
     };
+
+    shouldComponentUpdate(
+        nextProps: Readonly<ICheckboxGroupProps>,
+        nextState: Readonly<any>,
+        nextContext: any,
+    ): boolean {
+        return !deepIsEqual(
+            [this.props.value, this.props.options, this.props.columns, this.props.columnsCount, this.props.selectTools],
+            [nextProps.value, nextProps.options, nextProps.columns, nextProps.columnsCount, nextProps.selectTools],
+        );
+    }
 
     public fireOnChangeExternal(values: any[]) {
         if (this.props.onChange) {
@@ -55,6 +66,7 @@ export class CheckboxGroup extends React.PureComponent<ICheckboxGroupProps, any>
     };
 
     public render() {
+        console.log("lala");
         const props = this.props;
 
         const options = toOptions(props.options);
@@ -79,7 +91,7 @@ export class CheckboxGroup extends React.PureComponent<ICheckboxGroupProps, any>
         }
 
         const columnWidth: React.CSSProperties =
-            props.columns != "none" ? { width: 100 / props.columnsCount + "%" } : {};
+            props.columns != "none" ? {width: 100 / props.columnsCount + "%"} : {};
 
         const columDivider = Math.ceil(options.length / props.columnsCount);
 
@@ -108,20 +120,20 @@ export class CheckboxGroup extends React.PureComponent<ICheckboxGroupProps, any>
                     {props.columns != "vertical" && options.map((el: IOption) => gen(el.value, el.label))}
 
                     {props.columns == "vertical" &&
-                        Array.from({ length: props.columnsCount }, (v, k) => k).map((el) => {
-                            return (
-                                <div key={el} style={columnWidth}>
-                                    {options
-                                        .slice(el * columDivider, columDivider * (el + 1))
-                                        .map((item: IOption) => gen(item.value, item.label))}
-                                </div>
-                            );
-                        })}
+                    Array.from({length: props.columnsCount}, (v, k) => k).map((el) => {
+                        return (
+                            <div key={el} style={columnWidth}>
+                                {options
+                                    .slice(el * columDivider, columDivider * (el + 1))
+                                    .map((item: IOption) => gen(item.value, item.label))}
+                            </div>
+                        );
+                    })}
                 </div>
 
                 {props.selectTools && (
                     <div className="w-checkboxgroup-tools">
-                        <hr />
+                        <hr/>
                         <a onClick={this.selectAll}>{fI18n.t("frontend:fields.checkboxgroup.selectAll")}</a> |
                         <a onClick={this.deselectAll}>{fI18n.t("frontend:fields.checkboxgroup.deselectAll")}</a>
                     </div>
