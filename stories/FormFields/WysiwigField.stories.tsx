@@ -29,7 +29,12 @@ class WysiwigDemo extends React.Component<any, any> {
                 >
                     Change content of wyswig
                 </a>
-                <Wysiwyg value={this.state.value} onChange={(ev) => this.setState({ value: ev.value })} />
+                <Wysiwyg
+                    value={this.state.value}
+                    onChange={(ev) => {
+                        this.setState({ value: ev.value });
+                    }}
+                />
             </>
         );
     }
@@ -50,7 +55,7 @@ storiesOf("Field: Wysiwig ", module)
         return (
             <Panel>
                 <div style={{ height: 800 }}>
-                    <Wysiwyg value={text("Content", "This is default content")}  />
+                    <Wysiwyg value={text("Content", "This is default content")} />
                 </div>
             </Panel>
         );
@@ -59,9 +64,8 @@ storiesOf("Field: Wysiwig ", module)
         return (
             <Panel>
                 <div style={{ height: 800 }}>
-                    <Wysiwyg value={text("Content", "This is default content")}  editable={false} />
+                    <Wysiwyg value={text("Content", "This is default content")} editable={false} />
                 </div>
             </Panel>
         );
-    })
-;
+    });
