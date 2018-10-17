@@ -5,6 +5,7 @@ import { Modal } from "../Modal";
 import { RelativePositionPresets } from "../Positioner";
 import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
 import {Icon} from "../Icon";
+import {PrintJSON} from "../PrintJSON";
 
 interface ITheadProps {
     selectable: boolean;
@@ -160,6 +161,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                             shadow={false}
                             relativePositionConf={RelativePositionPresets.bottomRight}
                             className={"filter-modal"}
+                            {...filters[0].config.modalProps}
                         >
                             <div
                                 className={

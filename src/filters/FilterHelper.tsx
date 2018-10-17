@@ -7,11 +7,13 @@ import TextFilter from "./TextFilter";
 import ConnectionFilter from "./ConnectionFilter";
 import SelectFilter from "./SelectFilter";
 import SwitchFilter from "./SwitchFilter";
+import { IModalProps } from "../Modal";
 
 export class FilterHelper {
     private data: IFilter;
 
     constructor(initData: Partial<IFilter>) {
+        initData.config = { ...initData.config, modalProps: {} };
         this.data = {
             field: null,
             component: null,
@@ -88,6 +90,11 @@ export class FilterHelper {
             },
             component: SwitchFilter,
         });
+    }
+
+    public setModalProperties(props: Partial<IModalProps>) {
+        this.data.config.modalProps = props;
+        return this;
     }
 
     public get(): IFilter {

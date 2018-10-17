@@ -15,4 +15,3 @@ export interface IFilterValue {
     labelCaptionSeparator: string;
     label: string;
 }
-

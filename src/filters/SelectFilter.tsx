@@ -1,10 +1,12 @@
 import * as React from "react";
-import {fI18n} from "../lib/I18n";
-import AbstractFilter, {IFilterProps} from "./AbstractFilter";
-import {IOption} from "../fields/Interfaces";
+import { fI18n } from "../lib/I18n";
+import AbstractFilter, { IFilterProps } from "./AbstractFilter";
+import { IOption } from "../fields/Interfaces";
 import ReactDOM from "react-dom";
 
 import "./SelectFilter.sass";
+import { CheckboxGroup } from "../fields";
+import { toOptions } from "../fields/Utils";
 
 export interface ISelectFilterProps extends IFilterProps {
     config: {
@@ -60,22 +62,31 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
     }
 
     public getValue() {
-        const select = ReactDOM.findDOMNode(this.select) as HTMLSelectElement;
+        let values = [];
+        let labels = [];
+        if (this.props.config.multiselect) {
+            values = this.state.value;
+            labels = toOptions(this.props.config.content)
+                .filter((el) => this.state.value.includes(el.value))
+                .map((el) => el.label);
+        } else {
+            const select = ReactDOM.findDOMNode(this.select) as HTMLSelectElement;
 
-        let values = [].filter
-            .call(select.options, (o: HTMLOptionElement) => {
-                return o.selected;
-            })
-            .map((o: HTMLOptionElement) => {
-                return o.value;
-            });
-        const labels = [].filter
-            .call(select.options, (o: HTMLOptionElement) => {
-                return o.selected;
-            })
-            .map((o: HTMLOptionElement) => {
-                return o.innerHTML;
-            });
+            values = [].filter
+                .call(select.options, (o: HTMLOptionElement) => {
+                    return o.selected;
+                })
+                .map((o: HTMLOptionElement) => {
+                    return o.value;
+                });
+            labels = [].filter
+                .call(select.options, (o: HTMLOptionElement) => {
+                    return o.selected;
+                })
+                .map((o: HTMLOptionElement) => {
+                    return o.innerHTML;
+                });
+        }
 
         values = this.props.config.multiselect ? values : values[0];
         const condition = this.props.config.multiselect ? "IN" : "==";
@@ -100,14 +111,14 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
     };
 
     public handleApply = () => {
-        this.setState({show: false});
+        this.setState({ show: false });
         if (this.props.onApply) {
             this.props.onApply(this.getValue());
         }
     };
 
     public render() {
-        const {config, caption} = this.props;
+        const { config, caption } = this.props;
         let content: IOption[];
         if (!Array.isArray(this.props.config.content)) {
             content = Object.entries(this.props.config.content).map(([value, label]) => ({
@@ -121,36 +132,50 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
         return (
             <div className={"w-filter w-filter-select"}>
                 {caption != "" && <div className={"w-filter-title"}>{caption}</div>}
-                <select
-                    autoFocus={config.disableAutoFocus === true}
-                    ref={(el) => (this.select = el)}
-                    multiple={this.props.config.multiselect}
-                    size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}
-                    onChange={this.handleChange}
-                    value={this.state.value}
-                >
-                    {!this.props.config.multiselect && (
-                        <option key={"-1default"} value="">
-                            {fI18n.t("frontend:filters.select.chooseOption")}
-                        </option>
-                    )}
-                    {content.map((el) => (
-                        <option
-                            key={el.value}
-                            value={el.value}
-                            onMouseDown={(e: React.MouseEvent<HTMLOptionElement>) => {
-                                if (this.props.config.multiselect) {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    e.currentTarget.selected = !e.currentTarget.selected;
-                                    return false;
-                                }
-                            }}
-                        >
-                            {el.label}
-                        </option>
-                    ))}
-                </select>
+
+                {this.props.config.multiselect && (
+                    <div>
+                        <CheckboxGroup
+                            options={content}
+                            value={this.state.value}
+                            onChange={(ev) => this.setState({ value: ev.value })}
+                            columns="vertical"
+                            columnsCount={3}
+                        />
+                    </div>
+                )}
+                {!this.props.config.multiselect && (
+                    <select
+                        autoFocus={config.disableAutoFocus === true}
+                        ref={(el) => (this.select = el)}
+                        multiple={this.props.config.multiselect}
+                        size={this.props.config.multiselect ? Object.keys(this.props.config.content).length : 1}
+                        onChange={this.handleChange}
+                        value={this.state.value}
+                    >
+                        {!this.props.config.multiselect && (
+                            <option key={"-1default"} value="">
+                                {fI18n.t("frontend:filters.select.chooseOption")}
+                            </option>
+                        )}
+                        {content.map((el) => (
+                            <option
+                                key={el.value}
+                                value={el.value}
+                                onMouseDown={(e: React.MouseEvent<HTMLOptionElement>) => {
+                                    if (this.props.config.multiselect) {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        e.currentTarget.selected = !e.currentTarget.selected;
+                                        return false;
+                                    }
+                                }}
+                            >
+                                {el.label}
+                            </option>
+                        ))}
+                    </select>
+                )}
                 {this.props.showApply && (
                     <div>
                         <button className="w-filter-apply" onClick={this.handleApply}>
