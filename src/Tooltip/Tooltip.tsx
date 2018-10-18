@@ -18,11 +18,12 @@ interface ITooltipProps {
      */
     loadingIndicatorText?: string;
 
-    content?: string | Promise<any>;
+    content?: string | Promise<any> | any;
 
     template?: (data: any) => JSX.Element | string;
 
     theme?: string;
+    activation?: "hover" | "click";
 
     /**
      * Custom class name
@@ -45,6 +46,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
     public static defaultProps: ITooltipProps = {
         visible: true,
         theme: "dark",
+        activation: "hover",
         relativeSettings: RelativePositionPresets.bottomLeft,
     };
 
@@ -87,7 +89,12 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
         const props = this.props;
         const state = this.state;
         return (
-            <span ref={this.container} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+            <span
+                ref={this.container}
+                onMouseOver={props.activation == "hover" || this.state.mouseOver ? this.mouseOver : null}
+                onClick={props.activation == "click" ? this.mouseOver : null}
+                onMouseOut={this.mouseOut}
+            >
                 {props.children}
                 {state.mouseOver && (
                     <Positioner
@@ -97,7 +104,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
                     >
                         <div
                             className={"w-tooltip-hover-" + props.theme}
-                            onMouseEnter={this.mouseOver}
+                            onMouseOver={this.mouseOver}
                             onMouseOut={this.mouseOut}
                         >
                             {state.loading ? (
