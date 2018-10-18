@@ -42,6 +42,9 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
         if (nextState.libsLoaded != this.state.libsLoaded) {
             return true;
         }
+        if (nextProps.editable != this.props.editable) {
+            return true;
+        }
 
         return false;
     }
