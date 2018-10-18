@@ -204,9 +204,10 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
                 this.props.relativeSettings,
             );
             const result = calculator.calculate();
-
             this.applyStyles(result);
         };
+        // todo sprawdzić dlaczego dopiero podwójne wywołanie właściwie pozycjonuje lelement
+        calculatePos();
         calculatePos();
 
         if (this.positionObserver === null) {
