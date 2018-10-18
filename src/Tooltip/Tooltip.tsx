@@ -1,5 +1,11 @@
 import * as React from "react";
-import { alertDialog } from "../ConfirmDialog";
+
+import { Positioner, RelativePositionPresets } from "../Positioner";
+
+import "./Tooltip.sass";
+import { alertDialog } from "../AlertDialog";
+import { LoadingIndicator } from "../LoadingIndicator";
+import { IPositionCalculatorOptions } from "../lib";
 
 interface ITooltipProps {
     /**
@@ -8,32 +14,104 @@ interface ITooltipProps {
     visible?: boolean;
 
     /**
-     * Display loading indicator
-     */
-    showLoadingIndicator?: boolean;
-    /**
      * Loading indicator text
      */
-    showLoadingIndicatorText?: string;
+    loadingIndicatorText?: string;
+
+    content?: string | Promise<any>;
+
+    template?: (data: any) => JSX.Element | string;
+
+    theme?: string;
 
     /**
      * Custom class name
      */
     customClass?: string;
+
+    relativeSettings?: IPositionCalculatorOptions;
 }
 
-export default class Tooltip extends React.PureComponent<ITooltipProps> {
+interface ITooltipState {
+    mouseOver: boolean;
+    content: string | any;
+    loading: boolean;
+}
+
+export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltipState> {
+    private container = React.createRef<HTMLSpanElement>();
+
+    private timeout: number = 0;
     public static defaultProps: ITooltipProps = {
         visible: true,
-        showLoadingIndicator: false,
+        theme: "dark",
+        relativeSettings: RelativePositionPresets.bottomLeft,
     };
 
     constructor(props: ITooltipProps) {
         super(props);
+
+        const isPromise = props.content && (props.content as Promise<any>).then !== undefined;
+
+        this.state = {
+            mouseOver: false,
+            loading: isPromise,
+            content: isPromise ? null : props.content,
+        };
     }
 
+    public mouseOver = () => {
+        if (this.timeout !== 0) {
+            clearTimeout(this.timeout);
+            this.timeout = 0;
+        }
+
+        this.setState({ mouseOver: true });
+        const isPromise = this.props.content && (this.props.content as Promise<any>).then !== undefined;
+        if (isPromise) {
+            (this.props.content as Promise<any>).then((result) => {
+                this.setState({ content: result, loading: false });
+            });
+        }
+    };
+    public mouseOut = () => {
+        if (this.timeout === 0) {
+            this.timeout = window.setTimeout(() => {
+                this.setState({ mouseOver: false });
+                this.timeout = 0;
+            }, 10);
+        }
+    };
+
     public render() {
-        return <>in progress</>;
+        const props = this.props;
+        const state = this.state;
+        return (
+            <span ref={this.container} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+                {props.children}
+                {state.mouseOver && (
+                    <Positioner
+                        relativeTo={() => this.container.current}
+                        animation={"from-up"}
+                        relativeSettings={props.relativeSettings}
+                    >
+                        <div
+                            className={"w-tooltip-hover-" + props.theme}
+                            onMouseEnter={this.mouseOver}
+                            onMouseOut={this.mouseOut}
+                        >
+                            {state.loading ? (
+                                <LoadingIndicator text={props.loadingIndicatorText} />
+                            ) : props.template ? (
+                                props.template(state.content)
+                            ) : (
+                                state.content
+                            )}
+                        </div>
+                    </Positioner>
+                )}
+            </span>
+        );
     }
 }
 
