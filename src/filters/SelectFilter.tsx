@@ -140,7 +140,7 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
                             value={this.state.value}
                             onChange={(ev) => this.setState({ value: ev.value })}
                             columns="vertical"
-                            columnsCount={3}
+                            columnsCount={1}
                         />
                     </div>
                 )}

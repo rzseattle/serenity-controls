@@ -10,6 +10,8 @@ import {
     SwitchFilter,
     TextFilter,
 } from "../../src/filters";
+import { Checkbox } from "../../src/fields/Checkbox";
+import CheckboxFilter from "../../src/filters/CheckboxFilter";
 
 const onApply = (input: IFilterValue) => alert(input.value + " " + input.condition);
 
@@ -102,6 +104,31 @@ storiesOf("Filters", module)
                                 { value: "4", label: "Option 5" },
                             ],
                             multiselect: true,
+                        }}
+                        onApply={onApply}
+                    />
+                </div>
+            </>
+        ),
+    )
+    .add(
+        "Checkbox",
+
+        () => (
+            <>
+                <div style={containerStyle}>
+                    <CheckboxFilter
+                        caption={"Name (multiselect)"}
+                        field="someFieldName"
+                        showApply={true}
+                        config={{
+                            content: [
+                                { value: "1", label: "Option 1" },
+                                { value: "2", label: "Option 2" },
+                                { value: "3", label: "Option 3" },
+                                { value: "4", label: "Option 5" },
+                            ],
+                            columnsCount: 2
                         }}
                         onApply={onApply}
                     />
