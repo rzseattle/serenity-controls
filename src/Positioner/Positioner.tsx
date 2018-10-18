@@ -13,8 +13,8 @@ interface IRelativePositionPresets {
     topLeftCorner: IPositionCalculatorOptions;
     bottomRightCorner: IPositionCalculatorOptions;
     bottomLeftCorner: IPositionCalculatorOptions;
-    leftMiddle: IPositionCalculatorOptions;
-    rightMiddle: IPositionCalculatorOptions;
+    middleLeft: IPositionCalculatorOptions;
+    middleRight: IPositionCalculatorOptions;
     bottomRight: IPositionCalculatorOptions;
     bottomLeft: IPositionCalculatorOptions;
     topRight: IPositionCalculatorOptions;
@@ -46,15 +46,14 @@ export const RelativePositionPresets: IRelativePositionPresets = {
         relativeToAt: "bottom left",
         itemAt: "top right",
     },
-    leftMiddle: {
+    middleLeft: {
         relativeToAt: "middle left",
         itemAt: "middle right",
     },
-    rightMiddle: {
+    middleRight: {
         relativeToAt: "middle right",
         itemAt: "middle left",
     },
-
     bottomRight: {
         relativeToAt: "bottom right",
         itemAt: "top right",
