@@ -28,7 +28,7 @@ const baseColumns = [
                 { value: "Female", label: "Female" },
                 { value: "Male", label: "Male" },
             ]).get(),
-        ),
+        ).headerTooltip("La gender machen"),
     Col.text("ip_address", "Ip").className("right"),
     Col.date("date", "Date"),
     Col.money("price", "Price")
@@ -43,11 +43,11 @@ const baseColumns = [
 
 const provider = (query: IDataQuery) => {
     return new Promise<ITableDataInput>((resolve) => {
-        /*resolve({
-            data: [], //(mockData.slice((query.currentPage - 1) * query.onPage, query.currentPage * query.onPage) as any[]),
+        resolve({
+            data: mockData.slice((query.currentPage - 1) * query.onPage, query.currentPage * query.onPage) as any[],
             countAll: mockData.length,
             debug: false,
-        });*/
+        });
     });
 };
 

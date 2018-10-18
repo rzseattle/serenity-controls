@@ -44,7 +44,7 @@ addDecorator((story) => {
     );
 });
 
-import "./Panel/index.stories";
+require("./Panel/index.stories");
 
 require("./LoadingIndicator/index.stories");
 require("./FormFields/index.stories");
@@ -52,6 +52,7 @@ require("./FormFields/index.stories");
 require("./Tabs/index.stories.tsx");
 require("./Placeholder/index.stories");
 require("./Overlays/Modal/index.stories");
+require("./Overlays/Tooltip/index.stories");
 // require("./FormFields/index.stories");
 require("./Table/index.stories");
 require("./filters/index.stories");
@@ -61,7 +62,7 @@ require("./Overlays/ConfirmDialog/index.stories");
 require("./Overlays/Positioner/index.stories");
 
 /*
-    
+
 */
 
 // require("./fields/filesList.stories");
