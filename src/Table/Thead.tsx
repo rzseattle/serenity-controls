@@ -4,8 +4,9 @@ import { IFilter } from "../filters/Intefaces";
 import { Modal } from "../Modal";
 import { RelativePositionPresets } from "../Positioner";
 import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
-import {Icon} from "../Icon";
-import {PrintJSON} from "../PrintJSON";
+import { Icon } from "../Icon";
+import { PrintJSON } from "../PrintJSON";
+import Tooltip from "../Tooltip/Tooltip";
 
 interface ITheadProps {
     selectable: boolean;
@@ -88,7 +89,12 @@ export default class Thead extends React.PureComponent<ITheadProps, any> {
                             >
                                 {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
                                 {column.header.icon && <Icon name={column.header.icon} />}
-                                {column.caption}
+
+                                {column.header.tooltip ? (
+                                    <Tooltip relativeSettings={RelativePositionPresets.topLeft} content={column.header.tooltip}>{column.caption}</Tooltip>
+                                ) : (
+                                    column.caption
+                                )}
                                 {column.filter.length > 0 && (
                                     <Component showApply={true} onApply={this.props.onFilterChanged} />
                                 )}
