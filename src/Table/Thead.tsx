@@ -88,12 +88,18 @@ export default class Thead extends React.PureComponent<ITheadProps, any> {
                                 /*onMouseLeave={this.handleMouseLeave.bind(this, index)}*/
                             >
                                 {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
-                                {column.header.icon && <Icon name={column.header.icon} />}
 
                                 {column.header.tooltip ? (
-                                    <Tooltip relativeSettings={RelativePositionPresets.topLeft} content={column.header.tooltip}>{column.caption}</Tooltip>
+                                    <Tooltip
+                                        relativeSettings={RelativePositionPresets.topMiddle}
+                                        content={column.header.tooltip}
+                                    >
+                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                    </Tooltip>
                                 ) : (
-                                    column.caption
+                                    <>
+                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                    </>
                                 )}
                                 {column.filter.length > 0 && (
                                     <Component showApply={true} onApply={this.props.onFilterChanged} />
