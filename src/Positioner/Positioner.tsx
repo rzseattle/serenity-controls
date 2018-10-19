@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Portal } from "../Portal";
 import { IPositionCalculatorOptions, PositionCalculator } from "../lib/PositionCalculator";
-import { deepCopy, deepIsEqual } from "../lib/JSONTools";
+import { deepCopy } from "../lib/JSONTools";
 import ResizeObserver from "resize-observer-polyfill";
 
 import "./Positioner.sass";
@@ -94,7 +94,8 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
         trackResize: false,
         animation: "none",
     };
-    public positionElement: HTMLDivElement; // = React.createRef<HTMLDivElement>();
+
+    private positionElement = React.createRef<HTMLDivElement>();
 
     private positionObserver: number = null;
     private resizeObserver: ResizeObserver = null;
@@ -136,7 +137,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
             document.removeEventListener("mousemove", this.mouseCursorObserver, false);
         }
         if (this.resizeObserver !== null) {
-            this.resizeObserver.unobserve(this.positionElement);
+            this.resizeObserver.unobserve(this.positionElement.current);
         }
     }
 
@@ -160,7 +161,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
         for (const name in styles) {
             // if (this.positionElement.style.hasOwnProperty(name)) {
             // @ts-ignore
-            this.positionElement.style[name] = styles[name] + "px";
+            this.positionElement.current.style[name] = styles[name] + "px";
             // }
         }
     };
@@ -182,7 +183,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
                     calculate();
                 }
             });
-            this.resizeObserver.observe(this.positionElement);
+            this.resizeObserver.observe(this.positionElement.current);
         }
     }
 
@@ -199,7 +200,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
             currentPosition = getCurrentCoordinates();
             const calculator = new PositionCalculator(
                 currentPosition,
-                this.positionElement,
+                this.positionElement.current,
                 this.props.relativeSettings,
             );
             const result = calculator.calculate();
@@ -237,7 +238,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
         });
 
         const calculatePos = () => {
-            const calculator = new PositionCalculator(getActualCoordinades(), this.positionElement, {
+            const calculator = new PositionCalculator(getActualCoordinades(), this.positionElement.current, {
                 relativeToAt: "middle middle",
                 itemAt: "middle middle",
             });
@@ -269,12 +270,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
     public render() {
         return (
             <Portal container={this.props.container}>
-                <div
-                    className="w-positioner"
-                    ref={(el) => {
-                        this.positionElement = el;
-                    }}
-                >
+                <div className="w-positioner" ref={this.positionElement}>
                     <div className={"w-position-animation-" + this.props.animation}>{this.props.children}</div>
                 </div>
             </Portal>

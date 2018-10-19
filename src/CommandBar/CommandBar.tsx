@@ -1,7 +1,8 @@
 import * as React from "react";
 import { fI18n } from "../lib";
-
-
+import { Icon } from "../Icon";
+import { CommandMenu } from "../CommandMenu";
+import "./CommandBar.sass";
 
 export interface ICommand {
     key: string;
@@ -21,7 +22,7 @@ interface IProps {
     zIndex?: number;
 }
 
-export default class CommandBar extends React.PureComponent<IProps> {
+export class CommandBar extends React.PureComponent<IProps> {
     public static defaultProps: Partial<IProps> = {
         isSearchBoxVisible: false,
         searchPlaceholderText: null,
@@ -35,6 +36,8 @@ export default class CommandBar extends React.PureComponent<IProps> {
             searchedText: "",
         };
     }
+
+    public handleExpandMenu = (item: ICommand, event: React.MouseEvent) => {};
 
     public handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ searchedText: event.target.value });
@@ -73,28 +76,62 @@ export default class CommandBar extends React.PureComponent<IProps> {
                 )}
                 <div className="menu-bar">
                     <div className="buttons-left">
-                        {this.props.items.map((item: ICommand | false, index: number) => {
+                        {this.props.items.map((item: ICommand | false) => {
                             if (item !== null && item !== false) {
-                                if (item.subItems !== undefined) {
-                                    alert("need implementation");
-                                } else {
-                                    return (
-                                        <a key={item.key} onClick={item.onClick}>
-                                            <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label}
-                                        </a>
-                                    );
-                                }
+                                return (
+                                    <>
+                                        <CommandMenu items={item.subItems} activation={"hover"}>
+                                            {(opened) => {
+                                                return (
+                                                    <a
+                                                        key={item.key}
+                                                        onClick={(event) =>
+                                                            item.subItems
+                                                                ? this.handleExpandMenu(item, event)
+                                                                : item.onClick(event)
+                                                        }
+                                                        className={opened && "w-command-bar-element-opened"}
+                                                    >
+                                                        {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
+                                                        {item.label}
+                                                        {item.subItems && (
+                                                            <Icon name={"ChevronDown"} />
+                                                        )}
+                                                    </a>
+                                                );
+                                            }}
+                                        </CommandMenu>
+                                    </>
+                                );
                             }
                             return null;
                         })}
                     </div>
                     <div className="buttons-right">
-                        {this.props.rightItems.map((item: ICommand | false, index: number) => {
+                        {this.props.rightItems.map((item: ICommand | false) => {
                             if (item !== null && item !== false) {
                                 return (
-                                    <a key={item.key} onClick={item.onClick} className="ms-font-m">
-                                        <i className={"ms-Icon ms-Icon--" + item.icon} /> {item.label}
-                                    </a>
+                                    <>
+                                        <CommandMenu items={item.subItems} activation={"hover"}>
+                                            {(opened) => {
+                                                return (
+                                                    <a
+                                                        key={item.key}
+                                                        onClick={(event) =>
+                                                            item.subItems
+                                                                ? this.handleExpandMenu(item, event)
+                                                                : item.onClick(event)
+                                                        }
+                                                        className={opened && "w-command-bar-element-opened"}
+                                                    >
+                                                        {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
+                                                        {item.label}
+                                                        {item.subItems && <Icon name="ChevronDown" />}
+                                                    </a>
+                                                );
+                                            }}
+                                        </CommandMenu>
+                                    </>
                                 );
                             }
                             return null;
@@ -105,5 +142,3 @@ export default class CommandBar extends React.PureComponent<IProps> {
         );
     }
 }
-
-export { CommandBar };

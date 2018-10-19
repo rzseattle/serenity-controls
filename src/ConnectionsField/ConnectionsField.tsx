@@ -337,7 +337,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                         (this.state.search.length > 0 || this.props.searchWithoutPhrase) && (
                             <Positioner
                                 relativeTo={() => this.inputContainer.current}
-                                relativeSettings={{ ...RelativePositionPresets.bottomMiddle, theSameWidth: true }}
+                                relativeSettings={{ ...RelativePositionPresets.bottomMiddle, widthCalc: "same" }}
                             >
                                 <div className="w-connections-field-results">
                                     {/*To jest test modala {this.state.selectedIndex}*/}

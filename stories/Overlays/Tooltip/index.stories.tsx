@@ -2,9 +2,11 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { Panel } from "../../../src/Panel";
-import { Shadow } from "../../../src/Shadow";
+
 import Tooltip from "../../../src/Tooltip/Tooltip";
 import { RelativePositionPresets } from "../../../src/Positioner";
+
+import "./Tooltip.stories.sass";
 
 storiesOf("Tooltip", module)
     .add("Base", () => {
@@ -139,6 +141,10 @@ storiesOf("Tooltip", module)
                 <hr />
                 <Tooltip content={"This is tooltip content"} theme="light">
                     <a style={{ color: "red" }}>light</a>
+                </Tooltip>
+                <hr />
+                <Tooltip content={"This is tooltip content"} layerClass={"custom-tooltip-class"}>
+                    <a style={{ color: "red" }}>custom class</a>
                 </Tooltip>
             </Panel>
         );

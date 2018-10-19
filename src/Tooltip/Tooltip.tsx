@@ -18,11 +18,25 @@ interface ITooltipProps {
      */
     loadingIndicatorText?: string;
 
+    /**
+     * Layer content
+     */
     content?: string | Promise<any> | any;
 
+    /**
+     * Layer content template
+     * @param data
+     */
     template?: (data: any) => JSX.Element | string;
 
-    theme?: string;
+    /**
+     * Theme
+     */
+    theme?: "dark" | "light";
+
+    /**
+     * Activattion terms
+     */
     activation?: "hover" | "click";
 
     /**
@@ -30,7 +44,25 @@ interface ITooltipProps {
      */
     customClass?: string;
 
+    /**
+     * Layer relative postiton settings
+     */
     relativeSettings?: IPositionCalculatorOptions;
+
+    /**
+     * Custom css class for layer
+     */
+    layerClass?: string;
+
+    /**
+     * On show event
+     */
+    onHide?: () => any;
+
+    /**
+     * On hide event
+     */
+    onShow?: () => any;
 }
 
 interface ITooltipState {
@@ -68,7 +100,11 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
             this.timeout = 0;
         }
 
-        this.setState({ mouseOver: true });
+        this.setState({ mouseOver: true }, () => {
+            if (this.props.onShow) {
+                this.props.onShow();
+            }
+        });
         const isPromise = this.props.content && (this.props.content as Promise<any>).then !== undefined;
         if (isPromise) {
             (this.props.content as Promise<any>).then((result) => {
@@ -79,7 +115,11 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
     public mouseOut = () => {
         if (this.timeout === 0) {
             this.timeout = window.setTimeout(() => {
-                this.setState({ mouseOver: false });
+                this.setState({ mouseOver: false }, () => {
+                    if (this.props.onHide) {
+                        this.props.onHide();
+                    }
+                });
                 this.timeout = 0;
             }, 10);
         }
@@ -90,6 +130,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
         const state = this.state;
         return (
             <span
+                className={"w-tooltip"}
                 ref={this.container}
                 onMouseOver={props.activation == "hover" || this.state.mouseOver ? this.mouseOver : null}
                 onClick={props.activation == "click" ? this.mouseOver : null}
@@ -103,7 +144,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
                         relativeSettings={props.relativeSettings}
                     >
                         <div
-                            className={"w-tooltip-hover-" + props.theme}
+                            className={props.layerClass ? props.layerClass : "w-tooltip-hover-" + props.theme}
                             onMouseOver={this.mouseOver}
                             onMouseOut={this.mouseOut}
                         >

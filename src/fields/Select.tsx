@@ -225,7 +225,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     <Positioner
                         relativeTo={() => this.presenter}
                         animation={"from-up"}
-                        relativeSettings={{ ...RelativePositionPresets.bottomLeft, theSameWidth: true }}
+                        relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
                     >
                         <div
                             className={"w-select-overlay"}

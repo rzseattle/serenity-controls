@@ -45,6 +45,8 @@ addDecorator((story) => {
 });
 
 require("./Panel/index.stories");
+require("./CommandBar/index.stories");
+require("./CommandMenu/index.stories");
 
 require("./LoadingIndicator/index.stories");
 require("./FormFields/index.stories");
@@ -52,6 +54,7 @@ require("./FormFields/index.stories");
 require("./Tabs/index.stories.tsx");
 require("./Placeholder/index.stories");
 require("./Overlays/Modal/index.stories");
+
 require("./Overlays/Tooltip/index.stories");
 // require("./FormFields/index.stories");
 require("./Table/index.stories");

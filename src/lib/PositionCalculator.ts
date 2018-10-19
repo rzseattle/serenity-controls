@@ -3,7 +3,8 @@ export interface IPositionCalculatorOptions {
     relativeToAt: string;
     offsetX?: number;
     offsetY?: number;
-    theSameWidth?: boolean;
+    // theSameWidth?: boolean;
+    widthCalc?: "none" | "same" | "min" | "max";
 }
 
 export class PositionCalculator {
@@ -15,7 +16,7 @@ export class PositionCalculator {
         relativeToAt: "top left",
         offsetX: 0,
         offsetY: 0,
-        theSameWidth: false,
+        widthCalc: "none",
     };
 
     constructor(
@@ -88,13 +89,22 @@ export class PositionCalculator {
 
         let itemPositionData = this.item.getBoundingClientRect();
 
-        if (this.options.theSameWidth) {
-            styles.width = targetPositionData.width;
+        if (this.options.widthCalc != "none") {
+            let widthToApply = itemPositionData.width;
+            if (this.options.widthCalc == "same") {
+                widthToApply = targetPositionData.width;
+            } else if (this.options.widthCalc == "max" && itemPositionData.width > targetPositionData.width) {
+                widthToApply = targetPositionData.width;
+            } else if (this.options.widthCalc == "min" && itemPositionData.width < targetPositionData.width) {
+                widthToApply = targetPositionData.width;
+            }
+
+            styles.width = widthToApply;
             itemPositionData = { ...itemPositionData };
             // @ts-ignore
-            itemPositionData.width = targetPositionData.width;
+            itemPositionData.width = widthToApply;
             // @ts-ignore
-            itemPositionData.right = itemPositionData.width + targetPositionData.width;
+            itemPositionData.right = itemPositionData.width + widthToApply;
         }
 
         // const correction = this.getItemContainerPositionCorrection();
@@ -130,13 +140,13 @@ export class PositionCalculator {
 
         if (styles.left < 0) {
             styles.left = 0;
-        } else if (styles.left as number + itemPositionData.width > window.innerWidth) {
+        } else if ((styles.left as number) + itemPositionData.width > window.innerWidth) {
             styles.left = window.innerWidth - itemPositionData.width;
         }
 
         if (styles.top < 0) {
             styles.top = 0;
-        } else if (styles.top as number + itemPositionData.height > window.innerHeight) {
+        } else if ((styles.top as number) + itemPositionData.height > window.innerHeight) {
             styles.top = window.innerHeight - itemPositionData.height;
         }
 
