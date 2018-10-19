@@ -10,6 +10,7 @@ interface IProps {
     items: ICommand[];
     children: (opened: boolean) => JSX.Element | string;
     activation?: "hover" | "click";
+    context?: any;
 }
 
 interface IState {
@@ -20,6 +21,7 @@ export class CommandMenu extends React.PureComponent<IProps, IState> {
     public static defaultProps: Partial<IProps> = {
         items: [],
         activation: "click",
+        context: null,
     };
 
     constructor(props: IProps) {
@@ -30,7 +32,7 @@ export class CommandMenu extends React.PureComponent<IProps, IState> {
     }
 
     public render() {
-        const { items, activation } = this.props;
+        const { items, activation, context } = this.props;
         if (items.length === 0) {
             return this.props.children(false);
         }
@@ -47,7 +49,7 @@ export class CommandMenu extends React.PureComponent<IProps, IState> {
                                 {data.map((item: ICommand | false, index: number) => {
                                     if (item !== null && item !== false) {
                                         return (
-                                            <div key={item.key} onClick={item.onClick}>
+                                            <div key={item.key} onClick={(event) => item.onClick(event, context)}>
                                                 {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
                                                 {item.label}
                                             </div>

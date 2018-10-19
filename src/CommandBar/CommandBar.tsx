@@ -8,7 +8,7 @@ export interface ICommand {
     key: string;
     icon?: string;
     label: string;
-    onClick?: (event: React.MouseEvent) => any;
+    onClick?: (event: React.MouseEvent, context: any) => any;
     subItems?: ICommand[];
 }
 
@@ -94,9 +94,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                     >
                                                         {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
                                                         {item.label}
-                                                        {item.subItems && (
-                                                            <Icon name={"ChevronDown"} />
-                                                        )}
+                                                        {item.subItems && <Icon name={"ChevronDown"} />}
                                                     </a>
                                                 );
                                             }}
