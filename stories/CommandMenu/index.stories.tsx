@@ -1,7 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { CommandBar } from "../../src/CommandBar";
 import { CommandMenu } from "../../src/CommandMenu";
 import "./CommandMenu.stories.sass";
 
