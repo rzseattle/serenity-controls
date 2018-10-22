@@ -2,12 +2,12 @@ import { Modal } from "../Modal";
 import { CommandBar } from "../CommandBar";
 import { printFile } from "../FilePrinter";
 import * as React from "react";
-import { IFile } from "./FileListsField";
+import { IFile, IFileViewerProps } from "./FileListsField";
 import { parsePath } from "./utils";
 import { ImageViewer } from "../viewers/ImageViewer";
 import { PDFViewer } from "../viewers/PDFViewer";
 
-const viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType }> = [
+const viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType<IFileViewerProps> }> = [
     {
         filter: /.(jpg|jpeg|png|gif)$/i,
         viewer: ImageViewer,
@@ -24,7 +24,7 @@ interface IPreviewModalProps {
 
 export const PreviewModal = (props: IPreviewModalProps) => {
     const { preview } = props;
-    let ViewerComponent = null;
+    let ViewerComponent: React.ComponentType<IFileViewerProps> = null;
     for (const element of viewerRegistry) {
         if ((preview.name && preview.name.match(element.filter)) || preview.path.match(element.filter)) {
             ViewerComponent = element.viewer;
