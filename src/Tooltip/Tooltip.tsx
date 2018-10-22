@@ -18,7 +18,7 @@ interface ITooltipProps {
      */
     loadingIndicatorText?: string;
 
-     /**
+    /**
      * Layer content
      */
     content?: string | any;
@@ -64,7 +64,7 @@ interface ITooltipProps {
      * On hide event
      */
     onShow?: () => any;
-    
+
     children: (opened: boolean) => any | any;
 }
 
@@ -78,7 +78,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
     private container = React.createRef<HTMLSpanElement>();
 
     private timeout: number = 0;
-    public static defaultProps: ITooltipProps = {
+    public static defaultProps: Partial<ITooltipProps> = {
         visible: true,
         theme: "dark",
         activation: "hover",
