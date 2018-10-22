@@ -13,7 +13,6 @@ import { LoadingIndicator } from "../LoadingIndicator";
 // @ts-ignore
 import Hotkeys from "react-hot-keys";
 
-import { Trans } from "react-i18next";
 import { IModalProps, Modal } from "../Modal";
 import { Select } from "../fields/Select";
 import { fI18n, Comm } from "../lib";
@@ -247,7 +246,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </div>
                             <div style={{ padding: 10 }}>
                                 <a href={Comm.basePath + "/access/logout"}>
-                                    <Icon name="SignOut" /> <Trans ns="frontend" i18nKey="logout" />
+                                    <Icon name="SignOut" /> {fI18n.t("frontend:logout")}
                                 </a>
                             </div>
                         </Modal>

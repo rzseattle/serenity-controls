@@ -1,31 +1,15 @@
 import * as React from "react";
 
-import { SortableContainer, SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
 import Dropzone from "react-dropzone";
 import { IFieldProps } from "../fields/Interfaces";
 
-import { CommandBar } from "../CommandBar";
-
-import { printFile } from "../FilePrinter";
-
-import { ImageViewer } from "..//viewers/ImageViewer";
-import { PDFViewer } from "../viewers/PDFViewer";
 import { fI18n } from "../lib";
-import { Modal } from "../Modal";
 import { alertDialog } from "../ConfirmDialog";
 import { Icon } from "../Icon";
-
-let baseUrl = "";
-if (window.location.host.indexOf("esotiq") != -1) {
-    baseUrl = "https://static.esotiq.com/";
-}
-
-const parsePath = (path: string) => {
-    if (path.charAt(0) != "/") {
-        path = "/" + path;
-    }
-    return baseUrl + path;
-};
+import { SortEnd } from "react-sortable-hoc";
+import { formatBytes, isImage, parsePath } from "./utils";
+import { SortableImageList } from "./SortableImageList";
+import { PreviewModal } from "./PreviewModal";
 
 export interface IFile {
     key: number;
@@ -39,12 +23,6 @@ export interface IFile {
     path: string;
 }
 
-const DragHandle = SortableHandle(() => (
-    <a className="w-gallery-drag">
-        <Icon name={"SIPMove"} />
-    </a>
-)); //
-
 const Progress = (props: { percent: number }) => {
     return (
         <div className="w-gallery-loader">
@@ -53,87 +31,7 @@ const Progress = (props: { percent: number }) => {
     );
 };
 
-interface IImageBoxProps {
-    file: IFile;
-    style: React.CSSProperties;
-    onClick: (index: number) => any;
-    _index: number;
-    onDelete: (index: number) => any;
-}
-
-const ImageBox = SortableElement((props: IImageBoxProps) => {
-    const file = props.file;
-    let isImage = false;
-    if (file.path.match(/.(jpg|jpeg|png|gif)$/i)) {
-        isImage = true;
-    }
-    if (file.type && file.type.indexOf("image") != -1) {
-        isImage = true;
-    }
-
-    const style = props.style || {};
-
-    if (!file.uploaded) {
-        /*let reader = new FileReader();
-    reader.addEventListener("load", function () {
-        preview.src = reader.result;
-    }, false);
-    reader.readAsDataURL(file.nativeObj);*/
-    }
-
-    return (
-        <div style={style}>
-            <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
-                <span>
-                    <span />
-                    {file.uploaded ? <img src={parsePath(file.path)} alt="" /> : <Icon name={"Upload"} />}
-
-                    <div className="w-gallery-on-hover">
-                        <a
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                props.onDelete(props._index);
-                            }}
-                            className="w-gallery-delete"
-                        >
-                            <Icon name={"Clear"} />{" "}
-                        </a>
-                        <DragHandle />
-                    </div>
-                </span>
-                <div className="w-gallery-name">{file.name}</div>
-            </div>
-        </div>
-    );
-});
-
-interface ISortableImageList {
-    files: IFile[];
-    itemStyle: React.CSSProperties;
-    onClick: (index: number) => any;
-    onDelete: (index: number) => any;
-}
-
-const SortableImageList = SortableContainer((props: ISortableImageList) => {
-    return (
-        <div className="w-gallery-list">
-            {props.files &&
-                props.files.map((file, index) => (
-                    <ImageBox
-                        file={file}
-                        key={file.name}
-                        index={index}
-                        _index={index}
-                        onClick={props.onClick}
-                        onDelete={props.onDelete}
-                        style={props.itemStyle}
-                    />
-                ))}
-        </div>
-    );
-});
-
-export interface IFileList extends IFieldProps {
+export interface IFileListProps extends IFieldProps {
     name?: string;
     value: IFile[];
     type?: "gallery" | "filelist";
@@ -147,37 +45,24 @@ export interface IFileViewerProps {
     file: IFile;
 }
 
-export class FileListField extends React.Component<IFileList, any> {
-    public viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType }> = [];
-    public static defaultProps: Partial<IFileList> = {
+export class FileListField extends React.Component<IFileListProps, any> {
+
+    public static defaultProps: Partial<IFileListProps> = {
         type: "filelist",
         maxLength: null,
 
         itemStyle: {},
         downloadConnector: (file: IFile) => file.path,
     };
-    private clipurl: HTMLInputElement;
 
-    public constructor(props: IFileList) {
+    public constructor(props: IFileListProps) {
         super(props);
 
         this.state = {
             filesDeleted: [],
             preview: null,
             numPages: null,
-            viewers: {},
         };
-
-        this.viewerRegistry = [
-            {
-                filter: /.(jpg|jpeg|png|gif)$/i,
-                viewer: ImageViewer,
-            },
-            {
-                filter: /.(pdf)$/i,
-                viewer: PDFViewer,
-            },
-        ];
     }
 
     public handleFileAdd = (addedFiles: Array<File & { preview: string }>) => {
@@ -187,7 +72,7 @@ export class FileListField extends React.Component<IFileList, any> {
                 continue;
             }
             const el = addedFiles[i];
-            if (this.props.type == "gallery" && !this.isImage(el.name)) {
+            if (this.props.type == "gallery" && !isImage(el.name)) {
                 alertDialog(`"${el.name}" to nie plik graficzny`);
                 continue;
             }
@@ -240,49 +125,19 @@ export class FileListField extends React.Component<IFileList, any> {
         }
     }
 
-    public formatBytes(bytes: number) {
-        if (bytes < 1024) {
-            return bytes + " Bytes";
-        } else if (bytes < 1048576) {
-            return (bytes / 1024).toFixed(2) + " KB";
-        } else if (bytes < 1073741824) {
-            return (bytes / 1048576).toFixed(2) + " MB";
-        } else {
-            return (bytes / 1073741824).toFixed(2) + " GB";
-        }
-    }
-
-    public isImage(path: string) {
-        return path.match(/.(jpg|jpeg|png|gif)$/i);
-    }
-
     public handleViewRequest = (index: number) => {
         const el = this.props.value[index];
         el.path = parsePath(this.props.downloadConnector(el));
 
-        let viewer = null;
-        for (const element of this.viewerRegistry) {
-            if ((el.name && el.name.match(element.filter)) || el.path.match(element.filter)) {
-                viewer = element.viewer;
-                break;
-            }
-        }
-
-        if (viewer === null) {
-            alertDialog("Brak podglądu do tego rodzaju plików");
-            return;
-        }
-
-        this.setState({ preview: el, viewer });
+        this.setState({ preview: el });
 
         return;
     };
 
     public render() {
-        const { value, type, maxLength, downloadConnector } = this.props;
+        const { type, maxLength, downloadConnector } = this.props;
         const { preview } = this.state;
-        const deleted = this.state.filesDeleted;
-        const ViewerComponent = this.state.viewer;
+        const value = this.props.value ? this.props.value : [];
 
         return (
             <div className="w-file-list">
@@ -296,13 +151,12 @@ export class FileListField extends React.Component<IFileList, any> {
                 )}
 
                 <div className={" " + (type == "gallery" ? "w-file-list-gallery" : "w-file-list-files")}>
-                    {/*{deleted.map((el) => <div>Do usuni�cia: {el.name}</div>)}*/}
-                    {value && Array.isArray(value) && type == "filelist"
+                    {type == "filelist"
                         ? value.map((el, index) => (
                               <div className="w-file-list-element" key={el.name}>
                                   <div className="w-file-list-name">
                                       <a onClick={this.handleFileClick.bind(this, index)}>
-                                          <Icon name={this.isImage(el.name) ? "Photo2" : "TextDocument"} />
+                                          <Icon name={isImage(el.name) ? "Photo2" : "TextDocument"} />
                                           {el.name}
                                       </a>
                                       {!el.uploaded && (
@@ -316,7 +170,7 @@ export class FileListField extends React.Component<IFileList, any> {
                                           <Icon name={"Download"} />
                                       </a>
                                   </div>
-                                  <div className="w-file-list-size">{this.formatBytes(el.size)}</div>
+                                  <div className="w-file-list-size">{formatBytes(el.size)}</div>
                                   <div className="w-file-list-remove">
                                       <a onClick={() => this.handleFileRemove(index)}>
                                           <Icon name={"Delete"} />{" "}
@@ -325,78 +179,23 @@ export class FileListField extends React.Component<IFileList, any> {
                               </div>
                           ))
                         : null}
-                    {/*  <pre>
-                        {JSON.stringify(value, null, 2)}
-                    </pre>*/}
 
-                    {value &&
-                        type == "gallery" && (
-                            <SortableImageList
-                                helperClass={"w-file-list-dragging"}
-                                files={value}
-                                onSortEnd={this.handleMoveFile}
-                                axis={"xy"}
-                                useDragHandle={true}
-                                lockToContainerEdges={true}
-                                onDelete={this.handleFileRemove}
-                                onClick={this.handleViewRequest}
-                                itemStyle={this.props.itemStyle}
-                            />
-                        )}
-                </div>
-                {/*<pre>
-                    {JSON.stringify(preview, null, 2)}
-                </pre>*/}
-
-                {preview && (
-                    <Modal
-                        show={true}
-                        onHide={() => this.setState({ preview: null })}
-                        title={preview.name}
-                        showHideLink={true}
-                        width={1000}
-                    >
-                        <CommandBar
-                            items={[
-                                {
-                                    key: "f3",
-                                    label: "Drukuj",
-                                    icon: "Print",
-                                    onClick: () => {
-                                        // window.open(parsePath(this.props.downloadConnector(preview)));
-                                        printFile(preview);
-                                    },
-                                },
-                                {
-                                    key: "f0",
-                                    label: "Kopiuj link",
-                                    icon: "Copy",
-                                    onClick: () => {
-                                        this.clipurl.select();
-                                        document.execCommand("Copy");
-                                    },
-                                },
-                                {
-                                    key: "f1",
-                                    label: "Otwórz w nowym oknie",
-                                    icon: "OpenInNewWindow",
-                                    onClick: () => {
-                                        window.open(parsePath(this.props.downloadConnector(preview)));
-                                    },
-                                },
-                            ]}
+                    {type == "gallery" && (
+                        <SortableImageList
+                            helperClass={"w-file-list-dragging"}
+                            files={value}
+                            onSortEnd={this.handleMoveFile}
+                            axis={"xy"}
+                            useDragHandle={true}
+                            lockToContainerEdges={true}
+                            onDelete={this.handleFileRemove}
+                            onClick={this.handleViewRequest}
+                            itemStyle={this.props.itemStyle}
                         />
-                        <div style={{ opacity: 0, height: 1, overflow: "hidden" }}>
-                            <input
-                                className={"form-control"}
-                                type="text"
-                                value={parsePath(this.props.downloadConnector(preview))}
-                                ref={(el) => (this.clipurl = el)}
-                            />
-                        </div>
-                        <ViewerComponent file={preview} />
-                    </Modal>
-                )}
+                    )}
+                </div>
+
+                {preview && <PreviewModal preview={preview} />}
             </div>
         );
     }

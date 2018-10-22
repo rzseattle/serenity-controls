@@ -4,3 +4,4 @@ import "./WysiwigField.stories";
 import "./CheckboxField.stories";
 import "./CheckboxGroupField.stories";
 import "./DateField.stories";
+import "./FileListField.stories";

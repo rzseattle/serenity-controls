@@ -2,12 +2,16 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { CommandBar } from "../../src/CommandBar";
-
+import { action, configureActions } from "@storybook/addon-actions";
 const items = [
     {
         key: "f1",
         label: "Option 1",
         icon: "Add",
+        onClick: () => {
+            alert("x");
+            action("element-clicked");
+        },
     },
     {
         key: "f2",

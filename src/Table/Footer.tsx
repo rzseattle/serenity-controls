@@ -2,6 +2,7 @@ import * as React from "react";
 import { Trans } from "react-i18next";
 import { IColumnData } from "./Interfaces";
 import { Icon } from "../Icon";
+import { fI18n } from "../lib";
 
 interface IFooterProps {
     count: number;
@@ -81,12 +82,7 @@ export default class Footer extends React.Component<IFooterProps> {
                     </div>
 
                     <div className="w-table-footer-onpage-select">
-                        <span>
-                            <Trans ns="frontend" i18nKey="table.footer.onPage">
-                                Na stronie
-                            </Trans>
-                            :{" "}
-                        </span>
+                        <span>{fI18n.t("Na stronie")}</span>
                         <select value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
                             {[10, 25, 50, 100, 500].map((x, i) => (
                                 <option key={"onpageval" + x} value={x}>
@@ -97,7 +93,6 @@ export default class Footer extends React.Component<IFooterProps> {
                     </div>
 
                     <div className="w-table-buttons">
-                        {/*<button title="Usuń zmiany" onClick={table.handleStateRemove.bind(table)}><i className="fa fa-eraser"></i></button>*/}
                         <button
                             title="Odśwież"
                             onClick={(e) => {
@@ -108,24 +103,6 @@ export default class Footer extends React.Component<IFooterProps> {
                         >
                             <Icon name={"Sync"} />
                         </button>
-                        {/*<button title="Zmień sposób wyświetlania" onClick={table.toggleFixedLayout.bind(table)}><i className="fa fa-window-restore"></i></button>*/}
-                        {/*<div
-                            title="Przesuń i upuść aby zmienić rozmiar tabeli"
-                            className="w-table-footer-drag"
-                            onDragStart={(e) => {
-                                props.bodyResizeStart(e);
-                            }}
-                            onDrag={(e) => {
-                                props.bodyResize(e);
-                            }}
-                            onDragEnd={(e) => {
-                                props.bodyResizeEnd(e);
-                            }}
-                            draggable={true}
-                        >
-                            <i className="fa fa-arrows-v" />
-                        </div>
-                        {table.state.loading ? <button className="w-table-loading-indicator"><i className="fa fa-spinner fa-spin"></i></button> : ''}*/}
                     </div>
                 </td>
             </tr>

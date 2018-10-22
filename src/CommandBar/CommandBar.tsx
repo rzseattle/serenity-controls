@@ -88,7 +88,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                         onClick={(event) =>
                                                             item.subItems
                                                                 ? this.handleExpandMenu(item, event)
-                                                                : item.onClick(event)
+                                                                : item.onClick(event, null)
                                                         }
                                                         className={opened && "w-command-bar-element-opened"}
                                                     >
@@ -118,7 +118,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                         onClick={(event) =>
                                                             item.subItems
                                                                 ? this.handleExpandMenu(item, event)
-                                                                : item.onClick(event)
+                                                                : item.onClick(event, null)
                                                         }
                                                         className={opened && "w-command-bar-element-opened"}
                                                     >
