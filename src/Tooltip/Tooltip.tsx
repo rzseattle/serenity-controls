@@ -65,7 +65,7 @@ interface ITooltipProps {
      */
     onShow?: () => any;
 
-    children: (opened: boolean) => any | any;
+    children?: ((opened: boolean) => any) | any;
 }
 
 interface ITooltipState {
@@ -84,6 +84,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
         activation: "hover",
         relativeSettings: RelativePositionPresets.bottomLeft,
         promise: null,
+        children: null,
     };
 
     constructor(props: ITooltipProps) {

@@ -94,7 +94,7 @@ storiesOf("Tooltip", module)
                 Sed pulvinar massa eros, faucibus volutpat tellus placerat ut.{" "}
                 <Tooltip
                     theme="light"
-                    content={promise}
+                    promise={() => promise}
                     loadingIndicatorText="Data is loading"
                     template={(data) => {
                         return (
