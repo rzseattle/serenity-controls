@@ -95,8 +95,3 @@ export const confirmDialog = async (message: string, options: Partial<IConfirmMo
 
     return promise;
 };
-
-export const alertDialog = async (message: string, options: Partial<IConfirmModalProps> = {}) => {
-    options.showCancelLing = false;
-    return confirmDialog(message, options);
-};

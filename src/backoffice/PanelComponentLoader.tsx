@@ -5,6 +5,7 @@ import * as React from "react";
 import { ServerErrorPresenter } from "./ServerErrorPresenter";
 import { IModalProps } from "../Modal";
 import { ErrorInfo } from "react";
+import {PrintJSON} from "../PrintJSON";
 
 declare var PRODUCTION: boolean;
 
@@ -140,6 +141,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                 <div>
                     <h1>Something went wrong.</h1>
                     {!PRODUCTION && this.state.debugToolLoaded && <DebugTool error={this.state.error} {...debugVar} />}
+                    {!PRODUCTION && <PrintJSON json={this.state.error} />}
                 </div>
             );
         }

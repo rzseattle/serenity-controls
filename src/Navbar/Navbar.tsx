@@ -1,5 +1,5 @@
 import * as React from "react";
-import "Navbar.sass";
+import "./Navbar.sass";
 
 interface IProps {
     children: any;
