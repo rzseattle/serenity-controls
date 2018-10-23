@@ -10,8 +10,8 @@ export const parsePath = (path: string) => {
     return baseUrl + path;
 };
 
-export const isImage = (path: string) => {
-    return path.match(/.(jpg|jpeg|png|gif)$/i);
+export const isImage = (path: string): boolean => {
+    return path.match(/.(jpg|jpeg|png|gif)$/i) !== null;
 };
 
 export const formatBytes = (bytes: number) => {

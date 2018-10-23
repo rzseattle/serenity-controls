@@ -1,12 +1,9 @@
 import * as React from "react";
 import { IFileViewerProps } from "../FileListField";
 
-export class ImageViewer extends React.PureComponent<IFileViewerProps> {
-    constructor(props: IFileViewerProps) {
-        super(props);
-    }
+export const ImageViewer = (props: IFileViewerProps) => {
+    // @ts-ignore
+    const path = props.file.nativeObj.preview ? props.file.nativeObj.preview : props.file.path;
 
-    public render() {
-        return <img style={{ maxWidth: 1000, maxHeight: 800 }} src={this.props.file.path} />;
-    }
-}
+    return <img style={{ maxWidth: 1000, maxHeight: 800 }} src={path} />;
+};

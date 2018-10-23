@@ -6,6 +6,7 @@ import { IFile, IFileViewerProps } from "./FileListsField";
 import { parsePath } from "./utils";
 import { ImageViewer } from "../viewers/ImageViewer";
 import { PDFViewer } from "../viewers/PDFViewer";
+import { download } from "../Downloader";
 
 const viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType<IFileViewerProps> }> = [
     {
@@ -18,32 +19,27 @@ const viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType<IFileV
     },
 ];
 
-interface IPreviewModalProps {
-    preview: IFile;
+interface IPreviewModal extends IFileViewerProps {
+    onHide: () => any;
 }
 
-export const PreviewModal = (props: IPreviewModalProps) => {
-    const { preview } = props;
+export const PreviewModal = (props: IPreviewModal) => {
+    const { file } = props;
     let ViewerComponent: React.ComponentType<IFileViewerProps> = null;
     for (const element of viewerRegistry) {
-        if ((preview.name && preview.name.match(element.filter)) || preview.path.match(element.filter)) {
+        if ((file.name && file.name.match(element.filter)) || file.path.match(element.filter)) {
             ViewerComponent = element.viewer;
             break;
         }
     }
 
     if (ViewerComponent === null) {
-        return <div>Brak podglądu do tego rodzaju plików</div>;
+        download(parsePath(props.downloadConnector(file)));
+        return null;
     }
 
     return (
-        <Modal
-            show={true}
-            onHide={() => this.setState({ preview: null })}
-            title={preview.name}
-            showHideLink={true}
-            width={1000}
-        >
+        <Modal show={true} onHide={props.onHide} title={file.name} showHideLink={true} width={1000}>
             <CommandBar
                 items={[
                     {
@@ -51,8 +47,8 @@ export const PreviewModal = (props: IPreviewModalProps) => {
                         label: "Drukuj",
                         icon: "Print",
                         onClick: () => {
-                            // window.open(parsePath(this.props.downloadConnector(preview)));
-                            printFile(preview);
+                            // window.open(parsePath(this.props.downloadConnector(file)));
+                            printFile(file);
                         },
                     },
                     {
@@ -60,7 +56,7 @@ export const PreviewModal = (props: IPreviewModalProps) => {
                         label: "Kopiuj link",
                         icon: "Copy",
                         onClick: () => {
-                            this.clipurl.select();
+                            (document.getElementsByClassName("w-file-preview-input")[0] as HTMLInputElement).select();
                             document.execCommand("Copy");
                         },
                     },
@@ -69,20 +65,20 @@ export const PreviewModal = (props: IPreviewModalProps) => {
                         label: "Otwórz w nowym oknie",
                         icon: "OpenInNewWindow",
                         onClick: () => {
-                            window.open(parsePath(this.props.downloadConnector(preview)));
+                            window.open(parsePath(props.downloadConnector(file)));
                         },
                     },
                 ]}
             />
             <div style={{ opacity: 0, height: 1, overflow: "hidden" }}>
                 <input
-                    className={"form-control"}
+                    className={"form-control w-file-preview-input"}
                     type="text"
-                    value={parsePath(this.props.downloadConnector(preview))}
-                    ref={(el) => (this.clipurl = el)}
+                    value={parsePath(props.downloadConnector(file))}
+                    /*ref={(el) => (this.clipurl = el)}*/
                 />
             </div>
-            <ViewerComponent file={preview} />
+            <ViewerComponent file={file} downloadConnector={props.downloadConnector} />
         </Modal>
     );
 };

@@ -1,4 +1,5 @@
 import { ReactElement, StatelessComponent } from "react";
+import "./Table.sass";
 
 declare var window: any;
 declare var PRODUCTION: any;

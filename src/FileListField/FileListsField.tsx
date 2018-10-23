@@ -11,6 +11,8 @@ import { formatBytes, isImage, parsePath } from "./utils";
 import { SortableImageList } from "./SortableImageList";
 import { PreviewModal } from "./PreviewModal";
 
+import "./FilesLists.sass";
+
 export interface IFile {
     key: number;
     name: string;
@@ -43,10 +45,10 @@ export interface IFileListProps extends IFieldProps {
 
 export interface IFileViewerProps {
     file: IFile;
+    downloadConnector: (file: IFile) => any;
 }
 
 export class FileListField extends React.Component<IFileListProps, any> {
-
     public static defaultProps: Partial<IFileListProps> = {
         type: "filelist",
         maxLength: null,
@@ -72,10 +74,10 @@ export class FileListField extends React.Component<IFileListProps, any> {
                 continue;
             }
             const el = addedFiles[i];
-            if (this.props.type == "gallery" && !isImage(el.name)) {
+            /*if (this.props.type == "gallery" && !isImage(el.name)) {
                 alertDialog(`"${el.name}" to nie plik graficzny`);
                 continue;
-            }
+            }*/
 
             const file: IFile = {
                 key: null,
@@ -195,7 +197,13 @@ export class FileListField extends React.Component<IFileListProps, any> {
                     )}
                 </div>
 
-                {preview && <PreviewModal preview={preview} />}
+                {preview && (
+                    <PreviewModal
+                        file={preview}
+                        onHide={() => this.setState({ preview: false })}
+                        downloadConnector={this.props.downloadConnector}
+                    />
+                )}
             </div>
         );
     }

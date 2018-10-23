@@ -4,6 +4,7 @@ import { CommandBar } from "../CommandBar";
 
 import { Modal } from "../Modal";
 import { fI18n } from "../lib";
+import "./PrintContainer.sass";
 
 interface IPrintContainerProps {
     title?: string;

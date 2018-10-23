@@ -1,3 +1,5 @@
+@import "../../sass/bootstrap"
+
 .w-file-list
     .dropzone
         display: inline-block
@@ -110,6 +112,22 @@
                             max-width: 100%
                             max-height: 100%
                             vertical-align: middle
+
+                        >i
+                            position: absolute
+                            top: 50%
+                            left: 50%
+                            transform: translate(-50%,-50%)
+                            &.ms-Icon--TextDocument
+                                font-size: 50px
+                            &.ms-Icon--Upload
+                                color: white
+                                background-color: rgba(139,0,0,0.7)
+                                width: 30px
+                                height: 30px
+                                border-radius: 15px
+                                line-height: 30px
+
 
 
 

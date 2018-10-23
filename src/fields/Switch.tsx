@@ -1,5 +1,6 @@
 import { IFieldProps, IOption } from "./Interfaces";
 import React from "react";
+import "./Switch.sass";
 
 export interface ISwitchProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };

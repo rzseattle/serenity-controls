@@ -1,8 +1,8 @@
 import { SortableContainer, SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
-import {IFile} from "./FileListsField";
+import { IFile } from "./FileListsField";
 import * as React from "react";
-import {Icon} from "../Icon";
-import {parsePath} from "./utils";
+import { Icon } from "../Icon";
+import { isImage, parsePath } from "./utils";
 
 interface IImageBoxProps {
     file: IFile;
@@ -20,13 +20,6 @@ const DragHandle = SortableHandle(() => (
 
 export const ImageBox = SortableElement((props: IImageBoxProps) => {
     const file = props.file;
-    let isImage = false;
-    if (file.path.match(/.(jpg|jpeg|png|gif)$/i)) {
-        isImage = true;
-    }
-    if (file.type && file.type.indexOf("image") != -1) {
-        isImage = true;
-    }
 
     const style = props.style || {};
 
@@ -38,12 +31,27 @@ export const ImageBox = SortableElement((props: IImageBoxProps) => {
     reader.readAsDataURL(file.nativeObj);*/
     }
 
+    // @ts-ignore
+    const preview = file.nativeObj && file.nativeObj.preview ? file.nativeObj.preview : false;
     return (
         <div style={style}>
             <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
                 <span>
                     <span />
-                    {file.uploaded ? <img src={parsePath(file.path)} alt="" /> : <Icon name={"Upload"} />}
+                    {file.uploaded ? (
+                        isImage(file.name) ? (
+                            <img src={parsePath(file.path)} alt="" />
+                        ) : (
+                            <>
+                                <Icon name={"TextDocument"} />
+                            </>
+                        )
+                    ) : (
+                        <>
+                            <img src={preview} alt="" />
+                            <Icon name={"Upload"} />
+                        </>
+                    )}
 
                     <div className="w-gallery-on-hover">
                         <a
