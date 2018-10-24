@@ -4,7 +4,7 @@ import Dropzone from "react-dropzone";
 import { IFieldProps } from "../fields/Interfaces";
 
 import { fI18n } from "../lib";
-import { alertDialog } from "../ConfirmDialog";
+
 import { Icon } from "../Icon";
 import { SortEnd } from "react-sortable-hoc";
 import { formatBytes, isImage, parsePath } from "./utils";
