@@ -79,18 +79,17 @@ export class CommandBar extends React.PureComponent<IProps> {
                         {this.props.items.map((item: ICommand | false) => {
                             if (item !== null && item !== false) {
                                 return (
-                                    <>
+                                    <React.Fragment key={item.key}>
                                         <CommandMenu items={item.subItems} activation={"hover"}>
                                             {(opened) => {
                                                 return (
                                                     <a
-                                                        key={item.key}
                                                         onClick={(event) =>
                                                             item.subItems
                                                                 ? this.handleExpandMenu(item, event)
                                                                 : item.onClick(event, null)
                                                         }
-                                                        className={opened && "w-command-bar-element-opened"}
+                                                        className={opened ? "w-command-bar-element-opened" : ""}
                                                     >
                                                         {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
                                                         {item.label}
@@ -99,7 +98,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                 );
                                             }}
                                         </CommandMenu>
-                                    </>
+                                    </React.Fragment>
                                 );
                             }
                             return null;
@@ -109,18 +108,17 @@ export class CommandBar extends React.PureComponent<IProps> {
                         {this.props.rightItems.map((item: ICommand | false) => {
                             if (item !== null && item !== false) {
                                 return (
-                                    <>
+                                    <React.Fragment key={item.key}>
                                         <CommandMenu items={item.subItems} activation={"hover"}>
                                             {(opened) => {
                                                 return (
                                                     <a
-                                                        key={item.key}
                                                         onClick={(event) =>
                                                             item.subItems
                                                                 ? this.handleExpandMenu(item, event)
                                                                 : item.onClick(event, null)
                                                         }
-                                                        className={opened && "w-command-bar-element-opened"}
+                                                        className={opened ? "w-command-bar-element-opened" : ""}
                                                     >
                                                         {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
                                                         {item.label}
@@ -129,7 +127,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                 );
                                             }}
                                         </CommandMenu>
-                                    </>
+                                    </React.Fragment>
                                 );
                             }
                             return null;
