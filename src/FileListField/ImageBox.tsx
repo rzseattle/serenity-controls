@@ -1,8 +1,8 @@
-import { SortableContainer, SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
+import { SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
 import { IFile } from "./FileListsField";
 import * as React from "react";
 import { Icon } from "../Icon";
-import { isImage, globalTransformFilePath, formatBytes } from "./utils";
+import { isImage, formatBytes } from "./utils";
 import Tooltip from "../Tooltip/Tooltip";
 import { fI18n } from "../lib";
 import { Placeholder } from "../Placeholder";
@@ -87,7 +87,7 @@ export const ImageBox = SortableElement((props: IImageBoxProps) => {
                         <span />
                         {file.uploaded ? (
                             isElImage ? (
-                                <img src={globalTransformFilePath(file.path)} alt="" />
+                                <img src={file.path} alt="" />
                             ) : (
                                 <>
                                     <Icon name={"TextDocument"} />

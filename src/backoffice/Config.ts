@@ -1,5 +1,5 @@
 import { deepExtend } from "../lib/JSONTools";
-import { IFileViewerProps } from "../FileListField";
+import { IFile, IFileViewerProps } from "../FileListField";
 
 import { ImageViewer } from "../viewers/ImageViewer";
 import { PDFViewer } from "../viewers/PDFViewer";
@@ -12,7 +12,7 @@ interface IConfig {
     };
     files: {
         viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType<IFileViewerProps> }>;
-        transformFilePath: (path: string) => string;
+        transformFilePath: (file: IFile) => string;
     };
 }
 
@@ -26,7 +26,8 @@ const config: IConfig = {
         },
     },
     files: {
-        transformFilePath: (path: string) => {
+        transformFilePath: (file: IFile) => {
+            let path = file.path;
             let baseUrl = "";
             if (window.location.host.indexOf("esotiq") != -1) {
                 baseUrl = "https://static.esotiq.com/";

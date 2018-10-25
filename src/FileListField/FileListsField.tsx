@@ -34,7 +34,7 @@ export interface IFileListProps extends IFieldProps {
     buttonTitle?: string;
     maxLength?: number;
     itemStyle?: any;
-    transformFilePath?: (filePath: string) => string;
+    transformFilePath?: (file: IFile) => string;
 }
 
 export interface IFileViewerProps {
@@ -47,7 +47,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
         maxLength: null,
 
         itemStyle: {},
-        transformFilePath: (filePath: string) => filePath,
+        transformFilePath: (file: IFile) => file.path,
     };
 
     public constructor(props: IFileListProps) {
@@ -130,7 +130,8 @@ export class FileListField extends React.Component<IFileListProps, any> {
             }
         } else {
             const el = { ...file };
-            el.path = globalTransformFilePath(this.props.transformFilePath(el.path));
+            el.path = this.props.transformFilePath(el);
+            el.path = globalTransformFilePath(el);
             this.setState({ preview: el });
         }
         return;
@@ -147,7 +148,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                     <Dropzone className="dropzone" activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd}>
                         <span>
                             <Icon name={"Add"} />{" "}
-                            {this.props.buttonTitle ? this.props.buttonTitle : fI18n.t("frontend:files.add")}{" "}
+                            {this.props.buttonTitle ? this.props.buttonTitle : fI18n.t("frontend:file.add")}{" "}
                         </span>
                     </Dropzone>
                 )}
@@ -168,7 +169,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                       )}
                                   </div>
                                   <div className="w-file-list-size">
-                                      <a href={transformFilePath(el.path)} download={true}>
+                                      <a href={transformFilePath(el)} download={true}>
                                           <Icon name={"Download"} />
                                       </a>
                                   </div>
