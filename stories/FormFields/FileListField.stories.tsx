@@ -66,11 +66,20 @@ storiesOf("Field: FileList", module).add("Base - gallery style", () => {
             <FileListTest value={testFiles} type="gallery" />
         </Panel>
     );
-});
-storiesOf("Field: FileList", module).add("Base - list style", () => {
+}).add("Base - list style", () => {
     return (
         <Panel>
             <FileListTest value={testFiles} type="filelist" />
+        </Panel>
+    );
+})
+.add("Limit", () => {
+    return (
+        <Panel>
+            <h3>Limit 1</h3>
+            <FileListTest value={[]} type="gallery" maxLength={1} />
+            <h3>Limit 2</h3>
+            <FileListTest value={[]} type="gallery" maxLength={2} />
         </Panel>
     );
 });
