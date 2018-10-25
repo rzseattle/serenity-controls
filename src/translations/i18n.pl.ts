@@ -60,5 +60,14 @@ export const lang = {
                 onPage: "Na stronie",
             },
         },
+        file: {
+            download: "Pobierz",
+            print: "Drukuj",
+            copyLink: "Kopiuj link",
+            openInNewWindow: "Otwórz w nowym oknie",
+            fileNotUploadedYet: "Plik jeszcze nie został załadowany",
+            size: "Rozmiar",
+            dimensions: "Wymiary",
+        },
     },
 };

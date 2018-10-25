@@ -59,5 +59,12 @@ export const lang = {
                 onPage: "On page",
             },
         },
+        file: {
+            download: "Download",
+            print: "Print",
+            copyLink: "Copy link",
+            openInNewWindow: "Open in new widnow",
+            fileNotUploadedYet: "File is not uploaded",
+        },
     },
 };

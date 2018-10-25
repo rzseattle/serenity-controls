@@ -1,14 +1,7 @@
-let baseUrl = "";
-if (window.location.host.indexOf("esotiq") != -1) {
-    baseUrl = "https://static.esotiq.com/";
-}
+import { configGetAll } from "../backoffice/Config";
+import { IFile, IFileViewerProps } from "./FileListsField";
 
-export const parsePath = (path: string) => {
-    if (path.charAt(0) != "/") {
-        path = "/" + path;
-    }
-    return baseUrl + path;
-};
+export const globalTransformFilePath = configGetAll().files.transformFilePath;
 
 export const isImage = (path: string): boolean => {
     return path.match(/.(jpg|jpeg|png|gif)$/i) !== null;
@@ -24,4 +17,15 @@ export const formatBytes = (bytes: number) => {
     } else {
         return (bytes / 1073741824).toFixed(2) + " GB";
     }
+};
+
+export const getViewer = (file: IFile): React.ComponentType<IFileViewerProps> => {
+    let ViewerComponent: React.ComponentType<IFileViewerProps> = null;
+    for (const element of configGetAll().files.viewerRegistry) {
+        if ((file.name && file.name.match(element.filter)) || file.path.match(element.filter)) {
+            ViewerComponent = element.viewer;
+            break;
+        }
+    }
+    return ViewerComponent;
 };

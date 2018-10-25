@@ -2,22 +2,10 @@ import { Modal } from "../Modal";
 import { CommandBar } from "../CommandBar";
 import { printFile } from "../FilePrinter";
 import * as React from "react";
-import { IFile, IFileViewerProps } from "./FileListsField";
-import { parsePath } from "./utils";
-import { ImageViewer } from "../viewers/ImageViewer";
-import { PDFViewer } from "../viewers/PDFViewer";
+import { IFileViewerProps } from "./FileListsField";
+import { getViewer, globalTransformFilePath } from "./utils";
 import { download } from "../Downloader";
-
-const viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType<IFileViewerProps> }> = [
-    {
-        filter: /.(jpg|jpeg|png|gif)$/i,
-        viewer: ImageViewer,
-    },
-    {
-        filter: /.(pdf)$/i,
-        viewer: PDFViewer,
-    },
-];
+import { fI18n } from "../lib";
 
 interface IPreviewModal extends IFileViewerProps {
     onHide: () => any;
@@ -25,60 +13,63 @@ interface IPreviewModal extends IFileViewerProps {
 
 export const PreviewModal = (props: IPreviewModal) => {
     const { file } = props;
-    let ViewerComponent: React.ComponentType<IFileViewerProps> = null;
-    for (const element of viewerRegistry) {
-        if ((file.name && file.name.match(element.filter)) || file.path.match(element.filter)) {
-            ViewerComponent = element.viewer;
-            break;
-        }
-    }
-
-    if (ViewerComponent === null) {
-        download(parsePath(props.downloadConnector(file)));
-        return null;
-    }
+    const ViewerComponent = getViewer(file);
 
     return (
-        <Modal show={true} onHide={props.onHide} title={file.name} showHideLink={true} width={1000}>
-            <CommandBar
-                items={[
-                    {
-                        key: "f1",
-                        label: "Drukuj",
-                        icon: "Print",
-                        onClick: () => {
-                            // window.open(parsePath(this.props.downloadConnector(file)));
-                            printFile(file);
+        <Modal show={true} onHide={props.onHide} title={file.name} showHideLink={true}>
+            <div style={{ maxWidth: "80vw", maxHeight: "80vh", overflow: "auto" }}>
+                <CommandBar
+                    items={[
+                        {
+                            key: "f0",
+                            label: fI18n.t("frontend:file.download"),
+                            icon: "Download",
+                            onClick: () => {
+                                // window.open(parsePath(this.props.downloadConnector(file)));
+                                download(file.path);
+                            },
                         },
-                    },
-                    {
-                        key: "f2",
-                        label: "Kopiuj link",
-                        icon: "Copy",
-                        onClick: () => {
-                            (document.getElementsByClassName("w-file-preview-input")[0] as HTMLInputElement).select();
-                            document.execCommand("Copy");
+                        {
+                            key: "f1",
+                            label: fI18n.t("frontend:file.print"),
+                            icon: "Print",
+                            onClick: () => {
+                                // window.open(parsePath(this.props.downloadConnector(file)));
+                                printFile(file);
+                            },
                         },
-                    },
-                    {
-                        key: "f3",
-                        label: "Otwórz w nowym oknie",
-                        icon: "OpenInNewWindow",
-                        onClick: () => {
-                            window.open(parsePath(props.downloadConnector(file)));
+                        {
+                            key: "f2",
+                            label: fI18n.t("frontend:file.copyLink"),
+                            icon: "Copy",
+                            onClick: () => {
+                                (document.getElementsByClassName(
+                                    "w-file-preview-input",
+                                )[0] as HTMLInputElement).select();
+                                document.execCommand("Copy");
+                            },
                         },
-                    },
-                ]}
-            />
-            <div style={{ opacity: 0, height: 1, overflow: "hidden" }}>
-                <input
-                    className={"form-control w-file-preview-input"}
-                    type="text"
-                    value={parsePath(props.downloadConnector(file))}
-                    /*ref={(el) => (this.clipurl = el)}*/
+                        {
+                            key: "f3",
+                            label: fI18n.t("frontend:file.openInNewWindow"),
+                            icon: "OpenInNewWindow",
+                            onClick: () => {
+                                window.open(file.path);
+                            },
+                        },
+                    ]}
                 />
+                <div style={{ opacity: 0, height: 1, overflow: "hidden", position: "absolute" }}>
+                    <input
+                        className={"form-control w-file-preview-input"}
+                        type="text"
+                        defaultValue={file.path}
+                    />
+                </div>
+                <div style={{ maxHeight: "calc( 80vh -  45px )", overflow: "auto" }}>
+                    <ViewerComponent file={file}  />
+                </div>
             </div>
-            <ViewerComponent file={file} downloadConnector={props.downloadConnector} />
         </Modal>
     );
 };

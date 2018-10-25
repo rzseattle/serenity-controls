@@ -7,11 +7,13 @@ import { fI18n } from "../lib";
 
 import { Icon } from "../Icon";
 import { SortEnd } from "react-sortable-hoc";
-import { formatBytes, isImage, parsePath } from "./utils";
+import { formatBytes, isImage, globalTransformFilePath, getViewer } from "./utils";
 import { SortableImageList } from "./SortableImageList";
 import { PreviewModal } from "./PreviewModal";
 
 import "./FilesLists.sass";
+import { download } from "../Downloader";
+import { alertDialog } from "../AlertDialog";
 
 export interface IFile {
     key: number;
@@ -25,14 +27,6 @@ export interface IFile {
     path: string;
 }
 
-const Progress = (props: { percent: number }) => {
-    return (
-        <div className="w-gallery-loader">
-            <div style={{ width: props.percent + "%" }} />
-        </div>
-    );
-};
-
 export interface IFileListProps extends IFieldProps {
     name?: string;
     value: IFile[];
@@ -40,12 +34,11 @@ export interface IFileListProps extends IFieldProps {
     buttonTitle?: string;
     maxLength?: number;
     itemStyle?: any;
-    downloadConnector?: (file: IFile) => string;
+    transformFilePath?: (filePath: string) => string;
 }
 
 export interface IFileViewerProps {
     file: IFile;
-    downloadConnector: (file: IFile) => any;
 }
 
 export class FileListField extends React.Component<IFileListProps, any> {
@@ -54,7 +47,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
         maxLength: null,
 
         itemStyle: {},
-        downloadConnector: (file: IFile) => file.path,
+        transformFilePath: (filePath: string) => filePath,
     };
 
     public constructor(props: IFileListProps) {
@@ -78,7 +71,6 @@ export class FileListField extends React.Component<IFileListProps, any> {
                 alertDialog(`"${el.name}" to nie plik graficzny`);
                 continue;
             }*/
-
             const file: IFile = {
                 key: null,
                 name: el.name,
@@ -128,16 +120,24 @@ export class FileListField extends React.Component<IFileListProps, any> {
     }
 
     public handleViewRequest = (index: number) => {
-        const el = this.props.value[index];
-        el.path = parsePath(this.props.downloadConnector(el));
-
-        this.setState({ preview: el });
-
+        const file = this.props.value[index];
+        const viewer = getViewer(file);
+        if (viewer == null) {
+            if (file.uploaded) {
+                download(file.path);
+            } else {
+                alertDialog(fI18n.t("frontend:files.fileNotUploadedYet"));
+            }
+        } else {
+            const el = { ...file };
+            el.path = globalTransformFilePath(this.props.transformFilePath(el.path));
+            this.setState({ preview: el });
+        }
         return;
     };
 
     public render() {
-        const { type, maxLength, downloadConnector } = this.props;
+        const { type, maxLength, transformFilePath } = this.props;
         const { preview } = this.state;
         const value = this.props.value ? this.props.value : [];
 
@@ -168,7 +168,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                       )}
                                   </div>
                                   <div className="w-file-list-size">
-                                      <a href={downloadConnector(el)} download={true}>
+                                      <a href={transformFilePath(el.path)} download={true}>
                                           <Icon name={"Download"} />
                                       </a>
                                   </div>
@@ -197,13 +197,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                     )}
                 </div>
 
-                {preview && (
-                    <PreviewModal
-                        file={preview}
-                        onHide={() => this.setState({ preview: false })}
-                        downloadConnector={this.props.downloadConnector}
-                    />
-                )}
+                {preview && <PreviewModal file={preview} onHide={() => this.setState({ preview: false })} />}
             </div>
         );
     }

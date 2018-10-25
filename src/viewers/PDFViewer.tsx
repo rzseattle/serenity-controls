@@ -38,17 +38,17 @@ export class PDFViewer extends React.Component<IFileViewerProps, IPDFViewerState
             return <LoadingIndicator text={"Ładuje"} />;
         }
         return (
-            <>
+            <div style={{ maxWidth: "100%", maxHeight: "100%", overflow: "auto" }}>
                 <this.Document file={this.props.file.path} onLoadSuccess={this.onDocumentLoadSuccess}>
                     {this.state.numPages !== null &&
                         [...Array(this.state.numPages)].map((x, i) => (
                             <React.Fragment key={i}>
-                                <this.Page pageNumber={i + 1} width={1000} />
-                                <div style={{ height: 15, backgroundColor: "lightgrey" }} />
+                                {i + 1 > 1 && <div style={{ height: 15, backgroundColor: "lightgrey" }} />}
+                                <this.Page pageNumber={i + 1} />
                             </React.Fragment>
                         ))}
                 </this.Document>
-            </>
+            </div>
         );
     }
 }

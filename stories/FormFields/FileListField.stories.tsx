@@ -3,28 +3,74 @@ import { storiesOf } from "@storybook/react";
 
 import { Panel } from "../../src/Panel";
 
-import { FileListField, IFile } from "../../src/FileListField";
+import { IFile } from "../../src/FileListField";
 import { FileListTest } from "./stateHelpers/FileListTest";
 
 const testFiles: IFile[] = [
     {
-        key: 5,
-        name: "2018-02-19_07h51_11.wmv",
-        title: "2018-02-19_07h51_11.wmv",
+        key: null,
+        name: "test_photo_3.jpeg",
+        title: "test_photo_3.jpeg",
         description: "",
-        path: "blob:http://localhost:6006/d72e9faa-aee9-42f6-bd4e-70d92e07997f",
+        path: "/test_photo_3.jpeg",
         type: "image",
         uploaded: true,
-        size: 4727291,
+        size: 55106,
+    },
+    {
+        key: null,
+        name: "test_photo_1.jpeg",
+        title: "test_photo_1.jpeg",
+        description: "",
+        path: "/test_photo_1.jpeg",
+        type: "image",
+        uploaded: true,
+        size: 117825,
+    },
+    {
+        key: null,
+        name: "test_photo_2.jpeg",
+        title: "test_photo_2.jpeg",
+        description: "",
+        path: "/test_photo_2.jpeg",
+        type: "image",
+        uploaded: true,
+        size: 81582,
+    },
+    {
+        key: null,
+        name: "test_photo_4.jpeg",
+        title: "test_photo_4.jpeg",
+        description: "",
+        path: "test_photo_4.jpeg",
+        type: "image",
+        uploaded: true,
+        size: 47479,
+    },
+
+    {
+        key: null,
+        name: "pdf_document.pdf",
+        title: "pdf_document.pdf",
+        description: "",
+        path: "./pdf_document.pdf",
+        type: "image",
+        uploaded: true,
+        size: 1148,
     },
 ];
 
-storiesOf("Field: FileList", module).add("Base", () => {
+storiesOf("Field: FileList", module).add("Base - gallery style", () => {
+    return (
+        <Panel>
+            <FileListTest value={testFiles} type="gallery" />
+        </Panel>
+    );
+});
+storiesOf("Field: FileList", module).add("Base - list style", () => {
     return (
         <Panel>
             <FileListTest value={testFiles} type="filelist" />
-            <hr/>
-            <FileListTest value={testFiles} type="gallery" />
         </Panel>
     );
 });
