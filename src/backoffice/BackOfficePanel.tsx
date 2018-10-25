@@ -17,10 +17,11 @@ import { IModalProps, Modal } from "../Modal";
 import { Select } from "../fields/Select";
 import { fI18n, Comm } from "../lib";
 import { Icon } from "../Icon";
-import { configGet } from "./Config";
+
 import { BackOfficeContainer } from "./BackOfficeContainer";
 import { BackofficeStore } from "./BackofficeStore";
 import { PanelComponentLoader } from "./PanelComponentLoader";
+import { configGetAll } from "./Config";
 
 NProgress.configure({ parent: ".w-panel-body" });
 
@@ -196,7 +197,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     };
 
     public render() {
-        const languages = configGet("translations.languages");
+        const languages = configGetAll().translations.languages;
         return (
             <div className="w-panel-container" ref={(container) => (this.container = container)}>
                 {!this.state.onlyBody && (

@@ -1,9 +1,11 @@
 import * as i18n from "i18next";
 // import * as LanguageDetector from "i18next-browser-languagedetector";
-import {reactI18nextModule} from "react-i18next";
+import { reactI18nextModule } from "react-i18next";
 
-import {configGet} from "../backoffice/Config";
-import {Comm} from "./Comm";
+import { configGetAll } from "../backoffice/Config";
+import { Comm } from "./Comm";
+const config = configGetAll();
+
 
 declare var PRODUCTION: any;
 
@@ -52,30 +54,30 @@ const XHR = {
     },
 };
 
+
+
 const instance = i18n
     .use(XHR)
     // .use(LanguageDetector)
     .use(reactI18nextModule)
     .init({
         // lng: configGet("translations.defaultLanguage"),
-        fallbackLng: configGet("translations.defaultLanguage"),
+        fallbackLng: config.translations.defaultLanguage,
         // debug: !PRODUCTION,
         debug: false,
         saveMissing: true,
         ns: ["translation", "frontend"],
         missingKeyHandler(lng, ns, key, fallbackValue) {
-            //if (!PRODUCTION) {
-            //if (lng[0] != "pl") {
+            // if (!PRODUCTION) {
+            // if (lng[0] != "pl") {
             console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
-            //}
-            //}
+            // }
+            // }
         },
         react: {
             wait: true,
         },
     });
-instance.on("languageChanged", (lng) => {
-    Comm._get(configGet("translations.backendLangChanged").replace("{{lng}}", lng));
-});
+instance.on("languageChanged", config.translations.langChanged);
 const fI18n = instance;
-export {fI18n, langContainer};
+export { fI18n, langContainer };
