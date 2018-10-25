@@ -147,7 +147,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                     <Dropzone className="dropzone" activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd}>
                         <span>
                             <Icon name={"Add"} />{" "}
-                            {this.props.buttonTitle ? this.props.buttonTitle : fI18n.t("frontend:add")}{" "}
+                            {this.props.buttonTitle ? this.props.buttonTitle : fI18n.t("frontend:files.add")}{" "}
                         </span>
                     </Dropzone>
                 )}

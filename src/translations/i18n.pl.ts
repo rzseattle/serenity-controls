@@ -61,6 +61,7 @@ export const lang = {
             },
         },
         file: {
+            add: "Dodaj",
             download: "Pobierz",
             print: "Drukuj",
             copyLink: "Kopiuj link",

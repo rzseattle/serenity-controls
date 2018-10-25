@@ -60,6 +60,7 @@ export const lang = {
             },
         },
         file: {
+            add: "Add",
             download: "Download",
             print: "Print",
             copyLink: "Copy link",
