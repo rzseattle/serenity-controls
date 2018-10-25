@@ -4,7 +4,7 @@ import { IFile, IFileViewerProps } from "../FileListField";
 import { ImageViewer } from "../viewers/ImageViewer";
 import { PDFViewer } from "../viewers/PDFViewer";
 
-interface IConfig {
+export interface IConfig {
     translations: {
         defaultLanguage: string;
         languages: string[];
@@ -16,13 +16,12 @@ interface IConfig {
     };
 }
 
-const config: IConfig = {
+let config: IConfig = {
     translations: {
         defaultLanguage: "pl",
         languages: [],
         langChanged: (langCode) => {
-            // Comm._get("/admin/changeLang/" + langCode);
-            alert("provide lang change action");
+            console.error("provide lang change action");
         },
     },
     files: {
@@ -51,8 +50,10 @@ const config: IConfig = {
     },
 };
 
-export const configGetAll = (): IConfig => config;
+export const configGetAll = (): IConfig => {
+    return config;
+};
 
 export const configSet = (newConfig: any) => {
-    deepExtend(config, newConfig);
+    config = newConfig;
 };

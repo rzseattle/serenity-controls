@@ -6,7 +6,6 @@ import { configGetAll } from "../backoffice/Config";
 import { Comm } from "./Comm";
 const config = configGetAll();
 
-
 declare var PRODUCTION: any;
 
 class LangContainer {
@@ -54,8 +53,6 @@ const XHR = {
     },
 };
 
-
-
 const instance = i18n
     .use(XHR)
     // .use(LanguageDetector)
@@ -78,6 +75,7 @@ const instance = i18n
             wait: true,
         },
     });
-instance.on("languageChanged", config.translations.langChanged);
+
+instance.on("languageChanged", (lang) => configGetAll().translations.langChanged(lang));
 const fI18n = instance;
 export { fI18n, langContainer };
