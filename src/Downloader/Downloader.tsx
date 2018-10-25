@@ -9,15 +9,20 @@ interface IDownloaderProps {
     cleanup: ICleanUpCallback;
 }
 
-class Downloader extends React.Component<IDownloaderProps> {
+class Downloader extends React.PureComponent<IDownloaderProps> {
     public defaultProps: Partial<IDownloaderProps> = {
-        data: {},
+        data: null,
     };
 
     private form: HTMLFormElement;
+    private a: HTMLAnchorElement;
 
     public download() {
-        this.form.submit();
+        if (this.props.data == null) {
+            this.a.click();
+        } else {
+            this.form.submit();
+        }
     }
 
     public componentDidMount() {
@@ -26,6 +31,15 @@ class Downloader extends React.Component<IDownloaderProps> {
     }
 
     public render() {
+        const { data } = this.props;
+        if (data == null) {
+            return (
+                <a href={this.props.url} download={true} style={{ display: "none" }} ref={(el) => (this.a = el)}>
+                    [[downloader]]
+                </a>
+            );
+        }
+
         return (
             <form
                 action={this.props.url}
@@ -40,7 +54,7 @@ class Downloader extends React.Component<IDownloaderProps> {
     }
 }
 
-export const download = (url: string, data: any = {}): any => {
+export const download = (url: string, data: any = null): any => {
     const parent = document.body;
 
     const wrapper = parent.appendChild(document.createElement("div"));
