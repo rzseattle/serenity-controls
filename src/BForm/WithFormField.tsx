@@ -24,7 +24,7 @@ export interface IwithFormFieldProps {
 }
 
 export const withFormField = <P extends object>(Component: React.ComponentType<P>) =>
-    class WithBootstrap extends React.Component<P & IwithFormFieldProps, any> {
+    class WithBootstrap extends React.PureComponent<P & IwithFormFieldProps, any> {
         public static defaultProps: Partial<IwithFormFieldProps> = {
             layoutType: "default",
             addInputClass: true,
