@@ -1,6 +1,6 @@
 import React from "react";
 import { addDecorator } from "@storybook/react";
-import { configSet } from "../src/backoffice/Config";
+import { configGetAll, configSet } from "../src/backoffice/Config";
 import "./Stories.sass";
 import { fI18n, langContainer } from "../src/lib";
 
@@ -15,18 +15,19 @@ langContainer.add(
             });
         }),
 );
-
-const config = {
+let config = configGetAll();
+config = {
+    ...config,
     translations: {
         defaultLanguage: "pl",
         languages: ["pl", "en"],
-        backendLangChanged: "/admin/changeLang/{{lng}}",
+        langChanged: () => {},
     },
 };
 
 configSet(config);
 
-//fI18n.changeLanguage("pl");
+// fI18n.changeLanguage("pl");
 
 addDecorator((story) => {
     return (
