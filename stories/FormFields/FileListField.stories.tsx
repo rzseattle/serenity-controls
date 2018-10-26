@@ -57,29 +57,38 @@ const testFiles: IFile[] = [
         type: "image",
         uploaded: true,
         size: 1148,
+        data: {
+            tooltipItems: [
+              {label: "Author", value: "John Strand"},
+              {label: "Date", value: "2007"},
+              {label: "xxx", value: "200720072007200720072007"},
+            ],
+        },
     },
 ];
 
-storiesOf("Field: FileList", module).add("Base - gallery style", () => {
-    return (
-        <Panel>
-            <FileListTest value={testFiles} type="gallery" />
-        </Panel>
-    );
-}).add("Base - list style", () => {
-    return (
-        <Panel>
-            <FileListTest value={testFiles} type="filelist" />
-        </Panel>
-    );
-})
-.add("Limit", () => {
-    return (
-        <Panel>
-            <h3>Limit 1</h3>
-            <FileListTest value={[]} type="gallery" maxLength={1} />
-            <h3>Limit 2</h3>
-            <FileListTest value={[]} type="gallery" maxLength={2} />
-        </Panel>
-    );
-});
+storiesOf("Field: FileList", module)
+    .add("Base - gallery style", () => {
+        return (
+            <Panel>
+                <FileListTest value={testFiles} type="gallery" />
+            </Panel>
+        );
+    })
+    .add("Base - list style", () => {
+        return (
+            <Panel>
+                <FileListTest value={testFiles} type="filelist" />
+            </Panel>
+        );
+    })
+    .add("Limit", () => {
+        return (
+            <Panel>
+                <h3>Limit 1</h3>
+                <FileListTest value={[]} type="gallery" maxLength={1} />
+                <h3>Limit 2</h3>
+                <FileListTest value={[]} type="gallery" maxLength={2} />
+            </Panel>
+        );
+    });

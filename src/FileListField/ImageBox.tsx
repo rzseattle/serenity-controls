@@ -4,8 +4,8 @@ import * as React from "react";
 import { Icon } from "../Icon";
 import { isImage, formatBytes } from "./utils";
 import Tooltip from "../Tooltip/Tooltip";
-import { fI18n } from "../lib";
-import { Placeholder } from "../Placeholder";
+import { FileTooltip } from "./FileTooltip";
+import { RelativePositionPresets } from "../Positioner";
 
 interface IImageBoxProps {
     file: IFile;
@@ -32,55 +32,9 @@ export const ImageBox = SortableElement((props: IImageBoxProps) => {
     return (
         <div style={style}>
             <Tooltip
+                relativeSettings={{ ...RelativePositionPresets.bottomLeft, offsetX: -5, widthCalc: "min" }}
                 content={file}
-                template={(data) => {
-                    return (
-                        <>
-                            <div>{file.name}</div>
-                            <div>
-                                <small>
-                                    <div style={{ display: "inline-block", width: "50%" }}>
-                                        {fI18n.t("frontend:file.size")}:
-                                    </div>
-                                    {formatBytes(file.size)}
-                                </small>
-                                {isElImage && (
-                                    <div>
-                                        <small>
-                                            <div style={{ display: "inline-block", width: "50%" }}>
-                                                {fI18n.t("frontend:file.dimensions")}:
-                                            </div>
-                                            <div style={{ display: "inline-block", width: "50%" }}>
-                                                <Placeholder
-                                                    promise={
-                                                        new Promise<any>((resolve) => {
-                                                            const img = new Image();
-                                                            img.onload = (ev) => {
-                                                                resolve({
-                                                                    // @ts-ignore
-                                                                    width: ev.currentTarget.width,
-                                                                    // @ts-ignore
-                                                                    height: ev.currentTarget.height,
-                                                                });
-                                                            };
-                                                            img.src = file.path;
-                                                        })
-                                                    }
-                                                >
-                                                    {(imageData) => (
-                                                        <>
-                                                            {imageData.width} x {imageData.height}
-                                                        </>
-                                                    )}
-                                                </Placeholder>
-                                            </div>
-                                        </small>
-                                    </div>
-                                )}
-                            </div>
-                        </>
-                    );
-                }}
+                template={(data) => <FileTooltip file={file} />}
             >
                 <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
                     <span>

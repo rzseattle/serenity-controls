@@ -25,6 +25,7 @@ export interface IFile {
     uploaded: boolean;
     nativeObj?: File;
     path: string;
+    data?: any;
 }
 
 export interface IFileListProps extends IFieldProps {
@@ -81,6 +82,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                 uploaded: false,
                 size: el.size,
                 nativeObj: el,
+                data: {},
             };
             currFiles.push(file);
         }
