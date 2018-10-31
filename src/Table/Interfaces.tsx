@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IFilter } from "../filters/Intefaces";
-import { Row } from "./Tbody";
+import { TableRow } from "./TableRow";
 
 export interface IColumnData {
     field?: string;
@@ -34,9 +34,9 @@ export interface IColumnData {
     filter?: IFilter[];
 }
 
-export type ICellTemplate = (value: string, row: any, column: IColumnData, rowComponent: Row) => string | JSX.Element;
+export type ICellTemplate = (value: string, row: any, column: IColumnData, rowComponent: TableRow) => string | JSX.Element;
 
-export type IEventCallback = (row: any, column: IColumnData, rowComponent: Row, cell: HTMLElement, event: any) => any;
+export type IEventCallback = (row: any, column: IColumnData, rowComponent: TableRow, cell: HTMLElement, event: any) => any;
 
 export interface IFilterValue {
     field: string;
