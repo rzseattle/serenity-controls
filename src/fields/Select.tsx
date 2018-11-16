@@ -42,7 +42,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     };
     private dropdown: HTMLDivElement;
     private presenter: HTMLDivElement;
-    private searchField: HTMLDivElement | null;
+    private searchField: HTMLInputElement | null;
 
     constructor(props: ISelectProps) {
         super(props);

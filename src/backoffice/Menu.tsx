@@ -29,15 +29,20 @@ interface IMenuState {
 export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
     constructor(props: IMenuProps) {
         super(props);
+        // @ts-ignore
         if (window.localStorage.backofficeMenuOpened === undefined) {
+            // @ts-ignore
             window.localStorage.backofficeMenuOpened = "1";
         }
 
         this.state = {
             currentMenuOpened: -1,
             expanded:
+                // @ts-ignore
                 window.localStorage.backofficeMenuOpened !== undefined
-                    ? window.localStorage.backofficeMenuOpened == "1"
+                    ? // prettier-ignore
+                      // @ts-ignore
+                      window.localStorage.backofficeMenuOpened == "1"
                     : props.mobile,
         };
     }
@@ -64,6 +69,7 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
     }
 
     public changeExpandState = () => {
+        // @ts-ignore
         window.localStorage.backofficeMenuOpened = this.state.expanded ? "0" : "1";
         this.setState({ expanded: !this.state.expanded });
     };

@@ -311,7 +311,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                         />
                     ))}
 
-                    {!this.props.editable && this.state.items.length == 0 && <Trans i18nKey="frontend:noConnections" />}
+                    {!this.props.editable && this.state.items.length == 0 && fI18n.t("frontend:noConnections")}
                     {this.state.itemsLoading ? (
                         <LoadingIndicator />
                     ) : (

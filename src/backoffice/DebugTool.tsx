@@ -41,6 +41,8 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
 
     constructor(props: IDebugToolProps) {
         super(props);
+
+        // @ts-ignore
         let savedData = window.localStorage.DebugToolData || false;
         if (savedData) {
             savedData = JSON.parse(savedData);
@@ -125,6 +127,7 @@ export class DebugTool extends React.Component<IDebugToolProps, IDebugToolState>
     };
 
     public saveData() {
+        // @ts-ignore
         window.localStorage.DebugToolData = JSON.stringify({
             expanded: this.state.expanded,
             left: this.state.style.left,
