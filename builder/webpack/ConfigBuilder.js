@@ -140,7 +140,7 @@ module.exports = function(input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = ['babel-polyfill', input.ENTRY_POINTS[i]];
+        tmpEntry[i] = ["babel-polyfill", input.ENTRY_POINTS[i]];
     }
 
     let tmp;
@@ -210,7 +210,7 @@ module.exports = function(input) {
             }),
         ]);*/
 
-    if (false) {
+    if (true) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({
@@ -289,7 +289,7 @@ module.exports = function(input) {
         conf.optimization = {
             minimizer: [
                 new UglifyJsPlugin({
-                    cache: true,
+                    cache: NODE_CACHE_DIR + "/uglifyjs-webpack-plugin",
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
                 }),

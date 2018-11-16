@@ -30,7 +30,7 @@ export interface IDataQuery {
 export interface ITableDataInput {
     data: any[];
     countAll?: number;
-    debug?: string;
+    debug?: string | boolean;
     decorator?: (requestData: IDataQuery, data: ITableDataInput) => Promise<ITableDataInput>;
 }
 
