@@ -31,9 +31,11 @@ var getLoaders = function(production, input) {
                                         targets: {
                                             browsers: input.BROWSERS,
                                             node: "current",
+
                                         },
                                         useBuiltIns: "entry",
                                         modules: false,
+                                        forceAllTransforms: production,
                                     },
                                 ],
                                 "@babel/preset-typescript",

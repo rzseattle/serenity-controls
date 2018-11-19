@@ -210,7 +210,7 @@ module.exports = function(input) {
             }),
         ]);*/
 
-    if (true) {
+    if (false) {
         var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
         conf.plugins.push(
             new HardSourceWebpackPlugin({
@@ -289,7 +289,7 @@ module.exports = function(input) {
         conf.optimization = {
             minimizer: [
                 new UglifyJsPlugin({
-                    cache: NODE_CACHE_DIR + "/uglifyjs-webpack-plugin",
+                    cache: input.NODE_CACHE_DIR + "/uglifyjs-webpack-plugin",
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
                 }),
