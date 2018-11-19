@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 var { resolve, basename } = require("path");
 const fs = require("fs");
-const HappyPack = require("happypack");
+//const HappyPack = require("happypack");
 const path = require("path");
 
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
