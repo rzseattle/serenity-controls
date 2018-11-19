@@ -107,6 +107,7 @@
         "webpack-dev-server": "^3.1.1"
     },
     "devDependencies": {
+        "uglifyjs-webpack-plugin": "^2.0.1",
         "@ckeditor/ckeditor5-dev-utils": "^11.0.1",
         "@ckeditor/ckeditor5-typing": "^11.0.1",
         "@storybook/addon-actions": "^4.0.4",
