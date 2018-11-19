@@ -1,5 +1,5 @@
 const path = require("path");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var getLoaders = function(production, input) {
     console.log("Building for:");

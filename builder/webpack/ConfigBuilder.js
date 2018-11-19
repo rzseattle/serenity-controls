@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const { CheckerPlugin } = require("awesome-typescript-loader");
+// const { CheckerPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
