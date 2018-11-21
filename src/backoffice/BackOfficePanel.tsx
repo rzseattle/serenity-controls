@@ -280,7 +280,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                     <div
                                         style={{
                                             width: el.modalProps.width ? "auto" : "90vw",
-                                            paddingBottom: 10,
+
                                             backgroundColor: "#ECECEC",
                                         }}
                                     >

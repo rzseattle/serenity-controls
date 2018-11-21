@@ -325,13 +325,14 @@ export class Table extends React.Component<ITableProps, ITableState> {
     }
 
     public load = () => {
+
         this.state.dataSourceError = "";
 
         if (this.props.onSelectionChange !== null) {
             this.props.onSelectionChange([]);
         }
 
-        this.setState({ loading: true });
+        this.setState({ loading: true, data: [] });
 
         const setStateAfterLoad = (input: ITableDataInput, callback: () => any = null) => {
             this.setState(
