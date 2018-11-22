@@ -51,6 +51,7 @@ require("./CommandMenu/index.stories");
 
 require("./LoadingIndicator/index.stories");
 require("./FormFields/index.stories");
+require("./FormBuilder/index.stories");
 
 require("./Tabs/index.stories.tsx");
 require("./Placeholder/index.stories");
