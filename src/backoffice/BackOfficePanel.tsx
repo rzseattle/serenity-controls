@@ -6,7 +6,7 @@ import { IMenuElement, IMenuSection, Menu } from "./Menu";
 import * as NProgress from "nprogress/nprogress.js";
 import "nprogress/nprogress.css";
 
-import hotkeys from "hotkeys-js";
+import hotkeys, {KeyHandler} from "hotkeys-js";
 
 import { LoadingIndicator } from "../LoadingIndicator";
 
@@ -156,9 +156,10 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                 timeout = setTimeout(this.adjustToSize.bind(this), 30);
             });
 
-            hotkeys("ctrl+g", (event: React.KeyboardEvent) => {
+            hotkeys("ctrl+g", (event: KeyboardEvent) => {
                 event.preventDefault();
                 this.setState({ navigationWindowOpened: true });
+                return false;
             });
         }
     }
@@ -254,16 +255,15 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                     </div>
                 )}
                 <div className={"w-panel-body-container" + (this.props.isSub ? " w-panel-body-container-inner" : "")}>
-                    {this.state.menuVisible &&
-                        !this.state.onlyBody && (
-                            <div className="w-panel-menu">
-                                <Menu
-                                    elements={this.props.menu}
-                                    onMenuElementClick={this.handleNavigateTo}
-                                    mobile={this.state.layout == "mobile"}
-                                />
-                            </div>
-                        )}
+                    {this.state.menuVisible && !this.state.onlyBody && (
+                        <div className="w-panel-menu">
+                            <Menu
+                                elements={this.props.menu}
+                                onMenuElementClick={this.handleNavigateTo}
+                                mobile={this.state.layout == "mobile"}
+                            />
+                        </div>
+                    )}
                     <div className="w-panel-body" style={{ position: "relative" }}>
                         {this.state.openedWindows.map((el, index) => {
                             return (
