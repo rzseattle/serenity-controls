@@ -55,6 +55,15 @@ export const lang = {
         printContainer: {
             printPreview: "Podgląd wydruku",
         },
+        formBuilder: {
+            label: "Etykieta pola",
+            name: "Nazwa pola",
+            fieldType: "Typ pola",
+            required: "Czy pole jest wymagane?",
+            fieldOptions: "Opcje do wyboru",
+            default: "Wartość domyślna pola",
+            rowConfig: "Konfiguracja wyświetlenia",
+        },
         table: {
             footer: {
                 onPage: "Na stronie",

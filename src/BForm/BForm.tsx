@@ -24,7 +24,7 @@ interface IBFormProps {
      * @callback
      * @param {object} keys: inputEvent, form
      */
-    onChange?: (formEvent: IBFormEvent | React.FormEvent) => any;
+    onChange?: (formEvent: IBFormEvent) => any;
     /**
      * This callback is fired when form input is submited preventin "action send"
      * @callback
@@ -73,8 +73,8 @@ interface IBFormProps {
     loading?: boolean;
     children: (formConf: any, data: any, form: BForm) => any;
     formErrors?: string[];
-    fieldErrors?: any;
-    errors?: any;
+    fieldErrors?: Map<string, string[]>;
+    errors?: { fieldErrors: Map<string, string[]>; formErrors: string[] };
     useFormTag?: boolean;
 }
 
@@ -93,7 +93,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
     public static defaultProps: Partial<IBFormProps> = {
         layoutType: "default",
         editable: true,
-        fieldErrors: {},
+        fieldErrors: new Map<string, string[]>(),
         formErrors: [],
         useFormTag: true,
     };
@@ -166,7 +166,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
 
         if (nextProps.errors) {
             this.setState({
-                fieldErrors: nextProps.errors.fieldErrors || {},
+                fieldErrors: nextProps.errors.fieldErrors || new Map<string, string[]>(),
                 formErrors: nextProps.errors.errors || [],
             });
         }
@@ -325,6 +325,10 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                 arrayNotation,
                 this.props.data ? this.props.data[name] || defaultValue : defaultValue,
             );
+        }
+
+        if (value === null || (value === undefined && defaultValue !== null)) {
+            value = defaultValue;
         }
 
         // console.log(get(this.state.fieldErrors))

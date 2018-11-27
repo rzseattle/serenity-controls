@@ -4,6 +4,7 @@ import { storiesOf } from "@storybook/react";
 // @ts-ignore
 import { Panel } from "../../src/Panel";
 import { StateHelper } from "./StateHelper";
+import { StateGeneratorHelper } from "./StateGeneratorHelper";
 
 const fields = [
     {
@@ -38,8 +39,14 @@ const fields = [
     },
 ];
 
-storiesOf("FormBuilder", module).add("Base", () => (
-    <Panel>
-        <StateHelper fields={fields} />
-    </Panel>
-));
+storiesOf("FormBuilder", module)
+    .add("Base", () => (
+        <Panel>
+            <StateHelper fields={fields} />
+        </Panel>
+    ))
+    .add("Generator", () => (
+        <Panel>
+            <StateGeneratorHelper fields={fields} />
+        </Panel>
+    ));
