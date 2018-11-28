@@ -189,41 +189,56 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
 
     private calculateRelativePosition() {
         const getCurrentCoordinates = () => {
-            return this.props.relativeTo == "cursor"
-                ? this.mouseCursorCoords
-                : (this.props.relativeTo() as HTMLElement).getBoundingClientRect();
+            if (this.props.relativeTo == "cursor") {
+                return this.mouseCursorCoords;
+            } else {
+                const element = this.props.relativeTo() as HTMLElement;
+                // if element dont exist anymore
+                if (element === null) {
+                    return null;
+                }
+                return element.getBoundingClientRect();
+            }
         };
 
         let currentPosition = getCurrentCoordinates();
 
         const calculatePos = () => {
             currentPosition = getCurrentCoordinates();
-            const calculator = new PositionCalculator(
-                currentPosition,
-                this.positionElement.current,
-                this.props.relativeSettings,
-            );
-            const result = calculator.calculate();
-            this.applyStyles(result);
+            if (currentPosition !== null) {
+                const calculator = new PositionCalculator(
+                    currentPosition,
+                    this.positionElement.current,
+                    this.props.relativeSettings,
+                );
+                const result = calculator.calculate();
+                this.applyStyles(result);
+            }
         };
         // todo sprawdzić dlaczego dopiero podwójne wywołanie właściwie pozycjonuje lelement
         calculatePos();
         calculatePos();
 
         if (this.positionObserver === null) {
-            this.positionObserver = window.setInterval(() => {
-                // Last tick after unmount problem reference is empty - so we need if
-                if (this.positionElement == null) {
-                    return;
-                }
-                const newPosition = getCurrentCoordinates();
+            this.positionObserver = window.setInterval(
+                () => {
+                    // Last tick after unmount problem reference is empty - so we need if
+                    if (this.positionElement == null) {
+                        return;
+                    }
+                    const newPosition = getCurrentCoordinates();
 
-                if (newPosition.top != currentPosition.top || newPosition.left != currentPosition.left) {
-                    calculatePos();
+                    if (
+                        newPosition !== null &&
+                        (newPosition.top != currentPosition.top || newPosition.left != currentPosition.left)
+                    ) {
+                        calculatePos();
 
-                    currentPosition = deepCopy(newPosition);
-                }
-            }, this.props.relativeTo == "cursor" ? 10 : 1000);
+                        currentPosition = deepCopy(newPosition);
+                    }
+                },
+                this.props.relativeTo == "cursor" ? 10 : 1000,
+            );
         }
     }
 

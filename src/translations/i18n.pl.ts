@@ -58,11 +58,16 @@ export const lang = {
         formBuilder: {
             label: "Etykieta pola",
             name: "Nazwa pola",
+            change: "Zmień",
+            cancelEdition: "Anuluj edycję",
             fieldType: "Typ pola",
             required: "Czy pole jest wymagane?",
+            nameAlreadyExists: "Pole o podanej nazwie już istnieje",
+            fieldIsRequired: "To pole jest wymagane",
             fieldOptions: "Opcje do wyboru",
             default: "Wartość domyślna pola",
             rowConfig: "Konfiguracja wyświetlenia",
+          confirmFieldDelete: "Czy na pewno usunąć pole?"
         },
         table: {
             footer: {

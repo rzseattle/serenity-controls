@@ -75,6 +75,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
             const elements = [];
 
             for (const i in props.value) {
+
                 const element = options.filter((v) => {
                     return v.value == props.value[i];
                 });

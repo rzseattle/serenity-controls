@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BDate, BSelect, BSwitch, BText, BTextarea } from "../BForm";
+import { BCheckboxGroup, BDate, BSelect, BSwitch, BText, BTextarea } from "../BForm";
 import { IFieldChangeEvent, IOption } from "../fields";
 import { PrintJSON } from "../PrintJSON";
 
@@ -28,6 +28,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
         BTextarea,
         BSwitch,
         BSelect,
+        BCheckboxGroup,
     };
 
     public static defaultProps: Partial<IFormBuilderProps> = {
@@ -60,6 +61,10 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
             <div className="w-form-builder">
                 {fields.map((field) => {
                     const Component: any = this.fields[field.type];
+                    if (field.type == "BCheckboxGroup") {
+                        // @ts-ignore
+                        currentValues[field.name as string] = [];
+                    }
                     return (
                         <Component
                             key={field.name}
@@ -70,7 +75,9 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
                                 this.setState({ currentValues: fieldValues }, this.dataChanged);
                             }}
                             {...(field.options ? { options: field.options } : {})}
-                            value={currentValues[field.name] || field.default} /*help={field.default}*/
+                            value={
+                                currentValues[field.name] || (field.default !== "" ? field.default : [])
+                            } /*help={field.default}*/
                         />
                     );
                 })}

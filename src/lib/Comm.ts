@@ -214,6 +214,15 @@ class Comm {
                         } else if (data.accessDeny !== undefined) {
                             alert("Access deny " + data.accessDeny);
                         } else {
+                            const validationErrors: { fieldErrors: Map<string, string[]>; formErrors: string[] } = {
+                                fieldErrors: new Map<string, string[]>(),
+                                formErrors: [],
+                            };
+                            validationErrors.formErrors = data.formErrors || [];
+                            for (const field in data) {
+                                validationErrors.fieldErrors.set(field, data[field]);
+                            }
+
                             this.callEvent(CommEvents.VALIDATION_ERRORS, data);
                         }
                     }
@@ -284,6 +293,5 @@ class Comm {
         return Comm.__preparePromise("PUT", url, data, callback);
     }
 }
-
 
 export { Comm };

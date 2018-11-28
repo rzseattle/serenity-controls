@@ -8,21 +8,66 @@ export class StateGeneratorHelper extends React.Component<IFormBuilderProps, any
     constructor(props: any) {
         super(props);
         this.state = {
-            fields: [],
+            fields: [
+                {
+                    type: "BText",
+                    name: "invoice",
+                    label: "Nr. faktury",
+                    required: 0,
+                    default: null,
+                    layoutConfig: null,
+                },
+                {
+                    type: "BText",
+                    name: "date",
+                    label: "Data od",
+                    required: 0,
+                    default: null,
+                    layoutConfig: null,
+                },
+                {
+                    type: "BDate",
+                    name: "date_to",
+                    label: "Data do",
+                    required: 0,
+                    default: null,
+                    layoutConfig: null,
+                },
+                {
+                    type: "BTextarea",
+                    name: "comment",
+                    label: "Komentarz",
+                    required: 0,
+                    default: null,
+                    layoutConfig: null,
+                },
+                {
+                    type: "BText",
+                    name: "user",
+                    label: "Login",
+                    required: 0,
+                    default: null,
+                    layoutConfig: null,
+                },
+                {
+                    label: "Nb. of cars",
+                    type: "BSelect",
+                    default: "1",
+                    name: "select",
+                    options: [{ label: "zero", value: 0 }, { label: "one", value: 1 }, { label: "two", value: 2 }],
+                },
+            ],
         };
     }
 
     public render() {
         return (
             <>
-                <Row md={[8,4]}>
-                    <FormBuilderSchemaGenerator
-                        {...this.props}
-                        values={this.state.fields}
-                        onChange={(data) => this.setState({ fields: data })}
-                    />
-                    <FormBuilder fields={this.state.fields} />
-                </Row>
+                <FormBuilderSchemaGenerator
+                    {...this.props}
+                    values={this.state.fields}
+                    onChange={(data) => this.setState({ fields: data })}
+                />
             </>
         );
     }

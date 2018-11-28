@@ -167,7 +167,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         if (nextProps.errors) {
             this.setState({
                 fieldErrors: nextProps.errors.fieldErrors || new Map<string, string[]>(),
-                formErrors: nextProps.errors.errors || [],
+                formErrors: nextProps.errors.formErrors || [],
             });
         }
     }
@@ -337,7 +337,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value,
             name,
             layoutType: this.props.layoutType,
-            errors: get(this.state.fieldErrors),
+            errors: this.state.fieldErrors.get(name),
             editable: this.props.editable,
             onChange: (e: React.FormEvent | IFieldChangeEvent) => {
                 this.handleInputChange(e);

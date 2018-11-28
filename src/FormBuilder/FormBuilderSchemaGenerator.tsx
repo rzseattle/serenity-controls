@@ -1,8 +1,15 @@
 import * as React from "react";
-import { BDate, BForm, BSelect, BSwitch, BText, BTextarea, IFormFieldsErrorSet } from "../BForm";
+import { BDate, BForm, BSelect, BSwitch, BText, BTextarea } from "../BForm";
 import { IFieldChangeEvent, IOption } from "../fields";
 import { PrintJSON } from "../PrintJSON";
-import { fI18n } from "../lib";
+import { deepCopy, fI18n } from "../lib";
+import { Row } from "../Row";
+
+import "./FormBuilderSchemaGenerator.sass";
+import { FormBuilder } from "./FormBuilder";
+import { Icon } from "../Icon";
+import { confirmDialog } from "../ConfirmDialog";
+import { RelativePositionPresets } from "../Positioner";
 
 interface IFieldConfig {
     name: string;
@@ -21,6 +28,7 @@ export interface IFormBuilderProps {
 interface IState {
     currentField: any;
     formErrors: Map<string, string[]>;
+    editedIndex: number;
 }
 
 export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProps, IState> {
@@ -35,27 +43,86 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
             currentField: {
                 type: "BText",
             },
+            editedIndex: -1,
             formErrors: new Map<string, string[]>(),
         };
     }
 
+    private cancelEdition = () => {
+        this.setState({
+            currentField: {
+                type: "BText",
+            },
+            editedIndex: -1,
+        });
+    };
+    private handleFieldEdit = (index: number) => {
+        this.setState({
+            currentField: deepCopy(this.props.values[index]),
+            editedIndex: index,
+        });
+    };
+    private handleMoveUp = (index: number) => {
+        this.props.values.splice(index--, 0, this.props.values.splice(index, 1)[0]);
+        this.props.onChange(this.props.values);
+    };
+    private handleMoveDown = (index: number) => {
+        this.props.values.splice(index++, 0, this.props.values.splice(index, 1)[0]);
+        this.props.onChange(this.props.values);
+    };
+    private handleDelete = (index: number, e: React.MouseEvent) => {
+        confirmDialog(fI18n.t("frontend:formBuilder.confirmFieldDelete"), {
+            target: () => e.currentTarget as HTMLElement,
+            relativePositionConf: RelativePositionPresets.bottomRight,
+        }).then(() => {
+            this.props.values.splice(index, 1);
+            this.props.onChange(this.props.values);
+        });
+    };
+
     private handleAddField = () => {
         const { currentField } = this.state;
         const errors: Map<string, string[]> = new Map<string, string[]>();
-        console.log(errors, "__tutaj");
+        this.setState({ formErrors: errors });
         if (this.props.onChange) {
             if (!currentField.name) {
-              console.log(errors, "__tutaj");
-                errors.set("name", ["Pole wymagane"]);
-                errors.set("name", ["Pole wymaganexxx"]);
-console.log(errors, "_tutaj");
+                errors.set("name", [fI18n.t("frontend:formBuilder.fieldIsRequired")]);
+            }
+            if (this.state.editedIndex === -1) {
+                for (const el of this.props.values) {
+                    if (el.name == currentField.name) {
+                        errors.set("name", [fI18n.t("frontend:formBuilder.nameAlreadyExists")]);
+                    }
+                }
+            }
+
+            if (!currentField.type) {
+                errors.set("type", [fI18n.t("frontend:formBuilder.fieldIsRequired")]);
+            }
+            if (!currentField.label) {
+                errors.set("label", [fI18n.t("frontend:formBuilder.fieldIsRequired")]);
             }
 
             if (errors.size == 0) {
+                let curr = this.state.currentField;
 
-                this.props.onChange(this.props.values.concat(this.state.currentField));
+                if (curr.options !== undefined && !Array.isArray(curr.options)) {
+                    const lines = this.state.currentField.options.replace(/^\s+|\s+$/g, "").split("\n");
+                    const options = lines.map((el: string) => {
+                        const [value, label] = el.split(";");
+                        return { value, label };
+                    });
+                    // curr.options = options;
+                    curr = { ...curr, options };
+                }
+
+                if (this.state.editedIndex === -1) {
+                    this.props.onChange(this.props.values.concat({ ...curr }));
+                } else {
+                    this.props.values[this.state.editedIndex] = curr;
+                    this.props.onChange(this.props.values);
+                }
             } else {
-                console.log(errors, "tutaj");
                 this.setState({ formErrors: errors });
             }
         }
@@ -68,64 +135,174 @@ console.log(errors, "_tutaj");
             { type: "BDate", label: "Data", options: false },
             { type: "BSelect", label: "Jednokrotnego wyboru [lista]", options: true },
             { type: "BSwitch", label: "Jednokrotnego wyboru [przełącznik]", options: true },
-            { type: "BCheckboxList", label: "Wielokrotnego wyboru", options: true },
+            { type: "BCheckboxGroup", label: "Wielokrotnego wyboru", options: true },
         ];
         const currentConfig = fieldsConf.filter((el) => el.type == this.state.currentField.type)[0];
 
+        const data = this.state.currentField;
+        if (data.options && Array.isArray(data.options)) {
+            data.options = data.options
+                .reduce((p: string, option: IOption) => p + option.value + ";" + option.label + "\n", "")
+                .replace(/^\s+|\s+$/g, "");
+        }
+
         return (
             <div className="w-form-builder-schema-generator">
-                <BForm
-                    data={this.state.currentField}
-                    onChange={(event) => this.setState({ currentField: event.form.getData() })}
-                    fieldErrors={this.state.formErrors}
-                >
-                    {(form) => (
-                        <>
-                            <BSelect
-                                label={fI18n.t("frontend:formBuilder.fieldType")}
-                                options={fieldsConf.map((el) => ({ value: el.type, label: el.label }))}
-                                {...form("type", "BText")}
-                            />
-                            <BText label={fI18n.t("frontend:formBuilder.name")} {...form("name")} />
-                            <BText label={fI18n.t("frontend:formBuilder.label")} {...form("label")} />
-                            <BSwitch
-                                label={fI18n.t("frontend:formBuilder.required")}
-                                options={[{ value: 0, label: "Nie" }, { value: 1, label: "Tak" }]}
-                                {...form("required", 0)}
-                            />
-
-                            <BText label={fI18n.t("frontend:formBuilder.default")} {...form("default")} />
-                            {currentConfig.options && (
+                <Row noGutters={false}>
+                    <>
+                        <div className="w-form-builder-schema-generator-title">Dodaj / edytuj pole</div>
+                        <BForm
+                            data={data}
+                            onChange={(event) => this.setState({ currentField: event.form.getData() })}
+                            fieldErrors={this.state.formErrors}
+                        >
+                            {(form) => (
                                 <>
-                                    <BTextarea
-                                        label={fI18n.t("frontend:formBuilder.fieldOptions")}
-                                        help={"Format: oddzielne linie w fromacie wartoś;etykieta"}
-                                        style={{ height: 250 }}
+                                    <BSelect
+                                        label={fI18n.t("frontend:formBuilder.fieldType")}
+                                        options={fieldsConf.map((el) => ({ value: el.type, label: el.label }))}
+                                        {...form("type", "BText")}
                                     />
+                                    <BText label={fI18n.t("frontend:formBuilder.name")} {...form("name")} />
+                                    <BText label={fI18n.t("frontend:formBuilder.label")} {...form("label")} />
+                                    <BSwitch
+                                        label={fI18n.t("frontend:formBuilder.required")}
+                                        options={[{ value: 0, label: "Nie" }, { value: 1, label: "Tak" }]}
+                                        {...form("required", 0)}
+                                    />
+
+                                    <BText label={fI18n.t("frontend:formBuilder.default")} {...form("default")} />
+                                    {currentConfig.options && (
+                                        <>
+                                            <BTextarea
+                                                label={fI18n.t("frontend:formBuilder.fieldOptions")}
+                                                help={"Format: oddzielne linie w fromacie wartoś;etykieta"}
+                                                style={{ height: 250 }}
+                                                {...form("options")}
+                                            />
+                                        </>
+                                    )}
+                                    <BText
+                                        label={fI18n.t("frontend:formBuilder.rowConfig")}
+                                        help={"Nie obowiązkowe. Nr wiersza + ilość zajmowanego miejsca ( od 1 do 12 )"}
+                                        {...form("layoutConfig")}
+                                    />
+                                    <button
+                                        style={{ width: "100%" }}
+                                        className="btn btn-primary "
+                                        onClick={this.handleAddField}
+                                    >
+                                        {this.state.editedIndex == -1
+                                            ? fI18n.t("frontend:add")
+                                            : fI18n.t("frontend:formBuilder.change")}
+                                    </button>
+                                    {this.state.editedIndex != -1 && (
+                                        <button
+                                            style={{ width: "100%" }}
+                                            className="btn btn-default "
+                                            onClick={this.cancelEdition}
+                                        >
+                                            {fI18n.t("frontend:formBuilder.cancelEdition")}
+                                        </button>
+                                    )}
                                 </>
                             )}
-                            <BText
-                                label={fI18n.t("frontend:formBuilder.rowConfig")}
-                                help={"Nie obowiązkowe. Nr wiersza + ilość zajmowanego miejsca ( od 1 do 12 )"}
-                                {...form("layoutConfig")}
-                            />
-                            <button
-                                style={{ width: "100%" }}
-                                className="btn btn-primary "
-                                onClick={this.handleAddField}
-                            >
-                                {fI18n.t("frontend:add")}
-                            </button>
-                        </>
-                    )}
-                </BForm>
-                <PrintJSON json={this.state.currentField} />
-                <PrintJSON json={currentConfig} />
-                <hr />
-                To są errory
-                <PrintJSON json={this.state.formErrors} />
-                <PrintJSON json={{ x: 1, ...this.state.formErrors.entries() }} />
+                        </BForm>
+                        <PrintJSON json={this.state.currentField} />
+                        <hr />
+                        <PrintJSON json={this.props.values} />
+                    </>
+                    <>
+                        <div className="w-form-builder-schema-generator-title">Lista pól</div>
+                        <div className="w-form-builder-schema-generator-fields">
+                            {this.props.values.map((el: IFieldConfig, key: number) => (
+                                <div key={el.name} onClick={() => this.handleFieldEdit(key)}>
+                                    {/*<Icon name="FieldNotChanged" />*/}
+                                    <b>
+                                        {key + 1}. {el.label}
+                                    </b>{" "}
+                                    [{el.name}]
+                                    <div>
+                                        {key != 0 && (
+                                            <a
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    this.handleMoveUp(key);
+                                                }}
+                                            >
+                                                <Icon name="Up" />
+                                            </a>
+                                        )}
+                                        {key + 1 != this.props.values.length && (
+                                            <a
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    this.handleMoveDown(key);
+                                                }}
+                                            >
+                                                <Icon name="Down" />
+                                            </a>
+                                        )}
+                                        <a
+                                            onClick={(e) => {
+                                                e.persist();
+                                                e.stopPropagation();
+                                                this.handleDelete(key, e);
+                                            }}
+                                        >
+                                            <Icon name="ChromeClose" />
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                    <>
+                        <div className="w-form-builder-schema-generator-title">Podgląd</div>
+                        <ErrorBoundary>
+                            <FormBuilder fields={this.props.values} />
+                        </ErrorBoundary>
+                    </>
+                </Row>
             </div>
         );
+    }
+}
+
+class ErrorBoundary extends React.Component<any, any> {
+    constructor(props: any) {
+        super(props);
+        this.state = { hasError: false, error: null };
+    }
+
+    public componentWillReceiveProps() {
+        this.setState({ hasError: false });
+    }
+
+    public static getDerivedStateFromError(error: any) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true, error };
+    }
+
+    public componentDidCatch(error: any, info: any) {
+        // You can also log the error to an error reporting service
+        // logErrorToMyService(error, info);
+    }
+
+    public render() {
+        if (this.state.hasError) {
+            // You can render any custom fallback UI
+            return (
+                <>
+                    <h1>Something went wrong.</h1>
+                    <pre>{this.state.error.message}</pre>
+                    <pre>
+                        {this.state.error.fileName}:{this.state.error.lineNumber}
+                    </pre>
+                </>
+            );
+        }
+
+        return this.props.children;
     }
 }
