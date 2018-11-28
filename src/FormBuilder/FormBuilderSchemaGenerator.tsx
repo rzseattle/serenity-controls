@@ -21,7 +21,7 @@ interface IFieldConfig {
 
 export interface IFormBuilderProps {
     fields: IFieldConfig[];
-    values?: any;
+
     onChange?: (data: { [index: string]: string | number }) => any;
 }
 
@@ -33,7 +33,7 @@ interface IState {
 
 export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProps, IState> {
     public static defaultProps: Partial<IFormBuilderProps> = {
-        values: [],
+        fields: [],
     };
 
     constructor(props: IFormBuilderProps) {
@@ -58,25 +58,25 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
     };
     private handleFieldEdit = (index: number) => {
         this.setState({
-            currentField: deepCopy(this.props.values[index]),
+            currentField: deepCopy(this.props.fields[index]),
             editedIndex: index,
         });
     };
     private handleMoveUp = (index: number) => {
-        this.props.values.splice(index--, 0, this.props.values.splice(index, 1)[0]);
-        this.props.onChange(this.props.values);
+        this.props.fields.splice(index--, 0, this.props.fields.splice(index, 1)[0]);
+        this.props.onChange(this.props.fields);
     };
     private handleMoveDown = (index: number) => {
-        this.props.values.splice(index++, 0, this.props.values.splice(index, 1)[0]);
-        this.props.onChange(this.props.values);
+        this.props.fields.splice(index++, 0, this.props.fields.splice(index, 1)[0]);
+        this.props.onChange(this.props.fields);
     };
     private handleDelete = (index: number, e: React.MouseEvent) => {
         confirmDialog(fI18n.t("frontend:formBuilder.confirmFieldDelete"), {
             target: () => e.currentTarget as HTMLElement,
             relativePositionConf: RelativePositionPresets.bottomRight,
         }).then(() => {
-            this.props.values.splice(index, 1);
-            this.props.onChange(this.props.values);
+            this.props.fields.splice(index, 1);
+            this.props.onChange(this.props.fields);
         });
     };
 
@@ -89,7 +89,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                 errors.set("name", [fI18n.t("frontend:formBuilder.fieldIsRequired")]);
             }
             if (this.state.editedIndex === -1) {
-                for (const el of this.props.values) {
+                for (const el of this.props.fields) {
                     if (el.name == currentField.name) {
                         errors.set("name", [fI18n.t("frontend:formBuilder.nameAlreadyExists")]);
                     }
@@ -117,10 +117,10 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                 }
 
                 if (this.state.editedIndex === -1) {
-                    this.props.onChange(this.props.values.concat({ ...curr }));
+                    this.props.onChange(this.props.fields.concat({ ...curr }));
                 } else {
-                    this.props.values[this.state.editedIndex] = curr;
-                    this.props.onChange(this.props.values);
+                    this.props.fields[this.state.editedIndex] = curr;
+                    this.props.onChange(this.props.fields);
                 }
             } else {
                 this.setState({ formErrors: errors });
@@ -155,6 +155,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                             data={data}
                             onChange={(event) => this.setState({ currentField: event.form.getData() })}
                             fieldErrors={this.state.formErrors}
+                            useFormTag={false}
                         >
                             {(form) => (
                                 <>
@@ -182,12 +183,12 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                             />
                                         </>
                                     )}
-                                    <BText
+                                    {/*<BText
                                         label={fI18n.t("frontend:formBuilder.rowConfig")}
                                         help={"Nie obowiązkowe. Nr wiersza + ilość zajmowanego miejsca ( od 1 do 12 )"}
                                         {...form("layoutConfig")}
-                                    />
-                                    <button
+                                    />*/}
+                                    <a
                                         style={{ width: "100%" }}
                                         className="btn btn-primary "
                                         onClick={this.handleAddField}
@@ -195,27 +196,27 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                         {this.state.editedIndex == -1
                                             ? fI18n.t("frontend:add")
                                             : fI18n.t("frontend:formBuilder.change")}
-                                    </button>
+                                    </a>
                                     {this.state.editedIndex != -1 && (
-                                        <button
+                                        <a
                                             style={{ width: "100%" }}
                                             className="btn btn-default "
                                             onClick={this.cancelEdition}
                                         >
                                             {fI18n.t("frontend:formBuilder.cancelEdition")}
-                                        </button>
+                                        </a>
                                     )}
                                 </>
                             )}
                         </BForm>
-                        <PrintJSON json={this.state.currentField} />
+                        {/*<PrintJSON json={this.state.currentField} />
                         <hr />
-                        <PrintJSON json={this.props.values} />
+                        <PrintJSON json={this.props.values} />*/}
                     </>
                     <>
                         <div className="w-form-builder-schema-generator-title">Lista pól</div>
                         <div className="w-form-builder-schema-generator-fields">
-                            {this.props.values.map((el: IFieldConfig, key: number) => (
+                            {this.props.fields.map((el: IFieldConfig, key: number) => (
                                 <div key={el.name} onClick={() => this.handleFieldEdit(key)}>
                                     {/*<Icon name="FieldNotChanged" />*/}
                                     <b>
@@ -233,7 +234,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                                 <Icon name="Up" />
                                             </a>
                                         )}
-                                        {key + 1 != this.props.values.length && (
+                                        {key + 1 != this.props.fields.length && (
                                             <a
                                                 onClick={(e) => {
                                                     e.stopPropagation();
@@ -260,7 +261,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                     <>
                         <div className="w-form-builder-schema-generator-title">Podgląd</div>
                         <ErrorBoundary>
-                            <FormBuilder fields={this.props.values} />
+                            <FormBuilder fields={this.props.fields} />
                         </ErrorBoundary>
                     </>
                 </Row>

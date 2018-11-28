@@ -222,8 +222,7 @@ class Comm {
                             for (const field in data) {
                                 validationErrors.fieldErrors.set(field, data[field]);
                             }
-
-                            this.callEvent(CommEvents.VALIDATION_ERRORS, data);
+                            this.callEvent(CommEvents.VALIDATION_ERRORS, validationErrors);
                         }
                     }
                 } else {

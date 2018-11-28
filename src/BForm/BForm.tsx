@@ -80,8 +80,8 @@ interface IBFormProps {
 
 interface IBFormState {
     data: any;
-    fieldErrors: any;
-    formErrors: any;
+    fieldErrors: Map<string, string[]>;
+    formErrors: string[];
     isDirty: boolean;
     loading: boolean;
 }
@@ -200,7 +200,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                     this.props.onSuccess({ form: this, response });
                 }
                 this.setState({
-                    fieldErrors: {},
+                    fieldErrors: new Map<string, string[]>(),
                     formErrors: [],
                 });
 
