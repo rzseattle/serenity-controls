@@ -14,9 +14,7 @@ import {ImageViewer} from "./files/viewers/ImageViewer";
 import {PDFViewer} from "./files/viewers/PDFViewer";
 
 let baseUrl = "";
-if (window.location.host.indexOf("esotiq") != -1) {
-    baseUrl = "https://static.esotiq.com/";
-}
+
 
 const parsePath = (path) => {
     if (path.charAt(0) != "/") {
@@ -293,7 +291,7 @@ class FileList extends React.Component<IFileList, any> {
                                           <Icon name={this.isImage(el.name) ? "Photo2" : "TextDocument"} />
                                           {el.name}
                                       </a>
-                                      {!el.uploaded && (
+                                      {!el.uploaded && false && (
                                           <div className="w-file-list-upload-info">
                                               Plik zostanie załadowany po zapisaniu formularza
                                           </div>

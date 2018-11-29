@@ -454,7 +454,7 @@ class Wysiwyg extends React.Component<IWysiwygProps, any> {
                         {name: "insert", items: ["Image", "Table"]},
                         {name: "tools", items: ["Maximize", "Source"]},
                     ],
-                    extraPlugins: "justify",
+                    extraPlugins: "justify,",
                     enterMode: CKEDITOR.ENTER_P,
                 };
                 if (this.props.style.height) {
