@@ -22,7 +22,7 @@ interface IFieldConfig {
 export interface IFormBuilderProps {
     fields: IFieldConfig[];
 
-    onChange?: (data: { [index: string]: string | number }) => any;
+    onChange?: (data: IFieldConfig[]) => any;
 }
 
 interface IState {
