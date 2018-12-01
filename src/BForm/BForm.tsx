@@ -355,7 +355,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             // classes.push('form-inline');
         }
 
-        const Tag = this.props.useFormTag ? "form" : "div";
+        const Tag: any = this.props.useFormTag ? "form" : "div";
 
         return (
             <Tag
