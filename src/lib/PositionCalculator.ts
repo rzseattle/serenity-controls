@@ -56,12 +56,16 @@ export class PositionCalculator {
         const corr = [0, 0];
 
         let currentElement: HTMLElement | Node = this.item;
+
+
         while (currentElement) {
             currentElement = currentElement.parentNode;
             if (currentElement instanceof HTMLElement) {
                 const element: HTMLElement = currentElement as HTMLElement;
                 const style = window.getComputedStyle(element, null);
                 if (style.position == "relative") {
+
+
                     const clientRect = element.getBoundingClientRect();
                     corr[0] -= clientRect.left;
                     corr[1] -= clientRect.top;
