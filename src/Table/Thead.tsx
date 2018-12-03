@@ -65,48 +65,50 @@ export default class Thead extends React.PureComponent<ITheadProps, any> {
                             <input type="checkbox" checked={this.props.allChecked} />
                         </th>
                     ) : null}
-                    {this.props.columns.filter((el) => el !== null && el.display === true).map((column, index) => {
-                        const Component = column.filter.length > 0 ? withFilterOpenLayer(column.filter) : null;
-                        const classes = [];
-                        if (this.props.order[column.field] !== undefined) {
-                            classes.push("w-table-sorted w-table-sorted-" + this.props.order[column.field].dir);
-                        }
-                        if (this.props.filters[column.field] !== undefined) {
-                            classes.push("w-table-filtered");
-                        }
-                        return (
-                            <th
-                                key={index}
-                                style={{ width: column.width }}
-                                className={classes.join(" ")}
-                                onClick={(e) => {
-                                    if (column.isSortable) {
-                                        this.props.onCellClicked(index, e);
-                                    }
-                                }}
-                                /*onMouseEnter={this.handleMouseEnter.bind(this, index)}*/
-                                /*onMouseLeave={this.handleMouseLeave.bind(this, index)}*/
-                            >
-                                {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
+                    {this.props.columns
+                        .filter((el) => el !== null && el.display === true)
+                        .map((column, index) => {
+                            const Component = column.filter.length > 0 ? withFilterOpenLayer(column.filter) : null;
+                            const classes = [];
+                            if (this.props.order[column.field] !== undefined) {
+                                classes.push("w-table-sorted w-table-sorted-" + this.props.order[column.field].dir);
+                            }
+                            if (this.props.filters[column.field] !== undefined) {
+                                classes.push("w-table-filtered");
+                            }
+                            return (
+                                <th
+                                    key={index}
+                                    style={{ width: column.width }}
+                                    className={classes.join(" ")}
+                                    onClick={(e) => {
+                                        if (column.isSortable) {
+                                            this.props.onCellClicked(index, e);
+                                        }
+                                    }}
+                                    /*onMouseEnter={this.handleMouseEnter.bind(this, index)}*/
+                                    /*onMouseLeave={this.handleMouseLeave.bind(this, index)}*/
+                                >
+                                    {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
 
-                                {column.header.tooltip ? (
-                                    <Tooltip
-                                        relativeSettings={RelativePositionPresets.topMiddle}
-                                        content={column.header.tooltip}
-                                    >
-                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
-                                    </Tooltip>
-                                ) : (
-                                    <>
-                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
-                                    </>
-                                )}
-                                {column.filter.length > 0 && (
-                                    <Component showApply={true} onApply={this.props.onFilterChanged} />
-                                )}
-                            </th>
-                        );
-                    })}
+                                    {column.header.tooltip ? (
+                                        <Tooltip
+                                            relativeSettings={RelativePositionPresets.topMiddle}
+                                            content={column.header.tooltip}
+                                        >
+                                            {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                        </Tooltip>
+                                    ) : (
+                                        <>
+                                            {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                        </>
+                                    )}
+                                    {column.filter.length > 0 && (
+                                        <Component showApply={true} onApply={this.props.onFilterChanged} />
+                                    )}
+                                </th>
+                            );
+                        })}
                 </tr>
             </thead>
         );
@@ -173,7 +175,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                             shadow={false}
                             relativePositionConf={RelativePositionPresets.bottomRight}
                             className={"filter-modal"}
-                            {...filters[0].config.modalProps}
+                            {...(filters[0].config ? filters[0].config.modalProps : {})}
                         >
                             <div
                                 className={
