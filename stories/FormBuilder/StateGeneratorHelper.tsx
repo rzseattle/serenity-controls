@@ -65,7 +65,7 @@ export class StateGeneratorHelper extends React.Component<IFormBuilderProps, any
             <>
                 <FormBuilderSchemaGenerator
                     {...this.props}
-                    values={this.state.fields}
+                    fields={this.state.fields}
                     onChange={(data) => this.setState({ fields: data })}
                 />
             </>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BCheckboxGroup, BDate, BSelect, BSwitch, BText, BTextarea } from "../BForm";
+import { BCheckboxGroup, BDate, BForm, BSelect, BSwitch, BText, BTextarea, IApplyToFieldFn } from "../BForm";
 import { IFieldChangeEvent, IOption } from "../fields";
 import { PrintJSON } from "../PrintJSON";
 
@@ -15,6 +15,8 @@ export interface IFormBuilderProps {
     fields: IFieldConfig[];
     values?: { [index: string]: string | number };
     onChange?: (data: { [index: string]: string | number }) => any;
+    form?: IApplyToFieldFn;
+    formNamespace?: string;
 }
 
 interface IState {
@@ -55,7 +57,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
     };
 
     public render() {
-        const { fields } = this.props;
+        const { fields, form, formNamespace } = this.props;
         const { currentValues } = this.state;
         return (
             <div className="w-form-builder">
@@ -78,6 +80,12 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
                             value={
                                 currentValues[field.name] || (field.default !== "" ? field.default : [])
                             } /*help={field.default}*/
+                            {...(form
+                                ? form(
+                                      formNamespace ? formNamespace + "[" + field.name + "]" : field.name,
+                                      field.default,
+                                  )
+                                : {})}
                         />
                     );
                 })}

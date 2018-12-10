@@ -253,6 +253,12 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
         });
 
         const calculatePos = () => {
+            // unbind protection
+            if (this.positionElement.current == null) {
+                clearTimeout(this.positionObserver);
+                this.positionObserver = null;
+                return;
+            }
             const calculator = new PositionCalculator(getActualCoordinades(), this.positionElement.current, {
                 relativeToAt: "middle middle",
                 itemAt: "middle middle",

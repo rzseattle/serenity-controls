@@ -147,11 +147,24 @@ export class FileListField extends React.Component<IFileListProps, any> {
         return (
             <div className="w-file-list">
                 {(!maxLength || (value && value.length < maxLength) || !value) && (
-                    <Dropzone className="dropzone" activeClassName="w-gallery-add-active" onDrop={this.handleFileAdd}>
-                        <span>
-                            <Icon name={"Add"} />{" "}
-                            {this.props.buttonTitle ? this.props.buttonTitle : fI18n.t("frontend:file.add")}{" "}
-                        </span>
+                    <Dropzone onDrop={this.handleFileAdd}>
+                        {({ getRootProps, getInputProps, isDragActive }) => {
+                            return (
+                                <div {...getRootProps()} className="dropzone">
+                                    <input {...getInputProps()} />
+                                    {isDragActive ? (
+                                        <p>Drop files here...</p>
+                                    ) : (
+                                        <span >
+                                            <Icon name={"Add"} />{" "}
+                                            {this.props.buttonTitle
+                                                ? this.props.buttonTitle
+                                                : fI18n.t("frontend:file.add")}{" "}
+                                        </span>
+                                    )}
+                                </div>
+                            );
+                        }}
                     </Dropzone>
                 )}
 

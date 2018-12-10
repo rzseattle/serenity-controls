@@ -86,6 +86,17 @@ interface IBFormState {
     loading: boolean;
 }
 
+export type IApplyToFieldFn = (
+    fieldName: string,
+    defaultValue: any,
+) => {
+    value: any;
+    layoutType: string;
+    errors: string[];
+    editable: boolean;
+    onChange: (event: IFieldChangeEvent) => any;
+};
+
 export class BForm extends React.Component<IBFormProps, IBFormState> {
     public formTag: HTMLElement;
     private fieldsValues: {};
@@ -306,7 +317,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         }
     }
 
-    public applyToField(name: string, defaultValue: any = null) {
+    public applyToField: IApplyToFieldFn = (name: string, defaultValue: any = null) => {
         let value;
         const { get, set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
 
@@ -331,8 +342,6 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value = defaultValue;
         }
 
-        // console.log(get(this.state.fieldErrors))
-
         return {
             value,
             name,
@@ -343,7 +352,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                 this.handleInputChange(e);
             },
         };
-    }
+    };
 
     public render() {
         const layoutType = this.props.layoutType;
@@ -374,7 +383,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                         ))}
                     </ul>
                 )}
-                {this.props.children(this.applyToField.bind(this), this.getData(), this)}
+                {this.props.children(this.applyToField, this.getData(), this)}
 
                 <Shadow {...{ visible: this.state.loading, loader: true, container: () => this.formTag }} />
             </Tag>

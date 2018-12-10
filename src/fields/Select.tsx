@@ -144,6 +144,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     };
 
     private searchTextChanged = (e: any) => {
+
         let filteredOptions: IOption[];
 
         if (!Array.isArray(this.props.options)) {
@@ -152,9 +153,9 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             filteredOptions = this.props.options;
         }
 
-        if (this.state.searchedTxt != "") {
+        if (e.target.value != "") {
             filteredOptions = filteredOptions.filter(
-                (el) => ("" + el.label).toLowerCase().indexOf(this.state.searchedTxt.toLowerCase()) !== -1,
+                (el) => ("" + el.label).toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1,
             );
         }
 

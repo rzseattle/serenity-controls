@@ -45,6 +45,33 @@ const items = [
             },
         ],
     },
+    {
+        key: "f4",
+        label: "Menu",
+        subItems: [
+            {
+                key: "f4",
+                label: "Sub Option 1",
+                icon: "Sync",
+            },
+            {
+                key: "f5",
+                label: "Sub Option 2",
+                icon: "Add",
+                onClick: () => {
+                    alert("clicked");
+                },
+            },
+            {
+                key: "f6",
+                label: "This is option with very very very long text inside",
+                icon: "Delete",
+                onClick: () => {
+                    alert("clicked");
+                },
+            },
+        ],
+    },
 ];
 
 const containerStyle = {
