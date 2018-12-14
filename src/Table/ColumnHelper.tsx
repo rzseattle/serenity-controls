@@ -74,7 +74,7 @@ export default class ColumnHelper {
                     return "---";
                 } else {
                     // @ts-ignore
-                    return options[value];
+                    return options && options[value];
                 }
             },
             filter: [
