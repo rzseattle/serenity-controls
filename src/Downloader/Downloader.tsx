@@ -67,5 +67,6 @@ export const download = (url: string, data: any = null): any => {
         data,
     };
 
+    // @ts-ignore
     const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup} />, wrapper);
 };

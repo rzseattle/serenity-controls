@@ -153,7 +153,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
 
         this.setState({
             fieldErrors: response.fieldErrors,
-            formErrors: response.errors,
+            formErrors: response.errors || [],
         });
 
         this.forceUpdate();
@@ -342,6 +342,8 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value = defaultValue;
         }
 
+        console.log(this.state.fieldErrors, "xxx");
+
         return {
             value,
             name,
@@ -366,6 +368,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
 
         const Tag: any = this.props.useFormTag ? "form" : "div";
 
+        console.log(this.state.fieldErrors);
         return (
             <Tag
                 ref={(form: HTMLElement) => (this.formTag = form)}
