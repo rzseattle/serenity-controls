@@ -1,11 +1,11 @@
-import { SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
-import { IFile } from "./FileListsField";
+import {SortableElement, SortableHandle, SortEnd} from "react-sortable-hoc";
+import {IFile} from "./FileListsField";
 import * as React from "react";
-import { Icon } from "../Icon";
-import { isImage, formatBytes } from "./utils";
+import {Icon} from "../Icon";
+import {isImage, formatBytes} from "./utils";
 import Tooltip from "../Tooltip/Tooltip";
-import { FileTooltip } from "./FileTooltip";
-import { RelativePositionPresets } from "../Positioner";
+import {FileTooltip} from "./FileTooltip";
+import {RelativePositionPresets} from "../Positioner";
 
 interface IImageBoxProps {
     file: IFile;
@@ -17,11 +17,12 @@ interface IImageBoxProps {
 
 const DragHandle = SortableHandle(() => (
     <a className="w-gallery-drag">
-        <Icon name={"SIPMove"} />
+        <Icon name={"SIPMove"}/>
     </a>
 )); //
 
-export const ImageBox = SortableElement((props: IImageBoxProps) => {
+// @ts-ignore
+const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props: IImageBoxProps) => {
     const file = props.file;
 
     const style = props.style || {};
@@ -32,25 +33,25 @@ export const ImageBox = SortableElement((props: IImageBoxProps) => {
     return (
         <div style={style}>
             <Tooltip
-                relativeSettings={{ ...RelativePositionPresets.bottomLeft, offsetX: -5, widthCalc: "min" }}
+                relativeSettings={{...RelativePositionPresets.bottomLeft, offsetX: -5, widthCalc: "min"}}
                 content={file}
-                template={(data) => <FileTooltip file={file} />}
+                template={(data) => <FileTooltip file={file}/>}
             >
                 <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
                     <span>
-                        <span />
+                        <span/>
                         {file.uploaded ? (
                             isElImage ? (
-                                <img src={file.path} alt="" />
+                                <img src={file.path} alt=""/>
                             ) : (
                                 <>
-                                    <Icon name={"TextDocument"} />
+                                    <Icon name={"TextDocument"}/>
                                 </>
                             )
                         ) : (
                             <>
-                                <img src={preview} alt="" />
-                                <Icon name={"Upload"} />
+                                <img src={preview} alt=""/>
+                                <Icon name={"Upload"}/>
                             </>
                         )}
 
@@ -62,9 +63,9 @@ export const ImageBox = SortableElement((props: IImageBoxProps) => {
                                 }}
                                 className="w-gallery-delete"
                             >
-                                <Icon name={"Clear"} />{" "}
+                                <Icon name={"Clear"}/>{" "}
                             </a>
-                            <DragHandle />
+                            <DragHandle/>
                         </div>
                     </span>
                     <div className="w-gallery-name">{file.name}</div>
@@ -72,4 +73,7 @@ export const ImageBox = SortableElement((props: IImageBoxProps) => {
             </Tooltip>
         </div>
     );
-});
+};
+
+// @ts-ignore
+export const ImageBox = SortableElement(ImageBoxComponent);
