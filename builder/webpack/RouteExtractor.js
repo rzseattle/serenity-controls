@@ -33,7 +33,7 @@ const extractor = function(basePath, targetComponentFile, targetSassFile, produc
                 console.log("------------------");
                 console.log(basePath + "/" + command);
 
-                throw "Can't extract routes";
+                throw "Can't extract routes. Error: " + e.message;
             }
         } else {
             console.log("not worked");
