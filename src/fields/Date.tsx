@@ -97,6 +97,7 @@ export class Date extends React.Component<IDateProps, any> {
         return (
             <div>
                 <datePicker.SingleDatePicker
+
                     numberOfMonths={1}
                     displayFormat="YYYY-MM-DD"
                     date={this.state.date}
