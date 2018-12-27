@@ -325,7 +325,6 @@ export class Table extends React.Component<ITableProps, ITableState> {
     }
 
     public load = () => {
-
         this.state.dataSourceError = "";
 
         if (this.props.onSelectionChange !== null) {
@@ -335,18 +334,24 @@ export class Table extends React.Component<ITableProps, ITableState> {
         this.setState({ loading: true, data: [] });
 
         const setStateAfterLoad = (input: ITableDataInput, callback: () => any = null) => {
-            this.setState(
-                {
-                    data: input.data.slice(0),
-                    countAll: parseInt("" + input.countAll),
-                    loading: false,
-                    dataSourceDebug: input.debug ? input.debug : false,
-                    firstLoaded: true,
-                    selection: [],
-                    allChecked: false,
-                },
-                callback,
-            );
+            if (!Array.isArray(input.data)) {
+                this.setState({
+                    dataSourceError: typeof input == "string" ? input : JSON.stringify(input),
+                });
+            } else {
+                this.setState(
+                    {
+                        data: input.data.slice(0),
+                        countAll: parseInt("" + input.countAll),
+                        loading: false,
+                        dataSourceDebug: input.debug ? input.debug : false,
+                        firstLoaded: true,
+                        selection: [],
+                        allChecked: false,
+                    },
+                    callback,
+                );
+            }
             if (this.props.onDataChange) {
                 this.props.onDataChange(input.data.slice(0), input.countAll);
             }
@@ -596,8 +601,9 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         {this.state.dataSourceError != "" && (
                             <Error colspan={columns.length + 1} error={this.state.dataSourceError} />
                         )}
-                        {!this.state.loading &&
-                            this.state.data.length == 0 && <EmptyResult colspan={columns.length + 1} />}
+                        {!this.state.loading && this.state.data.length == 0 && (
+                            <EmptyResult colspan={columns.length + 1} />
+                        )}
                         {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
                         {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
                         {/*this.state.firstLoaded && */}

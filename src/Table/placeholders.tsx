@@ -24,7 +24,10 @@ export function Error(props: { colspan: number; error: string }) {
     return (
         <tr>
             <td colSpan={props.colspan}>
-                <span dangerouslySetInnerHTML={{ __html: props.error }} />
+                <h4>Datasource error</h4>
+                <pre>
+                    <span dangerouslySetInnerHTML={{ __html: props.error }} />
+                </pre>
             </td>
         </tr>
     );
