@@ -183,7 +183,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         }
     }
 
-    public submit(tmpCallbacks: { [index: string]: () => any }) {
+    public submit(tmpCallbacks: { [index: string]: () => any } = null) {
         this.handleSubmit(null, tmpCallbacks);
     }
 
@@ -215,7 +215,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                     formErrors: [],
                 });
 
-                if (tmpCallbacks[CommEvents.SUCCESS]) {
+                if (tmpCallbacks && tmpCallbacks[CommEvents.SUCCESS]) {
                     tmpCallbacks[CommEvents.SUCCESS]({ form: this, response });
                 }
             });
@@ -342,8 +342,6 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value = defaultValue;
         }
 
-        console.log(this.state.fieldErrors, "xxx");
-
         return {
             value,
             name,
@@ -368,7 +366,6 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
 
         const Tag: any = this.props.useFormTag ? "form" : "div";
 
-        console.log(this.state.fieldErrors);
         return (
             <Tag
                 ref={(form: HTMLElement) => (this.formTag = form)}

@@ -219,8 +219,8 @@ class Comm {
                                 formErrors: [],
                             };
                             validationErrors.formErrors = data.formErrors || [];
-                            for (const field in data) {
-                                validationErrors.fieldErrors.set(field, data[field]);
+                            for (const field in data.fieldErrors) {
+                                validationErrors.fieldErrors.set(field, data.fieldErrors[field]);
                             }
                             this.callEvent(CommEvents.VALIDATION_ERRORS, validationErrors);
                         }
