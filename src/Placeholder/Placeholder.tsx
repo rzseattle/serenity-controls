@@ -50,12 +50,20 @@ export class Placeholder extends React.Component<ILoaderContainerProps, any> {
     };*/
 
     public componentDidMount() {
-        this.props.promise.then((result: any) => {
-            this.setState({
-                loaded: true,
-                data: result,
+        this.props.promise
+            .then((result: any) => {
+                this.setState({
+                    loaded: true,
+                    data: result,
+                });
+            })
+            .catch((reason) => {
+                alert(reason);
+                this.setState({
+                    loaded: true,
+                    data: reason,
+                });
             });
-        });
     }
 
     public render() {

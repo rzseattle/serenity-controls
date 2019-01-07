@@ -5,7 +5,8 @@ import * as React from "react";
 import { ServerErrorPresenter } from "./ServerErrorPresenter";
 import { IModalProps } from "../Modal";
 import { ErrorInfo } from "react";
-import {PrintJSON} from "../PrintJSON";
+import { PrintJSON } from "../PrintJSON";
+import { PanelContext } from "./PanelContext";
 
 declare var PRODUCTION: boolean;
 
@@ -50,11 +51,17 @@ export interface IArrowViewComponentProps {
 interface IProps {
     context: any;
     isSub: boolean;
+
     onLoadStart(): any;
+
     onLoadEnd(): any;
+
     setPanelOption(name: string, value: string | number | boolean, callback?: () => any): any;
+
     openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): any;
+
     closeModal(modalId: string): any;
+
     changeView: (input: any, callback: () => any) => any;
 }
 
@@ -156,26 +163,46 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                 )}
 
                 {ComponentInfo && ComponentInfo.Component ? (
-                    <ComponentInfo.Component
-                        {...p.context.viewData}
-                        reloadProps={this.handleReloadProps}
-                        baseURL={p.context.view.baseURL}
-                        _baseURL={p.context.view.baseURL}
-                        _basePath={p.context.basePath}
-                        _notification={this.handleNotification}
-                        _log={this.handleLog}
-                        _reloadProps={this.handleReloadProps}
-                        _setPanelOption={this.props.setPanelOption}
-                        _goto={this.handleGoTo}
-                        _startLoadingIndicator={this.props.onLoadStart}
-                        _stopLoadingIndicator={this.props.onLoadEnd}
-                        _isSub={this.props.isSub}
-                        _scrollTo={() => {
-                            alert("Not implemented");
+                    <PanelContext.Provider
+                        value={{
+                            _baseURL: p.context.view.baseURL,
+                            _basePath: p.context.basePath,
+                            _notification: this.handleNotification,
+                            _log: this.handleLog,
+                            _reloadProps: this.handleReloadProps,
+                            _setPanelOption: this.props.setPanelOption,
+                            _goto: this.handleGoTo,
+                            _startLoadingIndicator: this.props.onLoadStart,
+                            _stopLoadingIndicator: this.props.onLoadEnd,
+                            _isSub: this.props.isSub,
+                            _scrollTo: () => {
+                                alert("Not implemented");
+                            },
+                            _openModal: this.props.openModal,
+                            _closeModal: this.props.closeModal,
                         }}
-                        _openModal={this.props.openModal}
-                        _closeModal={this.props.closeModal}
-                    />
+                    >
+                        <ComponentInfo.Component
+                            {...p.context.viewData}
+                            reloadProps={this.handleReloadProps}
+                            baseURL={p.context.view.baseURL}
+                            _baseURL={p.context.view.baseURL}
+                            _basePath={p.context.basePath}
+                            _notification={this.handleNotification}
+                            _log={this.handleLog}
+                            _reloadProps={this.handleReloadProps}
+                            _setPanelOption={this.props.setPanelOption}
+                            _goto={this.handleGoTo}
+                            _startLoadingIndicator={this.props.onLoadStart}
+                            _stopLoadingIndicator={this.props.onLoadEnd}
+                            _isSub={this.props.isSub}
+                            _scrollTo={() => {
+                                alert("Not implemented");
+                            }}
+                            _openModal={this.props.openModal}
+                            _closeModal={this.props.closeModal}
+                        />
+                    </PanelContext.Provider>
                 ) : (
                     !this.props.context.isViewLoading &&
                     ((this.props.context.viewServerErrors &&
@@ -188,13 +215,12 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                     )
                 )}
 
-                {ComponentInfo &&
-                    ComponentInfo.Component == null && (
-                        <div style={{ padding: 10 }}>
-                            <h3>Can't find component </h3>
-                            <pre>{JSON.stringify(ComponentInfo, null, 2)}</pre>
-                        </div>
-                    )}
+                {ComponentInfo && ComponentInfo.Component == null && (
+                    <div style={{ padding: 10 }}>
+                        <h3>Can't find component </h3>
+                        <pre>{JSON.stringify(ComponentInfo, null, 2)}</pre>
+                    </div>
+                )}
             </div>
         );
     }
