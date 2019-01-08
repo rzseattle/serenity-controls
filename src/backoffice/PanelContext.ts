@@ -2,17 +2,41 @@ import * as React from "react";
 
 import {IModalProps} from "../Modal";
 import * as NotificationSystem from "react-notification-system";
-import {IArrowViewComponentProps} from "./PanelComponentLoader";
+import {useContext} from "react";
 
-export const PanelContext = React.createContext<IArrowViewComponentProps>({
-    _basePath: "", _baseURL: "", _isSub: false,
-    _closeModal(modalId: string): any {},
-    _goto(componentPath: string, args?: any, callback?: () => any): any {},
-    _log(element: any): any {},
-    _notification(content: string, title?: string, conf?: NotificationSystem.Notification): any {},
-    _openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string { return "";},
-    _reloadProps(args?: any, callback?: () => any): any {},
-    _setPanelOption(name: string, value: string | number | boolean, callback?: () => any): any {},
-    _startLoadingIndicator(): any {},
-    _stopLoadingIndicator(): any {}
-});
+
+export interface IPanelContext {
+    /**
+     * Url without last action part
+     */
+
+    baseURL: string;
+
+    basePath: string;
+
+
+    notification(content: string, title?: string, conf?: NotificationSystem.Notification): any;
+
+    reloadProps(args?: any, callback?: () => any): any;
+
+    setPanelOption(name: string, value: string | number | boolean, callback?: () => any): any;
+
+    goto(componentPath: string, args?: any, callback?: () => any): any;
+
+    log(element: any): any;
+
+    startLoadingIndicator(): any;
+
+    stopLoadingIndicator(): any;
+
+    isSub: boolean;
+
+    openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string;
+
+    closeModal(modalId: string): any;
+}
+
+
+export const PanelContext = React.createContext(null);
+
+export const getPanelContext = () => useContext<IPanelContext>(PanelContext);
