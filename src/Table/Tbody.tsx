@@ -30,7 +30,7 @@ interface ITbodyProps {
     loading: boolean;
 }
 
-export default class Tbody extends React.PureComponent<ITbodyProps> {
+export default class Tbody extends React.Component<ITbodyProps> {
     constructor(props: ITbodyProps) {
         super(props);
     }
