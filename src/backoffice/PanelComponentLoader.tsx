@@ -165,21 +165,21 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                 {ComponentInfo && ComponentInfo.Component ? (
                     <PanelContext.Provider
                         value={{
-                            _baseURL: p.context.view.baseURL,
-                            _basePath: p.context.basePath,
-                            _notification: this.handleNotification,
-                            _log: this.handleLog,
-                            _reloadProps: this.handleReloadProps,
-                            _setPanelOption: this.props.setPanelOption,
-                            _goto: this.handleGoTo,
-                            _startLoadingIndicator: this.props.onLoadStart,
-                            _stopLoadingIndicator: this.props.onLoadEnd,
-                            _isSub: this.props.isSub,
-                            _scrollTo: () => {
+                            baseURL: p.context.view.baseURL,
+                            basePath: p.context.basePath,
+                            notification: this.handleNotification,
+                            log: this.handleLog,
+                            reloadProps: this.handleReloadProps,
+                            setPanelOption: this.props.setPanelOption,
+                            goto: this.handleGoTo,
+                            startLoadingIndicator: this.props.onLoadStart,
+                            stopLoadingIndicator: this.props.onLoadEnd,
+                            isSub: this.props.isSub,
+                            scrollTo: () => {
                                 alert("Not implemented");
                             },
-                            _openModal: this.props.openModal,
-                            _closeModal: this.props.closeModal,
+                            openModal: this.props.openModal,
+                            closeModal: this.props.closeModal,
                         }}
                     >
                         <ComponentInfo.Component
