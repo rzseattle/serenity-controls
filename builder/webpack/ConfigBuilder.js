@@ -10,7 +10,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
 
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 //require("babel-polyfill");
@@ -95,10 +95,14 @@ module.exports = function(input) {
             ],
             optimization: {
                 minimizer: [
-                    new UglifyJsPlugin({
+                    /*new UglifyJsPlugin({
                         cache: true,
                         parallel: true,
                         sourceMap: false, // set to true if you want JS source maps
+                    }),*/
+                    new TerserPlugin({
+                        cache: input.NODE_CACHE_DIR + "/terser-webpack-plugin",
+                        sourceMap: true,
                     }),
                     new OptimizeCSSAssetsPlugin({
                         cssProcessorOptions: {
