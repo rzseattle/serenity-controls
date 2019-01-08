@@ -292,10 +292,14 @@ module.exports = function(input) {
 
         conf.optimization = {
             minimizer: [
-                new UglifyJsPlugin({
+                /*new UglifyJsPlugin({
                     cache: input.NODE_CACHE_DIR + "/uglifyjs-webpack-plugin",
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
+                }),*/
+                new TerserPlugin({
+                    cache: input.NODE_CACHE_DIR + "/terser-webpack-plugin",
+                    sourceMap: true,
                 }),
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
