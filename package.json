@@ -5,13 +5,17 @@
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
     "scripts": {
+
         "dev": "webpack-dev-server -d ",
         "build:babel": "babel --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
         "babel-watch": "babel --watch --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
         "build:tsc": "tsc --emitDeclarationOnly --project ./ --outDir ./lib ",
-        "build": "rimraf lib/* && yarn run build:babel && yarn run build:tsc && node sass-copy.js",
+        "build:production": "rimraf lib/* && yarn run build:babel && node sass-copy.js",
+        "build:development": "rimraf lib/* && yarn run build:babel && yarn run build:tsc && node sass-copy.js",
         "rebuild": "yarn run build:babel && yarn run build:tsc && node sass-copy.js",
-        "postinstall": "yarn run build",
+        "postinstall": "per-env",
+        "postinstall:production": "yarn run build:production",
+        "postinstall:development": "yarn run build:development",
         "storybook": "start-storybook -s ./stories/public_assets -p 6006",
         "server": "nodemon ./stories/server.js",
         "build-storybook": "build-storybook"
@@ -121,6 +125,7 @@
         "chokidar": "^2.0.0",
         "mkdirp": "^0.5.1",
         "node-glob": "^1.2.0",
+        "per-env": "^1.0.2",
         "react-docgen-typescript-loader": "^3.0.0",
         "rimraf": "^2.6.3",
         "string-replace-loader": "^2.1.1",
