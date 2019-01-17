@@ -3,11 +3,13 @@ import * as React from "react";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { BackOfficePanel } from "./BackOfficePanel";
 import { BackofficeStore } from "./BackofficeStore";
+import { IPanelContext } from "./PanelContext";
 
 interface IBackOfficeContainerProps {
     route: string;
     input?: any;
     props?: any;
+    parentContext?: IPanelContext;
 }
 
 export class BackOfficeContainer extends React.Component<IBackOfficeContainerProps, { isLoading: boolean }> {
@@ -37,7 +39,12 @@ export class BackOfficeContainer extends React.Component<IBackOfficeContainerPro
         return (
             <>
                 {this.state.isLoading && <LoadingIndicator text={"Ładuje"} />}
-                <BackOfficePanel onlyBody={true} isSub={true} store={this.store} />
+                <BackOfficePanel
+                    onlyBody={true}
+                    isSub={true}
+                    store={this.store}
+                    parentContext={this.props.parentContext}
+                />
             </>
         );
     }

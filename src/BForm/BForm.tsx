@@ -342,6 +342,8 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value = defaultValue;
         }
 
+        console.log(name, "xxx");
+
         return {
             value,
             name,

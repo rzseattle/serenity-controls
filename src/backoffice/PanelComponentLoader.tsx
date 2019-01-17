@@ -6,7 +6,7 @@ import { ServerErrorPresenter } from "./ServerErrorPresenter";
 import { IModalProps } from "../Modal";
 import { ErrorInfo } from "react";
 import { PrintJSON } from "../PrintJSON";
-import { PanelContext } from "./PanelContext";
+import { IPanelContext, PanelContext } from "./PanelContext";
 
 declare var PRODUCTION: boolean;
 
@@ -63,6 +63,8 @@ interface IProps {
     closeModal(modalId: string): any;
 
     changeView: (input: any, callback: () => any) => any;
+
+    parentContext: IPanelContext;
 }
 
 interface IState {
@@ -128,6 +130,27 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         this.setState(null);
     };
 
+    public getContext: () => IPanelContext = () => {
+        return {
+            baseURL: this.props.context.view.baseURL,
+            basePath: this.props.context.basePath,
+            notification: this.handleNotification,
+            log: this.handleLog,
+            reloadProps: this.handleReloadProps,
+            setPanelOption: this.props.setPanelOption,
+            goto: this.handleGoTo,
+            startLoadingIndicator: this.props.onLoadStart,
+            stopLoadingIndicator: this.props.onLoadEnd,
+            isSub: this.props.isSub,
+            scrollTo: () => {
+                alert("Not implemented");
+            },
+            openModal: this.props.openModal,
+            closeModal: this.props.closeModal,
+            parentContext: this.props.parentContext,
+        };
+    };
+
     public render() {
         const s = this.state;
         const p = this.props;
@@ -163,25 +186,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                 )}
 
                 {ComponentInfo && ComponentInfo.Component ? (
-                    <PanelContext.Provider
-                        value={{
-                            baseURL: p.context.view.baseURL,
-                            basePath: p.context.basePath,
-                            notification: this.handleNotification,
-                            log: this.handleLog,
-                            reloadProps: this.handleReloadProps,
-                            setPanelOption: this.props.setPanelOption,
-                            goto: this.handleGoTo,
-                            startLoadingIndicator: this.props.onLoadStart,
-                            stopLoadingIndicator: this.props.onLoadEnd,
-                            isSub: this.props.isSub,
-                            scrollTo: () => {
-                                alert("Not implemented");
-                            },
-                            openModal: this.props.openModal,
-                            closeModal: this.props.closeModal,
-                        }}
-                    >
+                    <PanelContext.Provider value={this.getContext()}>
                         <ComponentInfo.Component
                             {...p.context.viewData}
                             reloadProps={this.handleReloadProps}
@@ -201,6 +206,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                             }}
                             _openModal={this.props.openModal}
                             _closeModal={this.props.closeModal}
+                            _parentContext={this.props.parentContext}
                         />
                     </PanelContext.Provider>
                 ) : (

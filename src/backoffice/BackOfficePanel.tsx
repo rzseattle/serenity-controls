@@ -6,7 +6,7 @@ import { IMenuElement, IMenuSection, Menu } from "./Menu";
 import * as NProgress from "nprogress/nprogress.js";
 import "nprogress/nprogress.css";
 
-import hotkeys, {KeyHandler} from "hotkeys-js";
+import hotkeys, { KeyHandler } from "hotkeys-js";
 
 import { LoadingIndicator } from "../LoadingIndicator";
 
@@ -22,6 +22,7 @@ import { BackOfficeContainer } from "./BackOfficeContainer";
 import { BackofficeStore } from "./BackofficeStore";
 import { PanelComponentLoader } from "./PanelComponentLoader";
 import { configGetAll } from "./Config";
+import { IPanelContext } from "./PanelContext";
 
 NProgress.configure({ parent: ".w-panel-body" });
 
@@ -33,6 +34,7 @@ interface IBackOfficePanelProps {
     user?: any;
     menu?: IMenuSection[];
     store?: BackofficeStore;
+    parentContext?: IPanelContext;
 }
 
 interface IBackOfficePanelState {
@@ -55,6 +57,8 @@ interface IBackOfficePanelState {
 export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     public container: HTMLDivElement;
     public store: BackofficeStore;
+    private panelLoader = React.createRef<PanelComponentLoader>();
+
     private callbacks: { onceAfterUpdate: Array<() => any> } = {
         onceAfterUpdate: [],
     };
@@ -62,6 +66,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     public static defaultProps: Partial<IBackOfficePanelProps> = {
         onlyBody: false,
         isSub: false,
+        parentContext: null,
     };
 
     constructor(props: IBackOfficePanelProps) {
@@ -116,6 +121,10 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
         if (this.state.layout == "mobile") {
             this.setState({ menuVisible: false });
         }
+    };
+
+    public getContext = () => {
+        return this.panelLoader.current.getContext();
     };
 
     private handleOpenWindow = (
@@ -284,7 +293,11 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                             backgroundColor: "#ECECEC",
                                         }}
                                     >
-                                        <BackOfficeContainer route={el.route} props={el.props} />
+                                        <BackOfficeContainer
+                                            route={el.route}
+                                            props={el.props}
+                                            parentContext={this.getContext()}
+                                        />
                                     </div>
                                 </Modal>
                             );
@@ -297,6 +310,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </Modal>
                         )}
                         <PanelComponentLoader
+                            ref={this.panelLoader}
                             context={{
                                 ...this.state.contextState,
                                 changeView: this.store.changeView,
@@ -310,6 +324,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             changeView={this.handleChangeView}
                             closeModal={this.handleCloseWindow}
                             isSub={this.props.isSub}
+                            parentContext={this.props.parentContext}
                         />
                     </div>
                 </div>

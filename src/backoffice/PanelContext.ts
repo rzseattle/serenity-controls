@@ -34,6 +34,8 @@ export interface IPanelContext {
     openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string;
 
     closeModal(modalId: string): any;
+
+    parentContext: IPanelContext;
 }
 
 
