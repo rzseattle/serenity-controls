@@ -132,7 +132,7 @@ var getLoaders = function(production, input) {
                 ],
             },
 
-            {
+            /*{
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 loaders: [
                     "file-loader?hash=sha512&digest=hex&name=./cache/[hash].[ext]",
@@ -155,9 +155,9 @@ var getLoaders = function(production, input) {
                         },
                     },
                 ],
-            },
+            },*/
             {
-                test: /\.(ttf|eot|svg|woff|woff2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                test: /\.(ttf|eot|svg|woff|woff2|jpe?g|png|gif|svg)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: "url-loader",
                 options: {
                     name: "name=/cache/[hash].[ext]",
