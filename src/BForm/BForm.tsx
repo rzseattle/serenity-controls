@@ -261,7 +261,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             }
         };
 
-        return { get, set, arrayNotation };
+        return { get, set, arrayNotation, dotNotation };
     }
 
     public handleInputChange(e: React.FormEvent | IFieldChangeEvent) {
@@ -319,7 +319,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
 
     public applyToField: IApplyToFieldFn = (name: string, defaultValue: any = null) => {
         let value;
-        const { get, set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
+        const { get, set, arrayNotation, dotNotation } = this.getHtmlNotationNameTranslators(name);
 
         value = get(this.state.data);
         if (value === undefined && defaultValue !== false) {
@@ -342,13 +342,11 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value = defaultValue;
         }
 
-        console.log(name, "xxx");
-
         return {
             value,
             name,
             layoutType: this.props.layoutType,
-            errors: this.state.fieldErrors.get(name),
+            errors: this.state.fieldErrors.get(dotNotation),
             editable: this.props.editable,
             onChange: (e: React.FormEvent | IFieldChangeEvent) => {
                 this.handleInputChange(e);
