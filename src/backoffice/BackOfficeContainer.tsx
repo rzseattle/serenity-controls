@@ -12,7 +12,10 @@ interface IBackOfficeContainerProps {
     parentContext?: IPanelContext;
 }
 
-export class BackOfficeContainer extends React.Component<IBackOfficeContainerProps, { isLoading: boolean }> {
+export class BackOfficeContainer extends React.Component<
+    IBackOfficeContainerProps,
+    { isLoading: boolean; reseting: boolean }
+> {
     public store: any = null;
     public static defaultProps: Partial<IBackOfficeContainerProps> = {
         props: {},
@@ -22,6 +25,7 @@ export class BackOfficeContainer extends React.Component<IBackOfficeContainerPro
         super(props);
         this.state = {
             isLoading: true,
+            reseting: false,
         };
 
         this.store = new BackofficeStore();
@@ -31,6 +35,17 @@ export class BackOfficeContainer extends React.Component<IBackOfficeContainerPro
         this.store.onViewLoadedArr.push(() => this.setState({ isLoading: false }));
     }
 
+    public reload = () => {
+        this.store.changeView(null, {}, () => {
+            this.setState(
+                {
+                    reseting: true,
+                },
+                () => this.setState({ reseting: false }),
+            );
+        });
+    };
+
     public componentWillUnmount() {
         BackofficeStore.unregisterDebugData(this.props.route);
     }
@@ -39,12 +54,14 @@ export class BackOfficeContainer extends React.Component<IBackOfficeContainerPro
         return (
             <>
                 {this.state.isLoading && <LoadingIndicator text={"Ładuje"} />}
-                <BackOfficePanel
-                    onlyBody={true}
-                    isSub={true}
-                    store={this.store}
-                    parentContext={this.props.parentContext}
-                />
+                {!this.state.reseting && (
+                    <BackOfficePanel
+                        onlyBody={true}
+                        isSub={true}
+                        store={this.store}
+                        parentContext={this.props.parentContext}
+                    />
+                )}
             </>
         );
     }
