@@ -79,7 +79,7 @@ interface ICommentItemProps {
     children: any;
 }
 
-const CommentItem: React.StatelessComponent<ICommentItemProps> = (props) => {
+const CommentItem = (props: ICommentItemProps) => {
     return (
         <div className="comment">
             <a className="avatar">
