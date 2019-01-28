@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Menu = () => <div id="menu">
+const Menu = () => <>
     <ul>
         <li className="current_page_item"><a href="/" accessKey="1" title="">Homepage</a></li>
         <li><a  onClick={() =>{
@@ -9,6 +9,6 @@ const Menu = () => <div id="menu">
         <li><a href="/wiki" accessKey="3" title="">Wiki</a></li>
         <li><a href="/api" accessKey="4" title="">API Doc</a></li>
     </ul>
-</div>
+</>
 
 export default Menu;

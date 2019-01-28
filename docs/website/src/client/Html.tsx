@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * Html
  * This Html.js file acts as a template that we insert all our generated
@@ -35,7 +37,7 @@ const Html = ({ body, title , menu}: { body: string, title: string, menu: string
     <div id="logo">
       <h1><a href="/">Fontend-lib</a></h1>
 </div>
-${menu}
+<div id="menu">${menu}</div>
     
   </div>
 </div>

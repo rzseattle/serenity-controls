@@ -16,7 +16,7 @@ const config = {
         modules: [__dirname, "node_modules"],
     },
 
-    externals: nodeExternals(),
+
     plugins: [
         new webpack.DefinePlugin({
             "process.env": {
@@ -77,6 +77,7 @@ const serverConfig = {
         __dirname: false,
         __filename: false,
     },
+    externals: nodeExternals(),
     //…
 };
 
