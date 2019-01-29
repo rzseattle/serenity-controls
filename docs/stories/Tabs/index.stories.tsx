@@ -3,9 +3,9 @@ import { storiesOf } from "@storybook/react";
 
 // @ts-ignore
 import { withKnobs, radios } from "@storybook/addon-knobs";
-import { Panel } from "../../src/Panel";
-import { TabPane, Tabs } from "../../src/Tabs";
-import { Placeholder } from "../../src/Placeholder";
+import { Panel } from "../../../src/Panel";
+import { TabPane, Tabs } from "../../../src/Tabs";
+import { Placeholder } from "../../../src/Placeholder";
 
 const options = {
     "Tab 1": "1",

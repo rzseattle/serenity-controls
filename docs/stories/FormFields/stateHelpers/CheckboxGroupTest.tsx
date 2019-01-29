@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { CheckboxGroup, ICheckboxGroupProps } from "../../../src/fields";
-import { PrintJSON } from "../../../src/PrintJSON";
+import { CheckboxGroup, ICheckboxGroupProps } from "../../../../src/fields";
+
 
 export class CheckboxGroupTest extends React.Component<ICheckboxGroupProps, any> {
     constructor(props: any) {

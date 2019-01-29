@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Panel } from "../../src/Panel";
+import { Panel } from "../../../src/Panel";
 import { DateTest } from "./stateHelpers/DateTest";
 
 storiesOf("Field: Date", module)

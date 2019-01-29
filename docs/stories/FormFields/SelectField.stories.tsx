@@ -2,8 +2,8 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { mockData } from "../Table/MOCK_DATA";
-import { IOption, ISelectProps, Select } from "../../src/fields";
-import { Panel } from "../../src/Panel";
+import { IOption, ISelectProps, Select } from "../../../src/fields";
+import { Panel } from "../../../src/Panel";
 import { SelectTest } from "./stateHelpers/SelectTest";
 
 const values: IOption[] = mockData.slice(0, 30).map((el) => ({

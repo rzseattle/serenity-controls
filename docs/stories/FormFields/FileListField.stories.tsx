@@ -1,9 +1,9 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Panel } from "../../src/Panel";
+import { Panel } from "../../../src/Panel";
 
-import { IFile } from "../../src/FileListField";
+import { IFile } from "../../../src/FileListField";
 import { FileListTest } from "./stateHelpers/FileListTest";
 
 const testFiles: IFile[] = [

@@ -2,9 +2,9 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { withKnobs, select } from "@storybook/addon-knobs";
-import { IPositionCalculatorOptions } from "../../../src/lib";
-import { RelativePositionPresets } from "../../../src/Positioner";
-import { confirmDialog } from "../../../src/ConfirmDialog";
+import { IPositionCalculatorOptions } from "../../../../src/lib";
+import { RelativePositionPresets } from "../../../../src/Positioner";
+import { confirmDialog } from "../../../../src/ConfirmDialog";
 
 
 interface IConfirmHelperProps {

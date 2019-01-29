@@ -2,10 +2,12 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import "./ConnectionField.stories.sass";
-import { ConnectionsField, IConnectionFieldInput } from "../../src/ConnectionsField";
-import IConnectionElement from "../../src/ConnectionsField/IConnectionElement";
-import { Comm } from "../../src/lib";
-import { Panel } from "../../src/Panel";
+
+
+import { Panel } from "../../../src/Panel";
+import IConnectionElement from "../../../src/ConnectionsField/IConnectionElement";
+import { ConnectionsField, IConnectionFieldInput } from "../../../src/ConnectionsField";
+import { Comm } from "../../../src/lib";
 
 const dataSource = (input: IConnectionFieldInput) =>
     new Promise<IConnectionElement[]>((resolve) => {
@@ -239,6 +241,4 @@ storiesOf("Field: Connection", module)
                 </div>
             </Panel>
         );
-    })
-
-;
+    });

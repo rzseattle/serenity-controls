@@ -1,6 +1,6 @@
 import * as React from "react";
-import { FormBuilder, IFormBuilderProps } from "../../src/FormBuilder";
-import { PrintJSON } from "../../src/PrintJSON";
+import { FormBuilder, IFormBuilderProps } from "../../../src/FormBuilder";
+import { PrintJSON } from "../../../src/PrintJSON";
 
 export class StateHelper extends React.Component<IFormBuilderProps, any> {
     constructor(props: any) {

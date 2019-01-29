@@ -1,8 +1,8 @@
 import React from "react";
 import { addDecorator } from "@storybook/react";
-import { configGetAll, configSet } from "../src/backoffice/Config";
+import { configGetAll, configSet } from "../../src/backoffice/Config";
 import "./Stories.sass";
-import { fI18n, langContainer } from "../src/lib";
+import { fI18n, langContainer } from "../../src/lib";
 
 import { I18nextProvider } from "react-i18next"; // the initialized i18next instance
 
@@ -10,7 +10,7 @@ langContainer.add(
     "pl",
     () =>
         new Promise((resolve) => {
-            import("../src/translations/i18n.pl").then((result) => {
+            import("../../src/translations/i18n.pl").then((result) => {
                 resolve({ lang: result.lang });
             });
         }),

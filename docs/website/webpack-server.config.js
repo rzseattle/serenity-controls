@@ -8,7 +8,7 @@ const config = {
 
 
     output: {
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, "../../website-build/dist"),
         publicPath: "/",
     },
     resolve: {
@@ -69,10 +69,7 @@ const serverConfig = {
     ...config,
     entry: { server: path.resolve(__dirname, "src/server.tsx") },
     target: "node",
-    output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: "server.js",
-    },
+
     node: {
         __dirname: false,
         __filename: false,
@@ -81,63 +78,5 @@ const serverConfig = {
     //…
 };
 
-const clientConfig = {
-    ...config,
-    entry: { client: path.resolve(__dirname, "src/client/client.tsx") },
-    target: "web", // <=== can be omitted as default is 'web'
-    output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: "client.js",
-    },
 
-    //…
-};
-
-clientConfig.module.rules[0].options.plugins.push("react-hot-loader/babel")
-
-if (true) {
-    const PORT  = 3000;
-    const HTTPS = false;
-    config.output = {
-        publicPath: "http" + (HTTPS ? "s" : "") + `://localhost:${PORT}/`,
-        filename: "client.js",
-    }
-    config.devServer = {
-
-        inline:true,
-        port: PORT,
-        https: true,
-        hot: true,
-        publicPath: "http" + (HTTPS ? "s" : "") + `://localhost:${PORT}/`,
-        host: "localhost",
-
-        stats:
-            "minimal" /*{
-            colors: true,
-            hash: false,
-            version: false,
-            timings: true,
-            assets: false,
-            chunks: false,
-            modules: false,
-            reasons: false,
-            children: false,
-            source: false,
-            errors: true,
-            errorDetails: false,
-            warnings: false,
-            publicPath: false
-        },*/,
-
-        disableHostCheck: true,
-
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/javascript",
-        },
-    };
-    //console.log(config);
-}
-
-
-module.exports = clientConfig; //[/*serverConfig,*/ clientConfig];
+module.exports = serverConfig; //[/*serverConfig,*/ clientConfig];

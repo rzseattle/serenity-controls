@@ -9,9 +9,8 @@ import {
     SelectFilter,
     SwitchFilter,
     TextFilter,
-} from "../../src/filters";
-import { Checkbox } from "../../src/fields/Checkbox";
-import CheckboxFilter from "../../src/filters/CheckboxFilter";
+} from "../../../src/filters";
+import CheckboxFilter from "../../../src/filters/CheckboxFilter";
 
 const onApply = (input: IFilterValue) => alert(input.value + " " + input.condition);
 

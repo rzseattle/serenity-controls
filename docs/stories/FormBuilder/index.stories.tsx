@@ -2,11 +2,11 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 // @ts-ignore
-import { Panel } from "../../src/Panel";
+import { Panel } from "../../../src/Panel";
 import { StateHelper } from "./StateHelper";
 import { StateGeneratorHelper } from "./StateGeneratorHelper";
-import { BForm } from "../../src/BForm";
-import { PrintJSON } from "../../src/PrintJSON";
+import { BForm } from "../../../src/BForm";
+import { PrintJSON } from "../../../src/PrintJSON";
 
 const fields = [
     {

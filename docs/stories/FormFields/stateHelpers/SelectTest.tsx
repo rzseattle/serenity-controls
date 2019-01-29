@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ISelectProps, Select } from "../../../src/fields";
+import { ISelectProps, Select } from "../../../../src/fields";
 
 export class SelectTest extends React.Component<ISelectProps, any> {
     constructor(props: any) {

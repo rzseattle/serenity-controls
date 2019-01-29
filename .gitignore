@@ -30,10 +30,10 @@ node_modules
 /css/
 .idea/
 dist/
-/stories/form/uploaded/
-storybook-static/
+docs/stories/form/uploaded/
+website-build/
 
-stories/form/uploaded/
+docs/stories/form/uploaded/
 
 *.bak
 

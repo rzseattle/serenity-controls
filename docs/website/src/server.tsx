@@ -9,8 +9,13 @@ const path = require("path");
 const port = 3000;
 const server = express();
 
-server.use(express.static(path.resolve(__dirname , '../public')));
-server.use(express.static(path.resolve(__dirname )));
+server.use(express.static(path.resolve(__dirname , '../../docs/website/public')));
+server.use( "/wiki", express.static(path.resolve(__dirname , '../wiki')));
+server.use( "/storybook", express.static(path.resolve(__dirname , '../storybook')));
+server.use( "/api", express.static(path.resolve(__dirname , '../api')));
+server.use( "/dist", express.static(path.resolve(__dirname , '../dist')));
+
+//server.use(express.static(path.resolve(__dirname )));
 
 server.get('/', (req: any, res: any) => {
     /**
@@ -18,13 +23,12 @@ server.get('/', (req: any, res: any) => {
      * to be inserted into our Html template function.
      */
     const body = renderToString(<App />);
-    const menu = renderToString(<Menu />);
+
     const title = 'Frontend-lib';
 
     //res.writeHead( 200, { "Content-Type": "text/html" } );
     res.send(
         Html({
-            menu,
             body,
             title
         })

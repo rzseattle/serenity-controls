@@ -1,10 +1,10 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { Panel } from "../../../src/Panel";
+import { Panel } from "../../../../src/Panel";
 
-import Tooltip from "../../../src/Tooltip/Tooltip";
-import { RelativePositionPresets } from "../../../src/Positioner";
+import Tooltip from "../../../../src/Tooltip/Tooltip";
+import { RelativePositionPresets } from "../../../../src/Positioner";
 
 import "./Tooltip.stories.sass";
 

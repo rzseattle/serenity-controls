@@ -1,8 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput } from "../../src/Table";
+import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput } from "../../../src/Table";
 import { mockData } from "./MOCK_DATA";
-import { FilterHelper } from "../../src/filters";
+import { FilterHelper } from "../../../src/filters";
 
 const baseColumns = [
     Col.id("id", "Id"),

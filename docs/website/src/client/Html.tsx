@@ -6,17 +6,14 @@ import React from "react";
  * application code into before sending it to the client as regular HTML.
  * Note we're returning a template string from this function.
  */
-const Html = ({ body, title , menu}: { body: string, title: string, menu: string }) => {
-
-
-
+const Html = ({ body, title }: { body: string, title: string }) => {
 
 
     return `
 
   
   
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -32,63 +29,19 @@ const Html = ({ body, title , menu}: { body: string, title: string, menu: string
 
 </head>
 <body>
-<div id="header-wrapper">
-  <div id="header" class="container">
-    <div id="logo">
-      <h1><a href="/">Fontend-lib</a></h1>
-</div>
-<div id="menu">${menu}</div>
-    
-  </div>
-</div>
-<div id="header-featured"> </div>
+<div id="app" >${body}</div>
 
-<div id="wrapper">
-  <div id="featured-wrapper">
-    <div id="featured" class="container">
-      <div class="column1"> <span class="icon icon-cogs"></span>
-        <div class="title">
-          <h2>Builder</h2>
-        </div>
-        <p>Building envoirment for js aps</p>
-      </div>
-      <div class="column2"> <span class="icon icon-legal"></span>
-        <div class="title">
-          <h2>Backoffice panel</h2>
-        </div>
-        <p>Panel providing routing/context/tools.</p>
-      </div>
-      <div class="column3"> <span class="icon icon-unlock"></span>
-        <div class="title">
-          <h2>Controls</h2>
-        </div>
-        <p>Controlset for any occassion.</p>
-      </div>
-      <div class="column4"> <span class="icon icon-wrench"></span>
-        <div class="title">
-          <h2>Develop tools</h2>
-        </div>
-        <p>Live reloading, code finding, errors debuging.</p>
-      </div>
-    </div>
-  </div>
-  <div id="extra" class="container">
-    
-    </div>
-
-<div id="copyright" class="container">
-  <p>&copy; Untitled. All rights reserved. | Photos by <a href="http://fotogrph.com/">Fotogrph</a> | Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</p>
-</div>
-<script src="/client.js" ></script>
+<script src="/dist/client.js" ></script>
 </body>
 </html>
-
   
 `;
 };
 
-export default Html;
+//<script src="https://localhost:3001/client.js" ></script>
 
+export default Html;
+//
 
 /*
 *

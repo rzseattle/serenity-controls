@@ -1,8 +1,9 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { CommandBar } from "../../src/CommandBar";
+
 import { action, configureActions } from "@storybook/addon-actions";
+import { CommandBar } from "../../../src/CommandBar";
 const items = [
     {
         key: "f1",

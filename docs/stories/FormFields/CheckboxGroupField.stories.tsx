@@ -2,10 +2,8 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 
 import { mockData } from "../Table/MOCK_DATA";
-import { CheckboxGroup, IOption, ISelectProps, Select } from "../../src/fields";
-import { Panel } from "../../src/Panel";
-import { Checkbox } from "../../src/fields/Checkbox";
-import { CheckboxTest } from "./stateHelpers/CheckboxTest";
+import { CheckboxGroup, IOption, ISelectProps, Select } from "../../../src/fields";
+import { Panel } from "../../../src/Panel";
 import { CheckboxGroupTest } from "./stateHelpers/CheckboxGroupTest";
 
 const values: IOption[] = mockData.slice(0, 31).map((el) => ({

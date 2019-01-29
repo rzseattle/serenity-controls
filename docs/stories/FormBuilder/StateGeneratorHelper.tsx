@@ -1,8 +1,8 @@
 import * as React from "react";
-import { FormBuilder, IFormBuilderProps } from "../../src/FormBuilder";
-import { PrintJSON } from "../../src/PrintJSON";
-import { FormBuilderSchemaGenerator } from "../../src/FormBuilder/FormBuilderSchemaGenerator";
-import { Row } from "../../src/Row";
+import { FormBuilder, IFormBuilderProps } from "../../../src/FormBuilder";
+import { PrintJSON } from "../../../src/PrintJSON";
+import { FormBuilderSchemaGenerator } from "../../../src/FormBuilder/FormBuilderSchemaGenerator";
+import { Row } from "../../../src/Row";
 
 export class StateGeneratorHelper extends React.Component<IFormBuilderProps, any> {
     constructor(props: any) {

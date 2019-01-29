@@ -449,6 +449,7 @@ ul.contact li a.icon-rss:before
 	text-transform: uppercase;
 	outline: 0;
 	color: #212121;
+	cursor: pointer;
 }
 
 #menu li:hover a, #menu li.active a, #menu li.active span

@@ -1,7 +1,6 @@
 import * as React from "react";
-import { ISelectProps, Select } from "../../../src/fields";
-import { FileListField, IFileListProps } from "../../../src/FileListField";
-import {PrintJSON} from "../../../src/PrintJSON";
+import { FileListField, IFileListProps } from "../../../../src/FileListField";
+import {PrintJSON} from "../../../../src/PrintJSON";
 
 export class FileListTest extends React.Component<IFileListProps, any> {
     constructor(props: any) {
