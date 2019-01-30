@@ -76,7 +76,7 @@ storiesOf("Tab", module)
     .add("Controlled tabs", () => (
         <>
             <Panel>
-                <Tabs activeTab={radios("Active tab", options, "1") - 1}>
+                <Tabs activeTab={((radios("Active tab", options, "1") as any) as number) - 1}>
                     <TabPane title="Tab1">{text1}</TabPane>
                     <TabPane title="Tab2">{text2}</TabPane>
                 </Tabs>
