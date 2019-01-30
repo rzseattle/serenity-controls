@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const mkdirp = require("mkdirp");
 
-var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
+var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
 
 
     conf = {};
@@ -10,7 +10,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
     conf.output = {
         filename: "bundle.js",
         publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,
-        devtoolModuleFilenameTemplate: function (info) {
+        devtoolModuleFilenameTemplate: function(info) {
             return path.resolve(BASE_PATH, info.absoluteResourcePath).replace(BASE_PATH, "");
         },
     };
@@ -19,6 +19,12 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
     for (let i in ENTRY_POINTS) {
         devEntries.push(ENTRY_POINTS[i]);
     }
+
+    config.resolve = {
+        alias: {
+            "react-dom": "@hot-loader/react-dom",
+        },
+    };
 
     conf.devServer = {
         //https: HTTPS,
@@ -61,27 +67,27 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
 
         before: (app) => {
             const busboyBodyParser = require("busboy-body-parser");
-            app.use(busboyBodyParser({limit: "5mb", multi: true}));
+            app.use(busboyBodyParser({ limit: "5mb", multi: true }));
 
-            app.get("/debug/getFile", function (req, res) {
+            app.get("/debug/getFile", function(req, res) {
                 res.header("Access-Control-Allow-Origin", "*");
                 //res.send(fs.readFileSync(BASE_PATH + req.param("file")));
                 res.send(fs.readFileSync(req.param("file")));
             });
-            app.post("/*", function (req, res, next) {
+            app.post("/*", function(req, res, next) {
                 res.header("Access-Control-Allow-Origin", "*");
                 next();
             });
 
-            app.options("/*", function (req, res, next) {
+            app.options("/*", function(req, res, next) {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
                 res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
                 res.send(200);
             });
 
-            app.post("/createFile", function (req, response) {
-                let {file, type} = req.body;
+            app.post("/createFile", function(req, response) {
+                let { file, type } = req.body;
                 let dir = path.dirname(BASE_PATH + file);
                 if (!fs.existsSync(dir)) {
                     mkdirp.sync(dir);
@@ -93,13 +99,13 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                     fs.writeFileSync(BASE_PATH + file, fs.readFileSync(path.resolve(__dirname, "../templates/component.tsx")));
                 }
 
-                response.send(JSON.stringify({status: "OK"}));
+                response.send(JSON.stringify({ status: "OK" }));
             });
 
-            app.post("/openFile", function (req, response) {
-                let {file, line} = req.body;
+            app.post("/openFile", function(req, response) {
+                let { file, line } = req.body;
                 console.log("Opening file " + file + ":" + line);
-                response.send(JSON.stringify({status: "OK"}));
+                response.send(JSON.stringify({ status: "OK" }));
 
                 var exec = require("child_process").exec;
                 //<IDE_HOME>\bin\phpstorm.exe C:\MyProject\ --line 3 C:\MyProject\scripts\numbers.js
@@ -120,7 +126,7 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                         let command = `"${ideDir}${_file}${fileTest}" ${BASE_PATH} --line ${line} ${file}`;
                         //let command = `"${ideDir}${_file}${fileTest}" ${BASE_PATH} --line ${line} ${BASE_PATH}${file}`;
                         console.log(command);
-                        exec(command, function (error, stdout, stderr) {
+                        exec(command, function(error, stdout, stderr) {
                             if (!error) {
                                 console.log("worked");
                             } else {
@@ -135,12 +141,12 @@ var getDevServerConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTT
                 return;
             });
 
-            app.post("/refreshRoute", function (req, response) {
+            app.post("/refreshRoute", function(req, response) {
                 response.header("Access-Control-Allow-Origin", "*");
                 let routeFile = path.resolve(BASE_PATH + "/data/cache/symfony/route.json");
                 let file = fs.writeFileSync(routeFile, req.body.data);
 
-                response.send(JSON.stringify({status: "OK"}));
+                response.send(JSON.stringify({ status: "OK" }));
                 return;
             });
 
