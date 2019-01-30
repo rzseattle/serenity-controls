@@ -8,7 +8,7 @@ const App = () => {
                 <div id="header" className="container">
                     <div id="logo">
                         <h1>
-                            <a href="/">Fontend-lib</a>
+                            <a href="/">Frontend-lib</a>
                         </h1>
                     </div>
 
