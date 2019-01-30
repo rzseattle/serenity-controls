@@ -59,14 +59,14 @@ module.exports = {
                     {
                         loader: "awesome-typescript-loader",
                         query: {
-                            configFileName: path.resolve(__dirname, "../builder/webpack/tsconfig.json"),
-                            cacheDirectory: path.resolve(__dirname, "../node_modules/.cache/awcache"),
+                            configFileName: path.resolve(__dirname, "../../../builder/webpack/tsconfig.json"),
+                            cacheDirectory: path.resolve(__dirname, "../../../node_modules/.cache/awcache"),
 
                             useCache: true,
                             noImplicitAny: true,
                             transpileOnly: true,
                             forceIsolatedModules: true,
-                            reportFiles: ["stories/**/*.{ts,tsx}", "src/**/*.{ts,tsx}"],
+                            reportFiles: ["docs/stories/**/*.{ts,tsx}", "src/**/*.{ts,tsx}"],
                             useBabel: true,
                             babelCore: "@babel/core",
                             babelOptions: {
@@ -120,7 +120,7 @@ module.exports = {
                     {
                         loader: "react-docgen-typescript-loader",
                         options: {
-                            tsconfigPath: path.resolve(__dirname, "../builder/webpack/tsconfig.json"),
+                            tsconfigPath: path.resolve(__dirname, "../../../builder/webpack/tsconfig.json"),
                         },
                     },
                     /* {
