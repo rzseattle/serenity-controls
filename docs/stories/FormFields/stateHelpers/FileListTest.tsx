@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FileListField, IFileListProps } from "../../../../src/FileListField";
-import {PrintJSON} from "../../../../src/PrintJSON";
+import { PrintJSON } from "../../../../src/PrintJSON";
 
 export class FileListTest extends React.Component<IFileListProps, any> {
     constructor(props: any) {
@@ -18,7 +18,7 @@ export class FileListTest extends React.Component<IFileListProps, any> {
                     value={this.state.value}
                     onChange={(e) => this.setState({ value: e.value })}
                 />
-                <PrintJSON json={this.state.value}/>
+                <PrintJSON json={this.state.value} />
             </>
         );
     }

@@ -20,11 +20,7 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
         devEntries.push(ENTRY_POINTS[i]);
     }
 
-    config.resolve = {
-        alias: {
-            "react-dom": "@hot-loader/react-dom",
-        },
-    };
+
 
     conf.devServer = {
         //https: HTTPS,

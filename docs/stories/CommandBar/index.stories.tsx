@@ -1,7 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-
 import { action, configureActions } from "@storybook/addon-actions";
 import { CommandBar } from "../../../src/CommandBar";
 const items = [

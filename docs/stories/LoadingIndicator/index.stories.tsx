@@ -2,7 +2,6 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { LoadingIndicator } from "../../../src/LoadingIndicator";
 
-
 storiesOf("Loading indicator", module)
     .add("Simple", () => (
         <>

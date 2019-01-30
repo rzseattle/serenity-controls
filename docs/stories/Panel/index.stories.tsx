@@ -17,7 +17,7 @@ storiesOf("Panel", module)
         () => <Panel>{text}</Panel>,
     )
     .add("No padding", () => <Panel noPadding={true}>{text}</Panel>)
-    .add("Title", () => <Panel title="Panel title ">{text}</Panel>)
+    .add("Title", () => <Panel title="Panel title ">{text}</Panel>);
 
 /*    .add("Toolbar", () => (
         <Panel
@@ -36,4 +36,3 @@ storiesOf("Panel", module)
             {text}
         </Panel>
     ))*/
-;

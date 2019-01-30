@@ -28,7 +28,8 @@ const baseColumns = [
                 { value: "Female", label: "Female" },
                 { value: "Male", label: "Male" },
             ]).get(),
-        ).headerTooltip("La gender machen"),
+        )
+        .headerTooltip("La gender machen"),
     Col.text("ip_address", "Ip").className("right"),
     Col.date("date", "Date"),
     Col.money("price", "Price")

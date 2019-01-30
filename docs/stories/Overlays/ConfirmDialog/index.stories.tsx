@@ -6,7 +6,6 @@ import { IPositionCalculatorOptions } from "../../../../src/lib";
 import { RelativePositionPresets } from "../../../../src/Positioner";
 import { confirmDialog } from "../../../../src/ConfirmDialog";
 
-
 interface IConfirmHelperProps {
     presetName: string;
     options?: IPositionCalculatorOptions;

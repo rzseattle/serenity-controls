@@ -41,7 +41,7 @@ const App = () => {
                             <div className="title">
                                 <h2>Controls</h2>
                             </div>
-                            <p style={{color: "white"}} >Controlset for any occassion.</p>
+                            <p style={{ color: "white" }}>Controlset for any occassion.</p>
                         </div>
                         <div className="column4">
                             <span className="icon icon-wrench" />
@@ -53,7 +53,6 @@ const App = () => {
                     </div>
                 </div>
                 <div id="extra" className="container" />
-
             </div>
         </>
     );

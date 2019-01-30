@@ -6,9 +6,7 @@ import React from "react";
  * application code into before sending it to the client as regular HTML.
  * Note we're returning a template string from this function.
  */
-const Html = ({ body, title }: { body: string, title: string }) => {
-
-
+const Html = ({ body, title }: { body: string; title: string }) => {
     return `
 
   

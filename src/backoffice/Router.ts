@@ -1,6 +1,7 @@
 // declare var Views: any;
 
 import RouterException from "./RouterException";
+import { hot, setConfig, cold } from "react-hot-loader";
 
 declare var PRODUCTION: any;
 
@@ -134,4 +135,4 @@ class Router {
     }
 }
 
-export const router = new Router();
+export const router = cold(new Router());

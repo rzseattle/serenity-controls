@@ -59,9 +59,9 @@ const testFiles: IFile[] = [
         size: 1148,
         data: {
             tooltipItems: [
-              {label: "Author", value: "John Strand"},
-              {label: "Date", value: "2007"},
-              {label: "xxx", value: "200720072007200720072007"},
+                { label: "Author", value: "John Strand" },
+                { label: "Date", value: "2007" },
+                { label: "xxx", value: "200720072007200720072007" },
             ],
         },
     },

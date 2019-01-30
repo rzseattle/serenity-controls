@@ -36,6 +36,11 @@ interface ITooltipProps {
     theme?: "dark" | "light";
 
     /**
+     * Auto open
+     */
+    autoOpen?: boolean;
+
+    /**
      * Activattion terms
      */
     activation?: "hover" | "click";
@@ -80,6 +85,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
     private timeout: number = 0;
     public static defaultProps: Partial<ITooltipProps> = {
         visible: true,
+        autoOpen: false,
         theme: "dark",
         activation: "hover",
         relativeSettings: RelativePositionPresets.bottomLeft,
@@ -95,6 +101,12 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
             loading: this.props.promise !== null,
             content: this.props.promise !== null ? null : props.content,
         };
+    }
+
+    componentDidMount(): void {
+        if (this.props.autoOpen) {
+            this.mouseOver();
+        }
     }
 
     public mouseOver = () => {

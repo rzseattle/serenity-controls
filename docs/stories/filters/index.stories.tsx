@@ -127,7 +127,7 @@ storiesOf("Filters", module)
                                 { value: "3", label: "Option 3" },
                                 { value: "4", label: "Option 5" },
                             ],
-                            columnsCount: 2
+                            columnsCount: 2,
                         }}
                         onApply={onApply}
                     />

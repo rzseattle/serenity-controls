@@ -23,7 +23,8 @@ import { BackofficeStore } from "./BackofficeStore";
 import { PanelComponentLoader } from "./PanelComponentLoader";
 import { configGetAll } from "./Config";
 import { IPanelContext } from "./PanelContext";
-
+const DebugTool = React.lazy(() => import("./DebugTool"));
+declare var PRODUCTION: boolean;
 NProgress.configure({ parent: ".w-panel-body" });
 
 interface IBackOfficePanelProps {
@@ -200,7 +201,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
         NProgress.done();
     };
 
-    public handleSetPanelOption = (name: string, value: any, callback: (() => any)) => {
+    public handleSetPanelOption = (name: string, value: any, callback: () => any) => {
         const obj: any = {};
         obj[name] = value;
         this.setState(obj, callback);
@@ -221,6 +222,12 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             />
                         </div>
                         <div className="app-title">{this.props.title}</div>
+
+                        {!PRODUCTION && this.props.isSub == false && (
+                            <React.Suspense fallback={<>...</>}>
+                                <DebugTool />
+                            </React.Suspense>
+                        )}
 
                         <div className="app-user" onClick={() => this.setState({ userMenuVisible: true })}>
                             <div className="app-user-icon">

@@ -112,7 +112,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         this.props.changeView(input, callback);
     };
 
-    public handleGoTo = (path: string, input = {}, callback: (() => any) = null) => {
+    public handleGoTo = (path: string, input = {}, callback: () => any = null) => {
         this.props.context.changeView(path, input, callback);
     };
 
@@ -157,20 +157,12 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         const ComponentInfo: any = p.context.view;
 
         const DebugTool = this.DebugTool;
-        const debugVar: any = {
-            log: s.log,
-            propsReloadHandler: this.handleReloadProps.bind(this),
-            componentInfo: ComponentInfo,
-            props: p.context.viewData,
-            store: p.context,
-        };
 
         if (this.state.hasError) {
             // You can render any custom fallback UI
             return (
                 <div>
                     <h1>Something went wrong.</h1>
-                    {!PRODUCTION && this.state.debugToolLoaded && <DebugTool error={this.state.error} {...debugVar} />}
                     {!PRODUCTION && <PrintJSON json={this.state.error} />}
                 </div>
             );
@@ -178,13 +170,10 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
 
         return (
             <div className={ComponentInfo && ComponentInfo.extendedInfo.componentName}>
-                {!PRODUCTION && this.props.isSub == false && this.state.debugToolLoaded && <DebugTool {...debugVar} />}
-
                 <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)} />
                 {this.props.context.viewServerErrors && (
                     <ServerErrorPresenter error={this.props.context.viewServerErrors} />
                 )}
-
                 {ComponentInfo && ComponentInfo.Component ? (
                     <PanelContext.Provider value={this.getContext()}>
                         <ComponentInfo.Component
@@ -220,7 +209,6 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                         </div>
                     )
                 )}
-
                 {ComponentInfo && ComponentInfo.Component == null && (
                     <div style={{ padding: 10 }}>
                         <h3>Can't find component </h3>

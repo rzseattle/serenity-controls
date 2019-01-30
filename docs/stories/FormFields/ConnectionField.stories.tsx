@@ -3,7 +3,6 @@ import { storiesOf } from "@storybook/react";
 
 import "./ConnectionField.stories.sass";
 
-
 import { Panel } from "../../../src/Panel";
 import IConnectionElement from "../../../src/ConnectionsField/IConnectionElement";
 import { ConnectionsField, IConnectionFieldInput } from "../../../src/ConnectionsField";
