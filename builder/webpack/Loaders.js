@@ -50,7 +50,6 @@ var getLoaders = function(production, input) {
 
                                 ["@babel/proposal-class-properties", { loose: true }],
                                 "@babel/proposal-object-rest-spread",
-                                "react-hot-loader/babel",
                             ],
                         },
                     },
