@@ -36,6 +36,7 @@
         "arrowParens": "always",
         "trailingComma": "all"
     },
+    "files": ["lib"],
     "dependencies": {
         "@babel/cli": "^7.2.3",
         "@babel/core": "^7.2.2",
