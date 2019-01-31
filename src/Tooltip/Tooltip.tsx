@@ -162,6 +162,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
                         relativeTo={() => this.container.current}
                         animation={"from-up"}
                         relativeSettings={props.relativeSettings}
+                        trackResize={true}
                     >
                         <div
                             className={props.layerClass ? props.layerClass : "w-tooltip-hover-" + props.theme}

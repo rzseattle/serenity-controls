@@ -7,6 +7,7 @@ import { IModalProps } from "../Modal";
 import { ErrorInfo } from "react";
 import { PrintJSON } from "../PrintJSON";
 import { IPanelContext, PanelContext } from "./PanelContext";
+import { BackofficeStore } from "./BackofficeStore";
 
 declare var PRODUCTION: boolean;
 
@@ -78,7 +79,6 @@ interface IState {
 export class PanelComponentLoader extends React.Component<IProps, IState> {
     public notificationSystem: NotificationSystem.System;
 
-
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -98,8 +98,6 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         // You can also log the error to an error reporting service
         // logErrorToMyService(error, info);
     }
-
-
 
     public handleReloadProps = (input = {}, callback: () => any) => {
         this.props.changeView(input, callback);
@@ -122,6 +120,10 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         this.state.log.push({ msg: message });
         this.setState(null);
     };
+
+    componentWillUnmount(): void {
+        BackofficeStore.unregisterDebugData(this.props.context.view);
+    }
 
     public getContext: () => IPanelContext = () => {
         return {

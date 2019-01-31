@@ -101,18 +101,32 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
             app.post("/openFile", function(req, response) {
                 let { file, line } = req.body;
                 console.log("Opening file " + file + ":" + line);
-                response.send(JSON.stringify({ status: "OK" }));
+
 
                 var exec = require("child_process").exec;
-                //<IDE_HOME>\bin\phpstorm.exe C:\MyProject\ --line 3 C:\MyProject\scripts\numbers.js
+
 
                 let ideDir, fileTest;
                 if (/^win/.test(process.platform)) {
                     ideDir = "C:\\Program Files\\JetBrains\\"; //\\bin\\phpstorm64.exe;
                     fileTest = "\\bin\\phpstorm64.exe";
                 } else {
-                    ideDir = "/home/artur/dev/PhpStorm-182.3458.35";
-                    fileTest = "/bin/phpstorm.sh";
+
+
+                    let command = `phpstorm ${BASE_PATH} --line ${line} ${BASE_PATH}/${file}`;
+                    console.log(command);
+                    exec(command, function(error, stdout, stderr) {
+                        if (!error) {
+                            console.log("worked");
+                            response.send(JSON.stringify({ status: "OK" }));
+                        } else {
+                            console.log("not worked");
+                            console.log(stdout);
+                            console.log(stderr);
+                            response.send(JSON.stringify({ status: "ERROR", error: stderr }));
+                        }
+                    });
+                    return;
                 }
 
 

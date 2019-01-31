@@ -192,6 +192,13 @@ class BackofficeStore {
     private currentPath = "";
     public changeView = (path: string, input: any = null, callback: () => any = null) => {
         const originalPath = path;
+        //console.log(this.currentPath + " => " + path);
+
+        if(path && false) {
+            // tutaj trzeba poradzić sobie ze śledzeniem odpalonych widoków
+            console.log(this.currentPath , "wywalam");
+            BackofficeStore.unregisterDebugData(this.currentPath);
+        }
 
         try {
             this.isViewLoading = true;

@@ -4,12 +4,18 @@ import Tooltip from "../Tooltip/Tooltip";
 import { PrintJSON } from "../PrintJSON";
 import { BackofficeStore, IDebugDataEntry } from "./BackofficeStore";
 import "./DebugTool.sass";
+import { useState } from "react";
+import { ideConnector } from "./IDEConnector";
+const ReactJson = React.lazy(() => import("react-json-view"));
+import { Modal } from "../Modal";
+import { LoadingIndicator } from "../LoadingIndicator";
 
 const DebugTool = () => {
     return (
-        <div style={{ backgroundColor: "lightgrey", color: "black", padding: "0 10px" }}>
-            <Tooltip template={() => <DebugToolBody />} theme="light" autoOpen={true}>
-                <Icon name={"Edit"} />
+        <div className="w-debug-tool">
+            <StoryBookHelper />
+            <Tooltip template={() => <DebugToolBody />} theme="light" layerClass="w-debug-tool-tooltip">
+                <Icon name={"Code"} />
             </Tooltip>
         </div>
     );
@@ -17,7 +23,7 @@ const DebugTool = () => {
 
 const DebugToolBody = () => {
     return (
-        <div style={{ maxHeight: "90vh", overflow: "auto" }}>
+        <div className="w-debug-tool-body">
             <h3>Views</h3>
             {BackofficeStore.debugData.views.map((el) => (
                 <RouteInfo info={el} />
@@ -26,110 +32,127 @@ const DebugToolBody = () => {
             {BackofficeStore.debugData.ajax.map((el) => (
                 <RouteInfo info={el} />
             ))}
+            <hr />
         </div>
     );
 };
 
 const RouteInfo = ({ info }: { info: any }) => {
-    return (
-        <div style={{}}>
-            {info.urls}
-            <small>
-                <table className={"w-debug-info-table"}>
-                    <tr>
-                        <td>Route:</td>
-                        <td> {info.routeInfo.path}</td>
-                    </tr>
-                    <tr>
-                        <td>Controller:</td> <td>{info.routeInfo.extendedInfo._controller}</td>
-                    </tr>
-                    <tr>
-                        <td>Place:</td>{" "}
-                        <td>
-                            {info.routeInfo.extendedInfo._debug.file}:{info.routeInfo.extendedInfo._debug.line}
-                        </td>
-                    </tr>
-                    {info.routeInfo.extendedInfo._debug.componentExists && (
-                        <tr>
-                            <td>Template:</td> <td>{info.routeInfo.extendedInfo._debug.template}.component.tsx</td>
-                        </tr>
-                    )}
-                </table>
-            </small>
+    const [expanded, setExpanded] = useState([]);
+    const [doing, setDoing] = useState("");
 
-            {info.props.map((prop: any, key: number) => (
-                <pre key={key}>
-                    <PrintJSON json={prop} />
-                </pre>
+    const routeInfoClicked = (file: string, line: number) => {
+        ideConnector.openFile(file, line, (devResponse) => {
+            if (devResponse.status == "OK") {
+                setDoing("Opened");
+                setTimeout(() => setDoing(""), 100);
+            } else {
+                setTimeout(() => setDoing("Error: " + devResponse.error), 100);
+            }
+        });
+    };
+
+    return (
+        <div>
+            {doing != "" && <pre>{doing}</pre>}
+            {info.urls.map((url: string, urlIndex: number) => (
+                <React.Fragment key={url}>
+                    <div
+                        className="w-debug-tool-url"
+                        onClick={() => {
+                            if (expanded.includes(urlIndex)) {
+                                setExpanded(expanded.filter((el) => el != urlIndex));
+                            } else {
+                                setExpanded([...expanded, urlIndex]);
+                            }
+                        }}
+                    >
+                        {url}
+                    </div>
+                    {expanded.includes(urlIndex) && (
+                        <>
+                            <small>
+                                <table className={"w-debug-info-table"}>
+                                    <tbody>
+                                        <tr>
+                                            <td>Route:</td>
+                                            <td> {info.routeInfo.path}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Controller:</td>
+                                            <td>{info.routeInfo.extendedInfo._controller}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Place:</td>
+                                            <td>
+                                                <a
+                                                    onClick={() =>
+                                                        routeInfoClicked(
+                                                            info.routeInfo.extendedInfo._debug.file,
+                                                            info.routeInfo.extendedInfo._debug.line,
+                                                        )
+                                                    }
+                                                >
+                                                    {info.routeInfo.extendedInfo._debug.file}:
+                                                    {info.routeInfo.extendedInfo._debug.line}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {info.routeInfo.extendedInfo._debug.componentExists && (
+                                            <tr>
+                                                <td>Template:</td>
+                                                <td>
+                                                    <a
+                                                        onClick={() =>
+                                                            routeInfoClicked(
+                                                                info.routeInfo.extendedInfo._debug.template +
+                                                                    ".component.tsx",
+                                                                1,
+                                                            )
+                                                        }
+                                                    >
+                                                        {info.routeInfo.extendedInfo._debug.template}.component.tsx
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </small>
+
+                            {/*<PrintJSON json={info.props[urlIndex]} />*/}
+                            <div className="w-debug-tool-props">
+                                <React.Suspense fallback={<LoadingIndicator />}>
+                                    <ReactJson
+                                        src={info.props[urlIndex]}
+                                        theme="monokai"
+                                        displayDataTypes={false}
+                                        name={false}
+                                    />
+                                </React.Suspense>
+                            </div>
+                        </>
+                    )}
+                </React.Fragment>
             ))}
         </div>
     );
 };
 
+const StoryBookHelper = () => {
+    const [opened, setOpened] = useState(false);
+    return (
+        <>
+            <span onClick={() => setOpened(true)}>
+                <Icon name={"DietPlanNotebook"} />
+            </span>
+            <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
+                <div className="w-debug-tool-storybook">
+                    <iframe src="http://frontend-lib.org:3000/storybook/" />
+                </div>
+            </Modal>
+        </>
+    );
+};
+
 export default DebugTool;
-
-/*
-*
-
-
-  "urls": [
-    "/access/points/list"
-  ],
-  "props": [
-    {
-      "agroups": {
-        "8": "Klienci",
-        "16": "Handlowcy",
-        "32": "Tumacze",
-        "64": "Handlowcy [ Kierownik ]",
-        "128": "Sklepy partnerskie",
-        "256": "Tylko produkty - zdjęcia",
-        "512": "Regeneracja",
-        "1024": "Magazyn [kierownik]",
-        "2048": "Reklamacje",
-        "4096": "Opiekunowie",
-        "8192": "Raporty",
-        "16384": "Marketing",
-        "32768": "Produkcja",
-        "65536": "CRM",
-        "131072": "England",
-        "262144": "Raporty - bez definiowania",
-        "524288": "Raporty - zapytania SQL",
-        "1048576": "Automat",
-        "2097152": "Logistyk",
-        "4194304": "Produkcja - Kierownik",
-        "8388608": "Raporty - zakupy",
-        "16777216": "Raporty - logistyka",
-        "33554432": "Raporty - logistyka wewnętrzna",
-        "67108864": "Raporty - sprzedaż",
-        "134217728": "Raporty - regeneracja",
-        "268435456": "Raporty - produkcja"
-      }
-    }
-  ],
-  "routeInfo": {
-    "baseURL": "/access/points",
-    "path": "/access/points/list",
-    "extendedInfo": {
-      "_controller": "Arrow\\Access\\Controllers\\Points",
-      "_method": "list",
-      "_package": "access",
-      "_routePath": "/access/points/list",
-      "_baseRoutePath": "/access/points",
-      "_debug": {
-        "file": "/vendor/arrow/engine/src/packages/access/Controllers/Points.php",
-        "line": 71,
-        "template": "/vendor/arrow/engine/src/packages/access/views/points/list",
-        "componentExists": true,
-        "templateExists": false
-      },
-      "componentName": "access_points_list_access_points_list",
-      "index": 5,
-      "namespace": "access"
-    }
-  },
-  "instances": 1
-}
-
-*
-* */

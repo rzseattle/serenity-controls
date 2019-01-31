@@ -4,12 +4,16 @@ import { Comm } from "../lib";
 declare var DEV_PROPERIES: DevProperties;
 
 class IDEConnector {
-    public openFile(file: string, line: number) {
+    public openFile(file: string, line: number, callback: (response: {status: "OK" | "ERROR", error?: string}) => any = null) {
         const base = Comm.basePath;
         Comm.basePath = "";
+        console.log("Opening file");
         Comm._post(JSON.parse(DEV_PROPERIES.build_domain) + "openFile", { file, line }).then((devResponse) => {
             // noinspection TsLint
-            console.log("Opening file");
+            console.log("File opened");
+            if(callback){
+                callback(devResponse);
+            }
         });
         Comm.basePath = base;
     }
