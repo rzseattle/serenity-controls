@@ -69,7 +69,7 @@ interface IProps {
 
 interface IState {
     log: any[];
-    debugToolLoaded: boolean;
+
     hasError: boolean;
     error: any;
     devComponentFile: string;
@@ -77,13 +77,13 @@ interface IState {
 
 export class PanelComponentLoader extends React.Component<IProps, IState> {
     public notificationSystem: NotificationSystem.System;
-    public DebugTool: any = null;
+
 
     constructor(props: IProps) {
         super(props);
         this.state = {
             log: [],
-            debugToolLoaded: false,
+
             hasError: false,
             error: false,
             devComponentFile: null,
@@ -99,14 +99,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         // logErrorToMyService(error, info);
     }
 
-    public componentWillMount() {
-        if (!PRODUCTION) {
-            import(/* webpackChunkName = "DebugTool" */ "./DebugTool").then(({ DebugTool }) => {
-                this.DebugTool = DebugTool;
-                this.setState({ debugToolLoaded: true });
-            });
-        }
-    }
+
 
     public handleReloadProps = (input = {}, callback: () => any) => {
         this.props.changeView(input, callback);
@@ -152,11 +145,8 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
     };
 
     public render() {
-        const s = this.state;
         const p = this.props;
         const ComponentInfo: any = p.context.view;
-
-        const DebugTool = this.DebugTool;
 
         if (this.state.hasError) {
             // You can render any custom fallback UI
