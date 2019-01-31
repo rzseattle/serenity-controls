@@ -1,26 +1,28 @@
-
 # Hello to Frontend   
+## Directory structure 
+`/src` - lib sources 
+: Components, Helper objects, Sass styles
 
-## Directory structure  
-`/src` - sources dir for all Components / Interfaces / Helpers / Styles
-
-`/sass` - some global styles
+`/sass` - some global styles  
+    
+`/lib` - lib distribution  
   
-`/lib` - lib distribution
+`/builder` - contains webpack build system files  
 
-`/builder` - contains webpack build system files
+`/assets` - lib assets
 
-`/stories` - storybook stories
-
-`/types` - global lib typescript types
-
-
-
-
-## Backoffice Panel
-#### Concept
-
-#### Components and base objects
-
-## Base controls  
-#### Storybook 
+`/doc` - documentation assets 
+- `stories/` - storybook stories
+- `website/` - lib website files
+  
+`/types` - global lib typescript types  
+  
+  
+  
+  
+## Backoffice Panel  
+#### Concept  
+  
+#### Components and base objects  
+  
+## Base controls #### Storybook
