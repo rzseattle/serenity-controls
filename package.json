@@ -11,7 +11,7 @@
         "build:tsc": "tsc --emitDeclarationOnly --project ./ --outDir ./lib ",
         "build:production": "rimraf lib/* && yarn run build:babel && node sass-copy.js",
         "build:development": "rimraf lib/* && yarn run build:babel && yarn run build:tsc && node sass-copy.js",
-        "rebuild": "yarn run build:babel && yarn run build:tsc && node sass-copy.js",
+        "rebuild": " node sass-copy.js && yarn run build:babel && yarn run build:tsc",
         "postinstall": "per-env",
         "postinstall:production": "yarn run build:production",
         "postinstall:development": "yarn run build:development",
