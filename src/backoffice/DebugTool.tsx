@@ -9,12 +9,14 @@ import { ideConnector } from "./IDEConnector";
 const ReactJson = React.lazy(() => import("react-json-view"));
 import { Modal } from "../Modal";
 import { LoadingIndicator } from "../LoadingIndicator";
+import { RouteVisualization } from "./RouteVisualization";
 
 const DebugTool = () => {
     return (
         <div className="w-debug-tool">
             <StoryBookHelper />
             <JSON2TypescriptHelper />
+            <RoutingVisualHelper />
             <Tooltip template={() => <DebugToolBody />} theme="light" layerClass="w-debug-tool-tooltip">
                 <Icon name={"Code"} />
             </Tooltip>
@@ -166,6 +168,22 @@ const JSON2TypescriptHelper = () => {
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">
                     <iframe src="https://transform.now.sh/json-to-ts-interface/" />
+                </div>
+            </Modal>
+        </>
+    );
+};
+
+const RoutingVisualHelper = () => {
+    const [opened, setOpened] = useState(false);
+    return (
+        <>
+            <span onClick={() => setOpened(true)}>
+                <Icon name={"NumberedList"} />
+            </span>
+            <Modal show={opened} title="Route List" showHideLink={true} onHide={() => setOpened(false)}>
+                <div className="w-debug-tool-storybook">
+                    <RouteVisualization />
                 </div>
             </Modal>
         </>
