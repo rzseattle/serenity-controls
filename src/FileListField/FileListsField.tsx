@@ -32,6 +32,7 @@ export interface IFileListProps extends IFieldProps {
     name?: string;
     value: IFile[];
     type?: "gallery" | "filelist";
+    editable: boolean;
     buttonTitle?: string;
     maxLength?: number;
     itemStyle?: any;
@@ -46,7 +47,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
     public static defaultProps: Partial<IFileListProps> = {
         type: "filelist",
         maxLength: null,
-
+        editable: true,
         itemStyle: {},
         transformFilePath: (file: IFile) => file.path,
     };
@@ -140,13 +141,13 @@ export class FileListField extends React.Component<IFileListProps, any> {
     };
 
     public render() {
-        const { type, maxLength, transformFilePath } = this.props;
+        const { type, maxLength, transformFilePath, editable } = this.props;
         const { preview } = this.state;
         const value = this.props.value ? this.props.value : [];
 
         return (
             <div className="w-file-list">
-                {(!maxLength || (value && value.length < maxLength) || !value) && (
+                {(!maxLength || (value && value.length < maxLength) || !value) && editable && (
                     <Dropzone onDrop={this.handleFileAdd}>
                         {({ getRootProps, getInputProps, isDragActive }) => {
                             return (
@@ -155,7 +156,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                     {isDragActive ? (
                                         <p>Drop files here...</p>
                                     ) : (
-                                        <span >
+                                        <span>
                                             <Icon name={"Add"} />{" "}
                                             {this.props.buttonTitle
                                                 ? this.props.buttonTitle
@@ -189,11 +190,13 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                       </a>
                                   </div>
                                   <div className="w-file-list-size">{formatBytes(el.size)}</div>
-                                  <div className="w-file-list-remove">
-                                      <a onClick={() => this.handleFileRemove(index)}>
-                                          <Icon name={"Delete"} />{" "}
-                                      </a>
-                                  </div>
+                                  {editable && (
+                                      <div className="w-file-list-remove">
+                                          <a onClick={() => this.handleFileRemove(index)}>
+                                              <Icon name={"Delete"} />{" "}
+                                          </a>
+                                      </div>
+                                  )}
                               </div>
                           ))
                         : null}
@@ -209,6 +212,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                             onDelete={this.handleFileRemove}
                             onClick={this.handleViewRequest}
                             itemStyle={this.props.itemStyle}
+                            editable={editable}
                         />
                     )}
                 </div>

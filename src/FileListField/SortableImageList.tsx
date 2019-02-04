@@ -7,6 +7,7 @@ interface ISortableImageList {
     itemStyle: React.CSSProperties;
     onClick: (index: number) => any;
     onDelete: (index: number) => any;
+    editable: boolean;
 }
 export const SortableImageList = SortableContainer((props: ISortableImageList) => {
     return (
@@ -21,6 +22,7 @@ export const SortableImageList = SortableContainer((props: ISortableImageList) =
                         onClick={props.onClick}
                         onDelete={props.onDelete}
                         style={props.itemStyle}
+                        editable={editable}
                     />
                 ))}
         </div>

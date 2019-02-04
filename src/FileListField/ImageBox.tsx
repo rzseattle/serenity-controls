@@ -1,11 +1,11 @@
-import {SortableElement, SortableHandle, SortEnd} from "react-sortable-hoc";
-import {IFile} from "./FileListsField";
+import { SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
+import { IFile } from "./FileListsField";
 import * as React from "react";
-import {Icon} from "../Icon";
-import {isImage, formatBytes} from "./utils";
+import { Icon } from "../Icon";
+import { isImage, formatBytes } from "./utils";
 import Tooltip from "../Tooltip/Tooltip";
-import {FileTooltip} from "./FileTooltip";
-import {RelativePositionPresets} from "../Positioner";
+import { FileTooltip } from "./FileTooltip";
+import { RelativePositionPresets } from "../Positioner";
 
 interface IImageBoxProps {
     file: IFile;
@@ -13,11 +13,12 @@ interface IImageBoxProps {
     onClick: (index: number) => any;
     _index: number;
     onDelete: (index: number) => any;
+    editable: boolean;
 }
 
 const DragHandle = SortableHandle(() => (
     <a className="w-gallery-drag">
-        <Icon name={"SIPMove"}/>
+        <Icon name={"SIPMove"} />
     </a>
 )); //
 
@@ -33,39 +34,43 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
     return (
         <div style={style}>
             <Tooltip
-                relativeSettings={{...RelativePositionPresets.bottomLeft, offsetX: -5, widthCalc: "min"}}
+                relativeSettings={{ ...RelativePositionPresets.bottomLeft, offsetX: -5, widthCalc: "min" }}
                 content={file}
-                template={(data) => <FileTooltip file={file}/>}
+                template={(data) => <FileTooltip file={file} />}
             >
                 <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
                     <span>
-                        <span/>
+                        <span />
                         {file.uploaded ? (
                             isElImage ? (
-                                <img src={file.path} alt=""/>
+                                <img src={file.path} alt="" />
                             ) : (
                                 <>
-                                    <Icon name={"TextDocument"}/>
+                                    <Icon name={"TextDocument"} />
                                 </>
                             )
                         ) : (
                             <>
-                                <img src={preview} alt=""/>
-                                <Icon name={"Upload"}/>
+                                <img src={preview} alt="" />
+                                <Icon name={"Upload"} />
                             </>
                         )}
 
                         <div className="w-gallery-on-hover">
-                            <a
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    props.onDelete(props._index);
-                                }}
-                                className="w-gallery-delete"
-                            >
-                                <Icon name={"Clear"}/>{" "}
-                            </a>
-                            <DragHandle/>
+                            {editable && (
+                                <>
+                                    <a
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            props.onDelete(props._index);
+                                        }}
+                                        className="w-gallery-delete"
+                                    >
+                                        <Icon name={"Clear"} />{" "}
+                                    </a>
+                                    <DragHandle />
+                                </>
+                            )}
                         </div>
                     </span>
                     <div className="w-gallery-name">{file.name}</div>
