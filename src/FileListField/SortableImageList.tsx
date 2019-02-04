@@ -22,7 +22,7 @@ export const SortableImageList = SortableContainer((props: ISortableImageList) =
                         onClick={props.onClick}
                         onDelete={props.onDelete}
                         style={props.itemStyle}
-                        editable={editable}
+                        editable={props.editable}
                     />
                 ))}
         </div>

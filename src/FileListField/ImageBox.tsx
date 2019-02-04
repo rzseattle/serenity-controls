@@ -57,7 +57,7 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
                         )}
 
                         <div className="w-gallery-on-hover">
-                            {editable && (
+                            {props.editable && (
                                 <>
                                     <a
                                         onClick={(e) => {
