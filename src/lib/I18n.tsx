@@ -10,11 +10,11 @@ declare var PRODUCTION: any;
 
 class LangContainer {
     public langs: { [index: string]: () => Promise<any> } = {};
-    public add = (lang: string, getter: (() => Promise<any>)) => {
+    public add = (lang: string, getter: () => Promise<any>) => {
         this.langs[lang] = getter;
     };
 
-    public get = (lang: string, callback: ((result: any) => any)) => {
+    public get = (lang: string, callback: (result: any) => any) => {
         if (this.langs[lang] !== undefined) {
             this.langs[lang]().then((result) => {
                 callback(result);
@@ -53,13 +53,17 @@ const XHR = {
     },
 };
 
+const missingLangData = {};
 const instance = i18n
     .use(XHR)
     // .use(LanguageDetector)
     .use(reactI18nextModule)
     .init({
         // lng: configGet("translations.defaultLanguage"),
-        fallbackLng: config.translations.defaultLanguage,
+        //fallbackLng: config.translations.defaultLanguage,
+        lng: window.reactBackOfficeVar.panel.language,
+        fallbackLng: window.reactBackOfficeVar.panel.language,
+
         // debug: !PRODUCTION,
         debug: false,
         saveMissing: true,
@@ -67,7 +71,8 @@ const instance = i18n
         missingKeyHandler(lng, ns, key, fallbackValue) {
             // if (!PRODUCTION) {
             // if (lng[0] != "pl") {
-            console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
+            //console.log(`i18n  key: ${key}, value: ${fallbackValue}, ns: ${ns}, lang: ${lng}`);
+            missingLangData[key] = "";
             // }
             // }
         },
@@ -79,3 +84,7 @@ const instance = i18n
 instance.on("languageChanged", (lang) => configGetAll().translations.langChanged(lang));
 const fI18n = instance;
 export { fI18n, langContainer };
+
+setTimeout(() => {
+    console.log(JSON.stringify(missingLangData, null, 2));
+}, 4000);
