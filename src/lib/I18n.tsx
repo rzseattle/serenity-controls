@@ -53,16 +53,16 @@ const XHR = {
     },
 };
 
-const missingLangData = {};
+const missingLangData: any = {};
 const instance = i18n
     .use(XHR)
     // .use(LanguageDetector)
     .use(reactI18nextModule)
     .init({
         // lng: configGet("translations.defaultLanguage"),
-        //fallbackLng: config.translations.defaultLanguage,
-        lng: window.reactBackOfficeVar.panel.language,
-        fallbackLng: window.reactBackOfficeVar.panel.language,
+        fallbackLng: config.translations.defaultLanguage,
+        //lng: window.reactBackOfficeVar.panel.language,
+        //fallbackLng: window.reactBackOfficeVar.panel.language,
 
         // debug: !PRODUCTION,
         debug: false,

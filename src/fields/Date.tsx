@@ -3,7 +3,10 @@ import * as React from "react";
 import { fI18n } from "../lib/I18n";
 import { Moment } from "moment";
 import "./Date.sass";
-let datePicker: any = null;
+
+
+
+
 let moment: any = null;
 
 export interface IDateProps extends IFieldProps {
@@ -12,9 +15,12 @@ export interface IDateProps extends IFieldProps {
 }
 
 export class Date extends React.Component<IDateProps, any> {
+
     public static defaultProps = {
         editable: true,
     };
+
+    datePicker: any = null;
 
     constructor(props: IDateProps) {
         super(props);
@@ -31,14 +37,14 @@ export class Date extends React.Component<IDateProps, any> {
             import("moment"),
             // @ts-ignore
             import("moment/locale/pl"),
-            import("react-dates"), // @ts-ignore
+            import("react-day-picker"), // @ts-ignore
             // @ts-ignore
-            import("react-dates/lib/css/_datepicker.css"),
+            import("react-day-picker/lib/style.css"),
             // @ts-ignore
-            import( "react-dates/initialize"),
+
         ]).then((imported) => {
             moment = imported[0].default;
-            datePicker = imported[2];
+            this.datePicker = imported[2].DayPicker;
             this.setState({
                 date:
                     this.props.value && this.props.value != "0000-00-00"
@@ -96,7 +102,8 @@ export class Date extends React.Component<IDateProps, any> {
 
         return (
             <div>
-                <datePicker.SingleDatePicker
+                <this.datePicker />
+               {/* <datePicker.SingleDatePicker
 
                     numberOfMonths={1}
                     displayFormat="YYYY-MM-DD"
@@ -107,7 +114,7 @@ export class Date extends React.Component<IDateProps, any> {
                     isOutsideRange={() => false}
                     disabled={props.disabled}
                     placeholder={props.placeholder ? props.placeholder : fI18n.t("frontend:fields.date.fillDate")}
-                />
+                />*/}
             </div>
         );
     }
