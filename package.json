@@ -93,7 +93,6 @@
         "qs": "^6.6.0",
         "react": "^16.8.0-alpha.1",
         "react-addons-shallow-compare": "^15.6.2",
-        "react-dates": "^18.3.0",
         "react-day-picker": "^7.2.4",
         "react-dom": "^16.8.0-alpha.1",
         "react-dropzone": "^8.0.3",

@@ -7,15 +7,19 @@ import "./DateFilter.sass";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { Icon } from "../Icon";
 
+import { BDate } from "../BForm";
+
 interface IDateFilterProps extends IFilterProps {
     config: {
         /*showFilterOptions?: boolean;
         disableAutoFocus?: boolean;*/
     };
 }
+
 export default class DateFilter extends AbstractFilter<IDateFilterProps> {
     public datepicker: any;
     public choiceTypes: { [index: string]: string } = { "<x<in": "range", ">": "exists", IN: "not-exists" };
+    moment: any;
 
     constructor(props: IDateFilterProps) {
         super(props);
@@ -37,26 +41,20 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
         Promise.all([
             import("moment"),
             // @ts-ignore
-            import("moment/locale/pl"),
-            import("react-dates"), // @ts-ignore
+        ]).then(([moment]) => {
             // @ts-ignore
-            import("react-dates/lib/css/_datepicker.css"),
-            // @ts-ignore
-            import( "react-dates/initialize"),
-        ]).then(([moment, locale, datePickerImp]) => {
-            // @ts-ignore
-            moment = moment.default;
-            this.datepicker = datePickerImp.DateRangePicker;
+            this.moment = moment.default;
+            
 
             this.setState({
                 // @ts-ignore
-                startDate: moment(),
+                startDate: this.moment(),
                 // @ts-ignore
-                endDate: moment(),
+                endDate: this.moment(),
                 // @ts-ignore
-                startTime: moment().startOf("day"),
+                startTime: this.moment().startOf("day"),
                 // @ts-ignore
-                endTime: moment().endOf("day"),
+                endTime: this.moment().endOf("day"),
                 libsLoaded: true,
             });
         });
@@ -139,32 +137,37 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
                 {caption != "" && <div className={"w-filter-title"}>{caption}</div>}
                 {/*<Positioner>*/}
                 <div style={{ display: s.choiceType != "range" ? "none" : "block" }}>
-                    <this.datepicker
-                        startDate={this.state.startDate}
-                        startDateId="your_unique_start_date_id"
-                        endDateId="your_unique_end_date_id"
-                        endDate={this.state.endDate}
-                        onDatesChange={({ startDate, endDate }: any) => {
-                            this.setState({ startDate, endDate }, () => {
-                                if (startDate && endDate) {
-                                    this.handleChange();
-                                }
-                            });
-                        }}
-                        focusedInput={this.state.focusedInput}
-                        onFocusChange={(focusedInput: any) => {
-                            this.setState({ focusedInput });
-                        }}
-                        startDatePlaceholderText="Data od"
-                        endDatePlaceholderText="Data do"
-                        minimumNights={0}
-                        isOutsideRange={() => {
-                            return false;
-                        }}
-                        renderCalendarInfo={() => false}
-                    />
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <BDate
+                                        value={this.state.startDate.format("YYYY-MM-DD")}
+                                        label={"Od"}
+                                        placeholder={"Data od"}
+                                        onChange={({ value }) => {
+                                            this.setState({ startDate: this.moment(value, "YYYY-MM-DD") }, () =>
+                                                this.handleChange(),
+                                            );
+                                        }}
+                                    />
+                                </td>
+                                <td>
+                                    <BDate
+                                        value={this.state.endDate.format("YYYY-MM-DD")}
+                                        label={"Do"}
+                                        placeholder={"Data do"}
+                                        onChange={({ value }) => {
+                                            this.setState({ endDate: this.moment(value, "YYYY-MM-DD") }, () =>
+                                                this.handleChange(),
+                                            );
+                                        }}
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                {/*</Positioner>*/}
                 <div className="w-filter-date-exists">
                     <div>
                         <label>

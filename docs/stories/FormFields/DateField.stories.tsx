@@ -9,7 +9,7 @@ storiesOf("Field: Date", module)
         return (
             <Panel>
                 <div style={{ height: 800 }}>
-                    <DateTest value="2007-11-11" />
+                    <DateTest value="2018-11-11" />
                 </div>
             </Panel>
         );
