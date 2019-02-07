@@ -218,7 +218,7 @@ class Comm {
                                 fieldErrors: new Map<string, string[]>(),
                                 formErrors: [],
                             };
-                            validationErrors.formErrors = data.formErrors || [];
+                            validationErrors.formErrors = data.errors || [];
                             for (const field in data.fieldErrors) {
                                 validationErrors.fieldErrors.set(field, data.fieldErrors[field]);
                             }
