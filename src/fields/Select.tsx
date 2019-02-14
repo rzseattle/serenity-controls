@@ -144,7 +144,6 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     };
 
     private searchTextChanged = (e: any) => {
-
         let filteredOptions: IOption[];
 
         if (!Array.isArray(this.props.options)) {
@@ -213,12 +212,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             {this.props.placeholder ? this.props.placeholder : fI18n.t("frontend:fields.select.choose")}
                         </div>
                     )}
-                    {props.allowClear &&
-                        props.value !== null && (
-                            <div className="w-select-clear" onClick={this.handleClear}>
-                                <Icon name={"ChromeClose"} />
-                            </div>
-                        )}
+                    {props.allowClear && props.value !== null && (
+                        <div className="w-select-clear" onClick={this.handleClear}>
+                            <Icon name={"ChromeClose"} />
+                        </div>
+                    )}
                     <Icon name={"ChevronDown"} />
                 </div>
 
@@ -236,16 +234,15 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             onMouseDown={(e) => e.preventDefault()}
                         >
                             <Hotkeys keyName="up,down,enter" onKeyDown={this.onKeyDown}>
-                                {parsetOptions.length > props.minLengthToShowSearchField &&
-                                    props.showSearchField && (
-                                        <input
-                                            ref={(el) => (this.searchField = el)}
-                                            type={"text"}
-                                            className={"form-control"}
-                                            onChange={this.searchTextChanged}
-                                            value={this.state.searchedTxt}
-                                        />
-                                    )}
+                                {parsetOptions.length > props.minLengthToShowSearchField && props.showSearchField && (
+                                    <input
+                                        ref={(el) => (this.searchField = el)}
+                                        type={"text"}
+                                        className={"form-control"}
+                                        onChange={this.searchTextChanged}
+                                        value={this.state.searchedTxt}
+                                    />
+                                )}
                                 {this.state.filteredOptions.map((el, index) => (
                                     <div
                                         key={el.value}

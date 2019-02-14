@@ -141,7 +141,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
                     }
                 });
                 this.timeout = 0;
-            }, 10);
+            }, 300);
         }
     };
 
