@@ -4,6 +4,8 @@ import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./NumericFilter.sass";
+import { IFieldChangeEvent, Select } from "../fields";
+import { toOptions } from "../fields/Utils";
 
 interface INumericFilterProps extends IFilterProps {
     config: {
@@ -76,18 +78,22 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
         }
     };
 
+    public handleSelectChange = (e: IFieldChangeEvent) => {
+        this.setState({ option: e.value });
+    };
+
     public render() {
         const { config, caption } = this.props;
 
         const options = {
-            "LIKE": fI18n.t("frontend:filters.numeric.like"),
+            LIKE: fI18n.t("frontend:filters.numeric.like"),
             "==": fI18n.t("frontend:filters.numeric.equal"),
             "<": fI18n.t("frontend:filters.numeric.smaller"),
             "<=": fI18n.t("frontend:filters.numeric.smallerEqual"),
             ">": fI18n.t("frontend:filters.numeric.greater"),
             ">=": fI18n.t("frontend:filters.numeric.greaterEqual"),
             "<x<": fI18n.t("frontend:filters.numeric.between"),
-            "IN": fI18n.t("frontend:filters.numeric.in"),
+            IN: fI18n.t("frontend:filters.numeric.in"),
         };
 
         if (config.disableLikeFilter == true) {
@@ -117,16 +123,7 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
                     </div>
                 )}
                 {this.props.config.showFilterOptions && (
-                    <select
-                        onChange={(e) => this.setState({ option: e.currentTarget.value })}
-                        value={this.state.option}
-                    >
-                        {Object.entries(options).map(([key, val]) => (
-                            <option value={key} key={key}>
-                                {val}
-                            </option>
-                        ))}
-                    </select>
+                    <Select onChange={this.handleSelectChange} value={this.state.option} options={toOptions(options)} />
                 )}
                 {this.props.showApply && (
                     <div>

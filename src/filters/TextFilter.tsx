@@ -3,6 +3,8 @@ import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./TextFilter.sass";
+import { toOptions } from "../fields/Utils";
+import { IFieldChangeEvent, Select } from "../fields";
 
 interface ITextFilterProps extends IFilterProps {
     config: {
@@ -31,14 +33,6 @@ export default class TextFilter extends AbstractFilter<ITextFilterProps> {
             option: props.value ? props.value.condition : "LIKE",
             searchText: props.value ? props.value.value : "",
         };
-        this.options = {
-            "LIKE": fI18n.t("frontend:filters.text.like"),
-            "==": fI18n.t("frontend:filters.text.equals"),
-            "!=": fI18n.t("frontend:filters.text.differentThan"),
-            "NOT LIKE": fI18n.t("frontend:filters.text.notLike"),
-            "^%": fI18n.t("frontend:filters.text.startsWith"),
-            "%$": fI18n.t("frontend:filters.text.endsWith"),
-        };
     }
 
     public componentDidMount(): void {
@@ -51,7 +45,7 @@ export default class TextFilter extends AbstractFilter<ITextFilterProps> {
 
     public componentWillReceiveProps(nextProps: ITextFilterProps) {
         this.setState({
-            option: nextProps.value ? nextProps.value.condition : "LIKE",
+            //option: nextProps.value ? nextProps.value.condition : "LIKE",
             searchText: nextProps.value ? nextProps.value.value : "",
         });
     }
@@ -87,8 +81,8 @@ export default class TextFilter extends AbstractFilter<ITextFilterProps> {
         this.setState({ searchText: e.currentTarget.value }, this.handleChange);
     };
 
-    public handleSelectChange = (e: React.FormEvent<HTMLSelectElement>) => {
-        this.setState({ option: e.currentTarget.value }, this.handleChange);
+    public handleSelectChange = (e: IFieldChangeEvent) => {
+        this.setState({ option: e.value }, this.handleChange);
     };
 
     public handleKeyPress = (e: React.KeyboardEvent) => {
@@ -99,6 +93,15 @@ export default class TextFilter extends AbstractFilter<ITextFilterProps> {
 
     public render() {
         const { config, caption } = this.props;
+
+        this.options = {
+            LIKE: fI18n.t("frontend:filters.text.like"),
+            "==": fI18n.t("frontend:filters.text.equals"),
+            "!=": fI18n.t("frontend:filters.text.differentThan"),
+            "NOT LIKE": fI18n.t("frontend:filters.text.notLike"),
+            "^%": fI18n.t("frontend:filters.text.startsWith"),
+            "%$": fI18n.t("frontend:filters.text.endsWith"),
+        };
 
         return (
             <div className="w-filter w-filter-text">
@@ -113,13 +116,11 @@ export default class TextFilter extends AbstractFilter<ITextFilterProps> {
                 />
 
                 {this.props.config.showFilterOptions && (
-                    <select onChange={this.handleSelectChange} value={this.state.option}>
-                        {Object.entries(this.options).map(([key, val]) => (
-                            <option value={key} key={key}>
-                                {val}
-                            </option>
-                        ))}
-                    </select>
+                    <Select
+                        onChange={this.handleSelectChange}
+                        value={this.state.option}
+                        options={toOptions(this.options)}
+                    />
                 )}
 
                 {this.props.showApply && (

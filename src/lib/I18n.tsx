@@ -60,7 +60,7 @@ const instance = i18n
     .use(reactI18nextModule)
     .init({
         // lng: configGet("translations.defaultLanguage"),
-        fallbackLng: config.translations.defaultLanguage,
+        fallbackLng: "pl", //config.translations.defaultLanguage,
         //lng: window.reactBackOfficeVar.panel.language,
         //fallbackLng: window.reactBackOfficeVar.panel.language,
 
