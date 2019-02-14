@@ -32,6 +32,7 @@ export interface IFileListProps extends IFieldProps {
     name?: string;
     value: IFile[];
     type?: "gallery" | "filelist";
+    emptyNotEditableText: string;
     editable: boolean;
     buttonTitle?: string;
     maxLength?: number;
@@ -49,6 +50,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
         maxLength: null,
         editable: true,
         itemStyle: {},
+        emptyNotEditableText: "Edytuj aby dodać pliki",
         transformFilePath: (file: IFile) => file.path,
     };
 
@@ -127,7 +129,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
         const viewer = getViewer(file);
         if (viewer == null) {
             if (file.uploaded) {
-                download(file.path);
+                download(this.props.transformFilePath(file));
             } else {
                 alertDialog(fI18n.t("frontend:files.fileNotUploadedYet"));
             }
@@ -170,6 +172,9 @@ export class FileListField extends React.Component<IFileListProps, any> {
                 )}
 
                 <div className={" " + (type == "gallery" ? "w-file-list-gallery" : "w-file-list-files")}>
+                    {!editable && value.length == 0 && (
+                        <div className="w-file-list-empty-not-editable-text">{this.props.emptyNotEditableText}</div>
+                    )}
                     {type == "filelist"
                         ? value.map((el, index) => (
                               <div className="w-file-list-element" key={el.name}>
@@ -200,7 +205,6 @@ export class FileListField extends React.Component<IFileListProps, any> {
                               </div>
                           ))
                         : null}
-
                     {type == "gallery" && (
                         <SortableImageList
                             helperClass={"w-file-list-dragging"}
