@@ -72,7 +72,6 @@ storiesOf("Field: Markdown ", module)
                         {/*<a onClick={() => setEditable(!editable)}>switch editable</a>*/}
                         <div style={{ height: 750 }}>
                             <Markdown value={str} onChange={(ev) => setValue(ev.value)} editable={editable} />
-
                         </div>
                     </div>
                 </Panel>

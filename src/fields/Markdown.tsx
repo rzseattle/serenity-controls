@@ -39,7 +39,7 @@ export const Markdown = (inProps: IFieldProps) => {
                 <IFrame
                     name="myIframeName"
                     style={{ display: loading ? "none" : "block", ...props.style }}
-                  onLoad={function(ev) {
+                    onLoad={function(ev) {
                         setLoading(false);
                         /*if (ev.target.contentDocument) {
                             //console.log(ev.target.window.innerWidth, "this");
@@ -48,9 +48,7 @@ export const Markdown = (inProps: IFieldProps) => {
                     }}
                 >
                     <html>
-                        <head>
-
-                        </head>
+                        <head />
                         <body
                             onLoad={function(el) {
                                 console.log(window.frames.myIframeName, "frame");
@@ -69,15 +67,16 @@ export const Markdown = (inProps: IFieldProps) => {
                                     rel="stylesheet"
                                     href="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css"
                                 />
-
                             </div>
-                            <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.js" data-manual={"data-manual"} />
+                            <script
+                                src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.js"
+                                data-manual={"data-manual"}
+                            />
                             <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-json.min.js" />
                             <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js" />
                             <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-php.min.js" />
 
                             <script src="https://unpkg.com/mermaid@8.0.0-rc.8/dist/mermaid.min.js" />
-
                         </body>
                     </html>
                 </IFrame>
