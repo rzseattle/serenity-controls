@@ -2,8 +2,10 @@ import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 
 import { MutableRefObject, useEffect, useRef, useState } from "react";
+// @ts-ignore
 import Stackedit from "stackedit-js";
-
+// @ts-ignore
+import loadScript from "load-external-scripts";
 import "./Markdown.sass";
 
 import { createPortal } from "react-dom";
@@ -39,46 +41,97 @@ export const Markdown = (inProps: IFieldProps) => {
                 <IFrame
                     name="myIframeName"
                     style={{ display: loading ? "none" : "block", ...props.style }}
-                    onLoad={function(ev) {
-                        setLoading(false);
-                        /*if (ev.target.contentDocument) {
+                    onLoad={function(ev: any) {
+                        //setLoading(false);
+                        if (ev.target.contentDocument) {
+                            console.log("loaded");
+                            //console.log(ev.nativeEvent.target.contentWindow.document);
+
                             //console.log(ev.target.window.innerWidth, "this");
-                            console.log(window.frames.myIframeName)
-                        }*/
+                            //console.log(window.frames.myIframeName)
+                            setLoading(false);
+                            const win = ev.nativeEvent.target.contentWindow;
+
+                            Promise.all([
+                                loadScript({
+                                    src: "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.js",
+                                    id: "id1",
+                                }),
+                            ]).then((result) => {
+                                Promise.all([
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-markup-templating.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-json.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-javascript.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-php.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src: "https://unpkg.com/mermaid@8.0.0-rc.8/dist/mermaid.min.js",
+                                        id: "id1",
+                                    }),
+                                ]).then(() => {
+                                    // @ts-ignore
+                                    console.log(mermaid);
+                                    console.log(result);
+                                    console.log("yeah");
+
+                                    var mermaids = win.document.getElementsByClassName("language-mermaid");
+                                    console.log(mermaids);
+                                    let i = 0;
+                                    while (mermaids.length > 0) {
+                                        i++;
+                                        const el = mermaids[0];
+                                        console.log(el);
+                                        el.className = "mermaid";
+                                        const id = "mermaid" + i;
+                                        console.log(mermaids[0]);
+                                        el.setAttribute("id", "mermaid" + i);
+                                        mermaid.mermaidAPI.render(id, el.textContent, function(svgCode) {
+                                            el.innerHTML = svgCode;
+                                        });
+                                    }
+
+                                    Prism.highlightAllUnder(win.document);
+                                    //mermaid.init(undefined, win.document);
+                                });
+                            });
+                        }
+
+                        return true;
                     }}
                 >
-                    <html>
-                        <head />
-                        <body
-                            onLoad={function(el) {
-                                console.log(window.frames.myIframeName, "frame");
-                                /*                                console.log(window.frames.myIframeName.onload = function(){
-                                                                    console.log("aaaa");
-                                                                });
-                                                                console.log(window.Prism, "prism");
-                                                                console.log(el.nativeEvent);*/
-                                //mermaid.initialize({ startOnLoad: true });
+                    <>
+                        <link rel="stylesheet" href="https://stackedit.io/style.css" />
+                        <link
+                            rel="stylesheet"
+                            href="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css"
+                        />
+                        <style
+                            dangerouslySetInnerHTML={{
+                                __html: `
+                              h1 { margin: 5px 0 5px 0 !important;  }
+                            `,
                             }}
-                        >
-                            <div>
-                                <div ref={iframeTarget} />
-                                <link rel="stylesheet" href="https://stackedit.io/style.css" />
-                                <link
-                                    rel="stylesheet"
-                                    href="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css"
-                                />
-                            </div>
-                            <script
-                                src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.js"
-                                data-manual={"data-manual"}
-                            />
-                            <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-json.min.js" />
-                            <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-javascript.min.js" />
-                            <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/components/prism-php.min.js" />
+                        />
 
-                            <script src="https://unpkg.com/mermaid@8.0.0-rc.8/dist/mermaid.min.js" />
-                        </body>
-                    </html>
+                        <div>
+                            <div ref={iframeTarget} />
+                        </div>
+                    </>
                 </IFrame>
             )}
         </div>
@@ -137,6 +190,7 @@ const initEditor = ({ props, iframeTarget, setLoading }: Pass) => {
             }, 20);
         }
     } else {
+        // @ts-ignore
         import("markdown-it").then((el) => {
             const MarkdownIt = el.default;
             const md = new MarkdownIt();
@@ -146,6 +200,7 @@ const initEditor = ({ props, iframeTarget, setLoading }: Pass) => {
     }
 };
 
+// @ts-ignore
 const IFrame = ({ children, ...props }) => {
     const [contentRef, setContentRef] = useState(null);
     const mountNode = contentRef && contentRef.contentWindow.document.body;
