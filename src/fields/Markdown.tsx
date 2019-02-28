@@ -84,29 +84,24 @@ export const Markdown = (inProps: IFieldProps) => {
                                         id: "id1",
                                     }),
                                 ]).then(() => {
-                                    // @ts-ignore
-                                    console.log(mermaid);
-                                    console.log(result);
-                                    console.log("yeah");
-
                                     var mermaids = win.document.getElementsByClassName("language-mermaid");
-                                    console.log(mermaids);
                                     let i = 0;
                                     while (mermaids.length > 0) {
                                         i++;
                                         const el = mermaids[0];
-                                        console.log(el);
+
                                         el.className = "mermaid";
                                         const id = "mermaid" + i;
-                                        console.log(mermaids[0]);
+
                                         el.setAttribute("id", "mermaid" + i);
+                                        // @ts-ignore
                                         mermaid.mermaidAPI.render(id, el.textContent, function(svgCode) {
                                             el.innerHTML = svgCode;
                                         });
                                     }
 
+                                    // @ts-ignore
                                     Prism.highlightAllUnder(win.document);
-                                    //mermaid.init(undefined, win.document);
                                 });
                             });
                         }
