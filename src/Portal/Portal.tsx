@@ -1,5 +1,6 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
+import { ReactNode } from "react";
 
 interface IPortalProps {
     container?: () => HTMLElement;
@@ -34,7 +35,7 @@ export class Portal extends React.PureComponent<IPortalProps> {
         this.modalRoot.removeChild(this.el);
     }
 
-    public render() {
+    public render(): ReactNode {
         const p = this.props;
         return ReactDOM.createPortal(p.children, this.el);
     }
