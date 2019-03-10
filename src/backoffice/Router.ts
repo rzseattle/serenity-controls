@@ -2,31 +2,10 @@
 
 import RouterException from "./RouterException";
 import { hot, setConfig, cold } from "react-hot-loader";
+import { IRouteElement } from "./interfaces/IRouteElement";
+import { IRouteList } from "./interfaces/IRouteList";
 
 declare var PRODUCTION: any;
-
-export interface IRouteElement {
-    _controller: string;
-    _method: string;
-    _package: string;
-    _routePath: string;
-    _baseRoutePath: string;
-    _debug?: {
-        file: string;
-        line: number;
-        template: string;
-        componentExists: boolean;
-        templateExists: boolean;
-    };
-    component: string;
-    index: number;
-    namespace: string;
-    componentObject?: React.ComponentType;
-}
-
-interface IRouteList {
-    [index: string]: IRouteElement;
-}
 
 class Router {
     public routes: IRouteList = {};
