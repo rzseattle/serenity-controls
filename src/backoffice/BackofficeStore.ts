@@ -1,7 +1,8 @@
 // @ts-ignore
 import * as qs from "qs";
 import { Comm, CommEvents } from "../lib";
-import { IRouteElement, router } from "./Router";
+import {  router } from "./Router";
+import { IRouteElement } from "./interfaces/IRouteElement";
 
 declare var window: any;
 declare var module: any;

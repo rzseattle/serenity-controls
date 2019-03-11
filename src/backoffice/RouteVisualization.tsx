@@ -1,8 +1,9 @@
 import * as React from "react";
 
-import { router, IRouteElement } from "./Router";
+import { router } from "./Router";
 
 import "./RouteVsualization.sass";
+import { IRouteElement } from "./interfaces/IRouteElement";
 declare var module: any;
 
 interface IRouteVisualizationState {
