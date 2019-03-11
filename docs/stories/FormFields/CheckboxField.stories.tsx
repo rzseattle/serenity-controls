@@ -24,7 +24,7 @@ class SelectTest extends React.Component<ISelectProps, any> {
     }
 }
 
-storiesOf("Field: Checkbox", module)
+storiesOf("Form/Fields/Checkbox", module)
     .add("Base", () => {
         return (
             <Panel>

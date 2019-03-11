@@ -41,7 +41,7 @@ const fields = [
     },
 ];
 
-storiesOf("FormBuilder", module)
+storiesOf("Form/FormBuilder", module)
     .add("Base", () => (
         <Panel>
             <StateHelper fields={fields} />

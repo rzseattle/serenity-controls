@@ -15,7 +15,7 @@ const presets = Object.entries(RelativePositionPresets).map(([key, value]) => {
     return key;
 });
 
-storiesOf("Confirm Dialog", module)
+storiesOf("Overlays/Confirm Dialog", module)
     .add("Promise with confirm", () => {
         return (
             <>

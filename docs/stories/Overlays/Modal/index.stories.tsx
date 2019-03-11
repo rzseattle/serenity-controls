@@ -71,7 +71,7 @@ class OpenTest extends React.Component {
     }
 }
 
-storiesOf("Modal", module)
+storiesOf("Overlays/Modal", module)
     .add("Base", () => (
         <Modal show={true} width={400} height={400}>
             {text}

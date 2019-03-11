@@ -67,7 +67,7 @@ const testFiles: IFile[] = [
     },
 ];
 
-storiesOf("Field: FileList", module)
+storiesOf("Form/Fields/FileList", module)
     .add("Base - gallery style", () => {
         return (
             <Panel>

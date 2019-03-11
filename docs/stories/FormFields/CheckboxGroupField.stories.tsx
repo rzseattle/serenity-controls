@@ -11,7 +11,7 @@ const values: IOption[] = mockData.slice(0, 31).map((el) => ({
     label: el.first_name + " " + el.last_name,
 }));
 
-storiesOf("Field: CheckboxGroup", module)
+storiesOf("Form/Fields/CheckboxGroup", module)
     .add("Base", () => {
         return (
             <Panel>

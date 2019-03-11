@@ -46,6 +46,7 @@ addDecorator((story) => {
 });
 
 require("./Panel/index.stories");
+require("./Navbar/index.stories");
 require("./CommandBar/index.stories");
 require("./CommandMenu/index.stories");
 
@@ -67,6 +68,8 @@ require("./Overlays/Shadow/index.stories");
 
 require("./Overlays/ConfirmDialog/index.stories");
 require("./Overlays/Positioner/index.stories");
+
+require("./BackofficePanel/index.stories");
 
 /*
 

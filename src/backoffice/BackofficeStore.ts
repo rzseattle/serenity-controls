@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as qs from "qs";
 import { Comm, CommEvents } from "../lib";
-import {  router } from "./Router";
+import { router } from "./Router";
 import { IRouteElement } from "./interfaces/IRouteElement";
 
 declare var window: any;
@@ -15,14 +15,10 @@ export interface IDebugDataEntry {
     routeInfo: IRouteElement;
 }
 
-export type DebugDataListener = (
-    data: {
-        views: IDebugDataEntry[];
-        ajax: IDebugDataEntry[];
-    },
-) => any;
+export type DebugDataListener = (data: { views: IDebugDataEntry[]; ajax: IDebugDataEntry[] }) => any;
 
-const browserInput = window.reactBackOfficeVar;
+const externalInput: object = window.reactBackOfficeVar !== undefined ? window.reactBackOfficeVar : {};
+const browserInput = { basePath: "/", user: { login: "test@login.com", isDev: true }, ...externalInput };
 
 class BackofficeStore {
     public static debugData: {
@@ -195,9 +191,9 @@ class BackofficeStore {
         const originalPath = path;
         //console.log(this.currentPath + " => " + path);
 
-        if(path && false) {
+        if (path && false) {
             // tutaj trzeba poradzić sobie ze śledzeniem odpalonych widoków
-            console.log(this.currentPath , "wywalam");
+            console.log(this.currentPath, "wywalam");
             BackofficeStore.unregisterDebugData(this.currentPath);
         }
 

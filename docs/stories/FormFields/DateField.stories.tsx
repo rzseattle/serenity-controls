@@ -4,7 +4,7 @@ import { storiesOf } from "@storybook/react";
 import { Panel } from "../../../src/Panel";
 import { DateTest } from "./stateHelpers/DateTest";
 
-storiesOf("Field: Date", module)
+storiesOf("Form/Fields/Date", module)
     .add("Base", () => {
         return (
             <Panel>

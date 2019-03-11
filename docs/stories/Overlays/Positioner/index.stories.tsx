@@ -56,7 +56,7 @@ const presets = Object.entries(RelativePositionPresets).map(([key, value]) => {
     return key;
 });
 
-storiesOf("Positioner", module)
+storiesOf("Overlays/Positioner", module)
     .addDecorator(withKnobs)
     .add("Relative with presets", () => {
         const presetSelected = select("preset", presets, presets[0]);

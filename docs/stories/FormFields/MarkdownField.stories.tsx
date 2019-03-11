@@ -58,7 +58,7 @@ We have several examples [on the website](https://reactjs.org/). Here is the fir
 
 `;
 
-storiesOf("Field: Markdown ", module)
+storiesOf("Form/Fields/Markdown ", module)
     .addDecorator(withKnobs)
     .add("Base", () => {
         const Demo = () => {

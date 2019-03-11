@@ -8,7 +8,7 @@ import { RelativePositionPresets } from "../../../../src/Positioner";
 
 import "./Tooltip.stories.sass";
 
-storiesOf("Tooltip", module)
+storiesOf("Overlays/Tooltip", module)
     .add("Base", () => {
         return (
             <Panel>

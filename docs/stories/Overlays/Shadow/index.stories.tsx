@@ -12,7 +12,7 @@ const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ves
         Aliquam tincidunt enim nec diam sagittis aliquam. Phasellus ultricies nunc at iaculis tincidunt. Morbi dui nisl, interdum quis porttitor tincidunt, interdum vel quam. Pellentesque ac ipsum tristique, ornare tellus nec, lacinia est. Pellentesque viverra, diam at aliquam vestibulum, nisi risus blandit sem, vel
         porttitor odio augue eu risus. Nunc sollicitudin vitae libero a dapibus. Etiam nec imperdiet lectus. Vestibulum facilisis augue at viverra auctor. Proin maximus tortor vitae sem pretium feugiat.
         Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
-storiesOf("Shadow", module)
+storiesOf("Overlays/Shadow", module)
     .add("Base", () => (
         <Panel>
             <Shadow />

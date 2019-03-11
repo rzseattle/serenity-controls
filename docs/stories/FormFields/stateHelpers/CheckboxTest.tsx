@@ -1,6 +1,6 @@
 import * as React from "react";
-
 import { Checkbox, ICheckboxProps } from "../../../../src/fields/Checkbox";
+
 
 export class CheckboxTest extends React.Component<ICheckboxProps, any> {
     constructor(props: any) {

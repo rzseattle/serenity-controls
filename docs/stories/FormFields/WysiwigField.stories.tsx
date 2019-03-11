@@ -40,7 +40,7 @@ class WysiwigDemo extends React.Component<any, any> {
     }
 }
 
-storiesOf("Field: Wysiwig ", module)
+storiesOf("Form/Fields/Wysiwig ", module)
     .addDecorator(withKnobs)
     .add("Base", () => {
         return (

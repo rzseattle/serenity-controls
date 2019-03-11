@@ -29,7 +29,7 @@ const dataSource = (input: IConnectionFieldInput) =>
         });
     });
 
-storiesOf("Field: Connection", module)
+storiesOf("Form/Fields/Connection", module)
     .add("Base", () => {
         return (
             <Panel>

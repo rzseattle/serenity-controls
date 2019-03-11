@@ -11,7 +11,7 @@ const values: IOption[] = mockData.slice(0, 30).map((el) => ({
     label: el.first_name + " " + el.last_name,
 }));
 
-storiesOf("Field: Select", module)
+storiesOf("Form/Fields/Select", module)
     .add("Base", () => {
         return (
             <Panel>
