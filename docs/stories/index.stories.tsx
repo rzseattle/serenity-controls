@@ -49,6 +49,7 @@ require("./Panel/index.stories");
 require("./CommandBar/index.stories");
 require("./CommandMenu/index.stories");
 
+require("./Icon/index.stories");
 require("./LoadingIndicator/index.stories");
 require("./Copyable/index.stories");
 require("./FormFields/index.stories");

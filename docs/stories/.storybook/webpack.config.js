@@ -37,7 +37,7 @@ module.exports = {
                 enforce: "pre",
             },
             {
-                test: /\.(sa|sc|c)ss$/,
+                test: /\.(sa|sc)ss$/,
                 //use: "happypack/loader?id=sass"
                 use: [
                     "style-loader",
