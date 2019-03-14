@@ -23,9 +23,6 @@ import { BackofficeStore } from "./BackofficeStore";
 import { PanelComponentLoader } from "./PanelComponentLoader";
 import { configGetAll } from "./Config";
 import { IPanelContext } from "./PanelContext";
-
-import "./BackOfficePanel.sass";
-
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare var PRODUCTION: boolean;
 NProgress.configure({ parent: ".w-panel-body" });
