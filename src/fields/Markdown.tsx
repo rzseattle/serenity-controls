@@ -1,20 +1,20 @@
-import {IFieldProps} from "./Interfaces";
+import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 
-import {MutableRefObject, useEffect, useRef, useState} from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 // @ts-ignore
 import Stackedit from "stackedit-js";
 // @ts-ignore
 import loadScript from "load-external-scripts";
 import "./Markdown.sass";
 
-import {createPortal} from "react-dom";
-import {LoadingIndicator} from "../LoadingIndicator";
-import {Modal} from "../Modal";
+import { createPortal } from "react-dom";
+import { LoadingIndicator } from "../LoadingIndicator";
+import { Modal } from "../Modal";
 import ResizeObserver from "resize-observer-polyfill";
 
 export const Markdown = (inProps: IFieldProps) => {
-    const props: IFieldProps = {editable: true, style: {}, ...inProps};
+    const props: IFieldProps = { editable: true, style: {}, ...inProps };
 
     const iframeTarget = useRef<HTMLDivElement>(null);
 
@@ -25,38 +25,38 @@ export const Markdown = (inProps: IFieldProps) => {
         setLoading(true);
     }, [props.editable]);
 
-    useMarkdown({props, iframeTarget, setLoading});
+    useMarkdown({ props, iframeTarget, setLoading });
 
     const observer = new ResizeObserver((entries, observer) => {
         for (const entry of entries) {
-            const {left, top, width, height} = entry.contentRect;
+            const { left, top, width, height } = entry.contentRect;
             setHeight(entry.contentRect.height + 30);
             //calculate();
         }
     });
     setTimeout(() => {
-        console.log(iframeTarget, "current");
+        //console.log(iframeTarget, "current");
         observer.observe(iframeTarget.current);
     }, 1000);
 
     return (
-        <div className="w-mardown" style={{height}}>
-            {loading && <LoadingIndicator text="Loading"/>}
+        <div className="w-mardown" style={{ height: height ? height : "auto" }}>
+            {loading && <LoadingIndicator text="Loading" />}
 
             {props.editable ? (
                 <div className="w-markdown-editor">
-                    <HelpBar/>
+                    <HelpBar />
                     <div
                         className="w-markdown-editor-container"
                         ref={iframeTarget}
-                        style={{display: loading ? "none" : "block", ...props.style}}
+                        style={{ display: loading ? "none" : "block", ...props.style }}
                     />
                 </div>
             ) : (
                 <IFrame
                     name="myIframeName"
-                    style={{display: loading ? "none" : "block", ...props.style}}
-                    onLoad={function (ev: any) {
+                    style={{ display: loading ? "none" : "block", ...props.style }}
+                    onLoad={function(ev: any) {
                         //setLoading(false);
                         if (ev.target.contentDocument) {
                             console.log("loaded");
@@ -110,7 +110,7 @@ export const Markdown = (inProps: IFieldProps) => {
 
                                         el.setAttribute("id", "mermaid" + i);
                                         // @ts-ignore
-                                        mermaid.mermaidAPI.render(id, el.textContent, function (svgCode) {
+                                        mermaid.mermaidAPI.render(id, el.textContent, function(svgCode) {
                                             el.innerHTML = svgCode;
                                         });
                                     }
@@ -125,7 +125,7 @@ export const Markdown = (inProps: IFieldProps) => {
                     }}
                 >
                     <>
-                        <link rel="stylesheet" href="https://stackedit.io/style.css"/>
+                        <link rel="stylesheet" href="https://stackedit.io/style.css" />
                         <link
                             rel="stylesheet"
                             href="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css"
@@ -139,8 +139,9 @@ export const Markdown = (inProps: IFieldProps) => {
                         />
 
                         <div>
-                            <div ref={iframeTarget}/>
+                            <div ref={iframeTarget} />
                         </div>
+                        <script dangerouslySetInnerHTML={{ __html: "alert('x');" }} />
                     </>
                 </IFrame>
             )}
@@ -154,13 +155,13 @@ interface Pass {
     setLoading: (val: boolean) => any;
 }
 
-const useMarkdown = ({props, iframeTarget, setLoading}: Pass) => {
+const useMarkdown = ({ props, iframeTarget, setLoading }: Pass) => {
     useEffect(() => {
-        initEditor({props, iframeTarget, setLoading});
+        initEditor({ props, iframeTarget, setLoading });
     }, [props.editable]);
 };
 
-const initEditor = ({props, iframeTarget, setLoading}: Pass) => {
+const initEditor = ({ props, iframeTarget, setLoading }: Pass) => {
     if (props.editable) {
         const stackedit = new Stackedit();
         stackedit.openFile({
@@ -185,7 +186,7 @@ const initEditor = ({props, iframeTarget, setLoading}: Pass) => {
 
         const container: HTMLDivElement = document.getElementsByClassName("stackedit-container")[
             last
-            ] as HTMLDivElement;
+        ] as HTMLDivElement;
         if (container) {
             container.style.display = "none";
 
@@ -211,16 +212,20 @@ const initEditor = ({props, iframeTarget, setLoading}: Pass) => {
 };
 
 // @ts-ignore
-const IFrame = ({children, ...props}) => {
+const IFrame = React.memo(({ children, ...props }) => {
     const [contentRef, setContentRef] = useState(null);
     const mountNode = contentRef && contentRef.contentWindow.document.body;
+
+    /*    useEffect(()=>{
+        console.log(setContentRef);
+    })*/
 
     return (
         <iframe {...props} ref={setContentRef}>
             {mountNode && createPortal(React.Children.only(children), mountNode)}
         </iframe>
     );
-};
+});
 
 const HelpBar = () => {
     const [helpVisible, setHelpVisible] = useState(false);
@@ -232,7 +237,7 @@ const HelpBar = () => {
             </a>
 
             <Modal show={helpVisible} onHide={() => setHelpVisible(false)} title="Pomoc" showHideLink={true}>
-                <div dangerouslySetInnerHTML={{__html: help}} style={{margin: 0, padding: 15}}/>
+                <div dangerouslySetInnerHTML={{ __html: help }} style={{ margin: 0, padding: 15 }} />
             </Modal>
         </div>
     );
