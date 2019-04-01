@@ -39,6 +39,7 @@ export const Markdown = (inProps: IFieldProps) => {
         observer.observe(iframeTarget.current);
     }, 1000);
 
+    // @ts-ignore
     return (
         <div className="w-mardown" style={{ height: height ? height : "auto" }}>
             {loading && <LoadingIndicator text="Loading" />}
@@ -53,10 +54,11 @@ export const Markdown = (inProps: IFieldProps) => {
                     />
                 </div>
             ) : (
+                // @ts-ignore
                 <IFrame
                     name="myIframeName"
                     style={{ display: loading ? "none" : "block", ...props.style }}
-                    onLoad={function(ev: any) {
+                    onLoad={(ev: any) => {
                         //setLoading(false);
                         if (ev.target.contentDocument) {
                             console.log("loaded");
@@ -212,7 +214,8 @@ const initEditor = ({ props, iframeTarget, setLoading }: Pass) => {
 };
 
 // @ts-ignore
-const IFrame = React.memo(({ children, ...props }) => {
+const IFrame = React.memo((props ) => {
+    const children = props.children;
     const [contentRef, setContentRef] = useState(null);
     const mountNode = contentRef && contentRef.contentWindow.document.body;
 
