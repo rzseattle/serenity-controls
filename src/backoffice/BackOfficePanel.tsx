@@ -148,6 +148,12 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     };
 
     public handleCloseWindow = (route: string): any => {
+        const target = this.state.openedWindows.filter((el) => el.route == route);
+        if (target.length > 0) {
+            if (target[0].modalProps.onHide) {
+                target[0].modalProps.onHide();
+            }
+        }
         this.setState({
             openedWindows: this.state.openedWindows.filter((el) => el.route != route),
         });
