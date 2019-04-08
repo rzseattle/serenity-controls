@@ -1,13 +1,12 @@
 import * as React from "react";
 import { deepIsEqual } from "../lib/JSONTools";
-import uuidv4 from "uuid/v4";
+import nanoid from "nanoid";
+
 import { ICellTemplate, IColumnData, IOrder } from "./Interfaces";
 import { IFilterValue } from "../filters/Intefaces";
 import { IGroupByData, IRowClassTemplate, IRowStyleTemplate } from "./Table";
-import { Icon } from "../Icon";
-import { TableRow } from "./TableRow";
 
-// const uuidv4 = require('uuid/v4');
+import { TableRow } from "./TableRow";
 
 interface ITbodyProps {
     data: any[];
@@ -98,7 +97,7 @@ export default class Tbody extends React.Component<ITbodyProps> {
 
         return props.data.map((row, index) => {
             // const key = row.id != undefined ? row.id : uuidv4();
-            const key = uuidv4();
+            const key = nanoid();
             const even = index % 2 == 0;
 
             const rowToOutput = (
@@ -127,7 +126,7 @@ export default class Tbody extends React.Component<ITbodyProps> {
                             <tr key={key + "_group"}>
                                 <td style={{ backgroundColor: "grey", color: "white" }} colSpan={columns.length + 1}>
                                     {groupData.map((el) => (
-                                        <React.Fragment key={uuidv4()}>{el.label}</React.Fragment>
+                                        <React.Fragment key={nanoid()}>{el.label}</React.Fragment>
                                     ))}
                                 </td>
                             </tr>

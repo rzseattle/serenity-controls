@@ -62,6 +62,7 @@ require("./Overlays/Modal/index.stories");
 
 require("./Overlays/Tooltip/index.stories");
 // require("./FormFields/index.stories");
+require("./Tree/index.stories");
 require("./Table/index.stories");
 require("./filters/index.stories");
 require("./Overlays/Shadow/index.stories");
