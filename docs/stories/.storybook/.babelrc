@@ -9,13 +9,13 @@
                     "node": "current"
                 },
                 "useBuiltIns": "entry",
-                "modules": false
+                "modules": false,
+                "corejs": "3"
             }
         ],
         "@babel/react"
     ],
     "plugins": [
-
         "transform-react-constant-elements",
         "transform-react-inline-elements",
         "@babel/plugin-syntax-jsx",
@@ -24,6 +24,5 @@
         "@babel/proposal-object-rest-spread",
         "@babel/plugin-syntax-dynamic-import",
         "react-hot-loader/babel"
-
     ]
 }

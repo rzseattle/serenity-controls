@@ -69,6 +69,7 @@ module.exports = async ({ config, mode }) => {
                                         node: "current",
                                     },
                                     useBuiltIns: "entry",
+                                    corejs: '3',
                                     modules: false,
                                 },
                             ],
