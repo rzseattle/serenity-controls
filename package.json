@@ -93,7 +93,7 @@
         "optimize-css-assets-webpack-plugin": "^5.0.0",
         "per-env": "^1.0.2",
         "prettier": "1.16.4",
-        "qs": "^6.6.0",
+        "qs": "^6.7.0",
         "react": "^16.8.3",
         "react-addons-shallow-compare": "^15.6.2",
         "react-day-picker": "^7.3.0",
@@ -125,8 +125,8 @@
         "webpack-node-externals": "^1.7.2"
     },
     "devDependencies": {
-        "@ckeditor/ckeditor5-dev-utils": "^11.0.1",
-        "@ckeditor/ckeditor5-typing": "^11.0.2",
+        "@ckeditor/ckeditor5-dev-utils": "^12.0.1",
+        "@ckeditor/ckeditor5-typing": "^12.0.0",
         "@storybook/addon-actions": "^5.0.6",
         "@storybook/addon-console": "^1.1.0",
         "@storybook/addon-info": "^5.0.6",
