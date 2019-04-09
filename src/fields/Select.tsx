@@ -21,6 +21,8 @@ export interface ISelectProps extends IFieldProps {
     disabledClass?: string;
     showSearchField?: boolean;
     minLengthToShowSearchField?: number;
+    onOpen?: () => any;
+    onClose?: () => any;
 }
 
 interface ISelectState {
@@ -103,6 +105,14 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     } else {
                         this.dropdown.focus();
                     }
+
+                    if (this.props.onOpen) {
+                        this.props.onOpen();
+                    }
+                } else {
+                    if (this.props.onClose) {
+                        this.props.onClose();
+                    }
                 }
             },
         );
@@ -140,6 +150,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
                 this.handleDropdownChange();
             }
+        } else if (keyName == "esc") {
+            this.handleDropdownChange();
         }
     };
 
@@ -233,7 +245,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             onBlur={() => setTimeout(this.handleDropdownChange, 100)}
                             onMouseDown={(e) => e.preventDefault()}
                         >
-                            <Hotkeys keyName="up,down,enter" onKeyDown={this.onKeyDown}>
+                            <Hotkeys
+                                keyName="up,down,enter,esc"
+                                onKeyDown={this.onKeyDown}
+                                filter={(event: any) => true}
+                            >
                                 {parsetOptions.length > props.minLengthToShowSearchField && props.showSearchField && (
                                     <input
                                         ref={(el) => (this.searchField = el)}

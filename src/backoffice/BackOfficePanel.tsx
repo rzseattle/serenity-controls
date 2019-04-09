@@ -23,6 +23,9 @@ import { BackofficeStore } from "./BackofficeStore";
 import { PanelComponentLoader } from "./PanelComponentLoader";
 import { configGetAll } from "./Config";
 import { IPanelContext } from "./PanelContext";
+import { ICommand } from "../CommandBar";
+import "./BackOfficePanel.sass";
+
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare var PRODUCTION: boolean;
 NProgress.configure({ parent: ".w-panel-body" });
@@ -36,6 +39,7 @@ interface IBackOfficePanelProps {
     menu?: IMenuSection[];
     store?: BackofficeStore;
     parentContext?: IPanelContext;
+    topActions?: ICommand[];
 }
 
 interface IBackOfficePanelState {
@@ -68,6 +72,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
         onlyBody: false,
         isSub: false,
         parentContext: null,
+        topActions: [],
     };
 
     constructor(props: IBackOfficePanelProps) {
@@ -128,7 +133,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
         return this.panelLoader.current.getContext();
     };
 
-    private handleOpenWindow = (
+    public handleOpenWindow = (
         route: string,
         input: any = {},
         modalProps: Partial<IModalProps> = {},
@@ -215,8 +220,9 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
     public render() {
         const languages = configGetAll().translations.languages;
+        const { topActions } = this.props;
         return (
-            <div className="w-panel-container" ref={(container) => (this.container = container)}>
+            <div className="w-panel-container w-backoffice-panel" ref={(container) => (this.container = container)}>
                 {!this.state.onlyBody && (
                     <div className="w-panel-top">
                         <div className="app-icon" onClick={this.handleAppIconClicked}>
@@ -253,6 +259,17 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 </a>
                             ))}
                         </div>
+                        {topActions.length > 0 && (
+                            <div className="w-backoffice-panel-top-actions">
+                                {topActions.map((action: ICommand) => {
+                                    return (
+                                        <div key={action.key} onClick={(ev) => action.onClick(ev, null)}>
+                                            <Icon name={action.icon} /> {action.label}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
 
                         <Modal
                             show={this.state.userMenuVisible}
@@ -342,34 +359,33 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                     </div>
                 </div>
                 {this.state.navigationWindowOpened && (
-                    <Hotkeys keyName="esc" onKeyDown={() => this.setState({ navigationWindowOpened: false })}>
-                        <Modal show={true} onHide={() => this.setState({ navigationWindowOpened: false })} top={200}>
-                            <div style={{ width: 300 }}>
-                                <Select
-                                    options={this.props.menu.reduce((p, c) => {
-                                        return p.concat(
-                                            c.elements.map((el) => {
-                                                return { label: c.title + " -> " + el.title, value: el.route };
-                                            }),
-                                        );
-                                    }, [])}
-                                    value={null}
-                                    autoFocus={true}
-                                    onChange={(e) => {
-                                        this.setState({
-                                            navigationWindowOpened: false,
-                                        });
+                    <Modal show={true} onHide={() => this.setState({ navigationWindowOpened: false })} top={200}>
+                        <div style={{ width: 300 }}>
+                            <Select
+                                onClose={() => this.setState({ navigationWindowOpened: false })}
+                                options={this.props.menu.reduce((p, c) => {
+                                    return p.concat(
+                                        c.elements.map((el) => {
+                                            return { label: c.title + " -> " + el.title, value: el.route };
+                                        }),
+                                    );
+                                }, [])}
+                                value={null}
+                                autoFocus={true}
+                                onChange={(e) => {
+                                    this.setState({
+                                        navigationWindowOpened: false,
+                                    });
 
-                                        this.handleNavigateTo({
-                                            title: "---",
-                                            route: e.value,
-                                            icon: null,
-                                        });
-                                    }}
-                                />
-                            </div>
-                        </Modal>
-                    </Hotkeys>
+                                    this.handleNavigateTo({
+                                        title: "---",
+                                        route: e.value,
+                                        icon: null,
+                                    });
+                                }}
+                            />
+                        </div>
+                    </Modal>
                 )}
             </div>
         );
