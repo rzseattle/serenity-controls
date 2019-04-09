@@ -6,7 +6,6 @@ import "react-checkbox-tree/src/scss/react-checkbox-tree.scss";
 import { Icon } from "../Icon";
 import { useEffect, useState } from "react";
 import { deepCopy } from "../lib";
-import { PrintJSON } from "../PrintJSON";
 
 export interface INode {
     label: JSX.Element | string;
@@ -73,7 +72,7 @@ const iterateOverAll = (nodes: INode[], callback: (node: INode) => any) => {
     });
 };
 
-export default (props: ICheckboxProps) => {
+export const Tree = (props: ICheckboxProps) => {
     const tmpExpanded: string[] = [];
     iterateOverAll(props.nodes, (node: INode) => {
         node.showCheckbox = false;
@@ -99,7 +98,6 @@ export default (props: ICheckboxProps) => {
     if (props.icons !== undefined) {
         icons = { ...icons, ...props.icons };
     }
-
 
     return (
         <div className="w-tree">

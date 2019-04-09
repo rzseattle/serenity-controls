@@ -61,6 +61,7 @@
         "@types/react-i18next": "^8.1.0",
         "@types/react-notification-system": "^0.2.39",
         "@types/uuid": "^3.4.4",
+        "array-to-tree": "^3.3.0",
         "awesome-typescript-loader": "^5.0.0",
         "babel-loader": "^8.0.5",
         "babel-plugin-transform-react-constant-elements": "^6.23.0",
