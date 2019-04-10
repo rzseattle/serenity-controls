@@ -5,7 +5,7 @@ let routeEqualizer = "";
 
 const extractor = function(basePath, targetComponentFile, targetSassFile, production = false) {
     production = false;
-    let command = "php bin/console debug:router --json";
+    let command = "APP_DISABLE_DB=1 php bin/console debug:router --json";
 
     console.log("Route check ...");
     exec(command, { cwd: basePath }, function(error, stdout, stderr) {
