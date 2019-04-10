@@ -27,7 +27,7 @@ export const Markdown = (inProps: IFieldProps) => {
 
     useMarkdown({ props, iframeTarget, setLoading });
 
-    const observer = new ResizeObserver((entries, observer) => {
+    /*const observer = new ResizeObserver((entries, observer) => {
         for (const entry of entries) {
             const { left, top, width, height } = entry.contentRect;
             setHeight(entry.contentRect.height + 30);
@@ -37,7 +37,7 @@ export const Markdown = (inProps: IFieldProps) => {
     setTimeout(() => {
         //console.log(iframeTarget, "current");
         observer.observe(iframeTarget.current);
-    }, 1000);
+    }, 1000);*/
 
     // @ts-ignore
     return (
@@ -68,7 +68,7 @@ export const Markdown = (inProps: IFieldProps) => {
                             //console.log(window.frames.myIframeName)
                             setLoading(false);
                             const win = ev.nativeEvent.target.contentWindow;
-
+                            return true;
                             Promise.all([
                                 loadScript({
                                     src: "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.js",
@@ -118,7 +118,7 @@ export const Markdown = (inProps: IFieldProps) => {
                                     }
 
                                     // @ts-ignore
-                                    Prism.highlightAllUnder(win.document);
+                                    //Prism.highlightAllUnder(win.document);
                                 });
                             });
                         }
