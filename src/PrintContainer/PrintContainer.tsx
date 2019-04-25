@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { CommandBar } from "../CommandBar";
 
-import { Modal } from "../Modal";
+import { IModalProps, Modal } from "../Modal";
 import { fI18n } from "../lib";
 import "./PrintContainer.sass";
 
@@ -10,10 +10,15 @@ interface IPrintContainerProps {
     title?: string;
     onHide?: () => any;
     onPrint?: () => any;
+    modalProps?: Partial<IModalProps>;
 }
 
 export class PrintContainer extends React.Component<IPrintContainerProps, any> {
     private iframe: HTMLIFrameElement;
+
+    public static defaultProps = {
+        modalProps: {},
+    };
 
     constructor(props: IPrintContainerProps) {
         super(props);
@@ -45,6 +50,7 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
                     title={this.props.title ? this.props.title : fI18n.t("frontend:printContainer.printPreview")}
                     showHideLink={true}
                     onHide={this.props.onHide}
+                    {...this.props.modalProps}
                 >
                     <div className="w-print-container-modal">
                         <CommandBar
@@ -123,8 +129,22 @@ class MyWindowPortal extends React.PureComponent<any, any> {
         copyStyles(document, this.externalWindow.document);
 
         const style = this.externalWindow.document.createElement("style");
-        style.appendChild(this.externalWindow.document.createTextNode("@page { size: auto;  margin: 0mm;  }\n"));
+        style.appendChild(this.externalWindow.document.createTextNode("@page { size: auto;  margin: 0;  }\n"));
         style.appendChild(this.externalWindow.document.createTextNode("body>div { size: auto;  margin: 0mm;  }\n"));
+        /*style.appendChild(
+            this.externalWindow.document.createTextNode(
+                "\n" +
+                    "    @page :footer {\n" +
+                    "        display: none\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    @page :header {\n" +
+                    "        display: none\n" +
+                    "    }\n" +
+                    "\n",
+            ),
+        );*/
+
         this.externalWindow.document.head.appendChild(style);
 
         // update the state in the parent component if the user closes the

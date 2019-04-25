@@ -70,7 +70,11 @@ require("./Overlays/Shadow/index.stories");
 require("./Overlays/ConfirmDialog/index.stories");
 require("./Overlays/Positioner/index.stories");
 
+require("./PrintContainer/index.stories");
+
 require("./BackofficePanel/index.stories");
+
+
 
 /*
 
