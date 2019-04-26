@@ -1,8 +1,8 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import loadScript from "load-external-scripts";
+import {  useRef, useState } from "react";
+//import loadScript from "load-external-scripts";
 import "./Markdown.sass";
 
 import { Modal } from "../Modal";
