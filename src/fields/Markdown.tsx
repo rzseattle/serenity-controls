@@ -2,16 +2,16 @@ import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-// @ts-ignore
-import Stackedit from "stackedit-js";
-// @ts-ignore
 import loadScript from "load-external-scripts";
 import "./Markdown.sass";
 
-import { createPortal } from "react-dom";
-import { LoadingIndicator } from "../LoadingIndicator";
 import { Modal } from "../Modal";
-import ResizeObserver from "resize-observer-polyfill";
+
+import CodeMirror from "react-codemirror";
+
+import "codemirror/lib/codemirror.css";
+import "codemirror/theme/monokai.css";
+import "codemirror/mode/markdown/markdown";
 
 export const Markdown = (inProps: IFieldProps) => {
     const props: IFieldProps = { editable: true, style: {}, ...inProps };
@@ -21,220 +21,47 @@ export const Markdown = (inProps: IFieldProps) => {
     const [loading, setLoading] = useState(true);
     const [height, setHeight] = useState(0);
 
-    useEffect(() => {
-        setLoading(true);
-    }, [props.editable]);
-
-    useMarkdown({ props, iframeTarget, setLoading });
-
-    /*const observer = new ResizeObserver((entries, observer) => {
-        for (const entry of entries) {
-            const { left, top, width, height } = entry.contentRect;
-            setHeight(entry.contentRect.height + 30);
-            //calculate();
-        }
-    });
-    setTimeout(() => {
-        //console.log(iframeTarget, "current");
-        observer.observe(iframeTarget.current);
-    }, 1000);*/
-
     // @ts-ignore
     return (
         <div className="w-mardown" style={{ height: height ? height : "auto" }}>
-            {loading && <LoadingIndicator text="Loading" />}
+            {/*{loading && <LoadingIndicator text="Loading" />}*/}
 
             {props.editable ? (
                 <div className="w-markdown-editor">
                     <HelpBar />
-                    <div
-                        className="w-markdown-editor-container"
-                        ref={iframeTarget}
-                        style={{ display: loading ? "none" : "block", ...props.style }}
+
+                    <CodeMirror
+                        value={inProps.value}
+                        options={{
+                            mode: "markdown",
+                            theme: "monokai",
+                            height: "600px",
+                        }}
+                        onChange={(value: any) => {
+                            if (inProps.onChange) {
+                                inProps.onChange({
+                                    name: inProps.name,
+                                    type: "markdown",
+                                    value,
+                                    event: null,
+                                });
+                            }
+                        }}
                     />
                 </div>
             ) : (
+                <div>Not implemented</div>
                 // @ts-ignore
-                <IFrame
-                    name="myIframeName"
-                    style={{ display: loading ? "none" : "block", ...props.style }}
-                    onLoad={(ev: any) => {
-                        //setLoading(false);
-                        if (ev.target.contentDocument) {
-                            console.log("loaded");
-                            //console.log(ev.nativeEvent.target.contentWindow.document);
-
-                            //console.log(ev.target.window.innerWidth, "this");
-                            //console.log(window.frames.myIframeName)
-                            setLoading(false);
-                            const win = ev.nativeEvent.target.contentWindow;
-                            return true;
-                            Promise.all([
-                                loadScript({
-                                    src: "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.js",
-                                    id: "id1",
-                                }),
-                            ]).then((result) => {
-                                Promise.all([
-                                    loadScript({
-                                        src:
-                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-markup-templating.min.js",
-                                        id: "id1",
-                                    }),
-                                    loadScript({
-                                        src:
-                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-json.min.js",
-                                        id: "id1",
-                                    }),
-                                    loadScript({
-                                        src:
-                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-javascript.min.js",
-                                        id: "id1",
-                                    }),
-                                    loadScript({
-                                        src:
-                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-php.min.js",
-                                        id: "id1",
-                                    }),
-                                    loadScript({
-                                        src: "https://unpkg.com/mermaid@8.0.0-rc.8/dist/mermaid.min.js",
-                                        id: "id1",
-                                    }),
-                                ]).then(() => {
-                                    var mermaids = win.document.getElementsByClassName("language-mermaid");
-                                    let i = 0;
-                                    while (mermaids.length > 0) {
-                                        i++;
-                                        const el = mermaids[0];
-
-                                        el.className = "mermaid";
-                                        const id = "mermaid" + i;
-
-                                        el.setAttribute("id", "mermaid" + i);
-                                        // @ts-ignore
-                                        mermaid.mermaidAPI.render(id, el.textContent, function(svgCode) {
-                                            el.innerHTML = svgCode;
-                                        });
-                                    }
-
-                                    // @ts-ignore
-                                    //Prism.highlightAllUnder(win.document);
-                                });
-                            });
-                        }
-
-                        return true;
-                    }}
-                >
-                    <>
-                        <link rel="stylesheet" href="https://stackedit.io/style.css" />
-                        <link
-                            rel="stylesheet"
-                            href="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css"
-                        />
-                        <style
-                            dangerouslySetInnerHTML={{
-                                __html: `
-                              h1 { margin: 5px 0 5px 0 !important;  }
-                            `,
-                            }}
-                        />
-
-                        <div>
-                            <div ref={iframeTarget} />
-                        </div>
-                        <script dangerouslySetInnerHTML={{ __html: "alert('x');" }} />
-                    </>
-                </IFrame>
             )}
         </div>
     );
 };
 
-interface Pass {
-    props: IFieldProps;
-    iframeTarget: MutableRefObject<HTMLDivElement>;
-    setLoading: (val: boolean) => any;
-}
-
-const useMarkdown = ({ props, iframeTarget, setLoading }: Pass) => {
-    useEffect(() => {
-        initEditor({ props, iframeTarget, setLoading });
-    }, [props.editable]);
-};
-
-const initEditor = ({ props, iframeTarget, setLoading }: Pass) => {
-    if (props.editable) {
-        const stackedit = new Stackedit();
-        stackedit.openFile({
-            name: "Filename", // with a filename
-            content: {
-                text: props.value, // and the Markdown content.
-            },
-        });
-
-        stackedit.on("fileChange", (file: any) => {
-            if (props.onChange) {
-                props.onChange({
-                    value: file.content.text,
-                    name: props.name,
-                    type: "Markdown",
-                    event: null,
-                });
-            }
-        });
-
-        const last = document.getElementsByClassName("stackedit-container").length - 1;
-
-        const container: HTMLDivElement = document.getElementsByClassName("stackedit-container")[
-            last
-        ] as HTMLDivElement;
-        if (container) {
-            container.style.display = "none";
-
-            setTimeout(() => {
-                const stackeditIframe = document.getElementsByClassName("stackedit-iframe")[last] as HTMLIFrameElement;
-                stackeditIframe.onload = () => {
-                    setLoading(false);
-                };
-                iframeTarget.current.append(stackeditIframe);
-                //stackeditIframe.style.height = iframeTarget.current.getBoundingClientRect().height + "px";
-                container.remove();
-            }, 20);
-        }
-    } else {
-        // @ts-ignore
-        import("markdown-it").then((el) => {
-            const MarkdownIt = el.default;
-            const md = new MarkdownIt();
-            const content = md.render(props.value);
-            iframeTarget.current.innerHTML = content;
-        });
-    }
-};
-
-// @ts-ignore
-const IFrame = React.memo((props ) => {
-    const children = props.children;
-    const [contentRef, setContentRef] = useState(null);
-    const mountNode = contentRef && contentRef.contentWindow.document.body;
-
-    /*    useEffect(()=>{
-        console.log(setContentRef);
-    })*/
-
-    return (
-        <iframe {...props} ref={setContentRef}>
-            {mountNode && createPortal(React.Children.only(children), mountNode)}
-        </iframe>
-    );
-});
-
 const HelpBar = () => {
     const [helpVisible, setHelpVisible] = useState(false);
 
     return (
-        <div className="w-mardown-toolbar">
+        <div className="w-mardown-toolbar" style={{ zIndex: 1000 }}>
             <a className="btn  btn-default" onClick={() => setHelpVisible(!helpVisible)}>
                 Pomoc
             </a>
@@ -367,3 +194,97 @@ $$
 <a href="https://mermaidjs.github.io/" target="_blank">https://en.wikibooks.org/wiki/LaTeX/Mathematics</a>
 
 `;
+
+{
+    /* <IFrame
+                    name="myIframeName"
+                    style={{ display: loading ? "none" : "block", ...props.style }}
+                    onLoad={(ev: any) => {
+                        //setLoading(false);
+                        if (ev.target.contentDocument) {
+                            console.log("loaded");
+                            //console.log(ev.nativeEvent.target.contentWindow.document);
+
+                            //console.log(ev.target.window.innerWidth, "this");
+                            //console.log(window.frames.myIframeName)
+                            setLoading(false);
+                            const win = ev.nativeEvent.target.contentWindow;
+                            return true;
+                            Promise.all([
+                                loadScript({
+                                    src: "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.js",
+                                    id: "id1",
+                                }),
+                            ]).then((result) => {
+                                Promise.all([
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-markup-templating.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-json.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-javascript.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src:
+                                            "//cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-php.min.js",
+                                        id: "id1",
+                                    }),
+                                    loadScript({
+                                        src: "https://unpkg.com/mermaid@8.0.0-rc.8/dist/mermaid.min.js",
+                                        id: "id1",
+                                    }),
+                                ]).then(() => {
+                                    var mermaids = win.document.getElementsByClassName("language-mermaid");
+                                    let i = 0;
+                                    while (mermaids.length > 0) {
+                                        i++;
+                                        const el = mermaids[0];
+
+                                        el.className = "mermaid";
+                                        const id = "mermaid" + i;
+
+                                        el.setAttribute("id", "mermaid" + i);
+                                        // @ts-ignore
+                                        mermaid.mermaidAPI.render(id, el.textContent, function(svgCode) {
+                                            el.innerHTML = svgCode;
+                                        });
+                                    }
+
+                                    // @ts-ignore
+                                    //Prism.highlightAllUnder(win.document);
+                                });
+                            });
+                        }
+
+                        return true;
+                    }}
+                >
+                    <>
+                        <link rel="stylesheet" href="https://stackedit.io/style.css" />
+                        <link
+                            rel="stylesheet"
+                            href="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css"
+                        />
+                        <style
+                            dangerouslySetInnerHTML={{
+                                __html: `
+                              h1 { margin: 5px 0 5px 0 !important;  }
+                            `,
+                            }}
+                        />
+
+                        <div>
+                            <div ref={iframeTarget} />
+                        </div>
+                        <script dangerouslySetInnerHTML={{ __html: "alert('x');" }} />
+                    </>
+                </IFrame>*/
+}
