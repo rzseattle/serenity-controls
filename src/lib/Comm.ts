@@ -153,7 +153,7 @@ class Comm {
     public send(): XMLHttpRequest {
         const data = this.prepareData();
 
-        if (!PRODUCTION) {
+        if (typeof PRODUCTION  !== "undefined" && PRODUCTION === false) {
             console.log("Frontend Comm dev debug. Sending on: " + Comm.basePath + this.url);
             console.log(data);
         }
