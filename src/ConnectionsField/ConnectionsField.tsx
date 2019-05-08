@@ -148,6 +148,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                     });
             });
         }
+
     }
 
     public static getDerivedStateFromProps(props: IConnectionsFieldProps, state: any) {
@@ -329,6 +330,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                                 value={this.state.search}
                                 onChange={this.handleInputChange}
                                 autoComplete="off"
+                                autoFocus={this.props.autoFocus}
                             />
                         </div>
                     )}
