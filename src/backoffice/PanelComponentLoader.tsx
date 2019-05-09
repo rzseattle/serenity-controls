@@ -47,6 +47,9 @@ export interface IArrowViewComponentProps {
     _openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string;
 
     _closeModal(modalId: string): any;
+
+
+    _parentContext(): IArrowViewComponentProps;
 }
 
 interface IProps {
