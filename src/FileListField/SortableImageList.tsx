@@ -8,6 +8,7 @@ interface ISortableImageList {
     onClick: (index: number) => any;
     onDelete: (index: number) => any;
     editable: boolean;
+    transformFilePath?: (file: IFile) => string;
 }
 export const SortableImageList = SortableContainer((props: ISortableImageList) => {
     return (
@@ -23,6 +24,7 @@ export const SortableImageList = SortableContainer((props: ISortableImageList) =
                         onDelete={props.onDelete}
                         style={props.itemStyle}
                         editable={props.editable}
+                        transformFilePath={props.transformFilePath}
                     />
                 ))}
         </div>

@@ -217,6 +217,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                             onClick={this.handleViewRequest}
                             itemStyle={this.props.itemStyle}
                             editable={editable}
+                            transformFilePath={this.props.transformFilePath}
                         />
                     )}
                 </div>

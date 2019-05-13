@@ -14,6 +14,7 @@ interface IImageBoxProps {
     _index: number;
     onDelete: (index: number) => any;
     editable: boolean;
+    transformFilePath?: (file: IFile) => string;
 }
 
 const DragHandle = SortableHandle(() => (
@@ -36,14 +37,14 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
             <Tooltip
                 relativeSettings={{ ...RelativePositionPresets.bottomLeft, offsetX: -5, widthCalc: "min" }}
                 content={file}
-                template={(data) => <FileTooltip file={file} />}
+                template={(data) => <FileTooltip file={file} transformFilePath={props.transformFilePath} />}
             >
                 <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
                     <span>
                         <span />
                         {file.uploaded ? (
                             isElImage ? (
-                                <img src={file.path} alt="" />
+                                <img src={props.transformFilePath(file)} alt="" />
                             ) : (
                                 <>
                                     <Icon name={"TextDocument"} />

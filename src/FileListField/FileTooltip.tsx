@@ -5,9 +5,9 @@ import { formatBytes, isImage } from "./utils";
 import { Placeholder } from "../Placeholder";
 import { IOption } from "../fields";
 
-export const FileTooltip = (props: { file: IFile }) => {
+export const FileTooltip = (props: { file: IFile; transformFilePath?: (file: IFile) => string }) => {
     const { file } = props;
-    const isElImage = isImage(file.name);
+    const isElImage = isImage(props.transformFilePath(file));
     return (
         <div className={"w-file-list-tooltip"}>
             <div className="w-file-list-info-title">{file.name}</div>
