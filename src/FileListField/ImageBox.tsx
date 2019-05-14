@@ -31,7 +31,7 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
 
     // @ts-ignore
     const preview = file.nativeObj && file.nativeObj.preview ? file.nativeObj.preview : false;
-    const isElImage = isImage(file.name);
+    const isElImage = isImage(file.name) || isImage(file.path);
     return (
         <div style={style}>
             <Tooltip
