@@ -290,7 +290,7 @@ module.exports = function(input) {
             }),
         );
 
-        conf.plugins.push(new BundleAnalyzerPlugin());
+        //conf.plugins.push(new BundleAnalyzerPlugin());
         conf.optimization = {
             minimizer: [
                 /*new UglifyJsPlugin({
