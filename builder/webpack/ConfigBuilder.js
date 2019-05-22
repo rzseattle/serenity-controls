@@ -1,7 +1,6 @@
 const webpack = require("webpack");
 var { resolve, basename } = require("path");
 const fs = require("fs");
-//const HappyPack = require("happypack");
 const path = require("path");
 
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
@@ -12,6 +11,7 @@ const extractor = require("./RouteExtractor.js");
 
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 //require("babel-polyfill");
 
@@ -290,6 +290,7 @@ module.exports = function(input) {
             }),
         );
 
+        conf.plugins.push(new BundleAnalyzerPlugin());
         conf.optimization = {
             minimizer: [
                 /*new UglifyJsPlugin({
