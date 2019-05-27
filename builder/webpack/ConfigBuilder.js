@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-var { resolve, basename } = require("path");
+var {resolve, basename} = require("path");
 const fs = require("fs");
 const path = require("path");
 
@@ -9,10 +9,10 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
 
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 //require("babel-polyfill");
 
 let configDefaults = {
@@ -25,7 +25,7 @@ let configDefaults = {
     NODE_CACHE_DIR: "node_modules/.cache",
 };
 
-module.exports = function(input) {
+module.exports = function (input) {
     const dllFile = resolve(input.BASE_PATH, "./public/assets/dist/dll-manifest.json");
 
     const GetLoaders = require("./Loaders.js");
@@ -107,7 +107,7 @@ module.exports = function(input) {
                     new OptimizeCSSAssetsPlugin({
                         cssProcessorOptions: {
                             "postcss-safe-parser": true,
-                            discardComments: { removeAll: true },
+                            discardComments: {removeAll: true},
                             zindex: false,
                         },
                     }),
@@ -214,25 +214,7 @@ module.exports = function(input) {
             }),
         ]);*/
 
-    if (false) {
-        var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
-        conf.plugins.push(
-            new HardSourceWebpackPlugin({
-                // Either an absolute path or relative to webpack's options.context.
-                cacheDirectory: input.NODE_CACHE_DIR + "/hard-source/[confighash]",
-                // Either an absolute path or relative to webpack's options.context.
-                // Sets webpack's recordsPath if not already set.
-                recordsPath: input.NODE_CACHE_DIR + "/hard-source/[confighash]/records.json",
 
-                // Either false, a string, an object, or a project hashing function.
-                environmentHash: {
-                    root: process.cwd(),
-                    directories: [],
-                    files: ["yarn.lock"],
-                },
-            }),
-        );
-    }
 
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
@@ -253,14 +235,11 @@ module.exports = function(input) {
         );
     }
 
-    if (false) {
-        conf.plugins.push(
-            new webpack.DllReferencePlugin({
-                context: resolve(__dirname, ""),
-                manifest: dllFile,
-            }),
-        );
-    }
+    conf.plugins.push(
+        (new HardSourceWebpackPlugin({
+            cacheDirectory: input.NODE_CACHE_DIR + "/hard-source/[confighash]",
+        }))
+    );
 
     /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
         // Can be `standalone` or `publisher`.
@@ -305,7 +284,7 @@ module.exports = function(input) {
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
                         "postcss-safe-parser": true,
-                        discardComments: { removeAll: true },
+                        discardComments: {removeAll: true},
                         zindex: false,
                     },
                 }),
