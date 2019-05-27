@@ -10,7 +10,7 @@
         "babel-watch": "babel --watch --extensions .ts,.tsx --source-maps inline -d ./lib ./src & nodemon -e sass sass-copy.js --watch ./src",
         "build:tsc": "tsc --emitDeclarationOnly --project ./ --outDir ./lib ",
         "build:production": "rimraf lib/* && yarn run build:babel && node sass-copy.js",
-        "build:development": "rimraf lib/* && yarn run build:babel && yarn run build:tsc && node sass-copy.js",
+        "build:development": "rimraf lib/* && yarn run build:babel && node sass-copy.js #//&& yarn run build:tsc",
         "rebuild": " node sass-copy.js && yarn run build:babel && yarn run build:tsc",
         "postinstall": "per-env",
         "postinstall:production": "echo 'lala produkcja' && yarn run build:production",
