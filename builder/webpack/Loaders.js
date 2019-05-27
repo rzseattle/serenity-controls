@@ -36,6 +36,7 @@ var getLoaders = function(production, input) {
                                         useBuiltIns: "entry",
                                         modules: false,
                                         forceAllTransforms: production,
+                                        corejs: "3"
                                     },
                                 ],
                                 "@babel/preset-typescript",
