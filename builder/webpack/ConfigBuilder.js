@@ -11,7 +11,7 @@ const extractor = require("./RouteExtractor.js");
 
 const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+//const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 //require("babel-polyfill");
 
