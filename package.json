@@ -2,8 +2,8 @@
     "name": "frontend",
     "version": "1.0.0",
     "description": "",
-    "main": "./lib/index.js",
-    "types": "./lib/index.d.ts",
+    "main": "./lib/",
+    "types": "./lib/",
     "scripts": {
         "dev": "webpack-dev-server -d ",
         "build:babel": "babel --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
