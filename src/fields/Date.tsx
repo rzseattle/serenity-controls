@@ -108,7 +108,7 @@ export class Date extends React.Component<IDateProps, any> {
         }
 
         return (
-            <div>
+            <div className="w-date">
                 <input
                     type="text"
                     ref={this.textField}
