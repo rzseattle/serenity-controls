@@ -1,5 +1,6 @@
 import { configGetAll } from "../backoffice/Config";
 import { IFile, IFileViewerProps } from "./FileListsField";
+import { ImageViewer } from "../../lib/viewers/ImageViewer";
 
 export const globalTransformFilePath = configGetAll().files.transformFilePath;
 
@@ -27,5 +28,9 @@ export const getViewer = (file: IFile): React.ComponentType<IFileViewerProps> =>
             break;
         }
     }
+    if(ViewerComponent === null){
+        return ImageViewer;
+    }
+
     return ViewerComponent;
 };
