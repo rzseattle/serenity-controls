@@ -5,7 +5,7 @@ import { ImageViewer } from "../../lib/viewers/ImageViewer";
 export const globalTransformFilePath = configGetAll().files.transformFilePath;
 
 export const isImage = (path: string): boolean => {
-    return path.match(/.(jpg|jpeg|png|gif)$/i) !== null;
+    return path && path.match(/.(jpg|jpeg|png|gif)$/i) !== null;
 };
 
 export const formatBytes = (bytes: number) => {
