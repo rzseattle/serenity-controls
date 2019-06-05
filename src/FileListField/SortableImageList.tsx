@@ -17,7 +17,7 @@ export const SortableImageList = SortableContainer((props: ISortableImageList) =
                 props.files.map((file, index) => (
                     <ImageBox
                         file={file}
-                        key={file.name}
+                        key={file.key}
                         index={index}
                         _index={index}
                         onClick={props.onClick}

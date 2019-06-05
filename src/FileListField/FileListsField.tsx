@@ -136,7 +136,10 @@ export class FileListField extends React.Component<IFileListProps, any> {
         } else {
             const el = { ...file };
             el.path = this.props.transformFilePath(el);
+
+
             el.path = globalTransformFilePath(el);
+
             this.setState({ preview: el });
         }
         return;
@@ -177,7 +180,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                     )}
                     {type == "filelist"
                         ? value.map((el, index) => (
-                              <div className="w-file-list-element" key={el.name}>
+                              <div className="w-file-list-element" key={el.key}>
                                   <div className="w-file-list-name">
                                       <a onClick={this.handleFileClick.bind(this, index)}>
                                           <Icon name={isImage(el.name) ? "Photo2" : "TextDocument"} />
