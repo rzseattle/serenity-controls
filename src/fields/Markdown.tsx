@@ -35,7 +35,6 @@ export const Markdown = (inProps: IFieldProps) => {
                         options={{
                             mode: "markdown",
                             theme: "monokai",
-                            height: "600px",
                         }}
                         onChange={(value: any) => {
                             if (inProps.onChange) {

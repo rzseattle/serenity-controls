@@ -1,6 +1,6 @@
 import { configGetAll } from "../backoffice/Config";
 import { IFile, IFileViewerProps } from "./FileListsField";
-import { ImageViewer } from "../../lib/viewers/ImageViewer";
+import { ImageViewer } from "../viewers/ImageViewer";
 
 export const globalTransformFilePath = configGetAll().files.transformFilePath;
 
