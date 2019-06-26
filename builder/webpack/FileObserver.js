@@ -24,7 +24,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         [
             path.resolve(BASE_PATH, "./app/Controllers"),
             path.resolve(BASE_PATH, "./app/views"),
-            path.resolve(BASE_PATH, "./vendor/arrow"),
+            path.resolve(BASE_PATH, "./libs/engine"),
         ],
         {
             ignored: /(^|[\/\\])\../,

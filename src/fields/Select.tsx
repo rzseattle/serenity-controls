@@ -5,6 +5,8 @@ import Hotkeys from "react-hot-keys";
 
 import { Positioner, RelativePositionPresets } from "../Positioner";
 
+import { List, AutoSizer, CellMeasurer, CellMeasurerCache, ListRowProps } from "react-virtualized";
+
 import "./Select.sass";
 import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import { Icon } from "../Icon";
@@ -45,6 +47,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     private dropdown: HTMLDivElement;
     private presenter: HTMLDivElement;
     private searchField: HTMLInputElement | null;
+    private cache: any;
 
     constructor(props: ISelectProps) {
         super(props);
@@ -60,6 +63,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             highlightedIndex: -1,
             filteredOptions: options as IOption[],
         };
+
+        this.cache = new CellMeasurerCache({
+            fixedWidth: true,
+            defaultHeight: 30,
+        });
     }
 
     /*shouldComponentUpdate(nextProps, nextState) {
@@ -94,9 +102,9 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
         this.setState(
             {
-                dropdownVisible: !this.state.dropdownVisible,
-                searchedTxt: "",
-                filteredOptions: options,
+                dropdownVisible: true,//!this.state.dropdownVisible,
+                //searchedTxt: "",
+                //filteredOptions: options,
             },
             () => {
                 if (this.state.dropdownVisible) {
@@ -170,11 +178,41 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             );
         }
 
+        this.cache = new CellMeasurerCache({
+            fixedWidth: true,
+            defaultHeight: 30,
+        });
+
         this.setState({
             searchedTxt: e.target.value,
             highlightedIndex: e.target.value.length > 0 ? 0 : -1,
             filteredOptions,
         });
+    };
+
+    private renderRow = ({ index, isScrolling, key, style, parent }: ListRowProps) => {
+        const el = this.state.filteredOptions[index];
+
+        return (
+            <CellMeasurer key={key} cache={this.cache} parent={parent} columnIndex={0} rowIndex={index}>
+                <div
+                    key={el.value}
+                    style={style}
+                    className={
+                        "w-select-item " +
+                        (this.props.value == el.value || index == this.state.highlightedIndex
+                            ? "w-select-selected"
+                            : "")
+                    }
+                    onClick={(e) => {
+                        this.handleChange(el.value);
+                        this.handleDropdownChange();
+                    }}
+                >
+                    {el.label}
+                </div>
+            </CellMeasurer>
+        );
     };
 
     public render() {
@@ -259,23 +297,22 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                                         value={this.state.searchedTxt}
                                     />
                                 )}
-                                {this.state.filteredOptions.map((el, index) => (
-                                    <div
-                                        key={el.value}
-                                        className={
-                                            "w-select-item " +
-                                            (props.value == el.value || index == this.state.highlightedIndex
-                                                ? "w-select-selected"
-                                                : "")
-                                        }
-                                        onClick={(e) => {
-                                            this.handleChange(el.value);
-                                            this.handleDropdownChange();
-                                        }}
-                                    >
-                                        {el.label}
-                                    </div>
-                                ))}
+                                <AutoSizer>
+                                    {({ width, height }) => (
+                                        <List
+                                            className={""}
+                                            height={height - 35 /*- input height*/}
+                                            overscanRowCount={5}
+                                            noRowsRenderer={() => <div>----</div>}
+                                            rowCount={this.state.filteredOptions.length}
+                                            deferredMeasurementCache={this.cache}
+                                            rowHeight={this.cache.rowHeight}
+                                            rowRenderer={this.renderRow}
+                                            /*scrollToIndex={scrollToIndex}*/
+                                            width={width}
+                                        />
+                                    )}
+                                </AutoSizer>
                             </Hotkeys>
                         </div>
                     </Positioner>

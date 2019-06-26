@@ -39,7 +39,7 @@
     },
 
 
-    "exclude": ["resources", "vendor", "assets", "data", "node_modules"],
+    "exclude": ["resources", "vendor", "assets", "data", "node_modules", "public"],
     "include": [
         "./src/**/*"
         // , "./stories/**/*"

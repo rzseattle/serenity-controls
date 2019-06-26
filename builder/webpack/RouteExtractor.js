@@ -51,7 +51,8 @@ generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
     let namespace = {};
 
     for (i in conf) {
-        let componentPath = BASE_PATH + conf[i]._debug.template + ".component.tsx";
+        let componentPath =
+            BASE_PATH + (conf[i]._debug.template[0] == "/" ? "" : "/") + conf[i]._debug.template + ".component.tsx";
         let sassPath = BASE_PATH + conf[i]._debug.template + ".component.sass";
 
         if (conf[i]._debug.componentExists) {
@@ -89,6 +90,10 @@ generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
             if (fs.existsSync(sassPath)) {
                 SassFileContent += `.${name}\n`;
                 SassFileContent += `    @import "${sassPath.replace(/\\/g, "/")}";\n`;
+            }
+        } else {
+            if(componentPath.indexOf("access") !== -1) {
+                console.log(componentPath, "not exists");
             }
         }
 
