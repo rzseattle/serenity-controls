@@ -102,9 +102,9 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
         this.setState(
             {
-                dropdownVisible: true,//!this.state.dropdownVisible,
-                //searchedTxt: "",
-                //filteredOptions: options,
+                dropdownVisible: !this.state.dropdownVisible,
+                searchedTxt: "",
+                filteredOptions: options,
             },
             () => {
                 if (this.state.dropdownVisible) {
