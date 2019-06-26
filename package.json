@@ -91,7 +91,7 @@
         "node-sass": "^4.11.0",
         "nodemon": "^1.19.1",
         "nprogress": "^0.2.0",
-        "office-ui-fabric-core": "^9.6.1",
+        "office-ui-fabric-core": "7.1.0",
         "optimize-css-assets-webpack-plugin": "^5.0.0",
         "per-env": "^1.0.2",
         "prettier": "1.18.2",
