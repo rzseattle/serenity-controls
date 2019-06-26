@@ -91,11 +91,7 @@ generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 SassFileContent += `.${name}\n`;
                 SassFileContent += `    @import "${sassPath.replace(/\\/g, "/")}";\n`;
             }
-        } else {
-            if(componentPath.indexOf("access") !== -1) {
-                console.log(componentPath, "not exists");
-            }
-        }
+        } 
 
         ComponentFileContentMapFilesX[i] = conf[i];
     }
