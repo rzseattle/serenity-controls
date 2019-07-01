@@ -8,47 +8,53 @@
 
     background-color: #fff
     box-shadow: 0 1px 1px rgba(0, 0, 0, .05)
+    position: relative
+
+    .title
+
+        height: 40px
+        line-height: 40px
+        font-size: 17px
+        border-bottom: #F7F7F7 solid 1px
+        background: #FFF
+        color: #106ebe
+        font-weight: 500
+        padding-bottom: 0
+        margin-bottom: 0
+        padding-left: 24px
+
+        i
+            margin-right: 5px
+            //display: inline-flex
+            vertical-align: bottom
+
+        .panel-toolbar
+            position: absolute
+            right: 0
+            top: 0
+
+            .w-command-bar
+                background-color: white
+
+
 
     .panel-body
         padding: 15px 20px
         position: relative
 
-        .title
-            //margin: -15px -20px 15px
-
-            font-size: 16px
-            border-bottom: #F7F7F7 solid 1px
-            background: #FFF
-            color: #106ebe
-            font-weight: 500
-            padding-bottom: 0
-            margin-bottom: 0
-            i
-                margin-right: 5px
-                display: inline-flex
-                vertical-align: text-bottom
-
-
-
-
-
-        .panel-toolbar
-            float: right
-            margin: -10px // -0px 15px
-
-            >*
-                margin: 5px
 
     &.panel-no-bottom-margin
         margin-bottom: 0
+
     &.panel-no-padding
         border-radius: 0
+
         .panel-body
             padding: 0
-            .title
-                padding: 10px 15px
 
 
-    &.panel-toolbar
-        .panel-body
-            padding: 9px 15px
+
+
+
+
+

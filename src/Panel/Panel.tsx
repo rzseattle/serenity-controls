@@ -2,6 +2,7 @@ import * as React from "react";
 
 import "./Panel.sass";
 import { Icon } from "../Icon";
+import { CommandBar, ICommand } from "../../src/CommandBar";
 
 interface IPanelProps {
     /**
@@ -19,7 +20,7 @@ interface IPanelProps {
     /**
      * Toolbar elements
      */
-    // toolbar?: JSX.Element;
+    toolbar?: ICommand[];
 
     /**
      * Icon
@@ -33,6 +34,7 @@ export class Panel extends React.PureComponent<IPanelProps> {
         noBottomMargin: true,
         title: "",
         icon: "",
+        toolbar: [],
     };
 
     public render() {
@@ -46,16 +48,18 @@ export class Panel extends React.PureComponent<IPanelProps> {
         }
         return (
             <div className={classes.join(" ")}>
-                <div className="panel-body ">
-                    {props.title && (
-                        <div className="title ">
-                            {props.icon && <Icon name={props.icon} />}
-                            {props.title}
-                            {/*<div className="panel-toolbar">{props.toolbar}</div>*/}
-                        </div>
-                    )}
-                    {props.children}
-                </div>
+                {props.title && (
+                    <div className="title ">
+                        {props.icon && <Icon name={props.icon} />}
+                        {props.title}
+                        {props.toolbar.length > 0 && (
+                            <div className="panel-toolbar">
+                                <CommandBar items={props.toolbar} />{" "}
+                            </div>
+                        )}
+                    </div>
+                )}
+                <div className="panel-body ">{props.children}</div>
             </div>
         );
     }
