@@ -17,22 +17,16 @@ storiesOf("Panel", module)
         () => <Panel>{text}</Panel>,
     )
     .add("No padding", () => <Panel noPadding={true}>{text}</Panel>)
-    .add("Title", () => <Panel title="Panel title ">{text}</Panel>);
-
-/*    .add("Toolbar", () => (
+    .add("Title", () => <Panel title="Panel title ">{text}</Panel>)
+    .add("With CommandBar", () => (
         <Panel
-            title="Panel title"
-            toolbar={
-                <>
-                    <a href="" className="btn btn-default btn-xs">
-                        Button 1
-                    </a>
-                    <a href="" className="btn btn-primary btn-xs">
-                        Button 2
-                    </a>
-                </>
-            }
+            title="Panel title "
+            toolbar={[
+                { key: "f1", label: "Add", icon: "Add", onClick: () => alert("Add action") },
+                { key: "f2", label: "Delete", icon: "Delete", onClick: () => alert("Delete action") },
+            ]}
         >
             {text}
         </Panel>
-    ))*/
+    ));
+
