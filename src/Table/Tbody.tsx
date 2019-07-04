@@ -27,6 +27,7 @@ interface ITbodyProps {
 
     onCheck: (index: string | number) => any;
     loading: boolean;
+    columnWidths: number[]
 }
 
 export default class Tbody extends React.Component<ITbodyProps> {
@@ -124,7 +125,7 @@ export default class Tbody extends React.Component<ITbodyProps> {
                     return (
                         <>
                             <tr key={key + "_group"}>
-                                <td style={{ backgroundColor: "grey", color: "white" }} colSpan={columns.length + 1}>
+                                <td style={{ backgroundColor: "grey", color: "white", width: props.columnWidths[index] }} colSpan={columns.length + 1} >
                                     {groupData.map((el) => (
                                         <React.Fragment key={nanoid()}>{el.label}</React.Fragment>
                                     ))}

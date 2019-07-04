@@ -1,4 +1,4 @@
-import { ReactElement, StatelessComponent } from "react";
+import { ReactElement, Ref, StatelessComponent } from "react";
 import "./Table.sass";
 
 declare var window: any;
@@ -109,6 +109,10 @@ export class Table extends React.Component<ITableProps, ITableState> {
     public state: ITableState;
     private tooltipTimeout: number;
 
+    private tableRef: HTMLTableElement;
+
+    private columnWidths: number[] = [];
+
     constructor(props: ITableProps) {
         super(props);
 
@@ -196,7 +200,23 @@ export class Table extends React.Component<ITableProps, ITableState> {
     public componentDidMount() {
         if (this.props.remoteURL || this.props.dataProvider) {
             this.load();
+            console.log("here");
         }
+
+        const th = this.tableRef.querySelectorAll("thead>tr>th");
+
+        for (let i = 0; i < th.length; i++) {
+            this.columnWidths.push(th[i].getBoundingClientRect().width);
+            //var cs = window.getComputedStyle(z, null);
+            th[i].style.width = (this.columnWidths[i] -1) + "px";
+            //console.log();
+            //th[i].styles.width = this.columnWidths[i] + "px";
+        }
+
+        this.tableRef.querySelector("thead").classList.add("fixed-th");
+        this.tableRef.querySelector("tbody").classList.add("fixed");
+
+        console.log(this.columnWidths);
     }
 
     /*shouldComponentUpdate(nextProps, nextState) {
@@ -568,7 +588,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
 
         return (
             <div
-                className={"w-table " + (this.state.loading ? "w-table-loading" : "")}
+                className={"w-table  " + (this.state.loading ? "w-table-loading" : "")}
                 tabIndex={0}
                 onKeyDown={this.handleKeyDown}
             >
@@ -584,7 +604,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                     />
                 </div>
 
-                <table>
+                <table ref={(el) => (this.tableRef = el)}>
                     {this.props.showHeader && (
                         <Thead
                             selectable={this.props.selectable}
@@ -621,6 +641,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                                 data={this.state.data}
                                 infoRow={this.props.infoRow}
                                 groupBy={this.props.groupBy}
+                                columnWidths={this.columnWidths}
                             />
                         )}
                     </tbody>
