@@ -203,20 +203,24 @@ export class Table extends React.Component<ITableProps, ITableState> {
             console.log("here");
         }
 
-        const th = this.tableRef.querySelectorAll("thead>tr>th");
 
-        for (let i = 0; i < th.length; i++) {
-            this.columnWidths.push(th[i].getBoundingClientRect().width);
-            //var cs = window.getComputedStyle(z, null);
-            th[i].style.width = (this.columnWidths[i] -1) + "px";
-            //console.log();
-            //th[i].styles.width = this.columnWidths[i] + "px";
+        if(this.state.fixedLayout) {
+            const th = this.tableRef.querySelectorAll("thead>tr>th");
+
+            for (let i = 0; i < th.length; i++) {
+                this.columnWidths.push(th[i].getBoundingClientRect().width);
+                //var cs = window.getComputedStyle(z, null);
+                // @ts-ignore
+                th[i].style.width = (this.columnWidths[i] - 1) + "px";
+                //console.log();
+                //th[i].styles.width = this.columnWidths[i] + "px";
+            }
+
+            this.tableRef.querySelector("thead").classList.add("fixed-th");
+            this.tableRef.querySelector("tbody").classList.add("fixed");
+
+            console.log(this.columnWidths);
         }
-
-        this.tableRef.querySelector("thead").classList.add("fixed-th");
-        this.tableRef.querySelector("tbody").classList.add("fixed");
-
-        console.log(this.columnWidths);
     }
 
     /*shouldComponentUpdate(nextProps, nextState) {
@@ -351,7 +355,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
             this.props.onSelectionChange([]);
         }
 
-        this.setState({ loading: true, data: [] });
+        this.setState({ loading: true/*, data: []*/ });
 
         const setStateAfterLoad = (input: ITableDataInput, callback: () => any = null) => {
             if (!Array.isArray(input.data)) {
