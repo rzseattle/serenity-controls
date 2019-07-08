@@ -314,6 +314,10 @@ export class Table extends React.Component<ITableProps, ITableState> {
             this.setState({ columns: preparedColumns });
         }
 
+        if (!deepIsEqual(nextProps.data, this.state.data)) {
+            this.setState({ data: nextProps.data.data });
+        }
+
         if (nextProps.filters) {
             const nextJSON = JSON.stringify(nextProps.filters);
             if (nextJSON != JSON.stringify(this.state.filters)) {
