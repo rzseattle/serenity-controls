@@ -46,10 +46,11 @@ export default class CheckboxFilter extends AbstractFilter<ISelectFilterProps> {
         let value: any = [];
         if (nextProps.value) {
             value = nextProps.value.value;
+
+            this.setState({
+                value,
+            });
         }
-        this.setState({
-            value,
-        });
     }
 
     public getValue() {
@@ -58,6 +59,7 @@ export default class CheckboxFilter extends AbstractFilter<ISelectFilterProps> {
             .map((el) => el.label);
 
         const condition = "IN";
+
         return {
             field: this.props.field,
             value: this.state.value,
@@ -110,6 +112,7 @@ export default class CheckboxFilter extends AbstractFilter<ISelectFilterProps> {
                         columnsCount={config.columnsCount | 2}
                     />
                 </div>
+                <PrintJSON json={this.state.value} />
 
                 {this.props.showApply && (
                     <div>
