@@ -35,7 +35,7 @@ export interface IFilterProps {
      */
     value: any;
 }
-export default class AbstractFilter<T> extends React.PureComponent<T, any> {
+export default class AbstractFilter<T> extends React.Component<T, any> {
     public static defaultProps: Partial<IFilterProps> = {
         config: {},
     };
