@@ -57,6 +57,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
     private rowHeights: number[] = [];
 
+    private dynamicList: any;
+
     constructor(props: ISelectProps) {
         super(props);
 
@@ -210,11 +212,13 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         });
     };
 
-    private renderRow = React.forwardRef(({ index, style }, ref) => {
+    private renderRow = React.forwardRef(({ index, style }: any, ref) => {
         const el = this.state.filteredOptions[index];
+
         return (
             <div
                 style={style}
+                // @ts-ignore
                 ref={ref}
                 className={
                     "w-select-item " +
@@ -313,12 +317,12 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                                     />
                                 )}
                                 <AutoSizer>
-                                    {({ width, height }) => (
+                                    {({ width, height }:any) => (
                                         <DynamicSizeList
                                             height={height - 35 /*- input height*/}
                                             itemCount={this.state.filteredOptions.length}
                                             width={width}
-                                            ref={(el) => this.dynamicList = el}
+                                            ref={(el:any) => this.dynamicList = el}
                                         >
                                             {this.renderRow}
                                         </DynamicSizeList>
