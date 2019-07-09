@@ -112,7 +112,6 @@ export default class CheckboxFilter extends AbstractFilter<ISelectFilterProps> {
                         columnsCount={config.columnsCount | 2}
                     />
                 </div>
-                <PrintJSON json={this.state.value} />
 
                 {this.props.showApply && (
                     <div>
