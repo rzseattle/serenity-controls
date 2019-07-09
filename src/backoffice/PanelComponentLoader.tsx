@@ -8,6 +8,7 @@ import { ErrorInfo } from "react";
 import { PrintJSON } from "../PrintJSON";
 import { IPanelContext, PanelContext } from "./PanelContext";
 import { BackofficeStore } from "./BackofficeStore";
+import { deepIsEqual } from "../lib";
 
 declare var PRODUCTION: boolean;
 
@@ -73,7 +74,6 @@ interface IProps {
 
 interface IState {
     log: any[];
-
     hasError: boolean;
     error: any;
     devComponentFile: string;
@@ -149,6 +149,13 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         };
     };
 
+    shouldComponentUpdate(nextProps: Readonly<IProps>, nextState: Readonly<IState>, nextContext: any): boolean {
+        return !deepIsEqual(nextProps, this.props, true);
+    }
+
+
+
+
     public render() {
         const p = this.props;
         const ComponentInfo: any = p.context.view;
@@ -158,16 +165,18 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
             return (
                 <div>
                     <h1>Something went wrong.</h1>
-                    {!PRODUCTION && <PrintJSON json={this.state.error} />}
+                    {!PRODUCTION && <PrintJSON json={this.state.error}/>}
                 </div>
             );
         }
+        console.log("renderuje panel context");
+
 
         return (
             <div className={ComponentInfo && ComponentInfo.extendedInfo.componentName}>
-                <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)} />
+                <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)}/>
                 {this.props.context.viewServerErrors && (
-                    <ServerErrorPresenter error={this.props.context.viewServerErrors} />
+                    <ServerErrorPresenter error={this.props.context.viewServerErrors}/>
                 )}
                 {ComponentInfo && ComponentInfo.Component ? (
                     <PanelContext.Provider value={this.getContext()}>

@@ -5,14 +5,14 @@ interface IIconProps {
     size?: number;
 }
 
-const Icon: React.StatelessComponent<IIconProps> = (props) => {
-    if (props.size != undefined) {
+const Icon = React.memo((props: IIconProps) => {
+    if (props.size !== undefined) {
         let add: any = {};
         add = { style: { fontSize: props.size } };
         return <i className={"ms-Icon ms-Icon--" + props.name} {...add} aria-hidden="true" />;
     }
     return <i className={"ms-Icon ms-Icon--" + props.name} aria-hidden="true" />;
-};
+});
 
 export { Icon };
 

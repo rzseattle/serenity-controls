@@ -18,6 +18,7 @@ import TextFilter from "../filters/TextFilter";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { confirmDialog } from "../ConfirmDialog";
 
+
 export interface IDataQuery {
     columns: IColumnData[];
     filters: { [key: string]: IFilterValue };
@@ -96,7 +97,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         rememberState: false,
         additionalConditions: {},
         filters: null,
-        data: { data: [], countAll: 0, debug: "" },
+        data: { data: null, countAll: 0, debug: "" },
         rowClassTemplate: null,
         rowStyleTemplate: null,
         infoRow: null,
@@ -126,7 +127,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         this.state = {
             loading: false,
             firstLoaded: false,
-            data: this.props.data.data,
+            data: this.props.data.data !== null ? this.props.data.data : [],
             dataSourceError: "",
             dataSourceDebug: false,
             filters: deepCopy(this.props.filters),
@@ -154,9 +155,9 @@ export class Table extends React.Component<ITableProps, ITableState> {
         };
         this.hashCode = hashCode(
             this.props.controlKey +
-                (window.CONTROLS_BASE_LOCATION != undefined
-                    ? window.CONTROLS_BASE_LOCATION
-                    : window.location.pathname + window.location.hash.split("?")[0]),
+            (window.CONTROLS_BASE_LOCATION != undefined
+                ? window.CONTROLS_BASE_LOCATION
+                : window.location.pathname + window.location.hash.split("?")[0]),
         );
 
         this.tooltipTimeout = null;
@@ -180,7 +181,8 @@ export class Table extends React.Component<ITableProps, ITableState> {
         return this.state.data;
     }
 
-    public componentDidUpdate(prevProps: ITableProps) {
+    public componentDidUpdate(prevProps: ITableProps, prevState) {
+
         const state = this.state;
         if (this.props.rememberState) {
             window.localStorage[this.hashCode] = JSON.stringify({
@@ -200,11 +202,10 @@ export class Table extends React.Component<ITableProps, ITableState> {
     public componentDidMount() {
         if (this.props.remoteURL || this.props.dataProvider) {
             this.load();
-            console.log("here");
         }
 
 
-        if(this.state.fixedLayout) {
+        if (this.state.fixedLayout) {
             const th = this.tableRef.querySelectorAll("thead>tr>th");
 
             for (let i = 0; i < th.length; i++) {
@@ -314,7 +315,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
             this.setState({ columns: preparedColumns });
         }
 
-        if (!deepIsEqual(nextProps.data, this.state.data)) {
+        if (nextProps.data.data !== null && !deepIsEqual(nextProps.data, this.state.data)) {
             this.setState({ data: nextProps.data.data });
         }
 
@@ -594,6 +595,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
     public render() {
         const columns = deepCopy(this.state.columns);
 
+
         return (
             <div
                 className={"w-table  " + (this.state.loading ? "w-table-loading" : "")}
@@ -601,7 +603,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                 onKeyDown={this.handleKeyDown}
             >
                 <div className="w-table-loader">
-                    <LoadingIndicator />
+                    <LoadingIndicator/>
                 </div>
                 <div className="w-table-top">
                     <FiltersPresenter
@@ -626,47 +628,47 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         />
                     )}
                     <tbody className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}>
-                        {this.state.dataSourceError != "" && (
-                            <Error colspan={columns.length + 1} error={this.state.dataSourceError} />
-                        )}
-                        {!this.state.loading && this.state.data.length == 0 && (
-                            <EmptyResult colspan={columns.length + 1} />
-                        )}
-                        {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
-                        {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
-                        {/*this.state.firstLoaded && */}
-                        {this.state.data.length > 0 && (
-                            <Tbody
-                                rowClassTemplate={this.props.rowClassTemplate}
-                                rowStyleTemplate={this.props.rowStyleTemplate}
-                                selection={deepCopy(this.state.selection)}
-                                onCheck={this.handleCheckClicked}
-                                selectable={this.props.selectable}
-                                columns={columns}
-                                filters={this.state.filters}
-                                order={this.state.order}
-                                loading={this.state.loading}
-                                data={this.state.data}
-                                infoRow={this.props.infoRow}
-                                groupBy={this.props.groupBy}
-                                columnWidths={this.columnWidths}
-                            />
-                        )}
+                    {this.state.dataSourceError != "" && (
+                        <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>
+                    )}
+                    {!this.state.loading && this.state.data.length == 0 && (
+                        <EmptyResult colspan={columns.length + 1}/>
+                    )}
+                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
+                    {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
+                    {/*this.state.firstLoaded && */}
+                    {this.state.data.length > 0 && (
+                        <Tbody
+                            rowClassTemplate={this.props.rowClassTemplate}
+                            rowStyleTemplate={this.props.rowStyleTemplate}
+                            selection={deepCopy(this.state.selection)}
+                            onCheck={this.handleCheckClicked}
+                            selectable={this.props.selectable}
+                            columns={columns}
+                            filters={this.state.filters}
+                            order={this.state.order}
+                            loading={this.state.loading}
+                            data={this.state.data}
+                            infoRow={this.props.infoRow}
+                            groupBy={this.props.groupBy}
+                            columnWidths={this.columnWidths}
+                        />
+                    )}
                     </tbody>
 
                     {this.props.showFooter && (
                         <tfoot>
-                            {this.state.firstLoaded && (
-                                <Footer
-                                    columns={columns}
-                                    count={this.state.countAll}
-                                    onPage={this.state.onPage}
-                                    onPageChanged={this.handleOnPageChange}
-                                    currentPage={this.state.currentPage}
-                                    currentPageChanged={this.handleCurrentPageChange}
-                                    reload={this.load}
-                                />
-                            )}
+                        {this.state.firstLoaded && (
+                            <Footer
+                                columns={columns}
+                                count={this.state.countAll}
+                                onPage={this.state.onPage}
+                                onPageChanged={this.handleOnPageChange}
+                                currentPage={this.state.currentPage}
+                                currentPageChanged={this.handleCurrentPageChange}
+                                reload={this.load}
+                            />
+                        )}
                         </tfoot>
                     )}
                 </table>
