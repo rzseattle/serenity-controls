@@ -5,16 +5,22 @@ import Hotkeys from "react-hot-keys";
 
 import { Positioner, RelativePositionPresets } from "../Positioner";
 
-import { List, AutoSizer, CellMeasurer, CellMeasurerCache, ListRowProps } from "react-virtualized";
+//import { List, AutoSizer, CellMeasurer, CellMeasurerCache, ListRowProps } from "react-virtualized";
+
+import { DynamicSizeList } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 import "./Select.sass";
 import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import { Icon } from "../Icon";
 import { fI18n } from "../lib";
 
+console.log(AutoSizer);
+
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
 }
+
 export interface ISelectProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
     onChange?: (changeData: ISelectChangeEvent) => any;
@@ -49,6 +55,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     private searchField: HTMLInputElement | null;
     private cache: any;
 
+    private rowHeights: number[] = [];
+
     constructor(props: ISelectProps) {
         super(props);
 
@@ -64,10 +72,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             filteredOptions: options as IOption[],
         };
 
-        this.cache = new CellMeasurerCache({
+        /*this.cache = new CellMeasurerCache({
             fixedWidth: true,
             defaultHeight: 30,
-        });
+        });*/
+        //this.rowHeights =
     }
 
     /*shouldComponentUpdate(nextProps, nextState) {
@@ -126,7 +135,10 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         );
     };
 
-    private handleChange = (value: any) => {
+    private handleChange = (value: any, index: number = -1) => {
+        if (index > 0) {
+            this.setState({ highlightedIndex: index });
+        }
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
@@ -136,6 +148,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 event: null,
             });
         }
+        this.dynamicList.forceUpdate();
     };
 
     private handleClear = (e: React.MouseEvent) => {
@@ -161,6 +174,12 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         } else if (keyName == "esc") {
             this.handleDropdownChange();
         }
+
+        if (keyName == "up" || keyName == "down") {
+            this.dynamicList.scrollToItem(this.state.highlightedIndex);
+            this.dynamicList.forceUpdate();
+        }
+
     };
 
     private searchTextChanged = (e: any) => {
@@ -178,10 +197,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             );
         }
 
-        this.cache = new CellMeasurerCache({
+        this.rowHeights = [];
+        /*this.cache = new CellMeasurerCache({
             fixedWidth: true,
             defaultHeight: 30,
-        });
+        });*/
 
         this.setState({
             searchedTxt: e.target.value,
@@ -190,30 +210,25 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         });
     };
 
-    private renderRow = ({ index, isScrolling, key, style, parent }: ListRowProps) => {
+    private renderRow = React.forwardRef(({ index, style }, ref) => {
         const el = this.state.filteredOptions[index];
-
         return (
-            <CellMeasurer key={key} cache={this.cache} parent={parent} columnIndex={0} rowIndex={index}>
-                <div
-                    key={el.value}
-                    style={style}
-                    className={
-                        "w-select-item " +
-                        (this.props.value == el.value || index == this.state.highlightedIndex
-                            ? "w-select-selected"
-                            : "")
-                    }
-                    onClick={(e) => {
-                        this.handleChange(el.value);
-                        this.handleDropdownChange();
-                    }}
-                >
-                    {el.label}
-                </div>
-            </CellMeasurer>
+            <div
+                style={style}
+                ref={ref}
+                className={
+                    "w-select-item " +
+                    (this.props.value == el.value || index == this.state.highlightedIndex ? "w-select-selected" : "")
+                }
+                onClick={(e) => {
+                    this.handleChange(el.value, index);
+                    this.handleDropdownChange();
+                }}
+            >
+                {el.label}
+            </div>
         );
-    };
+    });
 
     public render() {
         const props = this.props;
@@ -264,10 +279,10 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     )}
                     {props.allowClear && props.value !== null && (
                         <div className="w-select-clear" onClick={this.handleClear}>
-                            <Icon name={"ChromeClose"} />
+                            <Icon name={"ChromeClose"}/>
                         </div>
                     )}
-                    <Icon name={"ChevronDown"} />
+                    <Icon name={"ChevronDown"}/>
                 </div>
 
                 {this.state.dropdownVisible && (
@@ -299,18 +314,14 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                                 )}
                                 <AutoSizer>
                                     {({ width, height }) => (
-                                        <List
-                                            className={""}
+                                        <DynamicSizeList
                                             height={height - 35 /*- input height*/}
-                                            overscanRowCount={5}
-                                            noRowsRenderer={() => <div>----</div>}
-                                            rowCount={this.state.filteredOptions.length}
-                                            deferredMeasurementCache={this.cache}
-                                            rowHeight={this.cache.rowHeight}
-                                            rowRenderer={this.renderRow}
-                                            /*scrollToIndex={scrollToIndex}*/
+                                            itemCount={this.state.filteredOptions.length}
                                             width={width}
-                                        />
+                                            ref={(el) => this.dynamicList = el}
+                                        >
+                                            {this.renderRow}
+                                        </DynamicSizeList>
                                     )}
                                 </AutoSizer>
                             </Hotkeys>
