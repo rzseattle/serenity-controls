@@ -181,7 +181,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         return this.state.data;
     }
 
-    public componentDidUpdate(prevProps: ITableProps, prevState1243) {
+    public componentDidUpdate(prevProps: ITableProps, prevState12435) {
 
         const state = this.state;
         if (this.props.rememberState) {
