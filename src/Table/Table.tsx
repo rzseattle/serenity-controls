@@ -163,7 +163,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         this.tooltipTimeout = null;
     }
 
-    public componentWillMount() {
+    public componentWillMount(xxx) {
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
             const local = JSON.parse(window.localStorage[this.hashCode]);
             let filters = deepCopy(this.state.filters);
