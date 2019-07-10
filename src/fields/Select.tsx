@@ -7,6 +7,7 @@ import { Positioner, RelativePositionPresets } from "../Positioner";
 
 //import { List, AutoSizer, CellMeasurer, CellMeasurerCache, ListRowProps } from "react-virtualized";
 
+// @ts-ignore - couse its in beta
 import { DynamicSizeList } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
@@ -15,7 +16,6 @@ import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import { Icon } from "../Icon";
 import { fI18n } from "../lib";
 
-console.log(AutoSizer);
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;

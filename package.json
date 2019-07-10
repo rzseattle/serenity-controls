@@ -36,6 +36,11 @@
     "files": [
         "lib"
     ],
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn run rebuild"
+        }
+    },
     "dependencies": {
         "@babel/cli": "^7.4.4",
         "@babel/core": "^7.4.5",
@@ -143,6 +148,8 @@
         "@storybook/theming": "^5.0.6",
         "@types/express": "^4.16.1",
         "@types/nanoid": "^2.0.0",
+        "@types/react-virtualized-auto-sizer": "^1.0.0",
+        "@types/react-window": "^1.8.0",
         "@types/storybook__addon-actions": "^3.4.2",
         "@types/storybook__addon-knobs": "^5.0.0",
         "@types/storybook__react": "^4.0.1",
