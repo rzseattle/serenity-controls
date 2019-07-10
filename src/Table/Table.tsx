@@ -163,7 +163,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         this.tooltipTimeout = null;
     }
 
-    public componentWillMount(xxx) {
+    public componentWillMount() {
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
             const local = JSON.parse(window.localStorage[this.hashCode]);
             let filters = deepCopy(this.state.filters);
@@ -181,7 +181,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         return this.state.data;
     }
 
-    public componentDidUpdate(prevProps: ITableProps, prevState: ITableState) {
+    public componentDidUpdate(prevProps: ITableProps, prevState) {
 
         const state = this.state;
         if (this.props.rememberState) {
