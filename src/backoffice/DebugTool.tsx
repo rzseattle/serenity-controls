@@ -6,7 +6,7 @@ import { BackofficeStore, IDebugDataEntry } from "./BackofficeStore";
 import "./DebugTool.sass";
 import { useState } from "react";
 import { ideConnector } from "./IDEConnector";
-const ReactJson = React.lazy(() => import("react-json-view"));
+
 import { Modal } from "../Modal";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { RouteVisualization } from "./RouteVisualization";
@@ -126,11 +126,8 @@ const RouteInfo = ({ info }: { info: any }) => {
                             {/*<PrintJSON json={info.props[urlIndex]} />*/}
                             <div className="w-debug-tool-props">
                                 <React.Suspense fallback={<LoadingIndicator />}>
-                                    <ReactJson
-                                        src={info.props[urlIndex]}
-                                        theme="monokai"
-                                        displayDataTypes={false}
-                                        name={false}
+                                    <PrintJSON
+                                        json={info.props[urlIndex]}
                                     />
                                 </React.Suspense>
                             </div>

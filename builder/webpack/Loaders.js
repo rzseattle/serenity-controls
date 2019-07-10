@@ -23,7 +23,7 @@ var getLoaders = function(production, input) {
                             cacheDirectory: input.NODE_CACHE_DIR + "/babelcache",
                             retainLines: true,
 
-                            exclude: /(node_modules|bower_components|node_modules_shared)/,
+                            exclude: /(node_modules|bower_components|lib\/frontend)/,
                             presets: [
                                 [
                                     "@babel/preset-env",
@@ -56,6 +56,12 @@ var getLoaders = function(production, input) {
                         },
                     },
                 ],
+            },
+
+            {
+                test: /\.(js|map)$/,
+                use: ["source-map-loader"],
+                enforce: "pre"
             },
 
             /*{
