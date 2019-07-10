@@ -469,11 +469,8 @@ export class Table extends React.Component<ITableProps, ITableState> {
             };
         }
 
-        field = { field: field.field, dir: field.dir == "asc" ? "desc" : "asc" };
-
-        this.state.order[fieldName] = field;
-
-        this.setState({ order: this.state.order }, this.load);
+        field = { ...field, dir: field.dir == "asc" ? "desc" : "asc" };
+        this.setState({ order: {...this.state.order, [fieldName]: field}}, this.load);
     };
 
     public handleOnPageChange = (onPage: number) => {
