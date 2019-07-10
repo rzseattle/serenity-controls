@@ -37,6 +37,10 @@ export default class CheckboxFilter extends AbstractFilter<ISelectFilterProps> {
             value = props.value;
         }
 
+        if(props.config.default && value.length === 0) {
+            value = props.config.default
+        }
+
         this.state = {
             value,
         };
@@ -45,7 +49,7 @@ export default class CheckboxFilter extends AbstractFilter<ISelectFilterProps> {
     public componentWillReceiveProps(nextProps: ISelectFilterProps) {
         let value: any = [];
         if (nextProps.value) {
-            value = nextProps.value.value;
+            value = nextProps.value;
 
             this.setState({
                 value,
