@@ -235,11 +235,11 @@ module.exports = function (input) {
         );
     }
 
-    conf.plugins.push(
+    /*conf.plugins.push(
         (new HardSourceWebpackPlugin({
             cacheDirectory: input.NODE_CACHE_DIR + "/hard-source/[confighash]",
         }))
-    );
+    );*/
 
     /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
         // Can be `standalone` or `publisher`.
