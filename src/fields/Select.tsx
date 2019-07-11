@@ -31,9 +31,9 @@ export interface ISelectProps extends IFieldProps {
     minLengthToShowSearchField?: number;
     onOpen?: () => any;
     onClose?: () => any;
-    mode: "dropdown" | "list";
-    height: number;
-    autoFocus: boolean,
+    mode?: "dropdown" | "list";
+    height?: number;
+    autoFocus?: boolean;
 }
 
 interface ISelectState {

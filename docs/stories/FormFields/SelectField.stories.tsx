@@ -19,6 +19,13 @@ storiesOf("Form/Fields/Select", module)
             </Panel>
         );
     })
+    .add("As list", () => {
+        return (
+            <Panel>
+                <SelectTest options={values} value={1} />
+            </Panel>
+        );
+    })
     .add("Allow clear", () => {
         return (
             <Panel>
