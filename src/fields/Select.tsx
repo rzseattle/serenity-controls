@@ -111,35 +111,34 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     }
 
     public handleDropdownChange = () => {
-        let options = this.props.options;
-        if (!Array.isArray(options)) {
-            options = Object.entries(options).map(([key, val]) => ({ value: key, label: val }));
-        }
+        if (this.props.mode == "dropdown") {
+            const options = toOptions(this.props.options);
 
-        this.setState(
-            {
-                dropdownVisible: !this.state.dropdownVisible,
-                searchedTxt: "",
-                filteredOptions: options,
-            },
-            () => {
-                if (this.state.dropdownVisible) {
-                    if (this.searchField) {
-                        this.searchField.focus();
+            this.setState(
+                {
+                    dropdownVisible: !this.state.dropdownVisible,
+                    searchedTxt: "",
+                    filteredOptions: options,
+                },
+                () => {
+                    if (this.state.dropdownVisible) {
+                        if (this.searchField) {
+                            this.searchField.focus();
+                        } else {
+                            this.dropdown.focus();
+                        }
+
+                        if (this.props.onOpen) {
+                            this.props.onOpen();
+                        }
                     } else {
-                        this.dropdown.focus();
+                        if (this.props.onClose) {
+                            this.props.onClose();
+                        }
                     }
-
-                    if (this.props.onOpen) {
-                        this.props.onOpen();
-                    }
-                } else {
-                    if (this.props.onClose) {
-                        this.props.onClose();
-                    }
-                }
-            },
-        );
+                },
+            );
+        }
     };
 
     private handleChange = (value: any, index: number = -1) => {
@@ -245,7 +244,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     private renderListBody = () => {
         const options = toOptions(this.props.options);
 
-        let heightDiff = options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
+        let heightDiff: number =
+            options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
 
         return (
             <Hotkeys keyName="up,down,enter,esc" onKeyDown={this.onKeyDown} filter={(event: any) => true}>

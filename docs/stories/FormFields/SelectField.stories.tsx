@@ -22,7 +22,7 @@ storiesOf("Form/Fields/Select", module)
     .add("As list", () => {
         return (
             <Panel>
-                <SelectTest options={values} value={1} />
+                <SelectTest options={values} value={1} mode="list" />
             </Panel>
         );
     })
