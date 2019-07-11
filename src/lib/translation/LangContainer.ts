@@ -1,7 +1,6 @@
 class LangContainer {
 
     constructor() {
-        console.trace("Inicjuje -------");
     }
 
     private langs: { [index: string]: () => Promise<any> } = {};
@@ -25,7 +24,6 @@ class LangContainer {
 //console.log(langContainer, "lang container");
 // @ts-ignore
 if (window.langContainer === undefined) {
-    console.error("nowa instancja");
     // @ts-ignore
     window.langContainer = new LangContainer();
 }
