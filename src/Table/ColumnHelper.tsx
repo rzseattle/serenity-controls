@@ -84,6 +84,8 @@ export default class ColumnHelper {
                     config: {
                         content: options,
                         multiselect: multiSelectFilter,
+                        mode: "list",
+                        applyOnChange: true,
                     },
                 },
             ],
