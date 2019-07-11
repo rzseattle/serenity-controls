@@ -15,7 +15,7 @@ import "./Select.sass";
 import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import { Icon } from "../Icon";
 import { fI18n } from "../lib";
-
+import { toOptions } from "./Utils";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
@@ -31,6 +31,9 @@ export interface ISelectProps extends IFieldProps {
     minLengthToShowSearchField?: number;
     onOpen?: () => any;
     onClose?: () => any;
+    mode: "dropdown" | "list";
+    height: number;
+    autoFocus: boolean,
 }
 
 interface ISelectState {
@@ -49,6 +52,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         showSearchField: true,
         minLengthToShowSearchField: 6,
         style: {},
+        mode: "dropdown",
+        height: 300,
     };
     private dropdown: HTMLDivElement;
     private presenter: HTMLDivElement;
@@ -181,7 +186,6 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             this.dynamicList.scrollToItem(this.state.highlightedIndex);
             this.dynamicList.forceUpdate();
         }
-
     };
 
     private searchTextChanged = (e: any) => {
@@ -222,11 +226,15 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 ref={ref}
                 className={
                     "w-select-item " +
-                    (this.props.value == el.value || index == this.state.highlightedIndex ? "w-select-selected" : "")
+                    (this.props.value == el.value ? "w-select-selected " : "") +
+                    (index == this.state.highlightedIndex ? "w-select-highlighted " : "")
                 }
                 onClick={(e) => {
                     this.handleChange(el.value, index);
                     this.handleDropdownChange();
+                }}
+                onMouseEnter={() => {
+                    this.setState({ highlightedIndex: index }, () => this.dynamicList.forceUpdate());
                 }}
             >
                 {el.label}
@@ -234,18 +242,46 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         );
     });
 
+    private renderListBody = () => {
+        const options = toOptions(this.props.options);
+
+        let heightDiff = options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
+
+        return (
+            <Hotkeys keyName="up,down,enter,esc" onKeyDown={this.onKeyDown} filter={(event: any) => true}>
+                {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
+                    <input
+                        ref={(el) => (this.searchField = el)}
+                        type={"text"}
+                        className={"form-control"}
+                        onChange={this.searchTextChanged}
+                        value={this.state.searchedTxt}
+                    />
+                )}
+                <AutoSizer>
+                    {({ width, height }: any) => (
+                        <DynamicSizeList
+                            height={height - heightDiff /*- input height*/}
+                            itemCount={this.state.filteredOptions.length}
+                            width={width}
+                            ref={(el: any) => (this.dynamicList = el)}
+                        >
+                            {this.renderRow}
+                        </DynamicSizeList>
+                    )}
+                </AutoSizer>
+            </Hotkeys>
+        );
+    };
+
     public render() {
         const props = this.props;
-        let options = props.options;
-        if (!Array.isArray(props.options)) {
-            options = Object.entries(props.options).map(([key, val]) => ({ value: key, label: val }));
-        }
-        const parsetOptions = options as IOption[];
+        const options = toOptions(this.props.options);
 
         let selectedIndex: number = -1;
 
-        for (let i = 0; i < parsetOptions.length; i++) {
-            if (parsetOptions[i].value == props.value) {
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].value == props.value) {
                 selectedIndex = i;
             }
         }
@@ -258,38 +294,41 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         (selectedIndex >= 0 ? "" : "w-field-presentation-empty")
                     }
                 >
-                    {selectedIndex >= 0 ? parsetOptions[selectedIndex].label : ""}
+                    {selectedIndex >= 0 ? options[selectedIndex].label : ""}
                 </div>
             );
         }
 
         return (
             <div className={"w-select"} style={props.style}>
-                <div
-                    className={"w-select-result-presenter"}
-                    ref={(el) => (this.presenter = el)}
-                    onClick={() => {
-                        if (!this.state.dropdownVisible) {
-                            this.handleDropdownChange();
-                        }
-                    }}
-                >
-                    {parsetOptions[selectedIndex] ? (
-                        parsetOptions[selectedIndex].label
-                    ) : (
-                        <div className={"w-select-placeholder"}>
-                            {this.props.placeholder ? this.props.placeholder : fI18n.t("frontend:fields.select.choose")}
-                        </div>
-                    )}
-                    {props.allowClear && props.value !== null && (
-                        <div className="w-select-clear" onClick={this.handleClear}>
-                            <Icon name={"ChromeClose"}/>
-                        </div>
-                    )}
-                    <Icon name={"ChevronDown"}/>
-                </div>
-
-                {this.state.dropdownVisible && (
+                {this.props.mode === "dropdown" && (
+                    <div
+                        className={"w-select-result-presenter"}
+                        ref={(el) => (this.presenter = el)}
+                        onClick={() => {
+                            if (!this.state.dropdownVisible) {
+                                this.handleDropdownChange();
+                            }
+                        }}
+                    >
+                        {options[selectedIndex] ? (
+                            options[selectedIndex].label
+                        ) : (
+                            <div className={"w-select-placeholder"}>
+                                {this.props.placeholder
+                                    ? this.props.placeholder
+                                    : fI18n.t("frontend:fields.select.choose")}
+                            </div>
+                        )}
+                        {props.allowClear && props.value !== null && (
+                            <div className="w-select-clear" onClick={this.handleClear}>
+                                <Icon name={"ChromeClose"} />
+                            </div>
+                        )}
+                        <Icon name={"ChevronDown"} />
+                    </div>
+                )}
+                {this.state.dropdownVisible && props.mode === "dropdown" && (
                     <Positioner
                         relativeTo={() => this.presenter}
                         animation={"from-up"}
@@ -301,36 +340,21 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             tabIndex={-1}
                             onBlur={() => setTimeout(this.handleDropdownChange, 100)}
                             onMouseDown={(e) => e.preventDefault()}
+                            style={{ height: options.length * 28, maxHeight: this.props.height }}
                         >
-                            <Hotkeys
-                                keyName="up,down,enter,esc"
-                                onKeyDown={this.onKeyDown}
-                                filter={(event: any) => true}
-                            >
-                                {parsetOptions.length > props.minLengthToShowSearchField && props.showSearchField && (
-                                    <input
-                                        ref={(el) => (this.searchField = el)}
-                                        type={"text"}
-                                        className={"form-control"}
-                                        onChange={this.searchTextChanged}
-                                        value={this.state.searchedTxt}
-                                    />
-                                )}
-                                <AutoSizer>
-                                    {({ width, height }:any) => (
-                                        <DynamicSizeList
-                                            height={height - 35 /*- input height*/}
-                                            itemCount={this.state.filteredOptions.length}
-                                            width={width}
-                                            ref={(el:any) => this.dynamicList = el}
-                                        >
-                                            {this.renderRow}
-                                        </DynamicSizeList>
-                                    )}
-                                </AutoSizer>
-                            </Hotkeys>
+                            {this.renderListBody()}
                         </div>
                     </Positioner>
+                )}
+                {props.mode === "list" && (
+                    <div
+                        className="w-select-list"
+                        ref={(el) => (this.dropdown = el)}
+                        tabIndex={-1}
+                        style={{ height: options.length * 28, maxHeight: this.props.height }}
+                    >
+                        {this.renderListBody()}
+                    </div>
                 )}
             </div>
         );

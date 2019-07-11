@@ -25,23 +25,24 @@
             margin-right: 0
 
 
-.w-select-overlay
+.w-select-overlay, .w-select-list
     background-color: white
     border: 1px solid #cbd5dd
     outline: none
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
-    height: 400px
     overflow: hidden
     overflow-x: hidden
+
     .w-select-item
+        min-height: 28px
         padding: 4px
         cursor: pointer
-        &:hover, .w-select-selected
-            background-color: #4ba4ee
-            color: white
+        &:hover, .w-select-selected, &.w-select-highlighted
+            background-color: lightgrey
+            color: black
     .w-select-selected
-        background-color: #4484c7
-        color: white
+        background-color: #4484c7 !important
+        color: white !important
 
     input
         width: 100%
@@ -49,3 +50,5 @@
         height: 34px !important
         border-top: 0
 
+.w-select-list
+    box-shadow: none

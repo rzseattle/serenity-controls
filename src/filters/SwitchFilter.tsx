@@ -3,17 +3,25 @@ import * as React from "react";
 import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
-
 import "./SwitchFilter.sass";
-import {IOption, Switch} from "../fields";
+import { IOption, Switch } from "../fields";
+import { ISelectFilterProps } from "./SelectFilter";
 
 interface ISwitchFilterProps extends IFilterProps {
     config: {
         content: IOption[];
+        disableAutoFocus?: boolean;
     };
 }
 
 export default class SwitchFilter extends AbstractFilter<ISwitchFilterProps> {
+    public static defaultProps: Partial<ISelectFilterProps> = {
+        config: {
+            content: [],
+            disableAutoFocus: true,
+        },
+    };
+
     constructor(props: ISwitchFilterProps) {
         super(props);
         this.state = { value: props.value ? props.value.value : null };
@@ -59,6 +67,7 @@ export default class SwitchFilter extends AbstractFilter<ISwitchFilterProps> {
                     options={this.props.config.content}
                     value={this.state.value}
                     onChange={(e) => this.setState({ value: e.value }, this.handleChange)}
+                    autoFocus={!this.props.config.disableAutoFocus}
                 />
                 {this.props.showApply && (
                     <div>

@@ -2,12 +2,10 @@ import * as React from "react";
 import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 import { IFieldChangeEvent, IOption } from "../fields/Interfaces";
-import ReactDOM from "react-dom";
 
 import "./SelectFilter.sass";
 import { CheckboxGroup, Select } from "../fields";
 import { toOptions } from "../fields/Utils";
-import { FormEvent } from "react";
 
 export interface ISelectFilterProps extends IFilterProps {
     config: {
@@ -15,6 +13,8 @@ export interface ISelectFilterProps extends IFilterProps {
         default?: string | number;
         multiselect?: boolean;
         disableAutoFocus?: boolean;
+        mode?: "list" | "dropdown";
+        applyOnChange?: boolean;
     };
 }
 
@@ -28,6 +28,8 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
             default: "",
             multiselect: false,
             disableAutoFocus: false,
+            mode: "dropdown",
+            applyOnChange: true,
         },
     };
 
@@ -93,6 +95,10 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
             if (this.props.onChange) {
                 this.props.onChange(this.getValue());
             }
+
+            if (this.props.onApply && this.props.config.applyOnChange) {
+                this.props.onApply(this.getValue());
+            }
         });
     };
 
@@ -135,6 +141,7 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
                         autoFocus={!this.props.config.disableAutoFocus}
                         value={this.state.value}
                         onChange={this.handleChange}
+                        mode={this.props.config.mode}
                     />
                 )}
                 {this.props.showApply && (

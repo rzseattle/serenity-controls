@@ -1,15 +1,19 @@
 import { IFieldProps, IOption } from "./Interfaces";
 import React from "react";
 import "./Switch.sass";
+import { toOptions } from "./Utils";
 
 export interface ISwitchProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
     value?: number | string;
+    autoFocus: boolean,
+
 }
 
 export class Switch extends React.Component<ISwitchProps> {
     public static defaultProps: Partial<ISwitchProps> = {
         editable: true,
+        autoFocus: false
     };
 
     constructor(props: ISwitchProps) {
@@ -36,39 +40,28 @@ export class Switch extends React.Component<ISwitchProps> {
     public render() {
         const props = this.props;
 
+        const options = toOptions(props.options);
+
         if (!props.editable) {
-            if (Array.isArray(props.options)) {
-                for (const i in props.options) {
-                    if (props.options[i].value == props.value) {
-                        return (
-                            <div className={"w-field-presentation w-field-presentation-switch " + props.disabledClass}>
-                                {props.options[i].label}
-                            </div>
-                        );
-                    }
+            for (let i in options) {
+                if (options[i].value == props.value) {
+                    return (
+                        <div className={"w-field-presentation w-field-presentation-switch " + props.disabledClass}>
+                            {options[i].label}
+                        </div>
+                    );
                 }
-                return (
-                    <div
-                        className={
-                            "w-field-presentation w-field-presentation-switch " +
-                            (props.value ? "" : "w-field-presentation-empty")
-                        }
-                    >
-                        {props.value}
-                    </div>
-                );
-            } else {
-                return (
-                    <div
-                        className={
-                            "w-field-presentation w-field-presentation-switch " +
-                            (props.options[props.value] ? "" : "w-field-presentation-empty")
-                        }
-                    >
-                        {props.options[props.value]}
-                    </div>
-                );
             }
+            return (
+                <div
+                    className={
+                        "w-field-presentation w-field-presentation-switch " +
+                        (props.value ? "" : "w-field-presentation-empty")
+                    }
+                >
+                    {props.value}
+                </div>
+            );
         }
 
         const gen = (value: string | number, label: string | number) => {
@@ -84,10 +77,8 @@ export class Switch extends React.Component<ISwitchProps> {
             );
         };
         return (
-            <div className="w-switch">
-                {Array.isArray(props.options)
-                    ? props.options.map((el) => gen(el.value, el.label))
-                    : Object.entries(props.options).map(([value, label]) => gen(value, label))}
+            <div className="w-switch" tabIndex={-1}>
+                {options.map((el) => gen(el.value, el.label))}
             </div>
         );
     }
