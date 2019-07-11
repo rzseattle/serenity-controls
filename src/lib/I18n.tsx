@@ -1,6 +1,10 @@
 import i18next from "i18next";
 import langContainer from "./translation/LangContainer";
 
+import { configGetAll } from "../backoffice/Config";
+
+const config = configGetAll();
+
 const XHR = {
     type: "backend",
     init(services: any, backendOptions: any, i18nextOptions: any) {
@@ -34,6 +38,7 @@ const XHR = {
 i18next.use(XHR).init(
     {
         lng: "en",
+        fallbackLng: config.translations.defaultLanguage,
         debug: false,
         /*resources: {
             en: {
