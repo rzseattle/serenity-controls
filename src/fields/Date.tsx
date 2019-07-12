@@ -39,7 +39,7 @@ export class Date extends React.Component<IDateProps, any> {
         Promise.all([
             import("moment"),
             // @ts-ignore
-            import("moment/locale/" + fI18n.options.fallbackLng[0]),
+            import("moment/locale/pl"), //import("moment/locale/" + fI18n.options.fallbackLng[0]),
             import("react-day-picker"), // @ts-ignore
 
             // @ts-ignore
@@ -69,7 +69,7 @@ export class Date extends React.Component<IDateProps, any> {
         Promise.all([
             import("moment"),
             // @ts-ignore
-            import("moment/locale/" + fI18n.options.fallbackLng[0]),
+            import("moment/locale/pl"), //import("moment/locale/" + fI18n.options.fallbackLng[0]),
         ]).then((imported) => {
             moment = imported[0].default;
             this.setState({
