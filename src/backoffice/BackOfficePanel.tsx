@@ -374,6 +374,8 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 }, [])}
                                 value={null}
                                 autoFocus={true}
+                                mode="list"
+
                                 onChange={(e) => {
                                     this.setState({
                                         navigationWindowOpened: false,
