@@ -105,11 +105,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     public componentDidMount() {
         // this.handleDropdownChange();
 
-        if (this.props.autoFocus  ) {
+        if (this.props.autoFocus) {
             if (this.props.mode == "dropdown") {
-                this.searchField.focus();
-            }else {
                 this.handleDropdownChange();
+            } else {
+                setTimeout(() => this.searchField.focus(), 10);
             }
         }
     }
@@ -210,11 +210,14 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             defaultHeight: 30,
         });*/
 
-        this.setState({
-            searchedTxt: e.target.value,
-            highlightedIndex: e.target.value.length > 0 ? 0 : -1,
-            filteredOptions,
-        }, () => this.dynamicList.scrollToItem(0));
+        this.setState(
+            {
+                searchedTxt: e.target.value,
+                highlightedIndex: e.target.value.length > 0 ? 0 : -1,
+                filteredOptions,
+            },
+            () => this.dynamicList.scrollToItem(0),
+        );
     };
 
     private renderRow = React.forwardRef(({ index, style }: any, ref) => {
