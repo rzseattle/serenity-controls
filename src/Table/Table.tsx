@@ -17,7 +17,7 @@ import { deepCopy, deepIsEqual } from "../lib/JSONTools";
 import TextFilter from "../filters/TextFilter";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { confirmDialog } from "../ConfirmDialog";
-
+import TableFiltersOverlay from "./TableFiltersOverlay";
 
 export interface IDataQuery {
     columns: IColumnData[];
@@ -86,6 +86,7 @@ interface ITableState {
     allChecked: boolean;
     selection: any[];
     tooltipData: any;
+    isFilterPanelVisible: boolean;
 }
 
 export class Table extends React.Component<ITableProps, ITableState> {
@@ -111,6 +112,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
     private tooltipTimeout: number;
 
     private tableRef: HTMLTableElement;
+    private containerRef: HTMLDivElement;
 
     private columnWidths: number[] = [];
 
@@ -141,6 +143,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
             allChecked: false,
             selection: [],
             tooltipData: null,
+            isFilterPanelVisible: false,
         };
 
         // helpers
@@ -155,9 +158,9 @@ export class Table extends React.Component<ITableProps, ITableState> {
         };
         this.hashCode = hashCode(
             this.props.controlKey +
-            (window.CONTROLS_BASE_LOCATION != undefined
-                ? window.CONTROLS_BASE_LOCATION
-                : window.location.pathname + window.location.hash.split("?")[0]),
+                (window.CONTROLS_BASE_LOCATION != undefined
+                    ? window.CONTROLS_BASE_LOCATION
+                    : window.location.pathname + window.location.hash.split("?")[0]),
         );
 
         this.tooltipTimeout = null;
@@ -182,7 +185,6 @@ export class Table extends React.Component<ITableProps, ITableState> {
     }
 
     public componentDidUpdate(prevProps: ITableProps, prevState11: ITableState) {
-
         const state = this.state;
         if (this.props.rememberState) {
             window.localStorage[this.hashCode] = JSON.stringify({
@@ -204,7 +206,6 @@ export class Table extends React.Component<ITableProps, ITableState> {
             this.load();
         }
 
-
         if (this.state.fixedLayout) {
             const th = this.tableRef.querySelectorAll("thead>tr>th");
 
@@ -212,7 +213,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                 this.columnWidths.push(th[i].getBoundingClientRect().width);
                 //var cs = window.getComputedStyle(z, null);
                 // @ts-ignore
-                th[i].style.width = (this.columnWidths[i] - 1) + "px";
+                th[i].style.width = this.columnWidths[i] - 1 + "px";
                 //console.log();
                 //th[i].styles.width = this.columnWidths[i] + "px";
             }
@@ -360,7 +361,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
             this.props.onSelectionChange([]);
         }
 
-        this.setState({ loading: true/*, data: []*/ });
+        this.setState({ loading: true /*, data: []*/ });
 
         const setStateAfterLoad = (input: ITableDataInput, callback: () => any = null) => {
             if (!Array.isArray(input.data)) {
@@ -470,7 +471,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         }
 
         field = { ...field, dir: field.dir == "asc" ? "desc" : "asc" };
-        this.setState({ order: {...this.state.order, [fieldName]: field}}, this.load);
+        this.setState({ order: { ...this.state.order, [fieldName]: field } }, this.load);
     };
 
     public handleOnPageChange = (onPage: number) => {
@@ -484,7 +485,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         }
     };
 
-    public handleKeyDown = (e: React.KeyboardEvent) => {
+    private handleKeyDown = (e: React.KeyboardEvent) => {
         // right
         if (e.keyCode == 39) {
             this.handleCurrentPageChange(this.state.currentPage + 1);
@@ -494,6 +495,17 @@ export class Table extends React.Component<ITableProps, ITableState> {
         if (e.keyCode == 37) {
             this.handleCurrentPageChange(this.state.currentPage - 1);
         }
+        if (e.keyCode == 36) {
+            this.handleFilterPanelChange();
+        }
+    };
+
+    private handleFilterPanelChange = () => {
+        this.setState({ isFilterPanelVisible: !this.state.isFilterPanelVisible }, () => {
+            if (!this.state.isFilterPanelVisible) {
+                this.containerRef.focus();
+            }
+        });
     };
 
     public handleCheckClicked = (index: string | number) => {
@@ -592,15 +604,15 @@ export class Table extends React.Component<ITableProps, ITableState> {
     public render() {
         const columns = deepCopy(this.state.columns);
 
-
         return (
             <div
                 className={"w-table  " + (this.state.loading ? "w-table-loading" : "")}
                 tabIndex={0}
                 onKeyDown={this.handleKeyDown}
+                ref={(el) => (this.containerRef = el)}
             >
                 <div className="w-table-loader">
-                    <LoadingIndicator/>
+                    <LoadingIndicator />
                 </div>
                 <div className="w-table-top">
                     <FiltersPresenter
@@ -625,52 +637,62 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         />
                     )}
                     <tbody className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}>
-                    {this.state.dataSourceError != "" && (
-                        <Error colspan={columns.length + 1} error={this.state.dataSourceError}/>
-                    )}
-                    {!this.state.loading && this.state.data.length == 0 && (
-                        <EmptyResult colspan={columns.length + 1}/>
-                    )}
-                    {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1}/>}
-                    {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
-                    {/*this.state.firstLoaded && */}
-                    {this.state.data.length > 0 && (
-                        <Tbody
-                            rowClassTemplate={this.props.rowClassTemplate}
-                            rowStyleTemplate={this.props.rowStyleTemplate}
-                            selection={deepCopy(this.state.selection)}
-                            onCheck={this.handleCheckClicked}
-                            selectable={this.props.selectable}
-                            columns={columns}
-                            filters={this.state.filters}
-                            order={this.state.order}
-                            loading={this.state.loading}
-                            data={this.state.data}
-                            infoRow={this.props.infoRow}
-                            groupBy={this.props.groupBy}
-                            columnWidths={this.columnWidths}
-                        />
-                    )}
+                        {this.state.dataSourceError != "" && (
+                            <Error colspan={columns.length + 1} error={this.state.dataSourceError} />
+                        )}
+                        {!this.state.loading && this.state.data.length == 0 && (
+                            <EmptyResult colspan={columns.length + 1} />
+                        )}
+                        {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
+                        {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
+                        {/*this.state.firstLoaded && */}
+                        {this.state.data.length > 0 && (
+                            <Tbody
+                                rowClassTemplate={this.props.rowClassTemplate}
+                                rowStyleTemplate={this.props.rowStyleTemplate}
+                                selection={deepCopy(this.state.selection)}
+                                onCheck={this.handleCheckClicked}
+                                selectable={this.props.selectable}
+                                columns={columns}
+                                filters={this.state.filters}
+                                order={this.state.order}
+                                loading={this.state.loading}
+                                data={this.state.data}
+                                infoRow={this.props.infoRow}
+                                groupBy={this.props.groupBy}
+                                columnWidths={this.columnWidths}
+                            />
+                        )}
                     </tbody>
 
                     {this.props.showFooter && (
                         <tfoot>
-                        {this.state.firstLoaded && (
-                            <Footer
-                                columns={columns}
-                                count={this.state.countAll}
-                                onPage={this.state.onPage}
-                                onPageChanged={this.handleOnPageChange}
-                                currentPage={this.state.currentPage}
-                                currentPageChanged={this.handleCurrentPageChange}
-                                reload={this.load}
-                            />
-                        )}
+                            {this.state.firstLoaded && (
+                                <Footer
+                                    columns={columns}
+                                    count={this.state.countAll}
+                                    onPage={this.state.onPage}
+                                    onPageChanged={this.handleOnPageChange}
+                                    currentPage={this.state.currentPage}
+                                    currentPageChanged={this.handleCurrentPageChange}
+                                    reload={this.load}
+                                />
+                            )}
                         </tfoot>
                     )}
                 </table>
 
                 {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
+                {this.state.isFilterPanelVisible && (
+                    <TableFiltersOverlay
+                        columns={this.state.columns}
+                        filters={this.state.filters}
+                        onHide={() => {
+                            this.handleFilterPanelChange();
+                        }}
+                        onChange={(filter) => this.handleFilterChanged(filter)}
+                    />
+                )}
             </div>
         );
     }
