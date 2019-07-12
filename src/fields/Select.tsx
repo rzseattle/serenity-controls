@@ -105,40 +105,42 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     public componentDidMount() {
         // this.handleDropdownChange();
 
-        if (this.props.autoFocus) {
-            this.handleDropdownChange();
+        if (this.props.autoFocus  ) {
+            if (this.props.mode == "dropdown") {
+                this.searchField.focus();
+            }else {
+                this.handleDropdownChange();
+            }
         }
     }
 
     public handleDropdownChange = () => {
-        if (this.props.mode == "dropdown") {
-            const options = toOptions(this.props.options);
+        const options = toOptions(this.props.options);
 
-            this.setState(
-                {
-                    dropdownVisible: !this.state.dropdownVisible,
-                    searchedTxt: "",
-                    filteredOptions: options,
-                },
-                () => {
-                    if (this.state.dropdownVisible) {
-                        if (this.searchField) {
-                            this.searchField.focus();
-                        } else {
-                            this.dropdown.focus();
-                        }
-
-                        if (this.props.onOpen) {
-                            this.props.onOpen();
-                        }
+        this.setState(
+            {
+                dropdownVisible: !this.state.dropdownVisible,
+                searchedTxt: "",
+                filteredOptions: options,
+            },
+            () => {
+                if (this.state.dropdownVisible) {
+                    if (this.searchField) {
+                        this.searchField.focus();
                     } else {
-                        if (this.props.onClose) {
-                            this.props.onClose();
-                        }
+                        this.dropdown.focus();
                     }
-                },
-            );
-        }
+
+                    if (this.props.onOpen) {
+                        this.props.onOpen();
+                    }
+                } else {
+                    if (this.props.onClose) {
+                        this.props.onClose();
+                    }
+                }
+            },
+        );
     };
 
     private handleChange = (value: any, index: number = -1) => {
@@ -356,6 +358,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         {this.renderListBody()}
                     </div>
                 )}
+                {this.props.autoFocus ? "1" : "0"}
             </div>
         );
     }
