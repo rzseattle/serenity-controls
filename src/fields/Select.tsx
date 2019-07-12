@@ -358,7 +358,6 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         {this.renderListBody()}
                     </div>
                 )}
-                {this.props.autoFocus ? "1" : "0"}
             </div>
         );
     }
