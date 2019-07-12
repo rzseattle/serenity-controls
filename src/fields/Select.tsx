@@ -214,7 +214,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             searchedTxt: e.target.value,
             highlightedIndex: e.target.value.length > 0 ? 0 : -1,
             filteredOptions,
-        });
+        }, () => this.dynamicList.scrollToItem(0));
     };
 
     private renderRow = React.forwardRef(({ index, style }: any, ref) => {
