@@ -49,6 +49,7 @@ require("./Panel/index.stories");
 require("./Navbar/index.stories");
 require("./CommandBar/index.stories");
 require("./CommandMenu/index.stories");
+require("./Download/index.stories");
 
 require("./Icon/index.stories");
 require("./LoadingIndicator/index.stories");
