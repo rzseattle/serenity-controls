@@ -5,6 +5,7 @@ export const lang = {
         add: "Dodaj",
         cancel: "Anuluj",
         print: "Drukuj",
+        download: "Pobierz",
 
         fields: {
             select: {

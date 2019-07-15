@@ -1,0 +1,33 @@
+.w-download-button
+    display: inline-block
+    position: relative
+    user-select: none
+
+    .w-download-button-icon
+        width: 30px
+        position: absolute
+        left: 10px
+        top: 0px
+
+
+    &.w-download-button-disabled
+        color: grey
+        cursor: wait
+
+        &:hover
+            background-color: #f4f4f4
+
+
+        .w-download-button-icon
+            left: 0
+            top: -4px
+
+
+    .w-download-button-label
+        padding-left: 22px
+
+    .w-loading-indicator
+
+        display: inline-block
+
+

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Icon } from "../Icon";
-import { render } from "react-dom";
 import { LoadingIndicator } from "../LoadingIndicator";
 import "./Copyable.sass";
 interface ICopyableProps {
