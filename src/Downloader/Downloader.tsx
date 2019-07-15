@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import qs from "qs";
+import { string } from "prop-types";
 
 type ICleanUpCallback = () => any;
 
@@ -58,54 +59,50 @@ class Downloader extends React.PureComponent<IDownloaderProps> {
         );
     }
 }
+export interface IDownloadSuccessParams {
+    fileName: string;
+}
 
-export const download = (url: string, data: any = null): any => {
+export const download = (url: string, data: any = null): Promise<IDownloadSuccessParams> => {
     const targetUrl = url + (data !== null ? "?" + qs.stringify(data) : "");
     const simpleURL = url;
 
-    const promise = new Promise((resolve, reject) => {
-        console.clear();
-        var xhr = new XMLHttpRequest();
+    const promise = new Promise<IDownloadSuccessParams>((resolve) => {
+        const xhr = new XMLHttpRequest();
 
         xhr.open("GET", targetUrl, true);
 
-        //Now set response type
         xhr.responseType = "arraybuffer";
 
         xhr.onprogress = (evt: ProgressEvent) => {
             if (evt.lengthComputable) {
-                let percentComplete = (evt.loaded / evt.total) * 100;
-                console.log(percentComplete);
-            }else{
-                console.log("Not computable");
+                const percentComplete = (evt.loaded / evt.total) * 100;
             }
         };
         xhr.addEventListener("load", () => {
             if (xhr.status === 200) {
-                //console.log(xhr.response); // ArrayBuffer
-                //console.log(new Blob([xhr.response])); // Blob
-                resolve();
-
-
-                console.log(xhr.getAllResponseHeaders());
-                let fileName = null;
+                let fileName: string = "";
                 const contentDisposition = xhr.getResponseHeader("Content-Disposition");
                 if (contentDisposition !== null) {
-                    let tmp = contentDisposition.split("filename=");
+                    const tmp = contentDisposition.split("filename=");
 
                     if (tmp.length === 2) {
                         fileName = tmp[1];
                     }
                 }
 
-                if (fileName === null) {
-                    let tmp = simpleURL.split("/");
+                if (fileName === "") {
+                    const tmp = simpleURL.split("/");
                     fileName = tmp[tmp.length - 1];
                 }
 
-                const url = window.URL.createObjectURL(new Blob([xhr.response]));
+                resolve({
+                    fileName,
+                });
+
+                const urlBIN = window.URL.createObjectURL(new Blob([xhr.response]));
                 const link = document.createElement("a");
-                link.href = url;
+                link.href = urlBIN;
                 link.style.visibility = "none";
                 link.setAttribute("download", fileName);
                 document.body.appendChild(link);
@@ -116,20 +113,6 @@ export const download = (url: string, data: any = null): any => {
     });
 
     return promise;
-    /*const parent = document.body;
-
-    const wrapper = parent.appendChild(document.createElement("div"));
-    const cleanup = () => {
-        ReactDOM.unmountComponentAtNode(wrapper);
-        wrapper.remove();
-    };
-    const props = {
-        url,
-        data,
-    };
-
-    // @ts-ignore
-    const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup} />, wrapper);*/
 };
 
 export const downloadOld = (url: string, data: any = null): any => {

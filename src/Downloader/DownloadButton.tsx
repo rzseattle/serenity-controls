@@ -4,15 +4,21 @@ import { LoadingIndicator } from "../LoadingIndicator";
 import "./DownloadButton.sass";
 import { Icon } from "../Icon";
 import { fI18n } from "../lib/I18n";
-import { download } from "./Downloader";
+import { download, IDownloadSuccessParams } from "./Downloader";
 
 interface IDownloadButtonProps {
     url: string;
     label?: string;
     data?: any;
+    onFinish?: (params: IDownloadSuccessParams) => any;
 }
 
-export const DownloadButton = ({ url, data = {}, label = fI18n.t("frontend:download") }: IDownloadButtonProps) => {
+export const DownloadButton = ({
+    url,
+    data = {},
+    label = fI18n.t("frontend:download"),
+    onFinish = null,
+}: IDownloadButtonProps) => {
     const [isLoading, setLoading] = useState(false);
 
     const downloadCallback = useCallback(() => {
@@ -20,8 +26,11 @@ export const DownloadButton = ({ url, data = {}, label = fI18n.t("frontend:downl
             return;
         }
         setLoading(true);
-        download(url, data).then(() => {
+        download(url, data).then((result) => {
             setLoading(false);
+            if (onFinish !== null) {
+                onFinish(result);
+            }
         });
     }, [url]);
 
