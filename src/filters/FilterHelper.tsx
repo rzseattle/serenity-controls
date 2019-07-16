@@ -76,6 +76,7 @@ export class FilterHelper {
                 multiselect: multi,
                 content,
                 default: defaultValue,
+                mode: "list"
             },
             component: SelectFilter,
         });
