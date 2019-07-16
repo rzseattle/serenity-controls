@@ -53,7 +53,7 @@ class Downloader extends React.PureComponent<IDownloaderProps> {
                 <textarea name="payload">{JSON.stringify(this.props.data)}</textarea>
 
                 {Object.entries(this.props.data).map(([key, val]) => (
-                    <input type="hidden" name={key} value={val as string} />
+                    <input type="hidden" name={key} value={val as string}/>
                 ))}
             </form>
         );
@@ -62,6 +62,16 @@ class Downloader extends React.PureComponent<IDownloaderProps> {
 export interface IDownloadSuccessParams {
     fileName: string;
 }
+
+export const downloadString = (fileName: string, data: string) => {
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.style.visibility = "none";
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link);
+    link.click();
+};
 
 export const download = (url: string, data: any = null): Promise<IDownloadSuccessParams> => {
     const targetUrl = url + (data !== null ? "?" + qs.stringify(data) : "");
@@ -77,12 +87,16 @@ export const download = (url: string, data: any = null): Promise<IDownloadSucces
         xhr.onprogress = (evt: ProgressEvent) => {
             if (evt.lengthComputable) {
                 const percentComplete = (evt.loaded / evt.total) * 100;
+                console.log(percentComplete);
+            } else {
+                console.log("Not computable");
             }
         };
         xhr.addEventListener("load", () => {
             if (xhr.status === 200) {
                 let fileName: string = "";
                 const contentDisposition = xhr.getResponseHeader("Content-Disposition");
+
                 if (contentDisposition !== null) {
                     const tmp = contentDisposition.split("filename=");
 
@@ -96,17 +110,12 @@ export const download = (url: string, data: any = null): Promise<IDownloadSucces
                     fileName = tmp[tmp.length - 1];
                 }
 
-                resolve({
+                
+
+				downloadString(fileName, xhr.response);
+				resolve({
                     fileName,
                 });
-
-                const urlBIN = window.URL.createObjectURL(new Blob([xhr.response]));
-                const link = document.createElement("a");
-                link.href = urlBIN;
-                link.style.visibility = "none";
-                link.setAttribute("download", fileName);
-                document.body.appendChild(link);
-                link.click();
             }
         });
         xhr.send();
@@ -129,5 +138,5 @@ export const downloadOld = (url: string, data: any = null): any => {
     };
 
     // @ts-ignore
-    const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup} />, wrapper);
+    const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup}/>, wrapper);
 };
