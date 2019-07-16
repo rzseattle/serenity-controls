@@ -305,7 +305,9 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
         return (
-            <div className={"w-select"} style={props.style}>
+            <div className={"w-select"} style={props.style} onMouseLeave={() => {
+                this.setState({ highlightedIndex: -1 }, () => this.dynamicList.forceUpdate());
+            }}>
                 {this.props.mode === "dropdown" && (
                     <div
                         className={"w-select-result-presenter"}
