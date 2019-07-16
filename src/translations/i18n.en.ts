@@ -6,6 +6,7 @@ export const lang = {
         cancel: "Cancel",
         print: "Print",
         download: "Download",
+        downloading: "Downloading",
         fields: {
             select: {
                 choose: "Choose",
