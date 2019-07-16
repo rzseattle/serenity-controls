@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { LoadingIndicator } from "../LoadingIndicator";
 
 import "./DownloadButton.sass";
 import { Icon } from "../Icon";
@@ -9,8 +8,11 @@ import { download, IDownloadSuccessParams } from "./Downloader";
 interface IDownloadButtonProps {
     url: string;
     label?: string;
+    downloadingLabel?: string;
     data?: any;
     onFinish?: (params: IDownloadSuccessParams) => any;
+    mode?: "button" | "link" | "icon";
+
 }
 
 export const DownloadButton = ({
@@ -18,6 +20,9 @@ export const DownloadButton = ({
     data = {},
     label = fI18n.t("frontend:download"),
     onFinish = null,
+    downloadingLabel = fI18n.t("frontend:downloading"),
+    mode = "link",
+
 }: IDownloadButtonProps) => {
     const [isLoading, setLoading] = useState(false);
 
@@ -35,17 +40,19 @@ export const DownloadButton = ({
     }, [url]);
 
     return (
-        <>
+        <div className={"w-download-button" + (isLoading ? " w-download-button-disabled" : "")}>
             <a
-                className={"btn w-download-button" + (isLoading ? " w-download-button-disabled" : "")}
+                className={"  w-download-button-mode-" + mode + (mode == "button" ? " btn" : "")}
                 onClick={downloadCallback}
             >
-                <div className="w-download-button-icon">
-                    {isLoading && <LoadingIndicator />}
-                    {!isLoading && <Icon name="Download" />}
+                <div className={"w-download-button-icon" + (isLoading ? " w-download-button-icon-spin" : "")}>
+                    {/*{isLoading && <LoadingIndicator />}*/}
+                    <Icon name={!isLoading ? "Download" : "Sync"} />
                 </div>
-                <div className="w-download-button-label"> {label}</div>
+                {mode !== "icon" && (
+                    <div className="w-download-button-label"> {!isLoading ? label : downloadingLabel}</div>
+                )}
             </a>
-        </>
+        </div>
     );
 };

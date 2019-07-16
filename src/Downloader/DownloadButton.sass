@@ -1,33 +1,40 @@
+@keyframes spin
+    from
+        transform: rotate(0deg)
+    to
+        transform: rotate(360deg)
+
+
 .w-download-button
-    display: inline-block
-    position: relative
     user-select: none
+    display: inline-block
 
-    .w-download-button-icon
-        width: 30px
-        position: absolute
-        left: 10px
-        top: 0px
+    .w-download-button-mode-icon
 
+
+    .w-download-button-mode-link
+        display: flex
+        .w-download-button-label
+            margin-left: 4px
+
+
+    .w-download-button-mode-button
+        display: flex
+        .w-download-button-label
+            margin-left: 4px
+
+
+    .w-download-button-icon-spin
+        animation-name: spin
+        animation-duration: 4000ms
+        animation-iteration-count: infinite
+        animation-timing-function: linear
+        width: auto
 
     &.w-download-button-disabled
-        color: grey
-        cursor: wait
-
-        &:hover
-            background-color: #f4f4f4
-
+        .w-download-button-label
+            opacity: 0.5
 
         .w-download-button-icon
-            left: 0
-            top: -4px
-
-
-    .w-download-button-label
-        padding-left: 22px
-
-    .w-loading-indicator
-
-        display: inline-block
-
+            color: red
 
