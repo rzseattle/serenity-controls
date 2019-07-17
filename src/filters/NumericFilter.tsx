@@ -67,9 +67,7 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
             this.props.onApply(this.getValue());
         }
 
-        alert("x");
         if (this.props.onChange) {
-            alert("y");
             this.props.onChange(this.getValue());
         }
     };

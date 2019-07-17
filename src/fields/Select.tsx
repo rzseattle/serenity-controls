@@ -306,7 +306,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
         return (
             <div className={"w-select"} style={props.style} onMouseLeave={() => {
-                this.setState({ highlightedIndex: -1 }, () => this.dynamicList.forceUpdate());
+                this.setState({ highlightedIndex: -1 }, () => this.dynamicList?this.dynamicList.forceUpdate():null);
             }}>
                 {this.props.mode === "dropdown" && (
                     <div
