@@ -68,6 +68,7 @@ export const lang = {
             copyLink: "Copy link",
             openInNewWindow: "Open in new widnow",
             fileNotUploadedYet: "File is not uploaded",
+            confirmRemove: "Are you sure you want delete this file ?"
         },
     },
 };

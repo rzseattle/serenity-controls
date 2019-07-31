@@ -14,6 +14,7 @@ import { PreviewModal } from "./PreviewModal";
 import "./FilesLists.sass";
 import { download } from "../Downloader";
 import { alertDialog } from "../AlertDialog";
+import {confirmDialog} from "../ConfirmDialog";
 
 export interface IFile {
     key: number;
@@ -105,12 +106,16 @@ export class FileListField extends React.Component<IFileListProps, any> {
     };
 
     public handleFileRemove = (index: number) => {
-        const currFiles = this.props.value ? this.props.value.slice() : [];
-        const deleted = this.state.filesDeleted;
-        deleted.push(currFiles[index]);
-        this.setState({ filesDeleted: deleted });
-        currFiles.splice(index, 1);
-        this.handleChange(currFiles);
+        confirmDialog(fI18n.t("frontend:file.confirmRemove")).then(()=>{
+            const currFiles = this.props.value ? this.props.value.slice() : [];
+            const deleted = this.state.filesDeleted;
+            deleted.push(currFiles[index]);
+            this.setState({ filesDeleted: deleted });
+            currFiles.splice(index, 1);
+            this.handleChange(currFiles);
+        }).catch(() =>{
+            this.props._reloadProps();
+        })
     };
 
     public handleChange(currFiles: IFile[]) {

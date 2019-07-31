@@ -85,6 +85,7 @@ export const lang = {
             fileNotUploadedYet: "Plik jeszcze nie został załadowany",
             size: "Rozmiar",
             dimensions: "Wymiary",
+            confirmRemove: "Czy na pewno chesz usunąć plik ?",
         },
     },
 };
