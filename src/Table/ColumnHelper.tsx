@@ -392,6 +392,11 @@ export default class ColumnHelper {
         return this;
     }
 
+    public default(value: string | number) {
+        this.data.default = value as string;
+        return this;
+    }
+
     public set(el: Partial<IColumnData>): ColumnHelper {
         this.data = { ...this.data, ...el };
         return this;
