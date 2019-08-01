@@ -14,7 +14,8 @@ import { PreviewModal } from "./PreviewModal";
 import "./FilesLists.sass";
 import { download } from "../Downloader";
 import { alertDialog } from "../AlertDialog";
-import {confirmDialog} from "../ConfirmDialog";
+import { confirmDialog } from "../ConfirmDialog";
+import { RelativePositionPresets } from "../Positioner";
 
 export interface IFile {
     key: number;
@@ -105,17 +106,20 @@ export class FileListField extends React.Component<IFileListProps, any> {
         this.handleChange(currFiles);
     };
 
-    public handleFileRemove = (index: number) => {
-        confirmDialog(fI18n.t("frontend:file.confirmRemove")).then(()=>{
-            const currFiles = this.props.value ? this.props.value.slice() : [];
-            const deleted = this.state.filesDeleted;
-            deleted.push(currFiles[index]);
-            this.setState({ filesDeleted: deleted });
-            currFiles.splice(index, 1);
-            this.handleChange(currFiles);
-        }).catch(() =>{
-            this.props._reloadProps();
+    public handleFileRemove = (index: number, el: HTMLAnchorElement) => {
+        confirmDialog(fI18n.t("frontend:file.confirmRemove"), {
+            target: () => el,
+            relativePositionConf: RelativePositionPresets.bottomRight,
         })
+            .then(() => {
+                const currFiles = this.props.value ? this.props.value.slice() : [];
+                const deleted = this.state.filesDeleted;
+                deleted.push(currFiles[index]);
+                this.setState({ filesDeleted: deleted });
+                currFiles.splice(index, 1);
+                this.handleChange(currFiles);
+            })
+            .catch(() => {});
     };
 
     public handleChange(currFiles: IFile[]) {
@@ -141,7 +145,6 @@ export class FileListField extends React.Component<IFileListProps, any> {
         } else {
             const el = { ...file };
             el.path = this.props.transformFilePath(el);
-
 
             el.path = globalTransformFilePath(el);
 
@@ -205,7 +208,13 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                   <div className="w-file-list-size">{formatBytes(el.size)}</div>
                                   {editable && (
                                       <div className="w-file-list-remove">
-                                          <a onClick={() => this.handleFileRemove(index)}>
+                                          <a
+                                              onClick={(e) => {
+                                                  e.persist();
+                                                  this.handleFileRemove(index, e.nativeEvent
+                                                      .target as HTMLAnchorElement);
+                                              }}
+                                          >
                                               <Icon name={"Delete"} />{" "}
                                           </a>
                                       </div>

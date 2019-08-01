@@ -6,7 +6,7 @@ interface ISortableImageList {
     files: IFile[];
     itemStyle: React.CSSProperties;
     onClick: (index: number) => any;
-    onDelete: (index: number) => any;
+    onDelete: (index: number, el: HTMLAnchorElement) => any;
     editable: boolean;
     transformFilePath?: (file: IFile) => string;
 }

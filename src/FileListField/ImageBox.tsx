@@ -12,7 +12,7 @@ interface IImageBoxProps {
     style: React.CSSProperties;
     onClick: (index: number) => any;
     _index: number;
-    onDelete: (index: number) => any;
+    onDelete: (index: number, el: HTMLAnchorElement) => any;
     editable: boolean;
     transformFilePath?: (file: IFile) => string;
 }
@@ -63,7 +63,9 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
                                     <a
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            props.onDelete(props._index);
+                                            e.persist();
+                                            props.onDelete(props._index, e.nativeEvent
+                                                .target as HTMLAnchorElement);
                                         }}
                                         className="w-gallery-delete"
                                     >
