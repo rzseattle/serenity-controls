@@ -7,6 +7,7 @@ export const lang = {
         print: "Drukuj",
         download: "Pobierz",
         downloading: "Trwa pobieranie",
+        total: 'Ogółem',
 
         fields: {
             select: {

@@ -7,6 +7,8 @@ export const lang = {
         print: "Print",
         download: "Download",
         downloading: "Downloading",
+        total: 'Total',
+
         fields: {
             select: {
                 choose: "Choose",
