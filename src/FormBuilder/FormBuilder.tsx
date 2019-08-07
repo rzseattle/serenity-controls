@@ -59,6 +59,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
     public render() {
         const { fields, form, formNamespace } = this.props;
         const { currentValues } = this.state;
+
         return (
             <div className="w-form-builder">
                 {fields.map((field) => {
@@ -78,7 +79,11 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
                             }}
                             {...(field.options ? { options: field.options } : {})}
                             value={
-                                currentValues[field.name] || (field.default !== "" ? field.default : [])
+                                currentValues[field.name] !== null
+                                    ? currentValues[field.name]
+                                    : field.default !== ""
+                                    ? field.default
+                                    : []
                             } /*help={field.default}*/
                             {...(form
                                 ? form(
