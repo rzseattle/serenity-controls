@@ -12,6 +12,8 @@ interface INumericFilterProps extends IFilterProps {
         showFilterOptions?: boolean;
         disableAutoFocus?: boolean;
         disableLikeFilter?: boolean;
+        defaultValue?: string;
+        defaultFilter?: string;
     };
 }
 
@@ -26,6 +28,13 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     }
 
     public componentDidMount(): void {
+        if(this.props.config.defaultValue) {
+            this.input1.value = this.props.config.defaultValue;
+        }
+        if(this.props.config.defaultFilter) {
+            this.setState({option: this.props.config.defaultFilter});
+        }
+
         if (!this.props.config.disableAutoFocus) {
             setTimeout(() => {
                 this.input1.focus();
@@ -73,7 +82,7 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     };
 
     public handleKeyPress = (e: React.KeyboardEvent) => {
-        console.log(e.key)
+        console.log(e.key);
         if (e.key === "Enter") {
             this.handleApply();
         }
