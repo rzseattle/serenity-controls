@@ -8,7 +8,11 @@ export const lang = {
         download: "Download",
         downloading: "Downloading",
         total: 'Total',
-
+        statuses: {
+            kindlyApproved: 'Kindly approved',
+            accepted: 'Approved',
+            notAccepted: 'Not approved'
+        },
         fields: {
             select: {
                 choose: "Choose",

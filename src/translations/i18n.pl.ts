@@ -8,7 +8,11 @@ export const lang = {
         download: "Pobierz",
         downloading: "Trwa pobieranie",
         total: 'Ogółem',
-
+        statuses: {
+            kindlyApproved: 'Uznano grzecznościowo',
+            accepted: 'Uznano',
+            notAccepted: 'Nie uznano'
+        },
         fields: {
             select: {
                 choose: "Wybierz",
