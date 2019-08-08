@@ -11,7 +11,8 @@ export const lang = {
         statuses: {
             kindlyApproved: 'Kindly approved',
             accepted: 'Approved',
-            notAccepted: 'Not approved'
+            notAccepted: 'Not approved',
+            total: 'Total',
         },
         fields: {
             select: {
