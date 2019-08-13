@@ -12,7 +12,8 @@ export const lang = {
             kindlyApproved: 'Uznano grzecznościowo',
             accepted: 'Uznano',
             notAccepted: 'Nie uznano',
-            total: 'Sumarycznie',
+            completed: 'Zrealizowano',
+            acceptedTotalPercentage: 'Procent uznanych',
         },
         fields: {
             select: {
