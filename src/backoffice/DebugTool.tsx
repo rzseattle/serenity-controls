@@ -10,10 +10,12 @@ import { ideConnector } from "./IDEConnector";
 import { Modal } from "../Modal";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { RouteVisualization } from "./RouteVisualization";
+import { Comm } from "../../lib/lib";
 
 const DebugTool = () => {
     return (
         <div className="w-debug-tool">
+            <Cache />
             <StoryBookHelper />
             <JSON2TypescriptHelper />
             <RoutingVisualHelper />
@@ -21,6 +23,20 @@ const DebugTool = () => {
                 <Icon name={"Code"} />
             </Tooltip>
         </div>
+    );
+};
+
+const Cache = () => {
+    return (
+        <span onClick={() => {
+
+            Comm._post("/utils/developer/cache/remove").then(() => {
+                console.log("Cache deleted");
+            });
+
+        }}>
+            <Icon name={"EraseTool"} />
+        </span>
     );
 };
 
@@ -126,9 +142,7 @@ const RouteInfo = ({ info }: { info: any }) => {
                             {/*<PrintJSON json={info.props[urlIndex]} />*/}
                             <div className="w-debug-tool-props">
                                 <React.Suspense fallback={<LoadingIndicator />}>
-                                    <PrintJSON
-                                        json={info.props[urlIndex]}
-                                    />
+                                    <PrintJSON json={info.props[urlIndex]} />
                                 </React.Suspense>
                             </div>
                         </>
@@ -164,7 +178,7 @@ const JSON2TypescriptHelper = () => {
             </span>
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">
-                    <iframe src="https://transform.now.sh/json-to-ts-interface/" />
+                    <iframe src="https://transform.tools/json-to-typescript" />
                 </div>
             </Modal>
         </>
