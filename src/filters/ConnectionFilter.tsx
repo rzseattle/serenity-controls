@@ -3,6 +3,7 @@ import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 import { ConnectionsField, IConnectionChangeEvent } from "../ConnectionsField";
 import "./ConnectionField.sass";
+import { toOptions } from "../fields/Utils";
 
 interface IConnectionFilterProps extends IFilterProps {
     config: {
@@ -21,10 +22,11 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
     }
 
     public getValue() {
+
         return {
             field: this.props.field,
-            value: this.state.searchValue[0],
-            condition: "=",
+            value: this.state.searchValue.length > 0 ? this.state.searchValue : null,
+            condition: "IN",
             caption: this.props.caption,
             labelCaptionSeparator: " :",
             label: this.state.searchLabel,
@@ -32,10 +34,11 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
     }
 
     public handleChange = (event: IConnectionChangeEvent) => {
+
         this.setState(
             {
-                searchValue: event.value,
-                searchLabel: event.items.length > 0 ? event.items[0].label : null,
+                searchValue: event.items.map(el => el.value),
+                searchLabel: event.items.map(el => el.label).join(", "),
             },
             () => {
                 if (this.props.onChange != null) {
