@@ -36,7 +36,7 @@ var getLoaders = function(production, input) {
                                         useBuiltIns: "entry",
                                         modules: false,
                                         forceAllTransforms: production,
-                                        corejs: "3"
+                                        corejs: "3",
                                     },
                                 ],
                                 "@babel/preset-typescript",
@@ -61,7 +61,7 @@ var getLoaders = function(production, input) {
             {
                 test: /\.(js|map)$/,
                 use: ["source-map-loader"],
-                enforce: "pre"
+                enforce: "pre",
             },
 
             /*{
@@ -133,7 +133,7 @@ var getLoaders = function(production, input) {
                         loader: "sass-loader",
                         query: {
                             sourceMap: true,
-                            includePaths: ["node_modules"],
+                            sassOptions: { includePaths: ["node_modules"] },
                         },
                     },
                 ],
