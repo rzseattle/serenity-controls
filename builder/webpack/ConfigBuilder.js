@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-var {resolve, basename} = require("path");
+var { resolve, basename } = require("path");
 const fs = require("fs");
 const path = require("path");
 
@@ -25,12 +25,14 @@ let configDefaults = {
     NODE_CACHE_DIR: "node_modules/.cache",
 };
 
-module.exports = function (input) {
+module.exports = function(input) {
     const dllFile = resolve(input.BASE_PATH, "./public/assets/dist/dll-manifest.json");
 
     const GetLoaders = require("./Loaders.js");
     if (process.argv.includes("--env.mode=dll") && false) {
         //if (process.env.mode == "dll") {
+
+
         return {
             mode: "production",
             devtool: "cheap-module-eval-source-map",
@@ -38,6 +40,7 @@ module.exports = function (input) {
             resolve: {
                 extensions: [".js", ".json", ".css", ".ts", ".tsx"],
                 modules: [__dirname, "node_modules"],
+
             },
 
             /*entry: {
@@ -107,7 +110,7 @@ module.exports = function (input) {
                     new OptimizeCSSAssetsPlugin({
                         cssProcessorOptions: {
                             "postcss-safe-parser": true,
-                            discardComments: {removeAll: true},
+                            discardComments: { removeAll: true },
                             zindex: false,
                         },
                     }),
@@ -118,10 +121,14 @@ module.exports = function (input) {
 
     input = Object.assign(configDefaults, input);
 
+    let alias = {};
     if (input.PRODUCTION) {
         process.env.NODE_ENV = "production";
     } else {
         process.env.NODE_ENV = "development";
+        alias = {
+            "react-dom": "@hot-loader/react-dom",
+        };
     }
 
     if (input.BROWSERS == null) {
@@ -137,6 +144,7 @@ module.exports = function (input) {
             extensions: [".js", ".ts", ".tsx"],
             unsafeCache: true,
             modules: ["node_modules"],
+            alias,
         },
     };
 
@@ -144,7 +152,7 @@ module.exports = function (input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = ['react-hot-loader/patch', "babel-polyfill", input.ENTRY_POINTS[i]];
+        tmpEntry[i] = ["react-hot-loader/patch", "babel-polyfill", input.ENTRY_POINTS[i]];
     }
 
     let tmp;
@@ -215,7 +223,6 @@ module.exports = function (input) {
         ]);*/
 
 
-
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
     if (!input.PRODUCTION && false) {
@@ -284,7 +291,7 @@ module.exports = function (input) {
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
                         "postcss-safe-parser": true,
-                        discardComments: {removeAll: true},
+                        discardComments: { removeAll: true },
                         zindex: false,
                     },
                 }),
