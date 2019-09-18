@@ -144,7 +144,7 @@ module.exports = function (input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = ["babel-polyfill", input.ENTRY_POINTS[i]];
+        tmpEntry[i] = ['react-hot-loader/patch', "babel-polyfill", input.ENTRY_POINTS[i]];
     }
 
     let tmp;

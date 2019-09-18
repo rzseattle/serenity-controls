@@ -14,7 +14,9 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
             return path.resolve(BASE_PATH, info.absoluteResourcePath).replace(BASE_PATH, "");
         },
     };
-    let devEntries = [];
+    let devEntries = [
+        'react-hot-loader/patch'
+    ];
 
     for (let i in ENTRY_POINTS) {
         devEntries.push(ENTRY_POINTS[i]);
