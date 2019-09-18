@@ -94,7 +94,7 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
                 if (type == "template") {
                     fs.writeFileSync(BASE_PATH + file, "Automated generated template: " + file);
                 } else if (type == "component") {
-                    fs.writeFileSync(BASE_PATH + file, fs.readFileSync(path.resolve(__dirname, "../templates/component.tsx")));
+                    fs.writeFileSync(BASE_PATH + file, "template todo!");
                 }
 
                 response.send(JSON.stringify({ status: "OK" }));
