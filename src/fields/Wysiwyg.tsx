@@ -114,7 +114,7 @@ export class Wysiwyg extends React.Component<IWysiwygProps, any> {
         if (this.props.editable) {
             this.initializeEditor();
         }
-        console.clear();
+
     }
 
     public componentDidUpdate(prevProps: any, prevState: any) {
