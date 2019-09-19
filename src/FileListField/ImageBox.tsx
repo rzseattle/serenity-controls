@@ -30,7 +30,7 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
     const style = props.style || {};
 
     // @ts-ignore
-    const preview = file.nativeObj && file.nativeObj.preview ? file.nativeObj.preview : false;
+    const preview = file.nativeObj && file.nativeObj.preview ? file.nativeObj.preview : undefined;
     const isElImage = isImage(file.name) || isImage(file.path);
     return (
         <div style={style}>
