@@ -12,7 +12,6 @@
         "rebuild": "rimraf lib/* && yarn run build:babel && node sass-copy.js && yarn run build:tsc",
         "postinstall": "rimraf lib/* && yarn run build:babel && node sass-copy.js",
         "prepare": "yarn run build:tsc",
-
         "storybook": "start-storybook -c ./docs/stories/.storybook -s ./stories/public_assets -p 6006",
         "server": "nodemon ./stories/server.js",
         "website:build-all": "rimraf ./website-build && yarn run website:build-storybook && yarn run website:build-wiki && yarn run website:build-api-doc && yarn run website:build-page",
@@ -80,7 +79,7 @@
         "optimize-css-assets-webpack-plugin": "^5.0.3",
         "per-env": "^1.0.2",
         "prettier": "1.18.2",
-        "qs": "^6.8.0",
+        "qs": "^6.9.0",
         "react": "^16.9.0",
         "react-addons-shallow-compare": "^15.6.2",
         "react-checkbox-tree": "^1.5.1",
@@ -146,7 +145,7 @@
         "@types/uuid": "^3.4.5",
         "busboy": "^0.3.1",
         "busboy-body-parser": "^0.3.2",
-        "chokidar": "^3.1.0",
+        "chokidar": "^3.1.1",
         "dts-gen": "^0.5.8",
         "express": "^4.17.1",
         "express-fileupload": "^1.1.6-alpha.4",
@@ -158,7 +157,7 @@
         "tslint": "^5.20.0",
         "tslint-react": "^4.1.0",
         "typedoc": "^0.15.0",
-        "webpack-bundle-analyzer": "^3.5.0"
+        "webpack-bundle-analyzer": "^3.5.1"
     },
     "resolutions": {}
 }
