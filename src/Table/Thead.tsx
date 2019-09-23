@@ -5,7 +5,6 @@ import { Modal } from "../Modal";
 import { RelativePositionPresets } from "../Positioner";
 import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
 import { Icon } from "../Icon";
-import { PrintJSON } from "../PrintJSON";
 import Tooltip from "../Tooltip/Tooltip";
 
 interface ITheadProps {
@@ -19,101 +18,63 @@ interface ITheadProps {
     onFilterChanged: (value: IFilterValue) => any;
 }
 
-export default class Thead extends React.PureComponent<ITheadProps, any> {
-    public tooltipCleanup: any;
+export default React.memo((props: ITheadProps) => {
+    return (
+        <thead>
+            <tr>
+                {props.selectable ? (
+                    <th className="w-table-selection-header" onClick={props.onCheckAllClicked}>
+                        <input type="checkbox" checked={props.allChecked} />
+                    </th>
+                ) : null}
+                {props.columns
+                    .filter((el) => el !== null && el.display === true)
+                    .map((column, index) => {
+                        const Component = column.filter.length > 0 ? withFilterOpenLayer(column.filter) : null;
+                        const classes = [];
+                        if (props.order[column.field] !== undefined) {
+                            classes.push("w-table-sorted w-table-sorted-" + props.order[column.field].dir);
+                        }
+                        if (props.filters[column.field] !== undefined) {
+                            classes.push("w-table-filtered");
+                        }
+                        return (
+                            <th
+                                key={index}
+                                style={{ width: column.width }}
+                                className={classes.join(" ")}
+                                onClick={(e) => {
+                                    if (column.isSortable) {
+                                        props.onCellClicked(index, e);
+                                    }
+                                }}
+                                /*onMouseEnter={this.handleMouseEnter.bind(this, index)}*/
+                                /*onMouseLeave={this.handleMouseLeave.bind(this, index)}*/
+                            >
+                                {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
 
-    constructor(props: ITheadProps) {
-        super(props);
-        this.tooltipCleanup = null;
-    }
-
-    /*
-    public shouldComponentUpdate(nextProps, nextState) {
-        return !deepIsEqual(
-            [this.props.columns, this.props.filters, this.props.order, this.props.allChecked, this.props.selectable],
-            [nextProps.columns, nextProps.filters, nextProps.order, nextProps.allChecked, nextProps.selectable],
-        );
-    }
-
-    public handleMouseEnter(index: number, e) {
-        e.stopPropagation();
-            const el = this.props.columns.filter((column: IColumnData) => column !== null && column.display === true)[index];
-        const node = ReactDOM.findDOMNode(this).querySelector(`th:nth-child(${index + 1})`);
-
-        if (el.header.tooltip && this.tooltipCleanup === null) {
-            this.tooltipCleanup = tooltip(el.header.tooltip, {
-                target: () => node,
-                offsetY: -10,
-            });
-
-    }
-
-    public handleMouseLeave(index, e) {
-        const el = this.props.columns.filter((el: IColumnData) => el !== null && el.display === true)[index];
-        if (el.header.tooltip) {
-            this.tooltipCleanup();
-            this.tooltipCleanup = null;
-        }
-    }
-    */
-    public render() {
-        return (
-            <thead>
-                <tr>
-                    {this.props.selectable ? (
-                        <th className="w-table-selection-header" onClick={this.props.onCheckAllClicked}>
-                            <input type="checkbox" checked={this.props.allChecked} />
-                        </th>
-                    ) : null}
-                    {this.props.columns
-                        .filter((el) => el !== null && el.display === true)
-                        .map((column, index) => {
-                            const Component = column.filter.length > 0 ? withFilterOpenLayer(column.filter) : null;
-                            const classes = [];
-                            if (this.props.order[column.field] !== undefined) {
-                                classes.push("w-table-sorted w-table-sorted-" + this.props.order[column.field].dir);
-                            }
-                            if (this.props.filters[column.field] !== undefined) {
-                                classes.push("w-table-filtered");
-                            }
-                            return (
-                                <th
-                                    key={index}
-                                    style={{ width: column.width }}
-                                    className={classes.join(" ")}
-                                    onClick={(e) => {
-                                        if (column.isSortable) {
-                                            this.props.onCellClicked(index, e);
-                                        }
-                                    }}
-                                    /*onMouseEnter={this.handleMouseEnter.bind(this, index)}*/
-                                    /*onMouseLeave={this.handleMouseLeave.bind(this, index)}*/
-                                >
-                                    {/*{el.order ? <i className={'fa fa-' + (el.order == 'asc' ? 'arrow-down' : 'arrow-up')}></i> : ''}*/}
-
-                                    {column.header.tooltip ? (
-                                        <Tooltip
-                                            relativeSettings={RelativePositionPresets.topMiddle}
-                                            content={column.header.tooltip}
-                                        >
-                                            {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
-                                        </Tooltip>
-                                    ) : (
-                                        <>
-                                            {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
-                                        </>
-                                    )}
-                                    {column.filter.length > 0 && (
-                                        <Component showApply={true} onApply={this.props.onFilterChanged} />
-                                    )}
-                                </th>
-                            );
-                        })}
-                </tr>
-            </thead>
-        );
-    }
-}
+                                {column.header.tooltip ? (
+                                    <Tooltip
+                                        relativeSettings={RelativePositionPresets.topMiddle}
+                                        content={column.header.tooltip}
+                                    >
+                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                    </Tooltip>
+                                ) : (
+                                    <>
+                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                    </>
+                                )}
+                                {column.filter.length > 0 && (
+                                    <Component showApply={true} onApply={props.onFilterChanged} />
+                                )}
+                            </th>
+                        );
+                    })}
+            </tr>
+        </thead>
+    );
+});
 
 const withFilterOpenLayer = (filters: IFilter[]) => {
     return class FilterOpenableContainer extends React.PureComponent<any, any> {

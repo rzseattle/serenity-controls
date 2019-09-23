@@ -72,6 +72,7 @@
         max-height: 500px
 
         &.w-table-presenter-hidden
+            width: 0
             max-height: 0
             padding: 0
             .w-table-presenter-inner
@@ -167,7 +168,7 @@
                         margin-right: 0
 
         > tbody
-            max-height: 500px
+            //max-height: 500px
             color: #111111
 
             //To jest fixed
@@ -324,7 +325,6 @@
 
             width: 100%
             > thead
-                width: calc(100% - 18px)
                 display: table
                 table-layout: fixed
 
@@ -354,12 +354,15 @@
                         .w-table-footer-drag
                             display: block
 
-    .fixed
+    .fixed-tbody
         display: block
-        height: 400px
-        overflow: auto
-        width: 100%
+        //for footer
+        height: calc( 100% - 40px )
+        overflow-y: auto
+        border-bottom: solid 1px grey
+
 
     .fixed-th
+        display: block
         tr
             display: block

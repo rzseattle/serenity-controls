@@ -18,6 +18,7 @@ import TextFilter from "../filters/TextFilter";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { confirmDialog } from "../ConfirmDialog";
 import TableFiltersOverlay from "./TableFiltersOverlay";
+import { PrintJSON } from "../PrintJSON";
 
 export interface IDataQuery {
     columns: IColumnData[];
@@ -67,6 +68,7 @@ interface ITableProps {
     data?: ITableDataInput;
     infoRow?: ICellTemplate;
     groupBy?: IGroupByData[];
+    fixedLayout?: boolean;
 }
 
 interface ITableState {
@@ -87,6 +89,10 @@ interface ITableState {
     selection: any[];
     tooltipData: any;
     isFilterPanelVisible: boolean;
+    fixedLayoutData: {
+        widths: number[];
+        isScrolled: boolean;
+    };
 }
 
 export class Table extends React.Component<ITableProps, ITableState> {
@@ -104,6 +110,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         infoRow: null,
         onSelectionChange: null,
         groupBy: [],
+        fixedLayout: false,
     };
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
@@ -137,14 +144,20 @@ export class Table extends React.Component<ITableProps, ITableState> {
             onPage: this.props.onPage,
             currentPage: 1,
             countAll: this.props.data.countAll,
-            fixedLayout: false, // props.fixedLayout,
+            fixedLayout: props.fixedLayout,
             columns: processedColumns,
             // bodyHeight: this.props.initHeight,
             allChecked: false,
             selection: [],
             tooltipData: null,
             isFilterPanelVisible: false,
+            fixedLayoutData: {
+                widths: [],
+                isScrolled: false,
+            },
         };
+
+        console.log(this.state.fixedLayout, "this.state.fixedLayout");
 
         // helpers
         this.tmpDragStartY = 0;
@@ -193,11 +206,15 @@ export class Table extends React.Component<ITableProps, ITableState> {
                 // bodyHeight: state.bodyHeight,
                 filters: state.filters,
                 order: state.order,
-                fixedLayout: state.fixedLayout,
+                //fixedLayout: state.fixedLayout,
             });
         }
         if (prevProps.remoteURL != this.props.remoteURL) {
             this.load();
+        }
+
+        if (this.state.fixedLayout) {
+            this.applyFixedLayout();
         }
     }
 
@@ -207,23 +224,27 @@ export class Table extends React.Component<ITableProps, ITableState> {
         }
 
         if (this.state.fixedLayout) {
-            const th = this.tableRef.querySelectorAll("thead>tr>th");
-
-            for (let i = 0; i < th.length; i++) {
-                this.columnWidths.push(th[i].getBoundingClientRect().width);
-                //var cs = window.getComputedStyle(z, null);
-                // @ts-ignore
-                th[i].style.width = this.columnWidths[i] - 1 + "px";
-                //console.log();
-                //th[i].styles.width = this.columnWidths[i] + "px";
-            }
-
-            this.tableRef.querySelector("thead").classList.add("fixed-th");
-            this.tableRef.querySelector("tbody").classList.add("fixed");
-
-            console.log(this.columnWidths);
+            this.applyFixedLayout();
         }
     }
+
+    private applyFixedLayout = () => {
+        if (this.state.fixedLayoutData.widths.length > 0) {
+            return;
+        }
+        const th = this.tableRef.querySelectorAll("thead>tr>th");
+        const thead = this.tableRef.querySelector("thead");
+        const tbody = this.tableRef.querySelector("tbody");
+
+        const tmpWidths = [];
+        for (let i = 0; i < th.length; i++) {
+            tmpWidths.push(th[i].getBoundingClientRect().width);
+        }
+
+        thead.classList.add("fixed-th");
+        tbody.classList.add("fixed-tbody");
+        this.setState({ fixedLayoutData: { isScrolled: this.state.fixedLayoutData.isScrolled, widths: tmpWidths } });
+    };
 
     /*shouldComponentUpdate(nextProps, nextState) {
 
@@ -379,7 +400,30 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         selection: [],
                         allChecked: false,
                     },
-                    callback,
+                    () => {
+                        if (callback) {
+                            callback();
+                        }
+                        if (this.state.fixedLayout) {
+                            //checking if table have visible scrollbar
+                            const tbody = this.tableRef.querySelector("tbody");
+                            let lastTr = tbody.childNodes[tbody.childNodes.length - 1] as Element;
+
+                            if (lastTr) {
+                                const lastTrData = lastTr.getBoundingClientRect();
+                                const tbodyData = tbody.getBoundingClientRect();
+                                if (lastTrData.top + lastTrData.height > tbodyData.top + tbodyData.height) {
+                                    this.setState({
+                                        fixedLayoutData: { ...this.state.fixedLayoutData, isScrolled: true },
+                                    });
+                                } else {
+                                    this.setState({
+                                        fixedLayoutData: { ...this.state.fixedLayoutData, isScrolled: false },
+                                    });
+                                }
+                            }
+                        }
+                    },
                 );
             }
             if (this.props.onDataChange) {
@@ -603,6 +647,17 @@ export class Table extends React.Component<ITableProps, ITableState> {
 
     public render() {
         const columns = deepCopy(this.state.columns);
+        const scrollBarWidth = 15;
+        let fixedWithScrollDiff = 0;
+        if (this.state.fixedLayoutData.isScrolled) {
+            fixedWithScrollDiff = scrollBarWidth / this.state.fixedLayoutData.widths.length;
+        }
+        let topHeight = 0;
+        if(this.state.fixedLayout){
+            if(Object.entries(this.state.order).length > 0 || Object.entries(this.state.filters).length > 0){
+                topHeight = 45;
+            }
+        }
 
         return (
             <div
@@ -611,6 +666,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                 onKeyDown={this.handleKeyDown}
                 ref={(el) => (this.containerRef = el)}
             >
+
                 <div className="w-table-loader">
                     <LoadingIndicator />
                 </div>
@@ -622,8 +678,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         orderDelete={this.handleOrderDelete}
                     />
                 </div>
-
-                <table ref={(el) => (this.tableRef = el)}>
+                <table ref={(el) => (this.tableRef = el)} className={"w-table-" + this.hashCode}>
                     {this.props.showHeader && (
                         <Thead
                             selectable={this.props.selectable}
@@ -693,6 +748,34 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         onChange={(filter) => this.handleFilterChanged(filter)}
                     />
                 )}
+
+                {this.state.fixedLayout && <style>
+                    {this.state.fixedLayoutData.widths.map(
+                        (el, index) =>
+                            ".w-table-" +
+                            this.hashCode +
+                            ">thead>tr>th:nth-child(" +
+                            (index + 1) +
+                            "), " +
+                            ".w-table-" +
+                            this.hashCode +
+                            ">tbody>tr>td:nth-child(" +
+                            (index + 1) +
+                            "){ width: " +
+                            (el - fixedWithScrollDiff) +
+                            "px !important; }\n",
+                    )}
+                    .w-table-{this.hashCode}
+                        {"{height: calc( 100% - " + topHeight + "px );}"}
+                    {this.state.fixedLayoutData.isScrolled && (
+                        <>
+                            .w-table-{this.hashCode} .fixed-th
+                            {"{"}
+                            width: calc( 100% - {scrollBarWidth}px ){"}"}
+                        </>
+                    )}
+                </style>}
+
             </div>
         );
     }
