@@ -647,10 +647,11 @@ export class Table extends React.Component<ITableProps, ITableState> {
 
     public render() {
         const columns = deepCopy(this.state.columns);
-        const scrollBarWidth = 15;
+        const scrollBarWidth = 10;
         let fixedWithScrollDiff = 0;
         if (this.state.fixedLayoutData.isScrolled) {
             fixedWithScrollDiff = scrollBarWidth / this.state.fixedLayoutData.widths.length;
+            console.log(fixedWithScrollDiff,"here");
         }
         let topHeight = 0;
         if(this.state.fixedLayout){
@@ -678,7 +679,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         orderDelete={this.handleOrderDelete}
                     />
                 </div>
-                <table ref={(el) => (this.tableRef = el)} className={"w-table-" + this.hashCode}>
+                <table ref={(el) => (this.tableRef = el)} className={"w-table-" + this.hashCode + (this.state.fixedLayout? " w-table-fixed":"")}>
                     {this.props.showHeader && (
                         <Thead
                             selectable={this.props.selectable}
@@ -768,6 +769,13 @@ export class Table extends React.Component<ITableProps, ITableState> {
                     .w-table-{this.hashCode}
                         {"{height: calc( 100% - " + topHeight + "px );}"}
                     {this.state.fixedLayoutData.isScrolled && (
+                        <>
+                            .w-table-{this.hashCode} .fixed-th
+                            {"{"}
+                            width: calc( 100% - {scrollBarWidth}px ){"}"}
+                        </>
+                    )}
+                    {this.props.showFooter && (
                         <>
                             .w-table-{this.hashCode} .fixed-th
                             {"{"}
