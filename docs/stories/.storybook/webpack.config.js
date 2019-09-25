@@ -39,44 +39,37 @@ module.exports = async ({ config, mode }) => {
         test: [/\.tsx/, /\.ts$/],
         loaders: [
             {
-                loader: "awesome-typescript-loader",
-                query: {
-                    configFileName: path.resolve(__dirname, "../../../builder/webpack/tsconfig.json"),
-                    cacheDirectory: path.resolve(__dirname, "../../../node_modules/.cache/awcache"),
+                loader: "babel-loader",
+                options: {
 
-                    useCache: true,
-                    noImplicitAny: true,
-                    transpileOnly: true,
-                    forceIsolatedModules: true,
-                    reportFiles: ["docs/stories/**/*.{ts,tsx}", "src/**/*.{ts,tsx}"],
-                    useBabel: true,
-                    babelCore: "@babel/core",
-                    babelOptions: {
-                        babelrc: false,
-                        retainLines: true,
-                        exclude: /(node_modules|bower_components)/,
-                        presets: [
-                            [
-                                "@babel/preset-env",
-                                {
-                                    targets: {
-                                        browsers: [
-                                            "last 1 Chrome versions",
-                                            "last 1 Firefox versions",
-                                            "last 1 Edge versions",
-                                        ],
-                                        node: "current",
-                                    },
-                                    useBuiltIns: "entry",
-                                    corejs: "3",
-                                    modules: false,
+                    retainLines: true,
+
+                    babelrc: false,
+                    retainLines: true,
+                    exclude: /(node_modules|bower_components)/,
+                    presets: [
+                        [
+                            "@babel/preset-env",
+                            {
+                                targets: {
+                                    browsers: [
+                                        "last 1 Chrome versions",
+                                        "last 1 Firefox versions",
+                                        "last 1 Edge versions",
+                                    ],
+                                    node: "current",
                                 },
-                            ],
-                            "@babel/react",
+                                useBuiltIns: "entry",
+                                corejs: "3",
+                                modules: false,
+                            },
                         ],
+                        "@babel/preset-typescript",
+                        "@babel/react",
+                    ],
 
-                        plugins: [
-                            /*[
+                    plugins: [
+                        /*[
                               "react-css-modules",
                               {
                                   context,
@@ -90,15 +83,13 @@ module.exports = async ({ config, mode }) => {
                               },
                           ],*/
 
-                            "transform-react-constant-elements",
-                            "transform-react-inline-elements",
-                            "@babel/plugin-syntax-jsx",
-                            "@babel/plugin-syntax-dynamic-import",
-                            "@babel/proposal-class-properties",
-                            "@babel/proposal-object-rest-spread",
-                            "react-hot-loader/babel",
-                        ],
-                    },
+                        "@babel/plugin-syntax-jsx",
+                        "@babel/plugin-syntax-dynamic-import",
+
+                        ["@babel/proposal-class-properties", { loose: true }],
+                        "@babel/proposal-object-rest-spread",
+                        "react-hot-loader/babel",
+                    ],
                 },
             },
             {

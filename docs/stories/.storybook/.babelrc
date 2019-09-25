@@ -13,11 +13,10 @@
                 "corejs": "3"
             }
         ],
-        "@babel/react"
+        "@babel/react",
+        "@babel/preset-typescript"
     ],
     "plugins": [
-        "transform-react-constant-elements",
-        "transform-react-inline-elements",
         "@babel/plugin-syntax-jsx",
 
         "@babel/proposal-class-properties",
