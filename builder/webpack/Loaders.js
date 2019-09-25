@@ -44,8 +44,8 @@ var getLoaders = function(production, input) {
                             ],
 
                             plugins: [
-                                production && "@transform-react-constant-elements",
-                                production && "@transform-react-inline-elements",
+                                /*production && "@transform-react-constant-elements",
+                                production && "@transform-react-inline-elements",*/
                                 "@babel/plugin-syntax-jsx",
                                 "@babel/plugin-syntax-dynamic-import",
 
