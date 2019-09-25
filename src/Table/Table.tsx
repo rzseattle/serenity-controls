@@ -656,7 +656,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         let fixedWithScrollDiff = 0;
         if (this.state.fixedLayoutData.isScrolled) {
             fixedWithScrollDiff = scrollBarWidth / this.state.fixedLayoutData.widths.length;
-            console.log(fixedWithScrollDiff, "here");
+            //console.log(fixedWithScrollDiff, "here");
         }
         let topHeight = 0;
         if (this.state.fixedLayout) {
