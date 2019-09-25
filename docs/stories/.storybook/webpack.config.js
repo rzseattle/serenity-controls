@@ -1,7 +1,6 @@
 const path = require("path");
 const fs = require("fs");
 
-
 module.exports = async ({ config, mode }) => {
     config.resolve.extensions.push(".ts");
     config.resolve.extensions.push(".tsx");
@@ -19,7 +18,7 @@ module.exports = async ({ config, mode }) => {
                 loader: "sass-loader",
                 query: {
                     sourceMap: true,
-                    includePaths: ["node_modules"],
+                    sassOptions: { includePaths: ["node_modules"] },
                 },
             },
         ],
@@ -69,7 +68,7 @@ module.exports = async ({ config, mode }) => {
                                         node: "current",
                                     },
                                     useBuiltIns: "entry",
-                                    corejs: '3',
+                                    corejs: "3",
                                     modules: false,
                                 },
                             ],

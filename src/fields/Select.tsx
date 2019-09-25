@@ -16,6 +16,7 @@ import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import { Icon } from "../Icon";
 import { fI18n } from "../lib";
 import { toOptions } from "./Utils";
+import { HotkeysEvent } from "hotkeys-js";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
@@ -164,7 +165,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         this.handleChange(null);
     };
 
-    private onKeyDown = (keyName: string, e: React.KeyboardEvent, handle: any) => {
+
+    private onKeyDown = (keyName: string, e: KeyboardEvent, handle: HotkeysEvent) => {
         e.preventDefault();
         if (keyName == "up") {
             this.setState({ highlightedIndex: Math.max(0, this.state.highlightedIndex - 1) });
@@ -249,7 +251,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     private renderListBody = () => {
         const options = toOptions(this.props.options);
 
-        let heightDiff: number =
+        const heightDiff: number =
             options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
 
         return (
@@ -305,9 +307,15 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
         return (
-            <div className={"w-select"} style={props.style} onMouseLeave={() => {
-                this.setState({ highlightedIndex: -1 }, () => this.dynamicList?this.dynamicList.forceUpdate():null);
-            }}>
+            <div
+                className={"w-select"}
+                style={props.style}
+                onMouseLeave={() => {
+                    this.setState({ highlightedIndex: -1 }, () =>
+                        this.dynamicList ? this.dynamicList.forceUpdate() : null,
+                    );
+                }}
+            >
                 {this.props.mode === "dropdown" && (
                     <div
                         className={"w-select-result-presenter"}

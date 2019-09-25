@@ -101,7 +101,9 @@ export const Tree = (props: ICheckboxProps) => {
 
     return (
         <div className="w-tree">
-            <CheckboxTree
+            in developement
+            {/*<CheckboxTree
+
                 {...props}
                 icons={icons}
                 expandOnClick={true}
@@ -131,7 +133,7 @@ export const Tree = (props: ICheckboxProps) => {
                     }
                     setExpanded(expandend);
                 }}
-            />
+            />*/}
         </div>
     );
 };
