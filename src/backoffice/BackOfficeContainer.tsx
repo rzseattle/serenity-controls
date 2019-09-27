@@ -47,10 +47,6 @@ export class BackOfficeContainer extends React.Component<
         });
     };
 
-    public componentWillUnmount() {
-        BackofficeStore.unregisterDebugData(this.props.route);
-    }
-
     public render() {
         return (
             <>

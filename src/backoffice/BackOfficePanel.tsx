@@ -25,8 +25,8 @@ import { configGetAll } from "./Config";
 import { IPanelContext } from "./PanelContext";
 import { ICommand } from "../CommandBar";
 import "./BackOfficePanel.sass";
-
-
+import DebugCommLog from "./DebugCommLog";
+import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare var PRODUCTION: boolean;
@@ -51,7 +51,7 @@ interface IBackOfficePanelState {
     layout: "mobile" | "normal" | "large";
     loading: boolean;
     onlyBody: boolean;
-    contextState: any;
+    contextState: IBackOfficeStoreState;
     openedWindows: Array<{
         route: string;
         input: any;
@@ -306,6 +306,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                         </div>
                     )}
                     <div className="w-panel-body" style={{ position: "relative" }}>
+                        {!this.props.isSub && <DebugCommLog />}
                         {this.state.openedWindows.map((el, index) => {
                             return (
                                 <Modal
@@ -375,7 +376,6 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 value={null}
                                 autoFocus={true}
                                 mode="list"
-
                                 onChange={(e) => {
                                     this.setState({
                                         navigationWindowOpened: false,

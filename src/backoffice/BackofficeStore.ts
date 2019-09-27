@@ -3,31 +3,29 @@ import * as qs from "qs";
 import { Comm, CommEvents } from "../lib";
 import { router } from "./Router";
 import { IRouteElement } from "./interfaces/IRouteElement";
+import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
+import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";
 
 declare var window: any;
 declare var module: any;
 
 export interface IDebugDataEntry {
-    route: string;
-    props: any[];
-    urls: any[];
-    instances: number;
+    response: any;
+    input: any;
+    url: string;
     routeInfo: IRouteElement;
+    requestType: "view" | "ajax";
+    time: Date;
 }
 
-export type DebugDataListener = (data: { views: IDebugDataEntry[]; ajax: IDebugDataEntry[] }) => any;
+export type DebugDataListener = (data: IDebugDataEntry[]) => any;
 
 const externalInput: object = window.reactBackOfficeVar !== undefined ? window.reactBackOfficeVar : {};
 const browserInput = { basePath: "/", user: { login: "test@login.com", isDev: true }, ...externalInput };
 
-class BackofficeStore {
-    public static debugData: {
-        views: IDebugDataEntry[];
-        ajax: IDebugDataEntry[];
-    } = {
-        views: [],
-        ajax: [],
-    };
+class BackofficeStore implements IBackOfficestoreAPI {
+    public static debugLog: IDebugDataEntry[] = [];
+
     public static debugDataListeners: DebugDataListener[] = [];
     public static debugViewAjaxInProgress = true;
     public static registerDebugDataListener = (listener: DebugDataListener) => {
@@ -36,68 +34,33 @@ class BackofficeStore {
 
     public static debugDataChanged() {
         for (const listener of BackofficeStore.debugDataListeners) {
-            listener(this.debugData);
+            listener(this.debugLog);
         }
     }
 
-    public static registerDebugData(type: "views" | "ajax", url: string, routeElement: IRouteElement, props: any) {
-        if (type == "ajax") {
-            for (let index = 0; index < BackofficeStore.debugData.ajax.length; index++) {
-                const entry = BackofficeStore.debugData.ajax[index];
-                if (entry.route == routeElement._routePath) {
-                    BackofficeStore.debugData.ajax.splice(index, 1);
-                }
-            }
-
-            BackofficeStore.debugData[type].push({
-                urls: [url],
-                props: [props],
-                route: routeElement._routePath,
-                routeInfo: routeElement,
-                instances: 1,
-            });
-            if (BackofficeStore.debugData[type].length > 10) {
-                BackofficeStore.debugData[type] = BackofficeStore.debugData[type].slice(-10);
-            }
-        } else {
-            let exists = false;
-            for (const entry of BackofficeStore.debugData[type]) {
-                if (entry.route == routeElement._routePath) {
-                    exists = true;
-                    entry.urls.push(url);
-                    entry.props.push(props);
-                    entry.instances++;
-                }
-            }
-            if (!exists) {
-                BackofficeStore.debugData[type].push({
-                    urls: [url],
-                    props: [props],
-                    route: routeElement._routePath,
-                    routeInfo: routeElement,
-                    instances: 1,
-                });
-            }
-        }
-
+    public static cleanUpDebugData() {
+        BackofficeStore.debugLog = [];
         BackofficeStore.debugDataChanged();
     }
 
-    public static unregisterDebugData(url: string) {
-        for (let index = 0; index < BackofficeStore.debugData.views.length; index++) {
-            const entry = BackofficeStore.debugData.views[index];
-            for (let i = entry.urls.length - 1; i >= 0; i--) {
-                if (entry.urls[i] == url) {
-                    entry.instances--;
-                    if (entry.instances == 0) {
-                        BackofficeStore.debugData.views.splice(index as number, 1);
-                        break;
-                    }
+    public static registerDebugData(
+        type: "view" | "ajax",
+        url: string,
+        routeElement: IRouteElement,
+        response: any,
+        input: any,
+    ) {
+        BackofficeStore.debugLog.push({
+            url: url,
+            response: response,
+            routeInfo: routeElement,
+            requestType: type,
+            time: new Date(),
+            input: input ? input : {},
+        });
 
-                    entry.urls.splice(i, 1);
-                    entry.props.splice(i, 1);
-                }
-            }
+        if (BackofficeStore.debugLog.length > 10) {
+            BackofficeStore.debugLog = BackofficeStore.debugLog.slice(-10);
         }
         BackofficeStore.debugDataChanged();
     }
@@ -134,14 +97,11 @@ class BackofficeStore {
             this.dataUpdated();
         };
 
-        Comm.onStart.push((url, data, method) => {
+        Comm.onFinish.push((url, input, response, method) => {
             if (!BackofficeStore.debugViewAjaxInProgress) {
-                const routeData = router.getRouteInfo(url);
-                if (routeData !== null) {
-                    router.getRouteInfo(url).then((result) => {
-                        BackofficeStore.registerDebugData("ajax", url, result, data);
-                    });
-                }
+                router.getRouteInfo(url).then((routeInfo) => {
+                    BackofficeStore.registerDebugData("ajax", url, routeInfo, response, input);
+                });
             }
         });
 
@@ -158,7 +118,7 @@ class BackofficeStore {
         }
     }
 
-    public getState() {
+    public getState(): IBackOfficeStoreState {
         return {
             basePath: this.basePath,
             viewInput: this.viewInput,
@@ -189,13 +149,6 @@ class BackofficeStore {
     private currentPath = "";
     public changeView = (path: string, input: any = null, callback: () => any = null) => {
         const originalPath = path;
-        //console.log(this.currentPath + " => " + path);
-
-        if (path && false) {
-            // tutaj trzeba poradzić sobie ze śledzeniem odpalonych widoków
-            console.log(this.currentPath, "wywalam");
-            BackofficeStore.unregisterDebugData(this.currentPath);
-        }
 
         try {
             this.isViewLoading = true;
@@ -267,7 +220,13 @@ class BackofficeStore {
                     if (originalPath) {
                         try {
                             router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
-                                BackofficeStore.registerDebugData("views", originalPath, routeData, this.viewData);
+                                BackofficeStore.registerDebugData(
+                                    "view",
+                                    originalPath,
+                                    routeData,
+                                    this.viewData,
+                                    input,
+                                );
                             });
                         } catch (e) {
                             throw new Error("Smth is wrong " + originalPath + ", " + e);

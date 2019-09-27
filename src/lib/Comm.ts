@@ -23,7 +23,7 @@ class Comm {
     public static errorFallback: (data: IErrorFallbackData) => any = null;
 
     public static onStart: Array<(url: string, data: any, method: string) => any> = [];
-    public static onFinish: Array<(url: string, data: any, method: string) => any> = [];
+    public static onFinish: Array<(url: string, inputData: any, response: any, method: string) => any> = [];
 
     public static EVENTS = {
         BEFORE_SEND: "beforeSend",
@@ -153,7 +153,7 @@ class Comm {
     public send(): XMLHttpRequest {
         const data = this.prepareData();
 
-        if (typeof PRODUCTION  !== "undefined" && PRODUCTION === false) {
+        if (typeof PRODUCTION !== "undefined" && PRODUCTION === false) {
             console.log("Frontend Comm dev debug. Sending on: " + Comm.basePath + this.url);
             console.log(data);
         }
@@ -236,7 +236,7 @@ class Comm {
 
                 if (Comm.onFinish.length > 0) {
                     for (const cb of Comm.onFinish) {
-                        cb(this.url, data, this.method);
+                        cb(this.url, data, this.xhr.responseText, this.method);
                     }
                 }
             }

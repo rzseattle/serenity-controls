@@ -74,7 +74,7 @@ generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 ComponentFileContent += "import " + name + " from '" + componentPath.replace(/\\/g, "/") + "';\n";
                 //ComponentFileContent += " export { " + name + "}; \n";
             }
-            conf[i].component = "||" + name + "||";
+            conf[i].componentName = "||" + name + "||";
             conf[i].componentName = name;
             conf[i].index = namespace[tmpNamespace].length - 1;
             conf[i].namespace = tmpNamespace;

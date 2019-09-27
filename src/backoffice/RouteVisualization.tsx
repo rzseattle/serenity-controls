@@ -26,7 +26,7 @@ export class RouteVisualization extends React.Component<{}, IRouteVisualizationS
 
             this.setState({
                 filteredRoutes: this.routing.filter(
-                    (el: IRouteElement) => el._routePath.indexOf(this.state.search) != -1,
+                    (el: IRouteElement) => el.routePath.indexOf(this.state.search) != -1,
                 ),
             });
         });
@@ -36,13 +36,13 @@ export class RouteVisualization extends React.Component<{}, IRouteVisualizationS
         const val = (event.target as HTMLInputElement).value;
         this.setState({
             search: val,
-            filteredRoutes: this.routing.filter((el: IRouteElement) => el._routePath.indexOf(val) != -1),
+            filteredRoutes: this.routing.filter((el: IRouteElement) => el.routePath.indexOf(val) != -1),
         });
     };
 
     private parseRouting() {
         let controlers = this.state.filteredRoutes.reduce(
-            (p: string[], c: IRouteElement) => p.concat(c._controller),
+            (p: string[], c: IRouteElement) => p.concat(c.controller),
             [],
         );
 
@@ -52,7 +52,7 @@ export class RouteVisualization extends React.Component<{}, IRouteVisualizationS
             const tmp = el.split("\\Controllers\\");
             const apppackage = tmp[0].replace("Arrow\\", "");
 
-            const routes = this.state.filteredRoutes.filter((route: IRouteElement) => route._controller == el);
+            const routes = this.state.filteredRoutes.filter((route: IRouteElement) => route.controller == el);
             const file = routes[0]._debug.file; // 1234
 
             return {
@@ -79,7 +79,7 @@ export class RouteVisualization extends React.Component<{}, IRouteVisualizationS
         let packages = controlers.reduce((p: string[], c: any) => p.concat(c.package), []);
         packages = Array.from(new Set(packages));
         packages = packages.map((myPackage: string) => {
-            const pNamespaces = namespaces.filter((el: IRouteElement) => el._package == myPackage);
+            const pNamespaces = namespaces.filter((el: IRouteElement) => el.package == myPackage);
             return { package: myPackage, namespaces: pNamespaces };
         });
 

@@ -4,6 +4,7 @@ import RouterException from "./RouterException";
 import { hot, setConfig, cold } from "react-hot-loader";
 import { IRouteElement } from "./interfaces/IRouteElement";
 import { IRouteList } from "./interfaces/IRouteList";
+import { IArrowViewComponentProps } from "./PanelComponentLoader";
 
 declare var PRODUCTION: any;
 
@@ -39,10 +40,7 @@ class Router {
     }
 
     public async resolve(path: string): Promise<IRouteElement> {
-        const pathInfo = path;
-        let Component = null;
-        let extendedInfo = null;
-
+        let entryFromInput = null;
         // dynamic path matching 12
         for (const i in this.routes) {
             const el = this.routes[i];
@@ -59,58 +57,63 @@ class Router {
                 if (path.match(regexp) !== null) {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
-                    if (el.component) {
-                        if (PRODUCTION && false) {
-                            // todo ogarnąć typowanie asynchroniczne
-                            // @ts-ignore
-                            const result = await this.routes[el.namespace + "_export"]();
-                            Component = result[el.index].default;
-                        } else {
-                            // alert(el.component);
-                            Component = el.component;
-                            //Component = this.routes[el.component];
-                        }
-                    }
-                    extendedInfo = el;
+
+                    entryFromInput = el;
                     break;
                 }
             } else {
                 if (path == i) {
                     let tmp = i.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
-                    if (el.component) {
-                        if (PRODUCTION && false) {
-                            // todo ogarnąć typowanie asynchroniczne
-                            // @ts-ignore
-                            const result = await this.routes[el.namespace + "_export"]();
-                            Component = result[el.index].default;
-                        } else {
-                            Component = el.component;
-                            // Component = this.routes[el.component];
-                        }
-                    }
-                    extendedInfo = el;
+
+                    entryFromInput = el;
                     break;
                 }
             }
         }
-
-        if (!extendedInfo) {
+        if (!entryFromInput) {
             throw new RouterException(`Route not found: '${path}'`);
         }
+        return this.translateInputRoute(entryFromInput);
+    }
 
-        if (!Component && extendedInfo) {
-            // console.error("Component file not found:" + pathInfo);
-            // console.error("Component file should be:" + extendedInfo._debug.template);
-        }
+    private async translateInputRoute(input: any): Promise<IRouteElement> {
+        const Component: React.ComponentType<IArrowViewComponentProps> = await this.componentFromInput(input);
 
+        //input from generated tmp/components-route.include.js
         return {
-            // @ts-ignore
-            baseURL: extendedInfo._baseRoutePath,
-            path: pathInfo,
-            Component,
-            extendedInfo,
+            controller: input._controller,
+            method: input._method,
+            package: input._package,
+            routePath: input._routePath,
+            baseRoutePath: input._baseRoutePath,
+            componentName: input.componentName,
+            componentObject: Component,
+            index: input.index,
+            namespace: input.namespace,
+            _debug: {
+                file: input._debug.file,
+                line: input._debug.line,
+                template: input._debug.template,
+                componentExists: input._debug.componentExists,
+                templateExists: input._debug.templateExists,
+            },
         };
+    }
+
+    private async componentFromInput(input: any): Promise<React.ComponentType<IArrowViewComponentProps>> {
+        if (input.component) {
+            if (PRODUCTION && false) {
+                // todo ogarnąć typowanie asynchroniczne
+                // @ts-ignore
+                const result = await this.routes[el.namespace + "_export"]();
+                return result[input.index].default;
+            } else {
+                return input.component;
+                //Component = this.routes[el.component];
+            }
+        }
+        return null;
     }
 }
 

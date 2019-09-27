@@ -9,6 +9,8 @@ import { PrintJSON } from "../PrintJSON";
 import { IPanelContext, PanelContext } from "./PanelContext";
 import { BackofficeStore } from "./BackofficeStore";
 import { deepIsEqual } from "../lib";
+import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
+import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";
 
 declare var PRODUCTION: boolean;
 
@@ -49,12 +51,11 @@ export interface IArrowViewComponentProps {
 
     _closeModal(modalId: string): any;
 
-
     _parentContext(): IArrowViewComponentProps;
 }
 
 interface IProps {
-    context: any;
+    context: IBackOfficeStoreState & Partial<IBackOfficestoreAPI>;
     isSub: boolean;
 
     onLoadStart(): any;
@@ -124,13 +125,9 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         this.setState(null);
     };
 
-    componentWillUnmount(): void {
-        BackofficeStore.unregisterDebugData(this.props.context.view);
-    }
-
     public getContext: () => IPanelContext = () => {
         return {
-            baseURL: this.props.context.view.baseURL,
+            baseURL: this.props.context.view.baseRoutePath,
             basePath: this.props.context.basePath,
             notification: this.handleNotification,
             log: this.handleLog,
@@ -153,38 +150,35 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         return !deepIsEqual(nextProps, this.props, true);
     }
 
-
-
-
     public render() {
         const p = this.props;
-        const ComponentInfo: any = p.context.view;
+        const RouteElement = p.context.view;
 
         if (this.state.hasError) {
             // You can render any custom fallback UI
             return (
                 <div>
                     <h1>Something went wrong.</h1>
-                    {!PRODUCTION && <PrintJSON json={this.state.error}/>}
+                    {!PRODUCTION && <PrintJSON json={this.state.error} />}
                 </div>
             );
         }
-        console.log("renderuje panel context");
+
 
 
         return (
-            <div className={ComponentInfo && ComponentInfo.extendedInfo.componentName}>
-                <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)}/>
+            <div className={RouteElement && RouteElement.componentName}>
+                <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)} />
                 {this.props.context.viewServerErrors && (
-                    <ServerErrorPresenter error={this.props.context.viewServerErrors}/>
+                    <ServerErrorPresenter error={this.props.context.viewServerErrors} />
                 )}
-                {ComponentInfo && ComponentInfo.Component ? (
+                {RouteElement && RouteElement.componentObject ? (
                     <PanelContext.Provider value={this.getContext()}>
-                        <ComponentInfo.Component
+                        <RouteElement.componentObject
                             {...p.context.viewData}
                             reloadProps={this.handleReloadProps}
-                            baseURL={p.context.view.baseURL}
-                            _baseURL={p.context.view.baseURL}
+                            baseURL={p.context.view.baseRoutePath}
+                            _baseURL={p.context.view.baseRoutePath}
                             _basePath={p.context.basePath}
                             _notification={this.handleNotification}
                             _log={this.handleLog}
@@ -199,6 +193,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                             }}
                             _openModal={this.props.openModal}
                             _closeModal={this.props.closeModal}
+                            // @ts-ignore //todo sprawdzić dlaczego
                             _parentContext={this.props.parentContext}
                         />
                     </PanelContext.Provider>
@@ -213,10 +208,10 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                         </div>
                     )
                 )}
-                {ComponentInfo && ComponentInfo.Component == null && (
+                {RouteElement && RouteElement.componentObject == null && (
                     <div style={{ padding: 10 }}>
                         <h3>Can't find component </h3>
-                        <pre>{JSON.stringify(ComponentInfo, null, 2)}</pre>
+                        <pre>{JSON.stringify(RouteElement, null, 2)}</pre>
                     </div>
                 )}
             </div>
