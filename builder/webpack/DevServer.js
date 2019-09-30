@@ -3,8 +3,6 @@ const fs = require("fs");
 const mkdirp = require("mkdirp");
 
 var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTPS, PORT, DOMAIN, LANGUAGE, webpack) {
-
-
     conf = {};
 
     conf.output = {
@@ -14,15 +12,11 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
             return path.resolve(BASE_PATH, info.absoluteResourcePath).replace(BASE_PATH, "");
         },
     };
-    let devEntries = [
-        'react-hot-loader/patch'
-    ];
+    let devEntries = ["react-hot-loader/patch"];
 
     for (let i in ENTRY_POINTS) {
         devEntries.push(ENTRY_POINTS[i]);
     }
-
-
 
     conf.devServer = {
         //https: HTTPS,
@@ -80,7 +74,10 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
             app.options("/*", function(req, res, next) {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-                res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
+                res.header(
+                    "Access-Control-Allow-Headers",
+                    "Content-Type, Authorization, Content-Length, X-Requested-With",
+                );
                 res.send(200);
             });
 
@@ -104,17 +101,13 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
                 let { file, line } = req.body;
                 console.log("Opening file " + file + ":" + line);
 
-
                 var exec = require("child_process").exec;
-
 
                 let ideDir, fileTest;
                 if (/^win/.test(process.platform)) {
                     ideDir = "C:\\Program Files\\JetBrains\\"; //\\bin\\phpstorm64.exe;
                     fileTest = "\\bin\\phpstorm64.exe";
                 } else {
-
-
                     let command = `phpstorm ${BASE_PATH} --line ${line} ${BASE_PATH}/${file}`;
                     console.log(command);
                     exec(command, function(error, stdout, stderr) {
@@ -131,7 +124,6 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
                     return;
                 }
 
-
                 fs.readdirSync(ideDir).forEach((_file) => {
                     console.log(_file);
                     if (fs.existsSync(ideDir + _file + fileTest)) {
@@ -147,6 +139,29 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
                                 console.log(stderr);
                             }
                         });
+                    }
+                });
+
+                return;
+            });
+
+            app.post("/createURLFile", function(req, response) {
+                response.header("Access-Control-Allow-Origin", "*");
+                let targetFile = path.resolve(BASE_PATH + "/tmp-generated.http");
+                let file = fs.writeFileSync(targetFile, req.body.data);
+
+                const command = `phpstorm ${BASE_PATH} --line 1 ${targetFile}`;
+
+                var exec = require("child_process").exec;
+                exec(command, function(error, stdout, stderr) {
+                    if (!error) {
+                        console.log("worked");
+                        response.send(JSON.stringify({ status: "OK" }));
+                    } else {
+                        console.log("not worked");
+                        console.log(stdout);
+                        console.log(stderr);
+                        response.send(JSON.stringify({ status: "ERROR", error: stderr }));
                     }
                 });
 

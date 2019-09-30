@@ -6,9 +6,11 @@ import { LoadingIndicator } from "../LoadingIndicator";
 import { PrintJSON } from "../PrintJSON";
 
 import "./DebugCommLog.sass";
+import { Modal } from "../Modal";
 
 export default () => {
     const [log, setLog] = useState([...BackofficeStore.debugLog].reverse());
+    const [inspectingValue, setInspectingValue] = useState(null);
 
     useEffect(() => {
         BackofficeStore.registerDebugDataListener((log: IDebugDataEntry[]) => {
@@ -44,16 +46,28 @@ export default () => {
                 </thead>
                 <tbody>
                     {log.map((el) => (
-                        <RouteInfo info={el} />
+                        <RouteInfo info={el} setInspectingValue={setInspectingValue} />
                     ))}
                 </tbody>
             </table>
+            {inspectingValue !== null && (
+                <Modal show={true} onHide={() => setInspectingValue(null)} title="Inspecting">
+                    <div className={"w-debug-comm-log-inspect"}>
+                        <PrintJSON json={inspectingValue} />
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 };
 
-const RouteInfo = ({ info }: { info: IDebugDataEntry }) => {
-    const [expanded, setExpanded] = useState([]);
+const RouteInfo = ({
+    info,
+    setInspectingValue,
+}: {
+    info: IDebugDataEntry;
+    setInspectingValue: (value: string) => any;
+}) => {
     const [doing, setDoing] = useState("");
 
     const [isConnectingWithIDE, setIsConnectingWithIDE] = useState("");
@@ -101,8 +115,20 @@ const RouteInfo = ({ info }: { info: IDebugDataEntry }) => {
                 </a>
             </td>
             <td>{info.requestType}</td>
-            <td>{tmpResponse} </td>
-            <td>{Object.keys(info.input).length} keys</td>
+            <td>
+                <a
+                    onClick={() => {
+                        if (tmpResponse.indexOf("keys") != -1) {
+                            setInspectingValue(JSON.parse(info.response));
+                        }
+                    }}
+                >
+                    {tmpResponse}
+                </a>{" "}
+            </td>
+            <td>
+                <a onClick={() => setInspectingValue(info.input)}>{Object.keys(info.input).length} keys</a>
+            </td>
             <td>
                 {info.requestType == "view" && (
                     <a onClick={() => routeInfoClicked(info.routeInfo._debug.template + ".component.tsx", 1)}>
@@ -115,6 +141,10 @@ const RouteInfo = ({ info }: { info: IDebugDataEntry }) => {
                     go to code
                 </a>
             </td>
+            <td>
+                <a onClick={() => ideConnector.createURLFile(info.url, info.input)}>create ide request</a>
+            </td>
+
             <td>{isConnectingWithIDE}</td>
         </tr>
     );

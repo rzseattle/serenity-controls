@@ -76,7 +76,7 @@ class BackofficeStore implements IBackOfficestoreAPI {
     public isPackageCompiling = false;
 
     public viewServerErrors: any = null;
-    public view: any = null;
+    public view: IRouteElement = null;
     public viewData: any = {};
     public externalViewData: any = {};
 
@@ -100,7 +100,11 @@ class BackofficeStore implements IBackOfficestoreAPI {
         Comm.onFinish.push((url, input, response, method) => {
             if (!BackofficeStore.debugViewAjaxInProgress) {
                 router.getRouteInfo(url).then((routeInfo) => {
-                    BackofficeStore.registerDebugData("ajax", url, routeInfo, response, input);
+                    if(this.view.componentName == routeInfo.componentName) {
+                        BackofficeStore.registerDebugData("view", url, routeInfo, response, input);
+                    }else{
+                        BackofficeStore.registerDebugData("ajax", url, routeInfo, response, input);
+                    }
                 });
             }
         });
@@ -220,13 +224,13 @@ class BackofficeStore implements IBackOfficestoreAPI {
                     if (originalPath) {
                         try {
                             router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
-                                BackofficeStore.registerDebugData(
+                                /*BackofficeStore.registerDebugData(
                                     "view",
                                     originalPath,
                                     routeData,
                                     this.viewData,
                                     input,
-                                );
+                                );*/
                             });
                         } catch (e) {
                             throw new Error("Smth is wrong " + originalPath + ", " + e);
