@@ -306,7 +306,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                         </div>
                     )}
                     <div className="w-panel-body" style={{ position: "relative" }}>
-                        {!this.props.isSub && <DebugCommLog />}
+                        {!PRODUCTION && this.props.isSub == false && <DebugCommLog />}
                         {this.state.openedWindows.map((el, index) => {
                             return (
                                 <Modal
