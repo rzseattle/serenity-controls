@@ -40,11 +40,15 @@ class Router {
     }
 
     public async resolve(path: string): Promise<IRouteElement> {
+
+
         let entryFromInput = null;
         // dynamic path matching 12
         for (const i in this.routes) {
             const el = this.routes[i];
-            if (i.indexOf("{") != -1) {
+            const test = el.routePath;
+            if (test.indexOf("{") != -1) {
+                console.log(test);
                 const regexp = new RegExp(
                     "^" +
                         i
@@ -55,15 +59,16 @@ class Router {
                         "$",
                 );
                 if (path.match(regexp) !== null) {
-                    let tmp = i.split("/{")[0].split("/");
+                    let tmp = test.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
 
                     entryFromInput = el;
                     break;
                 }
             } else {
-                if (path == i) {
-                    let tmp = i.split("/{")[0].split("/");
+                console.log(test);
+                if (path == test) {
+                    let tmp = test.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
 
                     entryFromInput = el;
@@ -82,11 +87,11 @@ class Router {
 
         //input from generated tmp/components-route.include.js
         return {
-            controller: input._controller,
-            method: input._method,
-            package: input._package,
-            routePath: input._routePath,
-            baseRoutePath: input._baseRoutePath,
+            controller: input.controller,
+            method: input.method,
+            package: input.package,
+            routePath: input.routePath,
+            baseRoutePath: input.baseRoutePath,
             componentName: input.componentName,
             componentObject: Component,
             index: input.index,

@@ -163,7 +163,8 @@ module.exports = function(input) {
         conf.mode = "development";
         if (input.USE_FRAMEWORK_OBSERVERS) {
             const FileObserver = require("./FileObserver.js");
-            FileObserver(input.BASE_PATH, fileComponent, fileSass);
+            console.log(input.routeExtractor);
+            FileObserver(input.routeExtractor, input.BASE_PATH, fileComponent, fileSass);
         }
 
         const getDevServerConf = require("./DevServer.js");
@@ -181,7 +182,7 @@ module.exports = function(input) {
     } else {
         conf.mode = "production";
 
-        extractor(input.BASE_PATH, fileComponent, fileSass, true);
+        extractor(input.routeExtractor, input.BASE_PATH,  fileComponent, fileSass, true);
 
         const getProductionConf = require("./Production.js");
         tmp = getProductionConf(

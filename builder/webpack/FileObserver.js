@@ -4,7 +4,7 @@ const path = require("path");
 const extractor = require("./RouteExtractor.js");
 
 
-var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
+var setupFileObserver = function (inputExtractor, BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET) {
 
     let routeEqualizer = "";
     let annotationChanged = (path, event) => {
@@ -14,7 +14,7 @@ var setupFileObserver = function (BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
                 return;
             }
         }
-        extractor(BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET);
+        extractor(inputExtractor, BASE_PATH, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET);
 
     };
 
