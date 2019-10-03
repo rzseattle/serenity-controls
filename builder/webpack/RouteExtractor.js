@@ -3,41 +3,46 @@ const fs = require("fs");
 const path = require("path");
 let routeEqualizer = "";
 
-const extractor = function(inputExtractor, basePath, targetComponentFile, targetSassFile, production = false) {
+const extractor = function (inputExtractor, basePath, targetComponentFile, targetSassFile, production = false) {
     production = false;
 
     console.log("Route check ...");
-    inputExtractor.then((route) => {
-        try {
 
-            const routeSimplyfied = Object.entries(route).map(([index, el]) => [
-                el.controller,
-                el.method,
-                el.routePath,
-                el.package,
-                el._debug.templateExists,
-                el._debug.componentExists,
-            ]);
-            const toEqual = JSON.stringify(routeSimplyfied);
-            if (toEqual != routeEqualizer) {
-                routeEqualizer = toEqual;
-                generateRouteAssetsFromJson(route, targetComponentFile, targetSassFile, basePath, production);
-            } else {
-                console.log("No changes");
+    if (inputExtractor === undefined) {
+        generateRouteAssetsFromJson([], targetComponentFile, targetSassFile, basePath, production);
+    } else {
+        inputExtractor.then((route) => {
+                try {
+
+                    const routeSimplyfied = Object.entries(route).map(([index, el]) => [
+                        el.controller,
+                        el.method,
+                        el.routePath,
+                        el.package,
+                        el._debug.templateExists,
+                        el._debug.componentExists,
+                    ]);
+                    const toEqual = JSON.stringify(routeSimplyfied);
+                    if (toEqual != routeEqualizer) {
+                        routeEqualizer = toEqual;
+                        generateRouteAssetsFromJson(route, targetComponentFile, targetSassFile, basePath, production);
+                    } else {
+                        console.log("No changes");
+                    }
+                } catch (e) {
+                    console.log("Routes extract problem");
+                    console.log(stdout);
+                    console.log("------------------");
+                    console.log(basePath + "/" + command);
+
+                    throw "Can't extract routes. Error: " + e.message;
+                }
             }
-        } catch (e) {
-            console.log("Routes extract problem");
-            console.log(stdout);
-            console.log("------------------");
-            console.log(basePath + "/" + command);
-
-            throw "Can't extract routes. Error: " + e.message;
-        }
-
-    });
+        );
+    }
 };
 
-generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET, BASE_PATH, production) {
+generateRouteAssetsFromJson = function (conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TARGET, BASE_PATH, production) {
     let ComponentFileContent = "";
     let ComponentFileContentMapFilesX = {};
     let SassFileContent = "";
@@ -51,7 +56,7 @@ generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
         let sassPath = BASE_PATH + conf[i]._debug.template + ".component.sass";
 
         if (conf[i]._debug.componentExists) {
-            let name = ( conf[i].routePath)
+            let name = (conf[i].routePath)
                 .replace("/", "")
                 .replace(/\//g, "_")
                 .replace(/\{/g, "_")
@@ -95,7 +100,7 @@ generateRouteAssetsFromJson = function(conf, SAVE_COMPONENT_TARGET, SAVE_SASS_TA
     }
 
     if (production) {
-        Object.entries(namespace).map(function([namespace, entries]) {
+        Object.entries(namespace).map(function ([namespace, entries]) {
             ComponentFileContent +=
                 "export const " +
                 namespace +
