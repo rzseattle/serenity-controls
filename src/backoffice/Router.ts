@@ -40,18 +40,15 @@ class Router {
     }
 
     public async resolve(path: string): Promise<IRouteElement> {
-
-
         let entryFromInput = null;
         // dynamic path matching 12
         for (const i in this.routes) {
             const el = this.routes[i];
             const test = el.routePath;
             if (test.indexOf("{") != -1) {
-                console.log(test);
                 const regexp = new RegExp(
                     "^" +
-                        i
+                        test
                             // repplace all {var} to (.+?)
                             .replace(/\{.+?\}/g, "(.+?)")
                             // replace all / to _
@@ -66,7 +63,6 @@ class Router {
                     break;
                 }
             } else {
-                console.log(test);
                 if (path == test) {
                     let tmp = test.split("/{")[0].split("/");
                     tmp = tmp.slice(0, -1);
