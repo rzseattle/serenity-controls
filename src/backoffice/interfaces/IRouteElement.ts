@@ -1,4 +1,3 @@
-import customers_index_customers_index from "../../../../../app/views/crm/customers/index.component";
 import { IArrowViewComponentProps } from "../PanelComponentLoader";
 
 export interface IRouteElement {
