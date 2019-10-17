@@ -46,7 +46,7 @@ export default () => {
                 </thead>
                 <tbody>
                     {log.map((el) => (
-                        <RouteInfo info={el} setInspectingValue={setInspectingValue} />
+                        <RouteInfo key={el.url + el.time} info={el} setInspectingValue={setInspectingValue} />
                     ))}
                 </tbody>
             </table>
