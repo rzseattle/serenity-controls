@@ -4,6 +4,7 @@ import { IOption } from "../fields/Interfaces";
 
 import { IFilter, NumericFilter, TextFilter, DateFilter, SwitchFilter, SelectFilter } from "../filters";
 import { Icon } from "../Icon";
+import EditableTextCell from "./cells/editable/EditableTextCell";
 
 export default class ColumnHelper {
     protected data: IColumnData;
@@ -209,12 +210,13 @@ export default class ColumnHelper {
 
     public editable(
         fn: (columnt: IColumnData, row: any, changedValue: any) => any,
-        type: string,
+        type: "text" | "textarea",
         enabled: boolean,
     ): ColumnHelper {
         if (enabled === false) {
             return this;
         }
+        this.className("w-table-editable-cell");
         this.data.template = (value, row, column, rowContainer) => {
             const columnsInEditState = rowContainer.getData("columnsInEdit", {});
             const isInEditState = columnsInEditState[column.field] === true;
@@ -223,22 +225,14 @@ export default class ColumnHelper {
                 switch (type) {
                     case "text":
                         return (
-                            <div className={"global-input-column"}>
-                                <input
-                                    type="text"
-                                    onChange={(e) => (changedValue = e.target.value)}
-                                    defaultValue={value}
-                                    autoFocus={true}
-                                    onBlur={() => {
-                                        if (value !== changedValue) {
-                                            fn(column, row, changedValue);
-                                        }
-
-                                        delete columnsInEditState[column.field];
-                                        rowContainer.setData("columnsInEdit", columnsInEditState);
-                                        rowContainer.forceUpdate();
-                                    }}
-                                />
+                            <div className="">
+                                <EditableTextCell inputValue={value} />
+                                <a href="">
+                                    <Icon name="ChromeClose" />
+                                </a>
+                                <a href="">
+                                    <Icon name="Accept" />
+                                </a>
                             </div>
                         );
                         break;
@@ -263,29 +257,20 @@ export default class ColumnHelper {
                         break;
                 }
             } else {
-                switch (type) {
-                    case "text":
-                        return (
-                            <div className={"global-input-column global-input-column-disabled"}>
-                                <input type="text" defaultValue={value} disabled={true} />
-                            </div>
-                        );
-                        break;
-                    case "textarea":
-                        return (
-                            <div className={"global-input-column global-input-column-disabled"}>
-                                <textarea autoFocus={true} defaultValue={value} disabled={true} />
-                            </div>
-                        );
-                        break;
-                }
+                return (
+                    <div>
+                        <span style={{ color: "lightgrey" }}>
+                            <Icon name="edit" />
+                        </span>{" "}
+                        {value}
+                    </div>
+                );
             }
         };
         this.data.events.click.push((row, column, rowContainer) => {
             const columnsInEditState = rowContainer.getData("columnsInEdit", {});
-            columnsInEditState[column.field] = true;
+            columnsInEditState[column.field] = columnsInEditState[column.field] == true ? false : true;
             rowContainer.setData("columnsInEdit", columnsInEditState);
-            rowContainer.forceUpdate();
         });
         return this;
     }

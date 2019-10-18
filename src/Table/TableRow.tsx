@@ -1,16 +1,32 @@
 import { IColumnData } from "./Interfaces";
 import { Icon } from "../Icon";
 import * as React from "react";
+import { PrintJSON } from "../PrintJSON";
 
-export class TableRow extends React.PureComponent<any, any> {
-    public data: { [index: string]: any } = {};
+export class TableRow extends React.Component<
+    any,
+    {
+        data: { [index: string]: any };
+    }
+> {
+    constructor(props: any, context: any, data: { [p: string]: any }) {
+        super(props, context);
+        this.state = {
+            data: {},
+        };
+    }
 
     public setData(index: string, data: any) {
-        this.data[index] = data;
+        const tmp: any = {};
+        tmp[index] = data;
+        this.setState({ data: { ...this.state.data, ...tmp } });
     }
 
     public getData(index: string, defaultVal: any) {
-        return this.data[index] || defaultVal;
+        console.log(this.state.data);
+        console.log(this.state.data[index], index);
+
+        return this.state.data[index] || defaultVal;
     }
 
     public packFn = (val: any, column: IColumnData, row: any) => {
