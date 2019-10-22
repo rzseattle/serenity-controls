@@ -1,9 +1,12 @@
 import * as React from "react";
 
 import "./EditableCell.sass";
+//import test from "./EditableTextCell.module.sass";
+//console.log(test, "to jest tego opis");
 export default ({ inputValue }: { inputValue: string }) => {
     return (
-        <div className="w-table-editable-cell">
+        <div className="w-table-editable-cell w-table-editable-cell0text">
+            x
             <input type="text" value={inputValue} autoFocus={true} onClick={(e) => e.stopPropagation()} />
         </div>
     );
