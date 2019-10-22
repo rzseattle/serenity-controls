@@ -23,9 +23,6 @@ export class TableRow extends React.Component<
     }
 
     public getData(index: string, defaultVal: any) {
-        console.log(this.state.data);
-        console.log(this.state.data[index], index);
-
         return this.state.data[index] || defaultVal;
     }
 
