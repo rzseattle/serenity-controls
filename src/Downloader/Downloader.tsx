@@ -53,7 +53,7 @@ class Downloader extends React.PureComponent<IDownloaderProps> {
                 <textarea name="payload">{JSON.stringify(this.props.data)}</textarea>
 
                 {Object.entries(this.props.data).map(([key, val]) => (
-                    <input type="hidden" name={key} value={val as string}/>
+                    <input type="hidden" name={key} value={val as string} />
                 ))}
             </form>
         );
@@ -73,7 +73,15 @@ export const downloadString = (fileName: string, data: string) => {
     link.click();
 };
 
-export const download = (url: string, data: any = null): Promise<IDownloadSuccessParams> => {
+interface IDownloadOptions {
+    fileName?: string;
+}
+
+export const download = (
+    url: string,
+    data: any = null,
+    options: IDownloadOptions = {},
+): Promise<IDownloadSuccessParams> => {
     const targetUrl = url + (data !== null ? "?" + qs.stringify(data) : "");
     const simpleURL = url;
 
@@ -95,25 +103,27 @@ export const download = (url: string, data: any = null): Promise<IDownloadSucces
         xhr.addEventListener("load", () => {
             if (xhr.status === 200) {
                 let fileName: string = "";
-                const contentDisposition = xhr.getResponseHeader("Content-Disposition");
+                if (options.fileName === undefined) {
+                    const contentDisposition = xhr.getResponseHeader("Content-Disposition");
 
-                if (contentDisposition !== null) {
-                    const tmp = contentDisposition.split("filename=");
+                    if (contentDisposition !== null) {
+                        const tmp = contentDisposition.split("filename=");
 
-                    if (tmp.length === 2) {
-                        fileName = tmp[1];
+                        if (tmp.length === 2) {
+                            fileName = tmp[1];
+                        }
                     }
+
+                    if (fileName === "") {
+                        const tmp = simpleURL.split("/");
+                        fileName = tmp[tmp.length - 1];
+                    }
+                } else {
+                    fileName = options.fileName;
                 }
 
-                if (fileName === "") {
-                    const tmp = simpleURL.split("/");
-                    fileName = tmp[tmp.length - 1];
-                }
-
-                
-
-				downloadString(fileName, xhr.response);
-				resolve({
+                downloadString(fileName, xhr.response);
+                resolve({
                     fileName,
                 });
             }
@@ -138,5 +148,5 @@ export const downloadOld = (url: string, data: any = null): any => {
     };
 
     // @ts-ignore
-    const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup}/>, wrapper);
+    const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup} />, wrapper);
 };
