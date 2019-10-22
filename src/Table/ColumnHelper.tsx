@@ -211,7 +211,7 @@ export default class ColumnHelper {
     public editable(
         fn: (columnt: IColumnData, row: any, changedValue: any) => any,
         type: "text" | "textarea",
-        enabled: boolean,
+        enabled: boolean = true,
     ): ColumnHelper {
         if (enabled === false) {
             return this;
