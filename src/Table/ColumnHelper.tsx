@@ -225,15 +225,15 @@ export default class ColumnHelper {
                 switch (type) {
                     case "text":
                         return (
-                            <div className="">
-                                <EditableTextCell inputValue={value} />
-                                <a href="">
-                                    <Icon name="ChromeClose" />
-                                </a>
-                                <a href="">
-                                    <Icon name="Accept" />
-                                </a>
-                            </div>
+                            <EditableTextCell
+                                inputValue={value}
+                                onSubmit={(value) => {}}
+                                onCancel={() => {
+                                    let tmp = { ...columnsInEditState };
+                                    tmp[column.field] = false;
+                                    rowContainer.setData("columnsInEdit", tmp);
+                                }}
+                            />
                         );
                         break;
                     case "textarea":
@@ -269,8 +269,10 @@ export default class ColumnHelper {
         };
         this.data.events.click.push((row, column, rowContainer) => {
             const columnsInEditState = rowContainer.getData("columnsInEdit", {});
-            columnsInEditState[column.field] = columnsInEditState[column.field] == true ? false : true;
-            rowContainer.setData("columnsInEdit", columnsInEditState);
+            if (columnsInEditState[column.field] === undefined || columnsInEditState[column.field] === false) {
+                columnsInEditState[column.field] = true;
+                rowContainer.setData("columnsInEdit", columnsInEditState);
+            }
         });
         return this;
     }

@@ -1,13 +1,45 @@
 import * as React from "react";
 
 import "./EditableCell.sass";
-//import test from "./EditableTextCell.module.sass";
-//console.log(test, "to jest tego opis");
-export default ({ inputValue }: { inputValue: string }) => {
+import styles from "./EditableTextCell.module.sass";
+import { Icon } from "../../../Icon";
+import { useState } from "react";
+
+export default ({
+    inputValue,
+    onSubmit,
+    onCancel,
+}: {
+    inputValue: string;
+    onSubmit: (value: any) => any;
+    onCancel: () => any;
+}) => {
+    const [value, setValue] = useState(inputValue);
+
     return (
-        <div className="w-table-editable-cell w-table-editable-cell0text">
-            x
-            <input type="text" value={inputValue} autoFocus={true} onClick={(e) => e.stopPropagation()} />
+        <div className={styles.container}>
+            <div>
+                <input
+                    type="text"
+                    value={value}
+                    onChange={(e) => {
+                        setValue(e.target.value);
+                    }}
+                    className="form-control"
+                    autoFocus={true}
+                    onClick={(e) => e.stopPropagation()}
+                />
+            </div>
+            <div>
+                <a  onClick={onSubmit} className={styles.accept}>
+                    <Icon name="Accept" />
+                </a>
+            </div>
+            <div>
+                <a onClick={onCancel} className={styles.cancel}>
+                    <Icon name="ChromeClose" />
+                </a>
+            </div>
         </div>
     );
 };

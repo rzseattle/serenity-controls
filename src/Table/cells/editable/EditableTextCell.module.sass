@@ -1,2 +1,26 @@
-.costam
-    width: 100px
+.container
+    width: 100%
+    display: flex
+    div:nth-child(1)
+        flex-grow: 1
+
+        input:focus
+            border: solid 1px darkred !important
+
+    a
+        padding: 0 5px
+        height: 100%
+        line-height: 28px
+        //background-color: darkgray
+        display: block
+        font-weight: bold
+        color: white
+
+
+        &.accept
+            background-color: darkgreen
+
+
+        &.cancel
+            background-color: darkred
+            border-left: solid 1px grey
