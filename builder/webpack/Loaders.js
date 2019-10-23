@@ -31,7 +31,6 @@ var getLoaders = function(production, input) {
                                         targets: {
                                             browsers: input.BROWSERS,
                                             node: "current",
-
                                         },
                                         useBuiltIns: "entry",
                                         modules: false,
@@ -120,10 +119,37 @@ var getLoaders = function(production, input) {
                     },
                 ],
             },*/
+            {
+                test: /module\.sass$/,
+
+                use: [
+                    !production ? "style-loader" : MiniCssExtractPlugin.loader,
+                    {
+                        loader: "@teamsupercell/typings-for-css-modules-loader",
+                        options: {},
+                    },
+                    { loader: "css-loader", query: { sourceMap: true, modules: true } },
+                    { loader: "resolve-url-loader", query: { sourceMap: true } },
+                    //'postcss-loader',
+                    {
+                        loader: "sass-loader",
+                        query: {
+                            sourceMap: true,
+                            sassOptions: { includePaths: ["node_modules"] },
+                        },
+                    },
+                ],
+            },
 
             {
                 test: /\.(sa|sc|c)ss$/,
-                //use: "happypack/loader?id=sass"
+                exclude: (el) =>  {
+                    //exclude modules
+                    if(el.indexOf("module.")  !== -1){
+                        return true
+                    }
+                    return false;
+                },
                 use: [
                     !production ? "style-loader" : MiniCssExtractPlugin.loader,
                     { loader: "css-loader", query: { sourceMap: true } },

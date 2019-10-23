@@ -29,95 +29,6 @@ module.exports = function(input) {
     const dllFile = resolve(input.BASE_PATH, "./public/assets/dist/dll-manifest.json");
 
     const GetLoaders = require("./Loaders.js");
-    if (process.argv.includes("--env.mode=dll") && false) {
-        //if (process.env.mode == "dll") {
-
-
-        return {
-            mode: "production",
-            devtool: "cheap-module-eval-source-map",
-            context: resolve(__dirname, ""),
-            resolve: {
-                extensions: [".js", ".json", ".css", ".ts", ".tsx"],
-                modules: [__dirname, "node_modules"],
-
-            },
-
-            /*entry: {
-                react: ["react", "react-dom"],
-                pdf: ["react-pdf"],
-                dates: ["react-dates"],
-                i18Next: ["react-i18next"],
-                hotKeys: ["react-hot-keys"],
-            },*/
-            /*optimization: {
-                splitChunks: {
-                    // include all types of chunks
-
-                    maxSize: 500000
-
-                },
-
-            },*/
-
-            module: GetLoaders(true, input),
-            entry: {
-                react: [
-                    "react",
-                    "react-dom",
-                    "react-dates",
-                    "react-hot-keys",
-                    "react-pdf",
-                    "amcharts3",
-                    "nprogress",
-                    "i18next",
-                    "react-i18next",
-                    "frontend",
-                ],
-            },
-            output: {
-                filename: `[name]-[hash].dll.js`,
-                path: resolve(input.BASE_PATH, "./public/assets/dist/"),
-                library: "[name]",
-                chunkFilename: `chunk-[name]-[hash].dll.js`,
-                publicPath: input.PUBLIC_PATH,
-            },
-
-            plugins: [
-                new webpack.DllPlugin({
-                    name: "[name]",
-                    path: dllFile,
-                }),
-
-                new MiniCssExtractPlugin({
-                    // Options similar to the same options in webpackOptions.output
-                    // both options are optional
-                    filename: "bundle-[hash].css",
-                    chunkFilename: "[id].[hash].css",
-                }),
-            ],
-            optimization: {
-                minimizer: [
-                    /*new UglifyJsPlugin({
-                        cache: true,
-                        parallel: true,
-                        sourceMap: false, // set to true if you want JS source maps
-                    }),*/
-                    new TerserPlugin({
-                        cache: input.NODE_CACHE_DIR + "/terser-webpack-plugin",
-                        sourceMap: true,
-                    }),
-                    new OptimizeCSSAssetsPlugin({
-                        cssProcessorOptions: {
-                            "postcss-safe-parser": true,
-                            discardComments: { removeAll: true },
-                            zindex: false,
-                        },
-                    }),
-                ],
-            },
-        };
-    }
 
     input = Object.assign(configDefaults, input);
 
@@ -182,7 +93,7 @@ module.exports = function(input) {
     } else {
         conf.mode = "production";
 
-        extractor(input.routeExtractor, input.BASE_PATH,  fileComponent, fileSass, true);
+        extractor(input.routeExtractor, input.BASE_PATH, fileComponent, fileSass, true);
 
         const getProductionConf = require("./Production.js");
         tmp = getProductionConf(
@@ -223,9 +134,18 @@ module.exports = function(input) {
             }),
         ]);*/
 
+    conf.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(/(.*)\.sass/, function(resource) {
+            if (resource.contextInfo && resource.contextInfo.issuer.match(/frontend\/lib/)) {
+                let tmp = path.resolve(resource.context.replace("frontend/lib", "frontend/src"), resource.request);
+                resource.request = tmp;
+            }
+        }),
+    );
 
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
+
     if (!input.PRODUCTION && false) {
         conf.plugins.push(
             new webpack.SourceMapDevToolPlugin({
