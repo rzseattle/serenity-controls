@@ -3,6 +3,7 @@ import * as React from "react";
 import { Comm, CommEvents } from "../lib/Comm";
 import { IFieldChangeEvent } from "../fields";
 import { Shadow } from "../Shadow";
+import { ValidationError } from "./ValidationError";
 
 interface IBFormEvent {
     form: BForm;
@@ -74,7 +75,7 @@ interface IBFormProps {
     children: (formConf: any, data: any, form: BForm) => any;
     formErrors?: string[];
     fieldErrors?: Map<string, string[]>;
-    errors?: { fieldErrors: Map<string, string[]>; formErrors: string[] };
+    errors?: ValidationError;
     useFormTag?: boolean;
 }
 

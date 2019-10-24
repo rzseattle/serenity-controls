@@ -1,3 +1,5 @@
+import { ValidationError } from "../BForm/ValidationError";
+
 type IResponseCallback = (response: any) => any;
 interface IErrorFallbackData {
     url: string;
@@ -214,10 +216,7 @@ class Comm {
                         } else if (data.accessDeny !== undefined) {
                             alert("Access deny " + data.accessDeny);
                         } else {
-                            const validationErrors: { fieldErrors: Map<string, string[]>; formErrors: string[] } = {
-                                fieldErrors: new Map<string, string[]>(),
-                                formErrors: [],
-                            };
+                            const validationErrors = new ValidationError();
                             validationErrors.formErrors = data.errors || [];
                             for (const field in data.fieldErrors) {
                                 validationErrors.fieldErrors.set(field, data.fieldErrors[field]);

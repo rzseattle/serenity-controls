@@ -3,66 +3,70 @@ import * as React from "react";
 import "./EditableCell.sass";
 import styles from "./EditableTextCell.module.sass";
 import { Icon } from "../../../Icon";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { IEditableCellProps } from "./IEditableCellProps";
+import { ValidationError } from "../../../BForm/ValidationError";
 
-export default ({
-    inputValue,
-    onSubmit,
-    onCancel,
-}: {
-    inputValue: string;
-    onSubmit: (value: any) => any;
-    onCancel: () => any;
-}) => {
+export default ({ inputValue, onSubmit, onCancel }: IEditableCellProps): JSX.Element => {
     const [value, setValue] = useState(inputValue);
+    const [error, setError] = useState<ValidationError>(null);
+    const inputRef = useRef<HTMLInputElement>();
+
+    const internalSubmit = useCallback(() => {
+        const result = onSubmit(value);
+
+        if (result !== true) {
+            inputRef.current.focus();
+        }
+        if (result && result.fieldErrors !== undefined) {
+            console.log("to je to ");
+            setError(result);
+        }
+    }, [value, error]);
 
     return (
-        <div className={styles.container}>
-            <div>
-                <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => {
-                        setValue(e.target.value);
-                    }}
-                    className="form-control"
-                    autoFocus={true}
-                    onClick={(e) => e.stopPropagation()}
-                />
+        <div>
+            <div className={styles.container}>
+                <div>
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={value}
+                        onChange={(e) => {
+                            setValue(e.target.value);
+                        }}
+                        className="form-control"
+                        autoFocus={true}
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyUp={(e) => {
+                            if (e.keyCode == 13) {
+                                internalSubmit();
+                            } else if (e.keyCode == 27) {
+                                onCancel();
+                            }
+                        }}
+                    />
+                </div>
+                <div>
+                    <a onClick={internalSubmit} className={styles.accept}>
+                        <Icon name="Accept" />
+                    </a>
+                </div>
+                <div>
+                    <a onClick={onCancel} className={styles.cancel}>
+                        <Icon name="ChromeClose" />
+                    </a>
+                </div>
             </div>
-            <div>
-                <a  onClick={onSubmit} className={styles.accept}>
-                    <Icon name="Accept" />
-                </a>
-            </div>
-            <div>
-                <a onClick={onCancel} className={styles.cancel}>
-                    <Icon name="ChromeClose" />
-                </a>
-            </div>
+            {error !== null && (
+                <div className={styles.errors}>
+                    <ul>
+                        {error.formErrors.map((el) => (
+                            <li key={el}>{el}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };
-
-/*
-*
-
-<div className={"global-input-column"}>
-                                <input
-                                    type="text"
-                                    onChange={(e) => (changedValue = e.target.value)}
-                                    defaultValue={value}
-                                    autoFocus={true}
-                                    onBlur={() => {
-                                        if (value !== changedValue) {
-                                            fn(column, row, changedValue);
-                                        }
-
-                                        delete columnsInEditState[column.field];
-                                        rowContainer.setData("columnsInEdit", columnsInEditState);
-                                        rowContainer.forceUpdate();
-                                    }}
-                                />
-                            </div>
-
-* */

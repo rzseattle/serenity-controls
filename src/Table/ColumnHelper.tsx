@@ -5,6 +5,9 @@ import { IOption } from "../fields/Interfaces";
 import { IFilter, NumericFilter, TextFilter, DateFilter, SwitchFilter, SelectFilter } from "../filters";
 import { Icon } from "../Icon";
 import EditableTextCell from "./cells/editable/EditableTextCell";
+import index from "react-virtualized-auto-sizer";
+import { IEditableCell, IEditableCellProps } from "./cells/editable/IEditableCellProps";
+import { ValidationError } from "../BForm/ValidationError";
 
 export default class ColumnHelper {
     protected data: IColumnData;
@@ -209,56 +212,55 @@ export default class ColumnHelper {
     }
 
     public editable(
-        fn: (columnt: IColumnData, row: any, changedValue: any) => any,
+        fn: (changedValue: any, row: any, columnt: IColumnData) => any,
         type: "text" | "textarea",
         enabled: boolean = true,
     ): ColumnHelper {
         if (enabled === false) {
             return this;
         }
+
+        const editableComponentsMap: {
+            [index: string]: IEditableCell;
+        } = {
+            text: EditableTextCell,
+        };
+
         this.className("w-table-editable-cell");
         this.data.template = (value, row, column, rowContainer) => {
             const columnsInEditState = rowContainer.getData("columnsInEdit", {});
             const isInEditState = columnsInEditState[column.field] === true;
-            let changedValue = value;
+
             if (isInEditState) {
-                switch (type) {
-                    case "text":
-                        return (
-                            <EditableTextCell
-                                inputValue={value}
-                                onSubmit={(value) => {}}
-                                onCancel={() => {
+                const Component = editableComponentsMap[type];
+
+                return (
+                    <div className="w-table-editable-cell-edited">
+                        <Component
+                            inputValue={value}
+                            onSubmit={(value) => {
+                                const result = fn(value, row, column);
+                                if (result === undefined || (result !== false && result.fieldErrors === undefined)) {
                                     let tmp = { ...columnsInEditState };
                                     tmp[column.field] = false;
                                     rowContainer.setData("columnsInEdit", tmp);
-                                }}
-                            />
-                        );
-                        break;
-                    case "textarea":
-                        return (
-                            <div className={"global-input-column"}>
-                                <textarea
-                                    autoFocus={true}
-                                    onChange={(e) => (changedValue = e.target.value)}
-                                    defaultValue={value}
-                                    onBlur={() => {
-                                        if (value !== changedValue) {
-                                            fn(column, row, changedValue);
-                                        }
-                                        delete columnsInEditState[column.field];
-                                        rowContainer.setData("columnsInEdit", columnsInEditState);
-                                        rowContainer.forceUpdate();
-                                    }}
-                                />
-                            </div>
-                        );
-                        break;
-                }
+                                } else if (result === false) {
+                                    return false;
+                                } else if (result.fieldErrors !== undefined) {
+                                    return result;
+                                }
+                            }}
+                            onCancel={() => {
+                                let tmp = { ...columnsInEditState };
+                                tmp[column.field] = false;
+                                rowContainer.setData("columnsInEdit", tmp);
+                            }}
+                        />
+                    </div>
+                );
             } else {
                 return (
-                    <div>
+                    <div className="w-table-editable-cell-not-edited">
                         <span style={{ color: "lightgrey" }}>
                             <Icon name="edit" />
                         </span>{" "}
