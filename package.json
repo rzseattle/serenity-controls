@@ -7,11 +7,10 @@
     "scripts": {
         "dev": "webpack-dev-server -d ",
         "build:babel": "babel --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
-        "babel-watch": "babel --watch --extensions .ts,.tsx --source-maps inline -d ./lib ./src",
-        "sass-watch": "nodemon -e sass sass-copy.js --watch ./src",
+        "babel-watch": "babel --watch --extensions .ts,.tsx --source-maps inline -d ./lib ./src & tsc --watch --emitDeclarationOnly --project ./ --outDir ./lib",
         "build:tsc": "tsc --emitDeclarationOnly --project ./ --outDir ./lib ",
         "rebuild": "rimraf lib/* && yarn run build:babel  && yarn run build:tsc",
-        "postinstall": "rimraf lib/* && yarn run build:babel",
+        "postinstall": "rimraf lib/* && yarn run build:babel ",
         "prepare": "yarn run build:tsc",
         "storybook": "start-storybook -c ./docs/stories/.storybook -s ./stories/public_assets -p 6006",
         "server": "nodemon ./stories/server.js",
