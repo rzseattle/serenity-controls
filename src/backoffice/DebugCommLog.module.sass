@@ -1,4 +1,4 @@
-.w-debug-comm-log
+.container
     bottom: 5px
     position: fixed
     max-height: 200px
@@ -8,17 +8,8 @@
     padding: 5px
     border: solid 1px grey
     overflow: hidden
-    .w-debug-comm-log-title
-        span
-            font-weight: bold
-            padding: 2px
-        a
-            float: right
-            font-size: 10px
-            color: darkred
-            margin-left: 18px
-            color: black !important
-
+    left: 5px
+    z-index: 2000
 
     table
         background-color: white
@@ -32,6 +23,24 @@
                 font-size: 12px
                 padding: 4px 20px 4px 4px
                 border: 1px solid gainsboro
+
+.hidden
+    border-radius: 2px
+
+.title
+    span
+        font-weight: bold
+        padding: 2px
+    a
+        float: right
+        font-size: 10px
+        color: darkred
+        margin-left: 18px
+        color: black !important
+        padding-top: 4px
+
+
+
 
 
 .w-debug-comm-log-inspect

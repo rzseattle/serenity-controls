@@ -5,12 +5,14 @@ import { ideConnector } from "./IDEConnector";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { PrintJSON } from "../PrintJSON";
 
-import "./DebugCommLog.sass";
+import styles from "./DebugCommLog.module.sass";
+
 import { Modal } from "../Modal";
 
 export default () => {
     const [log, setLog] = useState([...BackofficeStore.debugLog].reverse());
     const [inspectingValue, setInspectingValue] = useState(null);
+    const [isExpanded, setExpanded] = useState(true);
 
     useEffect(() => {
         BackofficeStore.registerDebugDataListener((log: IDebugDataEntry[]) => {
@@ -21,35 +23,46 @@ export default () => {
     }, []);
 
     return (
-        <div className="w-debug-comm-log">
-            <div className="w-debug-comm-log-title">
+        <div className={styles.container + " " + (!isExpanded && styles.hidden)}>
+            <div className={styles.title}>
                 <span>Comm Log</span>
                 <a
                     onClick={() => {
-                        BackofficeStore.cleanUpDebugData();
+                        setExpanded(!isExpanded);
                     }}
                 >
-                    clear
+                    {isExpanded ? "hide" : "show"}
                 </a>
+                {isExpanded && (
+                    <a
+                        onClick={() => {
+                            BackofficeStore.cleanUpDebugData();
+                        }}
+                    >
+                        clear
+                    </a>
+                )}
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>time</th>
-                        <th>route</th>
-                        <th>url</th>
-                        <th>type</th>
-                        <th>response</th>
-                        <th>input</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {log.map((el) => (
-                        <RouteInfo key={el.url + el.time} info={el} setInspectingValue={setInspectingValue} />
-                    ))}
-                </tbody>
-            </table>
+            {isExpanded && (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>time</th>
+                            <th>route</th>
+                            <th>url</th>
+                            <th>type</th>
+                            <th>response</th>
+                            <th>input</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {log.map((el) => (
+                            <RouteInfo key={el.url + el.time} info={el} setInspectingValue={setInspectingValue} />
+                        ))}
+                    </tbody>
+                </table>
+            )}
             {inspectingValue !== null && (
                 <Modal show={true} onHide={() => setInspectingValue(null)} title="Inspecting">
                     <div className={"w-debug-comm-log-inspect"}>
