@@ -391,6 +391,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                         </div>
                     </Modal>
                 )}
+                <div id="modal-root"></div>
             </div>
         );
     }
