@@ -28,6 +28,9 @@ interface ITbodyProps {
     onCheck: (index: string | number) => any;
     loading: boolean;
     columnWidths: number[]
+
+/*    selectedRow: number;
+    selectedColumn: number;*/
 }
 
 export default class Tbody extends React.Component<ITbodyProps> {

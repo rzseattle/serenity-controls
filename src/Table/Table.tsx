@@ -1,4 +1,4 @@
-import { ReactElement, Ref, StatelessComponent } from "react";
+import { ReactElement, Ref, StatelessComponent, SyntheticEvent } from "react";
 import "./Table.sass";
 
 declare var window: any;
@@ -19,6 +19,7 @@ import { LoadingIndicator } from "../LoadingIndicator";
 import { confirmDialog } from "../ConfirmDialog";
 import TableFiltersOverlay from "./TableFiltersOverlay";
 import { PrintJSON } from "../PrintJSON";
+import { HotKeys } from "../HotKeys";
 
 export interface IDataQuery {
     columns: IColumnData[];
@@ -69,6 +70,7 @@ interface ITableProps {
     infoRow?: ICellTemplate;
     groupBy?: IGroupByData[];
     fixedLayout?: boolean;
+    rowKeyMap?: { [index: string]: (event: SyntheticEvent) => any };
 }
 
 interface ITableState {
@@ -93,6 +95,8 @@ interface ITableState {
         widths: number[];
         isScrolled: boolean;
     };
+    selectedRow: number;
+    selectedColumn: number;
 }
 
 export class Table extends React.Component<ITableProps, ITableState> {
@@ -155,6 +159,8 @@ export class Table extends React.Component<ITableProps, ITableState> {
                 widths: [],
                 isScrolled: false,
             },
+            selectedRow: -1,
+            selectedColumn: -1,
         };
 
         console.log(this.state.fixedLayout, "this.state.fixedLayout");
@@ -666,133 +672,177 @@ export class Table extends React.Component<ITableProps, ITableState> {
         }
 
         return (
-            <div
-                className={"w-table  " + (this.state.loading ? "w-table-loading" : "")}
-                tabIndex={0}
-                onKeyDown={this.handleKeyDown}
-                ref={(el) => (this.containerRef = el)}
+            <HotKeys
+                actions={{
+                    arrowup: (e) => {
+                        e.preventDefault();
+
+                        this.setState({ selectedRow: Math.max(-1, this.state.selectedRow - 1) });
+                    },
+                    arrowdown: (e) => {
+                        e.preventDefault();
+                        this.setState({
+                            selectedRow: Math.min(this.state.data.length - 2, this.state.selectedRow + 1),
+                        });
+                    },
+                    arrowright: (e) => {
+                        e.preventDefault();
+                        this.setState({ selectedColumn: Math.min(columns.length - 2, this.state.selectedColumn + 1) });
+                    },
+                    arrowleft: (e) => {
+                        e.preventDefault();
+                        this.setState({ selectedColumn: Math.max(-1, this.state.selectedColumn - 1) });
+                    },
+                }}
+                autofocus={true}
+                debug={true}
             >
-                <div className="w-table-loader">
-                    <LoadingIndicator />
-                </div>
-                <div className="w-table-top">
-                    <FiltersPresenter
-                        order={this.state.order}
-                        filters={this.state.filters}
-                        FilterDelete={this.handleFilterDelete}
-                        orderDelete={this.handleOrderDelete}
-                    />
-                </div>
-                <table
-                    ref={(el) => (this.tableRef = el)}
-                    className={"w-table-" + this.hashCode + (this.state.fixedLayout ? " w-table-fixed" : "")}
+                <div
+                    className={"w-table  " + (this.state.loading ? "w-table-loading" : "")}
+                    /*onKeyDown={this.handleKeyDown}*/
+                    ref={(el) => (this.containerRef = el)}
                 >
-                    {this.props.showHeader && (
-                        <Thead
-                            selectable={this.props.selectable}
-                            columns={columns}
-                            order={deepCopy(this.state.order)}
-                            filters={deepCopy(this.state.filters)}
-                            onFilterChanged={this.handleFilterChanged}
-                            onCellClicked={this.headClicked}
-                            onCheckAllClicked={() => this.handleCheckClicked("all")}
-                            allChecked={this.state.allChecked}
+                    <div className="w-table-loader">
+                        <LoadingIndicator />
+                    </div>
+                    <div className="w-table-top">
+                        <FiltersPresenter
+                            order={this.state.order}
+                            filters={this.state.filters}
+                            FilterDelete={this.handleFilterDelete}
+                            orderDelete={this.handleOrderDelete}
                         />
-                    )}
-                    <tbody className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}>
-                        {this.state.dataSourceError != "" && (
-                            <Error colspan={columns.length + 1} error={this.state.dataSourceError} />
-                        )}
-                        {!this.state.loading && this.state.data.length == 0 && (
-                            <EmptyResult colspan={columns.length + 1} />
-                        )}
-                        {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
-                        {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
-                        {/*this.state.firstLoaded && */}
-                        {this.state.data.length > 0 && (
-                            <Tbody
-                                rowClassTemplate={this.props.rowClassTemplate}
-                                rowStyleTemplate={this.props.rowStyleTemplate}
-                                selection={deepCopy(this.state.selection)}
-                                onCheck={this.handleCheckClicked}
+                    </div>
+                    <table
+                        ref={(el) => (this.tableRef = el)}
+                        className={"w-table-" + this.hashCode + (this.state.fixedLayout ? " w-table-fixed" : "")}
+                    >
+                        {this.props.showHeader && (
+                            <Thead
                                 selectable={this.props.selectable}
                                 columns={columns}
-                                filters={this.state.filters}
-                                order={this.state.order}
-                                loading={this.state.loading}
-                                data={this.state.data}
-                                infoRow={this.props.infoRow}
-                                groupBy={this.props.groupBy}
-                                columnWidths={this.columnWidths}
+                                order={deepCopy(this.state.order)}
+                                filters={deepCopy(this.state.filters)}
+                                onFilterChanged={this.handleFilterChanged}
+                                onCellClicked={this.headClicked}
+                                onCheckAllClicked={() => this.handleCheckClicked("all")}
+                                allChecked={this.state.allChecked}
                             />
                         )}
-                    </tbody>
-
-                    {this.props.showFooter && (
-                        <tfoot>
-                            {this.state.firstLoaded && (
-                                <Footer
+                        <tbody
+                            className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}
+                        >
+                            {this.state.dataSourceError != "" && (
+                                <Error colspan={columns.length + 1} error={this.state.dataSourceError} />
+                            )}
+                            {!this.state.loading && this.state.data.length == 0 && (
+                                <EmptyResult colspan={columns.length + 1} />
+                            )}
+                            {this.state.loading && !this.state.firstLoaded && <Loading colspan={columns.length + 1} />}
+                            {/*TODO sprawdzić dlaczego first loaded jest potrzebne*/}
+                            {/*this.state.firstLoaded && */}
+                            {this.state.data.length > 0 && (
+                                <Tbody
+                                    rowClassTemplate={this.props.rowClassTemplate}
+                                    rowStyleTemplate={this.props.rowStyleTemplate}
+                                    selection={deepCopy(this.state.selection)}
+                                    onCheck={this.handleCheckClicked}
+                                    selectable={this.props.selectable}
                                     columns={columns}
-                                    count={this.state.countAll}
-                                    onPage={this.state.onPage}
-                                    onPageChanged={this.handleOnPageChange}
-                                    currentPage={this.state.currentPage}
-                                    currentPageChanged={this.handleCurrentPageChange}
-                                    reload={this.load}
+                                    filters={this.state.filters}
+                                    order={this.state.order}
+                                    loading={this.state.loading}
+                                    data={this.state.data}
+                                    infoRow={this.props.infoRow}
+                                    groupBy={this.props.groupBy}
+                                    columnWidths={this.columnWidths}
+                                    //selectedRow={this.state.selectedRow}
                                 />
                             )}
-                        </tfoot>
+                        </tbody>
+
+                        {this.props.showFooter && (
+                            <tfoot>
+                                {this.state.firstLoaded && (
+                                    <Footer
+                                        columns={columns}
+                                        count={this.state.countAll}
+                                        onPage={this.state.onPage}
+                                        onPageChanged={this.handleOnPageChange}
+                                        currentPage={this.state.currentPage}
+                                        currentPageChanged={this.handleCurrentPageChange}
+                                        reload={this.load}
+                                    />
+                                )}
+                            </tfoot>
+                        )}
+                    </table>
+
+                    {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
+                    {this.state.isFilterPanelVisible && (
+                        <TableFiltersOverlay
+                            columns={this.state.columns}
+                            filters={this.state.filters}
+                            onHide={() => {
+                                this.handleFilterPanelChange();
+                            }}
+                            onChange={(filter) => this.handleFilterChanged(filter)}
+                        />
                     )}
-                </table>
 
-                {this.state.dataSourceDebug ? <pre>{this.state.dataSourceDebug}</pre> : null}
-                {this.state.isFilterPanelVisible && (
-                    <TableFiltersOverlay
-                        columns={this.state.columns}
-                        filters={this.state.filters}
-                        onHide={() => {
-                            this.handleFilterPanelChange();
-                        }}
-                        onChange={(filter) => this.handleFilterChanged(filter)}
-                    />
-                )}
-
-                {this.state.fixedLayout && (
                     <style>
-                        {this.state.fixedLayoutData.widths.map(
-                            (el, index) =>
-                                ".w-table-" +
+                        {this.state.selectedRow > -1 &&
+                            ".w-table-" +
                                 this.hashCode +
-                                ">thead>tr>th:nth-child(" +
-                                (index + 1) +
-                                "), " +
-                                ".w-table-" +
+                                ">tbody>tr:nth-child( " +
+                                (this.state.selectedRow + 1) +
+                                " ) td{ background-color: lightgrey !important; }"}
+
+                        {this.state.selectedColumn > -1 &&
+                            ".w-table-" +
                                 this.hashCode +
-                                ">tbody>tr>td:nth-child(" +
-                                (index + 1) +
-                                "){ width: " +
-                                (el - fixedWithScrollDiff) +
-                                "px !important; }\n",
-                        )}
-                        .w-table-{this.hashCode}
-                        {"{height: calc( 100% - " + topHeight + "px );}"}
-                        {this.state.fixedLayoutData.isScrolled && (
-                            <>
-                                .w-table-{this.hashCode} .fixed-th
-                                {"{"}
-                                width: calc( 100% - {scrollBarWidth}px ){"}"}
-                            </>
-                        )}
-                        {/*{this.props.showFooter && (
+                                ">tbody>tr>td:nth-child( " +
+                                (this.state.selectedColumn + 1) +
+                                " ){ background-color: lightgrey !important; }"}
+                    </style>
+
+                    {this.state.fixedLayout && (
+                        <style>
+                            {this.state.fixedLayoutData.widths.map(
+                                (el, index) =>
+                                    ".w-table-" +
+                                    this.hashCode +
+                                    ">thead>tr>th:nth-child(" +
+                                    (index + 1) +
+                                    "), " +
+                                    ".w-table-" +
+                                    this.hashCode +
+                                    ">tbody>tr>td:nth-child(" +
+                                    (index + 1) +
+                                    "){ width: " +
+                                    (el - fixedWithScrollDiff) +
+                                    "px !important; }\n",
+                            )}
+                            .w-table-{this.hashCode}
+                            {"{height: calc( 100% - " + topHeight + "px );}"}
+                            {this.state.fixedLayoutData.isScrolled && (
+                                <>
+                                    .w-table-{this.hashCode} .fixed-th
+                                    {"{"}
+                                    width: calc( 100% - {scrollBarWidth}px ){"}"}
+                                </>
+                            )}
+                            {/*{this.props.showFooter && (
                         <>
                             .w-table-{this.hashCode} .fixed-tbody
                             {"{"}
                             height: calc( 100% - 40px ){"}"}
                         </>
                     )}*/}
-                    </style>
-                )}
-            </div>
+                        </style>
+                    )}
+                </div>
+            </HotKeys>
         );
     }
 }
