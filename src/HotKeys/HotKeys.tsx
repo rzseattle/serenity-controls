@@ -8,13 +8,21 @@ interface IHotKeyProps {
     children: any;
     root?: boolean;
     autofocus?: boolean;
+    captureInput?: boolean;
 }
 
-export const HotKeys = ({ autofocus = false, actions, debug = false, children, root = false }: IHotKeyProps) => {
+export const HotKeys = ({
+    autofocus = false,
+    actions,
+    debug = false,
+    children,
+    root = false,
+    captureInput = false,
+}: IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
 
     useEffect(() => {
-        if(autofocus){
+        if (autofocus) {
             ref.current.focus();
         }
 
@@ -46,9 +54,17 @@ export const HotKeys = ({ autofocus = false, actions, debug = false, children, r
             tabIndex={-1}
             onKeyDown={(e) => {
                 e.persist();
+                let tag = (e.nativeEvent.target as HTMLElement).tagName.toLowerCase();
+
+                if (!captureInput) {
+                    if (tag == "input" || tag == "textarea") {
+                        return false;
+                    }
+                }
+
                 const key: string = e.nativeEvent.key.toLowerCase();
                 if (debug) {
-                    console.log("[HotKeys] Key pressed: " + key);
+                    console.log("[HotKeys] Key pressed: " + key + " | Event source:" + tag);
                     if (actions[key] !== undefined) {
                         console.log("[HotKeys] Running action:" + key);
                     } else {
