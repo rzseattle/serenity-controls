@@ -695,7 +695,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                     },
                 }}
                 autofocus={true}
-                debug={true}
+                debug={false}
             >
                 <div
                     className={"w-table  " + (this.state.loading ? "w-table-loading" : "")}
