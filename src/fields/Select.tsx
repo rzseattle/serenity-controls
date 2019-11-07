@@ -1,7 +1,6 @@
 import * as React from "react";
 
-// @ts-ignore
-import Hotkeys from "react-hot-keys";
+
 
 import { Positioner, RelativePositionPresets } from "../Positioner";
 
@@ -16,7 +15,9 @@ import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import { Icon } from "../Icon";
 import { fI18n } from "../lib";
 import { toOptions } from "./Utils";
-import { HotkeysEvent } from "hotkeys-js";
+import { HotKeys } from "../HotKeys";
+import { SyntheticEvent } from "react";
+
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
@@ -166,8 +167,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     };
 
 
-    private onKeyDown = (keyName: string, e: KeyboardEvent, handle: HotkeysEvent) => {
+    private onKeyDown = ( e: React.KeyboardEvent) => {
         e.preventDefault();
+        e.stopPropagation();
+        const keyName = e.key;
+        alert(keyName);
         if (keyName == "up") {
             this.setState({ highlightedIndex: Math.max(0, this.state.highlightedIndex - 1) });
         } else if (keyName == "down") {
@@ -255,7 +259,10 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
 
         return (
-            <Hotkeys keyName="up,down,enter,esc" onKeyDown={this.onKeyDown} filter={(event: any) => true}>
+            /*<HotKeys keyName="up,down,enter,esc" onKeyDown={this.onKeyDown} filter={(event: any) => true}>*/
+            <HotKeys actions={{
+                "arrowup": this.onKeyDown,
+            }}>
                 {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
                     <input
                         ref={(el) => (this.searchField = el)}
@@ -277,7 +284,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         </DynamicSizeList>
                     )}
                 </AutoSizer>
-            </Hotkeys>
+            </HotKeys>
         );
     };
 

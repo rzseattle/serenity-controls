@@ -675,22 +675,23 @@ export class Table extends React.Component<ITableProps, ITableState> {
             <HotKeys
                 actions={{
                     arrowup: (e) => {
-                        e.preventDefault();
+
+                        e.nativeEvent.preventDefault();
 
                         this.setState({ selectedRow: Math.max(-1, this.state.selectedRow - 1) });
                     },
                     arrowdown: (e) => {
-                        e.preventDefault();
+                        e.nativeEvent.preventDefault();
                         this.setState({
                             selectedRow: Math.min(this.state.data.length - 2, this.state.selectedRow + 1),
                         });
                     },
                     arrowright: (e) => {
-                        e.preventDefault();
+                        e.nativeEvent.preventDefault();
                         this.setState({ selectedColumn: Math.min(columns.length - 2, this.state.selectedColumn + 1) });
                     },
                     arrowleft: (e) => {
-                        e.preventDefault();
+                        e.nativeEvent.preventDefault();
                         this.setState({ selectedColumn: Math.max(-1, this.state.selectedColumn - 1) });
                     },
                 }}

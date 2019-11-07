@@ -1,9 +1,8 @@
-import * as React from "react";
-import { SyntheticEvent, useEffect, useRef } from "react";
+import React, { KeyboardEventHandler, useEffect, useRef } from "react";
 import styles from "./HotKeys.module.sass";
 
 interface IHotKeyProps {
-    actions: { [index: string]: (event: SyntheticEvent) => any };
+    actions: { [index: string]:  (event: React.KeyboardEvent) => any  };
     debug?: boolean;
     children: any;
     root?: boolean;
@@ -52,7 +51,7 @@ export const HotKeys = ({
             className={root ? "" : styles.div}
             ref={ref}
             tabIndex={-1}
-            onKeyDown={(e) => {
+            onKeyDown={(e ) => {
                 e.persist();
                 let tag = (e.nativeEvent.target as HTMLElement).tagName.toLowerCase();
 
