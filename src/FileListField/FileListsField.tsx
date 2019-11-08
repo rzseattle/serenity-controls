@@ -163,8 +163,11 @@ export class FileListField extends React.Component<IFileListProps, any> {
                 {(!maxLength || (value && value.length < maxLength) || !value) && editable && (
                     <Dropzone onDrop={this.handleFileAdd}>
                         {({ getRootProps, getInputProps, isDragActive }) => {
+                            // @ts-ignore
                             return (
+                                // @ts-ignore
                                 <div {...getRootProps()} className="dropzone">
+                                    // @ts-ignore
                                     <input {...getInputProps()} />
                                     {isDragActive ? (
                                         <p>Drop files here...</p>
