@@ -143,6 +143,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
             openModal: this.props.openModal,
             closeModal: this.props.closeModal,
             parentContext: this.props.parentContext,
+            routeData: this.props.context.view
         };
     };
 

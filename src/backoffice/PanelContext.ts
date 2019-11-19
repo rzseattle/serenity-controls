@@ -3,12 +3,15 @@ import * as React from "react";
 import {IModalProps} from "../Modal";
 import * as NotificationSystem from "react-notification-system";
 import {useContext} from "react";
+import { IRouteElement } from "./interfaces/IRouteElement";
 
 
 export interface IPanelContext {
     /**
      * Url without last action part
      */
+
+    routeData: IRouteElement,
 
     baseURL: string;
 
