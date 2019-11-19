@@ -17,6 +17,7 @@ import { fI18n } from "../lib";
 import { toOptions } from "./Utils";
 import { HotKeys } from "../HotKeys";
 import { SyntheticEvent } from "react";
+import { PrintJSON } from "../PrintJSON";
 
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
@@ -158,7 +159,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 event: null,
             });
         }
-        this.dynamicList.forceUpdate();
+        //this.dynamicList.forceUpdate();
     };
 
     private handleClear = (e: React.MouseEvent) => {
@@ -190,8 +191,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
         if (keyName == "up" || keyName == "down") {
-            this.dynamicList.scrollToItem(this.state.highlightedIndex);
-            this.dynamicList.forceUpdate();
+            //this.dynamicList.scrollToItem(this.state.highlightedIndex);
+            //this.dynamicList.forceUpdate();
         }
     };
 
@@ -221,8 +222,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 searchedTxt: e.target.value,
                 highlightedIndex: e.target.value.length > 0 ? 0 : -1,
                 filteredOptions,
-            },
-            () => this.dynamicList.scrollToItem(0),
+            }
+            /*() => this.dynamicList.scrollToItem(0)*/,
         );
     };
 
@@ -244,7 +245,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     this.handleDropdownChange();
                 }}
                 onMouseEnter={() => {
-                    this.setState({ highlightedIndex: index }, () => this.dynamicList.forceUpdate());
+                    this.setState({ highlightedIndex: index } ); //() => this.dynamicList.forceUpdate()
                 }}
             >
                 {el.label}
@@ -272,10 +273,10 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         value={this.state.searchedTxt}
                     />
                 )}
-                <AutoSizer>
+                {/*<AutoSizer>
                     {({ width, height }: any) => (
                         <DynamicSizeList
-                            height={height - heightDiff /*- input height*/}
+                            height={height - heightDiff /*- input height*!/
                             itemCount={this.state.filteredOptions.length}
                             width={width}
                             ref={(el: any) => (this.dynamicList = el)}
@@ -283,7 +284,35 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             {this.renderRow}
                         </DynamicSizeList>
                     )}
-                </AutoSizer>
+                </AutoSizer>*/}
+
+
+                {this.state.filteredOptions.map(  (el, index) => {
+
+                return <div
+
+
+
+                    className={
+                        "w-select-item " +
+                        (this.props.value == el.value ? "w-select-selected " : "") +
+                        (index == this.state.highlightedIndex ? "w-select-highlighted " : "")
+                    }
+                    onClick={(e) => {
+                        this.handleChange(el.value, index);
+                        this.handleDropdownChange();
+                    }}
+                    onMouseEnter={() => {
+                        this.setState({ highlightedIndex: index }); //, () => this.dynamicList.forceUpdate()
+                    }}
+                >
+                    {el.label}
+                </div>
+
+                })}
+
+
+
             </HotKeys>
         );
     };
