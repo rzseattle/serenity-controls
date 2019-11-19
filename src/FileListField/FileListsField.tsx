@@ -167,7 +167,8 @@ export class FileListField extends React.Component<IFileListProps, any> {
                             return (
                                 // @ts-ignore
                                 <div {...getRootProps()} className="dropzone">
-                                    // @ts-ignore
+                                    {/*
+  // @ts-ignore */}
                                     <input {...getInputProps()} />
                                     {isDragActive ? (
                                         <p>Drop files here...</p>

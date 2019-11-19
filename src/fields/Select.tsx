@@ -1,7 +1,5 @@
 import * as React from "react";
 
-
-
 import { Positioner, RelativePositionPresets } from "../Positioner";
 
 //import { List, AutoSizer, CellMeasurer, CellMeasurerCache, ListRowProps } from "react-virtualized";
@@ -18,7 +16,6 @@ import { toOptions } from "./Utils";
 import { HotKeys } from "../HotKeys";
 import { SyntheticEvent } from "react";
 import { PrintJSON } from "../PrintJSON";
-
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
@@ -167,8 +164,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         this.handleChange(null);
     };
 
-
-    private onKeyDown = ( e: React.KeyboardEvent) => {
+    private onKeyDown = (e: React.KeyboardEvent) => {
         e.preventDefault();
         e.stopPropagation();
         const keyName = e.key;
@@ -222,8 +218,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 searchedTxt: e.target.value,
                 highlightedIndex: e.target.value.length > 0 ? 0 : -1,
                 filteredOptions,
-            }
-            /*() => this.dynamicList.scrollToItem(0)*/,
+            },
+            /*() => this.dynamicList.scrollToItem(0)*/
         );
     };
 
@@ -245,7 +241,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     this.handleDropdownChange();
                 }}
                 onMouseEnter={() => {
-                    this.setState({ highlightedIndex: index } ); //() => this.dynamicList.forceUpdate()
+                    this.setState({ highlightedIndex: index }); //() => this.dynamicList.forceUpdate()
                 }}
             >
                 {el.label}
@@ -261,9 +257,11 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
         return (
             /*<HotKeys keyName="up,down,enter,esc" onKeyDown={this.onKeyDown} filter={(event: any) => true}>*/
-            <HotKeys actions={{
-                "arrowup": this.onKeyDown,
-            }}>
+            <HotKeys
+                actions={{
+                    arrowup: this.onKeyDown,
+                }}
+            >
                 {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
                     <input
                         ref={(el) => (this.searchField = el)}
@@ -286,33 +284,30 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     )}
                 </AutoSizer>*/}
 
+                <div style={{ height: 300, overflow: "auto" }}>
 
-                {this.state.filteredOptions.map(  (el, index) => {
-
-                return <div
-
-
-
-                    className={
-                        "w-select-item " +
-                        (this.props.value == el.value ? "w-select-selected " : "") +
-                        (index == this.state.highlightedIndex ? "w-select-highlighted " : "")
-                    }
-                    onClick={(e) => {
-                        this.handleChange(el.value, index);
-                        this.handleDropdownChange();
-                    }}
-                    onMouseEnter={() => {
-                        this.setState({ highlightedIndex: index }); //, () => this.dynamicList.forceUpdate()
-                    }}
-                >
-                    {el.label}
+                    {this.state.filteredOptions.map((el, index) => {
+                        return (
+                            <div
+                                key={el.value}
+                                className={
+                                    "w-select-item " +
+                                    (this.props.value == el.value ? "w-select-selected " : "") +
+                                    (index == this.state.highlightedIndex ? "w-select-highlighted " : "")
+                                }
+                                onClick={(e) => {
+                                    this.handleChange(el.value, index);
+                                    this.handleDropdownChange();
+                                }}
+                                onMouseEnter={() => {
+                                    this.setState({ highlightedIndex: index }); //, () => this.dynamicList.forceUpdate()
+                                }}
+                            >
+                                {el.label}
+                            </div>
+                        );
+                    })}
                 </div>
-
-                })}
-
-
-
             </HotKeys>
         );
     };
