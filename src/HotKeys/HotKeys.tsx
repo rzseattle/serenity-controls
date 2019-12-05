@@ -2,13 +2,13 @@ import React, { KeyboardEventHandler, useEffect, useRef } from "react";
 import styles from "./HotKeys.module.sass";
 
 interface IHotKeyProps {
-    actions: { [index: string]:  (event: React.KeyboardEvent, keyName: string) => any  };
+    actions: Array<{ key: string | string[]; handler: (event: React.KeyboardEvent, keyName: string) => any }>;
     debug?: boolean;
     children: any;
     root?: boolean;
     autofocus?: boolean;
     captureInput?: boolean;
-    filter?: ( event: React.KeyboardEvent ) => boolean
+    // filter?: (event: React.KeyboardEvent) => boolean;
 }
 
 export const HotKeys = ({
@@ -18,10 +18,11 @@ export const HotKeys = ({
     children,
     root = false,
     captureInput = false,
-    filter= (event) => true
-
-}: IHotKeyProps) => {
+}: // filter = (event) => true,
+IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
+
+    const map = useRef<any>({});
 
     useEffect(() => {
         if (autofocus) {
@@ -54,8 +55,11 @@ export const HotKeys = ({
             className={root ? "" : styles.div}
             ref={ref}
             tabIndex={-1}
-            onKeyUp={() => {}}
-            onKeyDown={(e ) => {
+            onKeyUp={(e) => {
+                const key: string = e.nativeEvent.key;
+                delete map.current[key];
+            }}
+            onKeyDown={(e) => {
                 e.persist();
                 let tag = (e.nativeEvent.target as HTMLElement).tagName.toLowerCase();
                 const key: string = e.nativeEvent.key;
@@ -63,12 +67,45 @@ export const HotKeys = ({
                 if (!captureInput) {
                     if (tag == "input" || tag == "textarea") {
                         if (debug) {
-                            console.log("[HotKeys] Keypress ingored. Source from input. Key pressed: " + key + " | Event source:" + tag );
+                            console.log(
+                                "[HotKeys] Keypress ingored. Source from input. Key pressed: " +
+                                    key +
+                                    " | Event source:" +
+                                    tag,
+                            );
                         }
                         return false;
                     }
                 }
 
+                map.current[key] = true;
+
+                console.log(map.current);
+                console.log(actions);
+
+                for (const i of actions) {
+
+                    console.log(typeof i.key);
+                    if (typeof i.key == "string") {
+                        if (map.current[i.key] == true) {
+                            console.log("akcja!!");
+                            break;
+                        }
+                    } else if ( Array.isArray(i.key)) {
+                        let pass = true;
+                        for (const key of i.key) {
+                            if (map.current[key] == undefined) {
+                                pass = false;
+                            }
+                        }
+                        if (pass) {
+                            console.log("akcja !!!");
+                            break;
+                        } else {
+                            console.log("not pass !!!");
+                        }
+                    }
+                }
 
                 if (debug) {
                     console.log("[HotKeys] Key pressed: " + key + " | Event source:" + tag);
@@ -79,7 +116,7 @@ export const HotKeys = ({
                     }
                 }
 
-                if (actions[key] !== undefined) {
+                if (actions[key] !== undefined && false) {
                     e.stopPropagation();
                     e.nativeEvent.stopPropagation();
                     actions[key](e, key);

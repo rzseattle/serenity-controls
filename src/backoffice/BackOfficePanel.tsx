@@ -25,7 +25,7 @@ import "./BackOfficePanel.sass";
 import DebugCommLog from "./DebugCommLog";
 import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { HotKeys } from "../HotKeys";
-import { Key } from 'ts-key-enum';
+import { Key } from "ts-key-enum";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare var PRODUCTION: boolean;
@@ -240,12 +240,13 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
         const { topActions } = this.props;
         return (
             <HotKeys
-                actions={{
-                    [Key.Escape]: this.toggleLayerMenu,
-                    [Key.ArrowLeft]: () => window.history.back(),
-                    [Key.ArrowRight]: () => window.history.forward(),
-                }}
+                actions={[
+                    { key: Key.Escape, handler: this.toggleLayerMenu },
+                    { key: [Key.ArrowLeft, Key.Control], handler: () => window.history.back() },
+                    { key: [Key.ArrowRight, Key.Control], handler: () => window.history.forward() },
+                ]}
                 root={true}
+                debug={true}
             >
                 <div className="w-panel-container w-backoffice-panel" ref={(container) => (this.container = container)}>
                     {!this.state.onlyBody && (
