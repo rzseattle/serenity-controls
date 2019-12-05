@@ -1,21 +1,13 @@
 import * as React from "react";
 
 import { Positioner, RelativePositionPresets } from "../Positioner";
-
-//import { List, AutoSizer, CellMeasurer, CellMeasurerCache, ListRowProps } from "react-virtualized";
-
-// @ts-ignore - couse its in beta
-import { DynamicSizeList } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-
 import "./Select.sass";
 import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import { Icon } from "../Icon";
 import { fI18n } from "../lib";
 import { toOptions } from "./Utils";
 import { HotKeys } from "../HotKeys";
-import { SyntheticEvent } from "react";
-import { PrintJSON } from "../PrintJSON";
+import { Key } from "ts-key-enum";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
@@ -59,6 +51,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     private presenter: HTMLDivElement;
     private searchField: HTMLInputElement | null;
     private cache: any;
+    private listRef: HTMLDivElement;
 
     private rowHeights: number[] = [];
 
@@ -73,34 +66,15 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
         this.state = {
-            dropdownVisible: false,
+            dropdownVisible: props.mode === "list" ? true : false,
             searchedTxt: "",
             highlightedIndex: -1,
             filteredOptions: options as IOption[],
         };
 
-        /*this.cache = new CellMeasurerCache({
-            fixedWidth: true,
-            defaultHeight: 30,
-        });*/
-        //this.rowHeights =
     }
 
-    /*shouldComponentUpdate(nextProps, nextState) {
 
-        return !deepIsEqual(
-            [
-                this.props.columns,
-                this.props.onPage,
-                this.props.currentPage
-            ],
-            [
-                nextProps.columns,
-                nextProps.onPage,
-                nextProps.currentPage
-            ]
-        )
-    }*/
 
     public componentDidMount() {
         // this.handleDropdownChange();
@@ -164,31 +138,44 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         this.handleChange(null);
     };
 
-    private onKeyDown = (e: React.KeyboardEvent) => {
+    componentDidUpdate(prevProps: Readonly<ISelectProps>, prevState: Readonly<ISelectState>, snapshot?: any): void {
+        if (this.listRef) {
+            const highlighted = this.listRef.getElementsByClassName("w-select-highlighted")[0] as HTMLElement;
+            if (highlighted) {
+                const elTop = highlighted.offsetTop -36;
+                const elHeight = highlighted.getBoundingClientRect().height;
+                const listHeight = this.listRef.getBoundingClientRect().height;
+
+                if (listHeight + this.listRef.scrollTop < elTop + elHeight) {
+                    this.listRef.scrollTop += elHeight;
+                }
+
+                if (this.listRef.scrollTop > elTop ) {
+                    this.listRef.scrollTop -= elHeight;
+                }
+            }
+        }
+    }
+
+    private onKeyDown = (e: React.KeyboardEvent, keyName: string) => {
         e.preventDefault();
         e.stopPropagation();
-        const keyName = e.key;
-        alert(keyName);
-        if (keyName == "up") {
+
+        if (keyName == Key.ArrowUp) {
             this.setState({ highlightedIndex: Math.max(0, this.state.highlightedIndex - 1) });
-        } else if (keyName == "down") {
+        } else if (keyName == Key.ArrowDown) {
             this.setState({
                 highlightedIndex: Math.min(this.state.filteredOptions.length - 1, this.state.highlightedIndex + 1),
             });
-        } else if (keyName == "enter") {
+        } else if (keyName == Key.Enter) {
             const el = this.state.filteredOptions[this.state.highlightedIndex];
             if (el !== undefined) {
                 this.handleChange(el.value);
 
                 this.handleDropdownChange();
             }
-        } else if (keyName == "esc") {
+        } else if (keyName == Key.Escape) {
             this.handleDropdownChange();
-        }
-
-        if (keyName == "up" || keyName == "down") {
-            //this.dynamicList.scrollToItem(this.state.highlightedIndex);
-            //this.dynamicList.forceUpdate();
         }
     };
 
@@ -256,11 +243,14 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
 
         return (
-            /*<HotKeys keyName="up,down,enter,esc" onKeyDown={this.onKeyDown} filter={(event: any) => true}>*/
             <HotKeys
                 actions={{
-                    arrowup: this.onKeyDown,
+                    [Key.ArrowUp]: this.onKeyDown,
+                    [Key.ArrowDown]: this.onKeyDown,
+                    [Key.Enter]: this.onKeyDown,
+                    [Key.Escape]: this.onKeyDown,
                 }}
+                captureInput={true}
             >
                 {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
                     <input
@@ -284,8 +274,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     )}
                 </AutoSizer>*/}
 
-                <div style={{ height: 300, overflow: "auto" }}>
-
+                <div style={{ height: 260, overflow: "auto", position: "relative" }} ref={(el) => (this.listRef = el)}>
                     {this.state.filteredOptions.map((el, index) => {
                         return (
                             <div

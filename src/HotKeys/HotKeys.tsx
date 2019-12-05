@@ -2,12 +2,13 @@ import React, { KeyboardEventHandler, useEffect, useRef } from "react";
 import styles from "./HotKeys.module.sass";
 
 interface IHotKeyProps {
-    actions: { [index: string]:  (event: React.KeyboardEvent) => any  };
+    actions: { [index: string]:  (event: React.KeyboardEvent, keyName: string) => any  };
     debug?: boolean;
     children: any;
     root?: boolean;
     autofocus?: boolean;
     captureInput?: boolean;
+    filter?: ( event: React.KeyboardEvent ) => boolean
 }
 
 export const HotKeys = ({
@@ -17,6 +18,8 @@ export const HotKeys = ({
     children,
     root = false,
     captureInput = false,
+    filter= (event) => true
+
 }: IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
 
@@ -51,17 +54,22 @@ export const HotKeys = ({
             className={root ? "" : styles.div}
             ref={ref}
             tabIndex={-1}
+            onKeyUp={() => {}}
             onKeyDown={(e ) => {
                 e.persist();
                 let tag = (e.nativeEvent.target as HTMLElement).tagName.toLowerCase();
+                const key: string = e.nativeEvent.key;
 
                 if (!captureInput) {
                     if (tag == "input" || tag == "textarea") {
+                        if (debug) {
+                            console.log("[HotKeys] Keypress ingored. Source from input. Key pressed: " + key + " | Event source:" + tag );
+                        }
                         return false;
                     }
                 }
 
-                const key: string = e.nativeEvent.key.toLowerCase();
+
                 if (debug) {
                     console.log("[HotKeys] Key pressed: " + key + " | Event source:" + tag);
                     if (actions[key] !== undefined) {
@@ -74,7 +82,7 @@ export const HotKeys = ({
                 if (actions[key] !== undefined) {
                     e.stopPropagation();
                     e.nativeEvent.stopPropagation();
-                    actions[key](e);
+                    actions[key](e, key);
                 }
             }}
         >

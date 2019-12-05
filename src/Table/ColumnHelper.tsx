@@ -5,7 +5,6 @@ import { IOption } from "../fields/Interfaces";
 import { IFilter, NumericFilter, TextFilter, DateFilter, SwitchFilter, SelectFilter } from "../filters";
 import { Icon } from "../Icon";
 import EditableTextCell from "./cells/editable/EditableTextCell";
-import index from "react-virtualized-auto-sizer";
 import { IEditableCell, IEditableCellProps } from "./cells/editable/IEditableCellProps";
 import { ValidationError } from "../BForm/ValidationError";
 

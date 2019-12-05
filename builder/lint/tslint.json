@@ -1,5 +1,5 @@
 {
-    "plugins": ["react"],
+    "plugins": ["react", "react-hooks"],
     "extends": ["tslint:recommended", "tslint-react"],
     "rules": {
         "no-set-state": "off",
@@ -20,6 +20,8 @@
         "semicolon": [true, "always", "ignore-bound-class-methods"],
         "forin": false,
         "no-bitwise": false,
-        "radix": false
+        "radix": false,
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
     }
 }

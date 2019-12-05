@@ -45,6 +45,7 @@ var getLoaders = function(production, input) {
                             plugins: [
                                 /*production && "@transform-react-constant-elements",
                                 production && "@transform-react-inline-elements",*/
+
                                 "@babel/plugin-syntax-jsx",
                                 "@babel/plugin-syntax-dynamic-import",
 
@@ -52,7 +53,8 @@ var getLoaders = function(production, input) {
                                 "@babel/proposal-object-rest-spread",
                                 "react-hot-loader/babel",
                                 "@babel/plugin-proposal-optional-chaining",
-                                "@babel/plugin-proposal-nullish-coalescing-operator"
+                                "@babel/plugin-proposal-nullish-coalescing-operator",
+
                             ],
                         },
                     },
