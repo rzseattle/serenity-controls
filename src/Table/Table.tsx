@@ -1,9 +1,6 @@
-import { ReactElement, Ref, StatelessComponent, SyntheticEvent } from "react";
-import "./Table.sass";
-
-declare var window: any;
-declare var PRODUCTION: any;
 import * as React from "react";
+import { ReactElement, StatelessComponent, SyntheticEvent } from "react";
+import "./Table.sass";
 import { ColumnHelper } from "./ColumnHelper";
 import FiltersPresenter from "./FiltersPresenter";
 import Tbody from "./Tbody";
@@ -18,8 +15,11 @@ import TextFilter from "../filters/TextFilter";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { confirmDialog } from "../ConfirmDialog";
 import TableFiltersOverlay from "./TableFiltersOverlay";
-import { PrintJSON } from "../PrintJSON";
 import { HotKeys } from "../HotKeys";
+import { Key } from "ts-key-enum";
+
+declare var window: any;
+declare var PRODUCTION: any;
 
 export interface IDataQuery {
     columns: IColumnData[];
@@ -71,6 +71,7 @@ interface ITableProps {
     groupBy?: IGroupByData[];
     fixedLayout?: boolean;
     rowKeyMap?: { [index: string]: (event: SyntheticEvent) => any };
+    autofocus?: boolean;
 }
 
 interface ITableState {
@@ -115,6 +116,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         onSelectionChange: null,
         groupBy: [],
         fixedLayout: false,
+        autofocus: false,
     };
     private tmpDragStartY: number;
     private xhrConnection: XMLHttpRequest;
@@ -673,29 +675,42 @@ export class Table extends React.Component<ITableProps, ITableState> {
 
         return (
             <HotKeys
-                actions={{
-                    arrowup: (e) => {
+                actions={[
+                    {
+                        key: Key.ArrowUp,
+                        handler: (e) => {
+                            e.nativeEvent.preventDefault();
 
-                        e.nativeEvent.preventDefault();
-
-                        this.setState({ selectedRow: Math.max(-1, this.state.selectedRow - 1) });
+                            this.setState({ selectedRow: Math.max(-1, this.state.selectedRow - 1) });
+                        },
                     },
-                    arrowdown: (e) => {
-                        e.nativeEvent.preventDefault();
-                        this.setState({
-                            selectedRow: Math.min(this.state.data.length - 2, this.state.selectedRow + 1),
-                        });
+                    {
+                        key: Key.ArrowDown,
+                        handler: (e) => {
+                            e.nativeEvent.preventDefault();
+                            this.setState({
+                                selectedRow: Math.min(this.state.data.length - 2, this.state.selectedRow + 1),
+                            });
+                        },
                     },
-                    arrowright: (e) => {
-                        e.nativeEvent.preventDefault();
-                        this.setState({ selectedColumn: Math.min(columns.length - 2, this.state.selectedColumn + 1) });
+                    {
+                        key: Key.ArrowRight,
+                        handler: (e) => {
+                            e.nativeEvent.preventDefault();
+                            this.setState({
+                                selectedColumn: Math.min(columns.length - 2, this.state.selectedColumn + 1),
+                            });
+                        },
                     },
-                    arrowleft: (e) => {
-                        e.nativeEvent.preventDefault();
-                        this.setState({ selectedColumn: Math.max(-1, this.state.selectedColumn - 1) });
+                    {
+                        key: Key.ArrowLeft,
+                        handler: (e) => {
+                            e.nativeEvent.preventDefault();
+                            this.setState({ selectedColumn: Math.max(-1, this.state.selectedColumn - 1) });
+                        },
                     },
-                }}
-                autofocus={true}
+                ]}
+                autofocus={this.props.autofocus}
                 debug={false}
             >
                 <div

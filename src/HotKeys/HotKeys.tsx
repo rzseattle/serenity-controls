@@ -80,47 +80,46 @@ IHotKeyProps) => {
 
                 map.current[key] = true;
 
-                console.log(map.current);
-                console.log(actions);
+                if (debug) {
+                    console.log("[HotKeys] Key pressed: " + key + " | Event source:" + tag);
+                }
 
                 for (const i of actions) {
-
-                    console.log(typeof i.key);
                     if (typeof i.key == "string") {
                         if (map.current[i.key] == true) {
-                            console.log("akcja!!");
+                            if (debug) {
+                                console.log("[HotKeys] Running action:" + key);
+                            }
+                            i.handler(e, key);
+
                             break;
                         }
-                    } else if ( Array.isArray(i.key)) {
+                    } else if (Array.isArray(i.key)) {
                         let pass = true;
-                        for (const key of i.key) {
-                            if (map.current[key] == undefined) {
+                        for (const oneOfKey of i.key) {
+                            if (map.current[oneOfKey] == undefined) {
                                 pass = false;
                             }
                         }
                         if (pass) {
-                            console.log("akcja !!!");
+                            e.stopPropagation();
+                            e.nativeEvent.stopPropagation();
+                            i.handler(e, key);
+                            if (debug) {
+                                console.log("[HotKeys] Running action:" + key);
+                            }
                             break;
                         } else {
-                            console.log("not pass !!!");
+                            //console.log("not pass !!!");
                         }
                     }
                 }
 
-                if (debug) {
-                    console.log("[HotKeys] Key pressed: " + key + " | Event source:" + tag);
-                    if (actions[key] !== undefined) {
-                        console.log("[HotKeys] Running action:" + key);
-                    } else {
-                        console.log("[HotKeys] No action found:", Object.keys(actions).join(","));
-                    }
-                }
-
-                if (actions[key] !== undefined && false) {
+                /*if (actions[key] !== undefined && false) {
                     e.stopPropagation();
                     e.nativeEvent.stopPropagation();
                     actions[key](e, key);
-                }
+                }*/
             }}
         >
             {children}

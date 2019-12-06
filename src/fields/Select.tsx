@@ -71,10 +71,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             highlightedIndex: -1,
             filteredOptions: options as IOption[],
         };
-
     }
-
-
 
     public componentDidMount() {
         // this.handleDropdownChange();
@@ -142,7 +139,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         if (this.listRef) {
             const highlighted = this.listRef.getElementsByClassName("w-select-highlighted")[0] as HTMLElement;
             if (highlighted) {
-                const elTop = highlighted.offsetTop -36;
+                const elTop = highlighted.offsetTop - 36;
                 const elHeight = highlighted.getBoundingClientRect().height;
                 const listHeight = this.listRef.getBoundingClientRect().height;
 
@@ -150,7 +147,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     this.listRef.scrollTop += elHeight;
                 }
 
-                if (this.listRef.scrollTop > elTop ) {
+                if (this.listRef.scrollTop > elTop) {
                     this.listRef.scrollTop -= elHeight;
                 }
             }
@@ -244,12 +241,12 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
         return (
             <HotKeys
-                actions={{
-                    [Key.ArrowUp]: this.onKeyDown,
-                    [Key.ArrowDown]: this.onKeyDown,
-                    [Key.Enter]: this.onKeyDown,
-                    [Key.Escape]: this.onKeyDown,
-                }}
+                actions={[
+                    { key: Key.ArrowUp, handler: this.onKeyDown },
+                    { key: Key.ArrowDown, handler: this.onKeyDown },
+                    { key: Key.Enter, handler: this.onKeyDown },
+                    { key: Key.Escape, handler: this.onKeyDown },
+                ]}
                 captureInput={true}
             >
                 {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
