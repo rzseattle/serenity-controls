@@ -1,16 +1,95 @@
 import React, { KeyboardEventHandler, useEffect, useRef } from "react";
 import styles from "./HotKeys.module.sass";
+import { log } from "../lib/Log";
+
+declare type Callback = (event: React.KeyboardEvent, keyName: string) => any;
+interface IHandler {
+    key: string | string[];
+    handler: Callback;
+    onRelease?: Callback;
+}
 
 interface IHotKeyProps {
-    actions?: Array<{ key: string | string[]; handler: (event: React.KeyboardEvent, keyName: string) => any }>;
+    actions?: IHandler[];
     debug?: boolean;
     children: any;
     root?: boolean;
     autofocus?: boolean;
     captureInput?: boolean;
     observeFromInput?: string[];
-    handler?: (event: React.KeyboardEvent, keyName: string) => any | null;
+    handler?: Callback;
+    stopPropagation?: boolean;
 }
+
+const findHandler = (involvedKeys: any, handlers: IHandler[]): IHandler | null => {
+    for (const i of handlers) {
+        if (typeof i.key == "string") {
+            if (involvedKeys[i.key] == true) {
+                return i;
+                break;
+            }
+        } else if (Array.isArray(i.key)) {
+            let pass = true;
+            for (const oneOfKey of i.key) {
+                if (involvedKeys[oneOfKey] == undefined) {
+                    pass = false;
+                }
+            }
+            if (pass) {
+                return i;
+                break;
+            }
+        }
+    }
+    return null;
+};
+
+const runHandler = (
+    event: React.KeyboardEvent,
+    callback: Callback,
+    keys: string,
+    stopPropagation: boolean,
+    debug: boolean,
+) => {
+    if (stopPropagation) {
+        event.stopPropagation();
+        event.nativeEvent.stopPropagation();
+    }
+    if (debug) {
+        log("[HotKeys] Running action:" + keys);
+    }
+
+    callback(event, keys);
+};
+
+const shouldBeProcessed = (
+    event: React.KeyboardEvent,
+    key: string,
+    captureInput: boolean,
+    observeFromInput: string[],
+    debug: boolean,
+): boolean => {
+    const tag = (event.nativeEvent.target as HTMLElement).tagName.toLowerCase();
+    if (!captureInput && (tag == "input" || tag == "textarea")) {
+        if (!observeFromInput.includes(key)) {
+            if (debug) {
+                log("[HotKeys] Keypress ingored. Source from input. Key pressed: " + key + " | Event source:" + tag);
+            }
+            return false;
+        } else {
+            if (debug) {
+                log(
+                    "[HotKeys] Keypress not ignored (key observed from intput). Source from input. Key pressed: " +
+                        key +
+                        " | Event source:" +
+                        tag,
+                );
+            }
+        }
+    }
+
+    return true;
+};
 
 export const HotKeys = ({
     autofocus = false,
@@ -21,6 +100,7 @@ export const HotKeys = ({
     captureInput = false,
     observeFromInput = [],
     handler = null,
+    stopPropagation = true,
 }: // filter = (event) => true,
 IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
@@ -39,7 +119,7 @@ IHotKeyProps) => {
             setTimeout(() => {
                 if (document.activeElement.tagName.toLowerCase() == "body") {
                     if (debug) {
-                        console.log("[HotKeys] Focusing root element");
+                        log("[HotKeys] Focusing root element");
                     }
                     ref.current.focus();
                 }
@@ -59,88 +139,42 @@ IHotKeyProps) => {
             ref={ref}
             tabIndex={-1}
             onKeyUp={(e) => {
+                e.persist();
                 const key: string = e.nativeEvent.key;
-                delete map.current[key];
+                if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug)) {
+                    const foundHandler = findHandler(map.current, actions);
+                    if (foundHandler !== null && foundHandler.onRelease !== undefined) {
+                        runHandler(
+                            e,
+                            foundHandler.onRelease,
+                            Object.keys(map.current).join("+"),
+                            stopPropagation,
+                            debug,
+                        );
+                    }
+                    delete map.current[key];
 
-                if (handler !== null) {
-                    handler(e, Object.keys(map.current).join("+"));
+                    if (handler !== null) {
+                        runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, debug);
+                    }
                 }
             }}
             onKeyDown={(e) => {
                 e.persist();
-                let tag = (e.nativeEvent.target as HTMLElement).tagName.toLowerCase();
                 const key: string = e.nativeEvent.key;
-
-                if (!captureInput) {
-                    if (tag == "input" || tag == "textarea") {
-                        if (!observeFromInput.includes(key)) {
-                            if (debug) {
-                                console.log(
-                                    "[HotKeys] Keypress ingored. Source from input. Key pressed: " +
-                                        key +
-                                        " | Event source:" +
-                                        tag,
-                                );
-                            }
-                            return false;
-                        } else {
-                            if (debug) {
-                                console.log(
-                                    "[HotKeys] Keypress not ignored (key observed from intput). Source from input. Key pressed: " +
-                                        key +
-                                        " | Event source:" +
-                                        tag,
-                                );
-                            }
-                        }
+                if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug)) {
+                    map.current[key] = true;
+                    if (debug) {
+                        log("[HotKeys] Key pressed: " + key + " | Event source:" + e.target);
+                    }
+                    if (handler !== null) {
+                        runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, debug);
+                    }
+                    const foundHandler = findHandler(map.current, actions);
+                    if (foundHandler !== null) {
+                        runHandler(e, foundHandler.handler, Object.keys(map.current).join("+"), stopPropagation, debug);
                     }
                 }
-
-                map.current[key] = true;
-
-                if (debug) {
-                    console.log("[HotKeys] Key pressed: " + key + " | Event source:" + tag);
-                }
-
-                if (handler !== null) {
-                    handler(e, Object.keys(map.current).join("+"));
-                }
-
-                for (const i of actions) {
-                    if (typeof i.key == "string") {
-                        if (map.current[i.key] == true) {
-                            if (debug) {
-                                console.log("[HotKeys] Running action:" + key);
-                            }
-                            i.handler(e, key);
-                            break;
-                        }
-                    } else if (Array.isArray(i.key)) {
-                        let pass = true;
-                        for (const oneOfKey of i.key) {
-                            if (map.current[oneOfKey] == undefined) {
-                                pass = false;
-                            }
-                        }
-                        if (pass) {
-                            e.stopPropagation();
-                            e.nativeEvent.stopPropagation();
-                            i.handler(e, i.key.join("+"));
-                            if (debug) {
-                                console.log("[HotKeys] Running action:" + i.key);
-                            }
-                            break;
-                        } else {
-                            //console.log("not pass !!!");
-                        }
-                    }
-                }
-
-                /*if (actions[key] !== undefined && false) {
-                    e.stopPropagation();
-                    e.nativeEvent.stopPropagation();
-                    actions[key](e, key);
-                }*/
             }}
         >
             {children}
