@@ -13,12 +13,12 @@ const HeightAdjuster = React.memo((props: IIconProps) => {
 
     let el: Element = document.documentElement;
 
-    //tmp to change
+    // tmp to change
     const result = document.getElementsByClassName("w-panel-body");
-    if(result.length > 0) {
+    if (result.length > 0) {
         el = result[0];
     }
-    //\tmp to change
+    // \tmp to change
 
     const originalWindowHeight = el.scrollHeight;
 
