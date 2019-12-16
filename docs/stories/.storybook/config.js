@@ -1,6 +1,7 @@
+import React, { useState } from "react";
 import { configure, addDecorator } from "@storybook/react";
 import { withInfo } from "@storybook/addon-info";
-import '@storybook/addon-console';
+import "@storybook/addon-console";
 
 addDecorator(withInfo);
 // automatically import all files ending in *.stories.js
