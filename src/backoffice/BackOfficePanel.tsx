@@ -6,8 +6,6 @@ import { IMenuElement, IMenuSection, Menu } from "./Menu";
 import * as NProgress from "nprogress/nprogress.js";
 import "nprogress/nprogress.css";
 
-import hotkeys, { KeyHandler } from "hotkeys-js";
-
 import { LoadingIndicator } from "../LoadingIndicator";
 
 import { IModalProps, Modal } from "../Modal";
