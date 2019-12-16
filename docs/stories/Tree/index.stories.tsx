@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { storiesOf } from "@storybook/react";
 import { Panel } from "../../../src/Panel";
 
-import "react-checkbox-tree/src/scss/react-checkbox-tree.scss";
 import { Tree, INode } from "../../../src/Tree/Tree";
 import { PrintJSON } from "../../../src/PrintJSON";
 

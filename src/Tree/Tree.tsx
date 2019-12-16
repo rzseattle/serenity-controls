@@ -1,8 +1,8 @@
 import * as React from "react";
-import CheckboxTree from "react-checkbox-tree";
+
 import "./Tree.sass";
 
-import "react-checkbox-tree/src/scss/react-checkbox-tree.scss";
+
 import { Icon } from "../Icon";
 import { useEffect, useState } from "react";
 import { deepCopy } from "../lib";
