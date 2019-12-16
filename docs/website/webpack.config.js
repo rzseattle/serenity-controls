@@ -51,7 +51,7 @@ module.exports = (env) => {
                             "@babel/react",
                         ],
                         plugins: [
-                            "transform-react-constant-elements",
+                            /*"transform-react-constant-elements",*/
                             /*"transform-react-inline-elements",*/
                             "@babel/plugin-syntax-jsx",
                             "@babel/proposal-class-properties",

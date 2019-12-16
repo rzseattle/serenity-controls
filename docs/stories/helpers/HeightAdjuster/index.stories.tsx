@@ -38,9 +38,8 @@ storiesOf("Helpers/HeightAdjuster", module)
                 <div style={{ height: "200px" }} className={"helper-target"}>
                     <HeightAdjuster
                         parent={() => {
-                            return document.getElementsByClassName("helper-target")[0];
+                            return document.getElementsByClassName("helper-target")[0] as HTMLElement;
                         }}
-                        xxxxx={() => {}}
                     >
                         {(height: number) => {
                             return (
