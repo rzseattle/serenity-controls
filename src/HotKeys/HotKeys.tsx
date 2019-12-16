@@ -8,6 +8,7 @@ interface IHotKeyProps {
     root?: boolean;
     autofocus?: boolean;
     captureInput?: boolean;
+    observeFromInput?: string[];
     // filter?: (event: React.KeyboardEvent) => boolean;
 }
 
@@ -18,6 +19,7 @@ export const HotKeys = ({
     children,
     root = false,
     captureInput = false,
+    observeFromInput = [],
 }: // filter = (event) => true,
 IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
@@ -66,15 +68,26 @@ IHotKeyProps) => {
 
                 if (!captureInput) {
                     if (tag == "input" || tag == "textarea") {
-                        if (debug) {
-                            console.log(
-                                "[HotKeys] Keypress ingored. Source from input. Key pressed: " +
-                                    key +
-                                    " | Event source:" +
-                                    tag,
-                            );
+                        if (!observeFromInput.includes(key)) {
+                            if (debug) {
+                                console.log(
+                                    "[HotKeys] Keypress ingored. Source from input. Key pressed: " +
+                                        key +
+                                        " | Event source:" +
+                                        tag,
+                                );
+                            }
+                            return false;
+                        } else {
+                            if (debug) {
+                                console.log(
+                                    "[HotKeys] Keypress not ignored (key observed from intput). Source from input. Key pressed: " +
+                                        key +
+                                        " | Event source:" +
+                                        tag,
+                                );
+                            }
                         }
-                        return false;
                     }
                 }
 

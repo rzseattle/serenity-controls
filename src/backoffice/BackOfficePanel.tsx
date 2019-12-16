@@ -245,6 +245,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                     { key: [Key.ArrowLeft, Key.Control], handler: () => window.history.back() },
                     { key: [Key.ArrowRight, Key.Control], handler: () => window.history.forward() },
                 ]}
+                observeFromInput={[Key.Escape]}
                 root={true}
                 debug={true}
             >
