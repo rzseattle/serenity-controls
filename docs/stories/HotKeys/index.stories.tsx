@@ -27,6 +27,9 @@ storiesOf("HotKeys", module)
                             handler: (event, keyName) => {
                                 setKey(keyName);
                             },
+                            onRelease: (event, keyName) => {
+                                setKey("");
+                            },
                         },
                     ]}
                 >
@@ -41,6 +44,9 @@ storiesOf("HotKeys", module)
                             key: [Key.Control, Key.ArrowRight],
                             handler: (event, keyName) => {
                                 setKey(keyName);
+                            },
+                            onRelease: (event, keyName) => {
+                                setKey("");
                             },
                         },
                     ]}
@@ -67,7 +73,9 @@ storiesOf("HotKeys", module)
         );
     })
     .add("Input tracking", () => {
-        const [key, setKey] = useState("----");
+        const [key1, setKey1] = useState("----");
+        const [key2, setKey2] = useState("----");
+        const [key3, setKey3] = useState("----");
         return (
             <>
                 <Panel title="Default - not tracked">
@@ -75,11 +83,11 @@ storiesOf("HotKeys", module)
                         handler={(event, keyName) => {
                             event.stopPropagation();
                             event.nativeEvent.stopPropagation();
-                            setKey(keyName);
+                            setKey1(keyName);
                         }}
                     >
                         <div style={style}>
-                            <input type="text" />
+                            <input type="text" /> Keypressed: {key1}
                         </div>
                     </HotKeys>
                 </Panel>
@@ -88,17 +96,86 @@ storiesOf("HotKeys", module)
                         handler={(event, keyName) => {
                             event.stopPropagation();
                             event.nativeEvent.stopPropagation();
-                            setKey(keyName);
+                            setKey2(keyName);
                         }}
                         captureInput={true}
                     >
                         <div style={style}>
-                            <input type="text" />
+                            <input type="text" /> Keypressed: {key2}
                         </div>
                     </HotKeys>
-
                 </Panel>
-                Keypressed: {key}
+                <Panel title="Tracked only selected">
+                    <HotKeys
+                        handler={(event, keyName) => {
+                            event.stopPropagation();
+                            event.nativeEvent.stopPropagation();
+                            setKey3(keyName);
+                        }}
+                        observeFromInput={["a"]}
+                    >
+                        <div style={style}>
+                            <input type="text" /> Keypressed: {key3}
+                        </div>
+                    </HotKeys>
+                </Panel>
+            </>
+        );
+    })
+    .add("Bumbling", () => {
+        const [key1, setKey1] = useState("");
+        const [key2, setKey2] = useState("");
+        const [key3, setKey3] = useState("");
+        return (
+            <>
+                <Panel>
+                    <HotKeys
+                        handler={(event, keyName) => {
+                            event.preventDefault();
+                            if (keyName != "") {
+                                setKey1(key1 + keyName);
+                            }
+                        }}
+                        captureInput={true}
+                    >
+                        Tracking all not tracked
+                        <div style={style}>
+                            <input type="text" value={key1} /> Keypressed: {key1}
+                        </div>
+                        <Panel>
+                            <HotKeys
+                                handler={(event, keyName) => {
+                                    event.preventDefault();
+                                    if (keyName != "") {
+                                        setKey2(key2 + keyName);
+                                    }
+                                }}
+                                observeFromInput={["b", "c"]}
+                            >
+                                Tracking all not tracked "<b>b</b>" and "<b>c</b>" from children
+                                <div style={style}>
+                                    <input type="text" value={key2} /> Keypressed: {key2}
+                                </div>
+                                <Panel title="Tracked only selected">
+                                    <HotKeys
+                                        handler={(event, keyName) => {
+                                            event.preventDefault();
+                                            if (keyName != "") {
+                                                setKey3(key3 + keyName);
+                                            }
+                                        }}
+                                        observeFromInput={["x"]}
+                                    >
+                                        Tracking only "<b>x</b>"
+                                        <div style={style}>
+                                            <input type="text" value={key3} /> Keypressed: {key3}
+                                        </div>
+                                    </HotKeys>
+                                </Panel>
+                            </HotKeys>
+                        </Panel>
+                    </HotKeys>
+                </Panel>
             </>
         );
     });
