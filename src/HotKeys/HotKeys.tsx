@@ -2,24 +2,25 @@ import React, { KeyboardEventHandler, useEffect, useRef } from "react";
 import styles from "./HotKeys.module.sass";
 
 interface IHotKeyProps {
-    actions: Array<{ key: string | string[]; handler: (event: React.KeyboardEvent, keyName: string) => any }>;
+    actions?: Array<{ key: string | string[]; handler: (event: React.KeyboardEvent, keyName: string) => any }>;
     debug?: boolean;
     children: any;
     root?: boolean;
     autofocus?: boolean;
     captureInput?: boolean;
     observeFromInput?: string[];
-    // filter?: (event: React.KeyboardEvent) => boolean;
+    handler?: (event: React.KeyboardEvent, keyName: string) => any | null;
 }
 
 export const HotKeys = ({
     autofocus = false,
-    actions,
+    actions = [],
     debug = false,
     children,
     root = false,
     captureInput = false,
     observeFromInput = [],
+    handler = null,
 }: // filter = (event) => true,
 IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
@@ -60,6 +61,10 @@ IHotKeyProps) => {
             onKeyUp={(e) => {
                 const key: string = e.nativeEvent.key;
                 delete map.current[key];
+
+                if (handler !== null) {
+                    handler(e, Object.keys(map.current).join("+"));
+                }
             }}
             onKeyDown={(e) => {
                 e.persist();
@@ -97,6 +102,10 @@ IHotKeyProps) => {
                     console.log("[HotKeys] Key pressed: " + key + " | Event source:" + tag);
                 }
 
+                if (handler !== null) {
+                    handler(e, Object.keys(map.current).join("+"));
+                }
+
                 for (const i of actions) {
                     if (typeof i.key == "string") {
                         if (map.current[i.key] == true) {
@@ -104,7 +113,6 @@ IHotKeyProps) => {
                                 console.log("[HotKeys] Running action:" + key);
                             }
                             i.handler(e, key);
-
                             break;
                         }
                     } else if (Array.isArray(i.key)) {
@@ -117,9 +125,9 @@ IHotKeyProps) => {
                         if (pass) {
                             e.stopPropagation();
                             e.nativeEvent.stopPropagation();
-                            i.handler(e, key);
+                            i.handler(e, i.key.join("+"));
                             if (debug) {
-                                console.log("[HotKeys] Running action:" + key);
+                                console.log("[HotKeys] Running action:" + i.key);
                             }
                             break;
                         } else {
