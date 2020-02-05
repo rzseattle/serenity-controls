@@ -140,8 +140,20 @@ class Comm {
                 response: error,
             });
         } else {
-            const errorWindow = window.open("", "", "width=800,height=600");
-            errorWindow.document.write("<pre>" + error + "</pre>");
+            const errorWindow = window.open("", "frontend-debug-window", "width=800,height=600");
+            errorWindow.focus();
+            try {
+                const json = JSON.parse(error);
+                errorWindow.document.write("2<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+                if(json.__arrowException?.trace ){
+
+                    errorWindow.document.write("<h4>Trace:</h4><pre>" + json.__arrowException.trace + "</pre>");
+                }
+            } catch (e) {
+                errorWindow.document.write("www<pre>" + error + "</pre>");
+                errorWindow.document.write("<pre>" + e + "</pre>");
+            }
+
             errorWindow.focus();
         }
     }
