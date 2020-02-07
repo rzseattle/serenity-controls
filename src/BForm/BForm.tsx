@@ -15,6 +15,8 @@ interface IBFormCommEvent {
     response: any;
 }
 
+type IBFormChildFunction = (formConf: any, data: any, form: BForm) => any;
+
 interface IBFormProps {
     /**
      * ( default | inline | horizontal )
@@ -72,7 +74,7 @@ interface IBFormProps {
     editable?: boolean;
 
     loading?: boolean;
-    children: (formConf: any, data: any, form: BForm) => any;
+    children: IBFormChildFunction;
     formErrors?: string[];
     fieldErrors?: Map<string, string[]>;
     errors?: ValidationError;
@@ -154,7 +156,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
 
         this.setState({
             fieldErrors: response.fieldErrors,
-            formErrors: response.errors || [],
+            formErrors: response.formErrors || [],
         });
 
         this.forceUpdate();
