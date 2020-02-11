@@ -133,6 +133,7 @@ class Comm {
     }
 
     public debugError(error: string) {
+
         if (Comm.errorFallback) {
             Comm.errorFallback({
                 url: Comm.basePath + this.url,
@@ -140,7 +141,7 @@ class Comm {
                 response: error,
             });
         } else {
-            const errorWindow = window.open("", "frontend-debug-window", "width=800,height=600");
+            const errorWindow = window.open("", "frontend-debug-window", "width=1000,height=800");
             errorWindow.focus();
             try {
                 const json = JSON.parse(error);
@@ -150,8 +151,8 @@ class Comm {
                     errorWindow.document.write("<h4>Trace:</h4><pre>" + json.__arrowException.trace + "</pre>");
                 }
             } catch (e) {
-                errorWindow.document.write("www<pre>" + error + "</pre>");
-                errorWindow.document.write("<pre>" + e + "</pre>");
+                errorWindow.document.write(  error);
+                //errorWindow.document.write("<pre>" + e + "</pre>");
             }
 
             errorWindow.focus();
@@ -239,7 +240,7 @@ class Comm {
                 } else {
                     // 0 == abotreted
                     if (this.xhr.status != 0) {
-                        this.debugError(this.xhr.status + "<hr />");
+                        this.debugError( this.xhr.responseText);
                         this.callEvent(CommEvents.CONNECTION_ERROR, this.xhr.response);
                     }
                 }
