@@ -20,7 +20,7 @@ class LangContainer {
         }
     };
 }
-let x = null;
+let x = new LangContainer();
 //console.log(langContainer, "lang container");
 if(typeof window !== "undefined") {
 // @ts-ignore
