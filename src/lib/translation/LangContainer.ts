@@ -20,13 +20,17 @@ class LangContainer {
         }
     };
 }
-
+let x = null;
 //console.log(langContainer, "lang container");
+if(typeof window !== "undefined") {
 // @ts-ignore
-if (window.langContainer === undefined) {
-    // @ts-ignore
-    window.langContainer = new LangContainer();
+    if (window.langContainer === undefined) {
+        // @ts-ignore
+        window.langContainer = new LangContainer();
+    }
+// @ts-ignore
+    x = window.langContainer;
+}else{
+    x = new LangContainer();
 }
-// @ts-ignore
-const x = window.langContainer;
 export default x;

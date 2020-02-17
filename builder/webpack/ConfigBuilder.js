@@ -26,7 +26,7 @@ let configDefaults = {
 };
 
 module.exports = function(input) {
-    const dllFile = resolve(input.BASE_PATH, "./public/assets/dist/dll-manifest.json");
+
 
     const GetLoaders = require("./Loaders.js");
 
