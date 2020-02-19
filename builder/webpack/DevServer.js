@@ -27,6 +27,7 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
         },
         //pfx: resolve(__dirname, './cert2.pfx'),
         //pfxPassphrase: 'xxx123',
+        http2: true,
         hot: true,
         port: PORT,
         publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,
@@ -60,6 +61,12 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
         before: (app) => {
             const busboyBodyParser = require("busboy-body-parser");
             app.use(busboyBodyParser({ limit: "5mb", multi: true }));
+
+
+            app.get("/ssr", function(req, res) {
+                res.send("holly shit");
+            });
+
 
             app.get("/debug/getFile", function(req, res) {
                 res.header("Access-Control-Allow-Origin", "*");

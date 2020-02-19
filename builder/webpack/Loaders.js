@@ -54,7 +54,6 @@ var getLoaders = function(production, input) {
                                 "react-hot-loader/babel",
                                 "@babel/plugin-proposal-optional-chaining",
                                 "@babel/plugin-proposal-nullish-coalescing-operator",
-
                             ],
                         },
                     },
@@ -67,62 +66,6 @@ var getLoaders = function(production, input) {
                 enforce: "pre",
             },
 
-            /*{
-                test: [/\.tsx/, /\.ts$/],
-                loaders: [
-                    {
-                        loader: "awesome-typescript-loader",
-                        query: {
-                            declaration: true,
-                            configFileName: input.LOCAL_TS_CONFIG
-                                ? "./tsconfig.json"
-                                : path.resolve(__dirname, "./tsconfig.json"),
-                            cacheDirectory: input.NODE_CACHE_DIR + "/awcache",
-                            useCache: true,
-                            noImplicitAny: true,
-                            transpileOnly: true,
-                            forceIsolatedModules: true,
-                            reportFiles: [
-                                "views/!**!/!*.{ts,tsx}",
-                                "vendor/arrow/!**!/!*.{ts,tsx}",
-                                "node_modules_shared/src/!**!/!*.{ts,tsx}",
-                            ],
-                            useBabel: true,
-                            babelCore: "@babel/core",
-
-                            babelOptions: {
-                                babelrc: false,
-                                retainLines: true,
-                                //exclude: /(node_modules|bower_components)/,
-                                presets: [
-                                    [
-                                        "@babel/preset-env",
-                                        {
-                                            targets: {
-                                                browsers: input.BROWSERS,
-                                                node: "current",
-                                            },
-                                            useBuiltIns: "entry",
-                                            modules: false,
-                                        },
-                                    ],
-                                    "@babel/react",
-                                ],
-
-                                plugins: [
-                                    "transform-react-constant-elements",
-                                    "transform-react-inline-elements",
-                                    "@babel/plugin-syntax-jsx",
-                                    "@babel/plugin-syntax-dynamic-import",
-                                    ["@babel/proposal-class-properties", { loose: true }],
-                                    "@babel/proposal-object-rest-spread",
-                                    "react-hot-loader/babel",
-                                ],
-                            },
-                        },
-                    },
-                ],
-            },*/
             {
                 test: /module\.sass$/,
 
@@ -147,10 +90,10 @@ var getLoaders = function(production, input) {
 
             {
                 test: /\.(sa|sc|c)ss$/,
-                exclude: (el) =>  {
+                exclude: (el) => {
                     //exclude modules
-                    if(el.indexOf("module.")  !== -1){
-                        return true
+                    if (el.indexOf("module.") !== -1) {
+                        return true;
                     }
                     return false;
                 },

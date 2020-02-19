@@ -9,7 +9,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
 
-const TerserPlugin = require("terser-webpack-plugin");
+
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 //const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
@@ -23,6 +23,7 @@ let configDefaults = {
     LANGUAGE: "pl",
     BROWSERS: null,
     NODE_CACHE_DIR: "node_modules/.cache",
+    SSR: false
 };
 
 module.exports = function(input) {
@@ -33,7 +34,9 @@ module.exports = function(input) {
     input = Object.assign(configDefaults, input);
 
     let alias = {};
-    if (input.PRODUCTION) {
+    if (input.PRODUCTION && !input.SSR) {
+        console.log("-------xxxxxxxxxxxx---------");
+
         process.env.NODE_ENV = "production";
     } else {
         process.env.NODE_ENV = "development";
@@ -47,6 +50,7 @@ module.exports = function(input) {
     }
 
     var conf = {
+        target: "web",
         context: resolve(__dirname, ""),
         devtool: input.PRODUCTION ? "none" : "cheap-module-eval-source-map", //,
         // devtool: false,
@@ -144,7 +148,7 @@ module.exports = function(input) {
     );
 
     conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
-    conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/App.sass"));
+
 
     if (!input.PRODUCTION && false) {
         conf.plugins.push(
@@ -187,7 +191,11 @@ module.exports = function(input) {
     }));
 */
 
-    if (input.PRODUCTION) {
+    if (input.PRODUCTION && !input.SSR) {
+        const TerserPlugin = require("terser-webpack-plugin");
+        console.log("--------------------------------------------");
+        console.log("--------------------------------------------");
+        console.log("--------------------------------------------");
         conf.plugins.push(
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
