@@ -64,7 +64,7 @@ export class FormBuilder extends React.Component<IFormBuilderProps, IState> {
             <div className="w-form-builder">
                 {fields.map((field) => {
                     const Component: any = this.fields[field.type];
-                    if (field.type == "BCheckboxGroup") {
+                    if (field.type == "BCheckboxGroup" && !Array.isArray(currentValues[field.name as string])) {
                         // @ts-ignore
                         currentValues[field.name as string] = [];
                     }
