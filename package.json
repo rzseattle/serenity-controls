@@ -160,6 +160,7 @@
         "string-replace-loader": "^2.2.0",
         "tslint": "^6.0.0",
         "tslint-react": "^4.2.0",
+        "tslint-react-hooks": "^2.2.1",
         "typedoc": "^0.16.9",
         "webpack-bundle-analyzer": "^3.6.0"
     },
