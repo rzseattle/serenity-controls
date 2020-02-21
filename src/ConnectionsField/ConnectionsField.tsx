@@ -131,6 +131,10 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
         };
     }
 
+    public focus = () =>{
+        this.input.focus();
+    }
+
     public componentDidMount(): void {
         if (this.props.value.length > 0 && this.props.fillItems) {
             this.setState({ itemsLoading: true }, () => {
@@ -148,10 +152,9 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                     });
             });
         }
-
     }
 
-    public static getDerivedStateFromProps(props: IConnectionsFieldProps, state: any) {
+    public static getDerivedStateFromProps(props: IConnectionsFieldProps, state: IConnectionsFieldState) {
         let ret = {};
 
         if (!deepIsEqual(props.items, state.props.items)) {
@@ -161,9 +164,11 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
         }
 
         if (!deepIsEqual(props.value, state.props.value)) {
+            let newItems = state.items.filter((el) => (props.value as string[]).includes(el.value as string));
             ret = {
                 ...ret,
                 value: props.value,
+                items: newItems,
             };
         }
 
@@ -335,29 +340,27 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                         </div>
                     )}
 
-                    {this.state.selectionOpened &&
-                        (this.state.search.length > 0 || this.props.searchWithoutPhrase) && (
-                            <Positioner
-                                relativeTo={() => this.inputContainer.current}
-                                relativeSettings={{ ...RelativePositionPresets.bottomMiddle, widthCalc: "same" }}
-                            >
-                                <div className="w-connections-field-results">
-                                    {/*To jest test modala {this.state.selectedIndex}*/}
-                                    {this.state.loading && <LoadingIndicator />}
-                                    {!this.state.loading &&
-                                        this.state.searchResult.length == 0 && <div>Brak wyników</div>}
-                                    {!this.state.loading && (
-                                        <ConnectionsFieldSelectionElement
-                                            items={this.state.searchResult}
-                                            selectedIndex={this.state.selectedIndex}
-                                            selectionChange={this.handleSelectionChange}
-                                            elementClicked={this.handleSelectionClick}
-                                            elementTemplate={this.props.selectionTemplate}
-                                        />
-                                    )}
-                                </div>
-                            </Positioner>
-                        )}
+                    {this.state.selectionOpened && (this.state.search.length > 0 || this.props.searchWithoutPhrase) && (
+                        <Positioner
+                            relativeTo={() => this.inputContainer.current}
+                            relativeSettings={{ ...RelativePositionPresets.bottomMiddle, widthCalc: "same" }}
+                        >
+                            <div className="w-connections-field-results">
+                                {/*To jest test modala {this.state.selectedIndex}*/}
+                                {this.state.loading && <LoadingIndicator />}
+                                {!this.state.loading && this.state.searchResult.length == 0 && <div>Brak wyników</div>}
+                                {!this.state.loading && (
+                                    <ConnectionsFieldSelectionElement
+                                        items={this.state.searchResult}
+                                        selectedIndex={this.state.selectedIndex}
+                                        selectionChange={this.handleSelectionChange}
+                                        elementClicked={this.handleSelectionClick}
+                                        elementTemplate={this.props.selectionTemplate}
+                                    />
+                                )}
+                            </div>
+                        </Positioner>
+                    )}
                 </div>
                 {this.props.debug && (
                     <div>
