@@ -85,7 +85,7 @@ export const download = (
     const targetUrl = url + (data !== null ? "?" + qs.stringify(data) : "");
     const simpleURL = url;
 
-    const promise = new Promise<IDownloadSuccessParams>((resolve) => {
+    const promise = new Promise<IDownloadSuccessParams>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
 
         xhr.open("GET", targetUrl, true);
@@ -101,31 +101,35 @@ export const download = (
             }
         };
         xhr.addEventListener("load", () => {
-            if (xhr.status === 200) {
-                let fileName: string = "";
-                if (options.fileName === undefined) {
-                    const contentDisposition = xhr.getResponseHeader("Content-Disposition");
+            if (xhr.readyState == 4) {
+                if (xhr.status === 200) {
+                    let fileName: string = "";
+                    if (options.fileName === undefined) {
+                        const contentDisposition = xhr.getResponseHeader("Content-Disposition");
 
-                    if (contentDisposition !== null) {
-                        const tmp = contentDisposition.split("filename=");
+                        if (contentDisposition !== null) {
+                            const tmp = contentDisposition.split("filename=");
 
-                        if (tmp.length === 2) {
-                            fileName = tmp[1];
+                            if (tmp.length === 2) {
+                                fileName = tmp[1];
+                            }
                         }
+
+                        if (fileName === "") {
+                            const tmp = simpleURL.split("/");
+                            fileName = tmp[tmp.length - 1];
+                        }
+                    } else {
+                        fileName = options.fileName;
                     }
 
-                    if (fileName === "") {
-                        const tmp = simpleURL.split("/");
-                        fileName = tmp[tmp.length - 1];
-                    }
+                    downloadString(fileName, xhr.response);
+                    resolve({
+                        fileName,
+                    });
                 } else {
-                    fileName = options.fileName;
+                    reject(xhr.response);
                 }
-
-                downloadString(fileName, xhr.response);
-                resolve({
-                    fileName,
-                });
             }
         });
         xhr.send();
