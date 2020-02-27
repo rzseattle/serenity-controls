@@ -88,7 +88,7 @@ export const download = (
     const promise = new Promise<IDownloadSuccessParams>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
 
-        xhr.open("GET", targetUrl, true);
+        xhr.open("POST", targetUrl, true);
 
         xhr.responseType = "arraybuffer";
 
