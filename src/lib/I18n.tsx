@@ -11,12 +11,11 @@ const XHR: BackendModule = {
         /* use services and options */
     },
     read(language: string, namespace: string, callback: any) {
-        console.log(namespace);
         langContainer.get(language, (result: any) => {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
             } else {
-                console.log("bbb");
+
                 callback(null, result.lang[namespace]);
             }
         });

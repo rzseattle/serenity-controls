@@ -13,6 +13,7 @@ class LangContainer {
     public get = (lang: string, callback: (result: any) => any) => {
         if (this.langs[lang] !== undefined) {
             this.langs[lang]().then((result) => {
+                console.log(result.lang);
                 callback(result);
             });
         } else {
