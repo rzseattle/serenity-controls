@@ -110,6 +110,7 @@ export class Date extends React.Component<IDateProps, any> {
         return (
             <div className="w-date">
                 <input
+                    className={props.className}
                     type="text"
                     ref={this.textField}
                     value={this.state.date ? moment(this.state.date).format("YYYY-MM-DD") : ""}
