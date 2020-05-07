@@ -138,8 +138,8 @@ export class PositionCalculator {
 
         styles = {
             ...styles,
-            left: targetRefPoint[0] + x + this.options.offsetX + correction[0] + scrollLeft,
-            top: targetRefPoint[1] + y + this.options.offsetY + correction[1] + scrollTop,
+            left: targetRefPoint[0] + x + this.options.offsetX + correction[0] /*+ scrollLeft*/,
+            top: targetRefPoint[1] + y + this.options.offsetY + correction[1] /*+ scrollTop*/,
         };
 
         if (styles.left < 0) {
