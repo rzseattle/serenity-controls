@@ -9,6 +9,8 @@ export interface ITextProps extends IFieldProps {
 }
 
 export class Text extends React.Component<ITextProps> {
+    private inputRef: HTMLInputElement;
+
     public static defaultProps: Partial<ITextProps> = {
         value: "",
         editable: true,
@@ -42,6 +44,12 @@ export class Text extends React.Component<ITextProps> {
     public componentDidMount() {
         // const $input_elem = ReactDOM.findDOMNode(this.refs.field);
         // Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
+        if (this.props.autoFocus) {
+            //todo sprawdzić dlaczego potrzebny jest timeout
+            setTimeout(() => {
+                this.inputRef.focus();
+            }, 1);
+        }
     }
 
     public render() {
@@ -74,6 +82,7 @@ export class Text extends React.Component<ITextProps> {
                     style={props.style}
                     autoFocus={props.autoFocus}
                     onKeyDown={props.onKeyDown}
+                    ref={(el) => (this.inputRef = el)}
                 />
                 {props.charLimit && (
                     <div>
