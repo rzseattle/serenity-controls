@@ -117,7 +117,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                             }}
                             ref={(el) => (this.modalContainer = el)}
                             className="w-modal-container"
-                            onClick={this.handleClose}
+                            onMouseDown={this.handleClose}
                         />
                     </Positioner>
                 )}
