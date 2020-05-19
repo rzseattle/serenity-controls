@@ -110,6 +110,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
     }
 
     public mouseOver = () => {
+
         if (this.timeout !== 0) {
             clearTimeout(this.timeout);
             this.timeout = 0;
@@ -153,7 +154,7 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
                 className={"w-tooltip"}
                 ref={this.container}
                 onMouseOver={props.activation == "hover" || this.state.mouseOver ? this.mouseOver : null}
-                onClick={props.activation == "click" ? this.mouseOver : null}
+                onClick={ (props.activation == "click" ? this.mouseOver : null)}
                 onMouseOut={this.mouseOut}
             >
                 {typeof props.children == "function" ? props.children(this.state.mouseOver) : props.children}

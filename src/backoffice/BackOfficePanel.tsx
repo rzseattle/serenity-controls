@@ -245,7 +245,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                 ]}
                 observeFromInput={[Key.Escape]}
                 root={true}
-                debug={true}
+                name={"Root Backoffice"}
             >
                 <div className="w-panel-container w-backoffice-panel" ref={(container) => (this.container = container)}>
                     {!this.state.onlyBody && (

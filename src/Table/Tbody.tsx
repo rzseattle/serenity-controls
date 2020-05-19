@@ -1,6 +1,6 @@
 import * as React from "react";
 import { deepIsEqual } from "../lib/JSONTools";
-import nanoid from "nanoid";
+import {nanoid} from "nanoid";
 
 import { ICellTemplate, IColumnData, IOrder } from "./Interfaces";
 import { IFilterValue } from "../filters/Intefaces";

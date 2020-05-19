@@ -3,6 +3,8 @@ import "./Modal.sass";
 import { Positioner } from "../Positioner";
 import { IPositionCalculatorOptions } from "../lib/PositionCalculator";
 import { Icon } from "../Icon";
+import { HotKeys } from "../HotKeys";
+import { Key } from "ts-key-enum";
 
 export interface IModalProps {
     show: boolean;
@@ -54,8 +56,10 @@ export class Modal extends React.PureComponent<IModalProps> {
     }
 
     public handleClose = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        e.nativeEvent.stopImmediatePropagation();
+        if (e !== null) {
+            e.stopPropagation();
+            e.nativeEvent.stopImmediatePropagation();
+        }
         if (this.props.onHide) {
             this.props.onHide();
         }
@@ -131,24 +135,38 @@ export class Modal extends React.PureComponent<IModalProps> {
                             : undefined
                     }
                 >
-                    <div
-                        className={`w-modal ` + (p.className !== undefined && p.className)}
-                        ref={(el) => (this.modalBody = el)}
-                        onClick={(e) => e.stopPropagation()}
-                        style={{ width: p.width ? p.width : "auto", height: p.height ? p.height : "auto" }}
+                    <HotKeys
+                        actions={[
+                            {
+                                key: Key.Escape,
+                                handler: () => {
+                                    this.handleClose(null);
+                                },
+                            },
+                        ]}
+                        captureInput={true}
+                        observeFromInput={[Key.Escape]}
+                        autofocus={true}
                     >
-                        {p.showHideLink && (
-                            <a className="w-modal-close" style={{}} onClick={this.handleClose}>
-                                <Icon name="ChromeClose" />
-                            </a>
-                        )}
-                        {p.title && (
-                            <div className="w-modal-title">
-                                {p.icon && <Icon name={p.icon} />} {p.title}
-                            </div>
-                        )}
-                        {this.props.show ? p.children : null}
-                    </div>
+                        <div
+                            className={`w-modal ` + (p.className !== undefined && p.className)}
+                            ref={(el) => (this.modalBody = el)}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ width: p.width ? p.width : "auto", height: p.height ? p.height : "auto" }}
+                        >
+                            {p.showHideLink && (
+                                <a className="w-modal-close" style={{}} onClick={this.handleClose}>
+                                    <Icon name="ChromeClose" />
+                                </a>
+                            )}
+                            {p.title && (
+                                <div className="w-modal-title">
+                                    {p.icon && <Icon name={p.icon} />} {p.title}
+                                </div>
+                            )}
+                            {this.props.show ? p.children : null}
+                        </div>
+                    </HotKeys>
                 </Positioner>
             </>
         );

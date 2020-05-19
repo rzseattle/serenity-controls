@@ -13,9 +13,12 @@ interface ISortableImageList {
 export const SortableImageList = SortableContainer((props: ISortableImageList) => {
     return (
         <div className="w-gallery-list">
+
             {props.files &&
                 props.files.map((file, index) => (
+
                     <ImageBox
+                        // @ts-ignore
                         file={file}
                         key={file.key}
                         index={index}

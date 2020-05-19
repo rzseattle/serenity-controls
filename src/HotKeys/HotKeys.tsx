@@ -19,6 +19,7 @@ interface IHotKeyProps {
     observeFromInput?: string[];
     handler?: Callback;
     stopPropagation?: boolean;
+    name?: string;
 }
 
 const findHandler = (involvedKeys: any, handlers: IHandler[]): IHandler | null => {
@@ -68,18 +69,28 @@ const shouldBeProcessed = (
     captureInput: boolean,
     observeFromInput: string[],
     debug: boolean,
+    name: string,
 ): boolean => {
     const tag = (event.nativeEvent.target as HTMLElement).tagName.toLowerCase();
     if (!captureInput && (tag == "input" || tag == "textarea")) {
         if (!observeFromInput.includes(key)) {
             if (debug) {
-                log("[HotKeys] Keypress ingored. Source from input. Key pressed: " + key + " | Event source:" + tag);
+                log(
+                    "[HotKeys:" +
+                        name +
+                        "] Keypress ingored. Source from input. Key pressed: " +
+                        key +
+                        " | Event source:" +
+                        tag,
+                );
             }
             return false;
         } else {
             if (debug) {
                 log(
-                    "[HotKeys] Keypress not ignored (key observed from intput). Source from input. Key pressed: " +
+                    "[HotKeys: " +
+                        name +
+                        "] Keypress not ignored (key observed from intput). Source from input. Key pressed: " +
                         key +
                         " | Event source:" +
                         tag,
@@ -101,6 +112,7 @@ export const HotKeys = ({
     observeFromInput = [],
     handler = null,
     stopPropagation = true,
+    name = "noname",
 }: // filter = (event) => true,
 IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
@@ -119,7 +131,9 @@ IHotKeyProps) => {
             setTimeout(() => {
                 if (document.activeElement.tagName.toLowerCase() == "body") {
                     if (debug) {
-                        log("[HotKeys] Focusing root element");
+                        log("[HotKeys:" +
+                            name +
+                            "] Focusing root element");
                     }
                     ref.current.focus();
                 }
@@ -141,7 +155,7 @@ IHotKeyProps) => {
             onKeyUp={(e) => {
                 e.persist();
                 const key: string = e.nativeEvent.key;
-                if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug)) {
+                if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug, name)) {
                     const foundHandler = findHandler(map.current, actions);
                     if (foundHandler !== null && foundHandler.onRelease !== undefined) {
                         runHandler(
@@ -162,10 +176,12 @@ IHotKeyProps) => {
             onKeyDown={(e) => {
                 e.persist();
                 const key: string = e.nativeEvent.key;
-                if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug)) {
+                if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug, name)) {
                     map.current[key] = true;
                     if (debug) {
-                        log("[HotKeys] Key pressed: " + key + " | Event source:" + e.target);
+                        log("[HotKeys:" +
+                            name +
+                            "] Key pressed: " + key + " | Event source:" + e.target);
                     }
                     if (handler !== null) {
                         runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, debug);
