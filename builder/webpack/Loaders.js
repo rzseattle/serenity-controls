@@ -10,7 +10,7 @@ var getLoaders = function(production, input) {
             {
                 test: [/\.js$/, /\.es6$/, /\.tsx/, /\.ts$/],
                 exclude: path.resolve(input.BASE_PATH, "node_modules"),
-                loaders: [
+                use: [
                     {
                         loader: "babel-loader",
                         /*options: {
@@ -49,22 +49,24 @@ var getLoaders = function(production, input) {
                                 "@babel/plugin-syntax-jsx",
                                 "@babel/plugin-syntax-dynamic-import",
 
-                                ["@babel/proposal-class-properties", { loose: true }],
+
                                 "@babel/proposal-object-rest-spread",
                                 "react-hot-loader/babel",
                                 "@babel/plugin-proposal-optional-chaining",
                                 "@babel/plugin-proposal-nullish-coalescing-operator",
+                                ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                                ["@babel/proposal-class-properties", { loose: true }],
                             ],
                         },
                     },
                 ],
             },
 
-            {
-                test: /\.(js|map)$/,
-                use: ["source-map-loader"],
-                enforce: "pre",
-            },
+            /*            {
+                            test: /\.(js|map)$/,
+                            use: ["source-map-loader"],
+                            enforce: "pre",
+                        },*/
 
             {
                 test: /module\.sass$/,
@@ -75,12 +77,12 @@ var getLoaders = function(production, input) {
                         loader: "@teamsupercell/typings-for-css-modules-loader",
                         options: {},
                     },
-                    { loader: "css-loader", query: { sourceMap: true, modules: true } },
-                    { loader: "resolve-url-loader", query: { sourceMap: true } },
+                    { loader: "css-loader", options: { sourceMap: true, modules: true } },
+                    { loader: "resolve-url-loader", options: { sourceMap: true } },
                     //'postcss-loader',
                     {
                         loader: "sass-loader",
-                        query: {
+                        options: {
                             sourceMap: true,
                             sassOptions: { includePaths: ["node_modules"] },
                         },
@@ -99,12 +101,12 @@ var getLoaders = function(production, input) {
                 },
                 use: [
                     !production ? "style-loader" : MiniCssExtractPlugin.loader,
-                    { loader: "css-loader", query: { sourceMap: true } },
-                    { loader: "resolve-url-loader", query: { sourceMap: true } },
+                    { loader: "css-loader", options: { sourceMap: true } },
+                    { loader: "resolve-url-loader", options: { sourceMap: true } },
                     //'postcss-loader',
                     {
                         loader: "sass-loader",
-                        query: {
+                        options: {
                             sourceMap: true,
                             sassOptions: { includePaths: ["node_modules"] },
                         },
@@ -138,7 +140,7 @@ var getLoaders = function(production, input) {
             },*/
             {
                 test: /\.(jpe?g|png|gif|svg|ttf|eot|woff|woff2)$/,
-                loader: "file-loader?hash=sha512&digest=hex&name=./cache/[hash].[ext]",
+                use: ["file-loader?hash=sha512&digest=hex&name=./cache/[hash].[ext]"],
             },
         ],
     };

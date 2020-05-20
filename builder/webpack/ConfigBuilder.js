@@ -33,7 +33,9 @@ module.exports = function(input) {
 
     input = Object.assign(configDefaults, input);
 
-    let alias = {};
+    let alias = {
+        "path": false
+    };
     if (input.PRODUCTION && !input.SSR) {
         console.log("-------xxxxxxxxxxxx---------");
 
@@ -42,6 +44,7 @@ module.exports = function(input) {
         process.env.NODE_ENV = "development";
         alias = {
             "react-dom": "@hot-loader/react-dom",
+            "path": false
         };
     }
 
@@ -52,7 +55,7 @@ module.exports = function(input) {
     var conf = {
         target: "web",
         context: resolve(__dirname, ""),
-        devtool: input.PRODUCTION ? "none" : "cheap-module-eval-source-map", //,
+        devtool: input.PRODUCTION ? "none" : "eval-cheap-module-source-map", //,
         // devtool: false,
 
         resolve: {
@@ -235,6 +238,7 @@ module.exports = function(input) {
             removeAvailableModules: false,
             removeEmptyChunks: false,
             splitChunks: false,
+
         };
         /*conf.output = {
             pathinfo: false

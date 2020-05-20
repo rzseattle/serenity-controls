@@ -220,7 +220,7 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
     conf.entry = ENTRY_POINTS;
 
     conf.plugins = [
-        new webpack.NamedModulesPlugin(),
+        //new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         // enable HMR globally
 
