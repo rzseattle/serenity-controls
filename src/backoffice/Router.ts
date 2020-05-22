@@ -1,7 +1,7 @@
 // declare var Views: any;
 
 import RouterException from "./RouterException";
-import { hot, setConfig, cold } from "react-hot-loader";
+
 import { IRouteElement } from "./interfaces/IRouteElement";
 import { IRouteList } from "./interfaces/IRouteList";
 import { IArrowViewComponentProps } from "./PanelComponentLoader";
@@ -117,5 +117,6 @@ class Router {
         return null;
     }
 }
-
-export const router = cold(new Router());
+export const router = new Router();
+//
+// export const router = cold(new Router());

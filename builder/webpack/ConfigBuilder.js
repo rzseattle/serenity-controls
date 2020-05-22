@@ -11,7 +11,7 @@ const extractor = require("./RouteExtractor.js");
 
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 //const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
+
 //require("babel-polyfill");
 
 let configDefaults = {
@@ -65,7 +65,7 @@ module.exports = function(input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = ["react-hot-loader/patch", "babel-polyfill", input.ENTRY_POINTS[i]];
+        tmpEntry[i] = [ "babel-polyfill", input.ENTRY_POINTS[i]];
     }
 
     let tmp;
