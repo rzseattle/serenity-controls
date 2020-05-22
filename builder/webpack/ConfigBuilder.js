@@ -9,7 +9,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractor = require("./RouteExtractor.js");
 
-
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 //const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
@@ -23,28 +22,24 @@ let configDefaults = {
     LANGUAGE: "pl",
     BROWSERS: null,
     NODE_CACHE_DIR: "node_modules/.cache",
-    SSR: false
+    SSR: false,
 };
 
 module.exports = function(input) {
-
-
     const GetLoaders = require("./Loaders.js");
 
     input = Object.assign(configDefaults, input);
 
     let alias = {
-        "path": false
+        path: "",
     };
     if (input.PRODUCTION && !input.SSR) {
-        console.log("-------xxxxxxxxxxxx---------");
-
         process.env.NODE_ENV = "production";
     } else {
         process.env.NODE_ENV = "development";
         alias = {
             "react-dom": "@hot-loader/react-dom",
-            "path": false
+            path: false,
         };
     }
 
@@ -118,29 +113,6 @@ module.exports = function(input) {
         conf[i] = tmp[i];
     }
 
-    /*    let threads = HappyPack.ThreadPool({size: 4});
-
-        conf.plugins = conf.plugins.concat([
-            new HappyPack({
-                id: "sass",
-                loaders: [
-                    MiniCssExtractPlugin.loader,
-                    {loader: "css-loader", query: {sourceMap: true}},
-                    {loader: "resolve-url-loader", query: {sourceMap: true}},
-                    //'postcss-loader',
-                    {
-                        loader: "sass-loader",
-                        query: {
-                            sourceMap: true,
-                            includePaths: ["node_modules"],
-                        },
-                    },
-                ],
-
-                threadPool: threads,
-            }),
-        ]);*/
-
     conf.plugins.push(
         new webpack.NormalModuleReplacementPlugin(/(.*)\.sass/, function(resource) {
             if (resource.contextInfo && resource.contextInfo.issuer.match(/frontend\/lib/)) {
@@ -150,25 +122,7 @@ module.exports = function(input) {
         }),
     );
 
-    conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
-
-
-    if (!input.PRODUCTION && false) {
-        conf.plugins.push(
-            new webpack.SourceMapDevToolPlugin({
-                filename: "[file].map",
-                moduleFilenameTemplate: "[resource-path]",
-                fallbackModuleFilenameTemplate: "[resource-path]",
-                append: null,
-                module: true,
-                columns: true,
-                lineToLine: false,
-                noSources: false,
-                namespace: "",
-                exclude: ["node_modules/*.js"],
-            }),
-        );
-    }
+    //conf.plugins.push(new webpack.PrefetchPlugin(input.BASE_PATH + "/build/js/app.tsx"));
 
     /*conf.plugins.push(
         (new HardSourceWebpackPlugin({
@@ -176,29 +130,7 @@ module.exports = function(input) {
         }))
     );*/
 
-    /*   conf.plugins.push(new RuntimeAnalyzerPlugin({
-        // Can be `standalone` or `publisher`.
-        // In `standalone` mode analyzer will start rempl server in exclusive publisher mode.
-        // In `publisher` mode you should start rempl on your own.
-        mode: 'standalone',
-        // Port that will be used in `standalone` mode to start rempl server.
-        // When set to `0` a random port will be chosen.
-        port: 81,
-        // Automatically open analyzer in the default browser. Works for `standalone` mode only.
-        open: false,
-        // Use analyzer only when Webpack run in a watch mode. Set it to `false` to use plugin
-        // in any Webpack mode. Take into account that a building process will not be terminated
-        // when done since the plugin holds a connection to the rempl server. The only way
-        // to terminate building process is using `ctrl+c` like in a watch mode.
-        //watchModeOnly: true
-    }));
-*/
-
     if (input.PRODUCTION && !input.SSR) {
-        const TerserPlugin = require("terser-webpack-plugin");
-        console.log("--------------------------------------------");
-        console.log("--------------------------------------------");
-        console.log("--------------------------------------------");
         conf.plugins.push(
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
@@ -216,10 +148,7 @@ module.exports = function(input) {
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
                 }),*/
-                new TerserPlugin({
-                    cache: input.NODE_CACHE_DIR + "/terser-webpack-plugin",
-                    sourceMap: true,
-                }),
+
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
                         "postcss-safe-parser": true,
@@ -238,42 +167,11 @@ module.exports = function(input) {
             removeAvailableModules: false,
             removeEmptyChunks: false,
             splitChunks: false,
-
         };
         /*conf.output = {
             pathinfo: false
         }*/
     }
-
-    /* conf.plugins.push(function() {
-         this.plugin("done", function(stats) {
-             var stats = stats.toJson();
-             //console.log(stats.warnings);
-
-             let missingLang = {};
-             if (stats.warnings && stats.warnings.length) {
-                 for (let i in stats.warnings) {
-                     let el = "" + stats.warnings[i];
-                     if (el.indexOf("Missing localization: ") != -1) {
-                         let lines = ("" + el).split("\n");
-                         for (let x = 0; x < lines.length; x++) {
-                             if (lines[x].indexOf("Missing localization: ") == 0) {
-                                 missingLang[lines[x].replace("Missing localization: ", "")] = "";
-                             }
-                         }
-                     }
-                 }
-
-                 fs.writeFile(
-                     resolve(input.BASE_PATH, `./build/js/tmp/missing-${input.LANGUAGE}-lang.json`),
-                     JSON.stringify(missingLang, null, 2),
-                     function() {}
-                 );
-             }
-
-             return true;
-         });
-     });*/
 
     return conf;
 };

@@ -14,8 +14,7 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
     };
     conf.stats = "errors-only";
     conf.plugins = [
-        new webpack.HashedModuleIdsPlugin(),
-        new webpack.optimize.ModuleConcatenationPlugin(),
+        //new webpack.optimize.ModuleConcatenationPlugin(),
         //new ExtractTextPlugin({filename: 'bundle-[hash].css', allChunks: true}),
 
 
