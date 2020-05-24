@@ -39,7 +39,7 @@ module.exports = function(input) {
         process.env.NODE_ENV = "development";
         alias = {
             "react-dom": "@hot-loader/react-dom",
-            path: false,
+            path: "",
         };
     }
 
