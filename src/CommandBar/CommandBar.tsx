@@ -18,7 +18,7 @@ interface IProps {
     onSearch?: (value: string) => any;
     onSearchChange?: (value: string) => any;
     items: ICommand[];
-    rightItems?: Array<ICommand | null>;
+    rightItems?: (ICommand | null)[];
     zIndex?: number;
 }
 

@@ -49,13 +49,16 @@ interface IBackOfficePanelState {
     loading: boolean;
     onlyBody: boolean;
     contextState: IBackOfficeStoreState;
-    openedWindows: Array<{
+    openedWindows: {
         route: string;
         input: any;
         modalProps: any;
         props: any;
-    }>;
+    }[];
     navigationWindowOpened: boolean;
+    contextMenuCoordinates: { x: number; y: number };
+    contextMenuCommands: ICommand[];
+    contextMenuContext: any;
 }
 
 export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
@@ -63,7 +66,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     public store: BackofficeStore;
     private panelLoader = React.createRef<PanelComponentLoader>();
 
-    private callbacks: { onceAfterUpdate: Array<() => any> } = {
+    private callbacks: { onceAfterUpdate: (() => any)[] } = {
         onceAfterUpdate: [],
     };
 
@@ -89,6 +92,9 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
             contextState: this.store.getState(),
             openedWindows: [],
             navigationWindowOpened: false,
+            contextMenuCoordinates: { x: 100, y: 100 },
+            contextMenuCommands: [],
+            contextMenuContext: null,
         };
 
         this.store.onViewLoad(() => this.handleLoadStart());
@@ -126,6 +132,18 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
         if (this.state.layout == "mobile") {
             this.setState({ menuVisible: false });
         }
+    };
+
+    public handleOpenContextMenu = (
+        event: React.MouseEvent<HTMLElement, MouseEvent>,
+        commands: ICommand[],
+        context: any,
+    ) => {
+        this.setState({
+            contextMenuContext: context,
+            contextMenuCoordinates: { x: event.clientX, y: event.clientY },
+            contextMenuCommands: commands,
+        });
     };
 
     public getContext = () => {
@@ -221,7 +239,6 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     private toggleLayerMenu = () => {
         if (!this.state.navigationWindowOpened) {
             this.beforeMenuFocusedElement = document.activeElement;
-            console.log(this.beforeMenuFocusedElement);
         }
         this.setState({ navigationWindowOpened: !this.state.navigationWindowOpened }, () => {
             if (!this.state.navigationWindowOpened) {
@@ -379,6 +396,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 onLoadEnd={this.handleLoadEnd}
                                 setPanelOption={this.handleSetPanelOption}
                                 openModal={this.handleOpenWindow}
+                                openContextMenu={this.handleOpenContextMenu}
                                 changeView={this.handleChangeView}
                                 closeModal={this.handleCloseWindow}
                                 isSub={this.props.isSub}
@@ -386,6 +404,33 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             />
                         </div>
                     </div>
+                    {this.state.contextMenuCoordinates !== null && (
+                        <Modal
+                            show={true}
+                            top={this.state.contextMenuCoordinates.y}
+                            left={this.state.contextMenuCoordinates.x}
+                            shadow={false}
+                            onHide={() => this.setState({ contextMenuCoordinates: null })}
+                        >
+                            {this.state.contextMenuCommands.map((el) => {
+                                return (
+                                    <div
+                                        className={"w-backoffice-panel-context-action"}
+                                        key={el.key}
+                                        onClick={(e) => {
+                                            el.onClick(e, this.state.contextMenuContext);
+                                            this.setState({
+                                                contextMenuCoordinates: null,
+                                                contextMenuContext: null,
+                                            });
+                                        }}
+                                    >
+                                        {el.icon && <Icon name={el.icon} />} {el.label}
+                                    </div>
+                                );
+                            })}
+                        </Modal>
+                    )}
                     {this.state.navigationWindowOpened && (
                         <Modal show={true} onHide={() => this.toggleLayerMenu()} top={200}>
                             <div style={{ width: 300 }}>
@@ -414,7 +459,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </div>
                         </Modal>
                     )}
-                    <div id="modal-root"></div>
+                    <div id="modal-root" />
                 </div>
             </HotKeys>
         );
