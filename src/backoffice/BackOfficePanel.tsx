@@ -92,7 +92,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
             contextState: this.store.getState(),
             openedWindows: [],
             navigationWindowOpened: false,
-            contextMenuCoordinates: { x: 100, y: 100 },
+            contextMenuCoordinates: null,
             contextMenuCommands: [],
             contextMenuContext: null,
         };
