@@ -50,7 +50,7 @@ module.exports = function(input) {
     var conf = {
         target: "web",
         context: resolve(__dirname, ""),
-        devtool: input.PRODUCTION ? "none" : "eval-cheap-module-source-map", //,
+        devtool: input.PRODUCTION ? "none" : "eval-source-map", //,
         // devtool: false,
 
         resolve: {

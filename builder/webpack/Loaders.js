@@ -41,21 +41,22 @@ var getLoaders = function(production, input) {
                                 "@babel/preset-typescript",
                                 "@babel/react",
                             ],
+                            sourceMap: "both",
 
                             plugins: [
                                 /*production && "@transform-react-constant-elements",
                                 production && "@transform-react-inline-elements",*/
-
+                                "react-hot-loader/babel",
                                 "@babel/plugin-syntax-jsx",
                                 "@babel/plugin-syntax-dynamic-import",
 
-
                                 "@babel/proposal-object-rest-spread",
-                                "react-hot-loader/babel",
+
                                 "@babel/plugin-proposal-optional-chaining",
                                 "@babel/plugin-proposal-nullish-coalescing-operator",
                                 ["@babel/plugin-proposal-decorators", { "legacy": true }],
                                 ["@babel/proposal-class-properties", { loose: true }],
+                                !production && "@babel/plugin-transform-react-jsx-source",
                             ],
                         },
                     },

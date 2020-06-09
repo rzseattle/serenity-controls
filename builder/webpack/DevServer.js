@@ -8,6 +8,7 @@ var getDevServerConf = function(ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, HTTP
     conf.output = {
         filename: "bundle.js",
         publicPath: "http" + (HTTPS ? "s" : "") + `://127.0.0.1:${PORT}/`,
+        crossOriginLoading: "anonymous",
         devtoolModuleFilenameTemplate: function(info) {
             return path.resolve(BASE_PATH, info.absoluteResourcePath).replace(BASE_PATH, "");
         },
