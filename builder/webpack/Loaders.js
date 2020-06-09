@@ -5,6 +5,25 @@ var getLoaders = function(production, input) {
     console.log("Building for:");
     console.log(input.BROWSERS);
 
+    const babelPlugins = [
+        /*production && "@transform-react-constant-elements",
+        production && "@transform-react-inline-elements",*/
+        "react-hot-loader/babel",
+        "@babel/plugin-syntax-jsx",
+        "@babel/plugin-syntax-dynamic-import",
+
+        "@babel/proposal-object-rest-spread",
+
+        "@babel/plugin-proposal-optional-chaining",
+        "@babel/plugin-proposal-nullish-coalescing-operator",
+        ["@babel/plugin-proposal-decorators", { legacy: true }],
+        ["@babel/proposal-class-properties", { loose: true }],
+    ];
+
+    if (!production) {
+        babelPlugins.push("@babel/plugin-transform-react-jsx-source");
+    }
+
     let loaders = {
         rules: [
             {
@@ -43,21 +62,7 @@ var getLoaders = function(production, input) {
                             ],
                             sourceMap: "both",
 
-                            plugins: [
-                                /*production && "@transform-react-constant-elements",
-                                production && "@transform-react-inline-elements",*/
-                                "react-hot-loader/babel",
-                                "@babel/plugin-syntax-jsx",
-                                "@babel/plugin-syntax-dynamic-import",
-
-                                "@babel/proposal-object-rest-spread",
-
-                                "@babel/plugin-proposal-optional-chaining",
-                                "@babel/plugin-proposal-nullish-coalescing-operator",
-                                ["@babel/plugin-proposal-decorators", { "legacy": true }],
-                                ["@babel/proposal-class-properties", { loose: true }],
-                                !production && "@babel/plugin-transform-react-jsx-source",
-                            ],
+                            plugins: babelPlugins,
                         },
                     },
                 ],
