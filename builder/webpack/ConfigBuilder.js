@@ -6,7 +6,7 @@ const path = require("path");
 //var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 // const { CheckerPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const extractor = require("./RouteExtractor.js");
 
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
@@ -25,7 +25,7 @@ let configDefaults = {
     SSR: false,
 };
 
-module.exports = function(input) {
+module.exports = function (input) {
     const GetLoaders = require("./Loaders.js");
 
     input = Object.assign(configDefaults, input);
@@ -65,7 +65,7 @@ module.exports = function(input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = [ "babel-polyfill", input.ENTRY_POINTS[i]];
+        tmpEntry[i] = ["babel-polyfill", input.ENTRY_POINTS[i]];
     }
 
     let tmp;
@@ -114,7 +114,7 @@ module.exports = function(input) {
     }
 
     conf.plugins.push(
-        new webpack.NormalModuleReplacementPlugin(/(.*)\.sass/, function(resource) {
+        new webpack.NormalModuleReplacementPlugin(/(.*)\.sass/, function (resource) {
             if (resource.contextInfo && resource.contextInfo.issuer.match(/frontend\/lib/)) {
                 let tmp = path.resolve(resource.context.replace("frontend/lib", "frontend/src"), resource.request);
                 resource.request = tmp;
@@ -142,12 +142,13 @@ module.exports = function(input) {
 
         //conf.plugins.push(new BundleAnalyzerPlugin());
         conf.optimization = {
-            minimizer: [
-                /*new UglifyJsPlugin({
+            minimize: true,
+            /*minimizer: [
+                new UglifyJsPlugin({
                     cache: input.NODE_CACHE_DIR + "/uglifyjs-webpack-plugin",
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
-                }),*/
+                }),
 
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
@@ -156,7 +157,7 @@ module.exports = function(input) {
                         zindex: false,
                     },
                 }),
-            ],
+            ],*/
             /*splitChunks: {
                 chunks: 'all'
             },*/
