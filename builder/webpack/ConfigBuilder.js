@@ -152,11 +152,15 @@ module.exports = function (input) {
                 new TerserPlugin(),
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
+                        preset: ['default', { discardComments: { removeAll: true } }],
                         "postcss-safe-parser": true,
                         discardComments: { removeAll: true },
                         zindex: false,
                     },
                 }),
+                new webpack.optimize.LimitChunkCountPlugin({
+                    maxChunks: 5
+                })
             ],
             /*splitChunks: {
                 chunks: 'all'
