@@ -143,7 +143,7 @@ module.exports = function (input) {
                     styles: {
                         name: "styles",
                         test: /\.sass$/,
-                        minSize: 61200,
+                        minSize: 41200,
                         enforce: true,
                     },
                     common: {
