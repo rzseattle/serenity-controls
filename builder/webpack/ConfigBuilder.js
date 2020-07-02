@@ -8,7 +8,7 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const extractor = require("./RouteExtractor.js");
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 //const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
@@ -131,47 +131,48 @@ module.exports = function (input) {
     );*/
 
     if (input.PRODUCTION && !input.SSR) {
-
-        console.log("heeerreeee aaaa")
-
+        console.log("heeerreeee aaaa");
 
         //conf.plugins.push(new BundleAnalyzerPlugin());
         conf.optimization = {
             minimize: true,
+
             splitChunks: {
-                //
+                chunks: "all",
                 cacheGroups: {
                     styles: {
-                        name: 'styles',
-                        test: /\.sass$/,
+                        name: "styles",
+                        test: /\.sass|\.css$/,
                         minSize: 61200,
                         enforce: true,
+                    },
+                    common: {
+                        chunks: 'all',
+                        reuseExistingChunk: true
                     },
                 },
             },
             minimizer: [
-
-               /* new webpack.optimize.MinChunkSizePlugin({
+                /* new webpack.optimize.MinChunkSizePlugin({
                     minChunkSize: 51200, // ~50kb
                 }),*/
 
                 new TerserPlugin(),
                 new OptimizeCSSAssetsPlugin({
-                    cssProcessor: require('cssnano'),
+                    cssProcessor: require("cssnano"),
                     cssProcessorOptions: {
-                        preset: ['default', { discardComments: { removeAll: true } }],
+                        preset: ["default", { discardComments: { removeAll: true } }],
                         "postcss-safe-parser": true,
                         discardComments: { removeAll: true },
                         zindex: false,
                     },
                 }),
-
             ],
             /*splitChunks: {
                 chunks: 'all'
             },*/
         };
-        const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+        const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
         conf.plugins.push(
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
@@ -179,8 +180,7 @@ module.exports = function (input) {
                 filename: "bundle-[hash].css",
                 chunkFilename: "[id].[hash].css",
             }),
-            //new BundleAnalyzerPlugin()
-
+            //new BundleAnalyzerPlugin(),
         );
     } else {
         //incremental build optymalization
