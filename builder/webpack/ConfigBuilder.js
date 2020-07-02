@@ -8,7 +8,7 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const extractor = require("./RouteExtractor.js");
-
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 //const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
@@ -149,7 +149,7 @@ module.exports = function (input) {
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
                 }),*/
-
+                new TerserPlugin(),
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
                         "postcss-safe-parser": true,
