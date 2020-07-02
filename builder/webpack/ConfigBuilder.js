@@ -179,7 +179,7 @@ module.exports = function (input) {
                 filename: "bundle-[hash].css",
                 chunkFilename: "[id].[hash].css",
             }),
-            new BundleAnalyzerPlugin()
+            //new BundleAnalyzerPlugin()
 
         );
     } else {
