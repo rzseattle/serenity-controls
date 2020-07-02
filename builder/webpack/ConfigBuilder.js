@@ -143,12 +143,12 @@ module.exports = function (input) {
         //conf.plugins.push(new BundleAnalyzerPlugin());
         conf.optimization = {
             minimize: true,
-            /*minimizer: [
-                new UglifyJsPlugin({
+            minimizer: [
+                /*new UglifyJsPlugin({
                     cache: input.NODE_CACHE_DIR + "/uglifyjs-webpack-plugin",
                     parallel: true,
                     sourceMap: true, // set to true if you want JS source maps
-                }),
+                }),*/
 
                 new OptimizeCSSAssetsPlugin({
                     cssProcessorOptions: {
@@ -157,7 +157,7 @@ module.exports = function (input) {
                         zindex: false,
                     },
                 }),
-            ],*/
+            ],
             /*splitChunks: {
                 chunks: 'all'
             },*/
