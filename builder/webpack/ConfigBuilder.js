@@ -131,29 +131,33 @@ module.exports = function (input) {
     );*/
 
     if (input.PRODUCTION && !input.SSR) {
-        conf.plugins.push(
-            new MiniCssExtractPlugin({
-                // Options similar to the same options in webpackOptions.output
-                // both options are optional
-                filename: "bundle-[hash].css",
-                chunkFilename: "[id].[hash].css",
-            }),
-            new webpack.optimize.MinChunkSizePlugin({
-                minChunkSize: 51200, // ~50kb
-            }),
-        );
+
+        console.log("heeerreeee aaaa")
+
 
         //conf.plugins.push(new BundleAnalyzerPlugin());
         conf.optimization = {
             minimize: true,
+            splitChunks: {
+                //
+                cacheGroups: {
+                    styles: {
+                        name: 'styles',
+                        test: /\.sass$/,
+                        minSize: 61200,
+                        enforce: true,
+                    },
+                },
+            },
             minimizer: [
-                /*new UglifyJsPlugin({
-                    cache: input.NODE_CACHE_DIR + "/uglifyjs-webpack-plugin",
-                    parallel: true,
-                    sourceMap: true, // set to true if you want JS source maps
+
+               /* new webpack.optimize.MinChunkSizePlugin({
+                    minChunkSize: 51200, // ~50kb
                 }),*/
+
                 new TerserPlugin(),
                 new OptimizeCSSAssetsPlugin({
+                    cssProcessor: require('cssnano'),
                     cssProcessorOptions: {
                         preset: ['default', { discardComments: { removeAll: true } }],
                         "postcss-safe-parser": true,
@@ -161,14 +165,23 @@ module.exports = function (input) {
                         zindex: false,
                     },
                 }),
-                new webpack.optimize.LimitChunkCountPlugin({
-                    maxChunks: 5
-                })
+
             ],
             /*splitChunks: {
                 chunks: 'all'
             },*/
         };
+        const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+        conf.plugins.push(
+            new MiniCssExtractPlugin({
+                // Options similar to the same options in webpackOptions.output
+                // both options are optional
+                filename: "bundle-[hash].css",
+                chunkFilename: "[id].[hash].css",
+            }),
+            new BundleAnalyzerPlugin()
+
+        );
     } else {
         //incremental build optymalization
         conf.optimization = {

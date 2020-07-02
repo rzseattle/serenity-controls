@@ -22,11 +22,11 @@ export class PDFViewer extends React.Component<IFileViewerProps, IPDFViewerState
     public componentDidMount(): void {
         // no typings
         // @ts-ignore
-        import("react-pdf").then((imported) => {
+/*        import(/!* webpackChunkName: "pdfjs" *!/ "react-pdf").then((imported) => {
             this.Document = imported.Document;
             this.Page = imported.Page;
             this.setState({ viewerImported: true });
-        });
+        });*/
     }
 
     public onDocumentLoadSuccess = ({ numPages }: any) => {

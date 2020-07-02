@@ -83,13 +83,13 @@ var getLoaders = function(production, input) {
                         loader: "@teamsupercell/typings-for-css-modules-loader",
                         options: {},
                     },
-                    { loader: "css-loader", options: { sourceMap: true, modules: true } },
-                    { loader: "resolve-url-loader", options: { sourceMap: true } },
+                    { loader: "css-loader", options: { sourceMap: !production, modules: true } },
+                    { loader: "resolve-url-loader", options: { sourceMap: !production } },
                     //'postcss-loader',
                     {
                         loader: "sass-loader",
                         options: {
-                            sourceMap: true,
+                            sourceMap: !production,
                             sassOptions: { includePaths: ["node_modules"] },
                         },
                     },
@@ -107,13 +107,13 @@ var getLoaders = function(production, input) {
                 },
                 use: [
                     !production ? "style-loader" : MiniCssExtractPlugin.loader,
-                    { loader: "css-loader", options: { sourceMap: true } },
-                    { loader: "resolve-url-loader", options: { sourceMap: true } },
+                    { loader: "css-loader", options: { sourceMap: !production } },
+                    { loader: "resolve-url-loader", options: { sourceMap: !production } },
                     //'postcss-loader',
                     {
                         loader: "sass-loader",
                         options: {
-                            sourceMap: true,
+                            sourceMap: !production,
                             sassOptions: { includePaths: ["node_modules"] },
                         },
                     },
