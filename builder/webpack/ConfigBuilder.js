@@ -138,6 +138,9 @@ module.exports = function (input) {
                 filename: "bundle-[hash].css",
                 chunkFilename: "[id].[hash].css",
             }),
+            new webpack.optimize.MinChunkSizePlugin({
+                minChunkSize: 51200, // ~50kb
+            }),
         );
 
         //conf.plugins.push(new BundleAnalyzerPlugin());
