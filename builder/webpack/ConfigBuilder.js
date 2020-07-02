@@ -142,7 +142,7 @@ module.exports = function (input) {
                 cacheGroups: {
                     styles: {
                         name: "styles",
-                        test: /\.sass|\.css$/,
+                        test: /\.sass$/,
                         minSize: 61200,
                         enforce: true,
                     },
