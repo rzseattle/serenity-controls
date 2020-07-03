@@ -7,8 +7,8 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
     conf = {};
     conf.entry = ENTRY_POINTS;
     conf.output = {
-        filename: `bundle-[name]-[hash].min.js`,
-        chunkFilename: `chunk-[id]-[name]-[hash].bundle.js`,
+        filename: `bundle-[hash].min.js`,
+        chunkFilename: `chunk-[id]-[hash].js`,
         path: PATH,
         publicPath: PUBLIC_PATH
     };
@@ -42,9 +42,15 @@ var getProductionConf = function (ENTRY_POINTS, PUBLIC_PATH, PATH, BASE_PATH, LA
             this.plugin("after-emit", function (compilation, callback) {
                 var stats = compilation.getStats().toJson();
                 if (stats) {
-                    console.log(stats.assetsByChunkName);
-                    let content = stats.assetsByChunkName.admin + "|" + compilation.getStats().hash
-                    fs.writeFile(PATH + `/compilation-hash.txt`, content, function () {
+                    let contentArr = [];
+                    for(  el of Object.values(stats.assetsByChunkName ) ){
+                       if(Array.isArray(el)){
+                           contentArr = [...contentArr, ...el];
+                       } else{
+                           contentArr.push(el);
+                       }
+                    }
+                    fs.writeFile(PATH + `/compilation-hash.txt`, contentArr.join("|"), function () {
                         callback();
                     });
                 }

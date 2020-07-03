@@ -131,37 +131,79 @@ module.exports = function (input) {
     );*/
 
     if (input.PRODUCTION && !input.SSR) {
-
+        const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
         conf.plugins.push(
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: "bundle-[hash].css",
-                //chunkFilename: "[id].[hash].css",
+                filename: "[name].[chunkhash].css",
+                esModule: false,
+                //chunkFilename: "[id].[hash:8].css",
             }),
             //new BundleAnalyzerPlugin(),
         );
-        //conf.plugins.push(new BundleAnalyzerPlugin());
+
         conf.optimization = {
             minimize: true,
             splitChunks: {
+                chunks: "async",
+                minSize: 30000,
+                maxSize: 0,
+                minChunks: 1,
+                maxAsyncRequests: 6,
+                maxInitialRequests: 4,
+                automaticNameDelimiter: "~",
                 cacheGroups: {
-                    styles: {
-                        name: "styles",
-                        test: /\.sass|\.css$/,
-                        
-
+                    frontend: {
+                        chunks: "initial",
+                        filename: "frontend.js",
+                        name: "frontend",
+                        test: /frontend\/lib.+/,
+                        reuseExistingChunk: true,
+                        minChunks: 1,
+                        enforce: true,
+                        priority: -10,
                     },
-                    common: {
-                        chunks: 'all',
+                    styles: {
+                        chunks: "all",
+                        name: "styles",
+                        test: /\.sass|\.css|\.scss$/,
+                        minChunks: 1,
+                        enforce: true
+                    },
+
+                    default: {
+                        chunks: "async",
+                        minChunks: 2,
+                        priority: -20,
+                        reuseExistingChunk: true,
                     },
                 },
             },
+
+            //            splitChunks: {
+            //                chunks: 'all',
+            //                 name: false,
+            //                 cacheGroups: {
+            //                     styles: {
+            //                         name: "styles",
+            //                         test: /\.sass|\.css|\.scss$/,
+            //                         chunks: 'all',
+            //                         minChunks: 1,
+            //                         reuseExistingChunk: true,
+            //                         enforce: true,
+            //                     },
+            // /*                    frontend:{
+            //                          name: "frontend",
+            //                          test: /frontend\/lib/,
+            //
+            //                     },*/
+            //                 },
+            //            },
             minimizer: [
                 /* new webpack.optimize.MinChunkSizePlugin({
                     minChunkSize: 51200, // ~50kb
                 }),*/
-
                 new TerserPlugin(),
                 new OptimizeCSSAssetsPlugin({
                     cssProcessor: require("cssnano"),
@@ -177,16 +219,6 @@ module.exports = function (input) {
                 chunks: 'all'
             },*/
         };
-        const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-        conf.plugins.push(
-            new MiniCssExtractPlugin({
-                // Options similar to the same options in webpackOptions.output
-                // both options are optional
-                filename: "bundle-[hash].css",
-                chunkFilename: "[id].[hash].css",
-            }),
-            //new BundleAnalyzerPlugin(),
-        );
     } else {
         //incremental build optymalization
         conf.optimization = {
