@@ -147,7 +147,7 @@ module.exports = function (input) {
             minimize: true,
             splitChunks: {
                 chunks: "async",
-                //minSize: 30000,
+                minSize: 30000,
 
                 minChunks: 1,
                 maxAsyncRequests: 6,
