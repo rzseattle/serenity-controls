@@ -140,44 +140,77 @@ module.exports = function (input) {
                 esModule: false,
                 //chunkFilename: "[id].[hash:8].css",
             }),
-            //new BundleAnalyzerPlugin(),
+            new BundleAnalyzerPlugin(),
         );
 
         conf.optimization = {
             minimize: true,
             splitChunks: {
                 chunks: "async",
-                minSize: 30000,
-                maxSize: 0,
+                //minSize: 30000,
+
                 minChunks: 1,
                 maxAsyncRequests: 6,
-                maxInitialRequests: 4,
+                maxInitialRequests: 3,
                 automaticNameDelimiter: "~",
+
                 cacheGroups: {
-                    frontend: {
-                        chunks: "initial",
-                        filename: "frontend.js",
+                    /*frontend: {
+                        chunks: "async",
+
                         name: "frontend",
                         test: /frontend\/lib.+/,
                         reuseExistingChunk: true,
-                        minChunks: 1,
+                        minChunks: 2,
                         enforce: true,
                         priority: -10,
-                    },
+
+                    },*/
+                    // rest: {
+                    //     chunks: "all",
+                    //     filename: "v2.js",
+                    //     name: "rest",
+                    //
+                    //     test: function (module) {
+                    //         if (module.resource) {
+                    //             /*if(module.resource.match(/moment.+/)){
+                    //                 console.log("---------------aaa" + module.resource);
+                    //             }
+                    //
+                    //             return module.resource.match(/moment.+/)*/
+                    //
+                    //             return (
+                    //                 module.resource.indexOf("moment") != -1 ||
+                    //                 module.resource.indexOf("ResizeObserver") != -1 ||
+                    //                 module.resource.includes("react-day-picker") ||
+                    //                 module.resource.includes("react-sortable-hoc") ||
+                    //                 module.resource.includes("i18next") ||
+                    //                 module.resource.includes("react-dropzone")
+                    //             );
+                    //         }
+                    //
+                    //         return false;
+                    //     },
+                    //
+                    //     //reuseExistingChunk: true,
+                    //     //minChunks: 1,
+                    //     enforce: true,
+                    //
+                    // },
                     styles: {
                         chunks: "all",
                         name: "styles",
                         test: /\.sass|\.css|\.scss$/,
                         minChunks: 1,
-                        enforce: true
+                        enforce: true,
                     },
 
-                    default: {
-                        chunks: "async",
-                        minChunks: 2,
-                        priority: -20,
-                        reuseExistingChunk: true,
-                    },
+                    // default: {
+                    //     chunks: "async",
+                    //     minChunks: 2,
+                    //     priority: -20,
+                    //     reuseExistingChunk: true,
+                    // },
                 },
             },
 
