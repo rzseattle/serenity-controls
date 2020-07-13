@@ -140,7 +140,7 @@ module.exports = function (input) {
                 esModule: false,
                 //chunkFilename: "[id].[hash:8].css",
             }),
-            new BundleAnalyzerPlugin(),
+            //new BundleAnalyzerPlugin(),
         );
 
         conf.optimization = {
