@@ -45,11 +45,11 @@ class ConfirmDialog extends React.Component<IConfirmModalProps, any> {
                 </div>
                 <div style={{ padding: 10, paddingTop: 0, textAlign: "right" }}>
                     <button onClick={this.handleConfirm} className="btn btn-primary">
-                        {fI18n.t("Tak")}
+                        {fI18n.t("frontend:yes")}
                     </button>
                     {this.props.showCancelLing && (
                         <button onClick={this.handleAbort} className="btn btn-default">
-                            {fI18n.t("Anuluj")}
+                            {fI18n.t("frontend:cancel")}
                         </button>
                     )}
                 </div>
