@@ -140,7 +140,7 @@ module.exports = function (input) {
                 esModule: false,
                 //chunkFilename: "[id].[hash:8].css",
             }),
-            //new BundleAnalyzerPlugin(),
+            new BundleAnalyzerPlugin(),
         );
 
         conf.optimization = {
@@ -201,6 +201,15 @@ module.exports = function (input) {
                         chunks: "all",
                         name: "styles",
                         test: /\.sass|\.css|\.scss$/,
+                        minChunks: 1,
+                        enforce: true,
+                    },
+
+                    styles: {
+                        chunks: "all",
+
+                        name: "styles-not-core",
+                        test: /swiper/,
                         minChunks: 1,
                         enforce: true,
                     },

@@ -26,6 +26,7 @@ var getLoaders = function(production, input) {
 
     let loaders = {
         rules: [
+            
             {
                 test: [/\.js$/, /\.es6$/, /\.tsx/, /\.ts$/],
                 exclude: path.resolve(input.BASE_PATH, "node_modules"),
