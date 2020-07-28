@@ -65,7 +65,7 @@ module.exports = function (input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = ["babel-polyfill", input.ENTRY_POINTS[i]];
+        tmpEntry[i] = ["babel-polyfill", ...input.ENTRY_POINTS[i]];
     }
 
     let tmp;
@@ -140,7 +140,7 @@ module.exports = function (input) {
                 esModule: false,
                 //chunkFilename: "[id].[hash:8].css",
             }),
-            new BundleAnalyzerPlugin(),
+            //new BundleAnalyzerPlugin(),
         );
 
         conf.optimization = {
