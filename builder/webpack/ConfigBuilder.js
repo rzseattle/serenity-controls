@@ -143,8 +143,11 @@ module.exports = function (input) {
             //new BundleAnalyzerPlugin(),
         );
 
+        const groupsOptions = { chunks: "all", minSize: 0, minChunks: 1, reuseExistingChunk: true, enforce: true };
+
         conf.optimization = {
             minimize: true,
+
             splitChunks: {
                 chunks: "async",
                 minSize: 30000,
@@ -155,88 +158,81 @@ module.exports = function (input) {
                 automaticNameDelimiter: "~",
 
                 cacheGroups: {
-                    /*frontend: {
-                        chunks: "async",
+                    styles: {
+                        name: "styles",
+                        test: (module) => {
+                            const test = module.resource !== undefined ? module.resource : module.context;
+
+                            if (test == null) {
+                                return false;
+                            }
+
+                            if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
+                                if (test.match(/swiper/) || test.match(/frontend/)) {
+                                    console.log( test + " > frontend");
+                                    return false;
+                                }
+                                return true;
+                            } else {
+                                if (module.type == "css/mini-extract") {
+                                    console.log("------------------------");
+                                    console.log(test);
+                                    console.log(module.resource);
+                                    console.log(module.context);
+                                    console.log(module);
+                                    console.log("------------------------");
+                                }
+                                return false;
+                            }
+                        },
+                        ...groupsOptions,
+                    },
+                    swiper: {
+                        name: "swiper",
+                        filename: "swiper.css",
+                        test: (module) => {
+                            const test = module.resource ? module.resource : module.context;
+                            if (test == null) {
+                                return false;
+                            }
+                            if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
+                                if (test.match(/swiper/)) {
+                                    console.log( test + " > swiper");
+                                    return true;
+                                }
+                                return false;
+                            } else {
+                                return false;
+                            }
+                        },
+                        ...groupsOptions,
+
+                    },
+                    frontend: {
 
                         name: "frontend",
-                        test: /frontend\/lib.+/,
-                        reuseExistingChunk: true,
-                        minChunks: 2,
-                        enforce: true,
-                        priority: -10,
+                        test: (module) => {
+                            const test = module.resource ? module.resource : module.context;
+                            if (test == null) {
+                                return false;
+                            }
+                            if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
+                                if (test.match(/frontend/)) {
+                                    console.log( test + " > frontend");
+                                    return true;
+                                }
+                                return false;
+                            } else {
+                                return false;
+                            }
+                        },
+                        ...groupsOptions,
 
-                    },*/
-                    // rest: {
-                    //     chunks: "all",
-                    //     filename: "v2.js",
-                    //     name: "rest",
-                    //
-                    //     test: function (module) {
-                    //         if (module.resource) {
-                    //             /*if(module.resource.match(/moment.+/)){
-                    //                 console.log("---------------aaa" + module.resource);
-                    //             }
-                    //
-                    //             return module.resource.match(/moment.+/)*/
-                    //
-                    //             return (
-                    //                 module.resource.indexOf("moment") != -1 ||
-                    //                 module.resource.indexOf("ResizeObserver") != -1 ||
-                    //                 module.resource.includes("react-day-picker") ||
-                    //                 module.resource.includes("react-sortable-hoc") ||
-                    //                 module.resource.includes("i18next") ||
-                    //                 module.resource.includes("react-dropzone")
-                    //             );
-                    //         }
-                    //
-                    //         return false;
-                    //     },
-                    //
-                    //     //reuseExistingChunk: true,
-                    //     //minChunks: 1,
-                    //     enforce: true,
-                    //
-                    // },
-                    styles: {
-                        chunks: "all",
-                        name: "styles",
-                        test: /\.sass|\.css|\.scss$/,
-                        minChunks: 1,
-                        enforce: true,
                     },
-
-                    // default: {
-                    //     chunks: "async",
-                    //     minChunks: 2,
-                    //     priority: -20,
-                    //     reuseExistingChunk: true,
-                    // },
                 },
             },
 
-            //            splitChunks: {
-            //                chunks: 'all',
-            //                 name: false,
-            //                 cacheGroups: {
-            //                     styles: {
-            //                         name: "styles",
-            //                         test: /\.sass|\.css|\.scss$/,
-            //                         chunks: 'all',
-            //                         minChunks: 1,
-            //                         reuseExistingChunk: true,
-            //                         enforce: true,
-            //                     },
-            // /*                    frontend:{
-            //                          name: "frontend",
-            //                          test: /frontend\/lib/,
-            //
-            //                     },*/
-            //                 },
-            //            },
             minimizer: [
-                /* new webpack.optimize.MinChunkSizePlugin({
-                    minChunkSize: 51200, // ~50kb
-                }),*/
                 new TerserPlugin(),
                 new OptimizeCSSAssetsPlugin({
                     cssProcessor: require("cssnano"),
