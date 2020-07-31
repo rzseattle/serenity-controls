@@ -205,15 +205,6 @@ module.exports = function (input) {
                         enforce: true,
                     },
 
-                    styles: {
-                        chunks: "all",
-
-                        name: "styles-not-core",
-                        test: /swiper/,
-                        minChunks: 1,
-                        enforce: true,
-                    },
-
                     // default: {
                     //     chunks: "async",
                     //     minChunks: 2,
