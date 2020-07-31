@@ -107,8 +107,6 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
     public static defaultProps: Partial<IBFormProps> = {
         layoutType: "default",
         editable: true,
-        fieldErrors: new Map<string, string[]>(),
-        formErrors: [],
         useFormTag: true,
     };
 
@@ -116,8 +114,8 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         super(props);
         this.state = {
             data: props.data || {},
-            fieldErrors: props.fieldErrors,
-            formErrors: props.formErrors,
+            fieldErrors: props.fieldErrors ?? new Map<string, string[]>(),
+            formErrors: props.formErrors ?? [],
             isDirty: false,
             loading: props.loading || false,
         };
@@ -153,10 +151,15 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         if (this.props.onValidatorError) {
             this.props.onValidatorError({ form: this, response });
         }
+        console.log(response);
+        console.log(response.fieldErrors);
 
         this.setState({
             fieldErrors: response.fieldErrors,
             formErrors: response.formErrors || [],
+        }, () => {
+            console.log(this.state);
+
         });
 
         this.forceUpdate();
@@ -172,6 +175,9 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         if (nextProps.fieldErrors) {
+            console.log("to jest pewnie to !! --------------");
+            console.log(nextProps.fieldErrors);
+            console.log("to jest pewnie to !! -------------");
             this.setState({ fieldErrors: nextProps.fieldErrors });
         }
         if (nextProps.formErrors) {
@@ -179,6 +185,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         if (nextProps.errors) {
+            console.log("to jest pewnie to !!")
             this.setState({
                 fieldErrors: nextProps.errors.fieldErrors || new Map<string, string[]>(),
                 formErrors: nextProps.errors.formErrors || [],
@@ -222,6 +229,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                     tmpCallbacks[CommEvents.SUCCESS]({ form: this, response });
                 }
             });
+
             comm.on(CommEvents.VALIDATION_ERRORS, (response) => {
                 this.handleValidatorError(response);
             });
