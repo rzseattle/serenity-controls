@@ -13,8 +13,9 @@ interface IPreviewModal extends IFileViewerProps {
 
 export const PreviewModal = (props: IPreviewModal) => {
     const { file } = props;
-    const ViewerComponent = getViewer(file);
+    const ViewerComponent = React.lazy(() => getViewer(file));
 
+    // @ts-ignore
     return (
         <Modal show={true} onHide={props.onHide} title={file.name} showHideLink={true}>
             <div style={{ maxWidth: "80vw", maxHeight: "80vh", overflow: "auto" }}>
@@ -60,14 +61,12 @@ export const PreviewModal = (props: IPreviewModal) => {
                     ]}
                 />
                 <div style={{ opacity: 0, height: 1, overflow: "hidden", position: "absolute" }}>
-                    <input
-                        className={"form-control w-file-preview-input"}
-                        type="text"
-                        defaultValue={file.path}
-                    />
+                    <input className={"form-control w-file-preview-input"} type="text" defaultValue={file.path} />
                 </div>
                 <div style={{ maxHeight: "calc( 80vh -  45px )", overflow: "auto" }}>
-                    <ViewerComponent file={file}  />
+                    <React.Suspense fallback={"..."}>
+                        <ViewerComponent file={file} />
+                    </React.Suspense>
                 </div>
             </div>
         </Modal>

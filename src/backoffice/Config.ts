@@ -1,8 +1,6 @@
 import { deepExtend } from "../lib/JSONTools";
 import { IFile, IFileViewerProps } from "../FileListField";
 
-import { ImageViewer } from "../viewers/ImageViewer";
-import { PDFViewer } from "../viewers/PDFViewer";
 
 export interface IConfig {
     translations: {
@@ -11,7 +9,7 @@ export interface IConfig {
         langChanged: (langCode: string) => any;
     };
     files: {
-        viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType<IFileViewerProps> }>;
+        viewerRegistry: Array<{ filter: RegExp; viewer: Promise<React.ComponentType<IFileViewerProps>> }>;
         transformFilePath: (file: IFile) => string;
     };
 }
@@ -40,11 +38,11 @@ let config: IConfig = {
         viewerRegistry: [
             {
                 filter: /.(jpg|jpeg|png|gif)$/i,
-                viewer: ImageViewer,
+                viewer: import("../viewers/ImageViewer").then((m) => m.ImageViewer),
             },
             {
                 filter: /.(pdf)$/i,
-                viewer: PDFViewer,
+                viewer: import("../viewers/PDFViewer").then((m) => m.PDFViewer),
             },
         ],
     },

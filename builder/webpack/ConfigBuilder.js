@@ -138,7 +138,7 @@ module.exports = function (input) {
                 // both options are optional
                 filename: "[name].[chunkhash].css",
                 esModule: false,
-                //chunkFilename: "[id].[hash:8].css",
+                chunkFilename: "[name].[id].[hash:8].css",
             }),
             //new BundleAnalyzerPlugin(),
         );
@@ -147,7 +147,9 @@ module.exports = function (input) {
 
         conf.optimization = {
             minimize: true,
-
+            runtimeChunk: {
+                name: 'runtime'
+            },
             splitChunks: {
                 chunks: "async",
                 minSize: 30000,
@@ -158,77 +160,85 @@ module.exports = function (input) {
                 automaticNameDelimiter: "~",
 
                 cacheGroups: {
+
                     styles: {
+                        chunks: "all",
                         name: "styles",
-                        test: (module) => {
-                            const test = module.resource !== undefined ? module.resource : module.context;
-
-                            if (test == null) {
-                                return false;
-                            }
-
-                            if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
-                                if (test.match(/swiper/) || test.match(/frontend/)) {
-                                    console.log( test + " > frontend");
-                                    return false;
-                                }
-                                return true;
-                            } else {
-                                if (module.type == "css/mini-extract") {
-                                    console.log("------------------------");
-                                    console.log(test);
-                                    console.log(module.resource);
-                                    console.log(module.context);
-                                    console.log(module);
-                                    console.log("------------------------");
-                                }
-                                return false;
-                            }
-                        },
-                        ...groupsOptions,
+                        test: /\.sass|\.css|\.scss$/,
+                        minChunks: 1,
+                        enforce: true
                     },
-                    swiper: {
-                        name: "swiper",
-                        filename: "swiper.css",
-                        test: (module) => {
-                            const test = module.resource ? module.resource : module.context;
-                            if (test == null) {
-                                return false;
-                            }
-                            if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
-                                if (test.match(/swiper/)) {
-                                    console.log( test + " > swiper");
-                                    return true;
-                                }
-                                return false;
-                            } else {
-                                return false;
-                            }
-                        },
-                        ...groupsOptions,
-
-                    },
-                    frontend: {
-
-                        name: "frontend",
-                        test: (module) => {
-                            const test = module.resource ? module.resource : module.context;
-                            if (test == null) {
-                                return false;
-                            }
-                            if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
-                                if (test.match(/frontend/)) {
-                                    console.log( test + " > frontend");
-                                    return true;
-                                }
-                                return false;
-                            } else {
-                                return false;
-                            }
-                        },
-                        ...groupsOptions,
-
-                    },
+                    // styles: {
+                    //     name: "styles",
+                    //     test: (module) => {
+                    //         const test = module.resource !== undefined ? module.resource : module.context;
+                    //
+                    //         if (test == null) {
+                    //             return false;
+                    //         }
+                    //
+                    //         if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
+                    //             if (test.match(/swiper/) || test.match(/frontend/)) {
+                    //                 console.log( test + " > frontend");
+                    //                 return false;
+                    //             }
+                    //             return true;
+                    //         } else {
+                    //             if (module.type == "css/mini-extract") {
+                    //                 console.log("------------------------");
+                    //                 console.log(test);
+                    //                 console.log(module.resource);
+                    //                 console.log(module.context);
+                    //                 console.log(module);
+                    //                 console.log("------------------------");
+                    //             }
+                    //             return false;
+                    //         }
+                    //     },
+                    //     ...groupsOptions,
+                    // },
+                    // swiper: {
+                    //     name: "swiper",
+                    //     filename: "swiper.css",
+                    //     test: (module) => {
+                    //         const test = module.resource ? module.resource : module.context;
+                    //         if (test == null) {
+                    //             return false;
+                    //         }
+                    //         if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
+                    //             if (test.match(/swiper/)) {
+                    //                 console.log( test + " > swiper");
+                    //                 return true;
+                    //             }
+                    //             return false;
+                    //         } else {
+                    //             return false;
+                    //         }
+                    //     },
+                    //     ...groupsOptions,
+                    //
+                    // },
+                    // frontend: {
+                    //
+                    //     name: "frontend",
+                    //     test: (module) => {
+                    //         const test = module.resource ? module.resource : module.context;
+                    //         if (test == null) {
+                    //             return false;
+                    //         }
+                    //         if (test.match(/\.sass|\.css|\.scss$/) || module.type == "css/mini-extract") {
+                    //             if (test.match(/frontend/)) {
+                    //                 console.log( test + " > frontend");
+                    //                 return true;
+                    //             }
+                    //             return false;
+                    //         } else {
+                    //             return false;
+                    //         }
+                    //     },
+                    //     ...groupsOptions,
+                    //
+                    // },
                 },
             },
 
