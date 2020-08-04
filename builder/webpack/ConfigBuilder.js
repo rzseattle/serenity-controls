@@ -140,7 +140,7 @@ module.exports = function (input) {
                 esModule: false,
                 chunkFilename: "[name].[id].[hash:8].css",
             }),
-            new BundleAnalyzerPlugin(),
+            //new BundleAnalyzerPlugin(),
         );
 
         const groupsOptions = { chunks: "all", minSize: 0, minChunks: 1, reuseExistingChunk: true, enforce: true };
