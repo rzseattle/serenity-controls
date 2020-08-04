@@ -5,7 +5,7 @@ import { IOption } from "../fields/Interfaces";
 import ReactDOM from "react-dom";
 
 import "./SelectFilter.sass";
-import { CheckboxGroup } from "../fields";
+import { CheckboxGroup } from "../fields/CheckboxGroup";
 import { toOptions } from "../fields/Utils";
 
 export interface ISelectFilterProps extends IFilterProps {

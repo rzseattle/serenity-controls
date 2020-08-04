@@ -11,7 +11,7 @@
     "importHelpers": true,
     "noImplicitAny": true,
     "downlevelIteration": true,
-    "removeComments": true,
+    //"removeComments": true,
     "noEmit": true,
     "skipLibCheck": true,
     "lib": [

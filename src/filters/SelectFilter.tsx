@@ -4,7 +4,8 @@ import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 import { IFieldChangeEvent, IOption } from "../fields/Interfaces";
 
 import "./SelectFilter.sass";
-import { CheckboxGroup, Select } from "../fields";
+import { Select } from "../fields/Select";
+import { CheckboxGroup } from "../fields/CheckboxGroup";
 import { toOptions } from "../fields/Utils";
 
 export interface ISelectFilterProps extends IFilterProps {

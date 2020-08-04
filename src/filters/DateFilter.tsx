@@ -7,7 +7,7 @@ import "./DateFilter.sass";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { Icon } from "../Icon";
 
-import { BDate } from "../BForm";
+import { BDate } from "../BForm/fields/BDate";
 
 interface IDateFilterProps extends IFilterProps {
     config: {

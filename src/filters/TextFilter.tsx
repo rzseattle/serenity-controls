@@ -4,7 +4,8 @@ import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./TextFilter.sass";
 import { toOptions } from "../fields/Utils";
-import { IFieldChangeEvent, Select } from "../fields";
+import { Select } from "../fields/Select";
+import { IFieldChangeEvent } from "../fields/Interfaces";
 
 interface ITextFilterProps extends IFilterProps {
     config: {

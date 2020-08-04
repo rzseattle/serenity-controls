@@ -4,7 +4,8 @@ import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./NumericFilter.sass";
-import { IFieldChangeEvent, Select } from "../fields";
+import { Select } from "../fields/Select";
+import { IFieldChangeEvent } from "../fields/Interfaces";
 import { toOptions } from "../fields/Utils";
 
 interface INumericFilterProps extends IFilterProps {
@@ -28,11 +29,11 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     }
 
     public componentDidMount(): void {
-        if(this.props.config.defaultValue) {
+        if (this.props.config.defaultValue) {
             this.input1.value = this.props.config.defaultValue;
         }
-        if(this.props.config.defaultFilter) {
-            this.setState({option: this.props.config.defaultFilter});
+        if (this.props.config.defaultFilter) {
+            this.setState({ option: this.props.config.defaultFilter });
         }
 
         if (!this.props.config.disableAutoFocus) {

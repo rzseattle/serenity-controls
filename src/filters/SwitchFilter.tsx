@@ -4,7 +4,8 @@ import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./SwitchFilter.sass";
-import { IOption, Switch } from "../fields";
+import { Switch } from "../fields/Switch";
+import { IOption } from "../fields/Interfaces";
 import { ISelectFilterProps } from "./SelectFilter";
 
 interface ISwitchFilterProps extends IFilterProps {
