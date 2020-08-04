@@ -65,7 +65,7 @@ module.exports = function (input) {
 
     let tmpEntry = {};
     for (let i in input.ENTRY_POINTS) {
-        tmpEntry[i] = ["babel-polyfill", ...input.ENTRY_POINTS[i]];
+        tmpEntry[i] = [ ...input.ENTRY_POINTS[i]];
     }
 
     let tmp;
@@ -140,7 +140,7 @@ module.exports = function (input) {
                 esModule: false,
                 chunkFilename: "[name].[id].[hash:8].css",
             }),
-            //new BundleAnalyzerPlugin(),
+            new BundleAnalyzerPlugin(),
         );
 
         const groupsOptions = { chunks: "all", minSize: 0, minChunks: 1, reuseExistingChunk: true, enforce: true };
@@ -161,13 +161,13 @@ module.exports = function (input) {
 
                 cacheGroups: {
 
-                    styles: {
+                   /* styles: {
                         chunks: "all",
                         name: "styles",
                         test: /\.sass|\.css|\.scss$/,
                         minChunks: 1,
                         enforce: true
-                    },
+                    },*/
                     // styles: {
                     //     name: "styles",
                     //     test: (module) => {
