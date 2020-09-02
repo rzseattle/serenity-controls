@@ -378,7 +378,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             tabIndex={-1}
                             onBlur={() => setTimeout(this.handleDropdownChange, 100)}
                             onMouseDown={(e) => e.preventDefault()}
-                            style={{ height: options.length * 28, maxHeight: this.props.height }}
+                            // style={{ height: options.length * 78, maxHeight: this.props.height }}
                         >
                             {this.renderListBody()}
                         </div>
