@@ -80,10 +80,16 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             if (this.props.mode == "dropdown") {
                 this.handleDropdownChange();
             } else {
-                setTimeout(() => this.searchField.focus(), 10);
+                this.focus();
             }
         }
     }
+
+    public focus = () => {
+        setTimeout(() => {
+            this.handleDropdownChange();
+        }, 10);
+    };
 
     public handleDropdownChange = () => {
         const options = toOptions(this.props.options);

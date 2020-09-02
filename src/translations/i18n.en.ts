@@ -3,6 +3,7 @@ export const lang = {
         logout: "Logout",
         search: "Search",
         add: "Add",
+        yes: "Yes",
         cancel: "Cancel",
         print: "Print",
         download: "Download",

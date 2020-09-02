@@ -1,22 +1,21 @@
 import * as React from "react";
 
-import {IModalProps} from "../Modal";
+import { IModalProps } from "../Modal";
 import * as NotificationSystem from "react-notification-system";
-import {useContext} from "react";
+import { useContext } from "react";
 import { IRouteElement } from "./interfaces/IRouteElement";
-
+import { ICommand } from "../CommandBar";
 
 export interface IPanelContext {
     /**
      * Url without last action part
      */
 
-    routeData: IRouteElement,
+    routeData: IRouteElement;
 
     baseURL: string;
 
     basePath: string;
-
 
     notification(content: string, title?: string, conf?: NotificationSystem.Notification): any;
 
@@ -36,11 +35,12 @@ export interface IPanelContext {
 
     openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string;
 
+    openContextMenu(coordinates: React.MouseEvent<HTMLElement, MouseEvent>, commands: ICommand[], context: any): any;
+
     closeModal(modalId: string): any;
 
     parentContext: IPanelContext;
 }
-
 
 export const PanelContext = React.createContext(null);
 

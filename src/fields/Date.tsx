@@ -51,8 +51,9 @@ export class Date extends React.Component<IDateProps, any> {
             // @ts-ignore
 
         ]).then((imported: any[]) => {
+            
             moment = imported[0].default;
-            this.datePicker = imported[2].DayPicker;
+            this.datePicker = imported[2].default;
             this.MomentLocaleUtils = imported[3].default;
             this.setState({
                 date:

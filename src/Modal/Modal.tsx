@@ -56,12 +56,19 @@ export class Modal extends React.PureComponent<IModalProps> {
     }
 
     public handleClose = (e: React.MouseEvent) => {
-        if (e !== null) {
-            e.stopPropagation();
-            e.nativeEvent.stopImmediatePropagation();
-        }
-        if (this.props.onHide) {
-            this.props.onHide();
+        const target = e.target as HTMLDivElement;
+        const rect = target.getBoundingClientRect();
+        const scrollbarWidth = rect.width - target.clientWidth;
+        const relativeMousePos = e.clientX - rect.left;
+        //clicked outside of scroll bar
+        if (!(rect.width - relativeMousePos < scrollbarWidth)) {
+            if (e !== null) {
+                e.stopPropagation();
+                e.nativeEvent.stopImmediatePropagation();
+            }
+            if (this.props.onHide) {
+                this.props.onHide();
+            }
         }
     };
 

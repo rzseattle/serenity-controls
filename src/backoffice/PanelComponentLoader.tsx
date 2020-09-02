@@ -11,6 +11,7 @@ import { BackofficeStore } from "./BackofficeStore";
 import { deepIsEqual } from "../lib";
 import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";
+import { ICommand } from "../CommandBar";
 
 declare var PRODUCTION: boolean;
 
@@ -49,6 +50,8 @@ export interface IArrowViewComponentProps {
 
     _openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): string;
 
+    _openContextMenu(coordinates: React.MouseEvent<HTMLElement, MouseEvent>, commands: ICommand[], context: any): any;
+
     _closeModal(modalId: string): any;
 
     _parentContext(): IArrowViewComponentProps;
@@ -65,6 +68,8 @@ interface IProps {
     setPanelOption(name: string, value: string | number | boolean, callback?: () => any): any;
 
     openModal(route: string, input?: any, modalProps?: Partial<IModalProps>, props?: any): any;
+
+    openContextMenu(event: React.MouseEvent<HTMLElement, MouseEvent>, commands: ICommand[], context: any): any;
 
     closeModal(modalId: string): any;
 
@@ -137,13 +142,14 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
             startLoadingIndicator: this.props.onLoadStart,
             stopLoadingIndicator: this.props.onLoadEnd,
             isSub: this.props.isSub,
+            openContextMenu: this.props.openContextMenu,
             scrollTo: () => {
                 alert("Not implemented");
             },
             openModal: this.props.openModal,
             closeModal: this.props.closeModal,
             parentContext: this.props.parentContext,
-            routeData: this.props.context.view
+            routeData: this.props.context.view,
         };
     };
 
@@ -164,8 +170,6 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                 </div>
             );
         }
-
-
 
         return (
             <div className={RouteElement && RouteElement.componentName}>
@@ -193,6 +197,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                                 alert("Not implemented");
                             }}
                             _openModal={this.props.openModal}
+                            _openContextMenu={this.props.openContextMenu}
                             _closeModal={this.props.closeModal}
                             // @ts-ignore //todo sprawdzić dlaczego
                             _parentContext={this.props.parentContext}
