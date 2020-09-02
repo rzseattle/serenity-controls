@@ -48,12 +48,13 @@ var getLoaders = function(production, input) {
 
                                 "@babel/plugin-syntax-jsx",
                                 "@babel/plugin-syntax-dynamic-import",
-
+                                ["@babel/plugin-proposal-decorators", { "legacy": true }],
                                 ["@babel/proposal-class-properties", { loose: true }],
                                 "@babel/proposal-object-rest-spread",
                                 "react-hot-loader/babel",
                                 "@babel/plugin-proposal-optional-chaining",
                                 "@babel/plugin-proposal-nullish-coalescing-operator",
+
                             ],
                         },
                     },
