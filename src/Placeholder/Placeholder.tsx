@@ -72,8 +72,7 @@ export class Placeholder extends React.Component<ILoaderContainerProps, any> {
 
         return (
             <div style={{ position: "relative" }}>
-                {!loaded && prerender && <Shadow showLoadingIndicator={true} />}
-                {!loaded && !prerender && <LoadingIndicator text={indicatorText} />}
+                {!loaded && prerender && <Shadow showLoadingIndicator={false} />}
                 {(loaded || (!loaded && prerender)) && this.props.children(this.state.data)}
                 {debug && (
                     <div style={{ padding: 10, margin: 5, border: "solid 1px grey" }}>

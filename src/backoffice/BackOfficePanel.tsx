@@ -127,7 +127,9 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
         if (inWindow) {
             this.handleOpenWindow(element.route, {}, { title: element.title, showHideLink: true, top: 55 });
         } else {
-            this.store.changeView(element.route);
+            window.location.hash = element.route;
+            //alert(element.route);
+            //this.store.changeView(element.route);
         }
         if (this.state.layout == "mobile") {
             this.setState({ menuVisible: false });

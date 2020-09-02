@@ -100,9 +100,9 @@ class BackofficeStore implements IBackOfficestoreAPI {
         Comm.onFinish.push((url, input, response, method) => {
             if (!BackofficeStore.debugViewAjaxInProgress) {
                 router.getRouteInfo(url).then((routeInfo) => {
-                    if(this.view.componentName == routeInfo.componentName) {
+                    if (this.view.componentName == routeInfo.componentName) {
                         BackofficeStore.registerDebugData("view", url, routeInfo, response, input);
-                    }else{
+                    } else {
                         BackofficeStore.registerDebugData("ajax", url, routeInfo, response, input);
                     }
                 });
@@ -151,7 +151,7 @@ class BackofficeStore implements IBackOfficestoreAPI {
     };
 
     private currentPath = "";
-    public changeView = (path: string, input: any = null, callback: () => any = null) => {
+    public changeView = async (path: string, input: any = null, callback: () => any = null) => {
         const originalPath = path;
 
         try {
@@ -177,75 +177,74 @@ class BackofficeStore implements IBackOfficestoreAPI {
             let view: any;
             // check path contains query string
             if (path.indexOf("?") == -1) {
-                view = router.resolve(path);
+                view = await router.resolve(path);
                 const query = qs.stringify(input);
                 url = path + (query ? "?" + query : "");
             } else {
                 const [purePath, pathQueryString] = path.split("?");
-                view = router.resolve(purePath);
+                view = await router.resolve(purePath);
                 const partOfInput = qs.parse(pathQueryString);
                 const query = qs.stringify(Object.assign({}, partOfInput, input));
                 url = purePath + (query ? "?" + query : "");
             }
+            const resolvedView = view;
 
-            view.then((resolvedView: any) => {
-                if (!this.subStore) {
-                    window.removeEventListener("hashchange", this.hashChangeHandler);
-                    window.location.hash = url;
-                    setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
+            if (!this.subStore) {
+                window.removeEventListener("hashchange", this.hashChangeHandler);
+                window.location.hash = url;
+                setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
+            }
+
+            const comm = new Comm(url);
+
+            comm.setData({ __PROPS_REQUEST__: 1 });
+            comm.on(CommEvents.ERROR, (errorResponse) => {
+                this.viewServerErrors = errorResponse;
+                for (const el of this.onViewLoadedArr) {
+                    el();
+                }
+            });
+            comm.on(CommEvents.SUCCESS, (data) => {
+                if (data.__arrowException !== undefined) {
+                    this.viewServerErrors = data;
+                    this.isViewLoading = false;
+                    return;
                 }
 
-                const comm = new Comm(url);
+                this.viewData = Object.assign({}, data, this.externalViewData);
+                this.view = resolvedView;
 
-                comm.setData({ __PROPS_REQUEST__: 1 });
-                comm.on(CommEvents.ERROR, (errorResponse) => {
-                    this.viewServerErrors = errorResponse;
-                    for (const el of this.onViewLoadedArr) {
-                        el();
-                    }
-                });
-                comm.on(CommEvents.SUCCESS, (data) => {
-                    if (data.__arrowException !== undefined) {
-                        this.viewServerErrors = data;
-                        this.isViewLoading = false;
-                        return;
-                    }
+                for (const el of this.onViewLoadedArr) {
+                    el();
+                }
+                if (callback) {
+                    callback();
+                }
 
-                    this.viewData = Object.assign({}, data, this.externalViewData);
-                    this.view = resolvedView;
-
-                    for (const el of this.onViewLoadedArr) {
-                        el();
-                    }
-                    if (callback) {
-                        callback();
-                    }
-
-                    if (originalPath) {
-                        try {
-                            router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
-                                /*BackofficeStore.registerDebugData(
+                if (originalPath) {
+                    try {
+                        router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
+                            /*BackofficeStore.registerDebugData(
                                     "view",
                                     originalPath,
                                     routeData,
                                     this.viewData,
                                     input,
                                 );*/
-                            });
-                        } catch (e) {
-                            throw new Error("Smth is wrong " + originalPath + ", " + e);
-                        }
+                        });
+                    } catch (e) {
+                        throw new Error("Smth is wrong " + originalPath + ", " + e);
                     }
-                });
-                comm.on(CommEvents.FINISH, () => {
-                    this.isViewLoading = false;
-                    this.dataUpdated();
-                });
-
-                BackofficeStore.debugViewAjaxInProgress = true;
-                comm.send();
-                BackofficeStore.debugViewAjaxInProgress = false;
+                }
             });
+            comm.on(CommEvents.FINISH, () => {
+                this.isViewLoading = false;
+                this.dataUpdated();
+            });
+
+            BackofficeStore.debugViewAjaxInProgress = true;
+            comm.send();
+            BackofficeStore.debugViewAjaxInProgress = false;
         } catch (e) {
             this.viewServerErrors = e;
             this.view = null;
