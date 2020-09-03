@@ -50,6 +50,7 @@ const runHandler = (
     callback: Callback,
     keys: string,
     stopPropagation: boolean,
+    name: string,
     debug: boolean,
 ) => {
     if (stopPropagation) {
@@ -57,7 +58,7 @@ const runHandler = (
         event.nativeEvent.stopPropagation();
     }
     if (debug) {
-        log("[HotKeys] Running action:" + keys);
+        log("[HotKeys:" + name + "] Running action:" + keys);
     }
 
     callback(event, keys);
@@ -118,6 +119,7 @@ IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
 
     const map = useRef<any>({});
+    console.log("here " + Math.random());
 
     useEffect(() => {
         if (autofocus) {
@@ -131,9 +133,7 @@ IHotKeyProps) => {
             setTimeout(() => {
                 if (document.activeElement.tagName.toLowerCase() == "body") {
                     if (debug) {
-                        log("[HotKeys:" +
-                            name +
-                            "] Focusing root element");
+                        log("[HotKeys:" + name + "] Focusing root element");
                     }
                     ref.current.focus();
                 }
@@ -163,13 +163,14 @@ IHotKeyProps) => {
                             foundHandler.onRelease,
                             Object.keys(map.current).join("+"),
                             stopPropagation,
+                            name,
                             debug,
                         );
                     }
                     delete map.current[key];
 
                     if (handler !== null) {
-                        runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, debug);
+                        runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, name, debug);
                     }
                 }
             }}
@@ -179,16 +180,21 @@ IHotKeyProps) => {
                 if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug, name)) {
                     map.current[key] = true;
                     if (debug) {
-                        log("[HotKeys:" +
-                            name +
-                            "] Key pressed: " + key + " | Event source:" + e.target);
+                        log("[HotKeys:" + name + "] Key pressed: " + key + " | Event source:" + e.target);
                     }
                     if (handler !== null) {
-                        runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, debug);
+                        runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, name, debug);
                     }
                     const foundHandler = findHandler(map.current, actions);
                     if (foundHandler !== null) {
-                        runHandler(e, foundHandler.handler, Object.keys(map.current).join("+"), stopPropagation, debug);
+                        runHandler(
+                            e,
+                            foundHandler.handler,
+                            Object.keys(map.current).join("+"),
+                            stopPropagation,
+                            name,
+                            debug,
+                        );
                     }
                 }
             }}
