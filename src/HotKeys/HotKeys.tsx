@@ -119,7 +119,6 @@ IHotKeyProps) => {
     const ref = useRef<HTMLDivElement>();
 
     const map = useRef<any>({});
-    console.log("here " + Math.random());
 
     useEffect(() => {
         if (autofocus) {
