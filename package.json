@@ -15,7 +15,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run rebuild"
+      "pre-commit": "yarn run build"
     }
   },
   "keywords": [],
