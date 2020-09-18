@@ -4,7 +4,7 @@ import { LoadingIndicator } from "../LoadingIndicator";
 import { PrintJSON } from "../PrintJSON";
 import { Shadow } from "../Shadow";
 
-interface ILoaderContainerProps {
+export interface IPlaceholderProps {
     /**
      * Datasource object
      */
@@ -25,14 +25,14 @@ interface ILoaderContainerProps {
     prerender?: boolean;
 }
 
-export class Placeholder extends React.Component<ILoaderContainerProps, any> {
-    public static defaultProps: Partial<ILoaderContainerProps> = {
+export class Placeholder extends React.Component<IPlaceholderProps, any> {
+    public static defaultProps: Partial<IPlaceholderProps> = {
         debug: false,
         prerender: false,
         indicatorText: null,
     };
 
-    constructor(props: ILoaderContainerProps) {
+    constructor(props: IPlaceholderProps) {
         super(props);
         this.state = {
             loaded: false,

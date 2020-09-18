@@ -4,7 +4,7 @@
         "declaration": true,
         "declarationMap": true,
         "declarationDir": "lib",
-        "outDir": "src",
+        "outDir": "lib",
         "sourceMap": true,
         "jsx": "react",
         "allowJs": false,
@@ -16,7 +16,6 @@
         "noImplicitAny": true,
         "downlevelIteration": true,
         "removeComments": true,
-
         "skipLibCheck": true,
 
         "lib": [
@@ -29,19 +28,19 @@
             "es2015.iterable",
             "dom.iterable"
         ],
-        "baseUrl": ".",
-        "paths": {
-            "frontend/src": ["./src"] // This mapping is relative to "baseUrl"
-        },
-        "typeRoots": [
-            "../../node_modules/@types"
-        ]
+        "baseUrl": "."
+        //    "paths": {
+        //      "frontend/src": ["./src"] // This mapping is relative to "baseUrl"
+        //    },
+        //    "typeRoots": [
+        //      "../../node_modules/@types"
+        //    ]
     },
 
 
     "exclude": ["resources", "vendor", "assets", "data", "node_modules", "public"],
     "include": [
         "./src/**/*"
-        // , "./stories/**/*"
+    , "./stories/**/*"
     ]
 }
