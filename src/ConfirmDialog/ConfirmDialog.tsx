@@ -12,7 +12,7 @@ export interface IConfirmModalProps extends IModalProps {
 }
 
 class ConfirmDialog extends React.Component<IConfirmModalProps, any> {
-    public promise: Promise<{}>;
+    public promise: Promise<unknown>;
 
     public static defaultProps: Partial<IConfirmModalProps> = {
         showCancelLing: true,
