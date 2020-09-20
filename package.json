@@ -8,7 +8,7 @@
         "watch": "npm-run-all -p 'build:* -- --watch'",
         "dev": "npm-run-all -p storybook 'build:modules -- --watch'",
         "build": "npm-run-all 'build:*'",
-        "build:prettier": "pretty-quick --staged src",
+        "build:prettier": "prettier --write src",
         "build:modules": "tsm \"src/**/*.module.sass\" ",
         "build:typescript": "tsc --project ./ --outDir ./lib ",
         "build:sass": "cpx 'src/**/*.sass' lib",
