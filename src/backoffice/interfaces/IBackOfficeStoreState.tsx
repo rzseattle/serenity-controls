@@ -5,7 +5,7 @@ export default interface IBackOfficeStoreState {
     viewInput: object;
     view: IRouteElement;
     viewData: object;
-    viewServerErrors: any ;
+    viewServerErrors: any;
     isViewLoading: boolean;
     isPackageCompiling: boolean;
 }

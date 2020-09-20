@@ -14,7 +14,6 @@ export const Icon = React.memo((props: IIconProps) => {
     return <i className={"ms-Icon ms-Icon--" + props.name} aria-hidden="true" />;
 });
 
-
 /*
  let icons = [
     "12PointStar",

@@ -168,7 +168,10 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                     <BText label={fI18n.t("frontend:formBuilder.label")} {...form("label")} />
                                     <BSwitch
                                         label={fI18n.t("frontend:formBuilder.required")}
-                                        options={[{ value: 0, label: "Nie" }, { value: 1, label: "Tak" }]}
+                                        options={[
+                                            { value: 0, label: "Nie" },
+                                            { value: 1, label: "Tak" },
+                                        ]}
                                         {...form("required", 0)}
                                     />
 

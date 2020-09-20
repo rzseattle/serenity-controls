@@ -8,13 +8,13 @@ interface IIconProps {
 const PrintJSON: React.StatelessComponent<IIconProps> = (props) => {
     const counter = props.counter || 0;
 
-    let {json} = props;
+    let { json } = props;
 
     if (typeof json === "string") {
         json = JSON.parse(json);
     }
 
-/*    let tdMainStyle: Partial<CSSStyleDeclaration> = {};
+    /*    let tdMainStyle: Partial<CSSStyleDeclaration> = {};
 
     if (counter == 0) {
         tdMainStyle = {verticalAlign: "top", fontWeight: "bold", padding: "10px"};
@@ -42,4 +42,4 @@ const PrintJSON: React.StatelessComponent<IIconProps> = (props) => {
     return <pre onClick={() => console.log(json)}>{JSON.stringify(json, null, 2)}</pre>;
 };
 
-export {PrintJSON};
+export { PrintJSON };

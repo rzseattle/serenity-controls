@@ -131,9 +131,9 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
         };
     }
 
-    public focus = () =>{
+    public focus = () => {
         this.input.focus();
-    }
+    };
 
     public componentDidMount(): void {
         if (this.props.value.length > 0 && this.props.fillItems) {

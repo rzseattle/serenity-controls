@@ -2,7 +2,6 @@ import * as React from "react";
 
 import "./Tree.sass";
 
-
 import { Icon } from "../Icon";
 import { useEffect, useState } from "react";
 import { deepCopy } from "../lib";

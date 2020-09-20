@@ -64,8 +64,7 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             e.persist();
-                                            props.onDelete(props._index, e.nativeEvent
-                                                .target as HTMLAnchorElement);
+                                            props.onDelete(props._index, e.nativeEvent.target as HTMLAnchorElement);
                                         }}
                                         className="w-gallery-delete"
                                     >

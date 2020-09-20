@@ -15,7 +15,6 @@ const XHR: BackendModule = {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
             } else {
-
                 callback(null, result.lang[namespace]);
             }
         });

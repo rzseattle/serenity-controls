@@ -133,7 +133,6 @@ class Comm {
     }
 
     public debugError(error: string) {
-
         if (Comm.errorFallback) {
             Comm.errorFallback({
                 url: Comm.basePath + this.url,
@@ -146,12 +145,11 @@ class Comm {
             try {
                 const json = JSON.parse(error);
                 errorWindow.document.write("2<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-                if(json.__arrowException?.trace ){
-
+                if (json.__arrowException?.trace) {
                     errorWindow.document.write("<h4>Trace:</h4><pre>" + json.__arrowException.trace + "</pre>");
                 }
             } catch (e) {
-                errorWindow.document.write(  error);
+                errorWindow.document.write(error);
                 //errorWindow.document.write("<pre>" + e + "</pre>");
             }
 
@@ -240,7 +238,7 @@ class Comm {
                 } else {
                     // 0 == abotreted
                     if (this.xhr.status != 0) {
-                        this.debugError( this.xhr.responseText);
+                        this.debugError(this.xhr.responseText);
                         this.callEvent(CommEvents.CONNECTION_ERROR, this.xhr.response);
                     }
                 }

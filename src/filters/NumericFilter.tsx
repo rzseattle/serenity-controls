@@ -28,11 +28,11 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     }
 
     public componentDidMount(): void {
-        if(this.props.config.defaultValue) {
+        if (this.props.config.defaultValue) {
             this.input1.value = this.props.config.defaultValue;
         }
-        if(this.props.config.defaultFilter) {
-            this.setState({option: this.props.config.defaultFilter});
+        if (this.props.config.defaultFilter) {
+            this.setState({ option: this.props.config.defaultFilter });
         }
 
         if (!this.props.config.disableAutoFocus) {

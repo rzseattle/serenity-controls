@@ -28,7 +28,7 @@ export const getViewer = (file: IFile): React.ComponentType<IFileViewerProps> =>
             break;
         }
     }
-    if(ViewerComponent === null){
+    if (ViewerComponent === null) {
         return ImageViewer;
     }
 

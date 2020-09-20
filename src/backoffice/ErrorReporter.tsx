@@ -155,10 +155,7 @@ function parseStack(stack: any) {
                 if (e.indexOf("(at ") !== -1) {
                     e = e.replace(/\(at /, "(");
                 }
-                const data = e
-                    .trim()
-                    .split(/\s+/g)
-                    .slice(1);
+                const data = e.trim().split(/\s+/g).slice(1);
                 const last = data.pop();
                 return new StackFrame(data.join(" ") || null, ...extractLocation(last));
             }

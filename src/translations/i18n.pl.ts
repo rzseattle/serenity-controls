@@ -8,13 +8,13 @@ export const lang = {
         print: "Drukuj",
         download: "Pobierz",
         downloading: "Trwa pobieranie",
-        total: 'Ogółem',
+        total: "Ogółem",
         statuses: {
-            kindlyApproved: 'Uznano grzecznościowo',
-            accepted: 'Uznano',
-            notAccepted: 'Nie uznano',
-            completed: 'Zrealizowano',
-            acceptedTotalPercentage: 'Procent uznanych',
+            kindlyApproved: "Uznano grzecznościowo",
+            accepted: "Uznano",
+            notAccepted: "Nie uznano",
+            completed: "Zrealizowano",
+            acceptedTotalPercentage: "Procent uznanych",
         },
         fields: {
             select: {
@@ -77,7 +77,7 @@ export const lang = {
             fieldOptions: "Opcje do wyboru",
             default: "Wartość domyślna pola",
             rowConfig: "Konfiguracja wyświetlenia",
-          confirmFieldDelete: "Czy na pewno usunąć pole?"
+            confirmFieldDelete: "Czy na pewno usunąć pole?",
         },
         table: {
             footer: {

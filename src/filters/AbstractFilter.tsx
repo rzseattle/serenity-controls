@@ -15,12 +15,12 @@ export interface IFilterProps {
      * On filter change
      * @param filterValue
      */
-    onChange?: (filterValue: IFilterValue) => any;
+    onChange?: (filterValue: IFilterValue) => unknown;
     /**
      * On filter apply
      * @param filterValue
      */
-    onApply?: (filterValue: IFilterValue) => any;
+    onApply?: (filterValue: IFilterValue) => unknown;
     /**
      * Some config values
      */
@@ -35,7 +35,7 @@ export interface IFilterProps {
      */
     value: any;
 }
-export default class AbstractFilter<T> extends React.Component<T, any> {
+export default class AbstractFilter<T> extends React.Component<T, unknown> {
     public static defaultProps: Partial<IFilterProps> = {
         config: {},
     };

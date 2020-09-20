@@ -60,10 +60,7 @@ export class RouteVisualization extends React.Component<{}, IRouteVisualizationS
                 file,
                 shortClass: tmp[1],
                 pureClass: tmp[1].split("\\").slice(-1)[0],
-                namespace: el
-                    .split("\\")
-                    .slice(0, -1)
-                    .join("\\"),
+                namespace: el.split("\\").slice(0, -1).join("\\"),
                 package: apppackage,
                 routes,
             };

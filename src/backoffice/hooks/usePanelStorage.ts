@@ -3,8 +3,6 @@ import { getPanelContext, IPanelContext, PanelContext } from "../PanelContext";
 import { useContext, useState } from "react";
 
 export function usePanelStorage<T>(key: string, initialValue: T): [T, (x: T) => any] {
-
-
     const subStoreKey = getPanelContext().routeData.routePath;
     const panelStorageKey = "frontend-panel-storage";
     // State to store our value

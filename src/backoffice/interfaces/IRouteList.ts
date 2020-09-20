@@ -1,4 +1,4 @@
-import {IRouteElement} from "./IRouteElement";
+import { IRouteElement } from "./IRouteElement";
 
 export interface IRouteList {
     [index: string]: IRouteElement;

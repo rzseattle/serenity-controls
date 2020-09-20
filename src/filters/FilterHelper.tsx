@@ -68,7 +68,7 @@ export class FilterHelper {
         content: IOption[],
         multi: boolean = false,
         defaultValue = "",
-        mode = "list"
+        mode = "list",
     ) {
         return new FilterHelper({
             field,
@@ -77,7 +77,7 @@ export class FilterHelper {
                 multiselect: multi,
                 content,
                 default: defaultValue,
-                mode: mode
+                mode: mode,
             },
             component: SelectFilter,
         });

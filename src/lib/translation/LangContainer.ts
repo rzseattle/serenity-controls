@@ -1,7 +1,5 @@
 class LangContainer {
-
-    constructor() {
-    }
+    constructor() {}
 
     private langs: { [index: string]: () => Promise<any> } = {};
 
@@ -12,7 +10,6 @@ class LangContainer {
     public get = (lang: string, callback: (result: any) => any) => {
         if (this.langs[lang] !== undefined) {
             this.langs[lang]().then((result) => {
-
                 callback(result);
             });
         } else {
@@ -20,17 +17,17 @@ class LangContainer {
         }
     };
 }
-let x = new LangContainer();
+let x: LangContainer;
 //console.log(langContainer, "lang container");
-if(typeof window !== "undefined") {
-// @ts-ignore
+if (typeof window !== "undefined") {
+    // @ts-ignore
     if (window.langContainer === undefined) {
         // @ts-ignore
         window.langContainer = new LangContainer();
     }
-// @ts-ignore
+    // @ts-ignore
     x = window.langContainer;
-}else{
+} else {
     x = new LangContainer();
 }
 export default x;

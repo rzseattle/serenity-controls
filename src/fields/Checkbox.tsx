@@ -39,8 +39,8 @@ export class Checkbox extends React.Component<ICheckboxProps, IChecboxState> {
     public static getDerivedStateFromProps(props: ICheckboxProps, state: IChecboxState): any {
         if (props.checked != state.lastChecked) {
             return {
-              checked: props.checked,
-              lastChecked: props.checked,
+                checked: props.checked,
+                lastChecked: props.checked,
             };
         }
         return null;

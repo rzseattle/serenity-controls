@@ -27,10 +27,23 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
         nextState: Readonly<any>,
         nextContext: any,
     ): boolean {
-
         return !deepIsEqual(
-            [this.props.value, this.props.options, this.props.columns, this.props.columnsCount, this.props.selectTools, this.props.editable],
-            [nextProps.value, nextProps.options, nextProps.columns, nextProps.columnsCount, nextProps.selectTools, nextProps.editable],
+            [
+                this.props.value,
+                this.props.options,
+                this.props.columns,
+                this.props.columnsCount,
+                this.props.selectTools,
+                this.props.editable,
+            ],
+            [
+                nextProps.value,
+                nextProps.options,
+                nextProps.columns,
+                nextProps.columnsCount,
+                nextProps.selectTools,
+                nextProps.editable,
+            ],
         );
     }
 
@@ -76,7 +89,6 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
             const elements = [];
 
             for (const i in props.value) {
-
                 const element = options.filter((v) => {
                     return v.value == props.value[i];
                 });

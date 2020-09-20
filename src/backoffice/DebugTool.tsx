@@ -6,7 +6,6 @@ import { BackofficeStore } from "./BackofficeStore";
 import "./DebugTool.sass";
 import { useState } from "react";
 
-
 import { Modal } from "../Modal";
 import { LoadingIndicator } from "../LoadingIndicator";
 import { RouteVisualization } from "./RouteVisualization";
@@ -39,7 +38,6 @@ const Cache = () => {
         </span>
     );
 };
-
 
 const StoryBookHelper = () => {
     const [opened, setOpened] = useState(false);

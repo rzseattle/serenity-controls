@@ -1,6 +1,6 @@
 import * as React from "react";
 import { deepIsEqual } from "../lib/JSONTools";
-import {nanoid} from "nanoid";
+import { nanoid } from "nanoid";
 
 import { ICellTemplate, IColumnData, IOrder } from "./Interfaces";
 import { IFilterValue } from "../filters/Intefaces";
@@ -27,9 +27,9 @@ interface ITbodyProps {
 
     onCheck: (index: string | number) => any;
     loading: boolean;
-    columnWidths: number[]
+    columnWidths: number[];
 
-/*    selectedRow: number;
+    /*    selectedRow: number;
     selectedColumn: number;*/
 }
 
@@ -128,7 +128,14 @@ export default class Tbody extends React.Component<ITbodyProps> {
                     return (
                         <>
                             <tr key={key + "_group"}>
-                                <td style={{ backgroundColor: "grey", color: "white", width: props.columnWidths[index] }} colSpan={columns.length + 1} >
+                                <td
+                                    style={{
+                                        backgroundColor: "grey",
+                                        color: "white",
+                                        width: props.columnWidths[index],
+                                    }}
+                                    colSpan={columns.length + 1}
+                                >
                                     {groupData.map((el) => (
                                         <React.Fragment key={nanoid()}>{el.label}</React.Fragment>
                                     ))}

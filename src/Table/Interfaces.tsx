@@ -34,9 +34,20 @@ export interface IColumnData {
     filter?: IFilter[];
 }
 
-export type ICellTemplate = (value: string, row: any, column: IColumnData, rowComponent: TableRow) => string | JSX.Element;
+export type ICellTemplate = (
+    value: string,
+    row: any,
+    column: IColumnData,
+    rowComponent: TableRow,
+) => string | JSX.Element;
 
-export type IEventCallback = (row: any, column: IColumnData, rowComponent: TableRow, cell: HTMLElement, event: any) => any;
+export type IEventCallback = (
+    row: any,
+    column: IColumnData,
+    rowComponent: TableRow,
+    cell: HTMLElement,
+    event: any,
+) => any;
 
 export interface IFilterValue {
     field: string;

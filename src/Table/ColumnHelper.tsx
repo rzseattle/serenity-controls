@@ -185,7 +185,10 @@ export default class ColumnHelper {
                     field,
                     component: SwitchFilter,
                     config: {
-                        content: [{ value: 0, label: "Nie" }, { value: 1, label: "Tak" }],
+                        content: [
+                            { value: 0, label: "Nie" },
+                            { value: 1, label: "Tak" },
+                        ],
                     },
                 },
             ],

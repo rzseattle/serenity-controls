@@ -60,14 +60,10 @@ export const PreviewModal = (props: IPreviewModal) => {
                     ]}
                 />
                 <div style={{ opacity: 0, height: 1, overflow: "hidden", position: "absolute" }}>
-                    <input
-                        className={"form-control w-file-preview-input"}
-                        type="text"
-                        defaultValue={file.path}
-                    />
+                    <input className={"form-control w-file-preview-input"} type="text" defaultValue={file.path} />
                 </div>
                 <div style={{ maxHeight: "calc( 80vh -  45px )", overflow: "auto" }}>
-                    <ViewerComponent file={file}  />
+                    <ViewerComponent file={file} />
                 </div>
             </div>
         </Modal>

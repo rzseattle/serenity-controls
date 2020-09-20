@@ -8,13 +8,13 @@ export const lang = {
         print: "Print",
         download: "Download",
         downloading: "Downloading",
-        total: 'Total',
+        total: "Total",
         statuses: {
-            kindlyApproved: 'Kindly approved',
-            accepted: 'Approved',
-            notAccepted: 'Not approved',
-            completed: 'Completed',
-            acceptedTotalPercentage: 'Approved percentage',
+            kindlyApproved: "Kindly approved",
+            accepted: "Approved",
+            notAccepted: "Not approved",
+            completed: "Completed",
+            acceptedTotalPercentage: "Approved percentage",
         },
         fields: {
             select: {
@@ -77,7 +77,7 @@ export const lang = {
             copyLink: "Copy link",
             openInNewWindow: "Open in new widnow",
             fileNotUploadedYet: "File is not uploaded",
-            confirmRemove: "Are you sure you want delete this file ?"
+            confirmRemove: "Are you sure you want delete this file ?",
         },
     },
 };

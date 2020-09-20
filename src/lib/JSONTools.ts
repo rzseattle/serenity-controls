@@ -1,8 +1,8 @@
-export const deepCopy = (obj: any) => {
+export const deepCopy = (obj: unknown) => {
     return x(Array.isArray(obj) ? [] : {}, obj);
 };
 
-export const deepIsEqual = (a: any, b: any, ignoreFunctions: boolean = false) => {
+export const deepIsEqual = (a: any, b: any, ignoreFunctions = false) => {
     if (a === b) {
         return true;
     }

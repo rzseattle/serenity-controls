@@ -215,8 +215,10 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                           <a
                                               onClick={(e) => {
                                                   e.persist();
-                                                  this.handleFileRemove(index, e.nativeEvent
-                                                      .target as HTMLAnchorElement);
+                                                  this.handleFileRemove(
+                                                      index,
+                                                      e.nativeEvent.target as HTMLAnchorElement,
+                                                  );
                                               }}
                                           >
                                               <Icon name={"Delete"} />{" "}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Icon} from "../Icon";
+import { Icon } from "../Icon";
 import "./Tabs.sass";
 type ITabsCallback = (index: number, e: any) => any;
 

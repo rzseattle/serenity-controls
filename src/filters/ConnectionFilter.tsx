@@ -22,7 +22,6 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
     }
 
     public getValue() {
-
         return {
             field: this.props.field,
             value: this.state.searchValue.length > 0 ? this.state.searchValue : null,
@@ -34,11 +33,10 @@ export default class ConnectionFilter extends AbstractFilter<IConnectionFilterPr
     }
 
     public handleChange = (event: IConnectionChangeEvent) => {
-
         this.setState(
             {
-                searchValue: event.items.map(el => el.value),
-                searchLabel: event.items.map(el => el.label).join(", "),
+                searchValue: event.items.map((el) => el.value),
+                searchLabel: event.items.map((el) => el.label).join(", "),
             },
             () => {
                 if (this.props.onChange != null) {

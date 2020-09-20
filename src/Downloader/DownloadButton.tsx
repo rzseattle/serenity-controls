@@ -12,7 +12,6 @@ interface IDownloadButtonProps {
     data?: any;
     onFinish?: (params: IDownloadSuccessParams) => any;
     mode?: "button" | "link" | "icon";
-
 }
 
 export const DownloadButton = ({
@@ -22,7 +21,6 @@ export const DownloadButton = ({
     onFinish = null,
     downloadingLabel = fI18n.t("frontend:downloading"),
     mode = "link",
-
 }: IDownloadButtonProps) => {
     const [isLoading, setLoading] = useState(false);
 
