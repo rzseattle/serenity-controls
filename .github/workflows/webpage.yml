@@ -7,12 +7,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        name: Checkout
       - uses: borales/actions-yarn@v2.0.0
+        name: Install yarn
         with:
           cmd: install # will run `yarn install` command
       - uses: borales/actions-yarn@v2.0.0
+        name: Build story-book
         with:
-          cmd: build # will run `yarn build` command
+          cmd: build-storybook # will run `yarn build` command
+      
+      - uses: peaceiris/actions-gh-pages@v3
+        name: Deploy
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static
     
     
         
