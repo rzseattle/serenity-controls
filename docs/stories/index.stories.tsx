@@ -45,7 +45,7 @@ addDecorator((story) => {
     );
 });
 
-require("./Panel/index.stories");
+require("./new-stories/Panel/index.stories");
 require("./Navbar/index.stories");
 require("./CommandBar/index.stories");
 require("./CommandMenu/index.stories");

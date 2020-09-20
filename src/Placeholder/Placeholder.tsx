@@ -14,10 +14,18 @@ export interface IPlaceholderProps {
      * Displays loaded data on bottom of container
      */
     debug?: boolean;
+
+    /**
+     * Show loading indicator
+     */
+    loadingIndicator?: boolean;
+
     /**
      * Text to show while loading
      */
     indicatorText?: string;
+
+    shadow?: boolean;
 
     /**
      * Displays content with not loaded data and refreshing it after data are loaded
@@ -29,7 +37,9 @@ export class Placeholder extends React.Component<IPlaceholderProps, any> {
     public static defaultProps: Partial<IPlaceholderProps> = {
         debug: false,
         prerender: false,
+        loadingIndicator: false,
         indicatorText: null,
+        shadow: false,
     };
 
     constructor(props: IPlaceholderProps) {
@@ -67,12 +77,15 @@ export class Placeholder extends React.Component<IPlaceholderProps, any> {
     }
 
     public render() {
-        const { prerender, debug, indicatorText } = this.props;
+        const { prerender, debug, indicatorText, loadingIndicator, shadow } = this.props;
         const { loaded } = this.state;
 
         return (
-            <div style={{ position: "relative" }}>
-                {!loaded && prerender && <Shadow showLoadingIndicator={false} />}
+            <div style={{ position: "relative", height: "100%" }}>
+                {!loaded && !prerender && loadingIndicator && <LoadingIndicator text={indicatorText} />}
+                {!loaded && prerender && (loadingIndicator || shadow) && (
+                    <Shadow showLoadingIndicator={loadingIndicator} showLoadingIndicatorText={indicatorText} />
+                )}
                 {(loaded || (!loaded && prerender)) && this.props.children(this.state.data)}
                 {debug && (
                     <div style={{ padding: 10, margin: 5, border: "solid 1px grey" }}>

@@ -1,6 +1,8 @@
 import React from "react";
-import { storiesOf } from "@storybook/react";
-import { Panel } from "../../../src/Panel";
+
+import { Story, Meta } from "@storybook/react/types-6-0";
+
+import { IPanelProps, Panel } from "../../../../src/Panel";
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
@@ -10,23 +12,38 @@ const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ves
         porttitor odio augue eu risus. Nunc sollicitudin vitae libero a dapibus. Etiam nec imperdiet lectus. Vestibulum facilisis augue at viverra auctor. Proin maximus tortor vitae sem pretium feugiat.
         Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
 
-storiesOf("Panel", module)
-    .add(
-        "Base",
+export default {
+    title: "Controls/Panel",
+    component: Panel,
+    argTypes: {},
+} as Meta;
 
-        () => <Panel>{text}</Panel>,
-    )
-    .add("No padding", () => <Panel noPadding={true}>{text}</Panel>)
-    .add("Title", () => <Panel title="Panel title ">{text}</Panel>)
-    .add("With CommandBar", () => (
-        <Panel
-            title="Panel title "
-            toolbar={[
-                { key: "f1", label: "Add", icon: "Add", onClick: () => alert("Add action") },
-                { key: "f2", label: "Delete", icon: "Delete", onClick: () => alert("Delete action") },
-            ]}
-        >
-            {text}
-        </Panel>
-    ));
+const Template: Story<IPanelProps> = (args) => {
+    return <div style={{padding: 10, backgroundColor: "lightgrey"}}><Panel {...args}>{text}</Panel></div>;
+};
 
+export const Template1 = Template.bind({});
+Template1.storyName = "Basic";
+Template1.args = {};
+
+export const Template2 = Template.bind({});
+Template2.storyName = "No padding";
+Template2.args = {
+    noPadding: true,
+};
+
+export const Template3 = Template.bind({});
+Template3.storyName = "Title";
+Template3.args = {
+    title: "This is panel title",
+};
+
+export const Template4 = Template.bind({});
+Template4.storyName = "With CommandBar";
+Template4.args = {
+    title: "This is panel title",
+    toolbar: [
+        { key: "f1", label: "Add", icon: "Add", onClick: () => alert("Add action") },
+        { key: "f2", label: "Delete", icon: "Delete", onClick: () => alert("Delete action") },
+    ],
+};

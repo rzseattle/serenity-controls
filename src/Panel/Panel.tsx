@@ -4,7 +4,7 @@ import "./Panel.sass";
 import { Icon } from "../Icon";
 import { CommandBar, ICommand } from "../../src/CommandBar";
 
-interface IPanelProps {
+export interface IPanelProps {
     /**
      * Panel title
      */
