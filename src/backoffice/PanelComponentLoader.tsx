@@ -13,7 +13,7 @@ import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";
 import { ICommand } from "../CommandBar";
 
-declare var PRODUCTION: boolean;
+declare let PRODUCTION: boolean;
 
 export interface IArrowViewComponentProps {
     /**

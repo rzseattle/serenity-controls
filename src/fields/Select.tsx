@@ -114,7 +114,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         );
     };
 
-    private handleChange = (value: any, index: number = -1) => {
+    private handleChange = (value: any, index = -1) => {
         if (index > 0) {
             this.setState({ highlightedIndex: index });
         }
@@ -302,7 +302,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         const props = this.props;
         const options = toOptions(this.props.options);
 
-        let selectedIndex: number = -1;
+        let selectedIndex = -1;
 
         for (let i = 0; i < options.length; i++) {
             if (options[i].value == props.value) {

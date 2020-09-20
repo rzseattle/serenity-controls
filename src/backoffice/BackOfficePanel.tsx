@@ -26,7 +26,7 @@ import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
-declare var PRODUCTION: boolean;
+declare let PRODUCTION: boolean;
 NProgress.configure({ parent: ".w-panel-body" });
 
 interface IBackOfficePanelProps {

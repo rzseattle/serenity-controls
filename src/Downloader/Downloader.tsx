@@ -103,7 +103,7 @@ export const download = (
         xhr.addEventListener("load", () => {
             if (xhr.readyState == 4) {
                 if (xhr.status === 200) {
-                    let fileName: string = "";
+                    let fileName = "";
                     if (options.fileName === undefined) {
                         const contentDisposition = xhr.getResponseHeader("Content-Disposition");
 

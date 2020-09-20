@@ -6,8 +6,8 @@ import { IRouteElement } from "./interfaces/IRouteElement";
 import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";
 
-declare var window: any;
-declare var module: any;
+declare let window: any;
+declare let module: any;
 
 export interface IDebugDataEntry {
     response: any;

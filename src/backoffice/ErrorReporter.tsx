@@ -115,8 +115,8 @@ export default class ErrorReporter extends React.Component<any, any> {
     }
 }
 
-const regexValidFrameChrome: RegExp = /^\s*(at|in)\s.+(:\d+)/;
-const regexValidFrameFireFox: RegExp = /(^|@)\S+:\d+|.+line\s+\d+\s+>\s+(eval|Function).+/;
+const regexValidFrameChrome = /^\s*(at|in)\s.+(:\d+)/;
+const regexValidFrameFireFox = /(^|@)\S+:\d+|.+line\s+\d+\s+>\s+(eval|Function).+/;
 
 const regexExtractLocation = /\(?(.+?)(?::(\d+))?(?::(\d+))?\)?$/;
 

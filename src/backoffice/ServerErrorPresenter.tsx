@@ -2,7 +2,7 @@ import * as React from "react";
 import RouterException from "./RouterException";
 import { RouteVisualization } from "./RouteVisualization";
 
-declare var PRODUCTION: boolean;
+declare let PRODUCTION: boolean;
 
 interface IProps {
     error: any;

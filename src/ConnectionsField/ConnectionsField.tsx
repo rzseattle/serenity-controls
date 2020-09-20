@@ -164,7 +164,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
         }
 
         if (!deepIsEqual(props.value, state.props.value)) {
-            let newItems = state.items.filter((el) => (props.value as string[]).includes(el.value as string));
+            const newItems = state.items.filter((el) => (props.value as string[]).includes(el.value as string));
             ret = {
                 ...ret,
                 value: props.value,

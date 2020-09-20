@@ -63,7 +63,7 @@ export default class ColumnHelper {
         field: string,
         caption: string,
         options: IOption[] | { [index: string]: string | number } | { [index: number]: string | number },
-        multiSelectFilter: boolean = false,
+        multiSelectFilter = false,
     ): ColumnHelper {
         return new ColumnHelper({
             field,
@@ -216,7 +216,7 @@ export default class ColumnHelper {
     public editable(
         fn: (changedValue: any, row: any, columnt: IColumnData) => any,
         type: "text" | "textarea",
-        enabled: boolean = true,
+        enabled = true,
     ): ColumnHelper {
         if (enabled === false) {
             return this;
@@ -243,7 +243,7 @@ export default class ColumnHelper {
                             onSubmit={(value) => {
                                 const result = fn(value, row, column);
                                 if (result === undefined || (result !== false && result.fieldErrors === undefined)) {
-                                    let tmp = { ...columnsInEditState };
+                                    const tmp = { ...columnsInEditState };
                                     tmp[column.field] = false;
                                     rowContainer.setData("columnsInEdit", tmp);
                                 } else if (result === false) {
@@ -253,7 +253,7 @@ export default class ColumnHelper {
                                 }
                             }}
                             onCancel={() => {
-                                let tmp = { ...columnsInEditState };
+                                const tmp = { ...columnsInEditState };
                                 tmp[column.field] = false;
                                 rowContainer.setData("columnsInEdit", tmp);
                             }}

@@ -7,7 +7,7 @@ interface IErrorFallbackData {
     response: any;
 }
 
-declare var PRODUCTION: any;
+declare let PRODUCTION: any;
 
 export enum CommEvents {
     BEFORE_SEND = "beforeSend",
@@ -38,7 +38,7 @@ class Comm {
         FINISH: "finish",
     };
 
-    public debug: boolean = true;
+    public debug = true;
 
     private readonly registredEvents: any;
     private readonly method: string;

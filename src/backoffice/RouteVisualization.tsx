@@ -4,7 +4,7 @@ import { router } from "./Router";
 
 import "./RouteVsualization.sass";
 import { IRouteElement } from "./interfaces/IRouteElement";
-declare var module: any;
+declare let module: any;
 
 interface IRouteVisualizationState {
     search: string;

@@ -66,7 +66,7 @@ export class FilterHelper {
         field: string,
         caption: string,
         content: IOption[],
-        multi: boolean = false,
+        multi = false,
         defaultValue = "",
         mode = "list",
     ) {

@@ -10,7 +10,7 @@ export const Row: React.StatelessComponent<IRowProps> = (props) => {
     let children = React.Children.toArray(props.children);
     children = children.filter((el) => el != null && el);
 
-    let colMd: number = 0;
+    let colMd = 0;
     let colsMd: number[] = [];
     // if detailed width delivered
     if (props.md) {

@@ -18,8 +18,8 @@ import TableFiltersOverlay from "./TableFiltersOverlay";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 
-declare var window: any;
-declare var PRODUCTION: any;
+declare let window: any;
+declare let PRODUCTION: any;
 
 export interface IDataQuery {
     columns: IColumnData[];
@@ -420,7 +420,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         if (this.state.fixedLayout) {
                             //checking if table have visible scrollbar
                             const tbody = this.tableRef.querySelector("tbody");
-                            let lastTr = tbody.childNodes[tbody.childNodes.length - 1] as Element;
+                            const lastTr = tbody.childNodes[tbody.childNodes.length - 1] as Element;
 
                             if (lastTr) {
                                 const lastTrData = lastTr.getBoundingClientRect();

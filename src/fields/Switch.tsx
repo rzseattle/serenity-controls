@@ -42,7 +42,7 @@ export class Switch extends React.Component<ISwitchProps> {
         const options = toOptions(props.options);
 
         if (!props.editable) {
-            for (let i in options) {
+            for (const i in options) {
                 if (options[i].value == props.value) {
                     return (
                         <div className={"w-field-presentation w-field-presentation-switch " + props.disabledClass}>

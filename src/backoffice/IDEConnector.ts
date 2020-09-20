@@ -1,7 +1,7 @@
 import { DevProperties } from "./DevProperties";
 import { Comm } from "../lib";
 
-declare var DEV_PROPERIES: DevProperties;
+declare let DEV_PROPERIES: DevProperties;
 
 class IDEConnector {
     public openFile(
@@ -53,8 +53,8 @@ class IDEConnector {
         const sessionCookieName = "session";
 
         const getCookie = (name: string) => {
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
+            const value = "; " + document.cookie;
+            const parts = value.split("; " + name + "=");
             if (parts.length == 2) return parts.pop().split(";").shift();
         };
 

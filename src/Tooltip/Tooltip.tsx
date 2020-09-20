@@ -82,7 +82,7 @@ interface ITooltipState {
 export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltipState> {
     private container = React.createRef<HTMLSpanElement>();
 
-    private timeout: number = 0;
+    private timeout = 0;
     public static defaultProps: Partial<ITooltipProps> = {
         visible: true,
         autoOpen: false,

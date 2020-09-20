@@ -6,7 +6,7 @@ import { IRouteElement } from "./interfaces/IRouteElement";
 import { IRouteList } from "./interfaces/IRouteList";
 import { IArrowViewComponentProps } from "./PanelComponentLoader";
 
-declare var PRODUCTION: any;
+declare let PRODUCTION: any;
 
 class Router {
     public routes: IRouteList = {};
