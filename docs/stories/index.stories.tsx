@@ -49,15 +49,15 @@ require("./new-stories/Panel/index.stories");
 require("./Navbar/index.stories");
 require("./CommandBar/index.stories");
 require("./CommandMenu/index.stories");
-require("./Download/index.stories");
+require("./new-stories/Download/index.stories");
 
 require("./Icon/index.stories");
-require("./LoadingIndicator/index.stories");
+//require("./new-stories/LoadingIndicator/index.stories");
 require("./Copyable/index.stories");
-require("./FormFields/index.stories");
+require("./new-stories/FormFields/index.stories");
 require("./FormBuilder/index.stories");
 
-require("./Tabs/index.stories.tsx");
+require("./new-stories/Tabs/index.stories.tsx");
 require("./Placeholder/index.stories");
 require("./Overlays/Modal/index.stories");
 
@@ -73,12 +73,12 @@ require("./Overlays/Positioner/index.stories");
 
 require("./PrintContainer/index.stories");
 
-require("./HotKeys/index.stories");
+require("./new-stories/HotKeys/index.stories");
 
 require("./BackofficePanel/index.stories");
 
 
-require("./helpers/HeightAdjuster/index.stories");
+require("./new-stories/helpers/HeightAdjuster/index.stories");
 
 /*
 

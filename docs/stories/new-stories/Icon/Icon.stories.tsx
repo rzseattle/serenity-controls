@@ -54,7 +54,7 @@ export const Template1 = Template.bind({});
 Template1.storyName = "Basic";
 Template1.args = {};
 
-const TemplateSize: Story<{}> = (args) => {
+const TemplateSize: Story<Record<string, unknown>> = (args) => {
     return (
         <div>
             <>
@@ -76,7 +76,7 @@ export const TemplateSizeEl = TemplateSize.bind({});
 TemplateSizeEl.storyName = "Size";
 TemplateSizeEl.args = {};
 
-const TemplateList: Story<{}> = (args) => {
+const TemplateList: Story<Record<string, unknown>> = (args) => {
     const iconsTable = IconsList.reduce((r, e, i) => {
         i % 5 === 0 ? r.push([e]) : r[r.length - 1].push(e);
         return r;
