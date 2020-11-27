@@ -1,12 +1,19 @@
-import React from 'react';
-import "../Stories.sass"
+import React from "react";
+import "../Stories.sass";
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-}
+    actions: { argTypesRegex: "^on[A-Z].*" },
+    options: {
+        storySort: {
+            order: ["Serenity", "Backoffice Panel", "Basic", "Overlays", "Table"],
+        },
+    },
+};
 
-
-
-export const decorators = [(Story) => <div style={{ margin: '2em' }}>
-
-  <Story/><div id="modal-root"></div>
-</div>];
+export const decorators = [
+    (Story) => (
+        <div style={{ margin: "2em" }}>
+            <Story />
+            <div id="modal-root"></div>
+        </div>
+    ),
+];

@@ -81,24 +81,28 @@ export const PrintPage = (props: { children: any }) => {
 };
 
 function copyStyles(sourceDoc: Document, targetDoc: Document) {
-    Array.from(sourceDoc.styleSheets).forEach((styleSheet: any) => {
-        if (styleSheet.cssRules) {
-            // true for inline styles
-            const newStyleEl = sourceDoc.createElement("style");
+    try {
+        Array.from(sourceDoc.styleSheets).forEach((styleSheet: any) => {
+            if (styleSheet.cssRules) {
+                // true for inline styles
+                const newStyleEl = sourceDoc.createElement("style");
 
-            Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
-                newStyleEl.appendChild(sourceDoc.createTextNode(cssRule.cssText));
-            });
+                Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
+                    newStyleEl.appendChild(sourceDoc.createTextNode(cssRule.cssText));
+                });
 
-            targetDoc.head.appendChild(newStyleEl);
-        } else if (styleSheet.href) {
-            // true for stylesheets loaded from a URL
-            const newLinkEl = sourceDoc.createElement("link");
-            newLinkEl.rel = "stylesheet";
-            newLinkEl.href = styleSheet.href;
-            targetDoc.head.appendChild(newLinkEl);
-        }
-    });
+                targetDoc.head.appendChild(newStyleEl);
+            } else if (styleSheet.href) {
+                // true for stylesheets loaded from a URL
+                const newLinkEl = sourceDoc.createElement("link");
+                newLinkEl.rel = "stylesheet";
+                newLinkEl.href = styleSheet.href;
+                targetDoc.head.appendChild(newLinkEl);
+            }
+        });
+    } catch (ex) {
+        console.log("Not allowed to copy styles");
+    }
 }
 
 class MyWindowPortal extends React.PureComponent<any, any> {

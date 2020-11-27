@@ -6,7 +6,7 @@ import { download, DownloadButton, downloadString } from "../../../../src/Downlo
 import { Meta, Story } from "@storybook/react/types-6-0";
 
 export default {
-    title: "Controls/Download",
+    title: "Helpers/Download",
     component: DownloadButton,
     argTypes: {},
 } as Meta;

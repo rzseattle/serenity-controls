@@ -1,9 +1,9 @@
 import { IArrowViewComponentProps } from "../PanelComponentLoader";
 
 export interface IRouteElement {
-    controller: string;
-    method: string;
-    package: string;
+    controller?: string;
+    method?: string;
+    package?: string;
     routePath: string;
     baseRoutePath: string;
     _debug?: {
@@ -14,7 +14,8 @@ export interface IRouteElement {
         templateExists: boolean;
     };
     componentName: string;
-    index: number;
-    namespace: string;
+    index?: number;
+    namespace?: string;
     componentObject?: React.ComponentType<IArrowViewComponentProps>;
+    useAutoRequest?: boolean;
 }

@@ -39,7 +39,6 @@ const baseColumns = [
             classTemplate: (row, column) => [parseFloat(row.price) < 100 ? "darkgreen" : "darkred"],
             styleTemplate: (row, column) => (parseFloat(row.price) < 100 ? { fontSize: "10px" } : { fontSize: "15px" }),
         }),
-    ,
 ];
 
 const provider = (query: IDataQuery) => {
@@ -52,7 +51,7 @@ const provider = (query: IDataQuery) => {
     });
 };
 
-storiesOf("Table", module).add(
+storiesOf("Table/Table", module).add(
     "Base",
 
     () => (

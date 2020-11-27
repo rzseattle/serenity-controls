@@ -81,8 +81,8 @@ export class PositionCalculator {
         if (this.target.width !== undefined) {
             targetPositionData = this.target;
         } else {
-            // @ts-ignore
-            targetPositionData = this.target.getBoundingClientRect();
+
+            targetPositionData = (this.target as HTMLElement).getBoundingClientRect();
         }
         const targetRefPoint = this.getRefPoint(this.options.relativeToAt, targetPositionData);
 

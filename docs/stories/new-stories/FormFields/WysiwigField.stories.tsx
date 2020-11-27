@@ -1,13 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { mockData } from "../../Table/MOCK_DATA";
-import { IOption, Select, Wysiwyg } from "../../../../src/fields";
+import { Wysiwyg } from "../../../../src/fields";
 import { Panel } from "../../../../src/Panel";
-const values: IOption[] = mockData.slice(0, 30).map((el) => ({
-    value: el.id,
-    label: el.first_name + " " + el.last_name,
-}));
 
 class WysiwigDemo extends React.Component<any, any> {
     constructor(props: any) {
@@ -53,7 +48,7 @@ storiesOf("Form/Fields/Wysiwig ", module)
         return (
             <Panel>
                 <div style={{ height: 800 }}>
-                    <Wysiwyg value={text("Content", "This is default content")} />
+                    <Wysiwyg value={"This is controled content"} />
                 </div>
             </Panel>
         );
@@ -62,7 +57,7 @@ storiesOf("Form/Fields/Wysiwig ", module)
         return (
             <Panel>
                 <div style={{ height: 800 }}>
-                    <Wysiwyg value={text("Content", "This is default content")} editable={false} />
+                    <Wysiwyg value={"This is default content"} editable={false} />
                 </div>
             </Panel>
         );

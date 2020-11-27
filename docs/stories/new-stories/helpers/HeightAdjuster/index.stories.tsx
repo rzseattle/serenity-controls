@@ -5,10 +5,13 @@ import { HeightAdjuster } from "../../../../../src/HeightAdjuster";
 
 // @ts-ignore
 
+const iframeCorrection = window.parent.document.getElementById("storybook-preview-iframe").getBoundingClientRect().top;
+console.log(iframeCorrection, "correction");
+
 storiesOf("Helpers/HeightAdjuster", module)
     .add("Base", () => {
         return (
-            <HeightAdjuster>
+            <HeightAdjuster offsetTopCorrection={iframeCorrection}>
                 <div style={{ height: "100%", backgroundColor: "yellow" }}>
                     This div will be always fit to end of window. Try to resize!
                 </div>
@@ -18,12 +21,12 @@ storiesOf("Helpers/HeightAdjuster", module)
     .add("With height feedback information", () => {
         return (
             <>
-                <HeightAdjuster>
+                <HeightAdjuster offsetTopCorrection={iframeCorrection}>
                     {(height: number) => {
                         return (
                             <div style={{ height: "100%", backgroundColor: "yellow" }}>
-                                This div will be always fit to end of window. Try to resize!
-                                <h2>{height}</h2>
+                                This div will be always fit to end of window. This div will be always fit to end of
+                                window. Try to resize!<h2>{height}</h2>
                             </div>
                         );
                     }}
@@ -43,8 +46,8 @@ storiesOf("Helpers/HeightAdjuster", module)
                     >
                         {(height: number) => {
                             return (
-                                <div style={{ height: "100%", backgroundColor: "yellow" }}>
-                                    This div will be always fit to end of window. Try to resize!
+                                <div style={{ height, backgroundColor: "yellow" }}>
+                                    Fit to parent
                                     <h2>{height}</h2>
                                 </div>
                             );

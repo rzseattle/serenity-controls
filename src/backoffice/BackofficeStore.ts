@@ -87,8 +87,7 @@ class BackofficeStore implements IBackOfficestoreAPI {
         if (window.location.hash != "#" && window.location.hash) {
             this.changeView(window.location.hash.replace("#", ""));
         } else {
-            const path = window.location.pathname;
-            this.changeView(path.replace(browserInput.basePath, ""));
+            this.changeView(router.defaultView);
         }
         window.addEventListener("hashchange", this.hashChangeHandler, false);
 
@@ -195,61 +194,74 @@ class BackofficeStore implements IBackOfficestoreAPI {
                 setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
             }
 
-            const comm = new Comm(url);
+            if (resolvedView.useAutoRequest === true) {
+                const comm = new Comm(url);
 
-            comm.setData({ __PROPS_REQUEST__: 1 });
-            comm.on(CommEvents.ERROR, (errorResponse) => {
-                this.viewServerErrors = errorResponse;
-                for (const el of this.onViewLoadedArr) {
-                    el();
-                }
-            });
-            comm.on(CommEvents.SUCCESS, (data) => {
-                if (data.__arrowException !== undefined) {
-                    this.viewServerErrors = data;
+                comm.setData({ __PROPS_REQUEST__: 1 });
+                comm.on(CommEvents.ERROR, (errorResponse) => {
+                    this.viewServerErrors = errorResponse;
+                    for (const el of this.onViewLoadedArr) {
+                        el();
+                    }
+                });
+                comm.on(CommEvents.SUCCESS, (data) => {
+                    if (data.__arrowException !== undefined) {
+                        this.viewServerErrors = data;
+                        this.isViewLoading = false;
+                        return;
+                    }
+
+                    this.viewData = Object.assign({}, data, this.externalViewData);
+                    this.view = resolvedView;
+
+                    for (const el of this.onViewLoadedArr) {
+                        el();
+                    }
+                    if (callback) {
+                        callback();
+                    }
+
+                    if (originalPath) {
+                        try {
+                            router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
+                                /*BackofficeStore.registerDebugData(
+                                        "view",
+                                        originalPath,
+                                        routeData,
+                                        this.viewData,
+                                        input,
+                                    );*/
+                            });
+                        } catch (e) {
+                            throw new Error("Smth is wrong " + originalPath + ", " + e);
+                        }
+                    }
+                });
+                comm.on(CommEvents.FINISH, () => {
                     this.isViewLoading = false;
-                    return;
-                }
+                    this.dataUpdated();
+                });
 
-                this.viewData = Object.assign({}, data, this.externalViewData);
+                BackofficeStore.debugViewAjaxInProgress = true;
+                comm.send();
+                BackofficeStore.debugViewAjaxInProgress = false;
+            } else {
                 this.view = resolvedView;
-
                 for (const el of this.onViewLoadedArr) {
                     el();
                 }
                 if (callback) {
                     callback();
                 }
-
-                if (originalPath) {
-                    try {
-                        router.getRouteInfo(originalPath).then((routeData: IRouteElement) => {
-                            /*BackofficeStore.registerDebugData(
-                                    "view",
-                                    originalPath,
-                                    routeData,
-                                    this.viewData,
-                                    input,
-                                );*/
-                        });
-                    } catch (e) {
-                        throw new Error("Smth is wrong " + originalPath + ", " + e);
-                    }
-                }
-            });
-            comm.on(CommEvents.FINISH, () => {
                 this.isViewLoading = false;
                 this.dataUpdated();
-            });
-
-            BackofficeStore.debugViewAjaxInProgress = true;
-            comm.send();
-            BackofficeStore.debugViewAjaxInProgress = false;
+            }
         } catch (e) {
             this.viewServerErrors = e;
             this.view = null;
             this.isViewLoading = false;
             this.dataUpdated();
+            console.log(e);
         }
     };
 

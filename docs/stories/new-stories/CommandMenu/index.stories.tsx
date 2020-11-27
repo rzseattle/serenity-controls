@@ -37,7 +37,7 @@ const items = [
 ];
 
 export default {
-    title: "Controls/Command menu",
+    title: "Basic/Command menu",
     component: CommandMenu,
     argTypes: {},
 } as Meta;

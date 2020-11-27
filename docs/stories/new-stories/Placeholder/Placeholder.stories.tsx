@@ -5,7 +5,7 @@ import { Placeholder, IPlaceholderProps } from "../../../../src/Placeholder";
 import { Comm } from "../../../../src/lib";
 
 export default {
-    title: "Controls/Placeholder",
+    title: "Basic/Placeholder",
     component: Placeholder,
     argTypes: {
         promise: Comm._get("https://jsonplaceholder.typicode.com/users"),

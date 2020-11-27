@@ -6,7 +6,7 @@ import { toOptions } from "./Utils";
 export interface ISwitchProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
     value?: number | string;
-    autoFocus: boolean;
+    autoFocus?: boolean;
 }
 
 export class Switch extends React.Component<ISwitchProps> {

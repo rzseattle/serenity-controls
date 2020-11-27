@@ -4,7 +4,7 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import { IPanelProps, Panel } from "../../../../src/Panel";
 
 export default {
-    title: "Controls/Navbar",
+    title: "Basic/Navbar",
     component: Navbar,
     argTypes: {},
 } as Meta;

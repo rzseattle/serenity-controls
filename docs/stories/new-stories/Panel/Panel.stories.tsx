@@ -13,7 +13,7 @@ const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ves
         Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
 
 export default {
-    title: "Controls/Panel",
+    title: "Basic/Panel",
     component: Panel,
     argTypes: {},
 } as Meta;

@@ -83,6 +83,7 @@ interface IPositionerProps {
         bottom?: number;
     };
     trackResize?: boolean;
+    trackPosition?: boolean;
     animation?: string;
 
     container?: () => HTMLElement;
@@ -92,6 +93,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
     public static defaultProps = {
         relativeSettings: RelativePositionPresets.bottomMiddle,
         trackResize: false,
+        trackPosition: true,
         animation: "none",
     };
 
@@ -219,7 +221,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
         calculatePos();
         calculatePos();
 
-        if (this.positionObserver === null) {
+        if (this.positionObserver === null && this.props.trackPosition) {
             this.positionObserver = window.setInterval(
                 () => {
                     // Last tick after unmount problem reference is empty - so we need if
@@ -275,17 +277,18 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
         calculatePos();
 
         let actual = getActualCoordinades();
-
-        this.positionObserver = window.setInterval(() => {
-            if (this.positionElement == null) {
-                return;
-            }
-            const newPosition = getActualCoordinades();
-            if (newPosition.width != actual.width || newPosition.height != actual.height) {
-                calculatePos();
-                actual = newPosition;
-            }
-        }, 1000);
+        if (this.props.trackPosition) {
+            this.positionObserver = window.setInterval(() => {
+                if (this.positionElement == null) {
+                    return;
+                }
+                const newPosition = getActualCoordinades();
+                if (newPosition.width != actual.width || newPosition.height != actual.height) {
+                    calculatePos();
+                    actual = newPosition;
+                }
+            }, 1000);
+        }
     }
 
     public render() {

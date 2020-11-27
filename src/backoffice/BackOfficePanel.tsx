@@ -27,6 +27,10 @@ import { Key } from "ts-key-enum";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare let PRODUCTION: boolean;
+if (PRODUCTION === undefined) {
+    const PRODUCTION = true;
+}
+
 NProgress.configure({ parent: ".w-panel-body" });
 
 interface IBackOfficePanelProps {
@@ -106,7 +110,8 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
     public adjustToSize() {
         if (this.container) {
-            this.container.style.height = window.innerHeight + "px";
+            this.container.style.height = "100%";
+            //(this.container.parentElement as HTMLElement).getBoundingClientRect().height + "px";
         }
         if (window.innerWidth <= 479 && this.state.layout != "mobile") {
             this.setState({ layout: "mobile", menuVisible: false });
@@ -124,12 +129,13 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     };
 
     public handleNavigateTo = (element: IMenuElement, inWindow = false) => {
+        console.log(element.route);
         if (inWindow) {
             this.handleOpenWindow(element.route, {}, { title: element.title, showHideLink: true, top: 55 });
         } else {
-            window.location.hash = element.route;
+            //window.location.hash = element.route;
             //alert(element.route);
-            //this.store.changeView(element.route);
+            this.store.changeView(element.route);
         }
         if (this.state.layout == "mobile") {
             this.setState({ menuVisible: false });
@@ -255,18 +261,19 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     public render() {
         const languages = configGetAll().translations.languages;
         const { topActions } = this.props;
+
         return (
-            <HotKeys
-                actions={[
-                    { key: Key.Escape, handler: this.toggleLayerMenu },
-                    { key: [Key.ArrowLeft, Key.Control], handler: () => window.history.back() },
-                    { key: [Key.ArrowRight, Key.Control], handler: () => window.history.forward() },
-                ]}
-                observeFromInput={[Key.Escape]}
-                root={true}
-                name={"Root Backoffice"}
-            >
-                <div className="w-panel-container w-backoffice-panel" ref={(container) => (this.container = container)}>
+            <div className="w-panel-container w-backoffice-panel" ref={(container) => (this.container = container)}>
+                <HotKeys
+                    actions={[
+                        { key: Key.Escape, handler: this.toggleLayerMenu },
+                        { key: [Key.ArrowLeft, Key.Control], handler: () => window.history.back() },
+                        { key: [Key.ArrowRight, Key.Control], handler: () => window.history.forward() },
+                    ]}
+                    observeFromInput={[Key.Escape]}
+                    root={true}
+                    name={"Root Backoffice"}
+                >
                     {!this.state.onlyBody && (
                         <div className="w-panel-top">
                             <div className="app-icon" onClick={this.handleAppIconClicked}>
@@ -462,8 +469,8 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                         </Modal>
                     )}
                     <div id="modal-root" />
-                </div>
-            </HotKeys>
+                </HotKeys>
+            </div>
         );
     }
 }

@@ -4,7 +4,7 @@ import { IPanelProps, Panel } from "../../../../src/Panel";
 import { Meta, Story } from "@storybook/react/types-6-0";
 
 export default {
-    title: "Controls/Loading indicator",
+    title: "Basic/Loading indicator",
     component: LoadingIndicator,
     argTypes: {},
 } as Meta;

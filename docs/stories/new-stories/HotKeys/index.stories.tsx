@@ -12,7 +12,7 @@ const style = {
     marginBottom: 10,
 };
 
-storiesOf("HotKeys", module)
+storiesOf("Helpers/HotKeys", module)
     .add("Base", () => {
         const [key, setKey] = useState("----");
 

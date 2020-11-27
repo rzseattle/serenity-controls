@@ -29,6 +29,51 @@ const LayerStyle: React.CSSProperties = {
     color: "white",
 };
 
+export class PositionPairHelperBase extends React.Component<IPositionPairHelperProps> {
+    public relativeTo = React.createRef<HTMLDivElement>();
+    public render() {
+        let style;
+        if (this.props.autoWidth) {
+            style = { ...LayerStyle, width: "100%" };
+        } else {
+            style = LayerStyle;
+        }
+        return (
+            <>
+                <div style={TargetStyle} ref={this.relativeTo}>
+                    Target
+                </div>
+                <Positioner
+                    relativeTo={() => this.relativeTo.current}
+                    relativeSettings={RelativePositionPresets.topLeft}
+                >
+                    <div style={style}>Top Left</div>
+                </Positioner>
+                <Positioner
+                    relativeTo={() => this.relativeTo.current}
+                    relativeSettings={RelativePositionPresets.bottomRight}
+                >
+                    <div style={style}>bottom right</div>
+                </Positioner>
+
+                <Positioner
+                    relativeTo={() => this.relativeTo.current}
+                    relativeSettings={RelativePositionPresets.middleRight}
+                >
+                    <div style={{ ...style, backgroundColor: "grey" }}>middle right</div>
+                </Positioner>
+
+                <Positioner
+                    relativeTo={() => this.relativeTo.current}
+                    relativeSettings={RelativePositionPresets.bottomLeftCorner}
+                >
+                    <div style={{ ...style, backgroundColor: "grey" }}>bottom left corner</div>
+                </Positioner>
+            </>
+        );
+    }
+}
+
 export class PositionPairHelper extends React.Component<IPositionPairHelperProps> {
     public relativeTo = React.createRef<HTMLDivElement>();
     public render() {
@@ -41,9 +86,9 @@ export class PositionPairHelper extends React.Component<IPositionPairHelperProps
         return (
             <>
                 <div style={TargetStyle} ref={this.relativeTo}>
-                    {this.props.presetName}
+                    {this.props.presetName ? this.props.presetName : "Target"}
                 </div>
-                <Positioner relativeTo={() => this.relativeTo.current} relativeSettings={this.props.options}>
+                <Positioner relativeTo={() => this.relativeTo.current} relativeSettings={this.props.options} trackPosition={false}>
                     <div style={style}>{this.props.layerContent ? this.props.layerContent : "Layer"}</div>
                 </Positioner>
             </>
@@ -60,19 +105,7 @@ storiesOf("Overlays/Positioner", module)
         return (
             <>
                 <div style={{ margin: "100px auto", paddingBottom: 200 }}>
-                    <PositionPairHelper options={RelativePositionPresets.bottomLeft} presetName={"preset"} />
-                </div>
-            </>
-        );
-    })
-    .add("Relative manual", () => {
-        const positionsHorizontal = ["left", "middle", "right"];
-        const positionsVertical = ["top", "middle", "bottom"];
-
-        return (
-            <>
-                <div style={{ margin: "100px auto", paddingBottom: 200 }}>
-                    <PositionPairHelper options={RelativePositionPresets.bottomLeft} presetName={""} />
+                    <PositionPairHelperBase options={RelativePositionPresets.bottomLeft} presetName={"preset"} />
                 </div>
             </>
         );
@@ -96,7 +129,7 @@ storiesOf("Overlays/Positioner", module)
 
         `;
         return (
-            <>
+            <div style={{position: "relative"}}>
                 <div style={{ height: 300 }}>
                     <PositionPairHelper
                         options={RelativePositionPresets.bottomMiddle}
@@ -141,6 +174,6 @@ storiesOf("Overlays/Positioner", module)
                         autoWidth={true}
                     />
                 </div>
-            </>
+            </div>
         );
     });

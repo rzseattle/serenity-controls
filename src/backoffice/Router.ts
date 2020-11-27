@@ -9,12 +9,21 @@ import { IArrowViewComponentProps } from "./PanelComponentLoader";
 declare let PRODUCTION: any;
 
 class Router {
+    get defaultView(): string {
+        return this._defaultView;
+    }
     public routes: IRouteList = {};
     public observers: Array<() => any> = [];
 
     // todo zdefinowac route odp    }owiedio
+    private _defaultView: string;
+
     public registerRoutes(routes: IRouteList) {
         this.routes = routes;
+    }
+
+    public registerDefaultView(path: string) {
+        this._defaultView = path;
     }
 
     public onRoutesChanges(callback: () => any) {
@@ -89,7 +98,7 @@ class Router {
             routePath: input.routePath,
             baseRoutePath: input.baseRoutePath,
             componentName: input.componentName,
-            componentObject: Component,
+            componentObject: input.componentObject !== null ? input.componentObject : Component,
             index: input.index,
             namespace: input.namespace,
             _debug: {

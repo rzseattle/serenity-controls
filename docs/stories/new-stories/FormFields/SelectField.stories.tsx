@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { mockData } from "../../Table/MOCK_DATA";
+import { mockData } from "./../Table/MOCK_DATA";
 import { IOption, ISelectProps, Select } from "../../../../src/fields";
 import { Panel } from "../../../../src/Panel";
 import { SelectTest } from "./stateHelpers/SelectTest";
@@ -45,7 +45,7 @@ storiesOf("Form/Fields/Select", module)
                     showSearchField={true}
                     minLengthToShowSearchField={0}
                 />
-                <h3>Enabled if length > 6</h3>
+                <h3>Enabled if length greather than 6</h3>
                 <div style={{ margin: 10 }}>
                     <b>List ( length=3)</b>
                 </div>

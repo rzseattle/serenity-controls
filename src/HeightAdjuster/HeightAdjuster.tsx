@@ -1,12 +1,24 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
-interface IIconProps {
+export const debounce = (func: (...args: any) => any, wait = 100) => {
+    let timeout: number;
+    return function (...args: any) {
+        clearTimeout(timeout);
+        // @ts-ignore
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    };
+};
+
+interface IHelpAdjusterProps {
     children: React.ReactChild | ((height: number) => React.ReactChild);
     parent?: () => HTMLElement;
+    offsetTopCorrection?: number;
 }
 
-const HeightAdjuster = React.memo((props: IIconProps) => {
+const HeightAdjuster = React.memo((props: IHelpAdjusterProps) => {
     const divRef = useRef<HTMLDivElement>();
 
     const [height, setHeight] = useState(-1);
@@ -20,16 +32,16 @@ const HeightAdjuster = React.memo((props: IIconProps) => {
     }
     // \tmp to change
 
-    const originalWindowHeight = el.scrollHeight;
+    //const originalWindowHeight = el.scrollHeight;
 
-    useEffect(() => {
-        if (props.parent === undefined && height != -1) {
-            //w-panel-body
-            if (originalWindowHeight < el.scrollHeight) {
-                setHeight(height - (el.scrollHeight - originalWindowHeight));
-            }
-        }
-    }, [height]);
+    // useEffect(() => {
+    //     if (props.parent === undefined && height != -1) {
+    //         //w-panel-body
+    //         if (originalWindowHeight < el.scrollHeight) {
+    //             //setHeight(height - (el.scrollHeight - originalWindowHeight));
+    //         }
+    //     }
+    // }, [height]);
 
     useEffect(() => {
         const adjust = () => {
@@ -39,15 +51,18 @@ const HeightAdjuster = React.memo((props: IIconProps) => {
                     ? props.parent().getBoundingClientRect()
                     : {
                           height: window.innerHeight,
-                          top: 0,
+                          top: props.offsetTopCorrection !== undefined ? -props.offsetTopCorrection : 0,
                       };
 
             const top = elementData.top - data.top;
+
             setHeight(data.height - top);
         };
         adjust();
-        window.addEventListener("resize", adjust);
-        return () => window.removeEventListener("resize", adjust);
+
+        const debounced = debounce(adjust, 100);
+        window.addEventListener("resize", debounced);
+        return () => window.removeEventListener("resize", debounced);
     }, []);
 
     return (

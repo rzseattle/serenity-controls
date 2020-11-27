@@ -29,7 +29,7 @@ const text2 = `Aliquam tincidunt enim nec diam sagittis aliquam. Phasellus ultri
                     Etiam nec imperdiet lectus. Vestibulum facilisis augue at viverra auctor. Proin maximus tortor vitae
                     sem pretium feugiat. Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
 
-storiesOf("Tab", module)
+storiesOf("Basic/Tab", module)
     .add("Base", () => (
         <Panel>
             <Tabs>

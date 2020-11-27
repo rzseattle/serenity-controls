@@ -1,7 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Panel } from "../../../src/Panel";
-import { PrintContainer } from "../../../src/PrintContainer";
+import { PrintContainer } from "../../../../src/PrintContainer";
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
@@ -11,7 +10,7 @@ const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ves
         porttitor odio augue eu risus. Nunc sollicitudin vitae libero a dapibus. Etiam nec imperdiet lectus. Vestibulum facilisis augue at viverra auctor. Proin maximus tortor vitae sem pretium feugiat.
         Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
 
-storiesOf("Print container", module)
+storiesOf("Helpers/Print container", module)
     .add(
         "Base",
 

@@ -16,7 +16,7 @@ const onApply = (input: IFilterValue) => alert(input.value + " " + input.conditi
 
 const containerStyle: React.CSSProperties = { width: 300, backgroundColor: "white", padding: 10 };
 
-storiesOf("Filters", module)
+storiesOf("Table/Filters", module)
     .add(
         "Text",
 

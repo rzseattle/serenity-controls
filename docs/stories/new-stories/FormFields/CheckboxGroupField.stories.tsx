@@ -1,7 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { mockData } from "../../Table/MOCK_DATA";
+import { mockData } from "./../Table/MOCK_DATA";
 import { CheckboxGroup, IOption, ISelectProps, Select } from "../../../../src/fields";
 import { Panel } from "../../../../src/Panel";
 import { CheckboxGroupTest } from "./stateHelpers/CheckboxGroupTest";

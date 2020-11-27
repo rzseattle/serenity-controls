@@ -13,7 +13,12 @@ import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";
 import { ICommand } from "../CommandBar";
 
+
+
 declare let PRODUCTION: boolean;
+if (PRODUCTION === undefined) {
+    let PRODUCTION = false;
+}
 
 export interface IArrowViewComponentProps {
     /**
@@ -170,6 +175,8 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
                 </div>
             );
         }
+
+        console.log(RouteElement);
 
         return (
             <div className={RouteElement && RouteElement.componentName}>

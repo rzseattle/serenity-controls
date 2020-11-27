@@ -32,7 +32,7 @@ import { IconsList } from "./IconsList";
 import { Icon, IIconProps } from "../../../../src/Icon";
 
 export default {
-    title: "Controls/Icon",
+    title: "Basic/Icon",
     component: Icon,
     argTypes: {
         name: {

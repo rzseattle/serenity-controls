@@ -81,7 +81,7 @@ const items = [
 ];
 
 export default {
-    title: "Controls/Command bar",
+    title: "Basic/Command bar",
     component: CommandBar,
     argTypes: {},
 } as Meta;
