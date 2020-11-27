@@ -18,7 +18,7 @@ import { DataBinding } from "./DataBinding";
 // import SurroundElements from "./SurroundElements";
 
 storiesOf("Form/Forms", module)
-    .add("Base ( layouts )", () => (
+    .add("Base", () => (
         <div style={{ maxWidth: "800px" }}>
             <Panel>
                 <BForm
@@ -63,6 +63,53 @@ storiesOf("Form/Forms", module)
             </Panel>
         </div>
     ))
+    .add("Disabled edition", () => (
+        <div style={{ maxWidth: "800px" }}>
+            <Panel>
+                <BForm
+                    editable={false}
+                    data={{
+                        text: "xxx",
+                        select: "2",
+                        switch: "2",
+                        checkboxGroup: [2, 3],
+                        textarea: "Some lorem ipsum text",
+                        date: "2008-11-11",
+                        wysiwig: "This is sparta"
+                    }}
+                >
+                    {(form) => {
+                        return (
+                            <>
+                                <BText label="Text" {...form("text")} />
+                                <BSelect
+                                    label="Select"
+                                    options={{ 1: "One", 2: "Two", 3: "Three" }}
+                                    {...form("select")}
+                                />
+                                <BCheckboxGroup
+                                    label="Checkbox group"
+                                    options={{ 1: "One", 2: "Two", 3: "Three" }}
+                                    {...form("checkboxGroup")}
+                                />
+                                <BSwitch
+                                    label="Radio group"
+                                    options={{ 1: "One", 2: "Two", 3: "Three" }}
+                                    {...form("switch")}
+                                />
+                                <BTextarea label="Textarea" {...form("textarea")} />
+                                <BDate label="Date" {...form("date")} />
+                                <BFile label="File" {...form("file")} />
+                                <BWysiwig label="Wysiwig" {...form("wysiwig")} />
+
+                            </>
+                        );
+                    }}
+                </BForm>
+            </Panel>
+        </div>
+    ))
+
     .add("Data Binding", () => (
         <div style={{ maxWidth: "800px" }}>
             <Panel>
