@@ -75,15 +75,15 @@ export class PositionCalculator {
     }
 
     public calculate(): React.CSSProperties {
-        let targetPositionData;
+        let targetPositionData: DOMRect;
         // this.target == ClientRect
         // @ts-ignore
         if (this.target.width !== undefined) {
-            targetPositionData = this.target;
+            targetPositionData = this.target as DOMRect;
         } else {
-
             targetPositionData = (this.target as HTMLElement).getBoundingClientRect();
         }
+
         const targetRefPoint = this.getRefPoint(this.options.relativeToAt, targetPositionData);
 
         let styles: React.CSSProperties = {};

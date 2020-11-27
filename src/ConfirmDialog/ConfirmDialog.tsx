@@ -7,7 +7,7 @@ import { RelativePositionPresets } from "../Positioner";
 
 export interface IConfirmModalProps extends IModalProps {
     showCancelLing?: boolean;
-    onOk: () => any;
+    onOk: (value: unknown) => any;
     cleanup: () => any;
 }
 
@@ -27,7 +27,7 @@ class ConfirmDialog extends React.Component<IConfirmModalProps, any> {
     };
 
     public handleConfirm = () => {
-        this.props.onOk();
+        this.props.onOk(true);
         this.props.cleanup();
     };
 
@@ -65,7 +65,7 @@ export const confirmDialog = async (message: string, options: Partial<IConfirmMo
 
     const wrapper = parent.appendChild(document.createElement("div"));
 
-    let resolver: () => any;
+    let resolver: (value: unknown) => any;
     let rejector: () => any;
 
     const promise = new Promise((resolve, reject) => {
