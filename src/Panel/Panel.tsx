@@ -2,7 +2,7 @@ import * as React from "react";
 
 import "./Panel.sass";
 import { Icon } from "../Icon";
-import { CommandBar, ICommand } from "../../src/CommandBar";
+import { CommandBar, ICommand } from "../CommandBar";
 
 export interface IPanelProps {
     /**
