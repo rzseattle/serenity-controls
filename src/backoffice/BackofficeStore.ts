@@ -153,6 +153,7 @@ class BackofficeStore implements IBackOfficestoreAPI {
     public changeView = async (path: string, input: any = null, callback: () => any = null) => {
         const originalPath = path;
 
+        alert("here");
         try {
             this.isViewLoading = true;
             this.viewServerErrors = null;
@@ -194,6 +195,7 @@ class BackofficeStore implements IBackOfficestoreAPI {
                 setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
             }
 
+            console.log(resolvedView.useAutoRequest, "teraz tutaj1");
             if (resolvedView.useAutoRequest === true) {
                 const comm = new Comm(url);
 

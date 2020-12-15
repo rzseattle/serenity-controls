@@ -174,8 +174,6 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
             );
         }
 
-        console.log(RouteElement);
-
         return (
             <div className={RouteElement && RouteElement.componentName}>
                 <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)} />

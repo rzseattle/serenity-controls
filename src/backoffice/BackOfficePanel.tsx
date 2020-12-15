@@ -83,7 +83,6 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
     constructor(props: IBackOfficePanelProps) {
         super(props);
-
         this.store = this.props.store ? this.props.store : new BackofficeStore();
 
         this.state = {
