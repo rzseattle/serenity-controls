@@ -62,7 +62,7 @@ var getLoaders = function(production, input) {
             },
 
             {
-                test: /\.(js|map)$/,MiniCssExtractPlugin
+                test: /\.(js|map)$/,
                 use: ["source-map-loader"],
                 enforce: "pre",
             },
