@@ -12,8 +12,8 @@
         "build:modules": "tsm \"src/**/*.module.sass\" ",
         "build:typescript": "tsc --project ./ --outDir ./lib ",
         "build:sass": "cpx 'src/**/*.sass' lib",
-        "storybook": "start-storybook -c ./docs/stories/.storybook -p 6006",
-        "build-storybook": "build-storybook -c ./docs/stories/.storybook",
+        "storybook": "start-storybook  -c ./docs/stories/.storybook -p 6006",
+        "build-storybook": "build-storybook -ci --quiet -c ./docs/stories/.storybook",
         "prepare": "npm-run-all build:modules build:sass build:typescript"
     },
     "husky": {
@@ -36,6 +36,7 @@
     ],
     "dependencies": {
         "array-to-tree": "^3.3.2",
+        "bootstrap-sass": "^3.4.1",
         "i18next": "^19.3.2",
         "markdown-it": "^10.0.0",
         "moment": "^2.25.3",
