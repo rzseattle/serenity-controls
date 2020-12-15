@@ -14,7 +14,7 @@
         "build:sass": "cpx 'src/**/*.sass' lib",
         "storybook": "start-storybook -c ./docs/stories/.storybook -p 6006",
         "build-storybook": "build-storybook -c ./docs/stories/.storybook",
-        "postinstall": "npm-run-all build:modules build:sass build:typescript"
+        "prepare": "npm-run-all build:modules build:sass build:typescript"
     },
     "husky": {
         "hooks": {
@@ -32,7 +32,7 @@
         "trailingComma": "all"
     },
     "files": [
-        "lib"
+        "lib/**/*"
     ],
     "dependencies": {
         "array-to-tree": "^3.3.2",
