@@ -15,6 +15,7 @@ export const debounce = (func: (...args: any) => any, wait = 100) => {
 interface IHelpAdjusterProps {
     children: React.ReactChild | ((height: number) => React.ReactChild);
     parent?: () => HTMLElement;
+    fitToParent?: boolean;
     offsetTopCorrection?: number;
 }
 
@@ -23,32 +24,20 @@ const HeightAdjuster = React.memo((props: IHelpAdjusterProps) => {
 
     const [height, setHeight] = useState(-1);
 
-    let el: Element = document.documentElement;
-
-    // tmp to change
-    const result = document.getElementsByClassName("w-panel-body");
-    if (result.length > 0) {
-        el = result[0];
-    }
-    // \tmp to change
-
-    //const originalWindowHeight = el.scrollHeight;
-
-    // useEffect(() => {
-    //     if (props.parent === undefined && height != -1) {
-    //         //w-panel-body
-    //         if (originalWindowHeight < el.scrollHeight) {
-    //             //setHeight(height - (el.scrollHeight - originalWindowHeight));
-    //         }
-    //     }
-    // }, [height]);
-
     useEffect(() => {
+        let parent: HTMLElement = null;
+
+        if (props.fitToParent !== undefined && props.fitToParent === true) {
+            parent = divRef.current.parentElement;
+        } else if (props.parent !== undefined) {
+            parent = props.parent();
+        }
+
         const adjust = () => {
             const elementData = divRef.current.getBoundingClientRect();
             const data =
-                props.parent !== undefined
-                    ? props.parent().getBoundingClientRect()
+                parent !== null
+                    ? parent.getBoundingClientRect()
                     : {
                           height: window.innerHeight,
                           top: props.offsetTopCorrection !== undefined ? -props.offsetTopCorrection : 0,

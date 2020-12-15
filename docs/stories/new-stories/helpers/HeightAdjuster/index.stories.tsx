@@ -39,10 +39,14 @@ storiesOf("Helpers/HeightAdjuster", module)
         return (
             <>
                 <div style={{ height: "200px" }} className={"helper-target"}>
+                    <div style={{ height: 50, backgroundColor: "lightgray" }}>
+                        Whole div have 200px height, this div have 50px of height
+                    </div>
                     <HeightAdjuster
-                        parent={() => {
-                            return document.getElementsByClassName("helper-target")[0] as HTMLElement;
-                        }}
+                        fitToParent={true}
+                        // parent={() => {
+                        //     return document.getElementsByClassName("helper-target")[0] as HTMLElement;
+                        // }}
                     >
                         {(height: number) => {
                             return (
