@@ -34,7 +34,8 @@
     "files": [
         "lib/**/*",
         "sass/**/*",
-        "builder/**/*"
+        "builder/**/*",
+        "src/**/*"
     ],
     "dependencies": {
         "array-to-tree": "^3.3.2",
