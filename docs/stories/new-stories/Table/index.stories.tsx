@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput } from "../../../../src/Table";
+import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput, Column } from "../../../../src/Table";
 import { mockData } from "./MOCK_DATA";
 import { FilterHelper } from "../../../../src/filters";
 
@@ -51,12 +51,34 @@ const provider = (query: IDataQuery) => {
     });
 };
 
-storiesOf("Table/Table", module).add(
-    "Base",
+storiesOf("Table/Table", module)
+    .add(
+        "Base",
 
-    () => (
-        <div style={{ minHeight: 500 }}>
-            <Table dataProvider={provider} columns={baseColumns} />
-        </div>
-    ),
-);
+        () => (
+            <div>
+                <Table dataProvider={provider} columns={baseColumns} />
+            </div>
+        ),
+    )
+    .add(
+        "Editable column",
+
+        () => {
+            baseColumns[1]
+                .editable((changedValue, row, column) => {
+                    if (changedValue === "") {
+                        return ["Fill field"];
+                    } else {
+                        alert(column.field + " changed to: " + changedValue);
+                        return true;
+                    }
+                }, "text")
+                .width(250);
+            return (
+                <div>
+                    <Table dataProvider={provider} columns={baseColumns} />
+                </div>
+            );
+        },
+    );

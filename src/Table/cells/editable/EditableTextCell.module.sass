@@ -1,16 +1,24 @@
+\:global
+    .w-table-editable-cell
+        width: 100%
+
+
+
 .container
-    width: 100%
+    width: calc( 100% - 10px )
     display: flex
+    margin: 0 5px
+
     div:nth-child(1)
         flex-grow: 1
-
-        input:focus
-            border: solid 1px darkred !important
+        //input:focus
+            border: solid 1px #a05959 !important
 
     a
         padding: 0 5px
         height: 100%
         line-height: 28px
+        height: 28px
         //background-color: darkgray
         display: block
         font-weight: bold

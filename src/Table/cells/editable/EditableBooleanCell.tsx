@@ -4,7 +4,6 @@ import styles from "./EditableTextCell.module.sass";
 import { Icon } from "../../../Icon";
 import { useCallback, useRef, useState } from "react";
 import { IEditableCellProps } from "./IEditableCellProps";
-import { ValidationError } from "../../../BForm/ValidationError";
 
 export default ({ inputValue, onSubmit, onCancel }: IEditableCellProps): JSX.Element => {
     const [value, setValue] = useState(inputValue);

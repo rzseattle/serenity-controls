@@ -7,6 +7,7 @@ import { Icon } from "../Icon";
 import EditableTextCell from "./cells/editable/EditableTextCell";
 import { IEditableCell, IEditableCellProps } from "./cells/editable/IEditableCellProps";
 import { ValidationError } from "../BForm/ValidationError";
+import EditableBooleanCell from "./cells/editable/EditableBooleanCell";
 
 export default class ColumnHelper {
     protected data: IColumnData;
@@ -214,18 +215,24 @@ export default class ColumnHelper {
     }
 
     public editable(
-        fn: (changedValue: any, row: any, columnt: IColumnData) => any,
-        type: "text" | "textarea",
+        fn: (changedValue: any, row: any, column: IColumnData) => boolean | string[],
+        type: "text" | "textarea" | "bool" | "switch" | "select",
         enabled = true,
+        content?: IOption[],
     ): ColumnHelper {
         if (enabled === false) {
             return this;
+        }
+
+        if (type === "switch" || type === "select") {
+            alert("Not implemented: " + type);
         }
 
         const editableComponentsMap: {
             [index: string]: IEditableCell;
         } = {
             text: EditableTextCell,
+            boolean: EditableBooleanCell,
         };
 
         this.className("w-table-editable-cell");
@@ -242,13 +249,13 @@ export default class ColumnHelper {
                             inputValue={value}
                             onSubmit={(value) => {
                                 const result = fn(value, row, column);
-                                if (result === undefined || (result !== false && result.fieldErrors === undefined)) {
+                                if (result === true) {
                                     const tmp = { ...columnsInEditState };
                                     tmp[column.field] = false;
                                     rowContainer.setData("columnsInEdit", tmp);
                                 } else if (result === false) {
                                     return false;
-                                } else if (result.fieldErrors !== undefined) {
+                                } else if (Array.isArray(result)) {
                                     return result;
                                 }
                             }}
