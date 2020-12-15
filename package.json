@@ -32,7 +32,8 @@
         "trailingComma": "all"
     },
     "files": [
-        "lib/**/*"
+        "lib/**/*",
+        "sass/**/*"
     ],
     "dependencies": {
         "array-to-tree": "^3.3.2",
