@@ -153,7 +153,6 @@ class BackofficeStore implements IBackOfficestoreAPI {
     public changeView = async (path: string, input: any = null, callback: () => any = null) => {
         const originalPath = path;
 
-        alert("here");
         try {
             this.isViewLoading = true;
             this.viewServerErrors = null;

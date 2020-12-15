@@ -89,29 +89,6 @@ class Router {
 
     private async translateInputRoute(input: any): Promise<IRouteElement> {
         const Component: React.ComponentType<IArrowViewComponentProps> = await this.componentFromInput(input);
-
-        console.log(
-            {
-                controller: input.controller,
-                method: input.method,
-                package: input.package,
-                routePath: input.routePath,
-                baseRoutePath: input.baseRoutePath,
-                componentName: input.componentName,
-                componentObject: input.componentObject !== null ? input.componentObject : Component,
-                index: input.index,
-                namespace: input.namespace,
-                useAutoRequest: input.useAutoRequest,
-                _debug: {
-                    file: input._debug.file,
-                    line: input._debug.line,
-                    template: input._debug.template,
-                    componentExists: input._debug.componentExists,
-                    templateExists: input._debug.templateExists,
-                },
-            },
-            "w routerze",
-        );
         //input from generated tmp/components-route.include.js
         return {
             controller: input.controller,
@@ -123,6 +100,7 @@ class Router {
             componentObject: input.componentObject !== null ? input.componentObject : Component,
             index: input.index,
             namespace: input.namespace,
+            useAutoRequest: input.useAutoRequest,
             _debug: {
                 file: input._debug.file,
                 line: input._debug.line,
