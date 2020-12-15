@@ -36,7 +36,6 @@
     ],
     "dependencies": {
         "array-to-tree": "^3.3.2",
-        "bootstrap-sass": "^3.4.1",
         "i18next": "^19.3.2",
         "markdown-it": "^10.0.0",
         "moment": "^2.25.3",
