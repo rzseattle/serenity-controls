@@ -59,7 +59,7 @@ interface ITableProps {
     rememberState?: boolean;
     rowClassTemplate?: IRowClassTemplate;
     rowStyleTemplate?: IRowStyleTemplate;
-    columns: IColumnData[] | ColumnHelper[];
+    columns:  (IColumnData | ColumnHelper)[];
     showFooter?: boolean;
     showHeader?: boolean;
     additionalConditions?: any;
