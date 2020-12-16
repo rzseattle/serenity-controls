@@ -149,7 +149,6 @@ IHotKeyProps) => {
     return (
         <div
             className={root ? "" : styles.div}
-            style={{ height: "100%" }}
             ref={ref}
             tabIndex={-1}
             onKeyUp={(e) => {
