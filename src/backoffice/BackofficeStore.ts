@@ -87,7 +87,7 @@ class BackofficeStore implements IBackOfficestoreAPI {
         if (window.location.hash != "#" && window.location.hash) {
             this.changeView(window.location.hash.replace("#", ""));
         } else {
-            this.changeView(router.defaultView);
+            this.changeView(window.location.pathname);
         }
         window.addEventListener("hashchange", this.hashChangeHandler, false);
 

@@ -160,6 +160,9 @@ export class Modal extends React.PureComponent<IModalProps> {
                             ref={(el) => (this.modalBody = el)}
                             onClick={(e) => e.stopPropagation()}
                             style={{ width: p.width ? p.width : "auto", height: p.height ? p.height : "auto" }}
+                            onMouseDown={(e) => {
+                                e.stopPropagation();
+                            }}
                         >
                             {p.showHideLink && (
                                 <a className="w-modal-close" style={{}} onClick={this.handleClose}>
