@@ -128,12 +128,9 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     };
 
     public handleNavigateTo = (element: IMenuElement, inWindow = false) => {
-        console.log(element.route);
         if (inWindow) {
             this.handleOpenWindow(element.route, {}, { title: element.title, showHideLink: true, top: 55 });
         } else {
-            //window.location.hash = element.route;
-            //alert(element.route);
             this.store.changeView(element.route);
         }
         if (this.state.layout == "mobile") {
