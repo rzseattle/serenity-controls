@@ -57,6 +57,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
     private dynamicList: any;
 
+    private container: HTMLDivElement;
+
     constructor(props: ISelectProps) {
         super(props);
 
@@ -109,6 +111,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     if (this.props.onClose) {
                         this.props.onClose();
                     }
+                    this.container.focus();
                 }
             },
         );
@@ -248,6 +251,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     { key: Key.Escape, handler: this.onKeyDown },
                 ]}
                 captureInput={true}
+                stopPropagation={true}
             >
                 {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
                     <input
@@ -324,15 +328,33 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
         return (
+
+            <HotKeys
+                actions={[
+                    { key: Key.ArrowDown, handler: this.handleDropdownChange },
+                    { key: Key.Enter, handler: this.handleDropdownChange },
+                    { key: Key.Escape, handler: this.handleDropdownChange },
+                ]}
+                captureInput={true}
+                stopPropagation={true}
+            >
             <div
+                ref={(el)=> this.container = el}
                 className={"w-select"}
-                style={props.style}
+                style={{...props.style, outline: 1}}
                 onMouseLeave={() => {
                     this.setState({ highlightedIndex: -1 }, () =>
                         this.dynamicList ? this.dynamicList.forceUpdate() : null,
                     );
                 }}
+                tabIndex={0}
+                // onFocus={()=>{
+                //     if (!this.state.dropdownVisible) {
+                //         this.handleDropdownChange();
+                //     }
+                // }}
             >
+
                 {this.props.mode === "dropdown" && (
                     <div
                         className={"w-select-result-presenter"}
@@ -389,6 +411,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     </div>
                 )}
             </div>
+            </HotKeys>
         );
     }
 }

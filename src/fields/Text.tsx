@@ -1,5 +1,6 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
+import "./Text.sass";
 
 export interface ITextProps extends IFieldProps {
     type?: "text" | "password";
@@ -41,7 +42,8 @@ export class Text extends React.Component<ITextProps> {
         }
     };
 
-    public componentDidMount() {
+
+    public componentDidMount = () => {
         // const $input_elem = ReactDOM.findDOMNode(this.refs.field);
         // Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
         if (this.props.autoFocus) {
@@ -50,6 +52,10 @@ export class Text extends React.Component<ITextProps> {
                 this.inputRef.focus();
             }, 1);
         }
+    }
+
+    public focus = () =>{
+        this.inputRef.focus();
     }
 
     public render() {
@@ -72,7 +78,7 @@ export class Text extends React.Component<ITextProps> {
         return (
             <div>
                 <input
-                    className={props.className}
+                    className={"w-text " + props.className}
                     name={props.name}
                     type={props.type}
                     value={props.value === null ? "" : props.value}

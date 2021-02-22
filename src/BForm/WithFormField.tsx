@@ -30,6 +30,8 @@ export const withFormField = <P extends object>(Component: React.ComponentType<P
             addInputClass: true,
         };
 
+
+
         public render() {
             const props = this.props;
             const addInputClass = this.props.addInputClass;
