@@ -42,7 +42,6 @@ export class Text extends React.Component<ITextProps> {
         }
     };
 
-
     public componentDidMount = () => {
         // const $input_elem = ReactDOM.findDOMNode(this.refs.field);
         // Inputmask('9-a{1,3}9{1,3}').mask($input_elem);
@@ -52,11 +51,11 @@ export class Text extends React.Component<ITextProps> {
                 this.inputRef.focus();
             }, 1);
         }
-    }
+    };
 
-    public focus = () =>{
+    public focus = () => {
         this.inputRef.focus();
-    }
+    };
 
     public render() {
         const props = this.props;

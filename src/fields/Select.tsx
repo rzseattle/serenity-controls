@@ -328,7 +328,6 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         }
 
         return (
-
             <HotKeys
                 actions={[
                     { key: Key.ArrowDown, handler: this.handleDropdownChange },
@@ -338,79 +337,78 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 captureInput={true}
                 stopPropagation={true}
             >
-            <div
-                ref={(el)=> this.container = el}
-                className={"w-select"}
-                style={{...props.style, outline: 1}}
-                onMouseLeave={() => {
-                    this.setState({ highlightedIndex: -1 }, () =>
-                        this.dynamicList ? this.dynamicList.forceUpdate() : null,
-                    );
-                }}
-                tabIndex={0}
-                // onFocus={()=>{
-                //     if (!this.state.dropdownVisible) {
-                //         this.handleDropdownChange();
-                //     }
-                // }}
-            >
-
-                {this.props.mode === "dropdown" && (
-                    <div
-                        className={"w-select-result-presenter"}
-                        ref={(el) => (this.presenter = el)}
-                        onClick={() => {
-                            if (!this.state.dropdownVisible) {
-                                this.handleDropdownChange();
-                            }
-                        }}
-                    >
-                        {options[selectedIndex] ? (
-                            options[selectedIndex].label
-                        ) : (
-                            <div className={"w-select-placeholder"}>
-                                {this.props.placeholder
-                                    ? this.props.placeholder
-                                    : fI18n.t("frontend:fields.select.choose")}
-                            </div>
-                        )}
-                        {props.allowClear && props.value !== null && (
-                            <div className="w-select-clear" onClick={this.handleClear}>
-                                <Icon name={"ChromeClose"} />
-                            </div>
-                        )}
-                        <Icon name={"ChevronDown"} />
-                    </div>
-                )}
-                {this.state.dropdownVisible && props.mode === "dropdown" && (
-                    <Positioner
-                        relativeTo={() => this.presenter}
-                        animation={"from-up"}
-                        relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
-                    >
+                <div
+                    ref={(el) => (this.container = el)}
+                    className={"w-select"}
+                    style={{ ...props.style, outline: 1 }}
+                    onMouseLeave={() => {
+                        this.setState({ highlightedIndex: -1 }, () =>
+                            this.dynamicList ? this.dynamicList.forceUpdate() : null,
+                        );
+                    }}
+                    tabIndex={0}
+                    // onFocus={()=>{
+                    //     if (!this.state.dropdownVisible) {
+                    //         this.handleDropdownChange();
+                    //     }
+                    // }}
+                >
+                    {this.props.mode === "dropdown" && (
                         <div
-                            className={"w-select-overlay"}
+                            className={"w-select-result-presenter"}
+                            ref={(el) => (this.presenter = el)}
+                            onClick={() => {
+                                if (!this.state.dropdownVisible) {
+                                    this.handleDropdownChange();
+                                }
+                            }}
+                        >
+                            {options[selectedIndex] ? (
+                                options[selectedIndex].label
+                            ) : (
+                                <div className={"w-select-placeholder"}>
+                                    {this.props.placeholder
+                                        ? this.props.placeholder
+                                        : fI18n.t("frontend:fields.select.choose")}
+                                </div>
+                            )}
+                            {props.allowClear && props.value !== null && (
+                                <div className="w-select-clear" onClick={this.handleClear}>
+                                    <Icon name={"ChromeClose"} />
+                                </div>
+                            )}
+                            <Icon name={"ChevronDown"} />
+                        </div>
+                    )}
+                    {this.state.dropdownVisible && props.mode === "dropdown" && (
+                        <Positioner
+                            relativeTo={() => this.presenter}
+                            animation={"from-up"}
+                            relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
+                        >
+                            <div
+                                className={"w-select-overlay"}
+                                ref={(el) => (this.dropdown = el)}
+                                tabIndex={-1}
+                                onBlur={() => setTimeout(this.handleDropdownChange, 100)}
+                                onMouseDown={(e) => e.preventDefault()}
+                                // style={{ height: options.length * 78, maxHeight: this.props.height }}
+                            >
+                                {this.renderListBody()}
+                            </div>
+                        </Positioner>
+                    )}
+                    {props.mode === "list" && (
+                        <div
+                            className="w-select-list"
                             ref={(el) => (this.dropdown = el)}
                             tabIndex={-1}
-                            onBlur={() => setTimeout(this.handleDropdownChange, 100)}
-                            onMouseDown={(e) => e.preventDefault()}
-                            // style={{ height: options.length * 78, maxHeight: this.props.height }}
+                            style={{ height: options.length * 28, maxHeight: this.props.height }}
                         >
                             {this.renderListBody()}
                         </div>
-                    </Positioner>
-                )}
-                {props.mode === "list" && (
-                    <div
-                        className="w-select-list"
-                        ref={(el) => (this.dropdown = el)}
-                        tabIndex={-1}
-                        style={{ height: options.length * 28, maxHeight: this.props.height }}
-                    >
-                        {this.renderListBody()}
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
             </HotKeys>
         );
     }
