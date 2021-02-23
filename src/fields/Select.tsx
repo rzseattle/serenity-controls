@@ -174,7 +174,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
                 this.handleDropdownChange();
             }
-        } else if (keyName == Key.Escape) {
+        } else if (keyName == Key.Escape || keyName == Key.Tab) {
             this.handleDropdownChange();
         }
     };
@@ -249,6 +249,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     { key: Key.ArrowDown, handler: this.onKeyDown },
                     { key: Key.Enter, handler: this.onKeyDown },
                     { key: Key.Escape, handler: this.onKeyDown },
+                    { key: Key.Tab, handler: this.onKeyDown },
                 ]}
                 captureInput={true}
                 stopPropagation={true}
