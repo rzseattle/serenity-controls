@@ -315,7 +315,11 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                         } else if ((action as ICommand).label !== undefined) {
                                             const command = action as ICommand;
                                             return (
-                                                <div className={"w-backoffice-panel-command-action"} key={command.key} onClick={(ev) => command.onClick(ev, null)}>
+                                                <div
+                                                    className={"w-backoffice-panel-command-action"}
+                                                    key={command.key}
+                                                    onClick={(ev) => command.onClick(ev, null)}
+                                                >
                                                     <Icon name={command.icon} /> {command.label}
                                                 </div>
                                             );
