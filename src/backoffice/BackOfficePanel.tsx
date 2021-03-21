@@ -308,12 +308,18 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </div>
                             {topActions.length > 0 && (
                                 <div className="w-backoffice-panel-top-actions">
-                                    {topActions.map((action: ICommand) => {
-                                        return (
-                                            <div key={action.key} onClick={(ev) => action.onClick(ev, null)}>
-                                                <Icon name={action.icon} /> {action.label}
-                                            </div>
-                                        );
+                                    {topActions.map((action: ICommand | React.ElementType) => {
+                                        if (React.isValidElement(action)) {
+                                            const Component = action as React.ElementType;
+                                            return action;
+                                        } else if ((action as ICommand).label !== undefined) {
+                                            const command = action as ICommand;
+                                            return (
+                                                <div className={"w-backoffice-panel-command-action"} key={command.key} onClick={(ev) => command.onClick(ev, null)}>
+                                                    <Icon name={command.icon} /> {command.label}
+                                                </div>
+                                            );
+                                        }
                                     })}
                                 </div>
                             )}
