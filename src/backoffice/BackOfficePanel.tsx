@@ -309,7 +309,9 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             {topActions.length > 0 && (
                                 <div className="w-backoffice-panel-top-actions">
                                     {topActions.map((action: ICommand | React.ElementType) => {
-                                        if (React.isValidElement(action)) {
+                                        if (action === null) {
+                                            return null;
+                                        } else if (React.isValidElement(action)) {
                                             const Component = action as React.ElementType;
                                             return action;
                                         } else if ((action as ICommand).label !== undefined) {
