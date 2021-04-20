@@ -44,6 +44,7 @@ class Comm {
     private readonly method: string;
     private readonly url: string;
     private data: any;
+    private headers: Record<string, string>;
     private readonly namespace: string;
     private xhr: XMLHttpRequest;
 
@@ -163,6 +164,10 @@ class Comm {
         }
     }
 
+    public setHeaders = (headers: Record<string, string>) => {
+        this.headers = headers;
+    };
+
     public send(): XMLHttpRequest {
         const data = this.prepareData();
 
@@ -186,6 +191,8 @@ class Comm {
                 percent: Math.round((event.loaded / event.total) * 100),
             });
         };
+
+
 
         this.xhr.onreadystatechange = () => {
             /*if (!PRODUCTION) {
@@ -260,6 +267,11 @@ class Comm {
 
         this.xhr.open(this.method, Comm.basePath + this.url, true);
         this.xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        if (this.headers !== undefined) {
+            for (const i in this.headers) {
+                this.xhr.setRequestHeader(i, this.headers[i]);
+            }
+        }
 
         if (this.method == "POST") {
             this.xhr.send(formData);
