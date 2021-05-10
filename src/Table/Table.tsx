@@ -580,7 +580,8 @@ export class Table extends React.Component<ITableProps, ITableState> {
             this.setState({ allChecked: !this.state.allChecked });
         } else {
             const selected = s.indexOf(index);
-            if (selected == -1) {
+            console.log(selected);
+            if (selected === -1) {
                 s.push(index);
             } else {
                 s.splice(selected, 1);

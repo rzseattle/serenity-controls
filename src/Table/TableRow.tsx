@@ -67,10 +67,11 @@ export class TableRow extends React.Component<
                         <td className={"w-table-selection-cell"} onClick={props.onCheck}>
                             <input
                                 type="checkbox"
-                                onChange={(event) => {
+                                onClick={(event) => {
                                     event.stopPropagation();
                                     props.onCheck();
                                 }}
+                                onChange={()=>{}}
                                 checked={this.props.isSelected}
                             />
                         </td>
