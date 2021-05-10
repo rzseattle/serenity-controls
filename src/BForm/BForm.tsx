@@ -202,7 +202,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             this.props.onSubmit({ form: this, inputEvent: e as React.FormEvent<HTMLFormElement> });
         } else if (this.props.action) {
             const comm = new Comm(this.props.action);
-            if(this.props.headers !== undefined) {
+            if (this.props.headers !== undefined) {
                 comm.setHeaders(this.props.headers);
             }
 
