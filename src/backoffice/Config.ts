@@ -9,7 +9,7 @@ export interface IConfig {
         defaultLanguage: string;
         currentLanguage: string;
         languages: string[];
-        langChanged: (langCode: string) => any;
+        langChanged: (langCode: string, callback: () => any ) => any;
     };
     files: {
         viewerRegistry: Array<{ filter: RegExp; viewer: React.ComponentType<IFileViewerProps> }>;
