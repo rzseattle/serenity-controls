@@ -71,7 +71,7 @@ export class TableRow extends React.Component<
                                     event.stopPropagation();
                                     props.onCheck();
                                 }}
-                                onChange={()=>{}}
+                                onChange={() => {}}
                                 checked={this.props.isSelected}
                             />
                         </td>

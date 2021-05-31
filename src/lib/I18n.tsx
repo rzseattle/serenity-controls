@@ -2,6 +2,7 @@ import i18next, { BackendModule } from "i18next";
 import langContainer from "./translation/LangContainer";
 
 import { configGetAll } from "../backoffice/Config";
+import { Comm } from "./Comm";
 
 const config = configGetAll();
 
@@ -11,6 +12,7 @@ const XHR: BackendModule = {
         /* use services and options */
     },
     read(language: string, namespace: string, callback: any) {
+        //alert("reading");
         langContainer.get(language, (result: any) => {
             if (result.lang[namespace] == undefined) {
                 callback("Undefined namespace", null);
@@ -24,19 +26,23 @@ const XHR: BackendModule = {
     },
     // only used in backends acting as cache layer
     save(language: string, namespace: string, data: any) {
+
         // store the translations
         console.log("bbb");
     },
     create(languages: string[], namespace: string, key: string, fallbackValue: string) {
         /* save the missing translation */
-        console.log("aaa");
+        Comm._post("/panel-translations/add", { lng: languages[0], namespace, key, fallbackValue });
     },
 };
 
 i18next.use(XHR).init(
     {
-        lng: "en",
-        fallbackLng: config.translations.defaultLanguage,
+        //todo get this vars from config
+        // @ts-ignore
+        lng: window.reactBackOfficeVar.panel.language, // config.translations.currentLanguage,
+        // @ts-ignore
+        fallbackLng: window.reactBackOfficeVar.panel.language, //,
         debug: false,
         /*resources: {
             en: {
@@ -46,6 +52,10 @@ i18next.use(XHR).init(
             }
         },*/
         ns: ["translation", "frontend"],
+        saveMissing: true,
+        /*missingKeyHandler: (lng, ns, key, fallbackValue) => {
+            //Comm._post("/panel-translations/add", { lng: lng[0], ns, key, fallbackValue });
+        },*/
     },
     (err: any, t: any) => {
         // initialized and ready to go!

@@ -7,6 +7,7 @@ import { PDFViewer } from "../viewers/PDFViewer";
 export interface IConfig {
     translations: {
         defaultLanguage: string;
+        currentLanguage: string;
         languages: string[];
         langChanged: (langCode: string) => any;
     };
@@ -19,6 +20,7 @@ export interface IConfig {
 let config: IConfig = {
     translations: {
         defaultLanguage: "pl",
+        currentLanguage: "pl",
         languages: [],
         langChanged: (langCode) => {
             console.error("provide lang change action");
