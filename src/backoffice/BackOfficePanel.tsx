@@ -476,7 +476,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </div>
                         </Modal>
                     )}
-                    <div id="modal-root" />
+                    {!this.props.isSub && <div id="modal-root" />}
                 </HotKeys>
             </div>
         );
