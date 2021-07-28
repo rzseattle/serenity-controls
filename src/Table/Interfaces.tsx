@@ -42,7 +42,7 @@ export type ICellTemplate = (
     rowComponent: TableRow,
 ) => string | JSX.Element;
 
-export type IHeaderClickEvent = (column: IColumnData, event: any,) => unknown;
+export type IHeaderClickEvent = (column: IColumnData, event: any) => unknown;
 
 export type IEventCallback = (
     row: any,
