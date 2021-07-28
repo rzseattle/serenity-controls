@@ -751,7 +751,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         >
                             {(this.state.order || this.state.filters) && (
                                 <tr>
-                                    <td colSpan={7} style={{ padding: "0 10px" }}>
+                                    <td colSpan={columns.length + 1} style={{ padding: "0 10px" }}>
                                         <FiltersPresenter
                                             order={this.state.order}
                                             filters={this.state.filters}
