@@ -722,14 +722,14 @@ export class Table extends React.Component<ITableProps, ITableState> {
                     <div className="w-table-loader">
                         <LoadingIndicator />
                     </div>
-                    <div className="w-table-top">
+                    {/*<div className="w-table-top">
                         <FiltersPresenter
                             order={this.state.order}
                             filters={this.state.filters}
                             FilterDelete={this.handleFilterDelete}
                             orderDelete={this.handleOrderDelete}
                         />
-                    </div>
+                    </div>*/}
                     <table
                         ref={(el) => (this.tableRef = el)}
                         className={"w-table-" + this.hashCode + (this.state.fixedLayout ? " w-table-fixed" : "")}
@@ -749,6 +749,20 @@ export class Table extends React.Component<ITableProps, ITableState> {
                         <tbody
                             className={this.props.infoRow !== null ? "tbody-with-info-row" : "tbody-without-info-row"}
                         >
+                            {(this.state.order ||
+                                this.state.filters) && (
+                                    <tr>
+                                        <td colSpan={7} style={{ padding: "0 10px" }}>
+                                            <FiltersPresenter
+                                                order={this.state.order}
+                                                filters={this.state.filters}
+                                                FilterDelete={this.handleFilterDelete}
+                                                orderDelete={this.handleOrderDelete}
+                                            />
+                                        </td>
+                                    </tr>
+                                )}
+
                             {this.state.dataSourceError != "" && (
                                 <Error colspan={columns.length + 1} error={this.state.dataSourceError} />
                             )}

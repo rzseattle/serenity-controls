@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { storiesOf } from "@storybook/react";
 import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput, Column } from "../../../../src/Table";
 import { mockData } from "./MOCK_DATA";
@@ -75,6 +75,25 @@ storiesOf("Table/Table", module)
                     }
                 }, "text")
                 .width(250);
+            return (
+                <div>
+                    <Table dataProvider={provider} columns={baseColumns} />
+                </div>
+            );
+        },
+    )
+    .add(
+        "Clickable header",
+
+        () => {
+            baseColumns[1]
+                .onHeaderClick((column, ev) => {
+                    alert("Column '"+ column.caption + "' clicked");
+                })
+                .noSorter()
+                .caption("Email ( clickable )")
+                .width(250);
+
             return (
                 <div>
                     <Table dataProvider={provider} columns={baseColumns} />

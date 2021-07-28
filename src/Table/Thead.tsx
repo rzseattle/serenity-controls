@@ -44,6 +44,11 @@ export default React.memo((props: ITheadProps) => {
                                 style={{ width: column.width }}
                                 className={classes.join(" ")}
                                 onClick={(e) => {
+                                    if (column.events.headerClick.length > 0) {
+                                        column.events.headerClick.map((callback) => {
+                                            callback.bind(this)(column, this, e);
+                                        });
+                                    }
                                     if (column.isSortable) {
                                         props.onCellClicked(index, e);
                                     }

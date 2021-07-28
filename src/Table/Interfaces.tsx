@@ -27,6 +27,7 @@ export interface IColumnData {
     };
     events?: {
         click?: IEventCallback[];
+        headerClick?: IHeaderClickEvent[];
         mouseUp?: IEventCallback[];
         enter?: IEventCallback[];
         leave?: IEventCallback[];
@@ -40,6 +41,8 @@ export type ICellTemplate = (
     column: IColumnData,
     rowComponent: TableRow,
 ) => string | JSX.Element;
+
+export type IHeaderClickEvent = (column: IColumnData, event: any,) => unknown;
 
 export type IEventCallback = (
     row: any,

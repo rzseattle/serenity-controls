@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ICellTemplate, IColumnData, IEventCallback } from "./Interfaces";
+import { ICellTemplate, IColumnData, IEventCallback, IHeaderClickEvent } from "./Interfaces";
 import { IOption } from "../fields/Interfaces";
 
 import { IFilter, NumericFilter, TextFilter, DateFilter, SwitchFilter, SelectFilter } from "../filters";
@@ -15,6 +15,7 @@ export default class ColumnHelper {
     constructor(initData: Partial<IColumnData>) {
         this.data = {
             events: {
+                headerClick: [],
                 click: [],
                 enter: [],
                 leave: [],
@@ -293,6 +294,11 @@ export default class ColumnHelper {
         return this;
     }
 
+    public onHeaderClick(fn: IHeaderClickEvent): ColumnHelper {
+        this.data.events.headerClick.push(fn);
+        return this;
+    }
+
     public template(fn: ICellTemplate): ColumnHelper {
         this.data.template = fn;
         return this;
@@ -318,12 +324,17 @@ export default class ColumnHelper {
         return this;
     }
 
-    public headerTooltip(text: string) {
+    public headerTooltip(text: string): ColumnHelper {
         this.data.header.tooltip = text;
         return this;
     }
 
-    public headerIcon(iconName: string) {
+    public caption = (caption: string): ColumnHelper => {
+        this.data.caption = caption;
+        return this;
+    };
+
+    public headerIcon(iconName: string): ColumnHelper {
         this.data.header.icon = iconName;
         this.data.filter[0].caption = "xx";
         return this;
