@@ -5,7 +5,6 @@ import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 
 import "./DateFilter.sass";
 import { LoadingIndicator } from "../LoadingIndicator";
-import { Icon } from "../Icon";
 
 import { BDate } from "../BForm";
 
@@ -176,7 +175,7 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
                                 onChange={(e) => this.setState({ choiceType: "range" }, this.handleChange)}
                                 type="checkbox"
                             />
-                            <Icon name={"ScrollUpDown"} /> Według wybou
+                            Według wybou
                         </label>
                     </div>
                     <div>
@@ -186,7 +185,7 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
                                 onChange={(e) => this.setState({ choiceType: "exists" }, this.handleChange)}
                                 type="checkbox"
                             />
-                            <Icon name={"CheckMark"} /> Data ustalona
+                            Data ustalona
                         </label>
                     </div>
 
@@ -197,7 +196,7 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
                                 onChange={(e) => this.setState({ choiceType: "not-exists" }, this.handleChange)}
                                 type="checkbox"
                             />{" "}
-                            <Icon name={"Clear"} /> Brak daty
+                            Brak daty
                         </label>
                     </div>
                 </div>

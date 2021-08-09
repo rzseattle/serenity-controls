@@ -7,9 +7,9 @@ import { Row } from "../Row";
 
 import "./FormBuilderSchemaGenerator.sass";
 import { FormBuilder } from "./FormBuilder";
-import { Icon } from "../Icon";
 import { confirmDialog } from "../ConfirmDialog";
 import { RelativePositionPresets } from "../Positioner";
+import { CloseOutlined, VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@material-ui/icons";
 
 interface IFieldConfig {
     name: string;
@@ -234,7 +234,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                                     this.handleMoveUp(key);
                                                 }}
                                             >
-                                                <Icon name="Up" />
+                                                <VerticalAlignTopOutlined />
                                             </a>
                                         )}
                                         {key + 1 != this.props.fields.length && (
@@ -244,7 +244,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                                     this.handleMoveDown(key);
                                                 }}
                                             >
-                                                <Icon name="Down" />
+                                                <VerticalAlignBottomOutlined />
                                             </a>
                                         )}
                                         <a
@@ -254,7 +254,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                                 this.handleDelete(key, e);
                                             }}
                                         >
-                                            <Icon name="ChromeClose" />
+                                            <CloseOutlined />
                                         </a>
                                     </div>
                                 </div>

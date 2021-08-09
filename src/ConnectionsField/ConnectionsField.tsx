@@ -4,7 +4,6 @@ import { IFieldChangeEvent, IFieldProps } from "../fields/Interfaces";
 
 import { LoadingIndicator } from "../LoadingIndicator";
 import { deepIsEqual } from "../lib/JSONTools";
-import { Trans } from "react-i18next";
 import IConnectionElement from "./IConnectionElement";
 import ConnectionsFieldSelectionElement from "./ConnectionsFieldSelectionElement";
 import { ConnectionsFieldEntry } from "./ConnectionsFieldEntry";

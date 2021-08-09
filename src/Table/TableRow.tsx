@@ -1,7 +1,5 @@
 import { IColumnData } from "./Interfaces";
-import { Icon } from "../Icon";
 import * as React from "react";
-import { PrintJSON } from "../PrintJSON";
 
 export class TableRow extends React.Component<
     any,
@@ -33,7 +31,7 @@ export class TableRow extends React.Component<
         }
         return (
             <>
-                {column.icon !== null && <Icon name={column.icon} />}
+                {column.icon !== null && <column.icon />}
                 {column.prepend !== null && column.prepend}
                 {templateResult !== false ? templateResult : val ? val : column.default}
                 {column.append !== null && column.append}

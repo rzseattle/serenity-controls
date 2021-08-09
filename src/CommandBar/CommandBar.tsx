@@ -1,12 +1,14 @@
 import * as React from "react";
 import { fI18n } from "../lib";
-import { Icon } from "../Icon";
 import { CommandMenu } from "../CommandMenu";
 import "./CommandBar.sass";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core";
+import { ExpandMoreOutlined } from "@material-ui/icons";
 
 export interface ICommand {
     key: string;
-    icon?: string;
+    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
     label: string;
     onClick?: (event: React.MouseEvent, context: any) => any;
     subItems?: ICommand[];
@@ -91,9 +93,8 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                         }
                                                         className={opened ? "w-command-bar-element-opened" : ""}
                                                     >
-                                                        {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
-                                                        {item.label}
-                                                        {item.subItems && <Icon name={"ChevronDown"} />}
+                                                        {item.icon && <item.icon />} {item.label}
+                                                        {item.subItems && <ExpandMoreOutlined />}
                                                     </a>
                                                 );
                                             }}
@@ -120,9 +121,8 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                         }
                                                         className={opened ? "w-command-bar-element-opened" : ""}
                                                     >
-                                                        {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
-                                                        {item.label}
-                                                        {item.subItems && <Icon name="ChevronDown" />}
+                                                        {item.icon && <item.icon />} {item.label}
+                                                        {item.subItems && <ExpandMoreOutlined />}
                                                     </a>
                                                 );
                                             }}

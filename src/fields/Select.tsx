@@ -3,12 +3,11 @@ import * as React from "react";
 import { Positioner, RelativePositionPresets } from "../Positioner";
 import "./Select.sass";
 import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
-import { Icon } from "../Icon";
 import { fI18n } from "../lib";
 import { toOptions } from "./Utils";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
-import { ArrowDownward, Close, ExpandMore } from "@material-ui/icons";
+import { Close, ExpandMore } from "@material-ui/icons";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;

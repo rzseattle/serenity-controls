@@ -1,11 +1,11 @@
-import { SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
+import { SortableElement, SortableHandle } from "react-sortable-hoc";
 import { IFile } from "./FileListsField";
 import * as React from "react";
-import { Icon } from "../Icon";
-import { isImage, formatBytes } from "./utils";
+import { isImage } from "./utils";
 import Tooltip from "../Tooltip/Tooltip";
 import { FileTooltip } from "./FileTooltip";
 import { RelativePositionPresets } from "../Positioner";
+import { CloseOutlined, CloudUploadOutlined, ControlCameraOutlined, DescriptionOutlined } from "@material-ui/icons";
 
 interface IImageBoxProps {
     file: IFile;
@@ -19,7 +19,7 @@ interface IImageBoxProps {
 
 const DragHandle = SortableHandle(() => (
     <a className="w-gallery-drag">
-        <Icon name={"SIPMove"} />
+        <ControlCameraOutlined />
     </a>
 )); //
 
@@ -47,13 +47,13 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
                                 <img src={props.transformFilePath(file)} alt="" />
                             ) : (
                                 <>
-                                    <Icon name={"TextDocument"} />
+                                    <DescriptionOutlined />
                                 </>
                             )
                         ) : (
                             <>
                                 <img src={preview} alt="" />
-                                <Icon name={"Upload"} />
+                                <CloudUploadOutlined />
                             </>
                         )}
 
@@ -68,7 +68,7 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
                                         }}
                                         className="w-gallery-delete"
                                     >
-                                        <Icon name={"Clear"} />{" "}
+                                        <CloseOutlined />{" "}
                                     </a>
                                     <DragHandle />
                                 </>

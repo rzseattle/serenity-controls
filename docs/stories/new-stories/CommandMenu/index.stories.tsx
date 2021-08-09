@@ -4,6 +4,7 @@ import { CommandMenu } from "../../../../src/CommandMenu";
 import "./CommandMenu.stories.sass";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IPanelProps } from "../../../../src/Panel";
+import { AddOutlined } from "@material-ui/icons";
 
 const containerStyle = {
     padding: 10,
@@ -21,7 +22,7 @@ const items = [
     {
         key: "f2",
         label: "Option 2",
-        icon: "Add",
+        icon: AddOutlined,
         onClick: (event: React.MouseEvent, context: any) => {
             alert("clicked: " + context);
         },
@@ -29,7 +30,7 @@ const items = [
     {
         key: "f3",
         label: "Another option",
-        icon: "Airplane",
+        icon: AddOutlined,
         onClick: (event: React.MouseEvent, context: any) => {
             alert("clicked " + context);
         },

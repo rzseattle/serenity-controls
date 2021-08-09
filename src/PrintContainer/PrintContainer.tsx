@@ -5,7 +5,7 @@ import { CommandBar } from "../CommandBar";
 import { IModalProps, Modal } from "../Modal";
 import { fI18n } from "../lib";
 import "./PrintContainer.sass";
-import { Search } from "@material-ui/icons";
+import { PrintOutlined, Search } from "@material-ui/icons";
 
 interface IPrintContainerProps {
     title?: string;
@@ -59,7 +59,7 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
                                 {
                                     key: "f1",
                                     label: fI18n.t("frontend:print"),
-                                    icon: "Print",
+                                    icon: PrintOutlined,
                                     onClick: this.handlePrint,
                                 },
                                 /*{key: "f1", label: "Pobierz jako PDF", icon: "PDF"}*/

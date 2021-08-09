@@ -1,8 +1,8 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
 import Dropzone from "react-dropzone";
-import { Icon } from "../Icon";
 import { fI18n } from "../lib";
+import { AddOutlined } from "@material-ui/icons";
 
 export interface IFileProps extends IFieldProps {
     value: FileList;
@@ -36,7 +36,7 @@ export class File extends React.Component<IFileProps, any> {
                                     <p>Drop files here...</p>
                                 ) : (
                                     <span className="btn btn-default" style={{ cursor: "pointer" }}>
-                                        <Icon name={"Add"} /> {fI18n.t("frontend:file.add")}
+                                        <AddOutlined /> {fI18n.t("frontend:file.add")}
                                     </span>
                                 )}
                             </div>

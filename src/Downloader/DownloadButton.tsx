@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
 
 import "./DownloadButton.sass";
-import { Icon } from "../Icon";
 import { fI18n } from "../lib/I18n";
 import { download, IDownloadSuccessParams } from "./Downloader";
+import { GetAppOutlined, SyncOutlined } from "@material-ui/icons";
 
 interface IDownloadButtonProps {
     url: string;
@@ -45,7 +45,7 @@ export const DownloadButton = ({
             >
                 <div className={"w-download-button-icon" + (isLoading ? " w-download-button-icon-spin" : "")}>
                     {/*{isLoading && <LoadingIndicator />}*/}
-                    <Icon name={!isLoading ? "Download" : "Sync"} />
+                    {!isLoading ? <GetAppOutlined /> : <SyncOutlined />}
                 </div>
                 {mode !== "icon" && (
                     <div className="w-download-button-label"> {!isLoading ? label : downloadingLabel}</div>

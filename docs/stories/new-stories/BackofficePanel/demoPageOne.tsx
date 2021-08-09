@@ -9,6 +9,15 @@ import { Icon } from "../../../../src/Icon";
 import { confirmDialog } from "../../../../src/ConfirmDialog";
 import { Modal } from "../../../../src/Modal";
 import { BDate, BForm, BSwitch, BText } from "../../../../src/BForm";
+import {
+    Add,
+    AddOutlined,
+    DeleteForever,
+    DeleteOutlineOutlined,
+    Edit,
+    EditOutlined,
+    HighlightOffOutlined,
+} from "@material-ui/icons";
 
 const provider = (query: IDataQuery) => {
     return new Promise<ITableDataInput>((resolve) => {
@@ -63,13 +72,13 @@ export default () => {
                     parseFloat(row.price) < 100 ? { fontSize: "10px" } : { fontSize: "15px" },
             }),
 
-        Col.template("", () => <Icon name={"Edit"} />)
+        Col.template("", () => <EditOutlined />)
             .className("center darkgreen")
             .onClick((row) => {
                 setEditData(row);
             }),
 
-        Col.template("", () => <Icon name={"Delete"} />)
+        Col.template("", () => <HighlightOffOutlined />)
             .className("center darkred")
             .onClick((row) => {
                 confirmDialog("Are I sure to delete " + row.email + "?").then(() => {
@@ -86,7 +95,7 @@ export default () => {
                     {
                         key: "f1",
                         label: "Add new item",
-                        icon: "Add",
+                        icon: AddOutlined,
                         onClick: () => {
                             context.notification("Item xxx added", "Information");
                         },
@@ -123,7 +132,7 @@ export default () => {
                 title={"Edit"}
                 showHideLink={true}
                 onHide={() => setEditData(null)}
-                icon="Edit"
+                icon={Edit}
             >
                 <div style={{ width: 400, padding: 15 }}>
                     <BForm

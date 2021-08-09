@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Icon } from "../Icon";
 import "./Tabs.sass";
+import { CloseOutlined } from "@material-ui/icons";
 type ITabsCallback = (index: number, e: any) => any;
 
 interface ITabsProps {
@@ -73,7 +73,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
                                 }
                                 onClick={this.handleTabChange.bind(this, index)}
                             >
-                                {child.props.icon ? <Icon name={child.props.icon} /> : null}
+                                {child.props.icon ? <child.props.icon /> : null}
                                 {child.props.title}
                                 {child.props.badge != undefined ? (
                                     <div className="w-tabs-badge">{child.props.badge}</div>
@@ -86,7 +86,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
                                         }}
                                         className={"tabs-close"}
                                     >
-                                        <Icon name={"ChromeClose"} />
+                                        <CloseOutlined />
                                     </a>
                                 )}
                             </div>

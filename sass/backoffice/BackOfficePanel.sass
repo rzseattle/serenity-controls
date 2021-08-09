@@ -28,12 +28,15 @@
 
 
         .app-icon
+
             background-color: #0078D7
             width: 60px
             text-align: center
             margin-right: 10px
             cursor: pointer
-
+            padding-top: 4px
+            svg
+                font-size: 25px
             &:hover
                 background-color: #124B7D
                 transition: background-color 200ms linear
@@ -99,12 +102,10 @@
                 color: #438eb9
                 background-color: #F8F8F8
                 color: #585858
-                font-weight: 400
                 display: block
 
 
                 height: 35px
-                padding: - 15px
                 padding-left: 7px
                 font-size: 13px
                 border-bottom: 1px solid #e5e5e5
@@ -113,15 +114,16 @@
                 &:hover
                     border-left-color: #0078D7
                     background-color: #ececec
-                i
+                svg
                     width: 30px
-                    font-size: 18px
-                    line-height: 35px
+                    height: 100%
                     color: #57889c
+                    padding: 8px 0 8px
+
                 span
                     display: inline-block
                     line-height: 35px
-                    vertical-align: bottom
+                    vertical-align: top
 
             .menu-section-section-opened
                 overflow: hidden
@@ -152,6 +154,13 @@
                         background-color: #f9f9f9
                     &:first-child
                         border-top: none
+
+
+                    .menu-link-title-icon
+                        color:  grey
+                        height: 100%
+                        vertical-align: text-bottom
+                        margin-right: 4px
 
 
 

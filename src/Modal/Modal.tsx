@@ -2,7 +2,6 @@ import React from "react";
 import "./Modal.sass";
 import { Positioner } from "../Positioner";
 import { IPositionCalculatorOptions } from "../lib/PositionCalculator";
-import { Icon } from "../Icon";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 import { Close } from "@material-ui/icons";
@@ -23,7 +22,7 @@ export interface IModalProps {
     recalculatePosition?: boolean;
     showHideLink?: boolean;
     title?: string;
-    icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
     shadow?: boolean;
     layer?: boolean;
     width?: string | number;

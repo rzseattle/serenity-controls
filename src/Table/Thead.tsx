@@ -4,9 +4,8 @@ import { IFilter } from "../filters/Intefaces";
 import { Modal } from "../Modal";
 import { RelativePositionPresets } from "../Positioner";
 import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
-import { Icon } from "../Icon";
 import Tooltip from "../Tooltip/Tooltip";
-import { Filter, Filter1, FilterList } from "@material-ui/icons";
+import { Filter, FilterList } from "@material-ui/icons";
 
 interface ITheadProps {
     selectable: boolean;
@@ -64,11 +63,11 @@ export default React.memo((props: ITheadProps) => {
                                         relativeSettings={RelativePositionPresets.topMiddle}
                                         content={column.header.tooltip}
                                     >
-                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                        {column.header.icon && <column.header.icon />} {column.caption}
                                     </Tooltip>
                                 ) : (
                                     <>
-                                        {column.header.icon && <Icon name={column.header.icon} />} {column.caption}
+                                        {column.header.icon && <column.header.icon />} {column.caption}
                                     </>
                                 )}
                                 {column.filter.length > 0 && (

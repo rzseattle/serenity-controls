@@ -1,16 +1,18 @@
 import * as React from "react";
-import { Icon } from "../Icon";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core";
+import { ChevronLeftOutlined, ChevronRightOutlined, OpenInBrowser, OpenInNew } from "@material-ui/icons";
 
 export interface IMenuSection {
     active: boolean;
     elements: IMenuElement[];
-    icon: string;
+    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
     opened: boolean;
     title: string;
 }
 
 export interface IMenuElement {
-    icon: string;
+    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
     route: string;
     title: string;
 }
@@ -90,45 +92,48 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
                 onMouseLeave={this.handleMenuLeave}
                 style={style}
             >
-                {this.props.elements.map((el, index) => (
-                    <div className="menu-section" key={index}>
-                        <div
-                            className="menu-section-title"
-                            onClick={() => this.setState({ currentMenuOpened: index })}
-                            onMouseEnter={() => this.handleTitleEnter(index)}
-                        >
-                            <Icon name={el.icon} />
-                            <span>{el.title}</span>
-                        </div>
-                        <div
-                            className={
-                                "menu-section-section menu-section-section-" +
-                                (index == this.state.currentMenuOpened ? "opened" : "closed")
-                            }
-                        >
-                            {!this.state.expanded && <div className="section-inner-title">{el.title}</div>}
-                            {el.elements.map((subelement) => (
-                                <div
-                                    key={subelement.title}
-                                    className="menu-link"
-                                    onClick={() => this.handleElementClick(subelement)}
-                                >
-                                    {subelement.title}
+                {this.props.elements.map((el, index) => {
+                    return (
+                        <div className="menu-section" key={index}>
+                            <div
+                                className="menu-section-title"
+                                onClick={() => this.setState({ currentMenuOpened: index })}
+                                onMouseEnter={() => this.handleTitleEnter(index)}
+                            >
+                                <el.icon />
+                                <span>{el.title}</span>
+                            </div>
+                            <div
+                                className={
+                                    "menu-section-section menu-section-section-" +
+                                    (index == this.state.currentMenuOpened ? "opened" : "closed")
+                                }
+                            >
+                                {!this.state.expanded && <div className="section-inner-title">{el.title}</div>}
+                                {el.elements.map((subelement) => (
                                     <div
-                                        onClick={(event) => this.handleElementClickOpen(subelement, event)}
-                                        className={"menu-link-open-window"}
+                                        key={subelement.title}
+                                        className="menu-link"
+                                        onClick={() => this.handleElementClick(subelement)}
                                     >
-                                        <Icon name={"OpenInNewWindow"} />
+                                        <subelement.icon className={"menu-link-title-icon"} />
+                                        {subelement.title}
+                                        <div
+                                            onClick={(event) => this.handleElementClickOpen(subelement, event)}
+                                            className={"menu-link-open-window"}
+                                        >
+                                            <OpenInNew />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
 
                 {!this.props.mobile && (
                     <div className="menu-collapse " onClick={this.changeExpandState}>
-                        <Icon name={this.state.expanded ? "DoubleChevronLeftMed" : "DoubleChevronLeftMedMirrored"} />
+                        <i>{this.state.expanded ? <ChevronLeftOutlined /> : <ChevronRightOutlined />}</i>
                     </div>
                 )}
             </div>

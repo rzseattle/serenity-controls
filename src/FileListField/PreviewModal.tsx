@@ -6,6 +6,7 @@ import { IFileViewerProps } from "./FileListsField";
 import { getViewer, globalTransformFilePath } from "./utils";
 import { download } from "../Downloader";
 import { fI18n } from "../lib";
+import { CloudDownloadOutlined, FileCopyOutlined, OpenInNewOutlined, PrintOutlined } from "@material-ui/icons";
 
 interface IPreviewModal extends IFileViewerProps {
     onHide: () => any;
@@ -23,7 +24,7 @@ export const PreviewModal = (props: IPreviewModal) => {
                         {
                             key: "f0",
                             label: fI18n.t("frontend:file.download"),
-                            icon: "Download",
+                            icon: CloudDownloadOutlined,
                             onClick: () => {
                                 // window.open(parsePath(this.props.downloadConnector(file)));
                                 download(file.path);
@@ -32,7 +33,7 @@ export const PreviewModal = (props: IPreviewModal) => {
                         {
                             key: "f1",
                             label: fI18n.t("frontend:file.print"),
-                            icon: "Print",
+                            icon: PrintOutlined,
                             onClick: () => {
                                 // window.open(parsePath(this.props.downloadConnector(file)));
                                 printFile(file);
@@ -41,7 +42,7 @@ export const PreviewModal = (props: IPreviewModal) => {
                         {
                             key: "f2",
                             label: fI18n.t("frontend:file.copyLink"),
-                            icon: "Copy",
+                            icon: FileCopyOutlined,
                             onClick: () => {
                                 (document.getElementsByClassName(
                                     "w-file-preview-input",
@@ -52,7 +53,7 @@ export const PreviewModal = (props: IPreviewModal) => {
                         {
                             key: "f3",
                             label: fI18n.t("frontend:file.openInNewWindow"),
-                            icon: "OpenInNewWindow",
+                            icon: OpenInNewOutlined,
                             onClick: () => {
                                 window.open(file.path);
                             },

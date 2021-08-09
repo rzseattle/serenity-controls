@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Icon } from "../Icon";
+
 import { LoadingIndicator } from "../LoadingIndicator";
 import "./Copyable.sass";
+import { DoneOutlined, FileCopyOutlined } from "@material-ui/icons";
 interface ICopyableProps {
     toCopy?: string;
     getToCopyString?: Promise<string>;
@@ -19,7 +20,7 @@ export class Copyable extends React.Component<ICopyableProps> {
     };
 
     public state = {
-        icon: "Copy",
+        icon: FileCopyOutlined,
         copyInProgress: false,
         resultOfPromise: "",
         isLoading: false,
@@ -38,7 +39,7 @@ export class Copyable extends React.Component<ICopyableProps> {
                 document.execCommand("copy");
                 selection.removeAllRanges();
 
-                this.setState({ icon: "CheckMark", copyInProgress: false });
+                this.setState({ icon: DoneOutlined, copyInProgress: false });
 
                 setTimeout(() => {
                     this.setState({ icon: "Copy" });
@@ -66,6 +67,7 @@ export class Copyable extends React.Component<ICopyableProps> {
         const { icon, copyInProgress, resultOfPromise, isLoading } = this.state;
         const { toCopy, hideContent, label, getToCopyString } = this.props;
 
+        const Icon = icon;
         return (
             <span className="w-copyable">
                 {!hideContent && <span ref={(el) => (this.node = el)}>{this.props.children}</span>}
@@ -83,7 +85,7 @@ export class Copyable extends React.Component<ICopyableProps> {
                             <LoadingIndicator />
                         </div>
                     ) : (
-                        <Icon name={icon} />
+                        <Icon />
                     )}
                 </a>
             </span>

@@ -2,7 +2,6 @@ import * as React from "react";
 
 import "./Tree.sass";
 
-import { Icon } from "../Icon";
 import { useEffect, useState } from "react";
 import { deepCopy } from "../lib";
 
@@ -82,18 +81,7 @@ export const Tree = (props: ICheckboxProps) => {
 
     const [expanded, setExpanded] = useState(tmpExpanded);
 
-    let icons = {
-        check: <Icon name="CheckMark" />,
-        uncheck: <Icon name="Checkbox" />,
-        halfCheck: <span className="rct-icon rct-icon-half-check" />,
-        expandClose: <Icon name="ChevronRight" />,
-        expandOpen: <Icon name="ChevronDown" />,
-        expandAll: <span className="rct-icon rct-icon-expand-all" />,
-        collapseAll: <span className="rct-icon rct-icon-collapse-all" />,
-        parentClose: <Icon name="FolderHorizontal" />,
-        parentOpen: <Icon name="OpenFolderHorizontal" />,
-        leaf: <Icon name="Document" />,
-    };
+    let icons = {};
     if (props.icons !== undefined) {
         icons = { ...icons, ...props.icons };
     }

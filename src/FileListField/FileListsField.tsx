@@ -5,9 +5,8 @@ import { IFieldProps } from "../fields/Interfaces";
 
 import { fI18n } from "../lib";
 
-import { Icon } from "../Icon";
 import { SortEnd } from "react-sortable-hoc";
-import { formatBytes, isImage, globalTransformFilePath, getViewer } from "./utils";
+import { formatBytes, getViewer, globalTransformFilePath, isImage } from "./utils";
 import { SortableImageList } from "./SortableImageList";
 import { PreviewModal } from "./PreviewModal";
 
@@ -16,6 +15,13 @@ import { download } from "../Downloader";
 import { alertDialog } from "../AlertDialog";
 import { confirmDialog } from "../ConfirmDialog";
 import { RelativePositionPresets } from "../Positioner";
+import {
+    AddOutlined,
+    CloseOutlined,
+    CloudDownloadOutlined,
+    DescriptionOutlined,
+    ImageOutlined,
+} from "@material-ui/icons";
 
 export interface IFile {
     key: number;
@@ -174,7 +180,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                         <p>Drop files here...</p>
                                     ) : (
                                         <span>
-                                            <Icon name={"Add"} />{" "}
+                                            <AddOutlined />{" "}
                                             {this.props.buttonTitle
                                                 ? this.props.buttonTitle
                                                 : fI18n.t("frontend:file.add")}{" "}
@@ -195,7 +201,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                               <div className="w-file-list-element" key={el.key}>
                                   <div className="w-file-list-name">
                                       <a onClick={this.handleFileClick.bind(this, index)}>
-                                          <Icon name={isImage(el.name) ? "Photo2" : "TextDocument"} />
+                                          {isImage(el.name) ? <ImageOutlined /> : <DescriptionOutlined />}
                                           {el.name}
                                       </a>
                                       {!el.uploaded && (
@@ -206,7 +212,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                   </div>
                                   <div className="w-file-list-size">
                                       <a href={transformFilePath(el)} download={true}>
-                                          <Icon name={"Download"} />
+                                          <CloudDownloadOutlined />
                                       </a>
                                   </div>
                                   <div className="w-file-list-size">{formatBytes(el.size)}</div>
@@ -221,7 +227,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                                   );
                                               }}
                                           >
-                                              <Icon name={"Delete"} />{" "}
+                                              <CloseOutlined />{" "}
                                           </a>
                                       </div>
                                   )}

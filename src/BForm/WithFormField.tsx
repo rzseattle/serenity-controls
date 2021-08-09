@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Copyable } from "../Copyable";
-import { Icon } from "../Icon";
+import { OpenInNewOutlined } from "@material-ui/icons";
 
 export interface IwithFormFieldProps {
     /**
@@ -97,7 +97,7 @@ export const withFormField = <P extends object>(Component: React.ComponentType<P
 
                                 {props.onInfoClick && (
                                     <a style={{ float: "right" }} onClick={props.onInfoClick}>
-                                        <Icon name={"OpenInNewWindow"} />
+                                        <OpenInNewOutlined />
                                     </a>
                                 )}
                             </label>

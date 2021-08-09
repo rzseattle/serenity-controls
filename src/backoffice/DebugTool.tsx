@@ -1,13 +1,9 @@
 import * as React from "react";
-import { Icon } from "../Icon";
-import Tooltip from "../Tooltip/Tooltip";
-import { PrintJSON } from "../PrintJSON";
-import { BackofficeStore } from "./BackofficeStore";
-import "./DebugTool.sass";
 import { useState } from "react";
 
+import "./DebugTool.sass";
+
 import { Modal } from "../Modal";
-import { LoadingIndicator } from "../LoadingIndicator";
 import { RouteVisualization } from "./RouteVisualization";
 import { Comm } from "../lib";
 
@@ -34,7 +30,7 @@ const Cache = () => {
                 });
             }}
         >
-            <Icon name={"EraseTool"} />
+            "EraseTool"
         </span>
     );
 };
@@ -43,9 +39,7 @@ const StoryBookHelper = () => {
     const [opened, setOpened] = useState(false);
     return (
         <>
-            <span onClick={() => setOpened(true)}>
-                <Icon name={"DietPlanNotebook"} />
-            </span>
+            <span onClick={() => setOpened(true)}>"DietPlanNotebook"</span>
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">
                     <iframe src="http://frontend-lib.org:3000/storybook/" />
@@ -60,7 +54,8 @@ const JSON2TypescriptHelper = () => {
     return (
         <>
             <span onClick={() => setOpened(true)}>
-                <Icon name={"TypeScriptLanguage"} />
+                {/*<Icon name={"TypeScriptLanguage"} />*/}
+                ikona
             </span>
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">
@@ -76,7 +71,8 @@ const RoutingVisualHelper = () => {
     return (
         <>
             <span onClick={() => setOpened(true)}>
-                <Icon name={"NumberedList"} />
+                {/*<Icon name={"NumberedList"} />*/}
+                list
             </span>
             <Modal show={opened} title="Route List" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">

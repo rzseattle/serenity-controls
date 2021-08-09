@@ -2,7 +2,7 @@ import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
 import React from "react";
 
 import "./Checkbox.sass";
-import { Icon } from "../Icon";
+import { CheckOutlined, CloseOutlined } from "@material-ui/icons";
 
 export interface ICheckboxProps extends IFieldProps {
     value?: any;
@@ -69,7 +69,7 @@ export class Checkbox extends React.Component<ICheckboxProps, IChecboxState> {
             return (
                 <div className="w-checkbox">
                     <div className="w-field-presentation w-field-presentation-checkbox ">
-                        <Icon name={props.checked ? "CheckMark" : "ChromeClose"} />
+                        {props.checked ? <CheckOutlined /> : <CloseOutlined />}
                     </div>
                 </div>
             );

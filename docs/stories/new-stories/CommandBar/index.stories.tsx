@@ -3,6 +3,7 @@ import React from "react";
 import { CommandBar } from "../../../../src/CommandBar";
 import { Icon, IIconProps } from "../../../../src/Icon";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import { RefreshOutlined, RemoveOutlined } from "@material-ui/icons";
 const items = [
     {
         key: "f1",
@@ -25,7 +26,7 @@ const items = [
             {
                 key: "f4",
                 label: "Sub Option 1",
-                icon: "Sync",
+                icon: RefreshOutlined,
                 onClick: () => {
                     alert("clicked");
                 },
@@ -41,7 +42,7 @@ const items = [
             {
                 key: "f6",
                 label: "This is option with very very very long text inside",
-                icon: "Delete",
+                icon: RemoveOutlined,
                 onClick: () => {
                     alert("clicked");
                 },

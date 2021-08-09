@@ -1,8 +1,9 @@
 import * as React from "react";
 
 import "./Panel.sass";
-import { Icon } from "../Icon";
 import { CommandBar, ICommand } from "../CommandBar";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core";
 
 export interface IPanelProps {
     /**
@@ -25,7 +26,7 @@ export interface IPanelProps {
     /**
      * Icon
      */
-    icon?: string;
+    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
 }
 
 export class Panel extends React.PureComponent<IPanelProps> {
@@ -33,7 +34,7 @@ export class Panel extends React.PureComponent<IPanelProps> {
         noPadding: false,
         noBottomMargin: true,
         title: "",
-        icon: "",
+        icon: null,
         toolbar: [],
     };
 
@@ -50,7 +51,7 @@ export class Panel extends React.PureComponent<IPanelProps> {
             <div className={classes.join(" ")}>
                 {props.title && (
                     <div className="title ">
-                        {props.icon && <Icon name={props.icon} />}
+                        {props.icon && <props.icon />}
                         {props.title}
                         {props.toolbar.length > 0 && (
                             <div className="panel-toolbar">

@@ -11,7 +11,6 @@ import { LoadingIndicator } from "../LoadingIndicator";
 import { IModalProps, Modal } from "../Modal";
 import { Select } from "../fields/Select";
 import { fI18n, Comm } from "../lib";
-import { Icon } from "../Icon";
 
 import { BackOfficeContainer } from "./BackOfficeContainer";
 import { BackofficeStore } from "./BackofficeStore";
@@ -24,7 +23,9 @@ import DebugCommLog from "./DebugCommLog";
 import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
-import { AccountCircle } from "@material-ui/icons";
+import { AccountCircle, ExitToAppOutlined } from "@material-ui/icons";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare let PRODUCTION: boolean;
@@ -35,7 +36,7 @@ if (PRODUCTION === undefined) {
 NProgress.configure({ parent: ".w-panel-body" });
 
 interface IBackOfficePanelProps {
-    icon?: string;
+    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
     onlyBody?: boolean;
     isSub?: boolean;
     title?: string;
@@ -274,12 +275,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                     {!this.state.onlyBody && (
                         <div className="w-panel-top">
                             <div className="app-icon" onClick={this.handleAppIconClicked}>
-                                <i
-                                    className={
-                                        "ms-Icon ms-Icon--" +
-                                        (this.state.layout != "mobile" ? this.props.icon : "CollapseMenu")
-                                    }
-                                />
+                                {this.state.layout != "mobile" ? <this.props.icon /> : "CollapseMenu"}
                             </div>
                             <div className="app-title">{this.props.title}</div>
 
@@ -323,7 +319,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                                     key={command.key}
                                                     onClick={(ev) => command.onClick(ev, null)}
                                                 >
-                                                    <Icon name={command.icon} /> {command.label}
+                                                    <command.icon /> {command.label}
                                                 </div>
                                             );
                                         }
@@ -347,7 +343,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 </div>
                                 <div style={{ padding: 10 }}>
                                     <a href={Comm.basePath + "/access/logout"}>
-                                        <Icon name="SignOut" /> {fI18n.t("frontend:logout")}
+                                        <ExitToAppOutlined /> {fI18n.t("frontend:logout")}
                                     </a>
                                 </div>
                             </Modal>
@@ -443,7 +439,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                             });
                                         }}
                                     >
-                                        {el.icon && <Icon name={el.icon} />} {el.label}
+                                        {el.icon && <el.icon />} {el.label}
                                     </div>
                                 );
                             })}

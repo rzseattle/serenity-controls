@@ -2,12 +2,11 @@ import * as React from "react";
 import { ICellTemplate, IColumnData, IEventCallback, IHeaderClickEvent } from "./Interfaces";
 import { IOption } from "../fields/Interfaces";
 
-import { IFilter, NumericFilter, TextFilter, DateFilter, SwitchFilter, SelectFilter } from "../filters";
-import { Icon } from "../Icon";
+import { DateFilter, IFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter } from "../filters";
 import EditableTextCell from "./cells/editable/EditableTextCell";
-import { IEditableCell, IEditableCellProps } from "./cells/editable/IEditableCellProps";
-import { ValidationError } from "../BForm/ValidationError";
+import { IEditableCell } from "./cells/editable/IEditableCellProps";
 import EditableBooleanCell from "./cells/editable/EditableBooleanCell";
+import { CheckOutlined, CloseOutlined, EditOutlined } from "@material-ui/icons";
 
 export default class ColumnHelper {
     protected data: IColumnData;
@@ -181,7 +180,7 @@ export default class ColumnHelper {
             field,
             caption,
             classTemplate: (row, column) => ["center", row[column.field] == "1" ? "darkgreen" : "darkred"],
-            template: (value) => <Icon name={value == "1" ? "CheckMark" : "Clear"} />,
+            template: (value) => (value == "1" ? <CheckOutlined /> : <CloseOutlined />),
             filter: [
                 {
                     field,
@@ -275,7 +274,7 @@ export default class ColumnHelper {
                 return (
                     <div className="w-table-editable-cell-not-edited">
                         <div style={{ color: "lightgrey" }}>
-                            <Icon name="edit" />
+                            <EditOutlined />
                         </div>
                         <div>{currTemplate ? currTemplate(value, row, column, rowContainer) : value}</div>
                     </div>

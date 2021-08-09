@@ -1,6 +1,6 @@
 import * as React from "react";
 import IConnectionElement from "./IConnectionElement";
-import { Icon } from "../Icon";
+import { CancelOutlined } from "@material-ui/icons";
 
 interface IConnectionsFieldEntryProps {
     item: IConnectionElement;
@@ -38,7 +38,7 @@ export class ConnectionsFieldEntry extends React.PureComponent<IConnectionsField
                     <>
                         {item.icon ? (
                             <div className="prepend">
-                                <Icon name={item.icon} />
+                                <item.icon />
                             </div>
                         ) : (
                             <div style={{ width: 5 }} />
@@ -47,7 +47,7 @@ export class ConnectionsFieldEntry extends React.PureComponent<IConnectionsField
                     </>
                 )}
                 <div className="delete" onClick={() => this.handleDeleteClick(item.value)}>
-                    <Icon name="Cancel" />
+                    <CancelOutlined />
                 </div>
             </div>
         );

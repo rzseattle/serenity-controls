@@ -50,8 +50,7 @@ export class CommandMenu extends React.PureComponent<IProps, IState> {
                                     if (item !== null && item !== false) {
                                         return (
                                             <div key={item.key} onClick={(event) => item.onClick(event, context)}>
-                                                {item.icon && <i className={"ms-Icon ms-Icon--" + item.icon} />}{" "}
-                                                {item.label}
+                                                {item.icon && <item.icon />} {item.label}
                                             </div>
                                         );
                                     }
