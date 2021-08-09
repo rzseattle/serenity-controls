@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Trans } from "react-i18next";
 import { IColumnData } from "./Interfaces";
-import { Icon } from "../Icon";
 import { fI18n } from "../lib";
+import { FirstPage, LastPage, NavigateBefore, NavigateNext, Refresh } from "@material-ui/icons";
 
 interface IFooterProps {
     count: number;
@@ -55,10 +54,10 @@ export default class Footer extends React.Component<IFooterProps> {
                 <td colSpan={props.columns.length + 1} className="w-table-footer-main">
                     <div className="w-table-pager">
                         <div onClick={(e) => props.currentPageChanged(1)}>
-                            <Icon name={"DoubleChevronLeft12"} />
+                            <FirstPage />
                         </div>
                         <div onClick={(e) => props.currentPageChanged(Math.max(1, props.currentPage - 1))}>
-                            <Icon name={"ChevronLeft"} />
+                            <NavigateBefore />
                         </div>
                         {arr.map((el, i) => (
                             <div
@@ -70,10 +69,10 @@ export default class Footer extends React.Component<IFooterProps> {
                             </div>
                         ))}
                         <div onClick={(e) => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}>
-                            <Icon name={"ChevronRight"} />
+                            <NavigateNext />
                         </div>
                         <div onClick={(e) => props.currentPageChanged(pages)}>
-                            <Icon name={"DoubleChevronRight12"} />
+                            <LastPage />
                         </div>
                     </div>
 
@@ -101,7 +100,7 @@ export default class Footer extends React.Component<IFooterProps> {
                                 this.props.reload();
                             }}
                         >
-                            <Icon name={"Sync"} />
+                            <Refresh />
                         </button>
                     </div>
                 </td>

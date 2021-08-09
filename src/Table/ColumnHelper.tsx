@@ -220,6 +220,7 @@ export default class ColumnHelper {
         type: "text" | "textarea" | "bool" | "switch" | "select",
         enabled = true,
         content?: IOption[],
+        valueGetter?: (row: any[]) => string,
     ): ColumnHelper {
         if (enabled === false) {
             return this;
@@ -237,6 +238,8 @@ export default class ColumnHelper {
         };
 
         this.className("w-table-editable-cell");
+
+        const currTemplate = this.data.template;
         this.data.template = (value, row, column, rowContainer) => {
             const columnsInEditState = rowContainer.getData("columnsInEdit", {});
             const isInEditState = columnsInEditState[column.field] === true;
@@ -247,7 +250,7 @@ export default class ColumnHelper {
                 return (
                     <div className="w-table-editable-cell-edited">
                         <Component
-                            inputValue={value}
+                            inputValue={valueGetter ? valueGetter(row) : value}
                             onSubmit={(value) => {
                                 const result = fn(value, row, column);
                                 if (result === true) {
@@ -271,10 +274,10 @@ export default class ColumnHelper {
             } else {
                 return (
                     <div className="w-table-editable-cell-not-edited">
-                        <span style={{ color: "lightgrey" }}>
+                        <div style={{ color: "lightgrey" }}>
                             <Icon name="edit" />
-                        </span>{" "}
-                        {value}
+                        </div>
+                        <div>{currTemplate ? currTemplate(value, row, column, rowContainer) : value}</div>
                     </div>
                 );
             }

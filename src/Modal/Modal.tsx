@@ -5,6 +5,9 @@ import { IPositionCalculatorOptions } from "../lib/PositionCalculator";
 import { Icon } from "../Icon";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
+import { Close } from "@material-ui/icons";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core";
 
 export interface IModalProps {
     show: boolean;
@@ -20,7 +23,7 @@ export interface IModalProps {
     recalculatePosition?: boolean;
     showHideLink?: boolean;
     title?: string;
-    icon?: string;
+    icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
     shadow?: boolean;
     layer?: boolean;
     width?: string | number;
@@ -166,12 +169,12 @@ export class Modal extends React.PureComponent<IModalProps> {
                         >
                             {p.showHideLink && (
                                 <a className="w-modal-close" style={{}} onClick={this.handleClose}>
-                                    <Icon name="ChromeClose" />
+                                    <Close />
                                 </a>
                             )}
                             {p.title && (
                                 <div className="w-modal-title">
-                                    {p.icon && <Icon name={p.icon} />} {p.title}
+                                    {p.icon && <p.icon />} {p.title}
                                 </div>
                             )}
                             {this.props.show ? p.children : null}

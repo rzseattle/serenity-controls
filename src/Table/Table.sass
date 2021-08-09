@@ -42,7 +42,7 @@
             background-color: white
             min-width: 27px
             padding: 0 4px
-            height: 20px
+            height: 25px
             text-align: center
             //line-height: 25px
             padding: 4px
@@ -89,6 +89,7 @@
             box-shadow: 0 2px 15px 0 rgba(0, 0, 0, .15)
 
             > div
+
                 display: inline-block
                 margin-right: 20px
                 border-bottom: solid 1px grey
@@ -97,10 +98,13 @@
                     border-bottom: solid 1px red
 
                 > div
+                    vertical-align: sub
                     display: inline-block
                     margin-right: 5px
                     &.caption
+                        vertical-align: baseline
                     &.value
+                        vertical-align: baseline
                         font-weight: bold
                     &.remove
                         color: darkred
@@ -219,6 +223,8 @@
             .w-table-editable-cell
                 padding: 0
                 .w-table-editable-cell-not-edited
+                    div
+                        display: inline-block
                     padding: 6px
                     i
                         margin-right: 5px
@@ -307,9 +313,9 @@
                                 border-radius: 3px
                                 min-width: 20px
                                 padding: 0 4px
-                                height: 20px
+
                                 text-align: center
-                                line-height: 20px
+                                line-height: 25px
                                 cursor: pointer
                                 display: inline-block
 
@@ -318,6 +324,8 @@
                                 margin: 2px
                                 user-select: none
                                 outline: 0
+                                svg
+                                    vertical-align: middle
                                 &:hover
                                     color: darkred
                                     border-color: darkred

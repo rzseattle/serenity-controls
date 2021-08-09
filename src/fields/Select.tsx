@@ -8,6 +8,7 @@ import { fI18n } from "../lib";
 import { toOptions } from "./Utils";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
+import { ArrowDownward, Close, ExpandMore } from "@material-ui/icons";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
@@ -375,10 +376,10 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                             )}
                             {props.allowClear && props.value !== null && (
                                 <div className="w-select-clear" onClick={this.handleClear}>
-                                    <Icon name={"ChromeClose"} />
+                                    <Close style={{ verticalAlign: "middle" }} />
                                 </div>
                             )}
-                            <Icon name={"ChevronDown"} />
+                            <ExpandMore />
                         </div>
                     )}
                     {this.state.dropdownVisible && props.mode === "dropdown" && (

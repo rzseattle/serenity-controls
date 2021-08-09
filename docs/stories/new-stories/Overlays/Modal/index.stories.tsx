@@ -7,6 +7,7 @@ import { Comm } from "../../../../../src/lib";
 import { Modal } from "../../../../../src/Modal";
 import { RelativePositionPresets } from "../../../../../src/Positioner";
 import { Placeholder } from "../../../../../src/Placeholder";
+import { Mail, MailOutline, MailSharp } from "@material-ui/icons";
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
@@ -122,12 +123,12 @@ storiesOf("Overlays/Modal", module)
         </Modal>
     ))
     .add("Icon", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"} width={600}>
+        <Modal show={true} title={"Test title"} showHideLink={true} icon={MailOutline} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
     .add("Without shadow", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true} icon={"Mail"} shadow={false} width={600}>
+        <Modal show={true} title={"Test title"} showHideLink={true} icon={MailOutline} shadow={false} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
@@ -136,7 +137,7 @@ storiesOf("Overlays/Modal", module)
             show={true}
             title={"Test title"}
             showHideLink={true}
-            icon={"Mail"}
+            icon={MailSharp}
             shadow={false}
             layer={false}
             width={600}

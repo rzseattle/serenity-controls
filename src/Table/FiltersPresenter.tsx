@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon } from "../Icon";
+import { ArrowDownward, ArrowUpward, Close, FilterList } from "@material-ui/icons";
 
 export default function (props: any) {
     const isVisible: boolean = Object.entries(props.order).length > 0 || Object.entries(props.filters).length > 0;
@@ -8,12 +8,10 @@ export default function (props: any) {
             <div className="w-table-presenter-inner">
                 {Object.entries(props.order).map(([field, el]: any, index) => (
                     <div key={index}>
-                        <div>
-                            <Icon name={el.dir == "asc" ? "SortDown" : "SortUp"} />
-                        </div>
+                        <div>{el.dir == "asc" ? <ArrowDownward /> : <ArrowUpward />}</div>
                         <div className="caption">{el.caption}</div>
                         <div className="remove" onClick={(e) => props.orderDelete(field)}>
-                            <Icon name={"Clear"} />
+                            <Close />
                         </div>
                     </div>
                 ))}
@@ -21,12 +19,12 @@ export default function (props: any) {
                 {Object.entries(props.filters).map(([key, el]: any) => (
                     <div key={key}>
                         <div>
-                            <i className="ms-Icon ms-Icon--Filter" />
+                            <FilterList />
                         </div>
                         <div className="caption">{el.caption}</div>
                         <div className="value" dangerouslySetInnerHTML={{ __html: el.label }} />
                         <div className="remove" onClick={(e) => props.FilterDelete(key)}>
-                            <Icon name={"Clear"} />
+                            <Close />
                         </div>
                     </div>
                 ))}

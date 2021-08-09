@@ -6,6 +6,7 @@ import { RelativePositionPresets } from "../Positioner";
 import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
 import { Icon } from "../Icon";
 import Tooltip from "../Tooltip/Tooltip";
+import { Filter, Filter1, FilterList } from "@material-ui/icons";
 
 interface ITheadProps {
     selectable: boolean;
@@ -129,7 +130,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                         onClick={this.handleTriggerClicked}
                         ref={this.triggerRef}
                     >
-                        <i className="ms-Icon ms-Icon--Filter" />
+                        <FilterList />
                     </div>
 
                     {this.state.show && (

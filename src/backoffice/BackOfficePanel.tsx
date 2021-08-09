@@ -24,6 +24,7 @@ import DebugCommLog from "./DebugCommLog";
 import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
+import { AccountCircle } from "@material-ui/icons";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare let PRODUCTION: boolean;
@@ -290,7 +291,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
                             <div className="app-user" onClick={() => this.setState({ userMenuVisible: true })}>
                                 <div className="app-user-icon">
-                                    <Icon name="Contact" />
+                                    <AccountCircle />
                                 </div>
                                 {this.props.user.login}
                             </div>
@@ -308,12 +309,12 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </div>
                             {topActions.length > 0 && (
                                 <div className="w-backoffice-panel-top-actions">
-                                    {topActions.map((action: ICommand | React.ElementType) => {
+                                    {topActions.map((action: ICommand | React.ElementType, index) => {
                                         if (action === null) {
                                             return null;
                                         } else if (React.isValidElement(action)) {
                                             const Component = action as React.ElementType;
-                                            return action;
+                                            return <React.Fragment key={index}>{action}</React.Fragment>;
                                         } else if ((action as ICommand).label !== undefined) {
                                             const command = action as ICommand;
                                             return (
