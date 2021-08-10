@@ -1,8 +1,8 @@
-import { IFieldChangeEvent, IFieldProps, IOption } from "./Interfaces";
+import { IFieldChangeEvent, IFieldProps } from "./Interfaces";
 import React from "react";
 
 import "./Checkbox.sass";
-import { CheckOutlined, CloseOutlined } from "@material-ui/icons";
+import { MdDone } from "react-icons/all";
 
 export interface ICheckboxProps extends IFieldProps {
     value?: any;
@@ -69,7 +69,10 @@ export class Checkbox extends React.Component<ICheckboxProps, IChecboxState> {
             return (
                 <div className="w-checkbox">
                     <div className="w-field-presentation w-field-presentation-checkbox ">
-                        {props.checked ? <CheckOutlined /> : <CloseOutlined />}
+                        <div className={"w-checkbox-element " + (this.state.checked && "w-checkbox-element-selected")}>
+                            {props.checked ? <MdDone /> : null}
+                        </div>
+                        {this.props.label !== "" && <span>{this.props.label}</span>}
                     </div>
                 </div>
             );
@@ -78,7 +81,9 @@ export class Checkbox extends React.Component<ICheckboxProps, IChecboxState> {
         return (
             <div className="w-checkbox">
                 <label onClick={this.handleOnChange}>
-                    <div className={"w-checkbox-element " + (this.state.checked && "w-checkbox-element-selected")} />
+                    <div className={"w-checkbox-element " + (this.state.checked && "w-checkbox-element-selected")}>
+                        {this.state.checked ? <MdDone /> : null}
+                    </div>
                     {this.props.label !== "" && <span>{this.props.label}</span>}
                 </label>
             </div>

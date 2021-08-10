@@ -1,6 +1,6 @@
 import * as React from "react";
 import IConnectionElement from "./IConnectionElement";
-import { CancelOutlined } from "@material-ui/icons";
+import { TiCancel } from "react-icons/all";
 
 interface IConnectionsFieldEntryProps {
     item: IConnectionElement;
@@ -47,7 +47,7 @@ export class ConnectionsFieldEntry extends React.PureComponent<IConnectionsField
                     </>
                 )}
                 <div className="delete" onClick={() => this.handleDeleteClick(item.value)}>
-                    <CancelOutlined />
+                    <TiCancel />
                 </div>
             </div>
         );

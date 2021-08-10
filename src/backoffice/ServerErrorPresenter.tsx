@@ -31,15 +31,15 @@ export class ServerErrorPresenter extends React.Component<IProps, {}> {
             );
         }
 
-        if (!PRODUCTION && error instanceof RouterException) {
-            return (
-                <div style={style}>
-                    {error.message}
-                    <hr />
-                    <RouteVisualization />
-                </div>
-            );
-        }
+        // if ( typeof(PRODUCTION) !== undefined && !PRODUCTION && error instanceof RouterException) {
+        //     return (
+        //         <div style={style}>
+        //             {error.message}
+        //             <hr />
+        //             <RouteVisualization />
+        //         </div>
+        //     );
+        // }
 
         return (
             <div style={style}>

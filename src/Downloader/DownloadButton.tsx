@@ -3,7 +3,8 @@ import React, { useCallback, useState } from "react";
 import "./DownloadButton.sass";
 import { fI18n } from "../lib/I18n";
 import { download, IDownloadSuccessParams } from "./Downloader";
-import { GetAppOutlined, SyncOutlined } from "@material-ui/icons";
+import { IoSyncOutline } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 interface IDownloadButtonProps {
     url: string;
@@ -45,7 +46,7 @@ export const DownloadButton = ({
             >
                 <div className={"w-download-button-icon" + (isLoading ? " w-download-button-icon-spin" : "")}>
                     {/*{isLoading && <LoadingIndicator />}*/}
-                    {!isLoading ? <GetAppOutlined /> : <SyncOutlined />}
+                    {!isLoading ? <CommonIcons.download style={{ verticalAlign: "text-top" }} /> : <IoSyncOutline />}
                 </div>
                 {mode !== "icon" && (
                     <div className="w-download-button-label"> {!isLoading ? label : downloadingLabel}</div>

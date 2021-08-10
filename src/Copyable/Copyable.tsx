@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { LoadingIndicator } from "../LoadingIndicator";
 import "./Copyable.sass";
-import { DoneOutlined, FileCopyOutlined } from "@material-ui/icons";
+import { BiCopy, MdDone } from "react-icons/all";
+
 interface ICopyableProps {
     toCopy?: string;
     getToCopyString?: Promise<string>;
@@ -20,7 +21,7 @@ export class Copyable extends React.Component<ICopyableProps> {
     };
 
     public state = {
-        icon: FileCopyOutlined,
+        icon: BiCopy,
         copyInProgress: false,
         resultOfPromise: "",
         isLoading: false,
@@ -39,10 +40,10 @@ export class Copyable extends React.Component<ICopyableProps> {
                 document.execCommand("copy");
                 selection.removeAllRanges();
 
-                this.setState({ icon: DoneOutlined, copyInProgress: false });
+                this.setState({ icon: MdDone, copyInProgress: false });
 
                 setTimeout(() => {
-                    this.setState({ icon: "Copy" });
+                    this.setState({ icon: BiCopy });
                 }, 500);
             } catch (e) {
                 alert("Can't copy, hit Ctrl+C!");

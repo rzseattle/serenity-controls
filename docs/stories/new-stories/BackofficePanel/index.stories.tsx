@@ -5,21 +5,21 @@ import { BackOfficePanel } from "../../../../src/backoffice";
 import { HeightAdjuster } from "../../../../src/HeightAdjuster";
 import { router } from "../../../../src/backoffice/Router";
 import demoPageOne from "./demoPageOne";
-import {
-    AssessmentOutlined,
-    AssignmentOutlined,
-    ComputerOutlined,
-    EventOutlined,
-    Language,
-    LocalShippingOutlined,
-    PeopleAltOutlined,
-    Public,
-    SettingsApplicationsOutlined,
-    SettingsOutlined,
-    ShoppingBasketOutlined,
-    ShoppingCartOutlined,
-    SubjectOutlined,
-} from "@material-ui/icons";
+
+
+import {     MdAssessment,
+    MdAssignment,
+    MdComputer,
+    MdEvent,
+    MdLanguage,
+    MdLocalShipping,
+    MdPeople,
+    MdPublic,
+    MdSettingsApplications,
+    MdSettings,
+    MdShoppingBasket,
+    MdShoppingCart,
+    MdSubject, } from "react-icons/all";
 
 const iframeCorrection = window.parent.document.getElementById("storybook-preview-iframe").getBoundingClientRect().top;
 
@@ -47,52 +47,52 @@ storiesOf("Backoffice Panel/BackofficePanel", module).add("Base", () => (
         <HeightAdjuster offsetTopCorrection={iframeCorrection}>
             <BackOfficePanel
                 user={{ login: "test" }}
-                icon={Public}
+                icon={MdPublic}
                 title="Test panel"
                 menu={[
                     {
-                        icon: Language,
+                        icon: MdLanguage,
                         title: "CMS ",
                         active: true,
                         opened: true,
                         elements: [
-                            { icon: Public, title: "Pages", route: "/test/page1" },
-                            { icon: SubjectOutlined, title: "Posts", route: "/test/page2" },
-                            { icon: EventOutlined, title: "Events", route: "/pages" },
+                            { icon: MdPublic, title: "Pages", route: "/test/page1" },
+                            { icon: MdSubject, title: "Posts", route: "/test/page2" },
+                            { icon: MdEvent, title: "Events", route: "/pages" },
                         ],
                     },
                     {
-                        icon: ShoppingCartOutlined,
+                        icon: MdShoppingCart,
                         title: "E-commerce ",
                         active: true,
                         opened: true,
                         elements: [
-                            { icon: SubjectOutlined, title: "Orders", route: "/pages" },
-                            { icon: PeopleAltOutlined, title: "Customers", route: "/pages" },
-                            { icon: LocalShippingOutlined, title: "Shipping", route: "/pages" },
-                            { icon: ShoppingBasketOutlined, title: "Products", route: "/pages" },
+                            { icon: MdSubject, title: "Orders", route: "/pages" },
+                            { icon: MdPeople, title: "Customers", route: "/pages" },
+                            { icon: MdLocalShipping, title: "Shipping", route: "/pages" },
+                            { icon: MdShoppingBasket, title: "Products", route: "/pages" },
                         ],
                     },
                     {
-                        icon: AssignmentOutlined,
+                        icon: MdAssignment,
                         title: "ERP ",
                         active: true,
                         opened: true,
                         elements: [
-                            { icon: SettingsApplicationsOutlined, title: "Production", route: "/pages" },
-                            { icon: AssessmentOutlined, title: "Reports", route: "/pages" },
-                            { icon: LocalShippingOutlined, title: "Logistic", route: "/pages" },
+                            { icon: MdSettingsApplications, title: "Production", route: "/pages" },
+                            { icon: MdAssessment, title: "Reports", route: "/pages" },
+                            { icon: MdLocalShipping, title: "Logistic", route: "/pages" },
                         ],
                     },
                     {
-                        icon: ComputerOutlined,
+                        icon: MdComputer,
                         title: "System ",
                         active: true,
                         opened: true,
                         elements: [
-                            { icon: PeopleAltOutlined, title: "Accounts", route: "/pages" },
-                            { icon: SettingsOutlined, title: "Settings", route: "/pages" },
-                            { icon: SubjectOutlined, title: "Logs", route: "/pages" },
+                            { icon: MdPeople, title: "Accounts", route: "/pages" },
+                            { icon: MdSettings, title: "Settings", route: "/pages" },
+                            { icon: MdSubject, title: "Logs", route: "/pages" },
                         ],
                     },
                 ]}

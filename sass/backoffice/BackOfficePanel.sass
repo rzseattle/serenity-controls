@@ -63,13 +63,14 @@
                 float: left
                 margin-top: 10px
                 margin-right: 10px
-                background-color: grey
+                background-color: lightgray
                 width: 30px
                 height: 30px
                 line-height: 30px
                 text-align: center
                 border-radius: 15px
-                font-size: 40px
+                font-size: 30px
+                color: black
             &:hover
                 background-color: #124B7D
                 transition: background-color 200ms linear
@@ -87,162 +88,6 @@
 
 
 
-
-
-    .w-panel-menu
-
-        z-index: 1003
-        background-color: #F9F9F9
-        border-right: solid 1px #d7d7d7
-
-
-
-        .menu-section
-            .menu-section-title
-                color: #438eb9
-                background-color: #F8F8F8
-                color: #585858
-                display: block
-
-
-                height: 35px
-                padding-left: 7px
-                font-size: 13px
-                border-bottom: 1px solid #e5e5e5
-                cursor: pointer
-                border-left: solid 4px transparent
-                &:hover
-                    border-left-color: #0078D7
-                    background-color: #ececec
-                svg
-                    width: 30px
-                    height: 100%
-                    color: #57889c
-                    padding: 8px 0 8px
-
-                span
-                    display: inline-block
-                    line-height: 35px
-                    vertical-align: top
-
-            .menu-section-section-opened
-                overflow: hidden
-                //max-height: 500px
-                //transition: max-height 0.45s linear
-
-            .menu-section-section-closed
-                max-height: 0
-                overflow: hidden
-                border: none !important
-                //transition: max-height 0.35s linear
-            .menu-section-section
-                background-color: white
-                border-bottom:  1px solid lightgrey
-
-                .menu-link
-                    font-size: 13px
-                    color: #585858
-                    display: block
-                    position: relative
-                    padding: 7px 30px 9px 37px
-                    margin: 0
-                    border-top: 1px dotted #e5e5e5
-                    font-weight: 400
-                    &:hover
-                        color:  #0078D7
-                        cursor: pointer
-                        background-color: #f9f9f9
-                    &:first-child
-                        border-top: none
-
-
-                    .menu-link-title-icon
-                        color:  grey
-                        height: 100%
-                        vertical-align: text-bottom
-                        margin-right: 4px
-
-
-
-                    .menu-link-open-window
-                        position: absolute
-                        right: 0
-                        top: 0
-                        height: 35px
-                        width: 25px
-
-                        text-align: center
-                        padding: 0
-                        padding-top: 10px
-                        &:hover
-                            background-color: lightgrey
-
-
-        .menu-collapse
-            margin-top: 10px
-            background-color: #F8F8F8
-            border-color: #e0e0e0
-            border-style: solid
-            border-width: 0 0 1px
-            text-align: center
-            padding: 3px 0
-            position: relative
-            border-bottom: none
-            &:before
-                content: " "
-                display: block
-                height: 0
-                border-top: 1px solid
-                border-color: inherit
-                position: absolute
-                left: 15px
-                right: 15px
-                top: 14px
-
-            i
-                border-color: #bbb
-                color: #aaa
-                background-color: #fff
-                padding: 0 5px
-                line-height: 24px
-                cursor: pointer
-                font-size: 14px
-                border-radius: 100%
-                border: 1px solid
-                position: relative
-                text-align: center
-
-        .w-menu-collapsed
-            .menu-section
-                position: relative
-                width: 60px
-                .menu-section-title
-                    >span
-                        display: none
-                    text-align: center
-                    padding-left: 0
-                    margin-left: -5px
-                    width: auto
-
-                .menu-section-section
-                    position: absolute
-                    left: 100%
-                    top: -1px
-                    z-index: 100
-                    width: 300px
-                    border: solid 1px lightgrey
-                    .section-inner-title
-                        //background-color: #EEEEEE
-                        background-color: #0078D7
-                        color: white
-                        height: 34px
-                        line-height: 34px
-                        font-weight: 500
-                        padding-left: 15px
-
-
-        .w-menu-expanded
-            width: 220px
 
 
 

@@ -5,7 +5,7 @@ import { Modal } from "../Modal";
 import { RelativePositionPresets } from "../Positioner";
 import { IColumnData, IFilterValue, IOrder } from "./Interfaces";
 import Tooltip from "../Tooltip/Tooltip";
-import { Filter, FilterList } from "@material-ui/icons";
+import { CommonIcons } from "../lib/CommonIcons";
 
 interface ITheadProps {
     selectable: boolean;
@@ -129,7 +129,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
                         onClick={this.handleTriggerClicked}
                         ref={this.triggerRef}
                     >
-                        <FilterList />
+                        <CommonIcons.filter />
                     </div>
 
                     {this.state.show && (

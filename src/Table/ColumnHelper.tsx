@@ -6,7 +6,7 @@ import { DateFilter, IFilter, NumericFilter, SelectFilter, SwitchFilter, TextFil
 import EditableTextCell from "./cells/editable/EditableTextCell";
 import { IEditableCell } from "./cells/editable/IEditableCellProps";
 import EditableBooleanCell from "./cells/editable/EditableBooleanCell";
-import { CheckOutlined, CloseOutlined, EditOutlined } from "@material-ui/icons";
+import { CommonIcons } from "../lib/CommonIcons";
 
 export default class ColumnHelper {
     protected data: IColumnData;
@@ -180,7 +180,7 @@ export default class ColumnHelper {
             field,
             caption,
             classTemplate: (row, column) => ["center", row[column.field] == "1" ? "darkgreen" : "darkred"],
-            template: (value) => (value == "1" ? <CheckOutlined /> : <CloseOutlined />),
+            template: (value) => (value == "1" ? <CommonIcons.check /> : <CommonIcons.close />),
             filter: [
                 {
                     field,
@@ -274,7 +274,7 @@ export default class ColumnHelper {
                 return (
                     <div className="w-table-editable-cell-not-edited">
                         <div style={{ color: "lightgrey" }}>
-                            <EditOutlined />
+                            <CommonIcons.edit />
                         </div>
                         <div>{currTemplate ? currTemplate(value, row, column, rowContainer) : value}</div>
                     </div>

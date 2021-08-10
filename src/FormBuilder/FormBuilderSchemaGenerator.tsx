@@ -1,15 +1,14 @@
 import * as React from "react";
 import { BDate, BForm, BSelect, BSwitch, BText, BTextarea } from "../BForm";
-import { IFieldChangeEvent, IOption } from "../fields";
-import { PrintJSON } from "../PrintJSON";
+import { IOption } from "../fields";
 import { deepCopy, fI18n } from "../lib";
 import { Row } from "../Row";
-
+import { CommonIcons } from "../lib/CommonIcons";
 import "./FormBuilderSchemaGenerator.sass";
 import { FormBuilder } from "./FormBuilder";
 import { confirmDialog } from "../ConfirmDialog";
 import { RelativePositionPresets } from "../Positioner";
-import { CloseOutlined, VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from "@material-ui/icons";
+import { FiArrowDown, FiArrowUp } from "react-icons/all";
 
 interface IFieldConfig {
     name: string;
@@ -234,7 +233,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                                     this.handleMoveUp(key);
                                                 }}
                                             >
-                                                <VerticalAlignTopOutlined />
+                                                <FiArrowUp />
                                             </a>
                                         )}
                                         {key + 1 != this.props.fields.length && (
@@ -244,7 +243,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                                     this.handleMoveDown(key);
                                                 }}
                                             >
-                                                <VerticalAlignBottomOutlined />
+                                                <FiArrowDown />
                                             </a>
                                         )}
                                         <a
@@ -254,7 +253,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                                                 this.handleDelete(key, e);
                                             }}
                                         >
-                                            <CloseOutlined />
+                                            <CommonIcons.delete />
                                         </a>
                                     </div>
                                 </div>

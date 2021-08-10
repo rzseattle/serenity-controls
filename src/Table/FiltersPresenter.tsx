@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowDownward, ArrowUpward, Close, FilterList } from "@material-ui/icons";
+import { CommonIcons } from "../lib/CommonIcons";
 
 export default function (props: any) {
     const isVisible: boolean = Object.entries(props.order).length > 0 || Object.entries(props.filters).length > 0;
@@ -8,10 +8,10 @@ export default function (props: any) {
             <div className="w-table-presenter-inner">
                 {Object.entries(props.order).map(([field, el]: any, index) => (
                     <div key={index}>
-                        <div>{el.dir == "asc" ? <ArrowDownward /> : <ArrowUpward />}</div>
+                        <div>{el.dir == "asc" ? <CommonIcons.down /> : <CommonIcons.up />}</div>
                         <div className="caption">{el.caption}</div>
                         <div className="remove" onClick={(e) => props.orderDelete(field)}>
-                            <Close />
+                            <CommonIcons.close />
                         </div>
                     </div>
                 ))}
@@ -19,12 +19,12 @@ export default function (props: any) {
                 {Object.entries(props.filters).map(([key, el]: any) => (
                     <div key={key}>
                         <div>
-                            <FilterList />
+                            <CommonIcons.filter />
                         </div>
                         <div className="caption">{el.caption}</div>
                         <div className="value" dangerouslySetInnerHTML={{ __html: el.label }} />
                         <div className="remove" onClick={(e) => props.FilterDelete(key)}>
-                            <Close />
+                            <CommonIcons.close />
                         </div>
                     </div>
                 ))}

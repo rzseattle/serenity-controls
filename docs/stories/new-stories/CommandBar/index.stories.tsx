@@ -1,9 +1,9 @@
 import React from "react";
 
 import { CommandBar } from "../../../../src/CommandBar";
-import { Icon, IIconProps } from "../../../../src/Icon";
+
 import { Meta, Story } from "@storybook/react/types-6-0";
-import { RefreshOutlined, RemoveOutlined } from "@material-ui/icons";
+import { CommonIcons } from "../../../../src/lib/CommonIcons";
 const items = [
     {
         key: "f1",
@@ -26,7 +26,7 @@ const items = [
             {
                 key: "f4",
                 label: "Sub Option 1",
-                icon: RefreshOutlined,
+                icon: CommonIcons.refresh,
                 onClick: () => {
                     alert("clicked");
                 },
@@ -42,7 +42,7 @@ const items = [
             {
                 key: "f6",
                 label: "This is option with very very very long text inside",
-                icon: RemoveOutlined,
+                icon: CommonIcons.delete,
                 onClick: () => {
                     alert("clicked");
                 },
@@ -87,7 +87,7 @@ export default {
     argTypes: {},
 } as Meta;
 
-const Template: Story<IIconProps> = (args) => {
+const Template: Story<any> = (args) => {
     return (
         <div
             style={{

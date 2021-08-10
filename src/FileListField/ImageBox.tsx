@@ -5,7 +5,9 @@ import { isImage } from "./utils";
 import Tooltip from "../Tooltip/Tooltip";
 import { FileTooltip } from "./FileTooltip";
 import { RelativePositionPresets } from "../Positioner";
-import { CloseOutlined, CloudUploadOutlined, ControlCameraOutlined, DescriptionOutlined } from "@material-ui/icons";
+
+import { BsArrowsMove, HiOutlineDocumentText } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 interface IImageBoxProps {
     file: IFile;
@@ -19,7 +21,7 @@ interface IImageBoxProps {
 
 const DragHandle = SortableHandle(() => (
     <a className="w-gallery-drag">
-        <ControlCameraOutlined />
+        <BsArrowsMove />
     </a>
 )); //
 
@@ -47,13 +49,13 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
                                 <img src={props.transformFilePath(file)} alt="" />
                             ) : (
                                 <>
-                                    <DescriptionOutlined />
+                                    <HiOutlineDocumentText />
                                 </>
                             )
                         ) : (
                             <>
                                 <img src={preview} alt="" />
-                                <CloudUploadOutlined />
+                                <CommonIcons.upload />
                             </>
                         )}
 
@@ -68,7 +70,7 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
                                         }}
                                         className="w-gallery-delete"
                                     >
-                                        <CloseOutlined />{" "}
+                                        <CommonIcons.close />{" "}
                                     </a>
                                     <DragHandle />
                                 </>

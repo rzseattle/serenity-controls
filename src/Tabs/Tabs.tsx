@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./Tabs.sass";
-import { CloseOutlined } from "@material-ui/icons";
+import { CommonIcons } from "../lib/CommonIcons";
 type ITabsCallback = (index: number, e: any) => any;
 
 interface ITabsProps {
@@ -86,7 +86,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
                                         }}
                                         className={"tabs-close"}
                                     >
-                                        <CloseOutlined />
+                                        <CommonIcons.close />
                                     </a>
                                 )}
                             </div>

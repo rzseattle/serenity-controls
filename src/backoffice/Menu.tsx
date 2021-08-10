@@ -1,7 +1,9 @@
 import * as React from "react";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core";
-import { ChevronLeftOutlined, ChevronRightOutlined, OpenInBrowser, OpenInNew } from "@material-ui/icons";
+import { BsChevronDoubleRight, HiOutlineChevronDoubleLeft } from "react-icons/all";
+import "./Menu.sass";
+import { CommonIcons } from "../lib/CommonIcons";
 
 export interface IMenuSection {
     active: boolean;
@@ -122,7 +124,7 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
                                             onClick={(event) => this.handleElementClickOpen(subelement, event)}
                                             className={"menu-link-open-window"}
                                         >
-                                            <OpenInNew />
+                                            <CommonIcons.openInNewWindow />
                                         </div>
                                     </div>
                                 ))}
@@ -133,7 +135,7 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
 
                 {!this.props.mobile && (
                     <div className="menu-collapse " onClick={this.changeExpandState}>
-                        <i>{this.state.expanded ? <ChevronLeftOutlined /> : <ChevronRightOutlined />}</i>
+                        <i>{this.state.expanded ? <HiOutlineChevronDoubleLeft /> : <BsChevronDoubleRight />}</i>
                     </div>
                 )}
             </div>

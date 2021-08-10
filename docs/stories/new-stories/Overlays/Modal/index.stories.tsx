@@ -7,7 +7,7 @@ import { Comm } from "../../../../../src/lib";
 import { Modal } from "../../../../../src/Modal";
 import { RelativePositionPresets } from "../../../../../src/Positioner";
 import { Placeholder } from "../../../../../src/Placeholder";
-import { Mail, MailOutline, MailSharp } from "@material-ui/icons";
+import { CommonIcons } from "../../../../../src/lib/CommonIcons";
 
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi
@@ -137,7 +137,7 @@ storiesOf("Overlays/Modal", module)
             show={true}
             title={"Test title"}
             showHideLink={true}
-            icon={MailSharp}
+            icon={CommonIcons.search}
             shadow={false}
             layer={false}
             width={600}

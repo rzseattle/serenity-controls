@@ -15,13 +15,9 @@ import { download } from "../Downloader";
 import { alertDialog } from "../AlertDialog";
 import { confirmDialog } from "../ConfirmDialog";
 import { RelativePositionPresets } from "../Positioner";
-import {
-    AddOutlined,
-    CloseOutlined,
-    CloudDownloadOutlined,
-    DescriptionOutlined,
-    ImageOutlined,
-} from "@material-ui/icons";
+
+import { CommonIcons } from "../lib/CommonIcons";
+import { BsImage, HiOutlineDocumentText } from "react-icons/all";
 
 export interface IFile {
     key: number;
@@ -180,7 +176,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                         <p>Drop files here...</p>
                                     ) : (
                                         <span>
-                                            <AddOutlined />{" "}
+                                            <CommonIcons.add style={{ verticalAlign: "middle" }} />{" "}
                                             {this.props.buttonTitle
                                                 ? this.props.buttonTitle
                                                 : fI18n.t("frontend:file.add")}{" "}
@@ -201,7 +197,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                               <div className="w-file-list-element" key={el.key}>
                                   <div className="w-file-list-name">
                                       <a onClick={this.handleFileClick.bind(this, index)}>
-                                          {isImage(el.name) ? <ImageOutlined /> : <DescriptionOutlined />}
+                                          {isImage(el.name) ? <BsImage /> : <HiOutlineDocumentText />}
                                           {el.name}
                                       </a>
                                       {!el.uploaded && (
@@ -212,7 +208,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                   </div>
                                   <div className="w-file-list-size">
                                       <a href={transformFilePath(el)} download={true}>
-                                          <CloudDownloadOutlined />
+                                          <CommonIcons.download />
                                       </a>
                                   </div>
                                   <div className="w-file-list-size">{formatBytes(el.size)}</div>
@@ -227,7 +223,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                                                   );
                                               }}
                                           >
-                                              <CloseOutlined />{" "}
+                                              <CommonIcons.close />{" "}
                                           </a>
                                       </div>
                                   )}

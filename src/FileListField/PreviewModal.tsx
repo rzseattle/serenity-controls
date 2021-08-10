@@ -3,10 +3,10 @@ import { CommandBar } from "../CommandBar";
 import { printFile } from "../FilePrinter";
 import * as React from "react";
 import { IFileViewerProps } from "./FileListsField";
-import { getViewer, globalTransformFilePath } from "./utils";
+import { getViewer } from "./utils";
 import { download } from "../Downloader";
 import { fI18n } from "../lib";
-import { CloudDownloadOutlined, FileCopyOutlined, OpenInNewOutlined, PrintOutlined } from "@material-ui/icons";
+import { CommonIcons } from "../lib/CommonIcons";
 
 interface IPreviewModal extends IFileViewerProps {
     onHide: () => any;
@@ -24,7 +24,7 @@ export const PreviewModal = (props: IPreviewModal) => {
                         {
                             key: "f0",
                             label: fI18n.t("frontend:file.download"),
-                            icon: CloudDownloadOutlined,
+                            icon: CommonIcons.download,
                             onClick: () => {
                                 // window.open(parsePath(this.props.downloadConnector(file)));
                                 download(file.path);
@@ -33,7 +33,7 @@ export const PreviewModal = (props: IPreviewModal) => {
                         {
                             key: "f1",
                             label: fI18n.t("frontend:file.print"),
-                            icon: PrintOutlined,
+                            icon: CommonIcons.print,
                             onClick: () => {
                                 // window.open(parsePath(this.props.downloadConnector(file)));
                                 printFile(file);
@@ -42,18 +42,18 @@ export const PreviewModal = (props: IPreviewModal) => {
                         {
                             key: "f2",
                             label: fI18n.t("frontend:file.copyLink"),
-                            icon: FileCopyOutlined,
+                            icon: CommonIcons.copy,
                             onClick: () => {
-                                (document.getElementsByClassName(
-                                    "w-file-preview-input",
-                                )[0] as HTMLInputElement).select();
+                                (
+                                    document.getElementsByClassName("w-file-preview-input")[0] as HTMLInputElement
+                                ).select();
                                 document.execCommand("Copy");
                             },
                         },
                         {
                             key: "f3",
                             label: fI18n.t("frontend:file.openInNewWindow"),
-                            icon: OpenInNewOutlined,
+                            icon: CommonIcons.openInNewWindow,
                             onClick: () => {
                                 window.open(file.path);
                             },

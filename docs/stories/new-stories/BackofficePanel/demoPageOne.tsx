@@ -2,22 +2,13 @@ import { Navbar } from "../../../../src/Navbar";
 import React, { useRef, useState } from "react";
 import { CommandBar } from "../../../../src/CommandBar";
 import { getPanelContext } from "../../../../src/backoffice/PanelContext";
-import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput } from "../../../../src/Table";
+import { ColumnHelper as Col, IDataQuery, ITableDataInput, Table } from "../../../../src/Table";
 import { mockData } from "../Table/MOCK_DATA";
 import { FilterHelper } from "../../../../src/filters";
-import { Icon } from "../../../../src/Icon";
 import { confirmDialog } from "../../../../src/ConfirmDialog";
 import { Modal } from "../../../../src/Modal";
 import { BDate, BForm, BSwitch, BText } from "../../../../src/BForm";
-import {
-    Add,
-    AddOutlined,
-    DeleteForever,
-    DeleteOutlineOutlined,
-    Edit,
-    EditOutlined,
-    HighlightOffOutlined,
-} from "@material-ui/icons";
+import { CommonIcons } from "../../../../src/lib/CommonIcons";
 
 const provider = (query: IDataQuery) => {
     return new Promise<ITableDataInput>((resolve) => {
@@ -72,13 +63,13 @@ export default () => {
                     parseFloat(row.price) < 100 ? { fontSize: "10px" } : { fontSize: "15px" },
             }),
 
-        Col.template("", () => <EditOutlined />)
+        Col.template("", () => <CommonIcons.edit />)
             .className("center darkgreen")
             .onClick((row) => {
                 setEditData(row);
             }),
 
-        Col.template("", () => <HighlightOffOutlined />)
+        Col.template("", () => <CommonIcons.delete />)
             .className("center darkred")
             .onClick((row) => {
                 confirmDialog("Are I sure to delete " + row.email + "?").then(() => {
@@ -95,7 +86,7 @@ export default () => {
                     {
                         key: "f1",
                         label: "Add new item",
-                        icon: AddOutlined,
+                        icon: CommonIcons.add,
                         onClick: () => {
                             context.notification("Item xxx added", "Information");
                         },
@@ -115,7 +106,7 @@ export default () => {
                 title={"Info"}
                 showHideLink={true}
                 onHide={() => setInfoVisible(false)}
-                icon="Edit"
+                icon={CommonIcons.edit}
             >
                 <div style={{ width: 400, padding: 15 }}>
                     <b>Use:</b>
@@ -132,7 +123,7 @@ export default () => {
                 title={"Edit"}
                 showHideLink={true}
                 onHide={() => setEditData(null)}
-                icon={Edit}
+                icon={CommonIcons.edit}
             >
                 <div style={{ width: 400, padding: 15 }}>
                     <BForm

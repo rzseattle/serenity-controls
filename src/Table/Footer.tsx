@@ -1,7 +1,8 @@
 import * as React from "react";
 import { IColumnData } from "./Interfaces";
 import { fI18n } from "../lib";
-import { FirstPage, LastPage, NavigateBefore, NavigateNext, Refresh } from "@material-ui/icons";
+import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 interface IFooterProps {
     count: number;
@@ -54,10 +55,10 @@ export default class Footer extends React.Component<IFooterProps> {
                 <td colSpan={props.columns.length + 1} className="w-table-footer-main">
                     <div className="w-table-pager">
                         <div onClick={(e) => props.currentPageChanged(1)}>
-                            <FirstPage />
+                            <MdFirstPage />
                         </div>
                         <div onClick={(e) => props.currentPageChanged(Math.max(1, props.currentPage - 1))}>
-                            <NavigateBefore />
+                            <MdNavigateBefore />
                         </div>
                         {arr.map((el, i) => (
                             <div
@@ -69,10 +70,10 @@ export default class Footer extends React.Component<IFooterProps> {
                             </div>
                         ))}
                         <div onClick={(e) => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}>
-                            <NavigateNext />
+                            <MdNavigateNext />
                         </div>
                         <div onClick={(e) => props.currentPageChanged(pages)}>
-                            <LastPage />
+                            <MdLastPage />
                         </div>
                     </div>
 
@@ -100,7 +101,7 @@ export default class Footer extends React.Component<IFooterProps> {
                                 this.props.reload();
                             }}
                         >
-                            <Refresh />
+                            <CommonIcons.refresh />
                         </button>
                     </div>
                 </td>

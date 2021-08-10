@@ -10,7 +10,7 @@ import { LoadingIndicator } from "../LoadingIndicator";
 
 import { IModalProps, Modal } from "../Modal";
 import { Select } from "../fields/Select";
-import { fI18n, Comm } from "../lib";
+import { Comm, fI18n } from "../lib";
 
 import { BackOfficeContainer } from "./BackOfficeContainer";
 import { BackofficeStore } from "./BackofficeStore";
@@ -23,9 +23,9 @@ import DebugCommLog from "./DebugCommLog";
 import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
-import { AccountCircle, ExitToAppOutlined } from "@material-ui/icons";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core";
+import { FiLogOut, VscAccount } from "react-icons/all";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare let PRODUCTION: boolean;
@@ -287,7 +287,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
                             <div className="app-user" onClick={() => this.setState({ userMenuVisible: true })}>
                                 <div className="app-user-icon">
-                                    <AccountCircle />
+                                    <VscAccount />
                                 </div>
                                 {this.props.user.login}
                             </div>
@@ -343,7 +343,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 </div>
                                 <div style={{ padding: 10 }}>
                                     <a href={Comm.basePath + "/access/logout"}>
-                                        <ExitToAppOutlined /> {fI18n.t("frontend:logout")}
+                                        <FiLogOut style={{ verticalAlign: "middle" }} /> {fI18n.t("frontend:logout")}
                                     </a>
                                 </div>
                             </Modal>

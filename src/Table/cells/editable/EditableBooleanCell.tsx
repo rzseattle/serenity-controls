@@ -1,9 +1,9 @@
 import * as React from "react";
+import { useCallback, useRef, useState } from "react";
 
 import styles from "./EditableTextCell.module.sass";
-import { useCallback, useRef, useState } from "react";
 import { IEditableCellProps } from "./IEditableCellProps";
-import { CheckOutlined, CloseOutlined } from "@material-ui/icons";
+import { CommonIcons } from "../../../lib/CommonIcons";
 
 export default ({ inputValue, onSubmit, onCancel }: IEditableCellProps): JSX.Element => {
     const [value, setValue] = useState(inputValue);
@@ -47,12 +47,12 @@ export default ({ inputValue, onSubmit, onCancel }: IEditableCellProps): JSX.Ele
                 </div>
                 <div>
                     <a onClick={internalSubmit} className={styles.accept}>
-                        <CheckOutlined />
+                        <CommonIcons.check />
                     </a>
                 </div>
                 <div>
                     <a onClick={onCancel} className={styles.cancel}>
-                        <CloseOutlined />
+                        <CommonIcons.close />
                     </a>
                 </div>
             </div>

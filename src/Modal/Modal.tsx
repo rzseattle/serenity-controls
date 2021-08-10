@@ -4,9 +4,9 @@ import { Positioner } from "../Positioner";
 import { IPositionCalculatorOptions } from "../lib/PositionCalculator";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
-import { Close } from "@material-ui/icons";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core";
+import { CommonIcons } from "../lib/CommonIcons";
 
 export interface IModalProps {
     show: boolean;
@@ -168,7 +168,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                         >
                             {p.showHideLink && (
                                 <a className="w-modal-close" style={{}} onClick={this.handleClose}>
-                                    <Close />
+                                    <CommonIcons.close />
                                 </a>
                             )}
                             {p.title && (
