@@ -2,11 +2,15 @@ import {
     AiOutlineSearch,
     BiCopy,
     BiDownload,
-    BiUpload, CgCalendarToday, FaRegFolderOpen,
+    BiUpload,
+    CgCalendarToday,
+    FaRegFolderOpen,
     FiArrowDown,
-    FiArrowUp, HiOutlineDocumentText,
+    FiArrowUp,
+    HiOutlineDocumentText,
     ImPrinter,
-    IoFilterOutline, IoMailOutline,
+    IoFilterOutline,
+    IoMailOutline,
     IoMdClose,
     IoMdOpen,
     MdDone,
@@ -14,7 +18,10 @@ import {
     MdRefresh,
     RiAddFill,
     RiDeleteBin4Line,
-    VscChevronDown, VscChevronLeft, VscChevronRight, VscChevronUp,
+    VscChevronDown,
+    VscChevronLeft,
+    VscChevronRight,
+    VscChevronUp,
 } from "react-icons/all";
 
 export const CommonIcons = {
@@ -40,5 +47,5 @@ export const CommonIcons = {
     mail: IoMailOutline,
     folder: FaRegFolderOpen,
     document: HiOutlineDocumentText,
-    calendar: CgCalendarToday
+    calendar: CgCalendarToday,
 };
