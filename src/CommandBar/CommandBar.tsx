@@ -5,6 +5,7 @@ import "./CommandBar.sass";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core";
 import { FiChevronDown } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 export interface ICommand {
     key: string;
@@ -62,7 +63,7 @@ export class CommandBar extends React.PureComponent<IProps> {
             <div className="w-command-bar" style={{ zIndex }}>
                 {this.props.isSearchBoxVisible && (
                     <div className="search-box">
-                        <i className="ms-Icon ms-Icon--Search " />
+                        <CommonIcons.search />
                         <input
                             type="text"
                             onChange={this.handleSearchChange}

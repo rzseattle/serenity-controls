@@ -1,4 +1,5 @@
 import * as React from "react";
+import { CommonIcons } from "../lib/CommonIcons";
 import "./Navbar.sass";
 
 interface IProps {
@@ -12,12 +13,14 @@ export const Navbar = (props: IProps) => {
     return (
         <div className="w-navbar">
             <ol>
-                {children.map((child, key) => {
+                {children.filter(Boolean).map((child, key) => {
+                    const last = key + 1 == props.children.filter(Boolean).length;
+
                     if (child !== null) {
                         return (
-                            <li key={key} className={"ms-font-m " + (key + 1 == props.children.length ? "active" : "")}>
+                            <li key={key} className={"ms-font-m " + (last ? "active" : "")}>
                                 {child}
-                                <i className="ms-Icon ms-Icon--ChevronRight" aria-hidden="true" />
+                                {!last && child !== null && <CommonIcons.chevronRight />}
                             </li>
                         );
                     }

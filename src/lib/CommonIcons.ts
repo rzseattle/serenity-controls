@@ -1,13 +1,16 @@
 import {
+    AiOutlineInfoCircle,
     AiOutlineSearch,
     BiCopy,
     BiDownload,
     BiUpload,
+    BsList,
     CgCalendarToday,
     FaRegFolderOpen,
     FiArrowDown,
     FiArrowUp,
     HiOutlineDocumentText,
+    HiOutlineSave,
     ImPrinter,
     IoFilterOutline,
     IoMailOutline,
@@ -17,7 +20,8 @@ import {
     MdModeEdit,
     MdRefresh,
     RiAddFill,
-    RiDeleteBin4Line,
+    RiDeleteBin4Line, RiHistoryFill,
+    RiShoppingCartLine,
     VscChevronDown,
     VscChevronLeft,
     VscChevronRight,
@@ -48,4 +52,11 @@ export const CommonIcons = {
     folder: FaRegFolderOpen,
     document: HiOutlineDocumentText,
     calendar: CgCalendarToday,
+
+    back: VscChevronLeft,
+    save: HiOutlineSave,
+    list: BsList,
+    cart: RiShoppingCartLine,
+    info: AiOutlineInfoCircle,
+    history: RiHistoryFill
 };

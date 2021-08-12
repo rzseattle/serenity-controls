@@ -6,6 +6,7 @@ import "./DebugTool.sass";
 import { Modal } from "../Modal";
 import { RouteVisualization } from "./RouteVisualization";
 import { Comm } from "../lib";
+import { CgErase, GiPlatform, SiTypescript } from "react-icons/all";
 
 const DebugTool = () => {
     return (
@@ -13,10 +14,6 @@ const DebugTool = () => {
             <Cache />
             <StoryBookHelper />
             <JSON2TypescriptHelper />
-            <RoutingVisualHelper />
-            {/*<Tooltip template={() => <DebugToolBody />} theme="light" layerClass="w-debug-tool-tooltip">
-                <Icon name={"Code"} />
-            </Tooltip>*/}
         </div>
     );
 };
@@ -30,7 +27,7 @@ const Cache = () => {
                 });
             }}
         >
-            "EraseTool"
+            <CgErase />
         </span>
     );
 };
@@ -39,10 +36,10 @@ const StoryBookHelper = () => {
     const [opened, setOpened] = useState(false);
     return (
         <>
-            <span onClick={() => setOpened(true)}>"DietPlanNotebook"</span>
+            <span onClick={() => setOpened(true)}><GiPlatform /></span>
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">
-                    <iframe src="http://frontend-lib.org:3000/storybook/" />
+                    <iframe src="https://rzseattle.github.io/serenity-controls" />
                 </div>
             </Modal>
         </>
@@ -54,8 +51,7 @@ const JSON2TypescriptHelper = () => {
     return (
         <>
             <span onClick={() => setOpened(true)}>
-                {/*<Icon name={"TypeScriptLanguage"} />*/}
-                ikona
+                <SiTypescript />
             </span>
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">

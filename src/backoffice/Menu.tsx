@@ -118,7 +118,9 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
                                         className="menu-link"
                                         onClick={() => this.handleElementClick(subelement)}
                                     >
-                                        {React.isValidElement(subelement.icon) && <subelement.icon className={"menu-link-title-icon"} />}
+                                        {React.isValidElement(subelement.icon) && (
+                                            <subelement.icon className={"menu-link-title-icon"} />
+                                        )}
                                         {subelement.title}
                                         <div
                                             onClick={(event) => this.handleElementClickOpen(subelement, event)}

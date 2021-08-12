@@ -25,7 +25,7 @@ import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core";
-import { FiLogOut, VscAccount } from "react-icons/all";
+import { AiOutlineMenu, FiLogOut, VscAccount } from "react-icons/all";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare let PRODUCTION: boolean;
@@ -275,7 +275,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                     {!this.state.onlyBody && (
                         <div className="w-panel-top">
                             <div className="app-icon" onClick={this.handleAppIconClicked}>
-                                {this.state.layout != "mobile" ? <this.props.icon /> : "CollapseMenu"}
+                                {this.state.layout != "mobile" ? <this.props.icon /> : <AiOutlineMenu />}
                             </div>
                             <div className="app-title">{this.props.title}</div>
 
