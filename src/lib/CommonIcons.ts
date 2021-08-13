@@ -2,7 +2,8 @@ import {
     AiOutlineInfoCircle,
     AiOutlineSearch,
     BiCopy,
-    BiDownload,
+    BiDownload, BiExport,
+    BiImport,
     BiUpload,
     BsList,
     CgCalendarToday,
@@ -20,7 +21,8 @@ import {
     MdModeEdit,
     MdRefresh,
     RiAddFill,
-    RiDeleteBin4Line, RiHistoryFill,
+    RiDeleteBin4Line,
+    RiHistoryFill,
     RiShoppingCartLine,
     VscChevronDown,
     VscChevronLeft,
@@ -39,6 +41,9 @@ export const CommonIcons = {
     chevronRight: VscChevronRight,
     download: BiDownload,
     upload: BiUpload,
+    import: BiImport,
+    export: BiExport,
+
     print: ImPrinter,
     copy: BiCopy,
     openInNewWindow: IoMdOpen,
@@ -58,5 +63,5 @@ export const CommonIcons = {
     list: BsList,
     cart: RiShoppingCartLine,
     info: AiOutlineInfoCircle,
-    history: RiHistoryFill
+    history: RiHistoryFill,
 };

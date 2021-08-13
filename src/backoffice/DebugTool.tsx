@@ -36,7 +36,9 @@ const StoryBookHelper = () => {
     const [opened, setOpened] = useState(false);
     return (
         <>
-            <span onClick={() => setOpened(true)}><GiPlatform /></span>
+            <span onClick={() => setOpened(true)}>
+                <GiPlatform />
+            </span>
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">
                     <iframe src="https://rzseattle.github.io/serenity-controls" />
