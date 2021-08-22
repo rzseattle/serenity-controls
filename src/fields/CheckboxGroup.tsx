@@ -1,9 +1,10 @@
 import { checkIncludes, toOptions } from "./Utils";
 import { IFieldProps, IOption } from "./Interfaces";
-import React from "react";
+import React, { ReactElement, StatelessComponent } from "react";
 import { Checkbox } from "./Checkbox";
 import "./CheckboxGroup.sass";
 import { deepCopy, deepIsEqual, fI18n } from "../lib";
+import { nanoid } from "nanoid";
 
 export interface ICheckboxGroupProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
@@ -11,6 +12,12 @@ export interface ICheckboxGroupProps extends IFieldProps {
     columns?: "none" | "horizontal" | "vertical";
     columnsCount?: number;
     selectTools?: boolean;
+    groupBy?: IGroupByData;
+}
+export interface IGroupByData {
+    field?: string;
+    equalizer?: (prevRow: any, nextRow: any) => boolean;
+    labelProvider?: (nextRow: any, prevRow: any) => string | ReactElement<any> | StatelessComponent;
 }
 
 export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
@@ -80,6 +87,23 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
         this.fireOnChangeExternal([]);
     };
 
+    public groupByGetInfo = (row1: any, row2: any) => {
+        const info = [];
+        const group = this.props.groupBy;
+
+        if (group.field !== undefined) {
+            if (row1 === null || row1[group.field] != row2[group.field]) {
+                info.push({ label: row2[group.field] });
+            }
+        } else if (group.equalizer !== undefined) {
+            if (row1 === null || group.equalizer(row1, row2)) {
+                info.push({ label: group.labelProvider(row2, row1) });
+            }
+        }
+
+        return info;
+    };
+
     public render() {
         const props = this.props;
 
@@ -121,7 +145,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                 />
             );
 
-            return <div style={props.columns == "horizontal" ? columnWidth : {}}> {field}</div>;
+            return <div style={props.columns == "horizontal" ? columnWidth : {}}>{field}</div>;
         };
 
         return (
@@ -131,15 +155,45 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
                         "w-checkboxgroup-container" + (props.columns != "none" && " w-checkboxgroup-container-inline")
                     }
                 >
-                    {props.columns != "vertical" && options.map((el: IOption) => gen(el.value, el.label))}
+                    {props.columns != "vertical" &&
+                        options.map((item: IOption, index) => {
+                            let groupInfo = null;
+                            if (this.props.groupBy !== undefined) {
+                                const groupData = this.groupByGetInfo(options[index - 1] ?? null, item);
+                                if (groupData.length > 0) {
+                                    groupInfo = (
+                                        <div className="w-checkboxgroup-group-label">
+                                            {groupData.map((el) => (
+                                                <React.Fragment key={nanoid()}>{el.label}</React.Fragment>
+                                            ))}
+                                        </div>
+                                    );
+                                }
+                            }
+                            return (
+                                <>
+                                    {groupInfo ? groupInfo : null}
+                                    {gen(item.value, item.label)}
+                                </>
+                            );
+                        })}
 
                     {props.columns == "vertical" &&
                         Array.from({ length: props.columnsCount }, (v, k) => k).map((el) => {
+                            // if (this.props.groupBy !== null) {
+                            //     const groupData = this.groupByGetInfo(lastRow, item);
+                            //     if (groupData.length > 0) {
+                            //
+                            //     }
+                            // }
+
                             return (
                                 <div key={el} style={columnWidth}>
                                     {options
                                         .slice(el * columDivider, columDivider * (el + 1))
-                                        .map((item: IOption) => gen(item.value, item.label))}
+                                        .map((item: IOption, index) => {
+                                            return <>{gen(item.value, item.label)}</>;
+                                        })}
                                 </div>
                             );
                         })}

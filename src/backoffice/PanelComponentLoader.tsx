@@ -135,6 +135,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
 
     public getContext: () => IPanelContext = () => {
         return {
+            URL: this.props.context.view.path,
             baseURL: this.props.context.view.baseRoutePath,
             basePath: this.props.context.basePath,
             notification: this.handleNotification,

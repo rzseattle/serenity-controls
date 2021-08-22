@@ -194,7 +194,6 @@ class BackofficeStore implements IBackOfficestoreAPI {
                 setTimeout(() => window.addEventListener("hashchange", this.hashChangeHandler), 20);
             }
 
-            console.log(resolvedView.useAutoRequest, "teraz tutaj1");
             if (resolvedView.useAutoRequest === true) {
                 const comm = new Comm(url);
 
@@ -258,11 +257,11 @@ class BackofficeStore implements IBackOfficestoreAPI {
                 this.dataUpdated();
             }
         } catch (e) {
-            this.viewServerErrors = e;
-            this.view = null;
-            this.isViewLoading = false;
-            this.dataUpdated();
-            console.log(e);
+            // this.viewServerErrors = e;
+            // this.view = null;
+            // this.isViewLoading = false;
+            // this.dataUpdated();
+            console.log("[Old router] View not found");
         }
     };
 

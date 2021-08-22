@@ -15,6 +15,8 @@ export interface IPanelContext {
 
     baseURL: string;
 
+    URL: string;
+
     basePath: string;
 
     notification(content: string, title?: string, conf?: NotificationSystem.Notification): any;

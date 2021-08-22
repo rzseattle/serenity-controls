@@ -1,6 +1,7 @@
 import { IArrowViewComponentProps } from "../PanelComponentLoader";
 
 export interface IRouteElement {
+    path: string
     controller?: string;
     method?: string;
     package?: string;

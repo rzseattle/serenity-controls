@@ -54,43 +54,36 @@ class Router {
         for (const i in this.routes) {
             const el = this.routes[i];
             const test = el.routePath;
-            if (test.indexOf("{") != -1) {
-                const regexp = new RegExp(
-                    "^" +
-                        test
-                            // repplace all {var} to (.+?)
-                            .replace(/\{.+?\}/g, "(.+?)")
-                            // replace all / to _
-                            .replace(/\//g, "/") +
-                        "$",
-                );
-                if (path.match(regexp) !== null) {
-                    let tmp = test.split("/{")[0].split("/");
-                    tmp = tmp.slice(0, -1);
 
-                    entryFromInput = el;
-                    break;
-                }
-            } else {
-                if (path == test) {
-                    let tmp = test.split("/{")[0].split("/");
-                    tmp = tmp.slice(0, -1);
+            const regexp = new RegExp(
+                "^" +
+                    test
+                        // repplace all {var} to (.+?)
+                        .replace(/\{.+?\}/g, "(.+?)")
+                        .replace(/\*/g, "(.*?)")
+                        // replace all / to _
+                        .replace(/\//g, "/") +
+                    "$",
+            );
+            if (path.match(regexp) !== null) {
+                let tmp = test.split("/{")[0].split("/");
+                tmp = tmp.slice(0, -1);
 
-                    entryFromInput = el;
-                    break;
-                }
+                entryFromInput = el;
+                break;
             }
         }
         if (!entryFromInput) {
             throw new RouterException(`Route not found: '${path}'`);
         }
-        return this.translateInputRoute(entryFromInput);
+        return this.translateInputRoute(entryFromInput, path);
     }
 
-    private async translateInputRoute(input: any): Promise<IRouteElement> {
+    private async translateInputRoute(input: any, path: string): Promise<IRouteElement> {
         const Component: React.ComponentType<IArrowViewComponentProps> = await this.componentFromInput(input);
         //input from generated tmp/components-route.include.js
         return {
+            path,
             controller: input.controller,
             method: input.method,
             package: input.package,
