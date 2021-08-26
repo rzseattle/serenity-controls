@@ -79,9 +79,9 @@ export class Placeholder extends React.Component<IPlaceholderProps, any> {
     public render() {
         const { prerender, debug, indicatorText, loadingIndicator, shadow } = this.props;
         const { loaded } = this.state;
-
+        //style={{ position: "relative", height: "100%" }}
         return (
-            <div style={{ position: "relative", height: "100%" }}>
+            <div>
                 {!loaded && !prerender && loadingIndicator && <LoadingIndicator text={indicatorText} />}
                 {!loaded && prerender && (loadingIndicator || shadow) && (
                     <Shadow showLoadingIndicator={loadingIndicator} showLoadingIndicatorText={indicatorText} />

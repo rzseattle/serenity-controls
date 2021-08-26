@@ -93,7 +93,7 @@ interface IBFormState {
 
 export type IApplyToFieldFn = (
     fieldName: string,
-    defaultValue: any,
+    defaultValue?: any,
 ) => {
     value: any;
     layoutType: string;

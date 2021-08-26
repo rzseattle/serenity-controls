@@ -55,7 +55,7 @@ export interface IFieldChangeEvent {
     /**
      * Field type
      */
-    type: string;
+    type?: string;
     /**
      * Field value
      */
@@ -63,7 +63,7 @@ export interface IFieldChangeEvent {
     /**
      * React event
      */
-    event: React.FormEvent;
+    event?: React.FormEvent;
     /**
      * Some additional data
      */
