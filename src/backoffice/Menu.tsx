@@ -112,24 +112,25 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
                                 }
                             >
                                 {!this.state.expanded && <div className="section-inner-title">{el.title}</div>}
-                                {el.elements.map((subelement) => (
-                                    <div
-                                        key={subelement.title}
-                                        className="menu-link"
-                                        onClick={() => this.handleElementClick(subelement)}
-                                    >
-                                        {React.isValidElement(subelement.icon) && (
-                                            <subelement.icon className={"menu-link-title-icon"} />
-                                        )}
-                                        {subelement.title}
+                                {index == this.state.currentMenuOpened &&
+                                    el.elements.map((subelement) => (
                                         <div
-                                            onClick={(event) => this.handleElementClickOpen(subelement, event)}
-                                            className={"menu-link-open-window"}
+                                            key={subelement.title}
+                                            className="menu-link"
+                                            onClick={() => this.handleElementClick(subelement)}
                                         >
-                                            <CommonIcons.openInNewWindow />
+                                            {React.isValidElement(subelement.icon) && (
+                                                <subelement.icon className={"menu-link-title-icon"} />
+                                            )}
+                                            {subelement.title}
+                                            <div
+                                                onClick={(event) => this.handleElementClickOpen(subelement, event)}
+                                                className={"menu-link-open-window"}
+                                            >
+                                                <CommonIcons.openInNewWindow />
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
                             </div>
                         </div>
                     );
