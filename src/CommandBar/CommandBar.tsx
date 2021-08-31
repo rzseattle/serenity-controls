@@ -4,7 +4,7 @@ import { CommandMenu } from "../CommandMenu";
 import "./CommandBar.sass";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core";
-import { FiChevronDown } from "react-icons/all";
+
 import { CommonIcons } from "../lib/CommonIcons";
 
 export interface ICommand {
@@ -95,7 +95,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                         className={opened ? "w-command-bar-element-opened" : ""}
                                                     >
                                                         {item.icon && <item.icon />} {item.label}
-                                                        {item.subItems && <FiChevronDown />}
+                                                        {item.subItems && <CommonIcons.chevronDown />}
                                                     </a>
                                                 );
                                             }}
@@ -123,7 +123,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                         className={opened ? "w-command-bar-element-opened" : ""}
                                                     >
                                                         {item.icon && <item.icon />} {item.label}
-                                                        {item.subItems && <FiChevronDown />}
+                                                        {item.subItems && <CommonIcons.chevronDown />}
                                                     </a>
                                                 );
                                             }}

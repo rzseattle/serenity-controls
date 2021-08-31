@@ -19,7 +19,7 @@ import {     MdAssessment,
     MdSettings,
     MdShoppingBasket,
     MdShoppingCart,
-    MdSubject, } from "react-icons/all";
+    MdSubject, } from "react-icons/md";
 
 const iframeCorrection = window.parent.document.getElementById("storybook-preview-iframe").getBoundingClientRect().top;
 

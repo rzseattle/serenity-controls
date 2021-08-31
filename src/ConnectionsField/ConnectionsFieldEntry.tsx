@@ -1,6 +1,6 @@
 import * as React from "react";
 import IConnectionElement from "./IConnectionElement";
-import { TiCancel } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 interface IConnectionsFieldEntryProps {
     item: IConnectionElement;
@@ -47,7 +47,7 @@ export class ConnectionsFieldEntry extends React.PureComponent<IConnectionsField
                     </>
                 )}
                 <div className="delete" onClick={() => this.handleDeleteClick(item.value)}>
-                    <TiCancel />
+                    <CommonIcons.close />
                 </div>
             </div>
         );

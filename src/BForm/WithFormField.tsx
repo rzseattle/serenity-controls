@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Copyable } from "../Copyable";
-import { IoMdOpen } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 export interface IwithFormFieldProps {
     /**
@@ -96,8 +96,8 @@ export const withFormField = <P extends object>(Component: React.ComponentType<P
                                 {this.props.copyable && <Copyable toCopy={this.props.value} />}
 
                                 {props.onInfoClick && (
-                                    <a style={{ float: "right" }} onClick={props.onInfoClick}>
-                                        <IoMdOpen />
+                                    <a style={{ float: "right", paddingTop: 4 }} onClick={props.onInfoClick}>
+                                        <CommonIcons.openInNewWindow />
                                     </a>
                                 )}
                             </label>

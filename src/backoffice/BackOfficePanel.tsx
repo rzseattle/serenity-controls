@@ -25,7 +25,7 @@ import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core";
-import { AiOutlineMenu, FiLogOut, VscAccount } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare let PRODUCTION: boolean;
@@ -275,7 +275,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                     {!this.state.onlyBody && (
                         <div className="w-panel-top">
                             <div className="app-icon" onClick={this.handleAppIconClicked}>
-                                {this.state.layout != "mobile" ? <this.props.icon /> : <AiOutlineMenu />}
+                                {this.state.layout != "mobile" ? <this.props.icon /> : <CommonIcons.list />}
                             </div>
                             <div className="app-title">{this.props.title}</div>
 
@@ -287,7 +287,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
                             <div className="app-user" onClick={() => this.setState({ userMenuVisible: true })}>
                                 <div className="app-user-icon">
-                                    <VscAccount />
+                                    <CommonIcons.user />
                                 </div>
                                 {this.props.user.login}
                             </div>
@@ -343,7 +343,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 </div>
                                 <div style={{ padding: 10 }}>
                                     <a href={Comm.basePath + "/access/logout"}>
-                                        <FiLogOut style={{ verticalAlign: "middle" }} /> {fI18n.t("frontend:logout")}
+                                        <CommonIcons.exit style={{ verticalAlign: "middle" }} /> {fI18n.t("frontend:logout")}
                                     </a>
                                 </div>
                             </Modal>

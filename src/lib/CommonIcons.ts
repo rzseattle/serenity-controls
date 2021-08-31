@@ -1,46 +1,25 @@
+import { AiOutlineInfoCircle, AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
+import { BiCopy, BiExport, BiImport, BiPrinter, BiUpload } from "react-icons/bi";
+import { BsCalendar, BsFilter, BsList } from "react-icons/bs";
+import { FiArrowDown, FiArrowUp, FiDownload, FiLogOut } from "react-icons/fi";
+import { HiOutlineDocumentText, HiOutlineFolder, HiOutlineSave } from "react-icons/hi";
+
+import { MdDone, MdModeEdit, MdOpenInNew, MdRefresh } from "react-icons/md";
+import { RiAddFill, RiDeleteBin4Line, RiHistoryFill, RiShoppingCartLine } from "react-icons/ri";
 import {
-    AiOutlineInfoCircle,
-    AiOutlineSearch,
-    BiCopy,
-    BiDownload,
-    BiExport,
-    BiImport,
-    BiUpload,
-    BsCalendar,
-    BsDownload,
-    BsList,
-    CgCalendarToday,
-    CgSoftwareDownload,
-    FaRegFolderOpen,
-    FiArrowDown,
-    FiArrowUp,
-    FiDownload,
-    HiOutlineDocumentText,
-    HiOutlineSave,
-    ImPrinter,
-    IoDownloadOutline,
-    IoFilterOutline,
-    IoMailOutline,
-    IoMdClose,
-    IoMdOpen,
-    MdDone,
-    MdModeEdit,
-    MdRefresh,
-    RiAddFill,
-    RiDeleteBin4Line,
-    RiHistoryFill,
-    RiShoppingCartLine,
+    VscAccount,
     VscChevronDown,
     VscChevronLeft,
     VscChevronRight,
     VscChevronUp,
-} from "react-icons/all";
+    VscChromeClose,
+} from "react-icons/vsc";
 
 export const CommonIcons = {
     edit: MdModeEdit,
     delete: RiDeleteBin4Line,
     add: RiAddFill,
-    close: IoMdClose,
+    close: VscChromeClose,
     chevronDown: VscChevronDown,
     chevronUp: VscChevronUp,
     chevronLeft: VscChevronLeft,
@@ -50,17 +29,17 @@ export const CommonIcons = {
     import: BiImport,
     export: BiExport,
 
-    print: ImPrinter,
+    print: BiPrinter,
     copy: BiCopy,
-    openInNewWindow: IoMdOpen,
+    openInNewWindow: MdOpenInNew,
     search: AiOutlineSearch,
     check: MdDone,
     up: FiArrowUp,
     down: FiArrowDown,
-    filter: IoFilterOutline,
+    filter: BsFilter,
     refresh: MdRefresh,
-    mail: IoMailOutline,
-    folder: FaRegFolderOpen,
+    mail: AiOutlineMail,
+    folder: HiOutlineFolder,
     document: HiOutlineDocumentText,
     calendar: BsCalendar,
 
@@ -70,4 +49,9 @@ export const CommonIcons = {
     cart: RiShoppingCartLine,
     info: AiOutlineInfoCircle,
     history: RiHistoryFill,
+
+    user: VscAccount,
+    exit: FiLogOut,
 };
+
+export const SpecialIcons = {};

@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { LoadingIndicator } from "../LoadingIndicator";
 import "./Copyable.sass";
-import { BiCopy, MdDone } from "react-icons/all";
+
+import { CommonIcons } from "../lib/CommonIcons";
 
 interface ICopyableProps {
     toCopy?: string;
@@ -21,7 +22,7 @@ export class Copyable extends React.Component<ICopyableProps> {
     };
 
     public state = {
-        icon: BiCopy,
+        icon: CommonIcons.copy,
         copyInProgress: false,
         resultOfPromise: "",
         isLoading: false,
@@ -40,10 +41,10 @@ export class Copyable extends React.Component<ICopyableProps> {
                 document.execCommand("copy");
                 selection.removeAllRanges();
 
-                this.setState({ icon: MdDone, copyInProgress: false });
+                this.setState({ icon: CommonIcons.check, copyInProgress: false });
 
                 setTimeout(() => {
-                    this.setState({ icon: BiCopy });
+                    this.setState({ icon: CommonIcons.copy });
                 }, 500);
             } catch (e) {
                 alert("Can't copy, hit Ctrl+C!");

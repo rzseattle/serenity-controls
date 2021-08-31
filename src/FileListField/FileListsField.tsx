@@ -17,7 +17,7 @@ import { confirmDialog } from "../ConfirmDialog";
 import { RelativePositionPresets } from "../Positioner";
 
 import { CommonIcons } from "../lib/CommonIcons";
-import { BsImage, HiOutlineDocumentText } from "react-icons/all";
+import { BsImage } from "react-icons/bs";
 
 export interface IFile {
     key: number;
@@ -197,7 +197,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                               <div className="w-file-list-element" key={el.key}>
                                   <div className="w-file-list-name">
                                       <a onClick={this.handleFileClick.bind(this, index)}>
-                                          {isImage(el.name) ? <BsImage /> : <HiOutlineDocumentText />}
+                                          {isImage(el.name) ? <BsImage /> : <CommonIcons.document />}
                                           {el.name}
                                       </a>
                                       {!el.uploaded && (

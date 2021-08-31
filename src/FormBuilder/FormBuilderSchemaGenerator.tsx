@@ -8,7 +8,7 @@ import "./FormBuilderSchemaGenerator.sass";
 import { FormBuilder } from "./FormBuilder";
 import { confirmDialog } from "../ConfirmDialog";
 import { RelativePositionPresets } from "../Positioner";
-import { FiArrowDown, FiArrowUp } from "react-icons/all";
+import { FiArrowDown, FiArrowUp } from "react-icons/fi";
 
 interface IFieldConfig {
     name: string;

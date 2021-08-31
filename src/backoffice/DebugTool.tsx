@@ -6,7 +6,9 @@ import "./DebugTool.sass";
 import { Modal } from "../Modal";
 import { RouteVisualization } from "./RouteVisualization";
 import { Comm } from "../lib";
-import { CgErase, GiPlatform, SiTypescript } from "react-icons/all";
+import { CgErase } from "react-icons/cg";
+import { GiPlatform } from "react-icons/gi";
+import { FaDropbox } from "react-icons/fa";
 
 const DebugTool = () => {
     return (
@@ -53,7 +55,7 @@ const JSON2TypescriptHelper = () => {
     return (
         <>
             <span onClick={() => setOpened(true)}>
-                <SiTypescript />
+                <FaDropbox />
             </span>
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">

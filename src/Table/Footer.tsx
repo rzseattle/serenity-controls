@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IColumnData } from "./Interfaces";
 import { fI18n } from "../lib";
-import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/all";
+import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import { CommonIcons } from "../lib/CommonIcons";
 
 interface IFooterProps {

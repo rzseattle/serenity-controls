@@ -2,7 +2,7 @@ import { IFieldChangeEvent, IFieldProps } from "./Interfaces";
 import React from "react";
 
 import "./Checkbox.sass";
-import { MdDone } from "react-icons/all";
+import { CommonIcons } from "../lib/CommonIcons";
 
 export interface ICheckboxProps extends IFieldProps {
     value?: any;
@@ -70,7 +70,7 @@ export class Checkbox extends React.Component<ICheckboxProps, IChecboxState> {
                 <div className="w-checkbox">
                     <div className="w-field-presentation w-field-presentation-checkbox ">
                         <div className={"w-checkbox-element " + (this.state.checked && "w-checkbox-element-selected")}>
-                            {props.checked ? <MdDone /> : null}
+                            {props.checked ? <CommonIcons.check /> : null}
                         </div>
                         {this.props.label !== "" && <span>{this.props.label}</span>}
                     </div>
@@ -82,7 +82,7 @@ export class Checkbox extends React.Component<ICheckboxProps, IChecboxState> {
             <div className="w-checkbox">
                 <label onClick={this.handleOnChange}>
                     <div className={"w-checkbox-element " + (this.state.checked && "w-checkbox-element-selected")}>
-                        {this.state.checked ? <MdDone /> : null}
+                        {this.state.checked ? <CommonIcons.check /> : null}
                     </div>
                     {this.props.label !== "" && <span>{this.props.label}</span>}
                 </label>
