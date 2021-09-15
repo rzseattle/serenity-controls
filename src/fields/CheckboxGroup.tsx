@@ -66,8 +66,7 @@ export class CheckboxGroup extends React.Component<ICheckboxGroupProps, any> {
     }
 
     public handleOnChange = (value: string | number, on: boolean) => {
-
-        let values = this.props.value;
+        let values = [...this.props.value];
         if (on) {
             (values as string[]).push(value as string);
         } else {
