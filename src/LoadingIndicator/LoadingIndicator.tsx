@@ -1,12 +1,7 @@
 import * as React from "react";
 import "./LoadingIndicator.sass";
 
-interface ILoadingIndicatorProps {
-    text?: string;
-    size?: number;
-}
-
-const LoadingIndicator = ({ size = 1, text = null }: ILoadingIndicatorProps) => {
+const LoadingIndicator = ({ size = 1, text = null }: { text?: string; size?: number }) => {
     return (
         <div className="w-loading-indicator">
             <div>
@@ -21,5 +16,22 @@ const LoadingIndicator = ({ size = 1, text = null }: ILoadingIndicatorProps) => 
         </div>
     );
 };
+const LoadingIndicatorDots = ({ size = 1, text = null }: { text?: string; size?: number }) => {
+    return (
+        <div className="w-loading-indicator-dots">
+            <div className="lds-grid">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    );
+};
 
-export { LoadingIndicator };
+export { LoadingIndicator, LoadingIndicatorDots };
