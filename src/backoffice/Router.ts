@@ -95,11 +95,11 @@ class Router {
             namespace: input.namespace,
             useAutoRequest: input.useAutoRequest,
             _debug: {
-                file: input._debug.file,
-                line: input._debug.line,
-                template: input._debug.template,
-                componentExists: input._debug.componentExists,
-                templateExists: input._debug.templateExists,
+                file: input._debug?.file,
+                line: input._debug?.line,
+                template: input._debug?.template,
+                componentExists: input._debug?.componentExists,
+                templateExists: input._debug?.templateExists,
             },
         };
     }
