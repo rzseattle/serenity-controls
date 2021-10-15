@@ -13,10 +13,10 @@ import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";
 import { ICommand } from "../CommandBar";
 
-declare let PRODUCTION: boolean;
-if (PRODUCTION === undefined) {
-    let PRODUCTION = false;
-}
+// declare let PRODUCTION: boolean;
+// if (PRODUCTION === undefined) {
+//     let PRODUCTION = false;
+// }
 
 export interface IArrowViewComponentProps {
     /**
@@ -170,7 +170,7 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
             return (
                 <div>
                     <h1>Something went wrong.</h1>
-                    {!PRODUCTION && <PrintJSON json={this.state.error} />}
+                    {/*{!PRODUCTION && <PrintJSON json={this.state.error} />}*/}
                 </div>
             );
         }

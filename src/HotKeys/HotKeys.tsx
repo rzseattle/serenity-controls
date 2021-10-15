@@ -1,5 +1,5 @@
 import React, { KeyboardEventHandler, useEffect, useRef } from "react";
-import styles from "./HotKeys.module.sass";
+//import styles from "./HotKeys.module.sass";
 import { log } from "../lib/Log";
 
 declare type Callback = (event: React.KeyboardEvent, keyName: string) => any;
@@ -148,7 +148,7 @@ IHotKeyProps) => {
 
     return (
         <div
-            className={root ? "" : styles.div}
+            className={root ? "" : "" /*styles.div*/}
             ref={ref}
             tabIndex={-1}
             onKeyUp={(e) => {

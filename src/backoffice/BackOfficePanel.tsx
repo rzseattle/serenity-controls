@@ -29,9 +29,6 @@ import { CommonIcons } from "../lib/CommonIcons";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
 declare let PRODUCTION: boolean;
-if (PRODUCTION === undefined) {
-    const PRODUCTION = true;
-}
 
 NProgress.configure({ parent: ".w-panel-body" });
 
@@ -279,17 +276,17 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </div>
                             <div className="app-title">{this.props.title}</div>
 
-                            {!PRODUCTION && this.props.isSub == false && (
-                                <React.Suspense fallback={<>...</>}>
-                                    <DebugTool />
-                                </React.Suspense>
-                            )}
+                            {/*{!PRODUCTION && this.props.isSub == false && (*/}
+                            {/*    <React.Suspense fallback={<>...</>}>*/}
+                            {/*        <DebugTool />*/}
+                            {/*    </React.Suspense>*/}
+                            {/*)}*/}
 
                             <div className="app-user" onClick={() => this.setState({ userMenuVisible: true })}>
                                 <div className="app-user-icon">
                                     <CommonIcons.user />
                                 </div>
-                                {this.props.user.login}
+                                {this.props.user?.login}
                             </div>
                             <div className="app-lang-change">
                                 {languages.map((lang: string) => (
@@ -343,7 +340,8 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                 </div>
                                 <div style={{ padding: 10 }}>
                                     <a href={Comm.basePath + "/access/logout"}>
-                                        <CommonIcons.exit style={{ verticalAlign: "middle" }} /> {fI18n.t("frontend:logout")}
+                                        <CommonIcons.exit style={{ verticalAlign: "middle" }} />{" "}
+                                        {fI18n.t("frontend:logout")}
                                     </a>
                                 </div>
                             </Modal>
@@ -362,7 +360,6 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                             </div>
                         )}
                         <div className="w-panel-body" style={{ position: "relative" }}>
-                            {!PRODUCTION && this.props.isSub == false && <DebugCommLog />}
                             {this.state.openedWindows.map((el, index) => {
                                 return (
                                     <Modal
