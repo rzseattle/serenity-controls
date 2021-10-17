@@ -1,3 +1,5 @@
+import { Rect } from "../Positioner";
+
 export interface IPositionCalculatorOptions {
     itemAt: string;
     relativeToAt: string;
@@ -9,7 +11,7 @@ export interface IPositionCalculatorOptions {
 
 export class PositionCalculator {
     private item: HTMLElement;
-    private target: HTMLElement | ClientRect;
+    private target: HTMLElement | Rect;
     private options: IPositionCalculatorOptions;
     private defaults: IPositionCalculatorOptions = {
         itemAt: "top left",
@@ -19,17 +21,13 @@ export class PositionCalculator {
         widthCalc: "none",
     };
 
-    constructor(
-        target: HTMLElement | ClientRect,
-        item: HTMLElement,
-        options: Partial<IPositionCalculatorOptions> = {},
-    ) {
+    constructor(target: HTMLElement | Rect, item: HTMLElement, options: Partial<IPositionCalculatorOptions> = {}) {
         this.item = item;
         this.target = target;
         this.options = { ...this.defaults, ...options };
     }
 
-    private getRefPoint(config: string, position: ClientRect): number[] {
+    private getRefPoint(config: string, position: Rect): number[] {
         const [vertical, horizontal] = config.split(" ");
         let x: number;
         let y: number;

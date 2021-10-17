@@ -89,6 +89,15 @@ interface IPositionerProps {
     container?: () => HTMLElement;
 }
 
+export interface Rect {
+    height: number;
+    width: number;
+    bottom: number;
+    right: number;
+    left: number;
+    top: number;
+}
+
 export class Positioner extends React.PureComponent<IPositionerProps> {
     public static defaultProps = {
         relativeSettings: RelativePositionPresets.bottomMiddle,
@@ -102,7 +111,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
     private positionObserver: number = null;
     private resizeObserver: ResizeObserver = null;
     private readonly mouseCursorObserver: (e: MouseEvent) => any;
-    private mouseCursorCoords: ClientRect = {
+    private mouseCursorCoords: Rect = {
         height: 10,
         width: 10,
         bottom: 10,

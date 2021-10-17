@@ -96,29 +96,7 @@ class BackofficeStore implements IBackOfficestoreAPI {
             this.dataUpdated();
         };
 
-        Comm.onFinish.push((url, input, response, method) => {
-            if (!BackofficeStore.debugViewAjaxInProgress) {
-                router.getRouteInfo(url).then((routeInfo) => {
-                    if (this.view.componentName == routeInfo.componentName) {
-                        BackofficeStore.registerDebugData("view", url, routeInfo, response, input);
-                    } else {
-                        BackofficeStore.registerDebugData("ajax", url, routeInfo, response, input);
-                    }
-                });
-            }
-        });
 
-        if (module.hot) {
-            module.hot.addStatusHandler((status: string) => {
-                if (status == "check") {
-                    this.isPackageCompiling = true;
-                    this.dataUpdated();
-                } else if (status == "idle") {
-                    this.isPackageCompiling = false;
-                    this.dataUpdated();
-                }
-            });
-        }
     }
 
     public getState(): IBackOfficeStoreState {
