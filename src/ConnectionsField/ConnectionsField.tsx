@@ -4,7 +4,7 @@ import { IFieldChangeEvent, IFieldProps } from "../fields/Interfaces";
 
 import { LoadingIndicator } from "../LoadingIndicator";
 import { deepIsEqual } from "../lib/JSONTools";
-import IConnectionElement from "./IConnectionElement";
+
 import ConnectionsFieldSelectionElement from "./ConnectionsFieldSelectionElement";
 import { ConnectionsFieldEntry } from "./ConnectionsFieldEntry";
 
@@ -13,6 +13,7 @@ import { Positioner, RelativePositionPresets } from "../Positioner";
 import "./ConnectionsField.sass";
 import { PrintJSON } from "../PrintJSON";
 import { fI18n } from "../lib";
+import { IConnectionElement } from "./IConnectionElement";
 
 export interface IConnectionChangeEvent extends IFieldChangeEvent {
     items: IConnectionElement[];

@@ -41,9 +41,9 @@ interface IBackOfficePanelProps {
     title?: string;
     user?: any;
     menu?: IMenuSection[];
-    store?: BackofficeStore;
     parentContext?: IPanelContext;
     topActions?: ICommand[];
+    onMenuClick: (element: IMenuElement, inWindow: boolean) => any;
 }
 
 interface IBackOfficePanelState {
@@ -53,7 +53,6 @@ interface IBackOfficePanelState {
     layout: "mobile" | "normal" | "large";
     loading: boolean;
     onlyBody: boolean;
-    contextState: IBackOfficeStoreState;
     openedWindows: {
         route: string;
         input: any;
@@ -66,9 +65,8 @@ interface IBackOfficePanelState {
     contextMenuContext: any;
 }
 
-export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
+export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
     public container: HTMLDivElement;
-    public store: BackofficeStore;
     private panelLoader = React.createRef<PanelComponentLoader>();
 
     private callbacks: { onceAfterUpdate: (() => any)[] } = {
@@ -84,7 +82,6 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
     constructor(props: IBackOfficePanelProps) {
         super(props);
-        this.store = this.props.store ? this.props.store : new BackofficeStore();
 
         this.state = {
             currentView: null,
@@ -93,16 +90,12 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
             layout: "normal",
             loading: false,
             onlyBody: this.props.onlyBody,
-            contextState: this.store.getState(),
             openedWindows: [],
             navigationWindowOpened: false,
             contextMenuCoordinates: null,
             contextMenuCommands: [],
             contextMenuContext: null,
         };
-
-        this.store.onViewLoad(() => this.handleLoadStart());
-        this.store.onViewLoaded(() => this.handleLoadEnd());
 
         Comm.onStart.push(this.handleLoadStart);
         Comm.onFinish.push(this.handleLoadEnd);
@@ -122,17 +115,19 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
 
     public handleAppIconClicked = () => {
         if (this.state.layout != "mobile") {
-            this.store.changeView("/admin/dashboard");
+            alert("home cliccked");
         } else {
             this.setState({ menuVisible: !this.state.menuVisible });
         }
     };
 
     public handleNavigateTo = (element: IMenuElement, inWindow = false) => {
+        this.props.onMenuClick(element, inWindow);
+        return;
         if (inWindow) {
             this.handleOpenWindow(element.route, {}, { title: element.title, showHideLink: true, top: 55 });
         } else {
-            this.store.changeView(element.route);
+            alert("cliccked" + element.route);
         }
         if (this.state.layout == "mobile") {
             this.setState({ menuVisible: false });
@@ -187,24 +182,12 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     };
 
     public componentDidMount() {
-        this.store.onDataUpdated(() => {
-            this.setState({ contextState: this.store.getState() });
+        this.adjustToSize();
+        let timeout = null;
+        window.addEventListener("resize", () => {
+            // clearTimeout(timeout);
+            timeout = setTimeout(this.adjustToSize.bind(this), 30);
         });
-        if (!this.props.isSub) {
-            this.store.initRootElement();
-            this.adjustToSize();
-            let timeout = null;
-            window.addEventListener("resize", () => {
-                // clearTimeout(timeout);
-                timeout = setTimeout(this.adjustToSize.bind(this), 30);
-            });
-
-            /*hotkeys("ctrl+g", (event: KeyboardEvent) => {
-                event.preventDefault();
-                this.setState({ navigationWindowOpened: true });
-                return false;
-            });*/
-        }
     }
 
     public componentDidUpdate() {
@@ -217,13 +200,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     public handleChangeView = (input = {}, callback: () => any) => {
         this.handleLoadStart();
 
-        this.store.changeView(null, input, () => {
-            this.handleLoadEnd();
-            if (callback) {
-                // callback have to run after update not when data is recived
-                this.callbacks.onceAfterUpdate.push(callback);
-            }
-        });
+
     };
 
     public handleLoadStart = () => {
@@ -390,31 +367,7 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
                                     </Modal>
                                 );
                             })}
-                            {this.state.contextState.isPackageCompiling && (
-                                <Modal show={true}>
-                                    <div>
-                                        <LoadingIndicator text={"Webpack compilation in progress"} />
-                                    </div>
-                                </Modal>
-                            )}
-                            <PanelComponentLoader
-                                ref={this.panelLoader}
-                                context={{
-                                    ...this.state.contextState,
-                                    changeView: this.store.changeView,
-                                    onViewLoad: this.store.onViewLoad,
-                                    onViewLoaded: this.store.onViewLoaded,
-                                }}
-                                onLoadStart={this.handleLoadStart}
-                                onLoadEnd={this.handleLoadEnd}
-                                setPanelOption={this.handleSetPanelOption}
-                                openModal={this.handleOpenWindow}
-                                openContextMenu={this.handleOpenContextMenu}
-                                changeView={this.handleChangeView}
-                                closeModal={this.handleCloseWindow}
-                                isSub={this.props.isSub}
-                                parentContext={this.props.parentContext}
-                            />
+                            {this.props.children}
                         </div>
                     </div>
                     {this.state.contextMenuCoordinates !== null && (

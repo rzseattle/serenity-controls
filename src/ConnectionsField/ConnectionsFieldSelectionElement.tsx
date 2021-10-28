@@ -1,5 +1,5 @@
-import IConnectionElement from "./IConnectionElement";
 import * as React from "react";
+import { IConnectionElement } from "./IConnectionElement";
 
 interface ISelectionProps {
     items: any[];

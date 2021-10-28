@@ -1,6 +1,6 @@
 import * as React from "react";
-import IConnectionElement from "./IConnectionElement";
 import { CommonIcons } from "../lib/CommonIcons";
+import { IConnectionElement } from "./IConnectionElement";
 
 interface IConnectionsFieldEntryProps {
     item: IConnectionElement;

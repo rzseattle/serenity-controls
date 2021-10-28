@@ -1,4 +1,4 @@
-export default interface IConnectionElement {
+export interface IConnectionElement {
     value: string | number;
     label: string;
     icon?: string;

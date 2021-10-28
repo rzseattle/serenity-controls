@@ -95,8 +95,6 @@ class BackofficeStore implements IBackOfficestoreAPI {
             this.viewServerErrors = error;
             this.dataUpdated();
         };
-
-
     }
 
     public getState(): IBackOfficeStoreState {

@@ -13,6 +13,8 @@ import { Select } from "../fields/Select";
 import { Comm, fI18n } from "../lib";
 
 import { BackOfficeContainer } from "./BackOfficeContainer";
+
+import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { BackofficeStore } from "./BackofficeStore";
 import { PanelComponentLoader } from "./PanelComponentLoader";
 import { configGetAll } from "./Config";
@@ -20,7 +22,7 @@ import { IPanelContext } from "./PanelContext";
 import { ICommand } from "../CommandBar";
 import "./BackOfficePanel.sass";
 import DebugCommLog from "./DebugCommLog";
-import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
+
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
