@@ -5,7 +5,7 @@ import styles from "./EditableTextCell.module.sass";
 import { IEditableCellProps } from "./IEditableCellProps";
 import { CommonIcons } from "../../../lib/CommonIcons";
 
-export default ({ inputValue, onSubmit, onCancel }: IEditableCellProps): JSX.Element => {
+const EditableBooleanCell = ({ inputValue, onSubmit, onCancel }: IEditableCellProps): JSX.Element => {
     const [value, setValue] = useState(inputValue);
     const [error, setError] = useState<string[]>(null);
     const inputRef = useRef<HTMLInputElement>();
@@ -68,3 +68,5 @@ export default ({ inputValue, onSubmit, onCancel }: IEditableCellProps): JSX.Ele
         </div>
     );
 };
+
+export default EditableBooleanCell;

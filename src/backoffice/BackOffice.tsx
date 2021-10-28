@@ -199,8 +199,6 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
 
     public handleChangeView = (input = {}, callback: () => any) => {
         this.handleLoadStart();
-
-
     };
 
     public handleLoadStart = () => {

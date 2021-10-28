@@ -9,7 +9,7 @@ import styles from "./DebugCommLog.module.sass";
 
 import { Modal } from "../Modal";
 
-export default () => {
+const DebugCommLog = () => {
     const [log, setLog] = useState([...BackofficeStore.debugLog].reverse());
     const [inspectingValue, setInspectingValue] = useState(null);
     const [isExpanded, setExpanded] = useState(true);
@@ -77,6 +77,8 @@ export default () => {
         </div>
     );
 };
+
+export default DebugCommLog;
 
 const RouteInfo = ({
     info,

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CommonIcons } from "../lib/CommonIcons";
 
-export default function (props: any) {
+export default function FiltersPresenter(props: any) {
     const isVisible: boolean = Object.entries(props.order).length > 0 || Object.entries(props.filters).length > 0;
     return (
         <div className={"w-table-presenter " + (!isVisible ? "w-table-presenter-hidden" : "")}>
