@@ -2,14 +2,12 @@ import * as React from "react";
 import { fI18n } from "../lib";
 import { CommandMenu } from "../CommandMenu";
 import "./CommandBar.sass";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
 
 import { CommonIcons } from "../lib/CommonIcons";
 
 export interface ICommand {
     key: string;
-    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
+    icon?: React.JSXElementConstructor<any>;
     label: string;
     onClick?: (event: React.MouseEvent, context: any) => any;
     subItems?: ICommand[];

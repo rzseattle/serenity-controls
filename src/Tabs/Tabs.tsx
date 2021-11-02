@@ -1,8 +1,6 @@
 import * as React from "react";
 import "./Tabs.sass";
 import { CommonIcons } from "../lib/CommonIcons";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
 type ITabsCallback = (index: number, e: any) => any;
 
 interface ITabsProps {
@@ -127,7 +125,7 @@ interface ITabPaneProps {
     /**
      * Tab icon
      */
-    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
+    icon?: React.JSXElementConstructor<any>;
 
     /**
      * If specyfied tab will display close button

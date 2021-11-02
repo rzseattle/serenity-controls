@@ -2,8 +2,6 @@ import * as React from "react";
 
 import "./Panel.sass";
 import { CommandBar, ICommand } from "../CommandBar";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
 
 export interface IPanelProps {
     /**
@@ -26,7 +24,7 @@ export interface IPanelProps {
     /**
      * Icon
      */
-    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
+    icon?: React.JSXElementConstructor<any>;
 }
 
 export class Panel extends React.PureComponent<IPanelProps> {

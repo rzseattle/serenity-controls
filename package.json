@@ -1,6 +1,6 @@
 {
     "name": "serenity-controls",
-    "version": "1.0.33",
+    "version": "1.0.34",
     "description": "",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
@@ -54,7 +54,6 @@
         "react-dropzone": "^8.0.3",
         "react-i18next": "^11.8.4",
         "react-icons": "^4.3.1",
-        "react-json-tree": "^0.13.0",
         "react-notification-system": "^0.4.0",
         "react-sortable-hoc": "^1.11.0",
         "resize-observer-polyfill": "^1.5.1",

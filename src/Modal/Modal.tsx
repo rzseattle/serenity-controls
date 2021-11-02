@@ -4,8 +4,6 @@ import { Positioner } from "../Positioner";
 import { IPositionCalculatorOptions } from "../lib/PositionCalculator";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
 import { CommonIcons } from "../lib/CommonIcons";
 
 export interface IModalProps {
@@ -22,7 +20,7 @@ export interface IModalProps {
     recalculatePosition?: boolean;
     showHideLink?: boolean;
     title?: string;
-    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
+    icon?: React.JSXElementConstructor<any>;
     shadow?: boolean;
     layer?: boolean;
     width?: string | number;

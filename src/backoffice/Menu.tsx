@@ -1,6 +1,5 @@
 import * as React from "react";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
+
 import "./Menu.sass";
 import { CommonIcons } from "../lib/CommonIcons";
 import { HiOutlineChevronDoubleLeft } from "react-icons/hi";
@@ -9,13 +8,13 @@ import { BsChevronDoubleRight } from "react-icons/bs";
 export interface IMenuSection {
     active: boolean;
     elements: IMenuElement[];
-    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
+    icon?: React.JSXElementConstructor<any>;
     opened: boolean;
     title: string;
 }
 
 export interface IMenuElement {
-    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
+    icon?: React.JSXElementConstructor<any>;
     route: string;
     title: string;
 }

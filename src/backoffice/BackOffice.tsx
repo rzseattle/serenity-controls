@@ -25,8 +25,7 @@ import DebugCommLog from "./DebugCommLog";
 
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core";
+
 import { CommonIcons } from "../lib/CommonIcons";
 
 const DebugTool = React.lazy(() => import("./DebugTool"));
@@ -35,7 +34,7 @@ declare let PRODUCTION: boolean;
 NProgress.configure({ parent: ".w-panel-body" });
 
 interface IBackOfficePanelProps {
-    icon?: OverridableComponent<SvgIconTypeMap<any, "svg">>;
+    icon?: any;
     onlyBody?: boolean;
     isSub?: boolean;
     title?: string;
