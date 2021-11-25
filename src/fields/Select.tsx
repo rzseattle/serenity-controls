@@ -8,6 +8,7 @@ import { toOptions } from "./Utils";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 import { CommonIcons } from "../lib/CommonIcons";
+import { Checkbox } from "./Checkbox";
 
 interface ISelectChangeEvent extends IFieldChangeEvent {
     selectedIndex: number;
@@ -17,7 +18,7 @@ export interface ISelectProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
     onChange?: (changeData: ISelectChangeEvent) => any;
     allowClear?: boolean;
-    value: string | number;
+    value: string | number | string[] | number[] ;
     disabledClass?: string;
     showSearchField?: boolean;
     minLengthToShowSearchField?: number;
@@ -26,6 +27,7 @@ export interface ISelectProps extends IFieldProps {
     mode?: "dropdown" | "list";
     height?: number;
     autoFocus?: boolean;
+    multiselect: boolean;
 }
 
 interface ISelectState {
@@ -46,6 +48,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         style: {},
         mode: "dropdown",
         height: 300,
+        multiselect: false,
     };
     private dropdown: HTMLDivElement;
     private presenter: HTMLDivElement;
@@ -121,11 +124,25 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         if (index > 0) {
             this.setState({ highlightedIndex: index });
         }
+
+        let targetValue = null;
+        if (Array.isArray(this.props.value)) {
+            let values = [...this.props.value];
+            if (!values.includes(value)) {
+                (values as string[]).push(value as string);
+            } else {
+                values = (values as string[]).filter((element: string | number) => element != value);
+            }
+            targetValue = values;
+        } else {
+            targetValue = this.props.value;
+        }
+
         if (this.props.onChange) {
             this.props.onChange({
                 name: this.props.name,
                 type: "select",
-                value,
+                value: targetValue,
                 selectedIndex: null,
                 event: null,
             });
@@ -231,7 +248,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                     this.setState({ highlightedIndex: index }); //() => this.dynamicList.forceUpdate()
                 }}
             >
-                {el.label}
+                {el.label} {this.props.multiselect ? "tak" : "nie"}
             </div>
         );
     });
@@ -278,12 +295,20 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
 
                 <div style={{ height: 260, overflow: "auto", position: "relative" }} ref={(el) => (this.listRef = el)}>
                     {this.state.filteredOptions.map((el, index) => {
+                        let isSelected = false;
+                        if (Array.isArray(this.props.value )) {
+                            // @ts-ignore
+                            isSelected = this.props.value.includes(el.value);
+                        } else {
+                            isSelected = this.props.value == el.value;
+                        }
+
                         return (
                             <div
                                 key={el.value}
                                 className={
                                     "w-select-item " +
-                                    (this.props.value == el.value ? "w-select-selected " : "") +
+                                    (!this.props.multiselect && isSelected ? "w-select-selected " : "") +
                                     (index == this.state.highlightedIndex ? "w-select-highlighted " : "")
                                 }
                                 onClick={(e) => {
@@ -294,7 +319,13 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                                     this.setState({ highlightedIndex: index }); //, () => this.dynamicList.forceUpdate()
                                 }}
                             >
-                                {el.label}
+                                {this.props.multiselect ? (
+                                    <div style={{ display: "flex" }}>
+                                        <Checkbox checked={isSelected} /> {el.label}
+                                    </div>
+                                ) : (
+                                    el.label
+                                )}
                             </div>
                         );
                     })}
