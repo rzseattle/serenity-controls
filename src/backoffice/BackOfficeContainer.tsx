@@ -4,7 +4,6 @@ import { LoadingIndicator } from "../LoadingIndicator";
 import { BackOfficePanel } from "./BackOfficePanel";
 import { BackofficeStore } from "./BackofficeStore";
 import { IPanelContext, PanelContext } from "./PanelContext";
-import { PrintJSON } from "../PrintJSON";
 
 interface IBackOfficeContainerProps {
     route: string;

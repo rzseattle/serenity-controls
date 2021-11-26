@@ -20,8 +20,8 @@ export interface IDebugDataEntry {
 
 export type DebugDataListener = (data: IDebugDataEntry[]) => any;
 
-//const externalInput: object = window.reactBackOfficeVar !== undefined ? window.reactBackOfficeVar : {};
-const browserInput = { basePath: "/", user: { login: "test@login.com", isDev: true } };
+const browserInput: any = window.reactBackOfficeVar !== undefined ? window.reactBackOfficeVar : {};
+//const browserInput = { basePath: "/", user: { login: "test@login.com", isDev: true } };
 
 class BackofficeStore implements IBackOfficestoreAPI {
     public static debugLog: IDebugDataEntry[] = [];
