@@ -135,7 +135,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
             }
             targetValue = values;
         } else {
-            targetValue = this.props.value;
+            targetValue = value;
         }
 
         if (this.props.onChange) {
@@ -271,8 +271,6 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 captureInput={true}
                 stopPropagation={true}
             >
-
-
                 {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
                     <input
                         ref={(el) => (this.searchField = el)}
