@@ -18,7 +18,7 @@ export interface ISelectProps extends IFieldProps {
     options: IOption[] | { [key: string]: string };
     onChange?: (changeData: ISelectChangeEvent) => any;
     allowClear?: boolean;
-    value: string | number | string[] | number[] ;
+    value: string | number | string[] | number[];
     disabledClass?: string;
     showSearchField?: boolean;
     minLengthToShowSearchField?: number;
@@ -271,6 +271,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 captureInput={true}
                 stopPropagation={true}
             >
+
+
                 {options.length > this.props.minLengthToShowSearchField && this.props.showSearchField && (
                     <input
                         ref={(el) => (this.searchField = el)}
@@ -296,7 +298,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 <div style={{ height: 260, overflow: "auto", position: "relative" }} ref={(el) => (this.listRef = el)}>
                     {this.state.filteredOptions.map((el, index) => {
                         let isSelected = false;
-                        if (Array.isArray(this.props.value )) {
+                        if (Array.isArray(this.props.value)) {
                             // @ts-ignore
                             isSelected = this.props.value.includes(el.value);
                         } else {
@@ -441,6 +443,18 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                         </div>
                     )}
                 </div>
+                {Array.isArray(this.props.value) && (
+                    <div className="w-select-values-multi-presenter ">
+                        {this.props.value.map((el) => {
+                            let result = (this.props.options as IOption[]).filter((option) => option.value == el);
+                            if (result.length > 0) {
+                                return <div>{result[0].label}</div>;
+                            } else {
+                                return "---";
+                            }
+                        })}
+                    </div>
+                )}
             </HotKeys>
         );
     }
