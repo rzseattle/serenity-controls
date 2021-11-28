@@ -3,7 +3,7 @@ import * as React from "react";
 import { Comm, CommEvents } from "../lib/Comm";
 import { IFieldChangeEvent } from "../fields";
 import { Shadow } from "../Shadow";
-import { ValidationError } from "./ValidationError";
+import { PrintJSON } from "../PrintJSON";
 
 interface IBFormEvent {
     form: BForm;
@@ -77,18 +77,16 @@ interface IBFormProps {
 
     loading?: boolean;
     children: IBFormChildFunction;
-    formErrors?: string[];
-    fieldErrors?: Map<string, string[]>;
-    errors?: ValidationError;
+    errors?: { msg: string; field?: string }[];
     useFormTag?: boolean;
 }
 
 interface IBFormState {
     data: any;
-    fieldErrors: Map<string, string[]>;
-    formErrors: string[];
+
     isDirty: boolean;
     loading: boolean;
+    errors: { msg: string; field?: string }[];
 }
 
 export type IApplyToFieldFn = (
@@ -104,13 +102,12 @@ export type IApplyToFieldFn = (
 
 export class BForm extends React.Component<IBFormProps, IBFormState> {
     public formTag: HTMLElement;
-    private fieldsValues: {};
+    private fieldsValues: any;
 
     public static defaultProps: Partial<IBFormProps> = {
         layoutType: "default",
         editable: true,
-        fieldErrors: new Map<string, string[]>(),
-        formErrors: [],
+        errors: [],
         useFormTag: true,
     };
 
@@ -118,8 +115,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         super(props);
         this.state = {
             data: props.data || {},
-            fieldErrors: props.fieldErrors,
-            formErrors: props.formErrors,
+            errors: this.props.errors,
             isDirty: false,
             loading: props.loading || false,
         };
@@ -144,7 +140,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
     }
 
     public getErrors() {
-        return { fieldErrors: this.state.fieldErrors, formErrors: this.state.formErrors };
+        return this.state.errors;
     }
 
     /**
@@ -157,8 +153,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         }
 
         this.setState({
-            fieldErrors: response.fieldErrors,
-            formErrors: response.formErrors || [],
+            errors: response.validationErrors,
         });
 
         this.forceUpdate();
@@ -173,18 +168,8 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             this.setState({ loading: nextProps.loading });
         }
 
-        if (nextProps.fieldErrors) {
-            this.setState({ fieldErrors: nextProps.fieldErrors });
-        }
-        if (nextProps.formErrors) {
-            this.setState({ formErrors: nextProps.formErrors });
-        }
-
         if (nextProps.errors) {
-            this.setState({
-                fieldErrors: nextProps.errors.fieldErrors || new Map<string, string[]>(),
-                formErrors: nextProps.errors.formErrors || [],
-            });
+            this.setState({ errors: nextProps.errors });
         }
     }
 
@@ -219,8 +204,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                     this.props.onSuccess({ form: this, response });
                 }
                 this.setState({
-                    fieldErrors: new Map<string, string[]>(),
-                    formErrors: [],
+                    errors: [],
                 });
 
                 if (tmpCallbacks && tmpCallbacks[CommEvents.SUCCESS]) {
@@ -333,9 +317,6 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         if (value === undefined && defaultValue !== false) {
             set(this.state.data, arrayNotation, defaultValue);
         }
-        if (get(this.state.fieldErrors) == undefined) {
-            set(this.state.fieldErrors, arrayNotation, null);
-        }
 
         // false - dont track
         if (defaultValue !== false) {
@@ -354,7 +335,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             value,
             name,
             layoutType: this.props.layoutType,
-            errors: this.state.fieldErrors.get(dotNotation),
+            errors: this.state.errors.filter((error) => error.field == dotNotation).map((el) => el.msg),
             editable: this.props.editable,
             onChange: (e: React.FormEvent | IFieldChangeEvent) => {
                 this.handleInputChange(e);
@@ -384,11 +365,13 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
                 }}
                 style={{ position: "relative" }}
             >
-                {this.state.formErrors.length > 0 && (
+                {this.state.errors.filter((error) => !error.field).length > 0 && (
                     <ul className="bg-danger ">
-                        {this.state.formErrors.map((el: string) => (
-                            <li key={el}>{el}</li>
-                        ))}
+                        {this.state.errors
+                            .filter((error) => !error.field)
+                            .map((el) => (
+                                <li key={el.msg}>{el.msg}</li>
+                            ))}
                     </ul>
                 )}
                 {this.props.children(this.applyToField, this.getData(), this)}

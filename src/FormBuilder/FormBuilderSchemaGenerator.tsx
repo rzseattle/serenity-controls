@@ -26,7 +26,7 @@ export interface IFormBuilderProps {
 
 interface IState {
     currentField: any;
-    formErrors: Map<string, string[]>;
+    formErrors: { msg: string; field?: string }[];
     editedIndex: number;
 }
 
@@ -43,7 +43,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                 type: "BText",
             },
             editedIndex: -1,
-            formErrors: new Map<string, string[]>(),
+            formErrors: [],
         };
     }
 
@@ -81,28 +81,28 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
 
     private handleAddField = () => {
         const { currentField } = this.state;
-        const errors: Map<string, string[]> = new Map<string, string[]>();
+        const errors: { msg: string; field?: string }[] = [];
         this.setState({ formErrors: errors });
         if (this.props.onChange) {
             if (!currentField.name) {
-                errors.set("name", [fI18n.t("frontend:formBuilder.fieldIsRequired")]);
+                errors.push({ msg: fI18n.t("frontend:formBuilder.fieldIsRequired"), field: "name" });
             }
             if (this.state.editedIndex === -1) {
                 for (const el of this.props.fields) {
                     if (el.name == currentField.name) {
-                        errors.set("name", [fI18n.t("frontend:formBuilder.nameAlreadyExists")]);
+                        errors.push({ msg: fI18n.t("frontend:formBuilder.nameAlreadyExists"), field: "name" });
                     }
                 }
             }
 
             if (!currentField.type) {
-                errors.set("type", [fI18n.t("frontend:formBuilder.fieldIsRequired")]);
+                errors.push({ field: "type", msg: fI18n.t("frontend:formBuilder.fieldIsRequired") });
             }
             if (!currentField.label) {
-                errors.set("label", [fI18n.t("frontend:formBuilder.fieldIsRequired")]);
+                errors.push({ field: "label", msg: fI18n.t("frontend:formBuilder.fieldIsRequired") });
             }
 
-            if (errors.size == 0) {
+            if (errors.length == 0) {
                 let curr = this.state.currentField;
 
                 if (curr.options !== undefined && !Array.isArray(curr.options)) {
@@ -153,7 +153,7 @@ export class FormBuilderSchemaGenerator extends React.Component<IFormBuilderProp
                         <BForm
                             data={data}
                             onChange={(event) => this.setState({ currentField: event.form.getData() })}
-                            fieldErrors={this.state.formErrors}
+                            errors={this.state.formErrors}
                             useFormTag={false}
                         >
                             {(form) => (
