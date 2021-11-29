@@ -48,7 +48,7 @@ export interface IConnectionsFieldProps extends IFieldProps {
      * Using search provider to fill field by items attached to values
      * input.requestType = "getItems"
      */
-    fillItems: boolean;
+    fillItems?: boolean;
 
     /**
      * Template applied to selection list
@@ -82,7 +82,7 @@ export interface IConnectionsFieldProps extends IFieldProps {
     /**
      * If true opening search box without any phrase entered
      */
-    searchWithoutPhrase: boolean;
+    searchWithoutPhrase?: boolean;
 
     /**
      * If item is clicked
