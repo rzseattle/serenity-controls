@@ -126,8 +126,8 @@ export default class Tbody extends React.Component<ITbodyProps> {
                 if (groupData.length > 0) {
                     lastRow = row;
                     return (
-                        <>
-                            <tr key={key + "_group"}>
+                        <React.Fragment key={key + "_group"}>
+                            <tr>
                                 <td
                                     style={{
                                         backgroundColor: "grey",
@@ -142,7 +142,7 @@ export default class Tbody extends React.Component<ITbodyProps> {
                                 </td>
                             </tr>
                             {rowToOutput}
-                        </>
+                        </React.Fragment>
                     );
                 }
             }
