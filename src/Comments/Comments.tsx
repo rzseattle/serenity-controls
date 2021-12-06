@@ -1,6 +1,7 @@
 import * as React from "react";
 import { fI18n } from "../lib";
 import "./Comments.sass";
+
 interface ICommentsProps {
     children: any;
     commentAdded: (comment: string) => boolean;

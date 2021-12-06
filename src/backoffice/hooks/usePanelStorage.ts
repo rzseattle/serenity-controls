@@ -1,6 +1,6 @@
 // Hook
-import { getPanelContext, IPanelContext, PanelContext } from "../PanelContext";
-import { useContext, useState } from "react";
+import { getPanelContext } from "../PanelContext";
+import { useState } from "react";
 
 export function usePanelStorage<T>(key: string, initialValue: T): [T, (x: T) => any] {
     const subStoreKey = getPanelContext().routeData.routePath;

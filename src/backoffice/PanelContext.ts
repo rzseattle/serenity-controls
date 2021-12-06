@@ -1,8 +1,8 @@
 import * as React from "react";
+import { useContext } from "react";
 
 import { IModalProps } from "../Modal";
 import * as NotificationSystem from "react-notification-system";
-import { useContext } from "react";
 import { IRouteElement } from "./interfaces/IRouteElement";
 import { ICommand } from "../CommandBar";
 

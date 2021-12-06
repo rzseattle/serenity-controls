@@ -19,22 +19,6 @@ export default class Footer extends React.Component<IFooterProps> {
         super(props);
     }
 
-    public shouldComponentUpdate(nextProps: IFooterProps, nextState: IFooterProps) {
-        return true;
-        /*return !deepIsEqual(
-            [
-                this.props.columns,
-                this.props.onPage,
-                this.props.currentPage
-            ],
-            [
-                nextProps.columns,
-                nextProps.onPage,
-                nextProps.currentPage
-            ]
-        )*/
-    }
-
     public render() {
         const props = this.props;
 
@@ -54,25 +38,25 @@ export default class Footer extends React.Component<IFooterProps> {
             <tr>
                 <td colSpan={props.columns.length + 1} className="w-table-footer-main">
                     <div className="w-table-pager">
-                        <div onClick={(e) => props.currentPageChanged(1)}>
+                        <div onClick={() => props.currentPageChanged(1)}>
                             <MdFirstPage />
                         </div>
-                        <div onClick={(e) => props.currentPageChanged(Math.max(1, props.currentPage - 1))}>
+                        <div onClick={() => props.currentPageChanged(Math.max(1, props.currentPage - 1))}>
                             <MdNavigateBefore />
                         </div>
                         {arr.map((el, i) => (
                             <div
                                 key={i}
-                                onClick={(e) => props.currentPageChanged(el)}
+                                onClick={() => props.currentPageChanged(el)}
                                 className={el == props.currentPage ? "w-table-pager-active" : ""}
                             >
                                 {el}
                             </div>
                         ))}
-                        <div onClick={(e) => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}>
+                        <div onClick={() => props.currentPageChanged(Math.min(props.currentPage + 1, pages))}>
                             <MdNavigateNext />
                         </div>
-                        <div onClick={(e) => props.currentPageChanged(pages)}>
+                        <div onClick={() => props.currentPageChanged(pages)}>
                             <MdLastPage />
                         </div>
                     </div>
@@ -84,7 +68,7 @@ export default class Footer extends React.Component<IFooterProps> {
                     <div className="w-table-footer-onpage-select">
                         <span>{fI18n.t("Na stronie")}</span>
                         <select value={props.onPage} onChange={(e) => props.onPageChanged(parseInt(e.target.value))}>
-                            {[10, 25, 50, 100, 500].map((x, i) => (
+                            {[10, 25, 50, 100, 500].map((x) => (
                                 <option key={"onpageval" + x} value={x}>
                                     {x}
                                 </option>

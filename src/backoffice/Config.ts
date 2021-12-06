@@ -1,4 +1,3 @@
-import { deepExtend } from "../lib/JSONTools";
 import { IFile, IFileViewerProps } from "../FileListField";
 
 import { ImageViewer } from "../viewers/ImageViewer";

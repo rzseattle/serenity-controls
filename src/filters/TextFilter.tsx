@@ -43,7 +43,7 @@ export default class TextFilter extends AbstractFilter<ITextFilterProps> {
         }
     }
 
-    public componentWillReceiveProps(nextProps: ITextFilterProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ITextFilterProps) {
         this.setState({
             //option: nextProps.value ? nextProps.value.condition : "LIKE",
             searchText: nextProps.value ? nextProps.value.value : "",
@@ -92,7 +92,7 @@ export default class TextFilter extends AbstractFilter<ITextFilterProps> {
     };
 
     public render() {
-        const { config, caption } = this.props;
+        const { caption } = this.props;
 
         this.options = {
             LIKE: fI18n.t("frontend:filters.text.like"),

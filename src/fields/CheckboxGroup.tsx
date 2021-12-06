@@ -3,7 +3,7 @@ import { IFieldProps, IOption } from "./Interfaces";
 import React, { ReactElement, StatelessComponent } from "react";
 import { Checkbox } from "./Checkbox";
 import "./CheckboxGroup.sass";
-import { deepCopy, deepIsEqual, fI18n } from "../lib";
+import { deepIsEqual, fI18n } from "../lib";
 import { nanoid } from "nanoid";
 
 export interface ICheckboxGroupProps extends IFieldProps {

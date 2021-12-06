@@ -1,9 +1,7 @@
 import * as React from "react";
+import { useState } from "react";
 
 import "./Tree.sass";
-
-import { useEffect, useState } from "react";
-import { deepCopy } from "../lib";
 
 export interface INode {
     label: JSX.Element | string;

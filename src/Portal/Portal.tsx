@@ -1,6 +1,6 @@
 import * as React from "react";
-import ReactDOM from "react-dom";
 import { ReactNode } from "react";
+import ReactDOM from "react-dom";
 
 interface IPortalProps {
     container?: () => HTMLElement;

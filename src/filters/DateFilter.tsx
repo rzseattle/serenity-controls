@@ -35,7 +35,7 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
         this.datepicker = null;
     }
 
-    public componentWillMount() {
+    public UNSAFE_componentWillMount() {
         // prettier-ignore
         Promise.all([
             import("moment"),
@@ -59,7 +59,7 @@ export default class DateFilter extends AbstractFilter<IDateFilterProps> {
         });
     }
 
-    public componentWillReceiveProps(nextProps: IDateFilterProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IDateFilterProps) {
         this.setState({
             choiceType: nextProps.value ? this.choiceTypes[nextProps.value.condition] : "range",
         });

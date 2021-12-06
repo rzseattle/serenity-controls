@@ -7,7 +7,7 @@ export class TableRow extends React.Component<
         data: { [index: string]: any };
     }
 > {
-    constructor(props: any, context: any, data: { [p: string]: any }) {
+    constructor(props: any, context: any) {
         super(props, context);
         this.state = {
             data: {},
@@ -69,7 +69,7 @@ export class TableRow extends React.Component<
                                     event.stopPropagation();
                                     props.onCheck();
                                 }}
-                                onChange={() => {}}
+                                //onChange={() => {}}
                                 checked={this.props.isSelected}
                             />
                         </td>

@@ -1,6 +1,5 @@
 import { IFieldProps } from "./Interfaces";
 import * as React from "react";
-
 import { useRef, useState } from "react";
 //import loadScript from "load-external-scripts";
 import "./Markdown.sass";

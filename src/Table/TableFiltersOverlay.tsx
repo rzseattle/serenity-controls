@@ -1,11 +1,9 @@
 import * as React from "react";
 import { Modal } from "../Modal";
 import { IColumnData } from "./Interfaces";
-import { PrintJSON } from "../PrintJSON";
 import { FilterPanel, IFilterValue } from "../filters";
-import { filter } from "minimatch";
 
-export default ({
+const TableFiltersOverlay = ({
     columns,
     onHide,
     onChange,
@@ -43,3 +41,4 @@ export default ({
         </>
     );
 };
+export default TableFiltersOverlay;

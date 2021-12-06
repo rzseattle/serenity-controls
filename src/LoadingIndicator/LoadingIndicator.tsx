@@ -16,6 +16,7 @@ const LoadingIndicator = ({ size = 1, text = null }: { text?: string; size?: num
         </div>
     );
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LoadingIndicatorDots = ({ size = 1, text = null }: { text?: string; size?: number }) => {
     return (
         <div className="w-loading-indicator-dots">

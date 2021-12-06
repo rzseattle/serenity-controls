@@ -48,7 +48,7 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
         };
     }
 
-    public componentWillReceiveProps(nextProps: ISelectFilterProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ISelectFilterProps) {
         let value: any = "";
         if (nextProps.value) {
             value = nextProps.value.value;
@@ -110,7 +110,7 @@ export default class SelectFilter extends AbstractFilter<ISelectFilterProps> {
     };
 
     public render() {
-        const { config, caption } = this.props;
+        const { caption } = this.props;
         let content: IOption[];
         if (!Array.isArray(this.props.config.content)) {
             content = Object.entries(this.props.config.content).map(([value, label]) => ({

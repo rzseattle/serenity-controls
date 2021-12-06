@@ -47,7 +47,7 @@ export class File extends React.Component<IFileProps, any> {
                 {props.value && Array.isArray(props.value) && (
                     <div className="w-file-dropzone-up-list">
                         {props.value.map((el) => (
-                            <div>
+                            <div key={el.path}>
                                 <div>
                                     <a href={el.preview || el.path} target="_blank">
                                         <div className="w-file-dropzone-up-list-icon">

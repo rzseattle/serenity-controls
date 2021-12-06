@@ -38,7 +38,7 @@ export default class Tbody extends React.Component<ITbodyProps> {
         super(props);
     }
 
-    public shouldComponentUpdate(nextProps: ITbodyProps, nextState: ITbodyProps) {
+    public shouldComponentUpdate(nextProps: ITbodyProps) {
         const ret = !deepIsEqual(
             [this.props.data, this.props.selection, this.props.columns, this.props.selectable],
             [nextProps.data, nextProps.selection, nextProps.columns, nextProps.selectable],

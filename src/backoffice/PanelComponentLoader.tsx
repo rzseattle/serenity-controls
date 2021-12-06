@@ -1,13 +1,11 @@
 import NotificationSystem from "react-notification-system";
 
 import * as React from "react";
+import { ErrorInfo } from "react";
 
 import { ServerErrorPresenter } from "./ServerErrorPresenter";
 import { IModalProps } from "../Modal";
-import { ErrorInfo } from "react";
-import { PrintJSON } from "../PrintJSON";
 import { IPanelContext, PanelContext } from "./PanelContext";
-import { BackofficeStore } from "./BackofficeStore";
 import { deepIsEqual } from "../lib";
 import IBackOfficeStoreState from "./interfaces/IBackOfficeStoreState";
 import { IBackOfficestoreAPI } from "./interfaces/IBackOfficestoreAPI";

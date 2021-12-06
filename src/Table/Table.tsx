@@ -19,7 +19,6 @@ import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 
 declare let window: any;
-declare let PRODUCTION: any;
 
 export interface IDataQuery {
     columns: IColumnData[];
@@ -187,7 +186,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         this.tooltipTimeout = null;
     }
 
-    public componentWillMount() {
+    public UNSAFE_componentWillMount() {
         if (this.props.rememberState && window.localStorage[this.hashCode]) {
             const local = JSON.parse(window.localStorage[this.hashCode]);
             let filters = deepCopy(this.state.filters);
@@ -205,7 +204,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         return this.state.data;
     }
 
-    public componentDidUpdate(prevProps: ITableProps, prevState11: ITableState) {
+    public componentDidUpdate(prevProps: ITableProps) {
         const state = this.state;
         if (this.props.rememberState) {
             window.localStorage[this.hashCode] = JSON.stringify({
@@ -242,7 +241,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         }
         const th = this.tableRef.querySelectorAll("thead>tr>th");
         const thead = this.tableRef.querySelector("thead");
-        const tfoot = this.tableRef.querySelector("tfoot");
+        //const tfoot = this.tableRef.querySelector("tfoot");
         const tbody = this.tableRef.querySelector("tbody");
 
         //        console.log(tfoot.getBoundingClientRect().height, "stopka");
@@ -340,7 +339,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
         return should;
     }*/
 
-    public componentWillReceiveProps(nextProps: ITableProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ITableProps) {
         const columns = [...nextProps.columns];
         const preparedColumns: IColumnData[] = [];
         for (const i in columns) {
@@ -389,7 +388,9 @@ export class Table extends React.Component<ITableProps, ITableState> {
     }
 
     public load = () => {
-        this.state.dataSourceError = "";
+        this.setState({
+            dataSourceError: "",
+        });
 
         if (this.props.onSelectionChange !== null) {
             this.props.onSelectionChange([]);
@@ -486,8 +487,12 @@ export class Table extends React.Component<ITableProps, ITableState> {
     }
 
     public handleFilterChanged = (filterValue: IFilterValue) => {
-        this.state.filters[filterValue.field] = filterValue;
-        this.setState({ currentPage: 1, filters: this.state.filters }, this.load);
+        const tmp: any = {
+            currentPage: 1,
+            filters: this.state.filters,
+        };
+        tmp[filterValue.field] = filterValue;
+        this.setState(tmp, this.load);
         if (this.props.onFiltersChange) {
             this.props.onFiltersChange(deepCopy(this.state.filters));
         }
@@ -588,9 +593,9 @@ export class Table extends React.Component<ITableProps, ITableState> {
             }
 
             if (s.length == this.state.data.length) {
-                this.state.allChecked = true;
+                this.setState({ allChecked: true });
             } else {
-                this.state.allChecked = false;
+                this.setState({ allChecked: false });
             }
         }
 

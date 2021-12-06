@@ -18,7 +18,7 @@ interface ITheadProps {
     onFilterChanged: (value: IFilterValue) => any;
 }
 
-export default React.memo((props: ITheadProps) => {
+const Thead = (props: ITheadProps) => {
     return (
         <thead>
             <tr>
@@ -79,7 +79,7 @@ export default React.memo((props: ITheadProps) => {
             </tr>
         </thead>
     );
-});
+};
 
 const withFilterOpenLayer = (filters: IFilter[]) => {
     return class FilterOpenableContainer extends React.PureComponent<any, any> {
@@ -98,7 +98,7 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
             this.hideTimeout = null;
         }
 
-        public componentDidUpdate(nextProps: any, nextState: any) {
+        public componentDidUpdate() {
             if (this.state.show == true) {
                 const data = this.body.getBoundingClientRect();
                 if (data.right > window.innerWidth) {
@@ -178,3 +178,4 @@ const withFilterOpenLayer = (filters: IFilter[]) => {
         }
     };
 };
+export default React.memo(Thead);

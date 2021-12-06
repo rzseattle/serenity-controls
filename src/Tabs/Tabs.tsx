@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./Tabs.sass";
 import { CommonIcons } from "../lib/CommonIcons";
+
 type ITabsCallback = (index: number, e: any) => any;
 
 interface ITabsProps {
@@ -49,7 +50,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
         }
     }
 
-    public componentWillReceiveProps(nextProps: Readonly<ITabsProps>, nextContext: any): void {
+    public UNSAFE_componentWillReceiveProps(nextProps: Readonly<ITabsProps>): void {
         if (nextProps.activeTab != null) {
             this.setState({ currentTab: nextProps.activeTab });
         }

@@ -1,7 +1,8 @@
-import { SortableContainer, SortableElement, SortableHandle, SortEnd } from "react-sortable-hoc";
+import { SortableContainer } from "react-sortable-hoc";
 import * as React from "react";
 import { ImageBox } from "./ImageBox";
 import { IFile } from "./FileListsField";
+
 interface ISortableImageList {
     files: IFile[];
     itemStyle: React.CSSProperties;

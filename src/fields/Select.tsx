@@ -155,7 +155,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
         this.handleChange(null);
     };
 
-    componentDidUpdate(prevProps: Readonly<ISelectProps>, prevState: Readonly<ISelectState>, snapshot?: any): void {
+    componentDidUpdate(): void {
         if (this.listRef) {
             const highlighted = this.listRef.getElementsByClassName("w-select-highlighted")[0] as HTMLElement;
             if (highlighted) {
@@ -256,8 +256,8 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     private renderListBody = () => {
         const options = toOptions(this.props.options);
 
-        const heightDiff: number =
-            options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
+        // const heightDiff: number =
+        //     options.length > this.props.minLengthToShowSearchField && this.props.showSearchField ? 35 : 0;
 
         return (
             <HotKeys
@@ -444,7 +444,7 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
                 {Array.isArray(this.props.value) && (
                     <div className="w-select-values-multi-presenter ">
                         {this.props.value.map((el) => {
-                            let result = (this.props.options as IOption[]).filter((option) => option.value == el);
+                            const result = (this.props.options as IOption[]).filter((option) => option.value == el);
                             if (result.length > 0) {
                                 return <div>{result[0].label}</div>;
                             } else {

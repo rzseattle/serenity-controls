@@ -1,4 +1,4 @@
-import React, { KeyboardEventHandler, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 //import styles from "./HotKeys.module.sass";
 import { log } from "../lib/Log";
 

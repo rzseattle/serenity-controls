@@ -3,7 +3,6 @@ import * as React from "react";
 import { Comm, CommEvents } from "../lib/Comm";
 import { IFieldChangeEvent } from "../fields";
 import { Shadow } from "../Shadow";
-import { PrintJSON } from "../PrintJSON";
 
 interface IBFormEvent {
     form: BForm;
@@ -159,7 +158,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
         this.forceUpdate();
     }
 
-    public componentWillReceiveProps(nextProps: IBFormProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IBFormProps) {
         if (nextProps.data) {
             this.setState({ data: nextProps.data });
         }
@@ -278,7 +277,7 @@ export class BForm extends React.Component<IBFormProps, IBFormState> {
             }
         }
 
-        const { get, set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
+        const { set, arrayNotation } = this.getHtmlNotationNameTranslators(name);
 
         if (type == "checkbox") {
             const checked = (e as React.FormEvent<HTMLElement>).target as HTMLInputElement;

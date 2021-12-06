@@ -4,7 +4,6 @@ import { useState } from "react";
 import "./DebugTool.sass";
 
 import { Modal } from "../Modal";
-import { RouteVisualization } from "./RouteVisualization";
 import { Comm } from "../lib";
 import { CgErase } from "react-icons/cg";
 import { GiPlatform } from "react-icons/gi";
@@ -60,23 +59,6 @@ const JSON2TypescriptHelper = () => {
             <Modal show={opened} title="Storybook helper" showHideLink={true} onHide={() => setOpened(false)}>
                 <div className="w-debug-tool-storybook">
                     <iframe src="https://transform.tools/json-to-typescript" />
-                </div>
-            </Modal>
-        </>
-    );
-};
-
-const RoutingVisualHelper = () => {
-    const [opened, setOpened] = useState(false);
-    return (
-        <>
-            <span onClick={() => setOpened(true)}>
-                {/*<Icon name={"NumberedList"} />*/}
-                list
-            </span>
-            <Modal show={opened} title="Route List" showHideLink={true} onHide={() => setOpened(false)}>
-                <div className="w-debug-tool-storybook">
-                    <RouteVisualization />
                 </div>
             </Modal>
         </>

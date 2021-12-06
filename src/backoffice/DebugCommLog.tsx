@@ -1,8 +1,7 @@
 import * as React from "react";
-import { BackofficeStore, IDebugDataEntry } from "./BackofficeStore";
 import { useEffect, useState } from "react";
+import { BackofficeStore, IDebugDataEntry } from "./BackofficeStore";
 import { ideConnector } from "./IDEConnector";
-import { LoadingIndicator } from "../LoadingIndicator";
 import { PrintJSON } from "../PrintJSON";
 
 import styles from "./DebugCommLog.module.sass";

@@ -34,7 +34,7 @@ export class Date extends React.Component<IDateProps, any> {
         };
     }
 
-    public componentWillMount() {
+    public UNSAFE_componentWillMount() {
         // prettier-ignore
         Promise.all([
             import("moment"),
@@ -65,7 +65,7 @@ export class Date extends React.Component<IDateProps, any> {
         });
     }
 
-    public componentWillReceiveProps(nextProps: Readonly<IDateProps>, nextContext: any): void {
+    public UNSAFE_componentWillReceiveProps(nextProps: Readonly<IDateProps>, nextContext: any): void {
         // prettier-ignore
         Promise.all([
             import("moment"),

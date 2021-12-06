@@ -1,7 +1,6 @@
 import * as React from "react";
-import { BCheckboxGroup, BDate, BForm, BSelect, BSwitch, BText, BTextarea, IApplyToFieldFn } from "../BForm";
+import { BCheckboxGroup, BDate, BSelect, BSwitch, BText, BTextarea, IApplyToFieldFn } from "../BForm";
 import { IFieldChangeEvent, IOption } from "../fields";
-import { PrintJSON } from "../PrintJSON";
 
 interface IFieldConfig {
     name: string;

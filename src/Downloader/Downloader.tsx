@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import qs from "qs";
-import { string } from "prop-types";
 
 type ICleanUpCallback = () => any;
 

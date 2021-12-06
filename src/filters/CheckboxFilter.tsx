@@ -2,7 +2,6 @@ import * as React from "react";
 import { fI18n } from "../lib/I18n";
 import AbstractFilter, { IFilterProps } from "./AbstractFilter";
 import { IOption } from "../fields/Interfaces";
-import ReactDOM from "react-dom";
 
 import "./SelectFilter.sass";
 import { CheckboxGroup } from "../fields";
@@ -46,7 +45,7 @@ export default class CheckboxFilter extends AbstractFilter<ISelectFilterProps> {
         };
     }
 
-    public componentWillReceiveProps(nextProps: ISelectFilterProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ISelectFilterProps) {
         let value: any = [];
         if (nextProps.value) {
             value = nextProps.value;

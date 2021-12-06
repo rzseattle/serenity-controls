@@ -6,8 +6,6 @@ import { IRouteElement } from "./interfaces/IRouteElement";
 import { IRouteList } from "./interfaces/IRouteList";
 import { IArrowViewComponentProps } from "./PanelComponentLoader";
 
-declare let PRODUCTION: any;
-
 class Router {
     get defaultView(): string {
         return this._defaultView;
@@ -106,15 +104,8 @@ class Router {
 
     private async componentFromInput(input: any): Promise<React.ComponentType<IArrowViewComponentProps>> {
         if (input.component) {
-            if (PRODUCTION && false) {
-                // todo ogarnąć typowanie asynchroniczne
-                // @ts-ignore
-                const result = await this.routes[el.namespace + "_export"]();
-                return result[input.index].default;
-            } else {
-                return input.component;
-                //Component = this.routes[el.component];
-            }
+            return input.component;
+            //Component = this.routes[el.component];
         }
         return null;
     }

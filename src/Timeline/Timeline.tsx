@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./Timeline.sass";
+
 interface ITimelineItemProps {
     color?: string;
     time?: string;
