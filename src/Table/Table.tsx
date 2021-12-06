@@ -164,8 +164,6 @@ export class Table extends React.Component<ITableProps, ITableState> {
             selectedColumn: -1,
         };
 
-        console.log(this.state.fixedLayout, "this.state.fixedLayout");
-
         // helpers
         this.tmpDragStartY = 0;
         this.xhrConnection = null;
@@ -585,7 +583,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
             this.setState({ allChecked: !this.state.allChecked });
         } else {
             const selected = s.indexOf(index);
-            console.log(selected);
+
             if (selected === -1) {
                 s.push(index);
             } else {
