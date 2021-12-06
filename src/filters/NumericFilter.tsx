@@ -82,7 +82,6 @@ export default class NumericFilter extends AbstractFilter<INumericFilterProps> {
     };
 
     public handleKeyPress = (e: React.KeyboardEvent) => {
-        console.log(e.key);
         if (e.key === "Enter") {
             this.handleApply();
         }
