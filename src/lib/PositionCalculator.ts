@@ -86,7 +86,14 @@ export class PositionCalculator {
 
         let styles: React.CSSProperties = {};
 
-        let itemPositionData = this.item.getBoundingClientRect();
+        let tmp = this.item.getBoundingClientRect();
+        let itemPositionData = {
+            width: tmp.width,
+            right: tmp.right,
+            top: tmp.top,
+            bottom: tmp.bottom,
+            height: tmp.height,
+        };
 
         if (this.options.widthCalc != "none") {
             let widthToApply = itemPositionData.width;
@@ -128,8 +135,8 @@ export class PositionCalculator {
             y = -itemPositionData.height / 2;
         }
 
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        // const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        // const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
         styles = {
             ...styles,
