@@ -1,0 +1,46 @@
+\:global
+    .w-table-editable-cell
+        //width: 100%
+
+
+
+.container
+    //width: calc( 100% - 10px )
+    display: flex
+    //margin: 0 5px
+
+    div:nth-child(1)
+        flex-grow: 1
+        //input:focus
+            border: solid 1px #a05959 !important
+
+    a
+        padding: 0 5px
+        height: 100%
+        line-height: 28px
+        height: 28px
+        //background-color: darkgray
+        display: block
+        font-weight: bold
+        color: white
+
+        svg
+            height: 100%
+
+        &.accept
+            background-color: limegreen
+
+
+
+        &.cancel
+            background-color: darkred
+            border-left: solid 1px grey
+
+
+.errors
+    color: darkred
+    font-size: 12px
+    ul
+        margin-left: 5px
+        padding-left: 15px
+        margin-top: 5px
