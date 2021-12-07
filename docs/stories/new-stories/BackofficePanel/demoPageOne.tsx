@@ -2,7 +2,7 @@ import { Navbar } from "../../../../src/Navbar";
 import React, { useRef, useState } from "react";
 import { CommandBar } from "../../../../src/CommandBar";
 import { getPanelContext } from "../../../../src/backoffice/PanelContext";
-import { ColumnHelper as Col, IDataQuery, ITableDataInput, Table } from "../../../../src/Table";
+import { ColumnHelper as Col, IDataQuery, ITableDataInput, _Table } from "../../../../src/Table";
 import { mockData } from "../Table/MOCK_DATA";
 import { FilterHelper } from "../../../../src/filters";
 import { confirmDialog } from "../../../../src/ConfirmDialog";
@@ -24,7 +24,7 @@ export default () => {
     const context = getPanelContext();
     const [editData, setEditData] = useState<Record<string, any> | null>(null);
     const [infoVisible, setInfoVisible] = useState<boolean>(true);
-    const table = useRef<Table>();
+    const table = useRef<_Table>();
 
     const baseColumns = [
         Col.id("id", "Id"),
@@ -98,7 +98,7 @@ export default () => {
                 <span>Path </span>
             </Navbar>
             <div style={{ margin: "0 10px" }}>
-                <Table dataProvider={provider} columns={baseColumns} ref={table} />
+                <_Table dataProvider={provider} columns={baseColumns} ref={table} />
             </div>
 
             <Modal

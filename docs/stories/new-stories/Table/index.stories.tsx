@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { storiesOf } from "@storybook/react";
-import { Table, ColumnHelper as Col, IDataQuery, ITableDataInput, Column } from "../../../../src/Table";
+import { _Table, ColumnHelper as Col, IDataQuery, ITableDataInput, Column } from "../../../../src/Table";
 import { mockData } from "./MOCK_DATA";
 import { FilterHelper } from "../../../../src/filters";
 
@@ -57,7 +57,7 @@ storiesOf("Table/Table", module)
 
         () => (
             <div>
-                <Table dataProvider={provider} columns={baseColumns} />
+                <_Table dataProvider={provider} columns={baseColumns} />
             </div>
         ),
     )
@@ -77,7 +77,7 @@ storiesOf("Table/Table", module)
                 .width(250);
             return (
                 <div>
-                    <Table dataProvider={provider} columns={baseColumns} />
+                    <_Table dataProvider={provider} columns={baseColumns} />
                 </div>
             );
         },
@@ -96,7 +96,7 @@ storiesOf("Table/Table", module)
 
             return (
                 <div>
-                    <Table dataProvider={provider} columns={baseColumns} />
+                    <_Table dataProvider={provider} columns={baseColumns} />
                 </div>
             );
         },
