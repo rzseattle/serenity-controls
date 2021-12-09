@@ -17,6 +17,7 @@ import { confirmDialog } from "../ConfirmDialog";
 import TableFiltersOverlay from "./TableFiltersOverlay";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
+import { PrintJSON } from "../PrintJSON";
 
 declare let window: any;
 
@@ -487,9 +488,10 @@ export class Table extends React.Component<ITableProps, ITableState> {
     public handleFilterChanged = (filterValue: IFilterValue) => {
         const tmp: any = {
             currentPage: 1,
-            filters: this.state.filters,
+            filters: { ...this.state.filters },
         };
-        tmp[filterValue.field] = filterValue;
+        tmp.filters[filterValue.field] = filterValue;
+
         this.setState(tmp, this.load);
         if (this.props.onFiltersChange) {
             this.props.onFiltersChange(deepCopy(this.state.filters));
@@ -733,6 +735,7 @@ export class Table extends React.Component<ITableProps, ITableState> {
                             orderDelete={this.handleOrderDelete}
                         />
                     </div>*/}
+
                     <table
                         ref={(el) => (this.tableRef = el)}
                         className={"w-table-" + this.hashCode + (this.state.fixedLayout ? " w-table-fixed" : "")}
