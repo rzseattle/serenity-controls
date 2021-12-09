@@ -1,5 +1,5 @@
 import { AiOutlineInfoCircle, AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
-import { BiCopy, BiExport, BiImport, BiPrinter, BiUpload } from "react-icons/bi";
+import { BiCommentDots, BiCopy, BiExport, BiImport, BiPrinter, BiUpload } from "react-icons/bi";
 import { BsCalendar, BsFilter, BsList } from "react-icons/bs";
 import { FiArrowDown, FiArrowUp, FiDownload, FiLogOut } from "react-icons/fi";
 import { HiOutlineDocumentText, HiOutlineFolder, HiOutlineSave } from "react-icons/hi";
@@ -52,6 +52,7 @@ export const CommonIcons = {
 
     user: VscAccount,
     exit: FiLogOut,
+    comment: BiCommentDots
 };
 
 export const SpecialIcons = {};
