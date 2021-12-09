@@ -2,5 +2,10 @@
   background-color: yellow
   display: grid
 
-  grid-gap: 10px
+
   grid-auto-rows: minmax(100px, auto)
+
+  > div
+    padding: 6px
+    &::nth-row(1n+2)
+      background-color: red
