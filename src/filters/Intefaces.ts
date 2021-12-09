@@ -1,5 +1,5 @@
 export interface IFilter {
-    field: string;
+    field: string | number | symbol;
     caption?: string;
     config?: any;
     onChange?: (value: IFilterValue) => any;
@@ -8,7 +8,7 @@ export interface IFilter {
 }
 
 export interface IFilterValue {
-    field: string;
+    field: string | number | symbol;
     value: any;
     condition: string;
     caption: string;

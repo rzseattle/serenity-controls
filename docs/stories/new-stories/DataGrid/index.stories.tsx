@@ -10,8 +10,17 @@ storiesOf("DataGrid/DataGrid", module).add(
 
     () => {
         const columns = useGridColumns<IMockUser>((creator) => {
-            return [creator.number("id", "Id").template((row) => row.price)];
+
+            return [
+                creator.number("id", "Id").template((row) => row.price),
+                creator.text( "first_name", "First name"),
+                creator.text( "last_name", "Last  name"),
+                creator.text( "email", "Email"),
+                creator.text( "price", "Price"),
+                creator.text( "ip_address", "IP"),
+            ];
         });
+
         return (
             <div>
                 <DataGrid columns={columns} data={{ rows: mockData, rowCount: mockData.length }} />

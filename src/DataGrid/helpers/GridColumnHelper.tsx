@@ -6,21 +6,22 @@ import { IGridCellTemplate } from "../interfaces/IGridCellTemplate";
 import { CommonIcons } from "../../lib/CommonIcons";
 import { IGridCellEventCallback } from "../interfaces/IGridCellEventCallback";
 import { IGridHeaderEventCallback } from "../interfaces/IGridHeaderEventCallback";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useGridColumns = <Row,>(
     callback: (list: GridColumnCreator<Row>) => GridColumnHelper<Row>[],
-): GridColumnHelper<Row>[] => {
-    let columns: GridColumnHelper<Row>[] = [];
-    useEffect(() => {
-        columns = callback(new GridColumnCreator<Row>());
-    }, []);
+): IGridColumnData<Row>[] => {
+    const [columns, setColumns] = useState<IGridColumnData<Row>[]>([]);
 
+    useEffect(() => {
+        const result = callback(new GridColumnCreator<Row>()).map((column) => column.get());
+        setColumns(result);
+    }, []);
     return columns;
 };
 
 export class GridColumnCreator<Row> {
-    public number(field: string, caption: string): GridColumnHelper<Row> {
+    public number(field: Extract<keyof Row, number | string>, caption: string): GridColumnHelper<Row> {
         return new GridColumnHelper<Row>({
             field,
             header: { caption },
@@ -35,6 +36,24 @@ export class GridColumnCreator<Row> {
                 },
             ],
         }).className(["right"]);
+    }
+
+    public text<Row>(field: Extract<keyof Row, number | string>, caption: string): GridColumnHelper<Row> {
+        return new GridColumnHelper<Row>({
+            field,
+            header: { caption },
+            filter: [
+                {
+                    caption,
+                    // label: caption,
+                    field,
+                    component: TextFilter,
+                    config: {
+                        showFilterOptions: true,
+                    },
+                },
+            ],
+        });
     }
 }
 
@@ -80,24 +99,6 @@ class GridColumnHelper<T> {
                         multiselect: multiSelectFilter,
                         mode: "list",
                         applyOnChange: true,
-                    },
-                },
-            ],
-        });
-    }
-
-    public static text<T>(field: string, caption: string): GridColumnHelper<T> {
-        return new GridColumnHelper({
-            field,
-            header: { caption },
-            filter: [
-                {
-                    caption,
-                    // label: caption,
-                    field,
-                    component: TextFilter,
-                    config: {
-                        showFilterOptions: true,
                     },
                 },
             ],
