@@ -1,4 +1,18 @@
-export const mockData = [{"id":1,"first_name":"Calida","last_name":"Dimelow","email":"cdimelow0@instagram.com","gender":"Female","ip_address":"119.229.150.50","date":"2017-06-15","price":"193.57"},
+export interface IMockUser{
+
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    gender: string;
+    ip_address: string;
+    date: string;
+    price: string;
+
+}
+
+
+export const mockData : IMockUser[] = [{"id":1,"first_name":"Calida","last_name":"Dimelow","email":"cdimelow0@instagram.com","gender":"Female","ip_address":"119.229.150.50","date":"2017-06-15","price":"193.57"},
 {"id":2,"first_name":"Link","last_name":"Catterick","email":"lcatterick1@so-net.ne.jp","gender":"Male","ip_address":"43.102.171.151","date":"2017-02-18","price":"137.73"},
 {"id":3,"first_name":"Allan","last_name":"Schust","email":"aschust2@i2i.jp","gender":"Male","ip_address":"40.176.191.35","date":"2017-04-25","price":"207.79"},
 {"id":4,"first_name":"Noemi","last_name":"Gibbins","email":"ngibbins3@booking.com","gender":"Female","ip_address":"249.142.188.166","date":"2016-12-23","price":"122.63"},

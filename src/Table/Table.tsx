@@ -100,8 +100,8 @@ interface ITableState {
 }
 
 export const Table = () => {
-    return <div>table 1</div>
-}
+    return <div>table 1</div>;
+};
 
 export class Table1 extends React.Component<ITableProps, ITableState> {
     public static defaultProps: Partial<ITableProps> = {

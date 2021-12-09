@@ -5,13 +5,14 @@ import { ITableDataInput } from "../Table";
 import { PrintJSON } from "../PrintJSON";
 import { IGridColumnData } from "./interfaces/IGridColumnData";
 import GridColumnHelper from "./helpers/GridColumnHelper";
+import { IGridData } from "./interfaces/IGridData";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
 interface IGridProps<T> {
     controlKey?: string;
 
-    dataProvider?: (input: IDataQuery) => Promise<ITableDataInput<T>>;
+    dataProvider?: (input: IDataQuery) => Promise<IGridData<T>>;
     selectable?: boolean;
     onSelectionChange?: ISelectionChangeEvent;
     onPage?: number;
@@ -25,7 +26,7 @@ interface IGridProps<T> {
     filters?: { [key: string]: IFilterValue };
     onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any;
     onDataChange?: (data: any, count: number) => any;
-    data?: ITableDataInput<T>;
+    data?: IGridData<T>;
 
     groupBy?: IGroupByData[];
 

@@ -6,28 +6,24 @@ import { IGridCellTemplate } from "../interfaces/IGridCellTemplate";
 import { CommonIcons } from "../../lib/CommonIcons";
 import { IGridCellEventCallback } from "../interfaces/IGridCellEventCallback";
 import { IGridHeaderEventCallback } from "../interfaces/IGridHeaderEventCallback";
+import { useEffect } from "react";
 
+export const useGridColumns = <Row,>(
+    callback: (list: GridColumnCreator<Row>) => GridColumnHelper<Row>[],
+): GridColumnHelper<Row>[] => {
+    let columns: GridColumnHelper<Row>[] = [];
+    useEffect(() => {
+        columns = callback(new GridColumnCreator<Row>());
+    }, []);
 
-export class GridColumnHelperG<T>{
-    public number(field: string, caption: string): GridColumnHelper<T> {
-        return GridColumnHelper.number<T>(field, caption);
-    }
-}
+    return columns;
+};
 
-class GridColumnHelper<T> {
-    protected data: IGridColumnData<T>;
-
-    constructor(initData: Partial<IGridColumnData<T>>) {
-        this.data = {
-            ...initData,
-        };
-    }
-
-    public static number<T>(field: string, caption: string): GridColumnHelper<T> {
-        return new GridColumnHelper({
+export class GridColumnCreator<Row> {
+    public number(field: string, caption: string): GridColumnHelper<Row> {
+        return new GridColumnHelper<Row>({
             field,
             header: { caption },
-
             filter: [
                 {
                     caption,
@@ -39,6 +35,16 @@ class GridColumnHelper<T> {
                 },
             ],
         }).className(["right"]);
+    }
+}
+
+class GridColumnHelper<T> {
+    protected data: IGridColumnData<T>;
+
+    constructor(initData: Partial<IGridColumnData<T>>) {
+        this.data = {
+            ...initData,
+        };
     }
 
     public static map<T>(
@@ -272,6 +278,7 @@ class GridColumnHelper<T> {
     }
 
     public className(className: string[]): GridColumnHelper<T> {
+        this.data.cell = this.data.cell ?? {};
         this.data.cell.class = className;
         return this;
     }
@@ -413,4 +420,4 @@ class GridColumnHelper<T> {
 }
 
 export default GridColumnHelper;
-export { GridColumnHelper, GridColumnHelper<T> as Column };
+export { GridColumnHelper };
