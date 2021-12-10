@@ -23,7 +23,7 @@ storiesOf("DataGrid/DataGrid", module).add(
 
         return (
             <div>
-                <DataGrid columns={columns} data={{ rows: mockData, rowCount: mockData.length }} />
+                <DataGrid columns={columns} data={{ rows: mockData.slice(0,40), rowCount: mockData.length }} />
             </div>
         );
     },

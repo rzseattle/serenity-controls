@@ -43,8 +43,8 @@ const DataGrid = <T,>(props: IGridProps<T>) => {
     return (
         <div>
             <div onClick={() => sc((r) => ++r)}>{c}</div>
-            <PrintJSON json={props.columns} />
-            <hr />
+            {/*<PrintJSON json={props.columns} />*/}
+
             <div className={styles.gridLayout} style={{gridTemplateColumns: `repeat(${props.columns.length}, 1fr)`}}>
                 <GridHead columns={props.columns} />
                 <GridBody columns={props.columns} rows={props.data.rows} />

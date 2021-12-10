@@ -1,11 +1,7 @@
 .gridLayout
-  background-color: yellow
-  display: grid
 
-
-  grid-auto-rows: minmax(100px, auto)
-
-  > div
-    padding: 6px
-    &::nth-row(1n+2)
-      background-color: red
+    display: grid
+    grid-auto-rows: auto
+    gap: 1px
+    width: calc( 100% - 2px )
+    margin-left: 1px
