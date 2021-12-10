@@ -28,13 +28,17 @@
             "es2015.iterable",
             "dom.iterable"
         ],
-        "baseUrl": "."
+        "baseUrl": ".",
         //    "paths": {
         //      "frontend/src": ["./src"] // This mapping is relative to "baseUrl"
         //    },
         //    "typeRoots": [
         //      "../../node_modules/@types"
         //    ]
+        "types": [
+            "./types/main.d.ts"
+        ],
+
     },
 
 
