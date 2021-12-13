@@ -52,7 +52,7 @@ export const CommonIcons = {
 
     user: VscAccount,
     exit: FiLogOut,
-    comment: BiCommentDots
+    comment: BiCommentDots,
 };
 
 export const SpecialIcons = {};
