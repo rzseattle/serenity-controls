@@ -13,6 +13,7 @@ interface IPrintContainerProps {
     onHide?: () => any;
     onPrint?: () => any;
     modalProps?: Partial<IModalProps>;
+    printOnOpen?: boolean
 }
 
 export class PrintContainer extends React.Component<IPrintContainerProps, any> {
@@ -32,6 +33,9 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
     public handlePrint = () => {
         this.iframe.focus();
         this.iframe.contentWindow.print();
+        if(this.props.title){
+            this.iframe.contentDocument.title = this.props.title;
+        }
         if (this.props.onPrint) {
             this.props.onPrint();
         }
@@ -40,6 +44,9 @@ export class PrintContainer extends React.Component<IPrintContainerProps, any> {
     public componentDidMount() {
         setTimeout(() => {
             this.setState({ ready: true });
+            if(this.props.printOnOpen){
+                this.handlePrint();
+            }
         }, 200);
     }
 
