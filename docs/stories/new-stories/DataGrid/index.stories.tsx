@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 
 import React from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
-import { useGridColumns } from "../../../../src/DataGrid/helpers/GridColumnHelper";
+import { useGridColumns } from "../../../../src/DataGrid/helpers/useGridColumns";
 
 storiesOf("DataGrid/DataGrid", module).add(
     "Base",
@@ -12,11 +12,14 @@ storiesOf("DataGrid/DataGrid", module).add(
         const columns = useGridColumns<IMockUser>((creator) => {
 
             return [
-                creator.number("id", "Id").template((row) => row.price),
+                creator.number("id", "Id")
+                    .template((row) => row.price)
+                    .width(30)
+                ,
                 creator.text( "first_name", "First name"),
                 creator.text( "last_name", "Last  name"),
                 creator.text( "email", "Email"),
-                creator.text( "price", "Price"),
+                creator.money( "price", "Price"),
                 creator.text( "ip_address", "IP"),
             ];
         });

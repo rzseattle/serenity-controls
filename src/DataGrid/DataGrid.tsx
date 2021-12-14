@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { IDataQuery, IFilterValue, IGroupByData, IRowClassTemplate, IRowStyleTemplate } from "../Table/Interfaces";
-import { PrintJSON } from "../PrintJSON";
+import { IDataQuery, IFilterValue, IRowClassTemplate, IRowStyleTemplate } from "../Table/Interfaces";
 import { IGridColumnData } from "./interfaces/IGridColumnData";
 import { IGridData } from "./interfaces/IGridData";
 import GridHead from "./parts/GridHead";
 import GridBody from "./parts/GridBody";
 import GridFoot from "./parts/GridFoot";
 import styles from "./DataGrid.module.sass";
+import { IGroupByData } from "./interfaces/IGroupByData";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
@@ -29,7 +29,7 @@ interface IGridProps<T> {
     onDataChange?: (data: any, count: number) => any;
     data: IGridData<T>;
 
-    groupBy?: IGroupByData[];
+    groupBy?: IGroupByData<T>[];
 
     autofocus?: boolean;
 }
@@ -40,17 +40,23 @@ const DataGrid = <T,>(props: IGridProps<T>) => {
         return null;
     }
 
+    const getWidths = (): string => {
+        return props.columns
+            .reduce((p, c) => {
+                return p.concat(c.width ? c.width + "px" : "1fr");
+            }, [])
+            .join(" ");
+    };
+
     return (
         <div>
             <div onClick={() => sc((r) => ++r)}>{c}</div>
-            {/*<PrintJSON json={props.columns} />*/}
 
-            <div className={styles.gridLayout} style={{gridTemplateColumns: `repeat(${props.columns.length}, 1fr)`}}>
+            <div className={styles.gridLayout} style={{ gridTemplateColumns: getWidths() }}>
                 <GridHead columns={props.columns} />
                 <GridBody columns={props.columns} rows={props.data.rows} />
             </div>
             <GridFoot />
-            {/*<PrintJSON json={props.data} />*/}
         </div>
     );
 };

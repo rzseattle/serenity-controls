@@ -5,7 +5,7 @@ import { IGridHeaderEventCallback } from "./IGridHeaderEventCallback";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export interface IGridColumnData<T> {
-    field?: string | number;
+    field?: Extract<keyof T, string | number>;
     orderField?: string;
     isSortable?: boolean;
     display?: boolean;

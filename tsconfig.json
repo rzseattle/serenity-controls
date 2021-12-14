@@ -35,16 +35,11 @@
         //    "typeRoots": [
         //      "../../node_modules/@types"
         //    ]
-        "types": [
-            "./types/main.d.ts"
-        ],
-
+//        "paths": {
+//            "*": ["types/main.d.ts", "./src/**"]
+//        }
     },
 
-
     "exclude": ["resources", "vendor", "assets", "data", "node_modules", "public"],
-    "include": [
-        "./src/**/*"
-    , "./stories/**/*"
-    ]
+    "include": ["./src/**/*", "./stories/**/*", "./types/**/*"]
 }
