@@ -2,7 +2,7 @@ import { DateFilter, NumericFilter, SelectFilter, SwitchFilter, TextFilter } fro
 import { IOption } from "../../fields";
 import { CommonIcons } from "../../lib/CommonIcons";
 import { IGridCellTemplate } from "../interfaces/IGridCellTemplate";
-import { IGridColumnData } from "../interfaces/IGridColumnData";
+import { IGridColumn } from "../interfaces/IGridColumn";
 import GridColumnHelper from "./GridColumnHelper";
 import React from "react";
 
@@ -176,7 +176,7 @@ export class ColumnCreator<Row> {
         }).noFilter();
     }
 
-    public custom<T>(data: IGridColumnData<T>): GridColumnHelper<T> {
+    public custom<T>(data: IGridColumn<T>): GridColumnHelper<T> {
         return new GridColumnHelper<T>(data);
     }
 }

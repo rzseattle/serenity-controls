@@ -5,10 +5,20 @@ import React, { useMemo } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 import { PrintJSON } from "../../../../src/PrintJSON";
 import { GridCreatorHelper } from "../../../../src/DataGrid/helpers/GridCreatorHelper";
+import { ColText } from "../../../../src/DataGrid/helpers/columnTemplates/ColText";
 
 storiesOf("DataGrid/DataGrid", module).add("Base", () => {
     const gridData = useMemo(() => {
         const creator = new GridCreatorHelper<IMockUser>();
+        creator.addCol( new ColText("id", "id") )
+
+
+
+
+
+
+
+
         const c = creator.column;
         return creator.toProcess({
             columns: [

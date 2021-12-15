@@ -1,8 +1,8 @@
 import React from "react";
-import { IGridColumnData } from "../interfaces/IGridColumnData";
+import { IGridColumn } from "../interfaces/IGridColumn";
 import styles from "./GridBody.module.sass";
 import { nanoid } from "nanoid";
-const GridBody = <T,>({ columns, rows }: { rows: T[]; columns: IGridColumnData<T>[] }) => {
+const GridBody = <T,>({ columns, rows }: { rows: T[]; columns: IGridColumn<T>[] }) => {
     let keyField: string | null = null;
     if (rows.length > 0) {
         if ("id" in rows[0]) {

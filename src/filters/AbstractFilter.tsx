@@ -20,7 +20,7 @@ export interface IFilterProps {
      * On filter apply
      * @param filterValue
      */
-    onApply?: (filterValue: IFilterValue) => unknown;
+    onApply: (filterValue: IFilterValue) => unknown;
     /**
      * Some config values
      */

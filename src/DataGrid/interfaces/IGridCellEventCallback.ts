@@ -1,8 +1,8 @@
-import { IGridColumnData } from "./IGridColumnData";
+import { IGridColumn } from "./IGridColumn";
 import React from "react";
 
 export type IGridCellEventCallback<T> = (
     row: T,
-    column: IGridColumnData<T>,
+    column: IGridColumn<T>,
     event: React.MouseEvent<HTMLElement>,
 ) => any;

@@ -1,4 +1,4 @@
-import { IGridColumnData } from "../interfaces/IGridColumnData";
+import { IGridColumn } from "../interfaces/IGridColumn";
 import GridColumnHelper from "./GridColumnHelper";
 import { GridCreatorHelper } from "./GridCreatorHelper";
 import { IGridFilter } from "../interfaces/IGridFilter";
@@ -10,7 +10,7 @@ export const useGrid = <Row>(
         filters?: IGridFilter[];
         sorters?: IGridSorter[];
     },
-): { columns: IGridColumnData<Row>[]; filters?: IGridFilter[]; sorters?: IGridSorter[] } => {
+): { columns: IGridColumn<Row>[]; filters?: IGridFilter[]; sorters?: IGridSorter[] } => {
     console.log("coś się dzieje");
     const result = callback(new GridCreatorHelper<Row>());
     const columns = result.columns.map((column) => column.get());

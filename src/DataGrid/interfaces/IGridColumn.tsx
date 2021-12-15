@@ -2,24 +2,23 @@ import { IFilter } from "../../filters";
 import { IGridCellEventCallback } from "./IGridCellEventCallback";
 import { IGridCellTemplate } from "./IGridCellTemplate";
 import { IGridHeaderEventCallback } from "./IGridHeaderEventCallback";
+import { IGridSorterValue } from "./IGridSorter";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export interface IGridColumnData<T> {
+export interface IGridColumn<T> {
     field?: Extract<keyof T, string | number>;
     name?: string;
     orderField?: string;
-    isSortable?: boolean;
     display?: boolean;
     width?: number;
     minWidth?: number;
     maxWidth?: number;
     type?: string;
     rowSpan?: number;
-    order?: string;
+
     cell?: {
         class?: string[];
-        classTemplate?: (row: T, column: IGridColumnData<T>) => string[];
-        styleTemplate?: (row: T, column: IGridColumnData<T>) => any;
+        classTemplate?: (row: T, column: IGridColumn<T>) => string[];
+        styleTemplate?: (row: T, column: IGridColumn<T>) => any;
         template?: IGridCellTemplate<T>;
         toolTip?: IGridCellTemplate<T>;
         append?: string | JSX.Element;
@@ -43,5 +42,7 @@ export interface IGridColumnData<T> {
             click?: IGridHeaderEventCallback<T>[];
         };
     };
+    isSortable?: boolean;
     filter?: IFilter[];
+    order?: IGridSorterValue;
 }

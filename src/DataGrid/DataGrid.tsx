@@ -1,5 +1,5 @@
 import React from "react";
-import { IGridColumnData } from "./interfaces/IGridColumnData";
+import { IGridColumn } from "./interfaces/IGridColumn";
 import { IGridData } from "./interfaces/IGridData";
 import GridHead from "./parts/GridHead";
 import GridBody from "./parts/GridBody";
@@ -23,7 +23,7 @@ interface IGridProps<T> {
     rememberState?: boolean;
     rowClassTemplate?: IGridRowClassProvider<T>;
     rowStyleTemplate?: IGridRowStyleProvider<T>;
-    columns: IGridColumnData<T>[];
+    columns: IGridColumn<T>[];
     showFooter?: boolean;
     showHeader?: boolean;
     additionalConditions?: any;

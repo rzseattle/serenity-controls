@@ -1,7 +1,7 @@
 import React from "react";
-import { IGridColumnData } from "../interfaces/IGridColumnData";
+import { IGridColumn } from "../interfaces/IGridColumn";
 import styles from "./GridHead.module.sass";
-const GridHead = <T,>({ columns }: { columns: IGridColumnData<T>[] }) => {
+const GridHead = <T,>({ columns }: { columns: IGridColumn<T>[] }) => {
     return (
         <div className={styles.row}>
             {columns.map((column) => {

@@ -1,5 +1,6 @@
 export interface IGridSorter {
-    field: string;
+    field: string | number;
+
     caption: string;
     column: string;
 }

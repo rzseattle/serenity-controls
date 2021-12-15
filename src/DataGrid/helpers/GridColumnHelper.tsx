@@ -1,14 +1,14 @@
 import * as React from "react";
 import { IFilter } from "../../filters";
-import { IGridColumnData } from "../interfaces/IGridColumnData";
+import { IGridColumn } from "../interfaces/IGridColumn";
 import { IGridCellTemplate } from "../interfaces/IGridCellTemplate";
 import { IGridCellEventCallback } from "../interfaces/IGridCellEventCallback";
 import { IGridHeaderEventCallback } from "../interfaces/IGridHeaderEventCallback";
 
 class GridColumnHelper<T> {
-    protected data: IGridColumnData<T>;
+    protected data: IGridColumn<T>;
 
-    constructor(initData: Partial<IGridColumnData<T>>) {
+    constructor(initData: Partial<IGridColumn<T>>) {
         this.data = {
             ...initData,
         };
@@ -129,13 +129,13 @@ class GridColumnHelper<T> {
         return this;
     }
 
-    public styleTemplate(fn: (row: T, column: IGridColumnData<T>) => React.CSSProperties) {
+    public styleTemplate(fn: (row: T, column: IGridColumn<T>) => React.CSSProperties) {
         this.data.cell = this.data.cell ?? {};
         this.data.cell.styleTemplate = fn;
         return this;
     }
 
-    public classTemplate(fn: (row: any, column: IGridColumnData<T>) => string[]) {
+    public classTemplate(fn: (row: any, column: IGridColumn<T>) => string[]) {
         this.data.cell = this.data.cell ?? {};
         this.data.cell.classTemplate = fn;
         return this;
@@ -147,12 +147,12 @@ class GridColumnHelper<T> {
         return this;
     }
 
-    public set(el: Partial<IGridColumnData<T>>): GridColumnHelper<T> {
+    public set(el: Partial<IGridColumn<T>>): GridColumnHelper<T> {
         this.data = { ...this.data, ...el };
         return this;
     }
 
-    public get(): IGridColumnData<T> {
+    public get(): IGridColumn<T> {
         return this.data;
     }
 }

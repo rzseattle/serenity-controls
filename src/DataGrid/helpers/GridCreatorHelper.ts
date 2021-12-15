@@ -4,7 +4,7 @@ import { ColumnCreator } from "./GridColumnCreatorHelper";
 import GridColumnHelper from "./GridColumnHelper";
 import { IGridFilter } from "../interfaces/IGridFilter";
 import { IGridSorter } from "../interfaces/IGridSorter";
-import { IGridColumnData } from "../interfaces/IGridColumnData";
+import { IGridColumn } from "../interfaces/IGridColumn";
 
 export class GridCreatorHelper<Row> {
     public column: ColumnCreator<Row> = new ColumnCreator<Row>();
@@ -19,13 +19,13 @@ export class GridCreatorHelper<Row> {
         filters?: GridFilterHelper[];
         sorters?: GridSortHelper[];
     }): {
-        columns: IGridColumnData<Row>[];
+        columns: IGridColumn<Row>[];
         filters?: IGridFilter[];
         sorters?: IGridSorter[];
     } => {
         const columns = input.columns.map((column) => column.get());
         let ret: {
-            columns: IGridColumnData<Row>[];
+            columns: IGridColumn<Row>[];
             filters?: IGridFilter[];
             sorters?: IGridSorter[];
         } = { columns };
