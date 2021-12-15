@@ -6,7 +6,10 @@ import { IGridColumnData } from "../interfaces/IGridColumnData";
 import GridColumnHelper from "./GridColumnHelper";
 import React from "react";
 
-export class GridColumnCreator<Row> {
+
+
+export class ColumnCreator<Row> {
+
     public number(field: Extract<keyof Row, number | string>, caption: string): GridColumnHelper<Row> {
         return new GridColumnHelper<Row>({
             field,
@@ -178,8 +181,6 @@ export class GridColumnCreator<Row> {
     }
 }
 
-
-
 // public editable<T>(
 //     fn: (changedValue: any, row: any, column: IGridColumnData<T>) => boolean | string[],
 //     type: "text" | "textarea" | "bool" | "switch" | "select",
@@ -256,4 +257,3 @@ export class GridColumnCreator<Row> {
 // // });
 // return this;
 // }
-

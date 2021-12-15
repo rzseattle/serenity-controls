@@ -1,33 +1,45 @@
 import { IMockUser, mockData } from "../Table/MOCK_DATA";
 import { storiesOf } from "@storybook/react";
 
-import React from "react";
+import React, { useMemo } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
-import { useGridColumns } from "../../../../src/DataGrid/helpers/useGridColumns";
+import { PrintJSON } from "../../../../src/PrintJSON";
+import { GridCreatorHelper } from "../../../../src/DataGrid/helpers/GridCreatorHelper";
 
-storiesOf("DataGrid/DataGrid", module).add(
-    "Base",
-
-    () => {
-        const columns = useGridColumns<IMockUser>((creator) => {
-
-            return [
-                creator.number("id", "Id")
+storiesOf("DataGrid/DataGrid", module).add("Base", () => {
+    const gridData = useMemo(() => {
+        const creator = new GridCreatorHelper<IMockUser>();
+        const c = creator.column;
+        return creator.toProcess({
+            columns: [
+                c
+                    .number("id", "Id")
                     .template((row) => row.price)
-                    .width(30)
-                ,
-                creator.text( "first_name", "First name"),
-                creator.text( "last_name", "Last  name"),
-                creator.text( "email", "Email"),
-                creator.money( "price", "Price"),
-                creator.text( "ip_address", "IP"),
-            ];
+                    .width(30),
+                c.text("first_name", "First name"),
+                c.text("last_name", "Last  name"),
+                c.text("email", "Email"),
+                c.money("price", "Price"),
+                c.text("ip_address", "IP"),
+            ],
+            filters: [creator.filter.text("id", "Id")],
+            sorters: [creator.sorter.add("id", "Id")],
         });
+    }, []);
 
-        return (
-            <div>
-                <DataGrid columns={columns} data={{ rows: mockData.slice(0,40), rowCount: mockData.length }} />
+    return (
+        <div>
+            <div style={{ display: "flex" }}>
+                <PrintJSON json={gridData.columns} />
+                <PrintJSON json={gridData.filters} />
+                <PrintJSON json={gridData.sorters} />
             </div>
-        );
-    },
-);
+            <DataGrid
+                {...gridData}
+                showFooter={false}
+                showHeader={true}
+                data={{ rows: mockData.slice(0, 5), rowCount: mockData.length }}
+            />
+        </div>
+    );
+});

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { IDataQuery, IFilterValue, IRowClassTemplate, IRowStyleTemplate } from "../Table/Interfaces";
+import React from "react";
 import { IGridColumnData } from "./interfaces/IGridColumnData";
 import { IGridData } from "./interfaces/IGridData";
 import GridHead from "./parts/GridHead";
@@ -7,35 +6,52 @@ import GridBody from "./parts/GridBody";
 import GridFoot from "./parts/GridFoot";
 import styles from "./DataGrid.module.sass";
 import { IGroupByData } from "./interfaces/IGroupByData";
+import { IGridFilter } from "./interfaces/IGridFilter";
+import { IGridSorter } from "./interfaces/IGridSorter";
+import { IGridRowClassProvider } from "./interfaces/IGridRowClassProvider";
+import { IGridRowStyleProvider } from "./interfaces/IGridRowStyleProvider";
+import { PrintJSON } from "../PrintJSON";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
 interface IGridProps<T> {
     controlKey?: string;
 
-    dataProvider?: (input: IDataQuery) => Promise<IGridData<T>>;
     selectable?: boolean;
     onSelectionChange?: ISelectionChangeEvent;
     onPage?: number;
     rememberState?: boolean;
-    rowClassTemplate?: IRowClassTemplate;
-    rowStyleTemplate?: IRowStyleTemplate;
+    rowClassTemplate?: IGridRowClassProvider<T>;
+    rowStyleTemplate?: IGridRowStyleProvider<T>;
     columns: IGridColumnData<T>[];
     showFooter?: boolean;
     showHeader?: boolean;
     additionalConditions?: any;
-    filters?: { [key: string]: IFilterValue };
-    onFiltersChange?: (filtersValue: { [key: string]: IFilterValue }) => any;
-    onDataChange?: (data: any, count: number) => any;
-    data: IGridData<T>;
 
     groupBy?: IGroupByData<T>[];
-
     autofocus?: boolean;
+
+    filters?: IGridFilter[];
+    onFiltersChange?: (filtersValue: IGridFilter[]) => void;
+
+    data: IGridData<T>;
+    onDataChange?: (data: any, count: number) => void;
+
+    sorters?: IGridSorter[];
+    onSortersChange?: (filtersValue: IGridSorter[]) => void;
 }
 
-const DataGrid = <T,>(props: IGridProps<T>) => {
-    const [c, sc] = useState<number>(0);
+const defaultProps: Partial<IGridProps<any>> = {
+    showHeader: true,
+    showFooter: true,
+    onPage: 25,
+    autofocus: false,
+};
+
+const DataGrid = <T,>(inProps: IGridProps<T>) => {
+    const props = { ...defaultProps, ...inProps };
+
+    //const [c, sc] = useState<number>(0);
     if (props.columns.length === 0) {
         return null;
     }
@@ -50,13 +66,15 @@ const DataGrid = <T,>(props: IGridProps<T>) => {
 
     return (
         <div>
-            <div onClick={() => sc((r) => ++r)}>{c}</div>
+            {/*<div onClick={() => sc((r) => ++r)}>{c}</div>*/}
 
             <div className={styles.gridLayout} style={{ gridTemplateColumns: getWidths() }}>
-                <GridHead columns={props.columns} />
+                {props.showHeader && <GridHead columns={props.columns} />}
                 <GridBody columns={props.columns} rows={props.data.rows} />
             </div>
-            <GridFoot />
+            {props.showFooter && <GridFoot />}
+            <div><PrintJSON json={props.filters} /></div>
+            <div><PrintJSON json={props.sorters} /></div>
         </div>
     );
 };
