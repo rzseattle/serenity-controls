@@ -1,5 +1,5 @@
 export interface IGridData<T> {
-    rowCount: number;
+    rowCount?: number;
     rows: T[];
     additional?: Record<string, unknown>;
 }

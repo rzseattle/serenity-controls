@@ -6,11 +6,12 @@ import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
 import { IFilter } from "../../../filters";
 import { IGridCellEventCallback } from "../../interfaces/IGridCellEventCallback";
 import * as React from "react";
+import { IColumnTemplate } from "./IColumnTemplate";
 
-export abstract class ColumnTemplate<Row> {
-    protected column: IGridColumn<Row> = {};
-    protected filters: IGridFilter[] = null;
-    protected sort: IGridSorter = null;
+export  class ColumnTemplate<Row> implements IColumnTemplate<Row>{
+    column: IGridColumn<Row> = {};
+    filters: IGridFilter[] = null;
+    sort: IGridSorter = null;
 
 /*    constructor(initData: Partial<IGridColumn<Row>>) {
         this.column = {
@@ -18,34 +19,35 @@ export abstract class ColumnTemplate<Row> {
         };
     }*/
 
-    public className(className: string[]): ColumnTemplate<Row> {
+    public className = (names: string[]) => {
         this.column.cell = this.column.cell ?? {};
-        this.column.cell.class = className;
+        this.column.cell.class = names;
         return this;
     }
+    
 
-    public onHeaderClick(fn: IGridHeaderEventCallback<Row>): ColumnTemplate<Row> {
+    public onHeaderClick(fn: IGridHeaderEventCallback<Row>){
         this.column.header.events.click.push(fn);
         return this;
     }
 
-    public template(fn: IGridCellTemplate<Row>): ColumnTemplate<Row> {
+    public template(fn: IGridCellTemplate<Row>) {
         this.column.cell = this.column.cell ?? {};
         this.column.cell.template = fn;
         return this;
     }
 
-    public append(x: any): ColumnTemplate<Row> {
+    public append(x: any) {
         this.column.cell.append = x;
         return this;
     }
 
-    public prepend(x: any): ColumnTemplate<Row> {
+    public prepend(x: any) {
         this.column.cell.prepend = x;
         return this;
     }
 
-    public width(x: any): ColumnTemplate<Row> {
+    public width(x: any) {
         this.column.width = x;
         return this;
     }
@@ -55,17 +57,17 @@ export abstract class ColumnTemplate<Row> {
         return this;
     }
 
-    public headerTooltip(text: string): ColumnTemplate<Row> {
+    public headerTooltip(text: string) {
         this.column.header.tooltip = text;
         return this;
     }
 
-    public caption = (caption: string): ColumnTemplate<Row> => {
+    public caption = (caption: string) => {
         this.column.header.caption = caption;
         return this;
     };
 
-    public headerIcon(iconName: string): ColumnTemplate<Row> {
+    public headerIcon(iconName: string) {
         this.column.header.icon = iconName;
         this.column.filter[0].caption = "xx";
         return this;
@@ -84,12 +86,12 @@ export abstract class ColumnTemplate<Row> {
             return this;
         }*/
 
-    public noFilter(): ColumnTemplate<Row> {
+    public noFilter() {
         this.column.filter = [];
         return this;
     }
 
-    public noSorter(): ColumnTemplate<Row> {
+    public noSorter() {
         this.column.isSortable = false;
         return this;
     }
@@ -108,26 +110,26 @@ export abstract class ColumnTemplate<Row> {
         this.column.cell.events[type] = this.column.cell.events.click ?? [];
     };
 
-    public onClick(fn: IGridCellEventCallback<Row>): ColumnTemplate<Row> {
+    public onClick(fn: IGridCellEventCallback<Row>) {
         this.createEventsStruct("click");
         this.column.cell.events.click.push(fn);
 
         return this;
     }
 
-    public onMouseUp(fn: IGridCellEventCallback<Row>): ColumnTemplate<Row> {
+    public onMouseUp(fn: IGridCellEventCallback<Row>) {
         this.createEventsStruct("mouseUp");
         this.column.cell.events.mouseUp.push(fn);
         return this;
     }
 
-    public onEnter(fn: IGridCellEventCallback<Row>): ColumnTemplate<Row> {
+    public onEnter(fn: IGridCellEventCallback<Row>) {
         this.createEventsStruct("enter");
         this.column.cell.events.enter.push(fn);
         return this;
     }
 
-    public onLeave(fn: IGridCellEventCallback<Row>): ColumnTemplate<Row> {
+    public onLeave(fn: IGridCellEventCallback<Row>) {
         this.createEventsStruct("leave");
         this.column.cell.events.leave.push(fn);
         return this;
@@ -139,7 +141,7 @@ export abstract class ColumnTemplate<Row> {
         return this;
     }
 
-    public classTemplate(fn: (row: any, column: IGridColumn<Row>) => string[]) {
+    public classTemplate(fn: (row: Row, column: IGridColumn<Row>) => string[]) {
         this.column.cell = this.column.cell ?? {};
         this.column.cell.classTemplate = fn;
         return this;
@@ -151,7 +153,7 @@ export abstract class ColumnTemplate<Row> {
         return this;
     }
 
-    public set(el: Partial<IGridColumn<Row>>): ColumnTemplate<Row> {
+    public set(el: Partial<IGridColumn<Row>>) {
         this.column = { ...this.column, ...el };
         return this;
     }

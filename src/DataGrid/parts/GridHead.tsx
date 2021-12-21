@@ -7,7 +7,7 @@ const GridHead = <T,>({ columns }: { columns: IGridColumn<T>[] }) => {
             {columns.map((column) => {
                 return (
                     <div key={column.field} className={styles.headerCell}>
-                        {column.header.caption}
+                        {column.header?.caption ?? column.field}
                     </div>
                 );
             })}

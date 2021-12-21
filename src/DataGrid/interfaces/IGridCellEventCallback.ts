@@ -5,4 +5,5 @@ export type IGridCellEventCallback<T> = (
     row: T,
     column: IGridColumn<T>,
     event: React.MouseEvent<HTMLElement>,
-) => any;
+    index: { row: number; column: number },
+) => unknown;

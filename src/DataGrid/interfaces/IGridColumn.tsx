@@ -4,14 +4,22 @@ import { IGridCellTemplate } from "./IGridCellTemplate";
 import { IGridHeaderEventCallback } from "./IGridHeaderEventCallback";
 import { IGridSorterValue } from "./IGridSorter";
 
+export interface IGridCellEvents<T> {
+    onClick?: IGridCellEventCallback<T>[];
+    onMouseUp?: IGridCellEventCallback<T>[];
+    onMouseEnter?: IGridCellEventCallback<T>[];
+    onMouseOut?: IGridCellEventCallback<T>[];
+    onDoubleClick?: IGridCellEventCallback<T>[];
+}
+
 export interface IGridColumn<T> {
     field?: Extract<keyof T, string | number>;
     name?: string;
     orderField?: string;
     display?: boolean;
-    width?: number;
-    minWidth?: number;
-    maxWidth?: number;
+    width?: number | string | "min-content" | "max-content" | "auto";
+    minWidth?: number | string | "min-content" | "max-content" | "auto";
+    maxWidth?: number | string | "min-content" | "max-content" | "auto";
     type?: string;
     rowSpan?: number;
 
@@ -25,14 +33,7 @@ export interface IGridColumn<T> {
         prepend?: string | JSX.Element;
         default?: string;
         icon?: string;
-        events?: {
-            click?: IGridCellEventCallback<T>[];
-            headerClick?: IGridCellEventCallback<T>[];
-            mouseUp?: IGridCellEventCallback<T>[];
-            enter?: IGridCellEventCallback<T>[];
-            leave?: IGridCellEventCallback<T>[];
-            doubleClick?: IGridCellEventCallback<T>[];
-        };
+        events?: IGridCellEvents<T>;
     };
     header?: {
         icon?: string;
