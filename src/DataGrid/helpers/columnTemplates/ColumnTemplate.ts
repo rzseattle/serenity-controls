@@ -1,6 +1,6 @@
 import { IGridColumn } from "../../interfaces/IGridColumn";
 import { IGridFilter } from "../../interfaces/IGridFilter";
-import { IGridSorter } from "../../interfaces/IGridSorter";
+import { IGridOrder } from "../../interfaces/IGridOrder";
 import { IGridHeaderEventCallback } from "../../interfaces/IGridHeaderEventCallback";
 import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
 import { IFilter } from "../../../filters";
@@ -11,7 +11,7 @@ import { IColumnTemplate } from "./IColumnTemplate";
 export  class ColumnTemplate<Row> implements IColumnTemplate<Row>{
     column: IGridColumn<Row> = {};
     filters: IGridFilter[] = null;
-    sort: IGridSorter = null;
+    sort: IGridOrder = null;
 
 /*    constructor(initData: Partial<IGridColumn<Row>>) {
         this.column = {

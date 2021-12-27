@@ -3,7 +3,7 @@ import { GridSortHelper } from "./GridSortHelper";
 import { ColumnCreator } from "./GridColumnCreatorHelper";
 import GridColumnHelper from "./GridColumnHelper";
 import { IGridFilter } from "../interfaces/IGridFilter";
-import { IGridSorter } from "../interfaces/IGridSorter";
+import { IGridOrder } from "../interfaces/IGridOrder";
 import { IGridColumn } from "../interfaces/IGridColumn";
 import { IColumnTemplate } from "./columnTemplates/IColumnTemplate";
 
@@ -22,7 +22,7 @@ export class GridCreatorHelper<Row> {
     public get = (): {
         columns: IGridColumn<Row>[];
         filters?: IGridFilter[];
-        sorters?: IGridSorter[];
+        sorters?: IGridOrder[];
     } =>{
         return this.toProcess({
             columns: this.column,
@@ -38,13 +38,13 @@ export class GridCreatorHelper<Row> {
     }): {
         columns: IGridColumn<Row>[];
         filters?: IGridFilter[];
-        sorters?: IGridSorter[];
+        sorters?: IGridOrder[];
     } => {
         const columns = input.columns.map((column) => column.get());
         let ret: {
             columns: IGridColumn<Row>[];
             filters?: IGridFilter[];
-            sorters?: IGridSorter[];
+            sorters?: IGridOrder[];
         } = { columns };
 
         if (typeof input.filters !== "undefined") {

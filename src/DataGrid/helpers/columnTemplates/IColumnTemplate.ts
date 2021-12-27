@@ -1,6 +1,6 @@
 import { IGridColumn } from "../../interfaces/IGridColumn";
 import { IGridFilter } from "../../interfaces/IGridFilter";
-import { IGridSorter } from "../../interfaces/IGridSorter";
+import { IGridOrder } from "../../interfaces/IGridOrder";
 import { IGridHeaderEventCallback } from "../../interfaces/IGridHeaderEventCallback";
 import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
 import { IFilter } from "../../../filters";
@@ -10,7 +10,7 @@ import * as React from "react";
 export interface IColumnTemplate<Row> {
     column: IGridColumn<Row>;
     filters: IGridFilter[];
-    sort: IGridSorter;
+    sort: IGridOrder;
 
     className: (names: string[]) => IColumnTemplate<Row>;
     onHeaderClick: (fn: IGridHeaderEventCallback<Row>) => IColumnTemplate<Row>;
@@ -37,6 +37,6 @@ export interface IColumnTemplate<Row> {
     get: () => {
         column: IGridColumn<Row>;
         filters: IGridFilter[];
-        sort: IGridSorter;
+        sort: IGridOrder;
     };
 }

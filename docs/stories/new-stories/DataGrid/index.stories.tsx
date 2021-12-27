@@ -4,6 +4,7 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 import { IGridColumn } from "../../../../src/DataGrid/interfaces/IGridColumn";
+import { getColumnsWidths } from "../../../../src/DataGrid/helpers/helpers";
 
 storiesOf("DataGrid/Base", module)
     .add("Base", () => {
@@ -73,13 +74,13 @@ storiesOf("DataGrid/Base", module)
             <DataGrid
                 columns={columns}
                 showFooter={true}
-                data={{ rows: mockData.slice(0, 5), rowCount: mockData.length }}
+                data={{ rows: mockData.slice(0, 25), rowCount: mockData.length }}
                 footer={(props) => {
                     return (
-                        <>
+                        <div style={{ backgroundColor: "white", paddingBottom: 10 }}>
                             <hr />
                             <DataGrid
-                                columns={columns as IGridColumn<any>[]}
+                                columns={props.columns as IGridColumn<any>[]}
                                 data={{
                                     rows: [
                                         {
@@ -93,9 +94,15 @@ storiesOf("DataGrid/Base", module)
                                     ],
                                 }}
                             />
-                            <br/>
+                            <br />
                             <b>Another part of footer </b>: {props.columns.length}
-                        </>
+                            <hr />
+                            <div style={{ display: "grid", gridTemplateColumns: getColumnsWidths(props.columns) }}>
+                                {columns.map((col) => (
+                                    <div key={col.field}>{col.field}</div>
+                                ))}
+                            </div>
+                        </div>
                     );
                 }}
             />

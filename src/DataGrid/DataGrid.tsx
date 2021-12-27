@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { IGridColumn } from "./interfaces/IGridColumn";
 import { IGridData } from "./interfaces/IGridData";
 import GridHead from "./parts/GridHead";
@@ -7,16 +7,18 @@ import GridFoot from "./parts/GridFoot";
 import styles from "./DataGrid.module.sass";
 import { IGroupByData } from "./interfaces/IGroupByData";
 import { IGridFilter } from "./interfaces/IGridFilter";
-import { IGridSorter } from "./interfaces/IGridSorter";
 import { IGridRowClassProvider } from "./interfaces/IGridRowClassProvider";
 import { IGridRowStyleProvider } from "./interfaces/IGridRowStyleProvider";
 import { IGridCellClassProvider } from "./interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "./interfaces/IGridCellStyleProvider";
+import { getColumnsWidths } from "./helpers/helpers";
+import { IGridOrder } from "./interfaces/IGridOrder";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
 interface IGridProps<T> {
     controlKey?: string;
+    className?: string;
 
     selectable?: boolean;
     onSelectionChange?: ISelectionChangeEvent;
@@ -42,8 +44,8 @@ interface IGridProps<T> {
     data: IGridData<T>;
     onDataChange?: (data: any, count: number) => void;
 
-    sorters?: IGridSorter[];
-    onSortersChange?: (filtersValue: IGridSorter[]) => void;
+    order?: IGridOrder[];
+    onOrderChange?: (filtersValue: IGridOrder[]) => void;
 
     footer?: (tableData: IGridProps<T>) => JSX.Element | string;
 }
@@ -57,45 +59,22 @@ const defaultProps: Partial<IGridProps<any>> = {
 
 const DataGrid = <T,>(inProps: IGridProps<T>) => {
     const props = { ...defaultProps, ...inProps };
+    const widths = useMemo<string>(() => {
+        return getColumnsWidths(props.columns);
+    }, [props.columns]);
 
     //const [c, sc] = useState<number>(0);
     if (props.columns.length === 0) {
         return null;
     }
 
-    const getWidths = (): string => {
-        return props.columns
-            .reduce((p, c) => {
-                let minWidth: string = null;
-                let maxWidth: string = null;
-                let width: string = null;
-
-                if (c.minWidth !== undefined && c.maxWidth !== null) {
-                    minWidth = Number.isInteger(c.minWidth) ? c.minWidth + "px" : (c.minWidth as string);
-                }
-                if (c.maxWidth !== undefined && c.maxWidth !== null) {
-                    maxWidth = Number.isInteger(c.maxWidth) ? c.maxWidth + "px" : (c.maxWidth as string);
-                }
-                if (c.width !== undefined && c.width !== null) {
-                    width = Number.isInteger(c.width) ? c.width + "px" : (c.width as string);
-                } else {
-                    width = "1fr";
-                }
-                if (minWidth !== null || maxWidth !== null) {
-                    const min = minWidth ?? 0;
-                    const max = maxWidth ?? width;
-                    width = `minmax(${min}, ${max})`;
-                }
-
-                return p.concat(width);
-            }, [])
-            .join(" ");
-    };
-
     return (
         <div>
             {/*<div onClick={() => sc((r) => ++r)}>{c}</div>*/}
-            <div className={styles.gridLayout} style={{ gridTemplateColumns: getWidths() }}>
+            <div
+                className={props.className !== undefined ? props.className + " " + styles.gridLayoutCore : styles.gridLayout}
+                style={{ display: "grid", gridTemplateColumns: widths }}
+            >
                 {props.showHeader && <GridHead columns={props.columns} />}
                 <GridBody
                     columns={props.columns}

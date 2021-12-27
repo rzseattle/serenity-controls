@@ -1,7 +1,60 @@
-.gridLayout
+.gridLayoutCore
+    display: grid
 
+    > div
+        display: contents
+
+.gridLayout
     display: grid
     grid-auto-rows: auto
     gap: 1px
     width: calc( 100% - 2px )
     margin-left: 1px
+    > div
+        display: contents
+        > div
+            font-family: Arial, Verdana, Tahoma
+
+            outline: 1px solid #dcdcdc82
+            padding: 6px
+            font-size: 12px
+            border-collapse: collapse
+
+            &:first-child
+                border-left: none
+            &:last-child
+                border-left: none
+
+
+
+        &:nth-child(odd)
+            >div
+                background-color: #F7F7F7
+
+        &:hover
+            >div
+                background-color: #eaeaea
+
+
+    \:global
+        .w-grid-header-row
+
+            >div
+                background-color: rgb(243, 243,243) !important
+                font-weight: bold
+                position: sticky
+                top: 0
+                padding: 0px
+                padding-right: 0
+                text-align: center
+                font-size: 13px
+                line-height: 1.42857
+                color: #767676
+                &:last-child
+                    border-right: solid 1px transparent
+
+            .w-grid-header-cell-in
+                padding: 6px
+                border-bottom: solid 1px rgb(230, 230,230)
+                outline: 1px solid rgba(0, 0, 0, .1)
+                height: 100%

@@ -2,7 +2,9 @@ import { IFilter } from "../../filters";
 import { IGridCellEventCallback } from "./IGridCellEventCallback";
 import { IGridCellTemplate } from "./IGridCellTemplate";
 import { IGridHeaderEventCallback } from "./IGridHeaderEventCallback";
-import { IGridSorterValue } from "./IGridSorter";
+import { IGridOrderValue } from "./IGridOrder";
+import { ICellCoordinates } from "./ICellCoordinates";
+import { IGridHeaderTemplate } from "./IGridHeaderTemplate";
 
 export interface IGridCellEvents<T> {
     onClick?: IGridCellEventCallback<T>[];
@@ -10,6 +12,14 @@ export interface IGridCellEvents<T> {
     onMouseEnter?: IGridCellEventCallback<T>[];
     onMouseOut?: IGridCellEventCallback<T>[];
     onDoubleClick?: IGridCellEventCallback<T>[];
+}
+
+export interface IGridHeaderEvents<T> {
+    onClick?: IGridHeaderEventCallback<T>[];
+    onMouseUp?: IGridHeaderEventCallback<T>[];
+    onMouseEnter?: IGridHeaderEventCallback<T>[];
+    onMouseOut?: IGridHeaderEventCallback<T>[];
+    onDoubleClick?: IGridHeaderEventCallback<T>[];
 }
 
 export interface IGridColumn<T> {
@@ -25,8 +35,8 @@ export interface IGridColumn<T> {
 
     cell?: {
         class?: string[];
-        classTemplate?: (row: T, column: IGridColumn<T>) => string[];
-        styleTemplate?: (row: T, column: IGridColumn<T>) => any;
+        classTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => string[];
+        styleTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => any;
         template?: IGridCellTemplate<T>;
         toolTip?: IGridCellTemplate<T>;
         append?: string | JSX.Element;
@@ -39,11 +49,10 @@ export interface IGridColumn<T> {
         icon?: string;
         tooltip?: string;
         caption?: string;
-        events?: {
-            click?: IGridHeaderEventCallback<T>[];
-        };
+        events?: IGridHeaderEvents<T>;
+        template?: IGridHeaderTemplate<T>;
     };
     isSortable?: boolean;
     filter?: IFilter[];
-    order?: IGridSorterValue;
+    order?: IGridOrderValue;
 }
