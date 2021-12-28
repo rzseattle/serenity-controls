@@ -1,5 +1,6 @@
 import React from "react";
 import "../Stories.sass";
+import GridRoot from "../../../src/DataGrid/config/GridRoot";
 export const parameters = {
     actions: { argTypesRegex: "^on[A-Z].*" },
     options: {
@@ -12,7 +13,9 @@ export const parameters = {
 export const decorators = [
     (Story) => (
         <div style={{ margin: "2em" }}>
-            <Story />
+            <GridRoot>
+                <Story />
+            </GridRoot>
             <div id="modal-root"></div>
         </div>
     ),

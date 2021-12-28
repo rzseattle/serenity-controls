@@ -129,9 +129,7 @@ const GridBody = <T,>(props: IGridBodyProps<T>) => {
                     </div>
                 );
             })}
-            <div>
-                to observe
-            </div>
+            <div>to observe</div>
         </>
     );
 };

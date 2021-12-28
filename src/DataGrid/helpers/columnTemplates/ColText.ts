@@ -2,7 +2,7 @@ import { ColumnTemplate } from "./ColumnTemplate";
 import { TextFilter } from "../../../filters";
 import { IColumnTemplate } from "./IColumnTemplate";
 
-export class ColText<Row> extends ColumnTemplate<Row> implements IColumnTemplate<Row>{
+export class ColText<Row> extends ColumnTemplate<Row> implements IColumnTemplate<Row> {
     constructor(field: Extract<keyof Row, string | number>, caption: string) {
         super();
         this.column = {
@@ -30,6 +30,6 @@ export class ColText<Row> extends ColumnTemplate<Row> implements IColumnTemplate
     };
 
     public specialsmth = () => {
-        console.log("aa")
-    }
+        console.log("aa");
+    };
 }

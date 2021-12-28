@@ -6,10 +6,7 @@ import { IGridColumn } from "../interfaces/IGridColumn";
 import GridColumnHelper from "./GridColumnHelper";
 import React from "react";
 
-
-
 export class ColumnCreator<Row> {
-
     public number(field: Extract<keyof Row, number | string>, caption: string): GridColumnHelper<Row> {
         return new GridColumnHelper<Row>({
             field,

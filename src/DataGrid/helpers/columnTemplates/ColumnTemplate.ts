@@ -8,12 +8,12 @@ import { IGridCellEventCallback } from "../../interfaces/IGridCellEventCallback"
 import * as React from "react";
 import { IColumnTemplate } from "./IColumnTemplate";
 
-export  class ColumnTemplate<Row> implements IColumnTemplate<Row>{
+export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
     column: IGridColumn<Row> = {};
     filters: IGridFilter[] = null;
     sort: IGridOrder = null;
 
-/*    constructor(initData: Partial<IGridColumn<Row>>) {
+    /*    constructor(initData: Partial<IGridColumn<Row>>) {
         this.column = {
             ...initData,
         };
@@ -23,10 +23,9 @@ export  class ColumnTemplate<Row> implements IColumnTemplate<Row>{
         this.column.cell = this.column.cell ?? {};
         this.column.cell.class = names;
         return this;
-    }
-    
+    };
 
-    public onHeaderClick(fn: IGridHeaderEventCallback<Row>){
+    public onHeaderClick(fn: IGridHeaderEventCallback<Row>) {
         this.column.header.events.click.push(fn);
         return this;
     }

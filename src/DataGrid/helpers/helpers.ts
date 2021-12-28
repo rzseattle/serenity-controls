@@ -28,5 +28,3 @@ export const getColumnsWidths = (columns: IGridColumn<any>[]): string => {
         }, [])
         .join(" ");
 };
-
-

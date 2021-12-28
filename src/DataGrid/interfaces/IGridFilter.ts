@@ -3,11 +3,14 @@ import { IFilterValue } from "../../Table/Interfaces";
 
 export interface IGridFilter {
     field: string | number;
+    applyTo?: string | number;
     label: string;
     caption?: string;
-    component: React.ComponentClass<{onApply:(val: IFilterValue) => unknown}>
+    component: React.ComponentClass<{ onApply: (val: IFilterValue) => unknown }>;
     description?: string;
-    config?: any
+    config?: any;
+    value?: IGridFilterValue;
+    opened?: boolean;
 }
 
 export interface IGridFilterValue {

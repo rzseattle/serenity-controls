@@ -4,7 +4,7 @@ import { IGridData } from "./interfaces/IGridData";
 import GridHead from "./parts/GridHead";
 import GridBody from "./parts/GridBody";
 import GridFoot from "./parts/GridFoot";
-import styles from "./DataGrid.module.sass";
+
 import { IGroupByData } from "./interfaces/IGroupByData";
 import { IGridFilter } from "./interfaces/IGridFilter";
 import { IGridRowClassProvider } from "./interfaces/IGridRowClassProvider";
@@ -13,6 +13,8 @@ import { IGridCellClassProvider } from "./interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "./interfaces/IGridCellStyleProvider";
 import { getColumnsWidths } from "./helpers/helpers";
 import { IGridOrder } from "./interfaces/IGridOrder";
+import { useGridContext } from "./config/GridContext";
+import styles from "./DataGrid.module.sass";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
@@ -55,9 +57,12 @@ const defaultProps: Partial<IGridProps<any>> = {
     showFooter: false,
     onPage: 25,
     autofocus: false,
+    order: [],
+    filters: [],
 };
 
 const DataGrid = <T,>(inProps: IGridProps<T>) => {
+    const config = useGridContext();
     const props = { ...defaultProps, ...inProps };
     const widths = useMemo<string>(() => {
         return getColumnsWidths(props.columns);
@@ -68,14 +73,22 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
         return null;
     }
 
+    const className =
+        props.className !== undefined ? props.className + " " + styles.gridLayoutCore : config.gridClassName;
+
     return (
         <div>
             {/*<div onClick={() => sc((r) => ++r)}>{c}</div>*/}
-            <div
-                className={props.className !== undefined ? props.className + " " + styles.gridLayoutCore : styles.gridLayout}
-                style={{ display: "grid", gridTemplateColumns: widths }}
-            >
-                {props.showHeader && <GridHead columns={props.columns} />}
+            <div className={className} style={{ display: "grid", gridTemplateColumns: widths }}>
+                {props.showHeader && (
+                    <GridHead
+                        order={props.order}
+                        onOrderChange={inProps.onOrderChange}
+                        filters={props.filters}
+                        onFiltersChange={props.onFiltersChange}
+                        columns={props.columns}
+                    />
+                )}
                 <GridBody
                     columns={props.columns}
                     rows={props.data.rows}

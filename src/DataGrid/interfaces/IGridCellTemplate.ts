@@ -1,6 +1,5 @@
 import { IGridColumn } from "./IGridColumn";
 
-
 export type IGridCellTemplate<T> = ({
     row,
     column,
