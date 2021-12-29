@@ -1,12 +1,16 @@
 import React from "react";
-import { IFilterValue } from "../../Table/Interfaces";
+import { IGridColumnAssignedElement } from "./IGridColumnAssignedElement";
+import { IGridDataAssignedElement } from "./IGridDataAssignedElement";
 
-export interface IGridFilter {
-    field: string | number;
-    applyTo?: string | number;
+export type IGridFilterComponent = React.ComponentType<{
+    filter: IGridFilter;
+    onApply: (filterValue: IGridFilterValue, hide?: boolean) => unknown;
+}>;
+
+export interface IGridFilter extends IGridColumnAssignedElement, IGridDataAssignedElement {
     label: string;
     caption?: string;
-    component: React.ComponentClass<{ onApply: (val: IFilterValue) => unknown }>;
+    component: IGridFilterComponent;
     description?: string;
     config?: any;
     value?: IGridFilterValue;
@@ -14,8 +18,9 @@ export interface IGridFilter {
 }
 
 export interface IGridFilterValue {
-    field: string;
-    labelValue: string;
     value: any;
     condition: string;
+
+    labelValue?: string;
+    labelCondition?: string;
 }

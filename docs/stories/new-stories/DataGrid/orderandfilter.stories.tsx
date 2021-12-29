@@ -4,7 +4,31 @@ import { storiesOf } from "@storybook/react";
 import React, { useEffect, useState } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 import { IGridOrder } from "../../../../src/DataGrid/interfaces/IGridOrder";
-import { IGridFilter } from "../../../../src/DataGrid/interfaces/IGridFilter";
+import { IGridFilter, IGridFilterComponent } from "../../../../src/DataGrid/interfaces/IGridFilter";
+import { PrintJSON } from "../../../../src/PrintJSON";
+
+const Filter: IGridFilterComponent = ({ onApply, filter }) => {
+    const [val, setVal] = useState(filter.value?.value);
+    const apply = () => {
+        onApply({ value: val, labelValue: "to jest 10", condition: "=" }, false);
+    };
+    return (
+        <div>
+            <input
+                autoFocus={true}
+                type="text"
+                value={val}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        apply();
+                    }
+                }}
+                onChange={(e) => setVal(e.currentTarget.value)}
+            />
+            <button onClick={() => apply()}>Apply</button>
+        </div>
+    );
+};
 
 storiesOf("DataGrid/Order & Filter", module)
     .add("Order", () => {
@@ -82,7 +106,7 @@ storiesOf("DataGrid/Order & Filter", module)
                 label: "ZZ",
                 description: "description",
                 opened: true,
-                component: ({ onApply }) => <div>dupa</div>,
+                component: Filter,
             },
         ]);
         const [data, setData] = useState(mockData.slice(0, 150));
@@ -112,14 +136,13 @@ storiesOf("DataGrid/Order & Filter", module)
 
         return (
             <>
+                <PrintJSON json={filters} />
                 <DataGrid
                     showHeader={true}
-                    onOrderChange={(order) => {
-                        //console.log(order);
-                        setOrder(order);
-                    }}
+                    onOrderChange={(order) => setOrder(order)}
                     order={order}
                     filters={filters}
+                    onFiltersChange={(filter) => setFilter(filter)}
                     columns={[
                         {
                             field: "id",

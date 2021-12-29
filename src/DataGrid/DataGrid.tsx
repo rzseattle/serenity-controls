@@ -15,6 +15,8 @@ import { getColumnsWidths } from "./helpers/helpers";
 import { IGridOrder } from "./interfaces/IGridOrder";
 import { useGridContext } from "./config/GridContext";
 import styles from "./DataGrid.module.sass";
+import { IOrderChange } from "./interfaces/IOrderChangeCallback";
+import { IFiltersChange } from "./interfaces/IFiltersChange";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
@@ -41,13 +43,13 @@ interface IGridProps<T> {
     autofocus?: boolean;
 
     filters?: IGridFilter[];
-    onFiltersChange?: (filtersValue: IGridFilter[]) => void;
+    onFiltersChange?: IFiltersChange;
 
     data: IGridData<T>;
     onDataChange?: (data: any, count: number) => void;
 
     order?: IGridOrder[];
-    onOrderChange?: (filtersValue: IGridOrder[]) => void;
+    onOrderChange?: IOrderChange;
 
     footer?: (tableData: IGridProps<T>) => JSX.Element | string;
 }
