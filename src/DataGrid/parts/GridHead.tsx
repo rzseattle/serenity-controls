@@ -5,6 +5,7 @@ import { IGridFilter } from "../interfaces/IGridFilter";
 import { IOrderChange } from "../interfaces/IOrderChangeCallback";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
 import GridHeadColumn from "./GridHeadColumn";
+import { isColumnAssignedElement } from "../helpers/helpers";
 
 const GridHead = <T,>({
     columns,
@@ -27,10 +28,14 @@ const GridHead = <T,>({
                     <GridHeadColumn
                         key={column.field}
                         column={column}
-                        order={order}
-                        onOrderChange={onOrderChange}
-                        filters={filters}
-                        onFiltersChange={onFiltersChange}
+                        order={order.filter((element) => isColumnAssignedElement(element, column))}
+                        onOrderChange={(changed) => {
+
+                        }}
+                        filters={filters.filter((element) => isColumnAssignedElement(element, column))}
+                        onFiltersChange={(changed) => {
+
+                        }}
                     />
                 );
             })}

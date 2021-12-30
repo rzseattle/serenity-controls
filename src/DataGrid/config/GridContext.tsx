@@ -4,17 +4,16 @@ import { IGridFilterComponent } from "../interfaces/IGridFilter";
 
 export interface IGridStore {
     gridClassName: string;
-    icons: {
-        order: {
+    order: {
+        icons: {
             asc: JSX.Element;
             desc: JSX.Element;
         };
-        filter: {
-            components: {
-                text: IGridFilterComponent;
-                number: IGridFilterComponent;
-                boolean: IGridFilterComponent;
-            };
+    };
+    filter: {
+        components: Record<string, IGridFilterComponent>;
+        icons: {
+            filter: JSX.Element;
         };
     };
 }

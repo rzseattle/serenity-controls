@@ -106,7 +106,17 @@ storiesOf("DataGrid/Order & Filter", module)
                 label: "ZZ",
                 description: "description",
                 opened: true,
-                component: Filter,
+                filterType: "text",
+                //component: Filter,
+            },
+            {
+                field: "date",
+                caption: "Date",
+                label: "in",
+                description: "ups",
+                opened: false,
+                filterType: "date",
+                //component: Filter,
             },
         ]);
         const [data, setData] = useState(mockData.slice(0, 150));

@@ -2,6 +2,8 @@ import React from "react";
 
 import styles from "../DataGrid.module.sass";
 import { GridContext, IGridConfig } from "./GridContext";
+import GridTextFilter from "../filters/GridTextFilter";
+import GridDateFilter from "../filters/GridDateFilter";
 
 const GridRoot = ({ children, options }: { children: React.ReactNode; options: Partial<IGridConfig> }) => {
     return (
@@ -9,12 +11,19 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options: P
             <GridContext.Provider
                 value={{
                     gridClassName: styles.gridLayout,
-                    icons: {
-                        order: {
+                    order: {
+                        icons: {
                             asc: <>↓</>,
                             desc: <>↑</>,
                         },
-                        filter: <>⛛</>,
+                    },
+                    filter: {
+                        icons: { filter: <>⛛</> },
+                        components: {
+                            "text": GridTextFilter,
+                            "date": GridDateFilter
+
+                        },
                     },
                 }}
             >

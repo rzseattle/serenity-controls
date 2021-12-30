@@ -1,4 +1,6 @@
 import { IGridColumn } from "../interfaces/IGridColumn";
+import { IGridDataAssignedElement } from "../interfaces/IGridDataAssignedElement";
+import { IGridColumnAssignedElement } from "../interfaces/IGridColumnAssignedElement";
 
 export const getColumnsWidths = (columns: IGridColumn<any>[]): string => {
     return columns
@@ -27,4 +29,18 @@ export const getColumnsWidths = (columns: IGridColumn<any>[]): string => {
             return p.concat(width);
         }, [])
         .join(" ");
+};
+
+export const isColumnAssignedElement = (
+    element: IGridDataAssignedElement & IGridColumnAssignedElement,
+    column: IGridColumn<any>,
+) => {
+    return (element.applyTo === undefined && element.field === column.field) || element.applyTo === column.field;
+};
+
+export const isGridColumnElementEqual = (
+    column1: IGridDataAssignedElement & IGridColumnAssignedElement,
+    column2: IGridDataAssignedElement & IGridColumnAssignedElement,
+) => {
+    return column1.applyTo === column2.applyTo && column1.field === column2.field;
 };

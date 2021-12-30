@@ -1,21 +1,13 @@
 import React from "react";
 import { IGridColumn, IGridHeaderEvents } from "../interfaces/IGridColumn";
 import { IGridHeaderEventCallback } from "../interfaces/IGridHeaderEventCallback";
-import { IGridDataAssignedElement } from "../interfaces/IGridDataAssignedElement";
-import { IGridColumnAssignedElement } from "../interfaces/IGridColumnAssignedElement";
 import styles from "./GridHead.module.sass";
 import { useGridContext } from "../config/GridContext";
 import { IGridOrder } from "../interfaces/IGridOrder";
 import { IOrderChange } from "../interfaces/IOrderChangeCallback";
 import { IGridFilter } from "../interfaces/IGridFilter";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
-
-const isColumnAssignedElement = (
-    element: IGridDataAssignedElement & IGridColumnAssignedElement,
-    column: IGridColumn<any>,
-) => {
-    return (element.applyTo === undefined && element.field === column.field) || element.applyTo === column.field;
-};
+import { isColumnAssignedElement } from "../helpers/helpers";
 
 const GridHeadColumn = <T,>({
     column,
@@ -88,7 +80,7 @@ const GridHeadColumn = <T,>({
             >
                 {column.header?.caption ?? column.field}
                 {columnOrder.length > 0 && columnOrder[0].dir && (
-                    <div className={"w-grid-header-cell-in-order"}>{config.icons.order[columnOrder[0].dir]}</div>
+                    <div className={"w-grid-header-cell-in-order"}>{config.order.icons[columnOrder[0].dir]}</div>
                 )}
                 {columnFilter.length > 0 && (
                     <>
@@ -104,30 +96,37 @@ const GridHeadColumn = <T,>({
                                 ]);
                             }}
                         >
-                            {config.icons.filter}
+                            {config.filter.icons.filter}
                         </div>
                         {columnFilter[0].opened && (
                             <div onClick={(e) => e.stopPropagation()}>
-                                {columnFilter.map((filter) => (
-                                    <>
-                                        <filter.component
-                                            filter={filter}
-                                            onApply={(value, hide) => {
-                                                onFiltersChange([
-                                                    ...filters.map((filter) => {
-                                                        if (isColumnAssignedElement(filter, column)) {
-                                                            filter.value = value;
-                                                            if (hide === true) {
-                                                                filter.opened = false;
-                                                            }
-                                                            return filter;
-                                                        }
-                                                    }),
-                                                ]);
-                                            }}
-                                        />
-                                    </>
-                                ))}
+                                {columnFilter.map((filter) => {
+                                    const Component = filter.component ?? config.filter.components[filter.filterType];
+                                    return (
+                                        <>
+                                            {Component ? (
+                                                <Component
+                                                    filter={filter}
+                                                    onApply={(value, hide) => {
+                                                        onFiltersChange([
+                                                            ...filters.map((filter) => {
+                                                                if (isColumnAssignedElement(filter, column)) {
+                                                                    filter.value = value;
+                                                                    if (hide === true) {
+                                                                        filter.opened = false;
+                                                                    }
+                                                                    return filter;
+                                                                }
+                                                            }),
+                                                        ]);
+                                                    }}
+                                                />
+                                            ) : (
+                                                "No filter found"
+                                            )}
+                                        </>
+                                    );
+                                })}
                             </div>
                         )}
                     </>
