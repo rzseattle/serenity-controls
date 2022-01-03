@@ -11,6 +11,11 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options: P
             <GridContext.Provider
                 value={{
                     gridClassName: styles.gridLayout,
+                    common: {
+                        icons: {
+                            delete: <>x</>,
+                        },
+                    },
                     order: {
                         icons: {
                             asc: <>↓</>,
@@ -18,11 +23,10 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options: P
                         },
                     },
                     filter: {
-                        icons: { filter: <>⛛</> },
+                        icons: { filter: <>‡</> },
                         components: {
-                            "text": GridTextFilter,
-                            "date": GridDateFilter
-
+                            text: GridTextFilter,
+                            date: GridDateFilter,
                         },
                     },
                 }}

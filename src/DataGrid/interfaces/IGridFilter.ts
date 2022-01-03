@@ -1,11 +1,11 @@
 import React from "react";
 import { IGridColumnAssignedElement } from "./IGridColumnAssignedElement";
 import { IGridDataAssignedElement } from "./IGridDataAssignedElement";
-import { IGridStore } from "../config/GridContext";
 
 export type IGridFilterComponent = React.ComponentType<{
     filter: IGridFilter;
-    onApply: (filterValue: IGridFilterValue, hide?: boolean) => unknown;
+    onApply: (filterValue: IGridFilterValue[]) => unknown;
+    hide: () => unknown
 }>;
 
 interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedElement {
@@ -13,7 +13,7 @@ interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedE
     caption?: string;
     description?: string;
     config?: any;
-    value?: IGridFilterValue;
+    value?: IGridFilterValue[];
     opened?: boolean;
 }
 

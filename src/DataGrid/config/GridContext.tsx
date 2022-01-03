@@ -4,6 +4,11 @@ import { IGridFilterComponent } from "../interfaces/IGridFilter";
 
 export interface IGridStore {
     gridClassName: string;
+    common: {
+        icons: {
+            delete: JSX.Element;
+        };
+    };
     order: {
         icons: {
             asc: JSX.Element;

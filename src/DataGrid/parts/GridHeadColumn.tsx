@@ -11,23 +11,21 @@ import { isColumnAssignedElement } from "../helpers/helpers";
 
 const GridHeadColumn = <T,>({
     column,
-    order,
+    isOrderable,
     onOrderChange,
     filters,
     onFiltersChange,
+    orderDir,
 }: {
     column: IGridColumn<T>;
-    order: IGridOrder[];
-    onOrderChange: IOrderChange;
-
+    isOrderable: boolean;
+    orderDir: null | "asc" | "desc";
+    onOrderChange: () => void;
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
 }) => {
     const config = useGridContext();
     const cellProperties: React.HTMLAttributes<HTMLDivElement> = {};
-
-    const columnOrder = order.filter((el) => isColumnAssignedElement(el, column));
-    const columnFilter = filters.filter((el) => isColumnAssignedElement(el, column));
 
     if (column.header?.events) {
         Object.entries(column.header.events).map(([key, val]) => {
@@ -43,25 +41,10 @@ const GridHeadColumn = <T,>({
         });
     }
 
-    if (columnOrder.length > 0) {
+    if (isOrderable) {
         const currOnClick = cellProperties["onClick"];
         cellProperties["onClick"] = (event) => {
-            const newOrder = [
-                ...order.filter((el) => el.dir !== undefined && !isColumnAssignedElement(el, column)),
-                ...columnOrder.map((el) => {
-                    if (el.dir === undefined) {
-                        el.dir = "asc";
-                    } else if (el.dir === "asc") {
-                        el.dir = "desc";
-                    } else {
-                        el.dir = undefined;
-                    }
-                    return el;
-                }),
-                ...order.filter((el) => el.dir === undefined && !isColumnAssignedElement(el, column)),
-            ];
-
-            onOrderChange(newOrder);
+            onOrderChange();
             if (currOnClick) {
                 currOnClick(event);
             }
@@ -79,10 +62,10 @@ const GridHeadColumn = <T,>({
                 className={"w-grid-header-cell-in " + (cellProperties.onClick ? "w-grid-header-cell-in-clickable" : "")}
             >
                 {column.header?.caption ?? column.field}
-                {columnOrder.length > 0 && columnOrder[0].dir && (
-                    <div className={"w-grid-header-cell-in-order"}>{config.order.icons[columnOrder[0].dir]}</div>
+                {isOrderable && orderDir !== null && (
+                    <div className={"w-grid-header-cell-in-order"}>{config.order.icons[orderDir]}</div>
                 )}
-                {columnFilter.length > 0 && (
+                {filters.length > 0 && (
                     <>
                         <div
                             className={"w-grid-header-cell-in-filter"}
@@ -98,27 +81,23 @@ const GridHeadColumn = <T,>({
                         >
                             {config.filter.icons.filter}
                         </div>
-                        {columnFilter[0].opened && (
+                        {filters[0].opened && (
                             <div onClick={(e) => e.stopPropagation()}>
-                                {columnFilter.map((filter) => {
+                                {filters.map((filter) => {
                                     const Component = filter.component ?? config.filter.components[filter.filterType];
                                     return (
                                         <>
                                             {Component ? (
                                                 <Component
+                                                    key={filter.field + "" + filter.applyTo}
                                                     filter={filter}
-                                                    onApply={(value, hide) => {
-                                                        onFiltersChange([
-                                                            ...filters.map((filter) => {
-                                                                if (isColumnAssignedElement(filter, column)) {
-                                                                    filter.value = value;
-                                                                    if (hide === true) {
-                                                                        filter.opened = false;
-                                                                    }
-                                                                    return filter;
-                                                                }
-                                                            }),
-                                                        ]);
+                                                    hide={() => {
+                                                        filter.opened = false;
+                                                        onFiltersChange([filter]);
+                                                    }}
+                                                    onApply={(value) => {
+                                                        filter.value = value;
+                                                        onFiltersChange([filter]);
                                                     }}
                                                 />
                                             ) : (

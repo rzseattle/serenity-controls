@@ -1,6 +1,6 @@
 import { ColumnTemplate } from "./ColumnTemplate";
-import { TextFilter } from "../../../filters";
 import { IColumnTemplate } from "./IColumnTemplate";
+import GridTextFilter from "../../filters/GridTextFilter";
 
 export class ColText<Row> extends ColumnTemplate<Row> implements IColumnTemplate<Row> {
     constructor(field: Extract<keyof Row, string | number>, caption: string) {
@@ -16,13 +16,13 @@ export class ColText<Row> extends ColumnTemplate<Row> implements IColumnTemplate
                 caption,
                 label: caption,
                 field,
-                component: TextFilter,
+                component: GridTextFilter,
                 config: {
                     showFilterOptions: true,
                 },
             },
         ];
-        this.sort = { field, caption, column: null };
+        this.sort = { field, caption };
     }
 
     public static create = <Row>(field: Extract<keyof Row, string | number>): ColText<Row> => {

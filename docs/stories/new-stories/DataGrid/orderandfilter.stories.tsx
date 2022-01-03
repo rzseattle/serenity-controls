@@ -108,14 +108,39 @@ storiesOf("DataGrid/Order & Filter", module)
                 opened: true,
                 filterType: "text",
                 //component: Filter,
+                value: [
+                    {
+                        value: 10,
+                        condition: "=",
+                        labelValue: "dziesięc",
+                        labelCondition: "jest równe",
+                    },
+
+                    {
+                        value: 20,
+                        condition: "=",
+                        labelValue: "dwadziescia",
+                        labelCondition: "jest równe",
+                    },
+                ],
             },
             {
                 field: "date",
                 caption: "Date",
                 label: "in",
                 description: "ups",
-                opened: false,
+                opened: true,
                 filterType: "date",
+                value: [
+                    {
+                        value: 20,
+                        condition: "!=",
+                    },
+                    {
+                        value: 30,
+                        condition: "!=",
+                    },
+                ],
                 //component: Filter,
             },
         ]);
@@ -146,7 +171,10 @@ storiesOf("DataGrid/Order & Filter", module)
 
         return (
             <>
-                <PrintJSON json={filters} />
+                <div style={{ display: "flex" }}>
+                    <PrintJSON json={filters} />
+                    <PrintJSON json={order} />
+                </div>
                 <DataGrid
                     showHeader={true}
                     onOrderChange={(order) => setOrder(order)}
