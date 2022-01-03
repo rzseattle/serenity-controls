@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IGridColumn, IGridHeaderEvents } from "../interfaces/IGridColumn";
 import { IGridHeaderEventCallback } from "../interfaces/IGridHeaderEventCallback";
 import styles from "./GridHead.module.sass";
 import { useGridContext } from "../config/GridContext";
-import { IGridOrder } from "../interfaces/IGridOrder";
-import { IOrderChange } from "../interfaces/IOrderChangeCallback";
 import { IGridFilter } from "../interfaces/IGridFilter";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
-import { isColumnAssignedElement } from "../helpers/helpers";
+import Trigger from "rc-trigger";
+import { Positioner, Rect, RelativePositionPresets } from "../../Positioner";
+import { Portal } from "../../Portal";
 
 const GridHeadColumn = <T,>({
     column,
@@ -79,7 +79,46 @@ const GridHeadColumn = <T,>({
                                 ]);
                             }}
                         >
-                            {config.filter.icons.filter}
+                            <Layer
+                                popup={
+                                    <div style={{ backgroundColor: "white", padding: 10, border: "solid 1px grey" }}>
+                                        {filters[0].opened && (
+                                            <div onClick={(e) => e.stopPropagation()}>
+                                                {filters.map((filter) => {
+                                                    const Component =
+                                                        filter.component ?? config.filter.components[filter.filterType];
+                                                    return (
+                                                        <>
+                                                            {Component ? (
+                                                                <Component
+                                                                    key={filter.field + "" + filter.applyTo}
+                                                                    filter={filter}
+                                                                    hide={() => {
+                                                                        filter.opened = false;
+                                                                        onFiltersChange([filter]);
+                                                                    }}
+                                                                    onApply={(value) => {
+                                                                        filter.value = value;
+                                                                        onFiltersChange([filter]);
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                "No filter found"
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                }
+                                popupAlign={{
+                                    points: ["tl", "bl"],
+                                    offset: [0, 3],
+                                }}
+                            >
+                                <a href="#">{config.filter.icons.filter} </a>
+                            </Layer>
                         </div>
                         {filters[0].opened && (
                             <div onClick={(e) => e.stopPropagation()}>
@@ -119,6 +158,81 @@ const GridHeadColumn = <T,>({
             </div>
         );
     }
+};
+
+const getRefPoint = (config: string, position: Rect): number[] => {
+    const [vertical, horizontal] = config.split(" ");
+    let x: number;
+    let y: number;
+
+    if (horizontal == "left") {
+        x = position.left;
+    } else if (horizontal == "right") {
+        x = position.left + position.width;
+    } else if (horizontal == "middle") {
+        x = position.left + position.width / 2;
+    }
+    if (vertical == "top") {
+        y = position.top;
+    } else if (vertical == "bottom") {
+        y = position.top + position.height;
+    } else if (vertical == "middle") {
+        y = position.top + position.height / 2;
+    }
+
+    return [x, y];
+};
+
+const Layer = ({ children, popup }: { children: JSX.Element | string; popup: JSX.Element }) => {
+    const container = useRef<HTMLDivElement>();
+
+    const [visible, setVisible] = useState(true);
+    const [position, setPosition] = useState<[number, number]>([0, 0]);
+
+    let ticking = false;
+    let lastKnownScrollPosition = 0;
+
+    useEffect(() => {
+        const sourcePos = container.current.getBoundingClientRect();
+        setPosition([sourcePos.left, sourcePos.top + sourcePos.height]);
+
+        const track = () => {
+            lastKnownScrollPosition = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(function () {
+                    const sourcePos = container.current.getBoundingClientRect();
+                    setPosition([sourcePos.left, sourcePos.top + sourcePos.height + lastKnownScrollPosition]);
+                    ticking = false;
+                });
+
+                ticking = true;
+            }
+        };
+        document.addEventListener("scroll", track);
+        return () => {
+            document.removeEventListener("scroll", track);
+        };
+    }, []);
+
+    return (
+        <>
+            <div
+                style={{ display: "inline" }}
+                ref={container}
+                onClick={(e) => {
+                    //e.stopPropagation();
+                }}
+            >
+                {children}
+            </div>
+            {visible && (
+                <Portal>
+                    <div style={{ position: "absolute", left: position[0], top: position[1] }}>{popup}</div>
+                </Portal>
+            )}
+        </>
+    );
 };
 
 export default GridHeadColumn;

@@ -25,6 +25,8 @@ const GridHead = <T,>({
         filters.filter((f) => f.value && f.value.length > 0).length > 0 || order.filter((o) => o.dir).length > 0;
     const firstRow = useRef<HTMLDivElement>();
     const presenterRow = useRef<HTMLDivElement>();
+
+
     useEffect(() => {
         if (presenterVisible) {
             presenterRow.current.style.top = firstRow.current.firstElementChild.getBoundingClientRect().height + "px";

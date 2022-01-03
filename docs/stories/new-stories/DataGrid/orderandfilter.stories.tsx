@@ -124,25 +124,25 @@ storiesOf("DataGrid/Order & Filter", module)
                     },
                 ],
             },
-            {
-                field: "date",
-                caption: "Date",
-                label: "in",
-                description: "ups",
-                opened: true,
-                filterType: "date",
-                value: [
-                    {
-                        value: 20,
-                        condition: "!=",
-                    },
-                    {
-                        value: 30,
-                        condition: "!=",
-                    },
-                ],
-                //component: Filter,
-            },
+            // {
+            //     field: "date",
+            //     caption: "Date",
+            //     label: "in",
+            //     description: "ups",
+            //     opened: true,
+            //     filterType: "date",
+            //     value: [
+            //         {
+            //             value: 20,
+            //             condition: "!=",
+            //         },
+            //         {
+            //             value: 30,
+            //             condition: "!=",
+            //         },
+            //     ],
+            //     //component: Filter,
+            // },
         ]);
         const [data, setData] = useState(mockData.slice(0, 150));
 
@@ -171,31 +171,33 @@ storiesOf("DataGrid/Order & Filter", module)
 
         return (
             <>
-                <div style={{ display: "flex" }}>
-                    <PrintJSON json={filters} />
-                    <PrintJSON json={order} />
+                {/*<div style={{ display: "flex" }}>*/}
+                {/*    <PrintJSON json={filters} />*/}
+                {/*    <PrintJSON json={order} />*/}
+                {/*</div>*/}
+                <div >
+                    <DataGrid
+                        showHeader={true}
+                        onOrderChange={(order) => setOrder(order)}
+                        order={order}
+                        filters={filters}
+                        onFiltersChange={(filter) => setFilter(filter)}
+                        columns={[
+                            {
+                                field: "id",
+                            },
+                            {
+                                field: "date",
+                            },
+                            {
+                                field: "email",
+                            },
+                            { field: "price" },
+                            { field: "ip_address" },
+                        ]}
+                        data={{ rows: data, rowCount: data.length }}
+                    />
                 </div>
-                <DataGrid
-                    showHeader={true}
-                    onOrderChange={(order) => setOrder(order)}
-                    order={order}
-                    filters={filters}
-                    onFiltersChange={(filter) => setFilter(filter)}
-                    columns={[
-                        {
-                            field: "id",
-                        },
-                        {
-                            field: "date",
-                        },
-                        {
-                            field: "email",
-                        },
-                        { field: "price" },
-                        { field: "ip_address" },
-                    ]}
-                    data={{ rows: data, rowCount: data.length }}
-                />
             </>
         );
     });

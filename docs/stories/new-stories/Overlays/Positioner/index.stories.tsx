@@ -110,18 +110,18 @@ storiesOf("Overlays/Positioner", module)
             </>
         );
     })
-    .add("Relative manual (to cursor)", () => {
-        const positionsHorizontal = ["left", "middle", "right"];
-        const positionsVertical = ["top", "middle", "bottom"];
-
-        return (
-            <>
-                <Positioner relativeTo={"cursor"}>
-                    <div style={LayerStyle} />
-                </Positioner>
-            </>
-        );
-    })
+    // .add("Relative manual (to cursor)", () => {
+    //     const positionsHorizontal = ["left", "middle", "right"];
+    //     const positionsVertical = ["top", "middle", "bottom"];
+    //
+    //     return (
+    //         <>
+    //             <Positioner relativeTo={"cursor"}>
+    //                 <div style={LayerStyle} />
+    //             </Positioner>
+    //         </>
+    //     );
+    // })
     .add("Layer width adjust", () => {
         const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum molestie nibh eget aliquet. Morbi a magna molestie, laoreet mi vitae, suscipit mi. Sed pulvinar massa eros, faucibus volutpat tellus placerat ut. Proin dictum mauris quis risus pretium varius. Donec porttitor ultricies urna eu elementum.
         Sed ullamcorper sapien mi, sed dignissim magna fermentum fringilla. Suspendisse consequat mauris tristique metus ullamcorper, sed ultricies magna tincidunt. Aenean sit amet enim vitae nisi

@@ -4,6 +4,7 @@ import { IGridFilterComponent } from "../interfaces/IGridFilter";
 
 export interface IGridStore {
     gridClassName: string;
+    locale: Record<string, object | string>;
     common: {
         icons: {
             delete: JSX.Element;

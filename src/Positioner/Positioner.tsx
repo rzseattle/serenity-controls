@@ -5,6 +5,7 @@ import { deepCopy } from "../lib/JSONTools";
 import ResizeObserver from "resize-observer-polyfill";
 
 import "./Positioner.sass";
+import { useEffect, useRef, useState } from "react";
 
 interface IRelativePositionPresets {
     bottomMiddle: IPositionCalculatorOptions;
@@ -73,7 +74,7 @@ export const RelativePositionPresets: IRelativePositionPresets = {
 };
 
 interface IPositionerProps {
-    relativeTo?: "cursor" | (() => HTMLElement | HTMLDivElement | HTMLSpanElement);
+    relativeTo?: () => HTMLElement | HTMLElement;
     relativeSettings?: IPositionCalculatorOptions;
 
     absoluteSettings?: {
@@ -87,6 +88,7 @@ interface IPositionerProps {
     animation?: string;
 
     container?: () => HTMLElement;
+    children: JSX.Element;
 }
 
 export interface Rect {
@@ -98,7 +100,85 @@ export interface Rect {
     top: number;
 }
 
-export class Positioner extends React.PureComponent<IPositionerProps> {
+const getRefPoint = (config: string, position: Rect): [number, number] => {
+    const [vertical, horizontal] = config.split(" ");
+    let x: number;
+    let y: number;
+
+    if (horizontal == "left") {
+        x = position.left;
+    } else if (horizontal == "right") {
+        x = position.left + position.width;
+    } else if (horizontal == "middle") {
+        x = position.left + position.width / 2;
+    }
+    if (vertical == "top") {
+        y = position.top;
+    } else if (vertical == "bottom") {
+        y = position.top + position.height;
+    } else if (vertical == "middle") {
+        y = position.top + position.height / 2;
+    }
+
+    return [x, y];
+};
+
+const Positioner = (inProps: IPositionerProps) => {
+    const props = {
+        relativeSettings: RelativePositionPresets.bottomMiddle,
+        trackResize: false,
+        trackPosition: true,
+        animation: "none",
+        ...inProps,
+    };
+    //const container = useRef<HTMLDivElement>();
+    const [position, setPosition] = useState<[number, number]>([0, 0]);
+    const element = useRef<HTMLDivElement>();
+
+    let ticking = false;
+    let lastKnownScrollPosition = 0;
+
+    useEffect(() => {
+        // @ts-ignore
+        const relativeTo: HTMLElement =
+            typeof inProps.relativeTo === "function" ? props.relativeTo() : props.relativeTo;
+
+        if (relativeTo) {
+            const sourceRect = relativeTo.getBoundingClientRect();
+            const targetRect = element.current.getBoundingClientRect();
+
+            setPosition(getRefPoint(props.relativeSettings, sourceRect, targetRect));
+
+            const track = () => {
+                lastKnownScrollPosition = window.scrollY;
+
+                if (!ticking) {
+                    window.requestAnimationFrame(function () {
+                        const sourcePos = relativeTo.getBoundingClientRect();
+                        setPosition([sourcePos.left, sourcePos.top + sourcePos.height + lastKnownScrollPosition]);
+                        ticking = false;
+                    });
+
+                    ticking = true;
+                }
+            };
+            document.addEventListener("scroll", track);
+            return () => {
+                document.removeEventListener("scroll", track);
+            };
+        }
+    }, []);
+
+    return (
+        <Portal>
+            <div ref={element} style={{ position: "absolute", left: position[0], top: position[1] }}>
+                {inProps.children}
+            </div>
+        </Portal>
+    );
+};
+
+class Positioner1 extends React.PureComponent<IPositionerProps> {
     public static defaultProps = {
         relativeSettings: RelativePositionPresets.bottomMiddle,
         trackResize: false,
@@ -173,6 +253,7 @@ export class Positioner extends React.PureComponent<IPositionerProps> {
             // if (this.positionElement.style.hasOwnProperty(name)) {
             // @ts-ignore
             this.positionElement.current.style[name] = styles[name] + "px";
+            //console.log( name , styles[name]);
             // }
         }
     };
@@ -316,3 +397,57 @@ export const AbsolutePositionPresets = {
     fullTop: { top: "auto", left: "auto" },
     top: { top: "auto", left: "auto" },
 };
+
+const Layer = ({ children, popup }: { children: JSX.Element | string; popup: JSX.Element }) => {
+    const container = useRef<HTMLDivElement>();
+
+    const [visible, setVisible] = useState(true);
+    const [position, setPosition] = useState<[number, number]>([0, 0]);
+
+    let ticking = false;
+    let lastKnownScrollPosition = 0;
+
+    useEffect(() => {
+        const sourcePos = container.current.getBoundingClientRect();
+        setPosition([sourcePos.left, sourcePos.top + sourcePos.height]);
+
+        const track = () => {
+            lastKnownScrollPosition = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(function () {
+                    const sourcePos = container.current.getBoundingClientRect();
+                    setPosition([sourcePos.left, sourcePos.top + sourcePos.height + lastKnownScrollPosition]);
+                    ticking = false;
+                });
+
+                ticking = true;
+            }
+        };
+        document.addEventListener("scroll", track);
+        return () => {
+            document.removeEventListener("scroll", track);
+        };
+    }, []);
+
+    return (
+        <>
+            <div
+                style={{ display: "inline" }}
+                ref={container}
+                onClick={(e) => {
+                    //e.stopPropagation();
+                }}
+            >
+                {children}
+            </div>
+            {visible && (
+                <Portal>
+                    <div style={{ position: "absolute", left: position[0], top: position[1] }}>{popup}</div>
+                </Portal>
+            )}
+        </>
+    );
+};
+
+export { Positioner };

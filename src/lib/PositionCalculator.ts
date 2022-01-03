@@ -86,7 +86,7 @@ export class PositionCalculator {
 
         let styles: React.CSSProperties = {};
 
-        let tmp = this.item.getBoundingClientRect();
+        const tmp = this.item.getBoundingClientRect();
         let itemPositionData = {
             width: tmp.width,
             right: tmp.right,
@@ -113,8 +113,8 @@ export class PositionCalculator {
             itemPositionData.right = itemPositionData.width + widthToApply;
         }
 
-        // const correction = this.getItemContainerPositionCorrection();
-        const correction = [0, 0];
+        const correction = this.getItemContainerPositionCorrection();
+        //const correction = [0, 0];
 
         const [vertical, horizontal] = this.options.itemAt.split(" ");
         let x: number;
@@ -138,10 +138,13 @@ export class PositionCalculator {
         // const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         // const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
+        //correction[1] = window.pageYOffset;
+        //console.log(window.pageYOffset, "to jest to ");
+
         styles = {
             ...styles,
             left: targetRefPoint[0] + x + this.options.offsetX + correction[0] /*+ scrollLeft*/,
-            top: targetRefPoint[1] + y + this.options.offsetY + correction[1] /*+ scrollTop*/,
+            top: targetRefPoint[1] + y + this.options.offsetY + correction[1] + window.scrollY /*+ scrollTop*/,
         };
 
         if (styles.left < 0) {
