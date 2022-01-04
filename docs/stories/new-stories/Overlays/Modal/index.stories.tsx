@@ -25,17 +25,19 @@ storiesOf("Overlays/Modal", module)
     ))
     .add("Positioning", () => (
         <>
-            <Modal show={true} bottom={0} right={0} width={500}>
+            <Modal show={true} position={{ bottom: 0, right: 0 }} width={500}>
                 <h4>Modal 1</h4>
                 {text}
             </Modal>
-            <Modal show={true} top={0} right={0}>
+            <Modal show={true} position={{ top: 0, right: 0 }}>
                 <h4>Modal 2</h4>
                 {text}
             </Modal>
-            <Modal show={true} top={100} right={100} width={300}>
-                <h4>Modal 3</h4>
-                {text}
+            <Modal show={true} position={{ top: 100, right: 100, bottom: 200 }} width={300} height={"100%"}>
+                <div style={{ overflow: "auto" }}>
+                    <h4>Modal 3</h4>
+                    {text}
+                </div>
             </Modal>
         </>
     ))

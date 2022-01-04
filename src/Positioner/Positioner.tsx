@@ -161,6 +161,8 @@ const Positioner = (inProps: IPositionerProps) => {
     };
     //const container = useRef<HTMLDivElement>();
     const [position, setRect] = useState<[number, number, string | number, string | number]>([0, 0, "auto", "auto"]);
+    const [visible, setVisible] = useState(false);
+    const [className, setClassName] = useState("");
     const element = useRef<HTMLDivElement>();
 
     let ticking = false;
@@ -171,7 +173,6 @@ const Positioner = (inProps: IPositionerProps) => {
         // @ts-ignore
         const relativeTo: HTMLElement =
             typeof inProps.relativeTo === "function" ? props.relativeTo() : props.relativeTo;
-        console.log(relativeTo);
 
         // if (this.props.trackResize && this.resizeObserver === null) {
         //     this.resizeObserver = new ResizeObserver((entries, observer) => {
@@ -187,7 +188,11 @@ const Positioner = (inProps: IPositionerProps) => {
             const sourceRect = relativeTo.getBoundingClientRect();
             const targetRect = element.current.getBoundingClientRect();
 
+            console.log(targetRect.height, ":)");
+
             setRect(getRect(props.relativeSettings, sourceRect, targetRect));
+            setVisible(true);
+            setClassName("rotate-in-center");
 
             const track = () => {
                 lastKnownScrollYPosition = window.scrollY;
@@ -215,6 +220,7 @@ const Positioner = (inProps: IPositionerProps) => {
         <Portal>
             <div
                 ref={element}
+                className={className}
                 style={
                     !props.absoluteSettings || Object.entries(props.absoluteSettings).length === 0
                         ? {
@@ -223,6 +229,7 @@ const Positioner = (inProps: IPositionerProps) => {
                               top: position[1],
                               width: position[2],
                               height: position[3],
+                              visibility: visible ? "visible" : "hidden",
                           }
                         : { position: "absolute", ...props.absoluteSettings }
                 }

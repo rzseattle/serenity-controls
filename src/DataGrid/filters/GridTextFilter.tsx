@@ -13,10 +13,11 @@ const GridTextFilter: IGridFilterComponent = ({ onApply, filter, hide }) => {
         >
             {false && filter.caption && <div className={"w-filter-title"}>{filter.caption}</div>}
             <input type="text" />
+            <br/>
             {filter.description}
-            LIKE: fI18n.t("frontend:filters.text.like"), "==": fI18n.t("frontend:filters.text.equals"), "!=":
-            fI18n.t("frontend:filters.text.differentThan"), "NOT LIKE": fI18n.t("frontend:filters.text.notLike"), "^%":
-            fI18n.t("frontend:filters.text.startsWith"), "%$": fI18n.t("frontend:filters.text.endsWith"),
+            {/*LIKE: fI18n.t("frontend:filters.text.like"), "==": fI18n.t("frontend:filters.text.equals"), "!=":*/}
+            {/*fI18n.t("frontend:filters.text.differentThan"), "NOT LIKE": fI18n.t("frontend:filters.text.notLike"), "^%":*/}
+            {/*fI18n.t("frontend:filters.text.startsWith"), "%$": fI18n.t("frontend:filters.text.endsWith"),*/}
             <button onClick={() => hide()}>cancel</button>
         </div>
     );

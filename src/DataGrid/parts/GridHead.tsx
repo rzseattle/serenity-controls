@@ -42,7 +42,7 @@ const GridHead = <T,>({
                             key={column.field}
                             column={column}
                             isOrderable={order.filter((element) => isColumnAssignedElement(element, column)).length > 0}
-                            orderDir={order.filter((element) => isColumnAssignedElement(element, column))[0].dir}
+                            orderDir={order.filter((element) => isColumnAssignedElement(element, column))[0]?.dir}
                             onOrderChange={() => {
                                 const newOrder = [
                                     ...order.filter(

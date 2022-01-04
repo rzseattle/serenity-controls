@@ -24,10 +24,12 @@ export interface IModalProps {
     layer?: boolean;
     width?: string | number;
     height?: string | number;
-    top?: string | number;
-    left?: string | number;
-    bottom?: string | number;
-    right?: string | number;
+    position: {
+        top?: string | number;
+        left?: string | number;
+        bottom?: string | number;
+        right?: string | number;
+    };
     className?: string;
     children: any;
     orientation?: string;
@@ -101,29 +103,14 @@ export class Modal extends React.PureComponent<IModalProps> {
         let conf: any = {
             left: "50%",
             top: "50%",
-            transform: "translate(-50%, -50%)"
+            transform: "translate(-50%, -50%)",
         };
-        if (p.right !== undefined) {
-            conf.right = p.right;
-            conf.left = undefined;
-            conf.transform = null;
-        }
-        if (p.left !== undefined) {
-            conf.left = p.left;
-            conf.transform = null;
-        }
-        if (p.bottom !== undefined) {
-            conf.bottom = p.bottom;
-            conf.top = undefined;
+        if (p.position !== undefined) {
+            conf = p.position;
             conf.transform = null;
         }
 
-        if (p.top !== undefined) {
-            conf.top = p.top;
-            conf.transform = null;
-        }
-
-        if(p.target){
+        if (p.target) {
             conf = {};
         }
 
