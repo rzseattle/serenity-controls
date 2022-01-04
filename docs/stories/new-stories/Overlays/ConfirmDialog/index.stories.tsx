@@ -1,19 +1,7 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-
-import { IPositionCalculatorOptions } from "../../../../../src/lib";
-import { RelativePositionPresets } from "../../../../../src/Positioner";
 import { confirmDialog } from "../../../../../src/ConfirmDialog";
-
-interface IConfirmHelperProps {
-    presetName: string;
-    options?: IPositionCalculatorOptions;
-}
-
-const presets = Object.entries(RelativePositionPresets).map(([key, value]) => {
-    return key;
-});
 
 storiesOf("Overlays/Confirm Dialog", module)
     .add("Promise with confirm", () => {

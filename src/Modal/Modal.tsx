@@ -1,7 +1,6 @@
 import React from "react";
 import "./Modal.sass";
-import { Positioner } from "../Positioner";
-import { IPositionCalculatorOptions } from "../lib/PositionCalculator";
+import { IPositionCalculatorOptions, Positioner } from "../Positioner";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 import { CommonIcons } from "../lib/CommonIcons";
@@ -99,21 +98,33 @@ export class Modal extends React.PureComponent<IModalProps> {
             return null;
         }
 
-        const conf: any = {};
+        let conf: any = {
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)"
+        };
         if (p.right !== undefined) {
             conf.right = p.right;
             conf.left = undefined;
+            conf.transform = null;
         }
         if (p.left !== undefined) {
             conf.left = p.left;
+            conf.transform = null;
         }
         if (p.bottom !== undefined) {
             conf.bottom = p.bottom;
             conf.top = undefined;
+            conf.transform = null;
         }
 
         if (p.top !== undefined) {
             conf.top = p.top;
+            conf.transform = null;
+        }
+
+        if(p.target){
+            conf = {};
         }
 
         return (

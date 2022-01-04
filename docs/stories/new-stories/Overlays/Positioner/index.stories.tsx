@@ -1,8 +1,9 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 
-import { IPositionCalculatorOptions } from "../../../../../src/lib";
+
 import { Positioner, RelativePositionPresets } from "../../../../../src/Positioner";
+import { IPositionCalculatorOptions } from "../../../../../lib/lib";
 
 interface IPositionPairHelperProps {
     presetName: string;

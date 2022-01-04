@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { storiesOf } from "@storybook/react";
 
 import "./Modal.stories.sass";
@@ -16,61 +16,6 @@ const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ves
         Aliquam tincidunt enim nec diam sagittis aliquam. Phasellus ultricies nunc at iaculis tincidunt. Morbi dui nisl, interdum quis porttitor tincidunt, interdum vel quam. Pellentesque ac ipsum tristique, ornare tellus nec, lacinia est. Pellentesque viverra, diam at aliquam vestibulum, nisi risus blandit sem, vel
         porttitor odio augue eu risus. Nunc sollicitudin vitae libero a dapibus. Etiam nec imperdiet lectus. Vestibulum facilisis augue at viverra auctor. Proin maximus tortor vitae sem pretium feugiat.
         Morbi posuere orci et felis placerat, et eleifend purus ultricies.`;
-
-class OpenTest extends React.Component {
-    private buttonRef: HTMLAnchorElement;
-
-    public state = {
-        opened: false,
-    };
-
-    public render() {
-        const promise = new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // returning URL to load
-                Comm._get("https://jsonplaceholder.typicode.com/users").then((result) => {
-                    resolve(result);
-                });
-            }, 1500);
-        });
-        return (
-            <>
-                <a
-                    className={"btn btn-primary"}
-                    onClick={() => this.setState({ opened: true })}
-                    ref={(el) => (this.buttonRef = el)}
-                >
-                    Open modal
-                </a>
-
-                <Modal
-                    show={this.state.opened}
-                    onHide={() => this.setState({ opened: false })}
-                    animation={"from-up"}
-                    shadow={false}
-                    width={400}
-                    target={() => this.buttonRef}
-                    relativePositionConf={RelativePositionPresets.bottomLeft}
-                >
-                    <div style={{ padding: 10 }}>
-                        <Placeholder promise={promise} loadingIndicator={true}>
-                            {(data) => (
-                                <ul>
-                                    {data.map((el: any) => (
-                                        <li key={el.id}>
-                                            {el.name}, email
-                                            {el.email}{" "}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </Placeholder>
-                    </div>
-                </Modal>
-            </>
-        );
-    }
-}
 
 storiesOf("Overlays/Modal", module)
     .add("Base", () => (
@@ -123,12 +68,12 @@ storiesOf("Overlays/Modal", module)
         </Modal>
     ))
     .add("Icon", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true} icon={MailOutline} width={600}>
+        <Modal show={true} title={"Test title"} showHideLink={true} icon={CommonIcons.mail} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
     .add("Without shadow", () => (
-        <Modal show={true} title={"Test title"} showHideLink={true} icon={MailOutline} shadow={false} width={600}>
+        <Modal show={true} title={"Test title"} showHideLink={true} icon={CommonIcons.mail} shadow={false} width={600}>
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
@@ -145,10 +90,53 @@ storiesOf("Overlays/Modal", module)
             <div style={{ padding: 10 }}>{text}</div>
         </Modal>
     ))
-    .add("Relative positioning", () => (
-        <div>
-            <div style={{ padding: 10 }}>
-                <OpenTest />
-            </div>
-        </div>
-    ));
+    .add("Relative positioning", () => {
+        const [opened, setOpened] = useState(false);
+        const buttonRef = useRef<HTMLAnchorElement>();
+
+        const promise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // returning URL to load
+                Comm._get("https://jsonplaceholder.typicode.com/users").then((result) => {
+                    resolve(result);
+                });
+            }, 1500);
+        });
+        return (
+            <>
+                <a
+                    className={"btn btn-primary"}
+                    onClick={() => setOpened(true)}
+                    ref={buttonRef}
+                    style={{ marginLeft: 200 }}
+                >
+                    Open modal
+                </a>
+
+                <Modal
+                    show={opened}
+                    onHide={() => setOpened(false)}
+                    animation={"from-up"}
+                    shadow={false}
+                    width={400}
+                    target={() => buttonRef.current}
+                    relativePositionConf={RelativePositionPresets.bottomLeft}
+                >
+                    <div style={{ padding: 10 }}>
+                        <Placeholder promise={promise} loadingIndicator={true}>
+                            {(data) => (
+                                <ul>
+                                    {data.map((el: any) => (
+                                        <li key={el.id}>
+                                            {el.name}, email
+                                            {el.email}{" "}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </Placeholder>
+                    </div>
+                </Modal>
+            </>
+        );
+    });
