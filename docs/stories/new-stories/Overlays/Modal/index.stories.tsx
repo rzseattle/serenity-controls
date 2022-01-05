@@ -121,8 +121,8 @@ storiesOf("Overlays/Modal", module)
                     animation={"from-up"}
                     shadow={false}
                     width={400}
-                    target={() => buttonRef.current}
-                    relativePositionConf={RelativePositionPresets.bottomLeft}
+                    relativeTo={() => buttonRef.current}
+                    relativeSettings={RelativePositionPresets.bottomLeft}
                 >
                     <div style={{ padding: 10 }}>
                         <Placeholder promise={promise} loadingIndicator={true}>

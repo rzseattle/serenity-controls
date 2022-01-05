@@ -61,6 +61,7 @@
         "sass-loader": "10",
         "scriptjs": "^2.5.9",
         "ts-key-enum": "2.0.2",
+        "use-immer": "^0.6.0",
         "yarn": "^1.22.10"
     },
     "devDependencies": {

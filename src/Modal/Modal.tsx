@@ -14,8 +14,6 @@ export interface IModalProps {
 
     container?(): HTMLElement;
 
-    target?(): HTMLElement;
-
     recalculatePosition?: boolean;
     showHideLink?: boolean;
     title?: string;
@@ -24,7 +22,7 @@ export interface IModalProps {
     layer?: boolean;
     width?: string | number;
     height?: string | number;
-    position: {
+    position?: {
         top?: string | number;
         left?: string | number;
         bottom?: string | number;
@@ -33,7 +31,8 @@ export interface IModalProps {
     className?: string;
     children: any;
     orientation?: string;
-    relativePositionConf?: IPositionCalculatorOptions;
+    relativeTo?(): HTMLElement;
+    relativeSettings?: IPositionCalculatorOptions;
     animation?: string;
 
     onOrientationChange?(type: string): any;
@@ -110,7 +109,7 @@ export class Modal extends React.PureComponent<IModalProps> {
             conf.transform = null;
         }
 
-        if (p.target) {
+        if (p.relativeTo) {
             conf = {};
         }
 
@@ -131,8 +130,8 @@ export class Modal extends React.PureComponent<IModalProps> {
                 <Positioner
                     trackResize={this.props.recalculatePosition}
                     absoluteSettings={conf}
-                    relativeTo={p.target}
-                    relativeSettings={p.relativePositionConf}
+                    relativeTo={p.relativeTo}
+                    relativeSettings={p.relativeSettings}
                     animation={this.props.animation}
                     container={
                         p.layer
@@ -156,7 +155,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                         autofocus={true}
                     >
                         <div
-                            className={`w-modal ` + (p.className !== undefined && p.className)}
+                            className={p.className === undefined ? "w-modal" : p.className}
                             ref={(el) => (this.modalBody = el)}
                             onClick={(e) => e.stopPropagation()}
                             style={{ width: p.width ? p.width : "auto", height: p.height ? p.height : "auto" }}

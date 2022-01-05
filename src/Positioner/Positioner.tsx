@@ -82,7 +82,7 @@ export const RelativePositionPresets: IRelativePositionPresets = {
 };
 
 interface IPositionerProps {
-    relativeTo?: () => HTMLElement | HTMLElement;
+    relativeTo?: HTMLElement | (() => HTMLElement);
     relativeSettings?: IPositionCalculatorOptions;
 
     absoluteSettings?: {
@@ -166,13 +166,13 @@ const Positioner = (inProps: IPositionerProps) => {
     const element = useRef<HTMLDivElement>();
 
     let ticking = false;
-    let lastKnownScrollYPosition = 0;
-    let lastKnownScrollXPosition = 0;
+    let lastKnownScrollYPosition = window.scrollY;
+    let lastKnownScrollXPosition = window.scrollX;
 
     useEffect(() => {
         // @ts-ignore
         const relativeTo: HTMLElement =
-            typeof inProps.relativeTo === "function" ? props.relativeTo() : props.relativeTo;
+            typeof inProps.relativeTo === "function" ? inProps.relativeTo() : props.relativeTo;
 
         // if (this.props.trackResize && this.resizeObserver === null) {
         //     this.resizeObserver = new ResizeObserver((entries, observer) => {
@@ -188,9 +188,8 @@ const Positioner = (inProps: IPositionerProps) => {
             const sourceRect = relativeTo.getBoundingClientRect();
             const targetRect = element.current.getBoundingClientRect();
 
-            console.log(targetRect.height, ":)");
-
-            setRect(getRect(props.relativeSettings, sourceRect, targetRect));
+            const [left, top, width, height] = getRect(props.relativeSettings, sourceRect, targetRect);
+            setRect([left + lastKnownScrollXPosition, top + lastKnownScrollYPosition, width, height]);
             setVisible(true);
             setClassName("rotate-in-center");
 

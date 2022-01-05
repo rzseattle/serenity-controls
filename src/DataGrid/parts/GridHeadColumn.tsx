@@ -6,6 +6,7 @@ import { useGridContext } from "../config/GridContext";
 import { IGridFilter } from "../interfaces/IGridFilter";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
 import { Positioner, RelativePositionPresets } from "../../Positioner";
+import { Modal } from "../../Modal";
 
 const GridHeadColumn = <T,>({
     column,
@@ -83,18 +84,33 @@ const GridHeadColumn = <T,>({
                         </div>
 
                         {filters[0].opened && (
-                            <Positioner
+                            <Modal
                                 relativeTo={() => filterTrigger.current}
                                 relativeSettings={RelativePositionPresets.bottomRight}
+                                show={true}
+                                shadow={false}
+                                className=""
+                                onHide={() => {
+                                    onFiltersChange([
+                                        ...filters.map((filter) => {
+                                            filter.opened = !filter.opened;
+                                            return filter;
+                                        }),
+                                    ]);
+                                }}
                             >
                                 <div
                                     onClick={(e) => e.stopPropagation()}
                                     style={{
                                         padding: 20,
-                                        backgroundColor: "white",
-                                        border: "solid 1px grey",
+                                        backgroundColor: "#fafafa",
+                                        border: "solid 1px #e6e6e6",
                                         borderRadius: 2,
+                                        boxShadow:
+                                            "rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
                                     }}
+
+
                                 >
                                     {filters.map((filter) => {
                                         const Component =
@@ -121,7 +137,7 @@ const GridHeadColumn = <T,>({
                                         );
                                     })}
                                 </div>
-                            </Positioner>
+                            </Modal>
                         )}
                     </>
                 )}

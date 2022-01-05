@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useContext } from "react";
 import { IGridFilterComponent } from "../interfaces/IGridFilter";
+import { ILocale } from "../interfaces/ILocale";
 
 export interface IGridStore {
     gridClassName: string;
-    locale: Record<string, object | string>;
+    locale: ILocale;
     common: {
         icons: {
             delete: JSX.Element;

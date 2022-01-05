@@ -102,7 +102,7 @@ storiesOf("DataGrid/Order & Filter", module)
         const [filters, setFilter] = useState<IGridFilter[]>([
             {
                 field: "id",
-                caption: "Id",
+                caption: "Id filter",
                 label: "ZZ",
                 description: "description",
                 opened: true,

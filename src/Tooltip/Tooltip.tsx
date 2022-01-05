@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { Positioner, RelativePositionPresets } from "../Positioner";
+import { IPositionCalculatorOptions, Positioner, RelativePositionPresets } from "../Positioner";
 
 import "./Tooltip.sass";
 import { alertDialog } from "../AlertDialog";
 import { LoadingIndicator } from "../LoadingIndicator";
-import { IPositionCalculatorOptions } from "../lib";
+
 
 interface ITooltipProps {
     /**

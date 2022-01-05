@@ -1,15 +1,16 @@
-import { fI18n } from "../../lib";
+import { ILocale } from "../interfaces/ILocale";
 
-const locale = {
+const locale: ILocale = {
     apply: "Apply",
     cancel: "Cancel",
     filter: {
         like: "contains",
-        equals: "quals",
+        equals: "equals",
         differentThan: "different than",
         notLike: "not contains",
         startsWith: "starts with",
         endsWith: "ends with",
+        addCondition: "Add condition"
     },
 };
 
