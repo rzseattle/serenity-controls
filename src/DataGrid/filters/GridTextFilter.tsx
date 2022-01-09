@@ -16,7 +16,6 @@ const GridTextFilter: IGridFilterComponent = ({ onChange, filter }) => {
                       value: "",
                       condition: "LIKE",
                       operator: "and",
-
                   },
               ],
     );
@@ -56,7 +55,7 @@ const GridTextFilter: IGridFilterComponent = ({ onChange, filter }) => {
                             });
                         }}
                     />
-                    {index + 1 === value.length && (
+                    {index > 0 && (
                         <div
                             className={styles.button}
                             onClick={() => {

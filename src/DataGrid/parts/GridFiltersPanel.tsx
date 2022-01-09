@@ -48,7 +48,7 @@ const GridFiltersPanel = ({
                     onClick={() => {
                         onFiltersChange(
                             produce(filters, (draft) => {
-                                draft[0].opened = false;
+                                draft.forEach(el => el.opened = false);
                             }),
                         );
                     }}
@@ -61,7 +61,7 @@ const GridFiltersPanel = ({
                     onClick={() => {
                         onFiltersChange(
                             produce(localFilters, (draft) => {
-                                draft[0].opened = false;
+                                draft.forEach(el => el.opened = false);
                             }),
                         );
                     }}

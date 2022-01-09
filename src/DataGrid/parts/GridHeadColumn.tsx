@@ -88,7 +88,7 @@ const GridHeadColumn = <T,>({
                             {config.filter.icons.filter}
                         </div>
 
-                        {filters[0].opened && (
+                        {filters.filter(el=>el.opened).length > 0 && (
                             <Modal
                                 relativeTo={() => filterTrigger.current}
                                 relativeSettings={RelativePositionPresets.bottomRight}
@@ -98,7 +98,7 @@ const GridHeadColumn = <T,>({
                                 onHide={() => {
                                     onFiltersChange(
                                         produce<IGridFilter[]>(filters, (draft) => {
-                                            draft[0].opened = false;
+                                            draft.forEach(el => el.opened = false);
                                         }),
                                     );
                                 }}
