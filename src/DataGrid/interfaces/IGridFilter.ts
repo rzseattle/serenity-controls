@@ -4,8 +4,7 @@ import { IGridDataAssignedElement } from "./IGridDataAssignedElement";
 
 export type IGridFilterComponent = React.ComponentType<{
     filter: IGridFilter;
-    onApply: (filterValue: IGridFilterValue[]) => unknown;
-    hide: () => unknown
+    onChange: (filterValue: IGridFilterValue[]) => unknown;
 }>;
 
 interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedElement {
@@ -13,6 +12,7 @@ interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedE
     caption?: string;
     description?: string;
     config?: any;
+    active?: boolean
     value?: IGridFilterValue[];
     opened?: boolean;
 }
@@ -31,7 +31,8 @@ export type IGridFilter = IGridFilterWithComponent | IGridFilterWithType;
 export interface IGridFilterValue {
     value: any;
     condition: string;
-
     labelValue?: string;
     labelCondition?: string;
+    group?: number;
+    operator?: "and" | "or";
 }

@@ -104,7 +104,31 @@ storiesOf("DataGrid/Order & Filter", module)
                 field: "id",
                 caption: "Id filter",
                 label: "ZZ",
-                description: "description",
+                description: "The first filter description",
+                opened: true,
+                filterType: "text",
+                //component: Filter,
+                value: [
+                    {
+                        value: 10,
+                        condition: "=",
+                        labelValue: "dziesięc",
+                        labelCondition: "jest równe",
+                    },
+
+                    {
+                        value: 20,
+                        condition: "=",
+                        labelValue: "dwadziescia",
+                        labelCondition: "jest równe",
+                    },
+                ],
+            },
+            {
+                field: "zz",
+                applyTo: "id",
+                caption: "Another filter without description",
+                label: "ZZ",
                 opened: true,
                 filterType: "text",
                 //component: Filter,

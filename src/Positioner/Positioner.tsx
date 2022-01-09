@@ -147,6 +147,9 @@ const getRect = (
         y = y - itemRect.height / 2;
     }
 
+    x += config.offsetX ? config.offsetX : 0;
+    y += config.offsetY ? config.offsetY : 0;
+
     return [x < 0 ? 0 : x, y, width, itemRect.height];
 };
 

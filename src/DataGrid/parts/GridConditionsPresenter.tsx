@@ -5,6 +5,7 @@ import { IGridFilter } from "../interfaces/IGridFilter";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
 import { useGridContext } from "../config/GridContext";
 import { isGridColumnElementEqual } from "../helpers/helpers";
+import produce from "immer";
 
 const GridConditionsPresenter = ({
     order,
@@ -70,15 +71,16 @@ const GridConditionsPresenter = ({
                         <div
                             key={filter.field + "" + filter.applyTo}
                             onClick={() => {
-                                onFiltersChange([
-                                    ...filters.map((sub) => {
-                                        if (isGridColumnElementEqual(sub, filter)) {
-                                            sub.opened = true;
-                                        }
-
-                                        return sub;
+                                onFiltersChange(
+                                    produce(filters, (draft) => {
+                                        draft.map((sub) => {
+                                            if (isGridColumnElementEqual(sub, filter)) {
+                                                sub.opened = true;
+                                            }
+                                            return sub;
+                                        });
                                     }),
-                                ]);
+                                );
                             }}
                         >
                             <div>
@@ -97,14 +99,16 @@ const GridConditionsPresenter = ({
                                 className={"w-grid-conditions-close"}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    onFiltersChange([
-                                        ...filters.map((sub) => {
-                                            if (isGridColumnElementEqual(sub, filter)) {
-                                                filter.value = [];
-                                            }
-                                            return sub;
+                                    onFiltersChange(
+                                        produce(filters, (draft) => {
+                                            draft.map((sub) => {
+                                                if (isGridColumnElementEqual(sub, filter)) {
+                                                    sub.value = [];
+                                                }
+                                                return sub;
+                                            });
                                         }),
-                                    ]);
+                                    );
                                 }}
                             >
                                 {context.common.icons.delete}

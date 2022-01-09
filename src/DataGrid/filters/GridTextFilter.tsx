@@ -1,12 +1,13 @@
-import produce from "immer";
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import { IGridFilterComponent, IGridFilterValue } from "../interfaces/IGridFilter";
 import { useGridContext } from "../config/GridContext";
 import { CommandMenu } from "../../CommandMenu";
+import styles from "./GridTextFilter.module.sass";
 
-const GridTextFilter: IGridFilterComponent = ({ onApply, filter, hide }) => {
+const GridTextFilter: IGridFilterComponent = ({ onChange, filter }) => {
     const config = useGridContext();
+    const isInitialMount = useRef(true);
     const [value, setValue] = useImmer<IGridFilterValue[]>(
         filter.value.length > 0
             ? filter.value
@@ -14,9 +15,19 @@ const GridTextFilter: IGridFilterComponent = ({ onApply, filter, hide }) => {
                   {
                       value: "",
                       condition: "LIKE",
+                      operator: "and",
+
                   },
               ],
     );
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            onChange(value);
+        }
+    }, [value]);
 
     const options: {
         value: string;
@@ -31,10 +42,10 @@ const GridTextFilter: IGridFilterComponent = ({ onApply, filter, hide }) => {
     ];
 
     return (
-        <div>
-            {false && filter.caption && <div className={"w-filter-title"}>{filter.caption}</div>}
+        <div className={styles.main}>
+            {filter.caption && <div className={styles.title}>{filter.caption}</div>}
             {value.map((valueEl, index) => (
-                <div key={index} onClick={() => {}} style={{ display: "flex" }}>
+                <div key={index} className={styles.valueRow}>
                     <input
                         type="text"
                         value={valueEl.value}
@@ -45,7 +56,19 @@ const GridTextFilter: IGridFilterComponent = ({ onApply, filter, hide }) => {
                             });
                         }}
                     />
-                    <div>
+                    {index + 1 === value.length && (
+                        <div
+                            className={styles.button}
+                            onClick={() => {
+                                setValue((draft) => {
+                                    draft[index].operator = draft[index].operator === "and" ? "or" : "and";
+                                });
+                            }}
+                        >
+                            {valueEl.operator === "or" ? "or" : "and"}
+                        </div>
+                    )}
+                    <div className={styles.button + " " + styles.filterType}>
                         <CommandMenu
                             items={options.map((o) => ({
                                 key: o.value,
@@ -58,65 +81,48 @@ const GridTextFilter: IGridFilterComponent = ({ onApply, filter, hide }) => {
                                 },
                             }))}
                         >
-                            {(opened) => (
-                                <button>{options.filter((el) => el.value === valueEl.condition)[0]?.label}</button>
-                            )}
+                            {(opened) => <div>{options.filter((el) => el.value === valueEl.condition)[0]?.label}</div>}
                         </CommandMenu>
                     </div>
                     {value.length > 1 && (
-                        <div>
-                            <button
-                                onClick={() => {
-                                    setValue((draft) => {
-                                        draft.splice(index, 1);
-                                        //value will be empty
-                                        if (value.length === 1) {
-                                            draft.push({
-                                                value: "",
-                                                condition: options[0].value,
-                                                labelCondition: options[0].label,
-                                            });
-                                        }
-                                    });
-                                }}
-                            >
-                                -
-                            </button>
-                        </div>
-                    )}
-                    {index + 1 === value.length && (
-                        <div>
-                            <button
-                                onClick={() => {
-                                    setValue((draft) => {
+                        <div
+                            className={styles.button}
+                            onClick={() => {
+                                setValue((draft) => {
+                                    draft.splice(index, 1);
+                                    //value will be empty
+                                    if (value.length === 1) {
                                         draft.push({
                                             value: "",
                                             condition: options[0].value,
                                             labelCondition: options[0].label,
                                         });
+                                    }
+                                });
+                            }}
+                        >
+                            -
+                        </div>
+                    )}
+                    {index + 1 === value.length && (
+                        <div
+                            className={styles.button}
+                            onClick={() => {
+                                setValue((draft) => {
+                                    draft.push({
+                                        value: "",
+                                        condition: options[0].value,
+                                        labelCondition: options[0].label,
                                     });
-                                }}
-                            >
-                                +
-                            </button>
+                                });
+                            }}
+                        >
+                            +
                         </div>
                     )}
                 </div>
             ))}
-            <hr />
-            {filter.description}
-            <hr />
-
-            <button onClick={() => hide()}>{config.locale.cancel}</button>
-
-            <button
-                onClick={() => {
-                    onApply(value);
-                    hide();
-                }}
-            >
-                {config.locale.apply}
-            </button>
+            {filter.description && <div className={styles.description}>{filter.description}</div>}
         </div>
     );
 };

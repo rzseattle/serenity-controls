@@ -1,0 +1,60 @@
+.main
+  display: block
+  font-family: "Segoe UI", sans-serif
+
+.valueRow
+  display: flex
+  margin-bottom: 4px
+  align-items: stretch
+  >div:last-child
+    border-right: solid 1px #9b9b9b
+    border-radius: 0 2px 2px 0
+
+  input
+    border-right: 0
+    border-radius: 2px 0 0 2px
+    border: solid 1px #9b9b9b
+    padding: 5px
+    width: 150px
+  \:global
+    .w-tooltip
+      height: 100%
+
+
+.filterType
+  width: 60px
+
+.title
+  color: darkgray
+
+
+
+.button
+  border-radius: 0
+  border: none
+  background-color: rgb( 230, 230, 230 )
+  padding: 8px
+  font-size: 11px
+  border-top: solid 1px #9b9b9b
+  border-bottom: solid 1px #9b9b9b
+  &:hover
+    background-color: lightgrey
+
+.applyButtons
+  background-color: lightgrey
+  margin-left: 5px
+  border: solid 1px grey
+  border-radius: 2px
+  padding: 4px 12px
+
+.description
+  padding: 2px
+  padding-left: 10px
+  border: dashed 1px lightgrey
+  margin-bottom: 10px
+
+.buttonPanel
+  border-top: solid 1px lightgrey
+  margin-top: 10px
+  padding-top: 5px
+  text-align: right

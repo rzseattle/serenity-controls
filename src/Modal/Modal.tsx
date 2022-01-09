@@ -1,6 +1,6 @@
 import React from "react";
 import "./Modal.sass";
-import { IPositionCalculatorOptions, Positioner } from "../Positioner";
+import { IPositionCalculatorOptions, Positioner, RelativePositionPresets } from "../Positioner";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 import { CommonIcons } from "../lib/CommonIcons";
@@ -109,6 +109,7 @@ export class Modal extends React.PureComponent<IModalProps> {
             conf.transform = null;
         }
 
+        const relativeSettings = p.relativeSettings;
         if (p.relativeTo) {
             conf = {};
         }
@@ -127,11 +128,12 @@ export class Modal extends React.PureComponent<IModalProps> {
                         />
                     </Positioner>
                 )}
+
                 <Positioner
                     trackResize={this.props.recalculatePosition}
                     absoluteSettings={conf}
                     relativeTo={p.relativeTo}
-                    relativeSettings={p.relativeSettings}
+                    relativeSettings={relativeSettings}
                     animation={this.props.animation}
                     container={
                         p.layer

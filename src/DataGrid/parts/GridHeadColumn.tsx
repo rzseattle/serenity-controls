@@ -5,9 +5,10 @@ import styles from "./GridHead.module.sass";
 import { useGridContext } from "../config/GridContext";
 import { IGridFilter } from "../interfaces/IGridFilter";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
-import { Positioner, RelativePositionPresets } from "../../Positioner";
+import { RelativePositionPresets } from "../../Positioner";
 import { Modal } from "../../Modal";
-
+import GridFiltersPanel from "./GridFiltersPanel";
+import produce from "immer";
 const GridHeadColumn = <T,>({
     column,
     isOrderable,
@@ -59,7 +60,11 @@ const GridHeadColumn = <T,>({
     } else {
         child = (
             <div
-                className={"w-grid-header-cell-in " + (cellProperties.onClick ? "w-grid-header-cell-in-clickable" : "")}
+                className={
+                    "w-grid-header-cell-in " +
+                    (cellProperties.onClick ? "w-grid-header-cell-in-clickable " : "") +
+                    (filters[0]?.opened ? "w-grid-header-cell-in-filter-on" : "")
+                }
             >
                 {column.header?.caption ?? column.field}
                 {isOrderable && orderDir !== null && (
@@ -72,12 +77,12 @@ const GridHeadColumn = <T,>({
                             className={"w-grid-header-cell-in-filter"}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                onFiltersChange([
-                                    ...filters.map((filter) => {
-                                        filter.opened = !filter.opened;
-                                        return filter;
+
+                                onFiltersChange(
+                                    produce<IGridFilter[]>(filters, (draft) => {
+                                        draft[0].opened = !draft[0].opened;
                                     }),
-                                ]);
+                                );
                             }}
                         >
                             {config.filter.icons.filter}
@@ -91,12 +96,11 @@ const GridHeadColumn = <T,>({
                                 shadow={false}
                                 className=""
                                 onHide={() => {
-                                    onFiltersChange([
-                                        ...filters.map((filter) => {
-                                            filter.opened = !filter.opened;
-                                            return filter;
+                                    onFiltersChange(
+                                        produce<IGridFilter[]>(filters, (draft) => {
+                                            draft[0].opened = false;
                                         }),
-                                    ]);
+                                    );
                                 }}
                             >
                                 <div
@@ -104,38 +108,13 @@ const GridHeadColumn = <T,>({
                                     style={{
                                         padding: 20,
                                         backgroundColor: "#fafafa",
-                                        border: "solid 1px #e6e6e6",
+                                        border: "solid 1px lightgrey",
                                         borderRadius: 2,
                                         boxShadow:
                                             "rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
                                     }}
-
-
                                 >
-                                    {filters.map((filter) => {
-                                        const Component =
-                                            filter.component ?? config.filter.components[filter.filterType];
-                                        return (
-                                            <>
-                                                {Component ? (
-                                                    <Component
-                                                        key={filter.field + "" + filter.applyTo}
-                                                        filter={filter}
-                                                        hide={() => {
-                                                            filter.opened = false;
-                                                            onFiltersChange([filter]);
-                                                        }}
-                                                        onApply={(value) => {
-                                                            filter.value = value;
-                                                            onFiltersChange([filter]);
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    "No filter found"
-                                                )}
-                                            </>
-                                        );
-                                    })}
+                                    <GridFiltersPanel onFiltersChange={onFiltersChange} filters={filters} />
                                 </div>
                             </Modal>
                         )}
