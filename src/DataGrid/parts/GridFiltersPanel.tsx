@@ -28,14 +28,19 @@ const GridFiltersPanel = ({
                                 <Component
                                     key={filter.field + "" + filter.applyTo}
                                     filter={filter}
-                                    onChange={(value) => {
+                                    onValueChange={(value) => {
                                         setLocalFilters((draft) => {
                                             draft[index].value = value;
                                         });
                                     }}
+                                    onFilterChange={(filter) => {
+                                        setLocalFilters(draft => {
+                                            draft[index] = filter;
+                                        })
+                                    }}
                                 />
                             ) : (
-                                "No filter found"
+                                <div>No filter found</div>
                             )}
                         </>
                     );
@@ -48,7 +53,7 @@ const GridFiltersPanel = ({
                     onClick={() => {
                         onFiltersChange(
                             produce(filters, (draft) => {
-                                draft.forEach(el => el.opened = false);
+                                draft.forEach((el) => (el.opened = false));
                             }),
                         );
                     }}
@@ -61,7 +66,7 @@ const GridFiltersPanel = ({
                     onClick={() => {
                         onFiltersChange(
                             produce(localFilters, (draft) => {
-                                draft.forEach(el => el.opened = false);
+                                draft.forEach((el) => (el.opened = false));
                             }),
                         );
                     }}

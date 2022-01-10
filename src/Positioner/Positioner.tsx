@@ -226,12 +226,18 @@ const Positioner = (inProps: IPositionerProps) => {
                 style={
                     !props.absoluteSettings || Object.entries(props.absoluteSettings).length === 0
                         ? {
-                              position: "absolute",
-                              left: position[0],
-                              top: position[1],
-                              width: position[2],
-                              height: position[3],
-                              visibility: visible ? "visible" : "hidden",
+                              ...{
+                                  position: "absolute",
+                                  left: position[0],
+                                  top: position[1],
+                                  visibility: visible ? "visible" : "hidden",
+                              },
+                              ...(props.relativeSettings.widthCalc && props.relativeSettings.widthCalc !== "none"
+                                  ? {
+                                        width: position[2],
+                                        height: position[3],
+                                    }
+                                  : {}),
                           }
                         : { position: "absolute", ...props.absoluteSettings }
                 }

@@ -26,7 +26,10 @@ interface IGridProps<T> {
 
     selectable?: boolean;
     onSelectionChange?: ISelectionChangeEvent;
+
     onPage?: number;
+    currentPage?: number;
+
     rememberState?: boolean;
 
     rowClassTemplate?: IGridRowClassProvider<T>;

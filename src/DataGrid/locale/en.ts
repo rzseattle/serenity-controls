@@ -10,7 +10,16 @@ const locale: ILocale = {
         notLike: "not contains",
         startsWith: "starts with",
         endsWith: "ends with",
-        addCondition: "Add condition"
+        addCondition: "Add condition",
+
+        dateIsSet: "Date is set",
+        dateIsNotSet: "Date is not set",
+
+
+        smaller: "smaller than",
+        smallerEqual: "smaller equals",
+        greater: "greater than",
+        greaterEqual: "greater equal",
     },
 };
 

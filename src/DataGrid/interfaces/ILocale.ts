@@ -11,5 +11,12 @@ export interface Filter {
     notLike: string;
     startsWith: string;
     endsWith: string;
-    addCondition: string
+    addCondition: string;
+    dateIsSet: string;
+    dateIsNotSet: string;
+
+    smaller: string;
+    smallerEqual: string;
+    greater: string;
+    greaterEqual: string;
 }

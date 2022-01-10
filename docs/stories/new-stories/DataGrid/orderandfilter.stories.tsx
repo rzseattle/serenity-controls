@@ -130,7 +130,7 @@ storiesOf("DataGrid/Order & Filter", module)
                 caption: "Another filter without description",
                 label: "ZZ",
                 opened: true,
-                filterType: "text",
+                filterType: "date",
                 //component: Filter,
                 value: [
                     {
@@ -139,11 +139,39 @@ storiesOf("DataGrid/Order & Filter", module)
                         labelValue: "dziesięc",
                         labelCondition: "jest równe",
                     },
-
+                ],
+            },
+            {
+                field: "yy",
+                applyTo: "id",
+                caption: "Numeric",
+                label: "ZZ",
+                opened: true,
+                filterType: "numeric",
+                //component: Filter,
+                value: [
                     {
-                        value: 20,
+                        value: 10,
                         condition: "=",
-                        labelValue: "dwadziescia",
+                        labelValue: "dziesięc",
+                        labelCondition: "jest równe",
+                    },
+                ],
+            },
+            {
+                field: "zzbool",
+                applyTo: "id",
+                caption: "Boolean",
+                label: "yyy",
+                opened: true,
+                description: "This is boolean filter",
+                filterType: "boolean",
+                //component: Filter,
+                value: [
+                    {
+                        value: 10,
+                        condition: "=",
+                        labelValue: "dziesięc",
                         labelCondition: "jest równe",
                     },
                 ],
@@ -199,7 +227,7 @@ storiesOf("DataGrid/Order & Filter", module)
                 {/*    <PrintJSON json={filters} />*/}
                 {/*    <PrintJSON json={order} />*/}
                 {/*</div>*/}
-                <div >
+                <div>
                     <DataGrid
                         showHeader={true}
                         onOrderChange={(order) => setOrder(order)}
@@ -224,4 +252,73 @@ storiesOf("DataGrid/Order & Filter", module)
                 </div>
             </>
         );
-    });
+    })
+
+    .add("Pagination", () => {
+        const [order, setOrder] = useState<IGridOrder[]>([
+            { field: "id", caption: "Sorted by Id" },
+            { field: "date" },
+            { field: "email" },
+            { field: "price" },
+            { field: "ip_address" },
+        ]);
+
+        const [currentPage, setCurrentPage] = useState(1);
+        const [onPage, setOnPage] = useState(10);
+        const [data, setData] = useState(
+            mockData.slice((currentPage - 1) * onPage, (currentPage - 1) * onPage + onPage),
+        );
+
+        useEffect(() => {
+            setData(mockData.slice((currentPage - 1) * onPage, (currentPage - 1) * onPage + onPage))
+        },[onPage, currentPage])
+
+
+
+
+        return (
+            <>
+                <DataGrid
+                    showHeader={true}
+                    showFooter={true}
+                    onOrderChange={(order) => {
+                        //console.log(order);
+                        setOrder(order);
+                    }}
+                    onPage={onPage}
+                    currentPage={currentPage}
+                    order={order}
+                    columns={[
+                        {
+                            field: "id",
+                        },
+                        {
+                            field: "date",
+                        },
+                        {
+                            field: "email",
+                        },
+                        { field: "price" },
+                        { field: "ip_address" },
+                    ]}
+                    data={{ rows: data, rowCount: mockData.length }}
+                    footer={(props) => {
+                        return (
+                            <div style={{ width: "100%", height: "auto", backgroundColor: "white" }}>
+                                pagination
+                                <hr />
+                                onPage: <span onClick={() => setOnPage((el) => el + 10)}>
+                                    {props.onPage}
+                                </span> current:{" "}
+                                <span onClick={() => setCurrentPage((el) => el + 1)}>{props.currentPage}</span> all:{" "}
+                                {props.data.rowCount}
+                            </div>
+                        );
+                    }}
+                />
+            </>
+        );
+    })
+
+
+  ;
