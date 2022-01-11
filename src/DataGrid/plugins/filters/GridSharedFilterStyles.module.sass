@@ -6,16 +6,24 @@
   display: flex
   margin-bottom: 4px
   align-items: stretch
+
   >div:last-child
     border-right: solid 1px #9b9b9b
     border-radius: 0 2px 2px 0
 
-  input
+  .fieldBlock
+    flex-grow: 1
     border-right: 0
-    border-radius: 2px 0 0 2px
+
     border: solid 1px #9b9b9b
+
+  input
     padding: 5px
-    width: 150px
+    border: none
+    border-radius: 2px 0 0 2px
+    height: 100%
+
+
   \:global
     .w-tooltip
       height: 100%

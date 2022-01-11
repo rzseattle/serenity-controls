@@ -1,9 +1,9 @@
 import React, { ReactElement, useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
-import { IGridFilter, IGridFilterValue } from "../interfaces/IGridFilter";
-import { CommandMenu } from "../../CommandMenu";
-import styles from "./GridTextFilter.module.sass";
+import sharedStyles from "./GridSharedFilterStyles.module.sass";
 import produce from "immer";
+import { IGridFilter, IGridFilterValue } from "../../interfaces/IGridFilter";
+import { CommandMenu } from "../../../CommandMenu";
 
 interface IGridCommonFilterProps {
     filter: IGridFilter;
@@ -50,7 +50,7 @@ const GridCommonFilter = ({
 
     return (
         <div
-            className={styles.main}
+            className={sharedStyles.main}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     alert("x");
@@ -58,7 +58,7 @@ const GridCommonFilter = ({
             }}
         >
             {filter.caption && (
-                <div className={styles.title}>
+                <div className={sharedStyles.title}>
                     <a
                         onClick={(e) => {
                             e.stopPropagation();
@@ -81,11 +81,11 @@ const GridCommonFilter = ({
                     });
                 });
                 return (
-                    <div key={index} className={styles.valueRow}>
-                        <div>{FieldComponent}</div>
+                    <div key={index} className={sharedStyles.valueRow}>
+                        <div className={sharedStyles.fieldBlock}>{FieldComponent}</div>
                         {filter.isInAdvancedMode && index > 0 && (
                             <div
-                                className={styles.button}
+                                className={sharedStyles.button}
                                 onClick={() => {
                                     setValue((draft) => {
                                         draft[index].operator = draft[index].operator === "and" ? "or" : "and";
@@ -95,7 +95,7 @@ const GridCommonFilter = ({
                                 {valueEl.operator === "or" ? "or" : "and"}
                             </div>
                         )}
-                        <div className={styles.button + " " + styles.filterType}>
+                        <div className={sharedStyles.button + " " + sharedStyles.filterType}>
                             <CommandMenu
                                 items={conditions.map((o) => ({
                                     key: o.value,
@@ -113,7 +113,7 @@ const GridCommonFilter = ({
                         </div>
                         {filter.isInAdvancedMode && value.length > 1 && (
                             <div
-                                className={styles.button}
+                                className={sharedStyles.button}
                                 onClick={() => {
                                     setValue((draft) => {
                                         draft.splice(index, 1);
@@ -133,7 +133,7 @@ const GridCommonFilter = ({
                         )}
                         {filter.isInAdvancedMode && index + 1 === value.length && (
                             <div
-                                className={styles.button}
+                                className={sharedStyles.button}
                                 onClick={() => {
                                     setValue((draft) => {
                                         draft.push({
@@ -150,7 +150,7 @@ const GridCommonFilter = ({
                     </div>
                 );
             })}
-            {filter.description && <div className={styles.description}>{filter.description}</div>}
+            {filter.description && <div className={sharedStyles.description}>{filter.description}</div>}
         </div>
     );
 };

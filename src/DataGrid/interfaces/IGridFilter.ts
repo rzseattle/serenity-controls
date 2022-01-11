@@ -37,7 +37,7 @@ export interface IGridFilterValue {
     value: any;
     condition: string;
     labelValue?: string;
-    labelCondition?: string;
+    labelCondition?: string | JSX.Element;
     group?: number;
     operator?: "and" | "or";
 }

@@ -23,6 +23,7 @@ export interface IGridStore {
             filter: JSX.Element;
             checked: JSX.Element;
             unchecked: JSX.Element;
+            calendar: JSX.Element;
         };
     };
 }

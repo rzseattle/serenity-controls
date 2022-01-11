@@ -2,12 +2,13 @@ import React from "react";
 
 import styles from "../DataGrid.module.sass";
 import { GridContext, IGridConfig } from "./GridContext";
-import GridTextFilter from "../filters/GridTextFilter";
-import GridDateFilter from "../filters/GridDateFilter";
 import locale from "../locale/en";
-import GridCommonFilter from "../filters/GridCommonFilter";
-import GridNumericFilter from "../filters/GridNumericFilter";
-import GridBooleanFilter from "../filters/GridBooleanFilter";
+import GridTextFilter from "../plugins/filters/GridTextFilter";
+import GridDateFilter from "../plugins/filters/GridDateFilter";
+import GridNumericFilter from "../plugins/filters/GridNumericFilter";
+import GridBooleanFilter from "../plugins/filters/GridBooleanFilter";
+import { BsCalendar3, BsFilter } from "react-icons/bs";
+import { AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineCheck, AiOutlineClose } from "react-icons/all";
 
 const GridRoot = ({ children, options }: { children: React.ReactNode; options: Partial<IGridConfig> }) => {
     return (
@@ -18,21 +19,21 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options: P
                     gridClassName: styles.gridLayout,
                     common: {
                         icons: {
-                            delete: <>x</>,
+                            delete: <><AiOutlineClose /></>,
                         },
                     },
                     order: {
                         icons: {
-                            asc: <>↓</>,
-                            desc: <>↑</>,
+                            asc: <><AiOutlineArrowDown /></>,
+                            desc: <><AiOutlineArrowUp /></>,
                         },
                     },
                     filter: {
                         icons: {
-                            filter: <>‡</>,
-                            checked: <>V</>,
-                            unchecked: <>X</>
-
+                            filter: <><BsFilter /></>,
+                            checked: <><AiOutlineCheck /></>,
+                            unchecked: <><AiOutlineClose /></>,
+                            calendar: <><BsCalendar3 /></>,
                         },
                         components: {
                             text: GridTextFilter,

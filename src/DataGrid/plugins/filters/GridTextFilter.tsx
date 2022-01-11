@@ -1,7 +1,7 @@
 import React from "react";
-import { IGridFilterComponent } from "../interfaces/IGridFilter";
 import GridCommonFilter from "./GridCommonFilter";
-import { useGridContext } from "../config/GridContext";
+import { useGridContext } from "../../config/GridContext";
+import { IGridFilterComponent } from "../../interfaces/IGridFilter";
 
 const GridTextFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, filter }) => {
     const config = useGridContext();

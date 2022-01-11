@@ -27,9 +27,6 @@ interface IGridProps<T> {
     selectable?: boolean;
     onSelectionChange?: ISelectionChangeEvent;
 
-    onPage?: number;
-    currentPage?: number;
-
     rememberState?: boolean;
 
     rowClassTemplate?: IGridRowClassProvider<T>;
@@ -60,7 +57,6 @@ interface IGridProps<T> {
 const defaultProps: Partial<IGridProps<any>> = {
     showHeader: false,
     showFooter: false,
-    onPage: 25,
     autofocus: false,
     order: [],
     filters: [],

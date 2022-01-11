@@ -5,10 +5,11 @@ import React, { useEffect, useState } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 import { IGridOrder } from "../../../../src/DataGrid/interfaces/IGridOrder";
 import { IGridFilter, IGridFilterComponent } from "../../../../src/DataGrid/interfaces/IGridFilter";
-import { PrintJSON } from "../../../../src/PrintJSON";
+import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import Pagination from "../../../../src/DataGrid/plugins/pagination/Pagination";
 
 const Filter: IGridFilterComponent = ({ onApply, filter }) => {
-    const [val, setVal] = useState(filter.value?.value);
+    const [val, setVal] = useState(filter.value[0]?.value);
     const apply = () => {
         onApply({ value: val, labelValue: "to jest 10", condition: "=" }, false);
     };
@@ -265,16 +266,14 @@ storiesOf("DataGrid/Order & Filter", module)
 
         const [currentPage, setCurrentPage] = useState(1);
         const [onPage, setOnPage] = useState(10);
+        const count = mockData.length;
         const [data, setData] = useState(
             mockData.slice((currentPage - 1) * onPage, (currentPage - 1) * onPage + onPage),
         );
 
         useEffect(() => {
-            setData(mockData.slice((currentPage - 1) * onPage, (currentPage - 1) * onPage + onPage))
-        },[onPage, currentPage])
-
-
-
+            setData(mockData.slice((currentPage - 1) * onPage, (currentPage - 1) * onPage + onPage));
+        }, [onPage, currentPage]);
 
         return (
             <>
@@ -285,8 +284,6 @@ storiesOf("DataGrid/Order & Filter", module)
                         //console.log(order);
                         setOrder(order);
                     }}
-                    onPage={onPage}
-                    currentPage={currentPage}
                     order={order}
                     columns={[
                         {
@@ -302,23 +299,18 @@ storiesOf("DataGrid/Order & Filter", module)
                         { field: "ip_address" },
                     ]}
                     data={{ rows: data, rowCount: mockData.length }}
-                    footer={(props) => {
+                    footer={() => {
                         return (
-                            <div style={{ width: "100%", height: "auto", backgroundColor: "white" }}>
-                                pagination
-                                <hr />
-                                onPage: <span onClick={() => setOnPage((el) => el + 10)}>
-                                    {props.onPage}
-                                </span> current:{" "}
-                                <span onClick={() => setCurrentPage((el) => el + 1)}>{props.currentPage}</span> all:{" "}
-                                {props.data.rowCount}
-                            </div>
+                            <Pagination
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                onPage={onPage}
+                                setOnPage={setOnPage}
+                                all={count}
+                            />
                         );
                     }}
                 />
             </>
         );
-    })
-
-
-  ;
+    });

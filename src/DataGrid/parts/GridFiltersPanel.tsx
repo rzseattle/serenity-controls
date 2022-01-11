@@ -1,6 +1,6 @@
 import React from "react";
 import { IGridFilter } from "../interfaces/IGridFilter";
-import styles from "../filters/GridTextFilter.module.sass";
+import styles from "../plugins/filters/GridSharedFilterStyles.module.sass";
 import { useGridContext } from "../config/GridContext";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
 import { useImmer } from "use-immer";

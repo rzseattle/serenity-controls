@@ -83,9 +83,8 @@ const GridConditionsPresenter = ({
                                 );
                             }}
                         >
-                            <div>
-                                {context.filter.icons.filter} {filter.caption ?? filter.field}
-                            </div>
+                            <div>{context.filter.icons.filter}</div>
+                            <div>{filter.caption ?? filter.field}</div>
                             <div style={{ textAlign: "left" }}>
                                 {filter.value.map((value, index) => {
                                     return (
