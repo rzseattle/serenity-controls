@@ -19,4 +19,6 @@ export interface Filter {
     smallerEqual: string;
     greater: string;
     greaterEqual: string;
+
+    between: string;
 }

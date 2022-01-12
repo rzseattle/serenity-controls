@@ -20,6 +20,7 @@ const locale: ILocale = {
         smallerEqual: "smaller equals",
         greater: "greater than",
         greaterEqual: "greater equal",
+        between: "between",
     },
 };
 

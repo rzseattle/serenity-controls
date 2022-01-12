@@ -89,6 +89,7 @@ const GridDateFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, f
                 );
             }}
             conditions={[
+                { value: "BETWEEN", label: config.locale.filter.between },
                 { value: "=", label: config.locale.filter.equals },
                 { value: "!=", label: config.locale.filter.differentThan },
                 { value: "set", label: config.locale.filter.dateIsSet },
