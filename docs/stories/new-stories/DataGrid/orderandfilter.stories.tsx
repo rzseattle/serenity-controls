@@ -135,8 +135,14 @@ storiesOf("DataGrid/Order & Filter", module)
                 //component: Filter,
                 value: [
                     {
-                        value: 10,
+                        value: "1982-11-20",
                         condition: "=",
+                        labelValue: "dziesięc",
+                        labelCondition: "jest równe",
+                    },
+                    {
+                        value: "1995-05-01 / 1995-05-07",
+                        condition: "BETWEEN",
                         labelValue: "dziesięc",
                         labelCondition: "jest równe",
                     },

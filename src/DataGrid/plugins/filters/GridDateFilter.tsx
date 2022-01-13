@@ -13,6 +13,34 @@ import { Modal } from "../../../Modal";
 
 const GridDateFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, filter }) => {
     const config = useGridContext();
+
+    return (
+        <GridCommonFilter
+            filter={filter}
+            onFilterChange={onFilterChange}
+            onValueChange={onValueChange}
+            fieldComponent={(value, onchange) => {
+                return <GridDateFilterRow value={value} onchange={onchange} />;
+            }}
+            conditions={[
+                { value: "BETWEEN", label: config.locale.filter.between },
+                { value: "=", label: config.locale.filter.equals },
+                { value: "!=", label: config.locale.filter.differentThan },
+                { value: "set", label: config.locale.filter.dateIsSet },
+                { value: "notSet", label: config.locale.filter.dateIsNotSet },
+            ]}
+        />
+    );
+};
+
+const GridDateFilterRow = ({
+    value,
+    onchange,
+}: {
+    value: IGridFilterValue;
+    onchange: (value: string, label: string) => unknown;
+}) => {
+    const config = useGridContext();
     const [show, setShow] = useState(false);
     const [range, setRange] = useState<Range[]>([
         {
@@ -23,7 +51,7 @@ const GridDateFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, f
     ]);
     const [date, setDate] = useState(new Date());
 
-    const setNewValue = (value: IGridFilterValue, onchange: (value: string, label: string) => unknown) => {
+    const setNewValue = () => {
         let fieldValue;
         if (value.condition === "=" || value.condition === "!=") {
             fieldValue = format(date, "yyyy-MM-dd");
@@ -33,85 +61,72 @@ const GridDateFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, f
         onchange(fieldValue, null);
     };
 
+    useEffect(() => {
+        alert("Tu parsujemy wartosc");
+        alert(value.value);
+    }, []);
+
     return (
-        <GridCommonFilter
-            filter={filter}
-            onFilterChange={onFilterChange}
-            onValueChange={onValueChange}
-            fieldComponent={(value, onchange) => {
-                return (
-                    <div className={styles.container}>
-                        {value.condition !== "set" && value.condition !== "notSet" ? (
-                            <>
-                                <div className={styles.icon}>{config.filter.icons.calendar}</div>
-                                <input
-                                    value={value.value}
-                                    onClick={() => setShow(true)}
-                                    onChange={(e) => onchange(e.target.value, null)}
-                                />
-                            </>
-                        ) : (
-                            <div className={styles.notImportant}>
-                                {" "}
-                                {value.condition === "set"
-                                    ? config.filter.icons.checked
-                                    : config.filter.icons.unchecked}{" "}
-                            </div>
-                        )}
-                        <Modal
-                            show={show}
-                            onHide={() => {
-                                setShow(false);
-                            }}
-                        >
-                            {value.condition === "BETWEEN" && (
-                                <DateRange
-                                    onChange={(item) => setRange([item.selection])}
-                                    moveRangeOnFirstSelection={false}
-                                    months={2}
-                                    ranges={range}
-                                    direction="horizontal"
-                                    locale={pl}
-                                />
-                            )}
-                            {(value.condition === "=" || value.condition === "=") && (
-                                <Calendar
-                                    onChange={(item) => setDate(item)}
-                                    date={date}
-                                    ranges={range}
-                                    direction="horizontal"
-                                    locale={pl}
-                                />
-                            )}
-                            <div className={styles.calendarApplyButtons}>
-                                <button
-                                    onClick={() => {
-                                        setShow(false);
-                                    }}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setNewValue(value, onchange);
-                                        setShow(false);
-                                    }}
-                                >
-                                    OK
-                                </button>
-                            </div>
-                        </Modal>
-                    </div>
-                );
-            }}
-            conditions={[
-                { value: "BETWEEN", label: config.locale.filter.between },
-                { value: "=", label: config.locale.filter.equals },
-                { value: "!=", label: config.locale.filter.differentThan },
-                { value: "set", label: config.locale.filter.dateIsSet },
-                { value: "notSet", label: config.locale.filter.dateIsNotSet },
-            ]}
-        />
+        <div className={styles.container}>
+            {value.condition !== "set" && value.condition !== "notSet" ? (
+                <>
+                    <div className={styles.icon}>{config.filter.icons.calendar}</div>
+                    <input
+                        value={value.value}
+                        onClick={() => setShow(true)}
+                        onChange={(e) => onchange(e.target.value, null)}
+                    />
+                </>
+            ) : (
+                <div className={styles.notImportant}>
+                    {" "}
+                    {value.condition === "set" ? config.filter.icons.checked : config.filter.icons.unchecked}{" "}
+                </div>
+            )}
+            <Modal
+                show={show}
+                onHide={() => {
+                    setShow(false);
+                }}
+            >
+                {value.condition === "BETWEEN" && (
+                    <DateRange
+                        onChange={(item) => setRange([item.selection])}
+                        moveRangeOnFirstSelection={false}
+                        months={2}
+                        ranges={range}
+                        direction="horizontal"
+                        locale={pl}
+                    />
+                )}
+                {(value.condition === "=" || value.condition === "=") && (
+                    <Calendar
+                        onChange={(item) => setDate(item)}
+                        date={date}
+                        ranges={range}
+                        direction="horizontal"
+                        locale={pl}
+                    />
+                )}
+                <div className={styles.calendarApplyButtons}>
+                    <button
+                        onClick={() => {
+                            setShow(false);
+                        }}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={() => {
+                            setNewValue();
+                            setShow(false);
+                        }}
+                    >
+                        OK
+                    </button>
+                </div>
+            </Modal>
+        </div>
     );
 };
 
