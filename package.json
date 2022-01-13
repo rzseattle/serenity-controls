@@ -39,6 +39,7 @@
         "src/**/*"
     ],
     "dependencies": {
+        "@types/react-date-range": "^1.4.2",
         "add": "^2.0.6",
         "array-to-tree": "^3.3.2",
         "bootstrap-sass": "^3.4.1",

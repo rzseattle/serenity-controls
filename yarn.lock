@@ -2813,6 +2813,14 @@
     "@types/codemirror" "*"
     "@types/react" "*"
 
+"@types/react-date-range@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@types/react-date-range/-/react-date-range-1.4.2.tgz#6e4ab5b385ab375473d87507b0966021ae88a258"
+  integrity sha512-C6RxGJutLcpGdmMjztZfzemr8RHq45UqXLaxUN4M7c1fGqVhTwt2l3KU9zEJolwSVZ4DvjNLK+PFh4j0tXxDdA==
+  dependencies:
+    "@types/react" "*"
+    date-fns "^2.16.1"
+
 "@types/react-dates@^21.8.1":
   version "21.8.3"
   resolved "https://registry.yarnpkg.com/@types/react-dates/-/react-dates-21.8.3.tgz#dc4e71f83d09979b1c4f355c267e52a850d0fe2c"
@@ -5155,7 +5163,7 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^2.28.0:
+date-fns@^2.16.1, date-fns@^2.28.0:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
   integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
