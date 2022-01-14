@@ -27,16 +27,7 @@ let config: IConfig = {
     },
     files: {
         transformFilePath: (file: IFile) => {
-            let path = file.path;
-            let baseUrl = "";
-            if (window.location.host.indexOf("esotiq") != -1) {
-                baseUrl = "https://static.esotiq.com/";
-            }
-
-            if (path.charAt(0) != "/") {
-                path = "/" + path;
-            }
-            return baseUrl + path;
+            return file.path;
         },
         viewerRegistry: [
             {

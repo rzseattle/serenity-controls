@@ -187,7 +187,6 @@ export class FileListField extends React.Component<IFileListProps, any> {
                         }}
                     </Dropzone>
                 )}
-
                 <div className={" " + (type == "gallery" ? "w-file-list-gallery" : "w-file-list-files")}>
                     {!editable && value.length == 0 && (
                         <div className="w-file-list-empty-not-editable-text">{this.props.emptyNotEditableText}</div>
@@ -246,7 +245,6 @@ export class FileListField extends React.Component<IFileListProps, any> {
                         />
                     )}
                 </div>
-
                 {preview && <PreviewModal file={preview} onHide={() => this.setState({ preview: false })} />}
             </div>
         );
