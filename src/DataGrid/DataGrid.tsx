@@ -20,7 +20,7 @@ import { IFiltersChange } from "./interfaces/IFiltersChange";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
-interface IGridProps<T> {
+export interface IGridProps<T> {
     controlKey?: string;
     className?: string;
 
@@ -52,6 +52,7 @@ interface IGridProps<T> {
     onOrderChange?: IOrderChange;
 
     footer?: (tableData: IGridProps<T>) => JSX.Element | string;
+    isInLoadingState?: boolean;
 }
 
 const defaultProps: Partial<IGridProps<any>> = {
@@ -60,6 +61,7 @@ const defaultProps: Partial<IGridProps<any>> = {
     autofocus: false,
     order: [],
     filters: [],
+    isInLoadingState: false,
 };
 
 const DataGrid = <T,>(inProps: IGridProps<T>) => {
@@ -78,8 +80,12 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
         props.className !== undefined ? props.className + " " + styles.gridLayoutCore : config.gridClassName;
 
     return (
-        <div>
-            {/*<div onClick={() => sc((r) => ++r)}>{c}</div>*/}
+        <div style={{ position: "relative" }}>
+            {props.isInLoadingState && (
+                <div style={{ position: "absolute", height: "100%", width: "100%", backgroundColor: "gray", opacity: 0.1 }}>
+                    loading{" "}
+                </div>
+            )}
             <div className={className} style={{ display: "grid", gridTemplateColumns: widths }}>
                 {props.showHeader && (
                     <GridHead
@@ -90,16 +96,18 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                         columns={props.columns}
                     />
                 )}
+                {/*<DndProvider backend={HTML5Backend}>*/}
                 <GridBody
                     columns={props.columns}
-                    rows={props.data.rows}
+                    rows={props.data}
                     rowClassTemplate={props.rowClassTemplate}
                     rowStyleTemplate={props.rowStyleTemplate}
                     cellClassTemplate={props.cellClassTemplate}
                     cellStyleTemplate={props.cellStyleTemplate}
                 />
+                {/*</DndProvider>*/}
             </div>
-            {props.showFooter && <GridFoot>{props.footer(props)}</GridFoot>}
+            {props.showFooter && <GridFoot>{props.footer && props.footer(props)}</GridFoot>}
             {/*<div><PrintJSON json={props.filters} /></div>*/}
             {/*<div><PrintJSON json={props.sorters} /></div>*/}
         </div>

@@ -11,7 +11,7 @@ import { IColumnTemplate } from "./IColumnTemplate";
 export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
     column: IGridColumn<Row> = {};
     filters: IGridFilter[] = null;
-    sort: IGridOrder = null;
+    order: IGridOrder[] = [];
 
     /*    constructor(initData: Partial<IGridColumn<Row>>) {
         this.column = {
@@ -26,7 +26,7 @@ export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
     };
 
     public onHeaderClick(fn: IGridHeaderEventCallback<Row>) {
-        this.column.header.events.click.push(fn);
+        this.column.header.events.onClick.push(fn);
         return this;
     }
 
@@ -86,12 +86,12 @@ export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
         }*/
 
     public noFilter() {
-        this.column.filter = [];
+        this.filters = [];
         return this;
     }
 
     public noSorter() {
-        this.column.isSortable = false;
+        this.order = [];
         return this;
     }
 
@@ -158,6 +158,6 @@ export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
     }
 
     public get = () => {
-        return { column: this.column, filters: this.filters, sort: this.sort };
+        return { column: this.column, filters: this.filters, sort: this.order };
     };
 }

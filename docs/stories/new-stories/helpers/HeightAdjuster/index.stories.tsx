@@ -1,12 +1,11 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Panel } from "../../../../../src/Panel";
 import { HeightAdjuster } from "../../../../../src/HeightAdjuster";
 
 // @ts-ignore
 
 const iframeCorrection = window.parent.document.getElementById("storybook-preview-iframe").getBoundingClientRect().top;
-console.log(iframeCorrection, "correction");
+
 
 storiesOf("Helpers/HeightAdjuster", module)
     .add("Base", () => {

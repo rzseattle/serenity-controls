@@ -23,10 +23,9 @@ const GridFiltersPanel = ({
                 {localFilters.map((filter, index) => {
                     const Component = filter.component ?? config.filter.components[filter.filterType];
                     return (
-                        <>
+                        <React.Fragment key={filter.field + "" + filter.applyTo}>
                             {Component ? (
                                 <Component
-                                    key={filter.field + "" + filter.applyTo}
                                     filter={filter}
                                     onValueChange={(value) => {
                                         setLocalFilters((draft) => {
@@ -34,15 +33,15 @@ const GridFiltersPanel = ({
                                         });
                                     }}
                                     onFilterChange={(filter) => {
-                                        setLocalFilters(draft => {
+                                        setLocalFilters((draft) => {
                                             draft[index] = filter;
-                                        })
+                                        });
                                     }}
                                 />
                             ) : (
                                 <div>No filter found</div>
                             )}
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </div>

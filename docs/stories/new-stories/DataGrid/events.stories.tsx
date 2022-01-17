@@ -1,10 +1,9 @@
 import { mockData } from "../Table/MOCK_DATA";
 import { storiesOf } from "@storybook/react";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
-// @ts-ignore
-import styles from "./classes.module.sass";
+
 import { PrintJSON } from "../../../../src/PrintJSON";
 import { useCellData } from "../../../../src/DataGrid/helpers/useCellData";
 
@@ -12,6 +11,8 @@ storiesOf("DataGrid/Events", module)
     .add("Basic", () => {
         const [text, setText] = useState("");
         const [get, set, getAll] = useCellData<boolean>();
+
+        const data = useMemo(() => mockData.slice(0, 5), []);
 
         return (
             <>
@@ -81,7 +82,7 @@ storiesOf("DataGrid/Events", module)
                         { field: "price" },
                         { field: "ip_address" },
                     ]}
-                    data={{ rows: mockData.slice(0, 15), rowCount: mockData.length }}
+                    data={data}
                 />
                 <hr />
                 {text}

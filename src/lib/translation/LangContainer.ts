@@ -13,7 +13,7 @@ class LangContainer {
                 callback(result);
             });
         } else {
-            console.log(`Lang ${lang} is not defined`, this.langs);
+            //console.log(`Lang ${lang} is not defined`, this.langs);
         }
     };
 }

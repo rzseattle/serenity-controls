@@ -29,12 +29,12 @@ const GridCommonFilter = ({
     const isInitialMount = useRef(true);
 
     const [value, setValue] = useImmer<IGridFilterValue[]>(
-        filter.value.length > 0
+        filter.value?.length > 0
             ? filter.value
             : [
                   {
                       value: "",
-                      condition: "LIKE",
+                      condition: conditions[0].value,
                       operator: "and",
                   },
               ],

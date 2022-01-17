@@ -1,13 +1,14 @@
 import { mockData } from "../Table/MOCK_DATA";
 import { storiesOf } from "@storybook/react";
 
-import React from "react";
+import React, { useMemo } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 // @ts-ignore
 import styles from "./classes.module.sass";
 
 storiesOf("DataGrid/Apperance", module)
     .add("No default styling", () => {
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 className=""
@@ -18,7 +19,7 @@ storiesOf("DataGrid/Apperance", module)
                     { field: "price" },
                     { field: "ip_address" },
                 ]}
-                data={{ rows: mockData.slice(0, 15), rowCount: mockData.length }}
+                data={data}
                 showHeader={true}
                 rowClassTemplate={(row) => {
                     const price = parseFloat(row.price);
@@ -40,6 +41,7 @@ storiesOf("DataGrid/Apperance", module)
         );
     })
     .add("Row styling", () => {
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 columns={[
@@ -49,7 +51,7 @@ storiesOf("DataGrid/Apperance", module)
                     { field: "price" },
                     { field: "ip_address" },
                 ]}
-                data={{ rows: mockData.slice(0, 15), rowCount: mockData.length }}
+                data={data}
                 rowClassTemplate={(row) => {
                     const price = parseFloat(row.price);
                     if (price > 200) {
@@ -70,6 +72,7 @@ storiesOf("DataGrid/Apperance", module)
         );
     })
     .add("Cell styling", () => {
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 columns={[
@@ -79,7 +82,7 @@ storiesOf("DataGrid/Apperance", module)
                     { field: "price" },
                     { field: "ip_address" },
                 ]}
-                data={{ rows: mockData.slice(0, 15), rowCount: mockData.length }}
+                data={data}
                 cellClassTemplate={(row, column) => {
                     if (column.field === "price") {
                         const price = parseFloat(row.price);
@@ -109,6 +112,7 @@ storiesOf("DataGrid/Apperance", module)
         );
     })
     .add("Templates", () => {
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 showHeader={true}
@@ -159,7 +163,7 @@ storiesOf("DataGrid/Apperance", module)
                     { field: "price" },
                     { field: "ip_address" },
                 ]}
-                data={{ rows: mockData.slice(0, 15), rowCount: mockData.length }}
+                data={data}
             />
         );
     });

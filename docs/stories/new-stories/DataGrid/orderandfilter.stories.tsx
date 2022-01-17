@@ -5,8 +5,6 @@ import React, { useEffect, useState } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 import { IGridOrder } from "../../../../src/DataGrid/interfaces/IGridOrder";
 import { IGridFilter, IGridFilterComponent } from "../../../../src/DataGrid/interfaces/IGridFilter";
-import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-import Pagination from "../../../../src/DataGrid/plugins/pagination/Pagination";
 
 const Filter: IGridFilterComponent = ({ onApply, filter }) => {
     const [val, setVal] = useState(filter.value[0]?.value);
@@ -87,7 +85,7 @@ storiesOf("DataGrid/Order & Filter", module)
                         { field: "price" },
                         { field: "ip_address" },
                     ]}
-                    data={{ rows: data, rowCount: data.length }}
+                    data={data}
                 />
             </>
         );
@@ -206,6 +204,7 @@ storiesOf("DataGrid/Order & Filter", module)
         const [data, setData] = useState(mockData.slice(0, 150));
 
         useEffect(() => {
+
             const orderElements = order.filter((el) => el.dir !== undefined);
             const data = mockData.slice(0, 150);
             if (orderElements.length > 0) {
@@ -254,69 +253,9 @@ storiesOf("DataGrid/Order & Filter", module)
                             { field: "price" },
                             { field: "ip_address" },
                         ]}
-                        data={{ rows: data, rowCount: data.length }}
+                        data={data}
                     />
                 </div>
-            </>
-        );
-    })
-
-    .add("Pagination", () => {
-        const [order, setOrder] = useState<IGridOrder[]>([
-            { field: "id", caption: "Sorted by Id" },
-            { field: "date" },
-            { field: "email" },
-            { field: "price" },
-            { field: "ip_address" },
-        ]);
-
-        const [currentPage, setCurrentPage] = useState(1);
-        const [onPage, setOnPage] = useState(10);
-        const count = mockData.length;
-        const [data, setData] = useState(
-            mockData.slice((currentPage - 1) * onPage, (currentPage - 1) * onPage + onPage),
-        );
-
-        useEffect(() => {
-            setData(mockData.slice((currentPage - 1) * onPage, (currentPage - 1) * onPage + onPage));
-        }, [onPage, currentPage]);
-
-        return (
-            <>
-                <DataGrid
-                    showHeader={true}
-                    showFooter={true}
-                    onOrderChange={(order) => {
-                        //console.log(order);
-                        setOrder(order);
-                    }}
-                    order={order}
-                    columns={[
-                        {
-                            field: "id",
-                        },
-                        {
-                            field: "date",
-                        },
-                        {
-                            field: "email",
-                        },
-                        { field: "price" },
-                        { field: "ip_address" },
-                    ]}
-                    data={{ rows: data, rowCount: mockData.length }}
-                    footer={() => {
-                        return (
-                            <Pagination
-                                currentPage={currentPage}
-                                setCurrentPage={setCurrentPage}
-                                onPage={onPage}
-                                setOnPage={setOnPage}
-                                all={count}
-                            />
-                        );
-                    }}
-                />
             </>
         );
     });

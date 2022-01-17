@@ -10,7 +10,7 @@ import * as React from "react";
 export interface IColumnTemplate<Row> {
     column: IGridColumn<Row>;
     filters: IGridFilter[];
-    sort: IGridOrder;
+    order: IGridOrder[];
 
     className: (names: string[]) => IColumnTemplate<Row>;
     onHeaderClick: (fn: IGridHeaderEventCallback<Row>) => IColumnTemplate<Row>;

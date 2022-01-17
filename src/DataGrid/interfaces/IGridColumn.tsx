@@ -1,17 +1,22 @@
-import { IFilter } from "../../filters";
 import { IGridCellEventCallback } from "./IGridCellEventCallback";
 import { IGridCellTemplate } from "./IGridCellTemplate";
 import { IGridHeaderEventCallback } from "./IGridHeaderEventCallback";
-import { IGridOrderValue } from "./IGridOrder";
 import { ICellCoordinates } from "./ICellCoordinates";
 import { IGridHeaderTemplate } from "./IGridHeaderTemplate";
+import React from "react";
 
 export interface IGridCellEvents<T> {
-    onClick?: IGridCellEventCallback<T>[];
-    onMouseUp?: IGridCellEventCallback<T>[];
-    onMouseEnter?: IGridCellEventCallback<T>[];
-    onMouseOut?: IGridCellEventCallback<T>[];
-    onDoubleClick?: IGridCellEventCallback<T>[];
+    onClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
+    onMouseUp?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
+    onMouseEnter?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
+    onMouseOut?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
+    onDoubleClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
+    onDrag?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
+    onDrop?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
+    onDragStart?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
+    onDragOver?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
+    onDragEnter?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
+    onDragLeave?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
 }
 
 export interface IGridHeaderEvents<T> {
@@ -36,7 +41,7 @@ export interface IGridColumn<T> {
     cell?: {
         class?: string[];
         classTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => string[];
-        styleTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => any;
+        styleTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => React.CSSProperties;
         template?: IGridCellTemplate<T>;
         toolTip?: IGridCellTemplate<T>;
         append?: string | JSX.Element;
@@ -52,7 +57,4 @@ export interface IGridColumn<T> {
         events?: IGridHeaderEvents<T>;
         template?: IGridHeaderTemplate<T>;
     };
-    isSortable?: boolean;
-    filter?: IFilter[];
-    order?: IGridOrderValue;
 }

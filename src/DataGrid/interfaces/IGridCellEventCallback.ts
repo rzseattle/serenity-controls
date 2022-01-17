@@ -1,7 +1,7 @@
 import { IGridColumn } from "./IGridColumn";
 import React from "react";
 
-export type IGridCellEventCallback<T> = ({
+export type IGridCellEventCallback<T, E> = ({
     row,
     column,
     event,
@@ -9,7 +9,7 @@ export type IGridCellEventCallback<T> = ({
 }: {
     row: T;
     column: IGridColumn<T>;
-    event: React.MouseEvent<HTMLElement>;
+    event: E;
     coordinates: { row: number; column: number };
     // refresh: {
     //     cell: () => void;

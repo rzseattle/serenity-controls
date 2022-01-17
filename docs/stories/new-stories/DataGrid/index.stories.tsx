@@ -1,20 +1,14 @@
 import { IMockUser, mockData } from "../Table/MOCK_DATA";
 import { storiesOf } from "@storybook/react";
 
-import React from "react";
+import React, { useMemo } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 import { IGridColumn } from "../../../../src/DataGrid/interfaces/IGridColumn";
 import { getColumnsWidths } from "../../../../src/DataGrid/helpers/helpers";
 
 storiesOf("DataGrid/Base", module)
     .add("Base", () => {
-        // const gridData = useMemo(() => {
-        //     const creator = new GridCreatorHelper<IMockUser>();
-        //
-        //     creator.addCol(ColText.create("price"));
-        //     return creator.get();
-        //
-        // }, []);
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 columns={[
@@ -26,11 +20,12 @@ storiesOf("DataGrid/Base", module)
                 ]}
                 showFooter={false}
                 showHeader={false}
-                data={{ rows: mockData.slice(0, 5), rowCount: mockData.length }}
+                data={data}
             />
         );
     })
     .add("Column widths", () => {
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 columns={[
@@ -42,11 +37,12 @@ storiesOf("DataGrid/Base", module)
                 ]}
                 showFooter={false}
                 showHeader={false}
-                data={{ rows: mockData.slice(0, 5), rowCount: mockData.length }}
+                data={data}
             />
         );
     })
     .add("Headers", () => {
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 columns={[
@@ -58,7 +54,7 @@ storiesOf("DataGrid/Base", module)
                 ]}
                 showFooter={false}
                 showHeader={true}
-                data={{ rows: mockData.slice(0, 5), rowCount: mockData.length }}
+                data={data}
             />
         );
     })
@@ -70,29 +66,28 @@ storiesOf("DataGrid/Base", module)
             { field: "price" },
             { field: "ip_address" },
         ];
+        const data = useMemo(() => mockData.slice(0, 5), []);
         return (
             <DataGrid
                 columns={columns}
                 showFooter={true}
-                data={{ rows: mockData.slice(0, 25), rowCount: mockData.length }}
+                data={data}
                 footer={(props) => {
                     return (
                         <div style={{ backgroundColor: "white", paddingBottom: 10 }}>
                             <hr />
                             <DataGrid
                                 columns={props.columns as IGridColumn<any>[]}
-                                data={{
-                                    rows: [
-                                        {
-                                            price:
-                                                Math.round(
-                                                    props.data.rows.reduce((p, row) => {
-                                                        return p + parseFloat(row.price);
-                                                    }, 0) * 100,
-                                                ) / 100,
-                                        },
-                                    ],
-                                }}
+                                data={[
+                                    {
+                                        price:
+                                            Math.round(
+                                                props.data.reduce((p, row) => {
+                                                    return p + parseFloat(row.price);
+                                                }, 0) * 100,
+                                            ) / 100,
+                                    },
+                                ]}
                             />
                             <br />
                             <b>Another part of footer </b>: {props.columns.length}
