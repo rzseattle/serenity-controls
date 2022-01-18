@@ -68,7 +68,6 @@ storiesOf("DataGrid/Order & Filter", module)
                 <DataGrid
                     showHeader={true}
                     onOrderChange={(order) => {
-                        //console.log(order);
                         setOrder(order);
                     }}
                     order={order}

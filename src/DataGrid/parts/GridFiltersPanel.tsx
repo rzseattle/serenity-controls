@@ -18,7 +18,7 @@ const GridFiltersPanel = ({
     const [localFilters, setLocalFilters] = useImmer<IGridFilter[]>(filters);
 
     return (
-        <div onClick={(e) => e.stopPropagation()}>
+        <div onClick={(e) => e.stopPropagation()} >
             <div>
                 {localFilters.map((filter, index) => {
                     const Component = filter.component ?? config.filter.components[filter.filterType];

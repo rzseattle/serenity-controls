@@ -7,6 +7,7 @@ import { IGridRowStyleProvider } from "../interfaces/IGridRowStyleProvider";
 import { IGridCellClassProvider } from "../interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "../interfaces/IGridCellStyleProvider";
 import GridRow from "./GridRow";
+import { useGridContext } from "../config/GridContext";
 
 interface IGridBodyProps<T> {
     columns: IGridColumn<T>[];
@@ -19,6 +20,7 @@ interface IGridBodyProps<T> {
 
 const GridBody = <T,>(props: IGridBodyProps<T>) => {
     const rows = props.rows;
+    const config = useGridContext();
 
     //const [x, setRefreshState] = useState(0);
 
@@ -40,6 +42,7 @@ const GridBody = <T,>(props: IGridBodyProps<T>) => {
 
     return (
         <>
+
             {rows.map((row, rowNumber) => {
                 const rowProperties: React.HTMLAttributes<HTMLDivElement> = {};
                 let rowClass = styles.row;

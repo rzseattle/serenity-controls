@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Portal } from "../Portal";
 
 import "./Positioner.sass";
+import produce from "immer";
 
 type PositionCoordinate = "top" | "right" | "middle" | "bottom" | "left";
 
@@ -103,6 +104,7 @@ const getRect = (
     config: IPositionCalculatorOptions,
     anchorRect: DOMRect,
     itemRect: DOMRect,
+    recursionCounter = 0,
 ): [number, number, string | number, string | number] => {
     const [vertical, horizontal] = config.relativeToAt;
     const [verticalItem, horizontalItem] = config.itemAt;
@@ -150,7 +152,40 @@ const getRect = (
     x += config.offsetX ? config.offsetX : 0;
     y += config.offsetY ? config.offsetY : 0;
 
-    return [x < 0 ? 0 : x, y, width, itemRect.height];
+    //manipulate coordinates to fit into window
+    if (recursionCounter < 3) {
+        let newConfig = null;
+        if (x < 0 && config.relativeToAt[1] === "right") {
+            newConfig = produce(newConfig ?? config, (draft) => {
+                draft.relativeToAt[1] = "left";
+                draft.itemAt[1] = "left";
+            });
+        }
+        if (x + itemRect.width > window.innerWidth && config.relativeToAt[1] === "left") {
+            newConfig = produce(newConfig ?? config, (draft) => {
+                draft.relativeToAt[1] = "right";
+                draft.itemAt[1] = "right";
+            });
+        }
+        if (y < 0 && config.relativeToAt[1] === "top") {
+            newConfig = produce(newConfig ?? config, (draft) => {
+                draft.relativeToAt[0] = "bottom";
+                draft.itemAt[0] = "top";
+            });
+        }
+        if (y + itemRect.height > window.innerHeight && config.relativeToAt[1] === "bottom") {
+            newConfig = produce(newConfig ?? config, (draft) => {
+                draft.relativeToAt[0] = "top";
+                draft.itemAt[0] = "bottom";
+            });
+        }
+
+        if (newConfig !== null) {
+            return getRect(newConfig, anchorRect, itemRect, ++recursionCounter);
+        }
+    }
+
+    return [x, y, width, itemRect.height];
 };
 
 const Positioner = (inProps: IPositionerProps) => {

@@ -1,6 +1,8 @@
 export interface ILocale {
     apply: string;
     cancel: string;
+    noData: string;
+    loading: string;
     filter: Filter;
 }
 

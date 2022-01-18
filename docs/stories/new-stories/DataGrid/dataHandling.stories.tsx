@@ -9,6 +9,10 @@ import FullGrid, { IFullGridDataProvider } from "../../../../src/DataGrid/helper
 import { ColText } from "../../../../src/DataGrid/helpers/columnTemplates/ColText";
 import { IGridColumn } from "../../../../src/DataGrid/interfaces/IGridColumn";
 import { ColumnTemplate } from "../../../../src/DataGrid/helpers/columnTemplates/ColumnTemplate";
+import { Modal } from "../../../../src/Modal";
+import { RelativePositionPresets } from "../../../../src/Positioner";
+import styles from "../../../../src/DataGrid/parts/GridHeadColumn.module.sass";
+import GridFiltersPanel from "../../../../src/DataGrid/parts/GridFiltersPanel";
 
 storiesOf("DataGrid/Data Handling", module)
     .add("Drag", () => {
@@ -185,6 +189,71 @@ storiesOf("DataGrid/Data Handling", module)
             </>
         );
     })
+    .add("Loading ( no data )", () => {
+        const [currentPage, setCurrentPage] = useState(1);
+        const [onPage, setOnPage] = useState(10);
+
+        const count = 0;
+
+        return (
+            <>
+                <DataGrid
+                    isInLoadingState={true}
+                    showHeader={true}
+                    showFooter={true}
+                    columns={[
+                        {
+                            field: "id",
+                        },
+                        {
+                            field: "date",
+                        },
+                        {
+                            field: "email",
+                        },
+                        { field: "price" },
+                        { field: "ip_address" },
+                    ]}
+                    data={[]}
+                    footer={() => {
+                        return (
+                            <Pagination
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                onPage={onPage}
+                                setOnPage={setOnPage}
+                                all={count}
+                            />
+                        );
+                    }}
+                />
+            </>
+        );
+    })
+    .add("No data", () => {
+        return (
+            <>
+                <DataGrid
+                    showHeader={true}
+                    showFooter={true}
+                    columns={[
+                        {
+                            field: "id",
+                        },
+                        {
+                            field: "date",
+                        },
+                        {
+                            field: "email",
+                        },
+                        { field: "price" },
+                        { field: "ip_address" },
+                    ]}
+                    data={[]}
+                />
+            </>
+        );
+    })
     .add("Fulll", () => {
         const dataProvider: IFullGridDataProvider<IMockUser> = ({ page }) => {
             return new Promise((resolve) => {
@@ -208,6 +277,54 @@ storiesOf("DataGrid/Data Handling", module)
 
         return (
             <div>
+                <Modal
+
+                    relativeSettings={RelativePositionPresets.bottomLeft}
+                    show={true}
+                    shadow={false}
+                    className=""
+                    onHide={() => {
+
+                    }}
+                    layer={false}
+                >
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        className={styles.filtersPanelContainer}
+                        style={{}}
+                    >
+                        <GridFiltersPanel
+                            onFiltersChange={(filters) => {
+
+                            }}
+                            filters={[ {
+                                field: "id",
+                                caption: "Id filter",
+                                label: "ZZ",
+                                description: "The first filter description",
+                                opened: true,
+                                filterType: "text",
+                                //component: Filter,
+                                value: [
+                                    {
+                                        value: 10,
+                                        condition: "=",
+                                        labelValue: "dziesięc",
+                                        labelCondition: "jest równe",
+                                    },
+
+                                    {
+                                        value: 20,
+                                        condition: "=",
+                                        labelValue: "dwadziescia",
+                                        labelCondition: "jest równe",
+                                    },
+                                ],
+                            }]}
+                        />
+                    </div>
+                </Modal>
+
                 <FullGrid dataProvider={dataProvider} columns={columns} />
             </div>
         );

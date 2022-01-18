@@ -49,7 +49,13 @@ export class CommandMenu extends React.PureComponent<IProps, IState> {
                                 {data.map((item: ICommand | false, index: number) => {
                                     if (item !== null && item !== false) {
                                         return (
-                                            <div key={item.key} onClick={(event) => item.onClick(event, context)}>
+                                            <div
+                                                key={item.key}
+                                                onClick={(event) => {
+                                                    item.onClick(event, context);
+                                                    this.setState({ opened: false });
+                                                }}
+                                            >
                                                 {item.icon && <item.icon />} {item.label}
                                             </div>
                                         );

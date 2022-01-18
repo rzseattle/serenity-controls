@@ -81,11 +81,20 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
 
     return (
         <div style={{ position: "relative" }}>
-            {props.isInLoadingState && (
-                <div style={{ position: "absolute", height: "100%", width: "100%", backgroundColor: "gray", opacity: 0.1 }}>
-                    loading{" "}
+            {props.isInLoadingState && props.data.length > 0 && (
+                <div
+                    style={{
+                        position: "absolute",
+                        height: "100%",
+                        width: "100%",
+                        backgroundColor: "gray",
+                        opacity: 0.1,
+                    }}
+                >
+                    {config.locale.loading}
                 </div>
             )}
+
             <div className={className} style={{ display: "grid", gridTemplateColumns: widths }}>
                 {props.showHeader && (
                     <GridHead
@@ -96,7 +105,18 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                         columns={props.columns}
                     />
                 )}
-                {/*<DndProvider backend={HTML5Backend}>*/}
+
+                {props.data.length === 0 && (
+                    <div>
+                        <div style={{ gridColumn: "1 / " + (props.columns.length + 1), textAlign: "center" }}>
+                            {!props.isInLoadingState &&
+                                config.common.components.noData({ communicate: config.locale.noData })}
+                            {props.isInLoadingState &&
+                                config.common.components.loading({ communicate: config.locale.loading })}
+                        </div>
+                    </div>
+                )}
+
                 <GridBody
                     columns={props.columns}
                     rows={props.data}
@@ -105,7 +125,6 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                     cellClassTemplate={props.cellClassTemplate}
                     cellStyleTemplate={props.cellStyleTemplate}
                 />
-                {/*</DndProvider>*/}
             </div>
             {props.showFooter && <GridFoot>{props.footer && props.footer(props)}</GridFoot>}
             {/*<div><PrintJSON json={props.filters} /></div>*/}

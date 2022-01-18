@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import DataGrid, { IGridProps } from "../DataGrid";
+import DataGrid from "../DataGrid";
 import { IGridFilter } from "../interfaces/IGridFilter";
 import { IGridOrder } from "../interfaces/IGridOrder";
 import { IGridColumn } from "../interfaces/IGridColumn";
 import Pagination from "../plugins/pagination/Pagination";
-import { IColumnTemplate } from "./columnTemplates/IColumnTemplate";
 import { ColumnTemplate } from "./columnTemplates/ColumnTemplate";
 
 export type IFullGridDataProvider<T> = ({
@@ -24,7 +23,7 @@ interface IFullGridProps<T> {
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
-    const [filters, setFilter] = useState<IGridFilter[]>(props.columns.map((el) => el.filters));
+    const [filters, setFilters] = useState<IGridFilter[]>([]);
     const [order, setOrder] = useState<IGridOrder[]>([]);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -45,8 +44,8 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             el.order.forEach((order) => tmpOrder.push(order));
         });
         setColumns(tmpColumns);
-        setFilter(filters);
-        setOrder(order);
+        setFilters(tmpFilters);
+        setOrder(tmpOrder);
     }, []);
 
     useEffect(() => {
@@ -66,6 +65,12 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                 showFooter={true}
                 isInLoadingState={isInLoadingState}
                 columns={columns}
+                filters={filters}
+                order={order}
+                onOrderChange={(order) => {
+                    setOrder(order);
+                }}
+                onFiltersChange={(filter) => setFilters(filter)}
                 data={data}
                 footer={() => {
                     return (

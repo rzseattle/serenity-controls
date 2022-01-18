@@ -29,6 +29,8 @@ export default function FiltersPresenter(props: any) {
                     </div>
                 ))}
             </div>
+
+
         </div>
     );
 }

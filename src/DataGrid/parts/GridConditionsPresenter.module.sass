@@ -1,0 +1,70 @@
+.main
+    display: flex
+    flex-wrap: wrap
+    align-items: baseline
+    position: relative
+
+
+    background-color: white
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 9px 29px 0px
+    border-bottom: solid 1px lightgrey
+    font-weight: normal
+
+    > div
+
+        cursor: pointer
+        border: solid 1px lightgrey
+        border-radius: 3px
+        margin: 6px 15px 6px 5px
+        display: flex
+        flex-wrap: nowrap
+
+        svg
+            vertical-align: middle
+            font-size: 13px
+
+        div
+            &:nth-child(1)
+                svg
+                    color: #106ebe
+
+
+        &:hover
+            background-color: rgb(248, 248, 248)
+            border-color: darkgreen
+
+        > div
+            padding: 3px
+            text-align: left
+
+.gridConditionsClose
+
+    color: black
+    background-color: #e7e7e7
+    padding: 3px 10px
+    margin-left: 10px
+    border-radius: 0 3px 3px 0
+
+    svg
+        height: 100%
+
+        &:hover
+            color: darkred !important
+
+
+.deleteAll
+    position: absolute
+    right: 5px
+    top: 10px
+    color: grey
+    display: block
+    text-align: center
+    width: 20px
+    border-radius: 2px
+    svg
+
+        margin-top: 4px
+        width: 100%
+
+    &:hover
+        color: darkred

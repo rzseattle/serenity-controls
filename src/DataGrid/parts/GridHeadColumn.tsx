@@ -1,14 +1,14 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { IGridColumn, IGridHeaderEvents } from "../interfaces/IGridColumn";
 import { IGridHeaderEventCallback } from "../interfaces/IGridHeaderEventCallback";
-import styles from "./GridHead.module.sass";
 import { useGridContext } from "../config/GridContext";
 import { IGridFilter } from "../interfaces/IGridFilter";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
 import { RelativePositionPresets } from "../../Positioner";
 import { Modal } from "../../Modal";
 import GridFiltersPanel from "./GridFiltersPanel";
-import produce from "immer";
+import styles from "./GridHeadColumn.module.sass";
+
 const GridHeadColumn = <T,>({
     column,
     isOrderable,
@@ -26,6 +26,7 @@ const GridHeadColumn = <T,>({
 }) => {
     const config = useGridContext();
     const cellProperties: React.HTMLAttributes<HTMLDivElement> = {};
+    const [filtersVisible, setFiltersVisible] = useState(false);
     const filterTrigger = useRef<HTMLDivElement>();
 
     if (column.header?.events) {
@@ -61,60 +62,53 @@ const GridHeadColumn = <T,>({
         child = (
             <div
                 className={
-                    "w-grid-header-cell-in " +
-                    (cellProperties.onClick ? "w-grid-header-cell-in-clickable " : "") +
-                    (filters[0]?.opened ? "w-grid-header-cell-in-filter-on" : "")
+                    styles.gridHeaderCellIn +
+                    " " +
+                    (cellProperties.onClick ? styles.gridHeaderCellInClickable + " " : "") +
+                    (filtersVisible ? styles.gridHeaderCellInFilterOn : "")
                 }
+                ref={filterTrigger}
             >
                 {column.header?.caption ?? column.field}
                 {isOrderable && orderDir !== null && (
-                    <div className={"w-grid-header-cell-in-order"}>{config.order.icons[orderDir]}</div>
+                    <div className={styles.gridHeaderCellInOrder}>{config.order.icons[orderDir]}</div>
                 )}
                 {filters.length > 0 && (
                     <>
                         <div
-                            ref={filterTrigger}
-                            className={"w-grid-header-cell-in-filter"}
+                            className={styles.gridHeaderCellInFilter}
                             onClick={(e) => {
                                 e.stopPropagation();
-
-                                onFiltersChange(
-                                    produce<IGridFilter[]>(filters, (draft) => {
-                                        draft[0].opened = !draft[0].opened;
-                                    }),
-                                );
+                                setFiltersVisible(true);
                             }}
                         >
                             {config.filter.icons.filter}
                         </div>
 
-                        {filters.filter(el=>el.opened).length > 0 && (
+                        {filtersVisible && (
                             <Modal
                                 relativeTo={() => filterTrigger.current}
-                                relativeSettings={RelativePositionPresets.bottomRight}
+                                relativeSettings={RelativePositionPresets.bottomLeft}
                                 show={true}
                                 shadow={false}
                                 className=""
                                 onHide={() => {
-                                    onFiltersChange(
-                                        produce<IGridFilter[]>(filters, (draft) => {
-                                            draft.forEach(el => el.opened = false);
-                                        }),
-                                    );
+                                    setFiltersVisible(false);
                                 }}
+
                             >
                                 <div
                                     onClick={(e) => e.stopPropagation()}
-                                    style={{
-                                        padding: 20,
-                                        backgroundColor: "#fafafa",
-                                        border: "solid 1px lightgrey",
-                                        borderRadius: 2,
-                                        boxShadow:
-                                            "rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
-                                    }}
+                                    className={styles.filtersPanelContainer}
+                                    style={{}}
                                 >
-                                    <GridFiltersPanel onFiltersChange={onFiltersChange} filters={filters} />
+                                    <GridFiltersPanel
+                                        onFiltersChange={(filters) => {
+                                            setFiltersVisible(false);
+                                            onFiltersChange(filters);
+                                        }}
+                                        filters={filters}
+                                    />
                                 </div>
                             </Modal>
                         )}

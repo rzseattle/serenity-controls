@@ -21,6 +21,9 @@ const Pagination = ({ currentPage, setCurrentPage, onPage, setOnPage, all }: IPa
         }
         return b;
     })(Math.min(leftRightCount * 2 + 1, pages > 0 ? pages : 1), []);
+    if (all === 0) {
+        return null;
+    }
     return (
         <div className={styles.main}>
             <div>

@@ -10,6 +10,10 @@ export interface IGridStore {
         icons: {
             delete: JSX.Element;
         };
+        components: {
+            noData: React.FC<{ communicate: string }>;
+            loading: React.FC<{ communicate: string }>;
+        };
     };
     order: {
         icons: {

@@ -3,7 +3,6 @@ import { useImmer } from "use-immer";
 import sharedStyles from "./GridSharedFilterStyles.module.sass";
 import produce from "immer";
 import { IGridFilter, IGridFilterValue } from "../../interfaces/IGridFilter";
-import { CommandMenu } from "../../../CommandMenu";
 
 interface IGridCommonFilterProps {
     filter: IGridFilter;
@@ -35,6 +34,7 @@ const GridCommonFilter = ({
                   {
                       value: "",
                       condition: conditions[0].value,
+                      labelCondition: conditions[0].label,
                       operator: "and",
                   },
               ],
@@ -95,21 +95,27 @@ const GridCommonFilter = ({
                                 {valueEl.operator === "or" ? "or" : "and"}
                             </div>
                         )}
-                        <div className={sharedStyles.button + " " + sharedStyles.filterType}>
-                            <CommandMenu
-                                items={conditions.map((o) => ({
-                                    key: o.value,
-                                    label: o.label,
-                                    onClick: () => {
-                                        setValue((draft) => {
-                                            draft[index].condition = o.value;
-                                            draft[index].labelCondition = o.label;
-                                        });
-                                    },
-                                }))}
+                        <div className={sharedStyles.button + " " + sharedStyles.filterType} style={{ padding: 0 }}>
+                            <select
+                                value={valueEl.condition}
+                                onChange={(e) => {
+                                    setValue((draft) => {
+                                        draft[index].condition = e.currentTarget.value;
+                                        draft[index].labelCondition = conditions.filter(
+                                            (c) => c.value == e.currentTarget.value,
+                                        )[0].label;
+                                    });
+                                }}
                             >
-                                {() => <div>{conditions.filter((el) => el.value === valueEl.condition)[0]?.label}</div>}
-                            </CommandMenu>
+                                {conditions.map((o) => {
+                                    return (
+                                        <option value={o.value} key={o.value}>
+                                            {o.label}
+                                        </option>
+                                    );
+                                })}
+                                ;
+                            </select>
                         </div>
                         {filter.isInAdvancedMode && value.length > 1 && (
                             <div

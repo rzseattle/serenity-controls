@@ -3,6 +3,8 @@ import { ILocale } from "../interfaces/ILocale";
 const locale: ILocale = {
     apply: "Apply",
     cancel: "Cancel",
+    noData: "No data",
+    loading: "Loading",
     filter: {
         like: "contains",
         equals: "equals",
@@ -14,7 +16,6 @@ const locale: ILocale = {
 
         dateIsSet: "Date is set",
         dateIsNotSet: "Date is not set",
-
 
         smaller: "smaller than",
         smallerEqual: "smaller equals",
