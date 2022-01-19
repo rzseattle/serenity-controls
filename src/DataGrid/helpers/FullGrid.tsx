@@ -5,6 +5,7 @@ import { IGridOrder } from "../interfaces/IGridOrder";
 import { IGridColumn } from "../interfaces/IGridColumn";
 import Pagination from "../plugins/pagination/Pagination";
 import { ColumnTemplate } from "./columnTemplates/ColumnTemplate";
+import { IColumnTemplate } from "./columnTemplates/IColumnTemplate";
 
 export type IFullGridDataProvider<T> = ({
     filters,
@@ -39,6 +40,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
         const tmpFilters: IGridFilter[] = [];
         const tmpOrder: IGridOrder[] = [];
         props.columns.forEach((el) => {
+
             tmpColumns.push(el.column);
             el.filters.forEach((filter) => tmpFilters.push(filter));
             el.order.forEach((order) => tmpOrder.push(order));

@@ -1,5 +1,4 @@
 export interface IMockUser{
-
     id: number;
     first_name: string;
     last_name: string;
@@ -8,7 +7,6 @@ export interface IMockUser{
     ip_address: string;
     date: string;
     price: string;
-
 }
 
 

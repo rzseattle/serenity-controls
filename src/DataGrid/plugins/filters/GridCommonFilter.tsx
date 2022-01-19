@@ -49,14 +49,7 @@ const GridCommonFilter = ({
     }, [value]);
 
     return (
-        <div
-            className={sharedStyles.main}
-            onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                    alert("x");
-                }
-            }}
-        >
+        <>
             {filter.caption && (
                 <div className={sharedStyles.title}>
                     <a
@@ -157,7 +150,7 @@ const GridCommonFilter = ({
                 );
             })}
             {filter.description && <div className={sharedStyles.description}>{filter.description}</div>}
-        </div>
+        </>
     );
 };
 

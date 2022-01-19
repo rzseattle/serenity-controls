@@ -69,6 +69,7 @@ const GridHeadColumn = <T,>({
                 }
                 ref={filterTrigger}
             >
+                {column.header?.icon && column.header?.icon}
                 {column.header?.caption ?? column.field}
                 {isOrderable && orderDir !== null && (
                     <div className={styles.gridHeaderCellInOrder}>{config.order.icons[orderDir]}</div>

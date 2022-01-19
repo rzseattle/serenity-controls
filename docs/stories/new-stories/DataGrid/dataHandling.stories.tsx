@@ -7,12 +7,9 @@ import Pagination from "../../../../src/DataGrid/plugins/pagination/Pagination";
 import { RiArrowUpDownLine } from "react-icons/ri";
 import FullGrid, { IFullGridDataProvider } from "../../../../src/DataGrid/helpers/FullGrid";
 import { ColText } from "../../../../src/DataGrid/helpers/columnTemplates/ColText";
-import { IGridColumn } from "../../../../src/DataGrid/interfaces/IGridColumn";
 import { ColumnTemplate } from "../../../../src/DataGrid/helpers/columnTemplates/ColumnTemplate";
-import { Modal } from "../../../../src/Modal";
-import { RelativePositionPresets } from "../../../../src/Positioner";
-import styles from "../../../../src/DataGrid/parts/GridHeadColumn.module.sass";
-import GridFiltersPanel from "../../../../src/DataGrid/parts/GridFiltersPanel";
+import { ColDate } from "../../../../src/DataGrid/helpers/columnTemplates/ColDate";
+import { ColNumber } from "../../../../src/DataGrid/helpers/columnTemplates/ColNumber";
 
 storiesOf("DataGrid/Data Handling", module)
     .add("Drag", () => {
@@ -269,62 +266,17 @@ storiesOf("DataGrid/Data Handling", module)
             });
         };
         const columns: ColumnTemplate<IMockUser>[] = [
-            ColText.create("id", "ID"),
-            ColText.create("date", "Date"),
+            ColNumber.create<IMockUser>("id", "ID").width("auto"),
+            ColDate.create<IMockUser>("date", "Date").width("auto"),
             ColText.create("email", "Email"),
             ColText.create("ip_address", "IP"),
+            ColText.create("first_name", "Firstname"),
+            ColText.create("last_name", "Lastname"),
+            ColText.create("gender", "Gender"),
         ];
 
         return (
             <div>
-                <Modal
-
-                    relativeSettings={RelativePositionPresets.bottomLeft}
-                    show={true}
-                    shadow={false}
-                    className=""
-                    onHide={() => {
-
-                    }}
-                    layer={false}
-                >
-                    <div
-                        onClick={(e) => e.stopPropagation()}
-                        className={styles.filtersPanelContainer}
-                        style={{}}
-                    >
-                        <GridFiltersPanel
-                            onFiltersChange={(filters) => {
-
-                            }}
-                            filters={[ {
-                                field: "id",
-                                caption: "Id filter",
-                                label: "ZZ",
-                                description: "The first filter description",
-                                opened: true,
-                                filterType: "text",
-                                //component: Filter,
-                                value: [
-                                    {
-                                        value: 10,
-                                        condition: "=",
-                                        labelValue: "dziesięc",
-                                        labelCondition: "jest równe",
-                                    },
-
-                                    {
-                                        value: 20,
-                                        condition: "=",
-                                        labelValue: "dwadziescia",
-                                        labelCondition: "jest równe",
-                                    },
-                                ],
-                            }]}
-                        />
-                    </div>
-                </Modal>
-
                 <FullGrid dataProvider={dataProvider} columns={columns} />
             </div>
         );

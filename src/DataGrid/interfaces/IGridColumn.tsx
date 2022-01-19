@@ -51,7 +51,7 @@ export interface IGridColumn<T> {
         events?: IGridCellEvents<T>;
     };
     header?: {
-        icon?: string;
+        icon?: string | JSX.Element;
         tooltip?: string;
         caption?: string;
         events?: IGridHeaderEvents<T>;

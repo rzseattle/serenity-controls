@@ -6,9 +6,8 @@ import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
 import { IFilter } from "../../../filters";
 import { IGridCellEventCallback } from "../../interfaces/IGridCellEventCallback";
 import * as React from "react";
-import { IColumnTemplate } from "./IColumnTemplate";
 
-export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
+export class ColumnTemplate<Row> {
     column: IGridColumn<Row> = {};
     filters: IGridFilter[] = null;
     order: IGridOrder[] = [];
@@ -46,7 +45,7 @@ export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
         return this;
     }
 
-    public width(x: any) {
+    public width(x: number | string | "min-content" | "max-content" | "auto") {
         this.column.width = x;
         return this;
     }
@@ -68,13 +67,12 @@ export class ColumnTemplate<Row> implements IColumnTemplate<Row> {
 
     public headerIcon(iconName: string) {
         this.column.header.icon = iconName;
-        this.column.filter[0].caption = "xx";
         return this;
     }
 
-    public addFilter(filter: IFilter | false) {
+    public addFilter(filter: IGridFilter | false) {
         if (filter !== false) {
-            this.column.filter.push(filter);
+            this.filters.push(filter);
         }
         return this;
     }

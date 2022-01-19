@@ -83,16 +83,7 @@ const GridConditionsPresenter = ({
                                     filterTrigger.current = e.currentTarget;
                                     setEditedFilter(filter);
                                     setFiltersVisible(true);
-                                    // onFiltersChange(
-                                    //     produce(filters, (draft) => {
-                                    //         draft.map((sub) => {
-                                    //             if (isGridColumnElementEqual(sub, filter)) {
-                                    //                 sub.opened = true;
-                                    //             }
-                                    //             return sub;
-                                    //         });
-                                    //     }),
-                                    // );
+
                                 }}
                             >
                                 <div>{context.filter.icons.filter}</div>
@@ -171,9 +162,18 @@ const GridConditionsPresenter = ({
                         style={{}}
                     >
                         <GridFiltersPanel
-                            onFiltersChange={(filters) => {
+                            onFiltersChange={(localFilters) => {
                                 setFiltersVisible(false);
-                                onFiltersChange(filters);
+
+                                onFiltersChange(
+                                    produce(filters, (draft) => {
+                                        draft.forEach((el) => {
+                                            if (isGridColumnElementEqual(el, localFilters[0])) {
+                                                el.value = localFilters[0].value;
+                                            }
+                                        });
+                                    }),
+                                );
                             }}
                             filters={[editedFilter]}
                         />
