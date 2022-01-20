@@ -9,7 +9,7 @@ import styles from "./GridBoleanFilter.module.sass";
 const GridBooleanFilter: IGridFilterComponent = ({ onValueChange, filter }) => {
     const config = useGridContext();
     return (
-        <div className={sharedStyles.main + " " + styles.main}>
+        <div className={sharedStyles.main}>
             {filter.caption && <div className={sharedStyles.title}>{filter.caption}</div>}
             <div className={styles.buttons}>
                 <button

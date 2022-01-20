@@ -9,7 +9,7 @@ import styles from "./GridBoleanFilter.module.sass";
 const GridSwitchFilter: IGridFilterComponent = ({ onValueChange, filter }) => {
     const config = useGridContext();
     return (
-        <div className={sharedStyles.main + " " + styles.main}>
+        <div className={sharedStyles.main}>
             {filter.caption && <div className={sharedStyles.title}>{filter.caption}</div>}
             <div className={styles.buttons}>
                 <button
@@ -20,7 +20,6 @@ const GridSwitchFilter: IGridFilterComponent = ({ onValueChange, filter }) => {
                         ])
                     }
                 >
-                    {" "}
                     {config.filter.icons.unchecked}{" "}
                 </button>
                 <button
@@ -31,7 +30,6 @@ const GridSwitchFilter: IGridFilterComponent = ({ onValueChange, filter }) => {
                         ])
                     }
                 >
-                    {" "}
                     {config.filter.icons.checked}{" "}
                 </button>
             </div>

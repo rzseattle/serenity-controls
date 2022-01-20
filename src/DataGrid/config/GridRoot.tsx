@@ -16,6 +16,7 @@ import {
     AiOutlineDatabase,
 } from "react-icons/ai";
 import ShimmerList from "../../Shimmer/ShimmerList";
+import GridSwitchFilter from "../plugins/filters/GridSwitchFilter";
 
 const GridRoot = ({ children, options }: { children: React.ReactNode; options: Partial<IGridConfig> }) => {
     return (
@@ -92,6 +93,7 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options: P
                             date: GridDateFilter,
                             numeric: GridNumericFilter,
                             boolean: GridBooleanFilter,
+                            switch: GridSwitchFilter,
                         },
                     },
                 }}

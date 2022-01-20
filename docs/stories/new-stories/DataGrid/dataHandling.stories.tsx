@@ -272,7 +272,17 @@ storiesOf("DataGrid/Data Handling", module)
             ColText.create("ip_address", "IP"),
             ColText.create("first_name", "Firstname"),
             ColText.create("last_name", "Lastname"),
-            ColText.create("gender", "Gender"),
+            ColText.create<IMockUser>("gender", "Gender").noFilter().addFilter({
+                field: "gender",
+                filterType: "switch",
+                label: "Gender",
+                value: [],
+                config: {
+                    values: [
+
+                    ]
+                }
+            }),
         ];
 
         return (
