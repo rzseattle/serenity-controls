@@ -10,13 +10,16 @@ import { ColText } from "../../../../src/DataGrid/helpers/columnTemplates/ColTex
 import { ColumnTemplate } from "../../../../src/DataGrid/helpers/columnTemplates/ColumnTemplate";
 import { ColDate } from "../../../../src/DataGrid/helpers/columnTemplates/ColDate";
 import { ColNumber } from "../../../../src/DataGrid/helpers/columnTemplates/ColNumber";
+import { IGridSwitchFilterConfig } from "../../../../src/DataGrid/plugins/filters/SelectionFilters/GridSwitchFilter";
+import { IGridSelectFilterConfig } from "../../../../src/DataGrid/plugins/filters/SelectionFilters/GridSelectFilter";
+import GridRoot from "../../../../src/DataGrid/config/GridRoot";
 
 storiesOf("DataGrid/Data Handling", module)
     .add("Drag", () => {
         const data = mockData.slice(0, 50);
 
         return (
-            <>
+            <GridRoot>
                 <DataGrid
                     showHeader={true}
                     showFooter={true}
@@ -86,7 +89,7 @@ storiesOf("DataGrid/Data Handling", module)
                         { field: "ip_address" },
                     ]}
                 />
-            </>
+            </GridRoot>
         );
     })
 
@@ -103,7 +106,7 @@ storiesOf("DataGrid/Data Handling", module)
         }, [onPage, currentPage]);
 
         return (
-            <>
+            <GridRoot>
                 <DataGrid
                     showHeader={true}
                     showFooter={true}
@@ -133,7 +136,7 @@ storiesOf("DataGrid/Data Handling", module)
                         );
                     }}
                 />
-            </>
+            </GridRoot>
         );
     })
     .add("Loading", () => {
@@ -152,7 +155,7 @@ storiesOf("DataGrid/Data Handling", module)
         }, [onPage, currentPage]);
 
         return (
-            <>
+            <GridRoot>
                 <DataGrid
                     isInLoadingState={isInLoadingState}
                     showHeader={true}
@@ -183,7 +186,7 @@ storiesOf("DataGrid/Data Handling", module)
                         );
                     }}
                 />
-            </>
+            </GridRoot>
         );
     })
     .add("Loading ( no data )", () => {
@@ -193,7 +196,7 @@ storiesOf("DataGrid/Data Handling", module)
         const count = 0;
 
         return (
-            <>
+            <GridRoot>
                 <DataGrid
                     isInLoadingState={true}
                     showHeader={true}
@@ -224,12 +227,12 @@ storiesOf("DataGrid/Data Handling", module)
                         );
                     }}
                 />
-            </>
+            </GridRoot>
         );
     })
     .add("No data", () => {
         return (
-            <>
+            <GridRoot>
                 <DataGrid
                     showHeader={true}
                     showFooter={true}
@@ -248,7 +251,7 @@ storiesOf("DataGrid/Data Handling", module)
                     ]}
                     data={[]}
                 />
-            </>
+            </GridRoot>
         );
     })
     .add("Fulll", () => {
@@ -272,22 +275,60 @@ storiesOf("DataGrid/Data Handling", module)
             ColText.create("ip_address", "IP"),
             ColText.create("first_name", "Firstname"),
             ColText.create("last_name", "Lastname"),
-            ColText.create<IMockUser>("gender", "Gender").noFilter().addFilter({
-                field: "gender",
-                filterType: "switch",
-                label: "Gender",
-                value: [],
-                config: {
-                    values: [
-
-                    ]
-                }
-            }),
+            ColText.create<IMockUser>("gender", "Gender")
+                .noFilter()
+                .addFilter({
+                    field: "gender",
+                    caption: "Gender",
+                    filterType: "switch",
+                    label: "Gender",
+                    value: [],
+                    config: {
+                        values: [
+                            { value: "Female", label: "Female" },
+                            { value: "Male", label: "Male" },
+                        ],
+                    } as IGridSwitchFilterConfig,
+                })
+                .addFilter({
+                    field: "smth",
+                    caption: "Gender multi",
+                    applyTo: "gender",
+                    filterType: "switch",
+                    label: "Gender multi",
+                    value: [],
+                    config: {
+                        multiselect: true,
+                        values: [
+                            { value: "Female", label: "Female" },
+                            { value: "Male", label: "Male" },
+                            { value: "lcatterick1@so-net.ne.jp", label: "lcatterick1@so-net.ne.jp" },
+                            { value: "aschust2@i2i.jp", label: "aschust2@i2i.jp" },
+                            { value: "2016-12-23", label: "2016-12-23" },
+                            { value: "Adelind", label: "Adelind" },
+                            { value: "119.229.150.501", label: "119.229.150.501" },
+                        ],
+                    } as IGridSwitchFilterConfig,
+                })
+                .addFilter({
+                    field: "zzz",
+                    caption: "Gender select",
+                    applyTo: "gender",
+                    filterType: "select",
+                    label: "Gender multi",
+                    value: [],
+                    config: {
+                        values: [
+                            { value: "Female", label: "Female" },
+                            { value: "Male", label: "Male" },
+                        ],
+                    } as IGridSelectFilterConfig,
+                }),
         ];
 
         return (
-            <div>
+            <GridRoot>
                 <FullGrid dataProvider={dataProvider} columns={columns} />
-            </div>
+            </GridRoot>
         );
     });

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import DataGrid from "../../../../src/DataGrid/DataGrid";
 import { IGridOrder } from "../../../../src/DataGrid/interfaces/IGridOrder";
 import { IGridFilter, IGridFilterComponent } from "../../../../src/DataGrid/interfaces/IGridFilter";
+import GridRoot from "../../../../src/DataGrid/config/GridRoot";
 
 const Filter: IGridFilterComponent = ({ onApply, filter }) => {
     const [val, setVal] = useState(filter.value[0]?.value);
@@ -12,7 +13,7 @@ const Filter: IGridFilterComponent = ({ onApply, filter }) => {
         onApply({ value: val, labelValue: "to jest 10", condition: "=" }, false);
     };
     return (
-        <div>
+        <GridRoot>
             <input
                 autoFocus={true}
                 type="text"
@@ -25,7 +26,7 @@ const Filter: IGridFilterComponent = ({ onApply, filter }) => {
                 onChange={(e) => setVal(e.currentTarget.value)}
             />
             <button onClick={() => apply()}>Apply</button>
-        </div>
+        </GridRoot>
     );
 };
 
@@ -64,7 +65,7 @@ storiesOf("DataGrid/Order & Filter", module)
         }, [order]);
 
         return (
-            <>
+            <GridRoot>
                 <DataGrid
                     showHeader={true}
                     onOrderChange={(order) => {
@@ -86,7 +87,7 @@ storiesOf("DataGrid/Order & Filter", module)
                     ]}
                     data={data}
                 />
-            </>
+            </GridRoot>
         );
     })
     .add("Filters", () => {
@@ -100,7 +101,7 @@ storiesOf("DataGrid/Order & Filter", module)
         const [filters, setFilter] = useState<IGridFilter[]>([
             {
                 field: "id",
-                caption: "Id filter",
+                caption: "Id filter ",
                 label: "ZZ",
                 description: "The first filter description",
                 opened: true,
@@ -232,7 +233,7 @@ storiesOf("DataGrid/Order & Filter", module)
                 {/*    <PrintJSON json={filters} />*/}
                 {/*    <PrintJSON json={order} />*/}
                 {/*</div>*/}
-                <div>
+                <GridRoot>
                     <DataGrid
                         showHeader={true}
                         onOrderChange={(order) => setOrder(order)}
@@ -254,7 +255,7 @@ storiesOf("DataGrid/Order & Filter", module)
                         ]}
                         data={data}
                     />
-                </div>
+                </GridRoot>
             </>
         );
     });

@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IGridFilterComponent, IGridFilterValue } from "../../interfaces/IGridFilter";
-import { useGridContext } from "../../config/GridContext";
+import { IGridFilterComponent, IGridFilterValue } from "../../../interfaces/IGridFilter";
+import { useGridContext } from "../../../config/GridContext";
 import GridCommonFilter from "./GridCommonFilter";
 
 import styles from "./GridDateFilter.module.sass";
 import { Calendar, DateRange, Range } from "react-date-range";
+// @ts-ignore
 import { pl } from "react-date-range/dist/locale";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays, format, parse } from "date-fns";
-import { Modal } from "../../../Modal";
+import { Modal } from "../../../../Modal";
 
 const GridDateFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, filter }) => {
     const config = useGridContext();

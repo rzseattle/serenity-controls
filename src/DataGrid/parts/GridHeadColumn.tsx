@@ -89,14 +89,13 @@ const GridHeadColumn = <T,>({
                         {filtersVisible && (
                             <Modal
                                 relativeTo={() => filterTrigger.current}
-                                relativeSettings={RelativePositionPresets.bottomLeft}
+                                relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "min" }}
                                 show={true}
                                 shadow={false}
                                 className=""
                                 onHide={() => {
                                     setFiltersVisible(false);
                                 }}
-
                             >
                                 <div
                                     onClick={(e) => e.stopPropagation()}
@@ -118,11 +117,7 @@ const GridHeadColumn = <T,>({
             </div>
         );
     }
-    return (
-        <div className={styles.headerCell} {...cellProperties}>
-            {child}
-        </div>
-    );
+    return <div {...cellProperties}>{child}</div>;
 };
 
 export default GridHeadColumn;

@@ -6,6 +6,7 @@ import DataGrid from "../../../../src/DataGrid/DataGrid";
 
 import { PrintJSON } from "../../../../src/PrintJSON";
 import { useCellData } from "../../../../src/DataGrid/helpers/useCellData";
+import GridRoot from "../../../../src/DataGrid/config/GridRoot";
 
 storiesOf("DataGrid/Events", module)
     .add("Basic", () => {
@@ -15,7 +16,7 @@ storiesOf("DataGrid/Events", module)
         const data = useMemo(() => mockData.slice(0, 5), []);
 
         return (
-            <>
+            <GridRoot>
                 <DataGrid
                     showHeader={true}
                     columns={[
@@ -88,7 +89,7 @@ storiesOf("DataGrid/Events", module)
                 {text}
                 <hr />
                 <PrintJSON json={getAll()} />
-            </>
+            </GridRoot>
         );
     })
     .add("Data changed", () => {
