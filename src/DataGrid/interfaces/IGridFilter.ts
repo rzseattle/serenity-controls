@@ -10,6 +10,7 @@ export type IGridFilterComponent = React.ComponentType<{
     filter: IGridFilter;
     onValueChange: (filterValue: IGridFilterValue[]) => unknown;
     onFilterChange: (filter: IGridFilter) => unknown;
+    showCaption?: boolean;
 }>;
 
 interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedElement {

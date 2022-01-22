@@ -12,11 +12,12 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays, format, parse } from "date-fns";
 import { Modal } from "../../../../Modal";
 
-const GridDateFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, filter }) => {
+const GridDateFilter: IGridFilterComponent = ({ showCaption, onFilterChange, onValueChange, filter }) => {
     const config = useGridContext();
 
     return (
         <GridCommonFilter
+            showCaption={showCaption}
             filter={filter}
             onFilterChange={onFilterChange}
             onValueChange={onValueChange}
@@ -98,17 +99,16 @@ const GridDateFilterRow = ({
     return (
         <div className={styles.container}>
             {value.condition !== "set" && value.condition !== "notSet" ? (
-                <>
+                <div className={styles.inputContainer}>
                     <div className={styles.icon}>{config.filter.icons.calendar}</div>
                     <input
                         value={value.value}
                         onClick={() => setShow(true)}
                         onChange={(e) => onchange(e.target.value, null)}
                     />
-                </>
+                </div>
             ) : (
                 <div className={styles.notImportant}>
-                    {" "}
                     {value.condition === "set" ? config.filter.icons.checked : config.filter.icons.unchecked}{" "}
                 </div>
             )}

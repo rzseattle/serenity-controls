@@ -13,14 +13,13 @@ interface IGridSelectFilterOption {
 
 export interface IGridSelectFilterConfig {
     values: IGridSelectFilterOption[];
-
 }
 
-const GridSelectFilter: IGridFilterComponent = ({ onValueChange, filter }) => {
+const GridSelectFilter: IGridFilterComponent = ({ showCaption, onValueChange, filter }) => {
     const filterConfig: IGridSelectFilterConfig = filter.config;
 
     return (
-        <GridFilterBody filter={filter}>
+        <GridFilterBody filter={filter} showCaption={showCaption}>
             <div className={styles.buttons}>
                 <select
                     onChange={(e) => {

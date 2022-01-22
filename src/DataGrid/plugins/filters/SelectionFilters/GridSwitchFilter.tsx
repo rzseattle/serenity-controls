@@ -16,11 +16,11 @@ export interface IGridSwitchFilterConfig {
     columns?: number;
 }
 
-const GridSwitchFilter: IGridFilterComponent = ({ onValueChange, filter }) => {
+const GridSwitchFilter: IGridFilterComponent = ({ showCaption,onValueChange, filter }) => {
     const filterConfig: IGridSwitchFilterConfig = filter.config;
 
     return (
-        <GridFilterBody filter={filter}>
+        <GridFilterBody filter={filter} showCaption={showCaption}>
             <div
                 className={styles.buttons + " " + (filterConfig.columns > 0 ? styles.gridLayout : styles.noGridLayout)}
                 style={

@@ -1,0 +1,49 @@
+$row-border-color: lightgrey
+$row-height: 30px
+
+.rows
+  display: grid
+
+  grid-template-columns: 2fr 1fr
+  grid-row-gap: 7px
+  .valueRow
+    display: contents
+    > div
+      border-top: solid 1px $row-border-color
+      border-bottom: solid 1px $row-border-color
+      border-left: solid 1px $row-border-color
+      background-color: rgb( 230, 230, 230 )
+      &:first-child
+        background-color: white
+      &:last-child
+        border-right: solid 1px $row-border-color
+
+    .inRowAction
+      display: flex
+      text-align: center
+      justify-content: center
+      align-content: center
+      flex-direction: column
+      text-align: center
+      min-width: 28px
+      user-select: none
+      background-color: rgb( 230, 230, 230 )
+      min-height: $row-height
+      cursor: pointer
+      &:hover
+        background-color: rgb( 220, 220, 220 )
+    select, input
+      height: 100%
+      border: none
+      background-color: transparent
+    select
+      margin-top: -2px
+      width: calc( 100% - 6px )
+    input
+      width: 100%
+      min-width: 180px
+      padding: 4px
+
+
+.advancedMode
+  grid-template-columns: 4fr 1fr 2fr 1fr 1fr

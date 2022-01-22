@@ -1,14 +1,15 @@
 import React, { ReactElement, useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
-import sharedStyles from "../GridSharedFilterStyles.module.sass";
-import produce from "immer";
+import styles from "./GridCommonFilter.module.sass";
 import { IGridFilter, IGridFilterValue } from "../../../interfaces/IGridFilter";
 import GridFilterBody from "../Common/GridFilterBody";
 
 interface IGridCommonFilterProps {
+
     filter: IGridFilter;
     onValueChange: (filterValue: IGridFilterValue[]) => unknown;
     onFilterChange: (filter: IGridFilter) => unknown;
+    showCaption: boolean
     fieldComponent: (
         filterValue: IGridFilterValue,
         onChange: (value: string, label: string) => unknown,
@@ -20,6 +21,7 @@ interface IGridCommonFilterProps {
 }
 
 const GridCommonFilter = ({
+    showCaption,
     onFilterChange,
     onValueChange,
     filter,
@@ -51,8 +53,8 @@ const GridCommonFilter = ({
 
     return (
         <>
-            <GridFilterBody filter={filter} onFilterChange={onFilterChange} showAdvancedSwitch={true}>
-                <>
+            <GridFilterBody filter={filter} onFilterChange={onFilterChange} showAdvancedSwitch={true} showCaption={showCaption}>
+                <div className={styles.rows + " " + (filter.isInAdvancedMode ? styles.advancedMode : "")}>
                     {value.map((valueEl, index) => {
                         const FieldComponent = fieldComponent(valueEl, (value, label) => {
                             setValue((draft) => {
@@ -61,24 +63,28 @@ const GridCommonFilter = ({
                             });
                         });
                         return (
-                            <div key={index} className={sharedStyles.valueRow}>
-                                <div className={sharedStyles.fieldBlock}>{FieldComponent}</div>
-                                {filter.isInAdvancedMode && index > 0 && (
-                                    <div
-                                        className={sharedStyles.button}
-                                        onClick={() => {
-                                            setValue((draft) => {
-                                                draft[index].operator = draft[index].operator === "and" ? "or" : "and";
-                                            });
-                                        }}
-                                    >
-                                        {valueEl.operator === "or" ? "or" : "and"}
-                                    </div>
+                            <div key={index} className={styles.valueRow}>
+                                <div className={styles.fieldBlock}>{FieldComponent}</div>
+                                {filter.isInAdvancedMode && (
+                                    <>
+                                        {index > 0 ? (
+                                            <div
+                                                className={styles.inRowAction}
+                                                onClick={() => {
+                                                    setValue((draft) => {
+                                                        draft[index].operator =
+                                                            draft[index].operator !== "or" ? "or" : "and";
+                                                    });
+                                                }}
+                                            >
+                                                {valueEl.operator !== "or" ? "or" : "and"}
+                                            </div>
+                                        ) : (
+                                            <div></div>
+                                        )}
+                                    </>
                                 )}
-                                <div
-                                    className={sharedStyles.button + " " + sharedStyles.filterType}
-                                    style={{ padding: 0 }}
-                                >
+                                <div className={styles.inRowAction + " " + styles.filterType} style={{ padding: 0 }}>
                                     <select
                                         value={valueEl.condition}
                                         onChange={(e) => {
@@ -100,46 +106,58 @@ const GridCommonFilter = ({
                                         ;
                                     </select>
                                 </div>
-                                {filter.isInAdvancedMode && value.length > 1 && (
-                                    <div
-                                        className={sharedStyles.button}
-                                        onClick={() => {
-                                            setValue((draft) => {
-                                                draft.splice(index, 1);
-                                                //value will be empty
-                                                if (value.length === 1) {
-                                                    draft.push({
-                                                        value: "",
-                                                        condition: conditions[0].value,
-                                                        labelCondition: conditions[0].label,
+                                {filter.isInAdvancedMode && (
+                                    <>
+                                        {value.length > 1 ? (
+                                            <div
+                                                className={styles.inRowAction}
+                                                onClick={() => {
+                                                    setValue((draft) => {
+                                                        draft.splice(index, 1);
+                                                        //value will be empty
+                                                        if (value.length === 1) {
+                                                            draft.push({
+                                                                value: "",
+                                                                condition: conditions[0].value,
+                                                                labelCondition: conditions[0].label,
+                                                            });
+                                                        }
                                                     });
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        -
-                                    </div>
+                                                }}
+                                            >
+                                                -
+                                            </div>
+                                        ) : (
+                                            <div></div>
+                                        )}
+                                    </>
                                 )}
-                                {filter.isInAdvancedMode && index + 1 === value.length && (
-                                    <div
-                                        className={sharedStyles.button}
-                                        onClick={() => {
-                                            setValue((draft) => {
-                                                draft.push({
-                                                    value: "",
-                                                    condition: conditions[0].value,
-                                                    labelCondition: conditions[0].label,
-                                                });
-                                            });
-                                        }}
-                                    >
-                                        +
-                                    </div>
+                                {filter.isInAdvancedMode && (
+                                    <>
+                                        {index + 1 === value.length ? (
+                                            <div
+                                                className={styles.inRowAction}
+                                                onClick={() => {
+                                                    setValue((draft) => {
+                                                        draft.push({
+                                                            value: "",
+                                                            condition: conditions[0].value,
+                                                            labelCondition: conditions[0].label,
+                                                        });
+                                                    });
+                                                }}
+                                            >
+                                                +
+                                            </div>
+                                        ) : (
+                                            <div></div>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         );
                     })}
-                </>
+                </div>
             </GridFilterBody>
         </>
     );

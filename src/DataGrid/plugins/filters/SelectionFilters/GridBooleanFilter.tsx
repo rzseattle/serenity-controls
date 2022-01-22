@@ -5,10 +5,10 @@ import { useGridContext } from "../../../config/GridContext";
 import styles from "./GridBoleanFilter.module.sass";
 import GridFilterBody from "../Common/GridFilterBody";
 
-const GridBooleanFilter: IGridFilterComponent = ({ onValueChange, filter }) => {
+const GridBooleanFilter: IGridFilterComponent = ({ showCaption, onValueChange, filter }) => {
     const config = useGridContext();
     return (
-        <GridFilterBody filter={filter}>
+        <GridFilterBody filter={filter} showCaption={showCaption}>
             <div className={styles.buttons}>
                 <button
                     disabled={filter.value[0]?.value == 0}

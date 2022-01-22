@@ -3,7 +3,7 @@ import GridCommonFilter from "./GridCommonFilter";
 import { useGridContext } from "../../../config/GridContext";
 import { IGridFilterComponent } from "../../../interfaces/IGridFilter";
 
-const GridTextFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, filter }) => {
+const GridTextFilter: IGridFilterComponent = ({ onFilterChange, onValueChange,showCaption, filter }) => {
     const config = useGridContext();
     const ref = useRef<HTMLInputElement>();
     useEffect(() => {
@@ -15,6 +15,7 @@ const GridTextFilter: IGridFilterComponent = ({ onFilterChange, onValueChange, f
     return (
         <>
             <GridCommonFilter
+                showCaption={showCaption}
                 filter={filter}
                 onFilterChange={onFilterChange}
                 onValueChange={onValueChange}

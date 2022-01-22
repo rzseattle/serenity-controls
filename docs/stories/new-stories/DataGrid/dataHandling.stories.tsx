@@ -308,6 +308,7 @@ storiesOf("DataGrid/Data Handling", module)
                             { value: "Adelind", label: "Adelind" },
                             { value: "119.229.150.501", label: "119.229.150.501" },
                         ],
+                        columns: 3
                     } as IGridSwitchFilterConfig,
                 })
                 .addFilter({

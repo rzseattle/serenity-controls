@@ -1,11 +1,10 @@
 import React from "react";
 import { IGridFilter } from "../interfaces/IGridFilter";
-import styles from "../plugins/filters/GridSharedFilterStyles.module.sass";
 import { useGridContext } from "../config/GridContext";
 import { IFiltersChange } from "../interfaces/IFiltersChange";
 import { useImmer } from "use-immer";
 import produce from "immer";
-import sharedStyles from "../plugins/filters/GridSharedFilterStyles.module.sass";
+import styles from "./GridFiltersPanel.module.sass";
 
 const GridFiltersPanel = ({
     filters,
@@ -20,7 +19,7 @@ const GridFiltersPanel = ({
 
     return (
         <div
-            className={sharedStyles.main}
+            className={styles.main}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     onFiltersChange(
@@ -32,13 +31,14 @@ const GridFiltersPanel = ({
             }}
         >
             <div onClick={(e) => e.stopPropagation()}>
-                <div>
+                <div className={styles.body}>
                     {localFilters.map((filter, index) => {
                         const Component = filter.component ?? config.filter.components[filter.filterType];
                         return (
                             <React.Fragment key={filter.field + "" + filter.applyTo}>
                                 {Component ? (
                                     <Component
+                                        showCaption={localFilters.length > 1}
                                         filter={filter}
                                         onValueChange={(value) => {
                                             setLocalFilters((draft) => {
@@ -63,11 +63,17 @@ const GridFiltersPanel = ({
                     <button
                         className={styles.applyButtons}
                         onClick={() => {
-                            onFiltersChange(
-                                produce(filters, (draft) => {
-                                    draft.forEach((el) => (el.opened = false));
-                                }),
-                            );
+                            setLocalFilters((draft) => {
+                                draft.forEach((el) => (el.isInAdvancedMode = !el.isInAdvancedMode));
+                            });
+                        }}
+                    >
+                        a
+                    </button>
+                    <button
+                        className={styles.applyButtons}
+                        onClick={() => {
+                            onFiltersChange(filters);
                         }}
                     >
                         {config.locale.cancel}
@@ -76,11 +82,7 @@ const GridFiltersPanel = ({
                     <button
                         className={styles.applyButtons}
                         onClick={() => {
-                            onFiltersChange(
-                                produce(localFilters, (draft) => {
-                                    draft.forEach((el) => (el.opened = false));
-                                }),
-                            );
+                            onFiltersChange(localFilters);
                         }}
                     >
                         {config.locale.apply}
