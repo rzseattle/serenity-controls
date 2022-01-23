@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import DataGrid from "../DataGrid";
-import { IGridFilter } from "../interfaces/IGridFilter";
-import { IGridOrder } from "../interfaces/IGridOrder";
-import { IGridColumn } from "../interfaces/IGridColumn";
-import Pagination from "../plugins/pagination/Pagination";
-import { ColumnTemplate } from "../plugins/columns/ColumnTemplate";
+import DataGrid from "../../DataGrid";
+import { IGridFilter } from "../../interfaces/IGridFilter";
+import { IGridOrder } from "../../interfaces/IGridOrder";
+import { IGridColumn } from "../../interfaces/IGridColumn";
+import Pagination from "../pagination/Pagination";
+import { ColumnTemplate } from "../columns/ColumnTemplate";
 
 export type IFullGridDataProvider<T> = ({
     filters,

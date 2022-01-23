@@ -9,11 +9,12 @@ import GridNumericFilter from "../plugins/filters/InputFilters/GridNumericFilter
 import GridBooleanFilter from "../plugins/filters/SelectionFilters/GridBooleanFilter";
 import { BsCalendar3, BsFilter } from "react-icons/bs";
 import {
+    AiFillSetting,
     AiOutlineArrowDown,
     AiOutlineArrowUp,
     AiOutlineCheck,
     AiOutlineClose,
-    AiOutlineDatabase,
+    AiOutlineDatabase, AiOutlinePlus,
 } from "react-icons/ai";
 import ShimmerList from "../../Shimmer/ShimmerList";
 import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilter";
@@ -68,6 +69,11 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options?: 
                     },
                     filter: {
                         icons: {
+                            advanced: (
+                                <>
+                                    <AiOutlinePlus />
+                                </>
+                            ),
                             filter: (
                                 <>
                                     <BsFilter />

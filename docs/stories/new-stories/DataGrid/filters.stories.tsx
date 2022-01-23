@@ -284,13 +284,14 @@ storiesOf("DataGrid/Plugins/Filters", module)
         ]);
         return (
             <GridRoot>
-
+                    <div style={{width: 400}}>
                     <GridFiltersPanel
                         filters={filters}
                         onFiltersChange={(changed) => {
                             setFilters(changed);
                         }}
                     />
+                    </div>
 
             </GridRoot>
         );

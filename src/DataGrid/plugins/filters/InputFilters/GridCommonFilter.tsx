@@ -5,11 +5,10 @@ import { IGridFilter, IGridFilterValue } from "../../../interfaces/IGridFilter";
 import GridFilterBody from "../Common/GridFilterBody";
 
 interface IGridCommonFilterProps {
-
     filter: IGridFilter;
     onValueChange: (filterValue: IGridFilterValue[]) => unknown;
     onFilterChange: (filter: IGridFilter) => unknown;
-    showCaption: boolean
+    showCaption: boolean;
     fieldComponent: (
         filterValue: IGridFilterValue,
         onChange: (value: string, label: string) => unknown,
@@ -53,7 +52,12 @@ const GridCommonFilter = ({
 
     return (
         <>
-            <GridFilterBody filter={filter} onFilterChange={onFilterChange} showAdvancedSwitch={true} showCaption={showCaption}>
+            <GridFilterBody
+                filter={filter}
+                onFilterChange={onFilterChange}
+                showAdvancedSwitch={true}
+                showCaption={showCaption}
+            >
                 <div className={styles.rows + " " + (filter.isInAdvancedMode ? styles.advancedMode : "")}>
                     {value.map((valueEl, index) => {
                         const FieldComponent = fieldComponent(valueEl, (value, label) => {
@@ -132,31 +136,31 @@ const GridCommonFilter = ({
                                         )}
                                     </>
                                 )}
-                                {filter.isInAdvancedMode && (
-                                    <>
-                                        {index + 1 === value.length ? (
-                                            <div
-                                                className={styles.inRowAction}
-                                                onClick={() => {
-                                                    setValue((draft) => {
-                                                        draft.push({
-                                                            value: "",
-                                                            condition: conditions[0].value,
-                                                            labelCondition: conditions[0].label,
-                                                        });
-                                                    });
-                                                }}
-                                            >
-                                                +
-                                            </div>
-                                        ) : (
-                                            <div></div>
-                                        )}
-                                    </>
-                                )}
                             </div>
                         );
                     })}
+
+                    {filter.isInAdvancedMode && (
+                        <>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div
+                                className={styles.addFieldButton}
+                                onClick={() => {
+                                    setValue((draft) => {
+                                        draft.push({
+                                            value: "",
+                                            condition: conditions[0].value,
+                                            labelCondition: conditions[0].label,
+                                        });
+                                    });
+                                }}
+                            >
+                                +
+                            </div>
+                        </>
+                    )}
                 </div>
             </GridFilterBody>
         </>

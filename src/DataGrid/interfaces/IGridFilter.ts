@@ -20,7 +20,6 @@ interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedE
     config?: any;
     isInAdvancedMode?: boolean;
     value?: IGridFilterValue[];
-    opened?: boolean;
 }
 
 interface IGridFilterWithComponent extends IGridFilterBase {

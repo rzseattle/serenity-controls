@@ -3,7 +3,6 @@ import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
 import { IGridHeaderEventCallback } from "../../interfaces/IGridHeaderEventCallback";
 import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
-import { IFilter } from "../../../filters";
 import { IGridCellEventCallback } from "../../interfaces/IGridCellEventCallback";
 import * as React from "react";
 
@@ -11,12 +10,6 @@ export class ColumnTemplate<Row> {
     column: IGridColumn<Row> = {};
     filters: IGridFilter[] = null;
     order: IGridOrder[] = [];
-
-    /*    constructor(initData: Partial<IGridColumn<Row>>) {
-        this.column = {
-            ...initData,
-        };
-    }*/
 
     public className = (names: string[]) => {
         this.column.cell = this.column.cell ?? {};
@@ -92,14 +85,6 @@ export class ColumnTemplate<Row> {
         this.order = [];
         return this;
     }
-
-    /*filter(type, field, conf) {
-        if(Array.isArray(this.column.filter)){
-
-        }else{
-
-        }
-    }*/
 
     private createEventsStruct = (type: "click" | "mouseUp" | "enter" | "leave") => {
         this.column.cell = this.column.cell ?? {};

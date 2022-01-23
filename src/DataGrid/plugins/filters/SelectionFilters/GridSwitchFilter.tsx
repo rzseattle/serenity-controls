@@ -16,18 +16,16 @@ export interface IGridSwitchFilterConfig {
     columns?: number;
 }
 
-const GridSwitchFilter: IGridFilterComponent = ({ showCaption,onValueChange, filter }) => {
+const GridSwitchFilter: IGridFilterComponent = ({ showCaption, onValueChange, filter }) => {
     const filterConfig: IGridSwitchFilterConfig = filter.config;
+
+    const columns = filterConfig.columns !== undefined ? filterConfig.columns : 3;
 
     return (
         <GridFilterBody filter={filter} showCaption={showCaption}>
             <div
                 className={styles.buttons + " " + (filterConfig.columns > 0 ? styles.gridLayout : styles.noGridLayout)}
-                style={
-                    filterConfig.columns > 0
-                        ? { gridTemplateColumns: "1fr ".repeat(filterConfig.columns), rowGap: 10 }
-                        : {}
-                }
+                style={columns > 0 ? { gridTemplateColumns: "1fr ".repeat(columns), rowGap: 10 } : {}}
             >
                 {filterConfig.values.map((el: IGridSwitchFilterOption) => {
                     return (

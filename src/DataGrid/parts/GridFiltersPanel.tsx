@@ -59,17 +59,19 @@ const GridFiltersPanel = ({
                     })}
                 </div>
 
-                <div className={styles.buttonPanel}>
-                    <button
-                        className={styles.applyButtons}
-                        onClick={() => {
-                            setLocalFilters((draft) => {
-                                draft.forEach((el) => (el.isInAdvancedMode = !el.isInAdvancedMode));
-                            });
-                        }}
-                    >
-                        a
-                    </button>
+                <div className={styles.buttonsPanel}>
+                    {filters.filter((el) => el.isInAdvancedMode !== undefined).length > 0 && (
+                        <button
+                            className={styles.applyButtons + " " + styles.advancedButton}
+                            onClick={() => {
+                                setLocalFilters((draft) => {
+                                    draft.forEach((el) => (el.isInAdvancedMode = !el.isInAdvancedMode));
+                                });
+                            }}
+                        >
+                            {config.filter.icons.advanced}
+                        </button>
+                    )}
                     <button
                         className={styles.applyButtons}
                         onClick={() => {

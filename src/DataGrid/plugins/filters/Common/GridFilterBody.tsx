@@ -13,7 +13,7 @@ const GridFilterBody = ({
     showCaption
 }: {
     filter: IGridFilter;
-    children: JSX.Element;
+    children: JSX.Element | JSX.Element[];
     onFilterChange?: (filter: IGridFilter) => unknown;
     showAdvancedSwitch?: boolean;
     showCaption?: boolean

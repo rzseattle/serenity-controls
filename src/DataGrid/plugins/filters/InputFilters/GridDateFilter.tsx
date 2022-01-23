@@ -11,6 +11,7 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays, format, parse } from "date-fns";
 import { Modal } from "../../../../Modal";
+import { RelativePositionPresets } from "../../../../Positioner";
 
 const GridDateFilter: IGridFilterComponent = ({ showCaption, onFilterChange, onValueChange, filter }) => {
     const config = useGridContext();
@@ -43,6 +44,7 @@ const GridDateFilterRow = ({
     onchange: (value: string, label: string) => unknown;
 }) => {
     const config = useGridContext();
+    const inputRef = useRef<HTMLInputElement>()
     const isInitialMount = useRef(true);
     const dateFormat = "yyyy-MM-dd";
     const [show, setShow] = useState(false);
@@ -102,6 +104,7 @@ const GridDateFilterRow = ({
                 <div className={styles.inputContainer}>
                     <div className={styles.icon}>{config.filter.icons.calendar}</div>
                     <input
+                        ref={inputRef}
                         value={value.value}
                         onClick={() => setShow(true)}
                         onChange={(e) => onchange(e.target.value, null)}
@@ -114,6 +117,8 @@ const GridDateFilterRow = ({
             )}
             <Modal
                 show={show}
+                relativeTo={() => inputRef.current}
+                relativeSettings={RelativePositionPresets.bottomLeft}
                 onHide={() => {
                     setShow(false);
                 }}

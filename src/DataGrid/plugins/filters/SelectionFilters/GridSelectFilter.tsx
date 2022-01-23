@@ -20,7 +20,7 @@ const GridSelectFilter: IGridFilterComponent = ({ showCaption, onValueChange, fi
 
     return (
         <GridFilterBody filter={filter} showCaption={showCaption}>
-            <div className={styles.buttons}>
+            <div className={styles.main}>
                 <select
                     onChange={(e) => {
                         const index = e.currentTarget.selectedIndex;

@@ -104,9 +104,10 @@ storiesOf("DataGrid/Order & Filter", module)
                 caption: "Id filter ",
                 label: "ZZ",
                 description: "The first filter description",
-                opened: true,
+
                 filterType: "text",
                 //component: Filter,
+                isInAdvancedMode: false,
                 value: [
                     {
                         value: 10,
@@ -128,7 +129,8 @@ storiesOf("DataGrid/Order & Filter", module)
                 applyTo: "id",
                 caption: "Another filter without description",
                 label: "ZZ",
-                opened: true,
+                isInAdvancedMode: false,
+
                 filterType: "date",
                 //component: Filter,
                 value: [
@@ -151,7 +153,8 @@ storiesOf("DataGrid/Order & Filter", module)
                 applyTo: "id",
                 caption: "Numeric",
                 label: "ZZ",
-                opened: true,
+                isInAdvancedMode: false,
+
                 filterType: "numeric",
                 //component: Filter,
                 value: [
@@ -168,7 +171,6 @@ storiesOf("DataGrid/Order & Filter", module)
                 applyTo: "id",
                 caption: "Boolean",
                 label: "yyy",
-                opened: true,
                 description: "This is boolean filter",
                 filterType: "boolean",
                 //component: Filter,
