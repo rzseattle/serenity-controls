@@ -15,6 +15,7 @@ export class ColText<Row> extends ColumnTemplate<Row> {
                 label: caption,
                 field,
                 filterType: "text",
+                isInAdvancedMode: false,
                 config: {
                     showFilterOptions: true,
                 },

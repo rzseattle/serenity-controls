@@ -4,7 +4,7 @@ import { IGridFilter } from "../interfaces/IGridFilter";
 import { IGridOrder } from "../interfaces/IGridOrder";
 import { IGridColumn } from "../interfaces/IGridColumn";
 import Pagination from "../plugins/pagination/Pagination";
-import { ColumnTemplate } from "./columnTemplates/ColumnTemplate";
+import { ColumnTemplate } from "../plugins/columns/ColumnTemplate";
 
 export type IFullGridDataProvider<T> = ({
     filters,

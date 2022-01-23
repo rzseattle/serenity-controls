@@ -22,6 +22,7 @@ export class ColNumber<Row> extends ColumnTemplate<Row> {
                 label: caption,
                 field,
                 filterType: "numeric",
+                isInAdvancedMode: false,
                 config: {
                     showFilterOptions: true,
                 },
