@@ -30,15 +30,39 @@ const baseFilter: IGridFilter = {
 //👇 We create a “template” of how args map to rendering
 const Template: ComponentStory<typeof GridAdvancedFilterContainer> = (args) => (
     <GridRoot>
-        <GridAdvancedFilterContainer filter={baseFilter} {...args} />
+        <GridAdvancedFilterContainer
+            filter={baseFilter}
+            fieldComponent={(value, onchange) => {
+                return (
+                    <input data-testid="input" value={value.value} onChange={(e) => onchange(e.target.value, null)} />
+                );
+            }}
+            conditions={[
+                { value: 1, label: "condition 1" },
+                { value: 2, label: "condition 2" },
+            ]}
+            {...args}
+        />
     </GridRoot>
 );
 
-export const Story1 = Template.bind({});
-Story1.args = { filter: { ...baseFilter, isInAdvancedMode: false } };
-Story1.storyName = "Simple";
+export const StorySimple = Template.bind({});
+StorySimple.args = { filter: { ...baseFilter, isInAdvancedMode: false } };
+StorySimple.storyName = "Simple";
 
+export const StoryWithTitle = Template.bind({});
+StoryWithTitle.args = { filter: { ...baseFilter }, showCaption: true };
+StoryWithTitle.storyName = "With title";
 
-export const StoryFocus = Template.bind({});
-StoryFocus.args = { filter: { ...baseFilter }, autoFocus: true };
-StoryFocus.storyName = "Auto focus";
+export const StoryAdvanced = Template.bind({});
+StoryAdvanced.args = {
+    filter: {
+        ...baseFilter,
+        isInAdvancedMode: true,
+        value: [
+            { value: "1", condition: "1" },
+            { value: "2", condition: "2" },
+        ],
+    },
+};
+StoryAdvanced.storyName = "Advanced mode";

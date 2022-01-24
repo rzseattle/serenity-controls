@@ -4,7 +4,7 @@ import styles from "./GridCommonFilter.module.sass";
 import { IGridFilter, IGridFilterValue } from "../../../../interfaces/IGridFilter";
 import GridFilterBody from "../../Common/GridFilterBody";
 
-interface IGridAdvancedFilterContainerProps {
+export interface IGridAdvancedFilterContainerProps {
     filter: IGridFilter;
     onValueChange: (filterValue: IGridFilterValue[]) => unknown;
     onFilterChange: (filter: IGridFilter) => unknown;
@@ -74,6 +74,7 @@ const GridAdvancedFilterContainer = ({
                                         {index > 0 ? (
                                             <div
                                                 className={styles.inRowAction}
+                                                data-testid="conditions-operator"
                                                 onClick={() => {
                                                     setValue((draft) => {
                                                         draft[index].operator =
@@ -81,7 +82,7 @@ const GridAdvancedFilterContainer = ({
                                                     });
                                                 }}
                                             >
-                                                {valueEl.operator !== "or" ? "or" : "and"}
+                                                {valueEl.operator !== "or" ? "and" : "or"}
                                             </div>
                                         ) : (
                                             <div></div>
@@ -91,6 +92,7 @@ const GridAdvancedFilterContainer = ({
                                 <div className={styles.inRowAction} style={{ padding: 0 }}>
                                     <select
                                         value={valueEl.condition}
+                                        data-testid="conditions-list"
                                         onChange={(e) => {
                                             const newValue = conditions[e.currentTarget.selectedIndex];
 
@@ -147,12 +149,14 @@ const GridAdvancedFilterContainer = ({
                             <div></div>
                             <div
                                 className={styles.addFieldButton}
+                                data-testid="add-condition-button"
                                 onClick={() => {
                                     setValue((draft) => {
                                         draft.push({
                                             value: "",
                                             condition: conditions[0].value,
                                             labelCondition: conditions[0].label,
+                                            operator: "or"
                                         });
                                     });
                                 }}
