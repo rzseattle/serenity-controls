@@ -1,10 +1,10 @@
 import React, { ReactElement, useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import styles from "./GridCommonFilter.module.sass";
-import { IGridFilter, IGridFilterValue } from "../../../interfaces/IGridFilter";
-import GridFilterBody from "../Common/GridFilterBody";
+import { IGridFilter, IGridFilterValue } from "../../../../interfaces/IGridFilter";
+import GridFilterBody from "../../Common/GridFilterBody";
 
-interface IGridCommonFilterProps {
+interface IGridAdvancedFilterContainerProps {
     filter: IGridFilter;
     onValueChange: (filterValue: IGridFilterValue[]) => unknown;
     onFilterChange: (filter: IGridFilter) => unknown;
@@ -19,14 +19,14 @@ interface IGridCommonFilterProps {
     }[];
 }
 
-const GridCommonFilter = ({
+const GridAdvancedFilterContainer = ({
     showCaption,
     onFilterChange,
     onValueChange,
     filter,
     conditions,
     fieldComponent,
-}: IGridCommonFilterProps) => {
+}: IGridAdvancedFilterContainerProps) => {
     const isInitialMount = useRef(true);
 
     const [value, setValue] = useImmer<IGridFilterValue[]>(
@@ -68,7 +68,7 @@ const GridCommonFilter = ({
                         });
                         return (
                             <div key={index} className={styles.valueRow}>
-                                <div className={styles.fieldBlock}>{FieldComponent}</div>
+                                <div>{FieldComponent}</div>
                                 {filter.isInAdvancedMode && (
                                     <>
                                         {index > 0 ? (
@@ -88,15 +88,15 @@ const GridCommonFilter = ({
                                         )}
                                     </>
                                 )}
-                                <div className={styles.inRowAction + " " + styles.filterType} style={{ padding: 0 }}>
+                                <div className={styles.inRowAction} style={{ padding: 0 }}>
                                     <select
                                         value={valueEl.condition}
                                         onChange={(e) => {
+                                            const newValue = conditions[e.currentTarget.selectedIndex];
+
                                             setValue((draft) => {
-                                                draft[index].condition = e.currentTarget.value;
-                                                draft[index].labelCondition = conditions.filter(
-                                                    (c) => c.value == e.currentTarget.value,
-                                                )[0].label;
+                                                draft[index].condition = newValue.value;
+                                                draft[index].labelCondition = newValue.label;
                                             });
                                         }}
                                     >
@@ -112,7 +112,7 @@ const GridCommonFilter = ({
                                 </div>
                                 {filter.isInAdvancedMode && (
                                     <>
-                                        {value.length > 1 ? (
+                                        {value?.length > 1 ? (
                                             <div
                                                 className={styles.inRowAction}
                                                 onClick={() => {
@@ -167,4 +167,4 @@ const GridCommonFilter = ({
     );
 };
 
-export default GridCommonFilter;
+export default GridAdvancedFilterContainer;

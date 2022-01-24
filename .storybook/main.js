@@ -1,9 +1,11 @@
 module.exports = {
-    stories: ["../new-stories/**/*.stories.mdx", "../new-stories/**/*.stories.@(ts|tsx)"],
+    stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(ts|tsx)"],
     addons: [
         "@storybook/addon-links",
         "@storybook/addon-essentials",
-        '@storybook/addon-storysource'
+        "@storybook/addon-storysource",
+        "@storybook/addon-contexts/register",
+        "storybook-addon-pseudo-states",
         //"@storybook/preset-scss",
     ],
     webpackFinal: async (config, { configType }) => {

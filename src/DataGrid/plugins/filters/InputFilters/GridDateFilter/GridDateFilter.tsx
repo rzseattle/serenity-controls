@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IGridFilterComponent, IGridFilterValue } from "../../../interfaces/IGridFilter";
-import { useGridContext } from "../../../config/GridContext";
-import GridCommonFilter from "./GridCommonFilter";
+import { IGridFilterComponent, IGridFilterValue } from "../../../../interfaces/IGridFilter";
+import { useGridContext } from "../../../../config/GridContext";
+import GridAdvancedFilterContainer from "../GridCommonFilter/GridAdvancedFilterContainer";
 
 import styles from "./GridDateFilter.module.sass";
 import { Calendar, DateRange, Range } from "react-date-range";
@@ -10,20 +10,20 @@ import { pl } from "react-date-range/dist/locale";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays, format, parse } from "date-fns";
-import { Modal } from "../../../../Modal";
-import { RelativePositionPresets } from "../../../../Positioner";
+import { Modal } from "../../../../../Modal";
+import { RelativePositionPresets } from "../../../../../Positioner";
 
-const GridDateFilter: IGridFilterComponent = ({ showCaption, onFilterChange, onValueChange, filter }) => {
+const GridDateFilter: IGridFilterComponent = ({ autoFocus, showCaption, onFilterChange, onValueChange, filter }) => {
     const config = useGridContext();
 
     return (
-        <GridCommonFilter
+        <GridAdvancedFilterContainer
             showCaption={showCaption}
             filter={filter}
             onFilterChange={onFilterChange}
             onValueChange={onValueChange}
             fieldComponent={(value, onchange) => {
-                return <GridDateFilterRow value={value} onchange={onchange} />;
+                return <GridDateFilterRow autoFocus={autoFocus} value={value} onchange={onchange} />;
             }}
             conditions={[
                 { value: "BETWEEN", label: config.locale.filter.between },
@@ -39,12 +39,14 @@ const GridDateFilter: IGridFilterComponent = ({ showCaption, onFilterChange, onV
 const GridDateFilterRow = ({
     value,
     onchange,
+    autoFocus,
 }: {
     value: IGridFilterValue;
     onchange: (value: string, label: string) => unknown;
+    autoFocus: boolean;
 }) => {
     const config = useGridContext();
-    const inputRef = useRef<HTMLInputElement>()
+    const inputRef = useRef<HTMLInputElement>();
     const isInitialMount = useRef(true);
     const dateFormat = "yyyy-MM-dd";
     const [show, setShow] = useState(false);
@@ -68,6 +70,11 @@ const GridDateFilterRow = ({
     };
 
     useEffect(() => {
+        setTimeout(() => {
+            if (autoFocus) {
+                inputRef.current.focus();
+            }
+        }, 20);
         if (value.value) {
             try {
                 if (value.value.indexOf(" / ") !== -1) {
@@ -87,6 +94,8 @@ const GridDateFilterRow = ({
                 console.log(ex);
             }
         }
+
+
     }, []);
     useEffect(() => {
         if (isInitialMount.current) {

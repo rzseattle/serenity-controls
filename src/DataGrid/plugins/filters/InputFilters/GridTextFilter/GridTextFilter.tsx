@@ -1,19 +1,21 @@
 import React, { useEffect, useRef } from "react";
-import GridCommonFilter from "./GridCommonFilter";
-import { useGridContext } from "../../../config/GridContext";
-import { IGridFilterComponent } from "../../../interfaces/IGridFilter";
+import GridAdvancedFilterContainer from "../GridCommonFilter/GridAdvancedFilterContainer";
+import { useGridContext } from "../../../../config/GridContext";
+import { IGridFilterComponent } from "../../../../interfaces/IGridFilter";
 
-const GridNumericFilter: IGridFilterComponent = ({ showCaption, onFilterChange, onValueChange, filter }) => {
+const GridTextFilter: IGridFilterComponent = ({ onFilterChange, autoFocus, onValueChange, showCaption, filter }) => {
     const config = useGridContext();
     const ref = useRef<HTMLInputElement>();
     useEffect(() => {
         //need to w8 to animation change
         setTimeout(() => {
-            ref.current.focus();
+            if (autoFocus) {
+                ref.current.focus();
+            }
         }, 20);
     }, []);
     return (
-        <GridCommonFilter
+        <GridAdvancedFilterContainer
             showCaption={showCaption}
             filter={filter}
             onFilterChange={onFilterChange}
@@ -21,7 +23,7 @@ const GridNumericFilter: IGridFilterComponent = ({ showCaption, onFilterChange, 
             fieldComponent={(value, onchange) => {
                 return (
                     <input
-                        type="number"
+                        data-testid="input"
                         ref={ref}
                         value={value.value}
                         onChange={(e) => onchange(e.target.value, null)}
@@ -32,14 +34,12 @@ const GridNumericFilter: IGridFilterComponent = ({ showCaption, onFilterChange, 
                 { value: "LIKE", label: config.locale.filter.like },
                 { value: "=", label: config.locale.filter.equals },
                 { value: "!=", label: config.locale.filter.differentThan },
-
-                { value: "<", label: config.locale.filter.smaller },
-                { value: "<=", label: config.locale.filter.smallerEqual },
-                { value: ">", label: config.locale.filter.greater },
-                { value: ">=", label: config.locale.filter.greaterEqual },
+                { value: "NOT LIKE", label: config.locale.filter.notLike },
+                { value: "^%", label: config.locale.filter.startsWith },
+                { value: "%$", label: config.locale.filter.endsWith },
             ]}
         />
     );
 };
 
-export default GridNumericFilter;
+export default GridTextFilter;

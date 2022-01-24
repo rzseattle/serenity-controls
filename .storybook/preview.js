@@ -1,5 +1,5 @@
 import React from "react";
-import "../Stories.sass";
+//import "../Stories.sass";
 export const parameters = {
     actions: { argTypesRegex: "^on[A-Z].*" },
     options: {

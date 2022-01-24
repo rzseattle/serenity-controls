@@ -2,7 +2,7 @@ import React from "react";
 
 import { IGridFilter } from "../../../interfaces/IGridFilter";
 
-import sharedStyles from "./GridFilterBody.module.sass";
+import styles from "./GridFilterBody.module.sass";
 import produce from "immer";
 
 const GridFilterBody = ({
@@ -19,10 +19,10 @@ const GridFilterBody = ({
     showCaption?: boolean
 }) => {
     return (
-        <div className={sharedStyles.main}>
-            <div className={sharedStyles.body}>
+        <div className={styles.main}>
+            <div className={styles.body}>
                 {showCaption && filter.caption  && (
-                    <div className={sharedStyles.title}>
+                    <div className={styles.title}>
                         {showAdvancedSwitch ? (
                             <a
                                 onClick={(e) => {
@@ -43,7 +43,7 @@ const GridFilterBody = ({
                 )}
 
                 {children}
-                {filter.description && <div className={sharedStyles.description}>{filter.description}</div>}
+                {filter.description && <div className={styles.description}>{filter.description}</div>}
             </div>
         </div>
     );
