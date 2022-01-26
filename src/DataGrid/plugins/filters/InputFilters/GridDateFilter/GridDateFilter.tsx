@@ -113,6 +113,7 @@ const GridDateFilterRow = ({
                 <div className={styles.inputContainer}>
                     <div className={styles.icon}>{config.filter.icons.calendar}</div>
                     <input
+                        data-testid="input"
                         ref={inputRef}
                         value={value.value}
                         onClick={() => setShow(true)}
@@ -134,6 +135,7 @@ const GridDateFilterRow = ({
             >
                 {value.condition === "BETWEEN" && (
                     <DateRange
+
                         onChange={(item) => setRange([item.selection])}
                         moveRangeOnFirstSelection={false}
                         months={2}
@@ -145,7 +147,7 @@ const GridDateFilterRow = ({
                 {(value.condition === "=" || value.condition === "=") && (
                     <Calendar onChange={(item) => setDate(item)} date={date} locale={pl} />
                 )}
-                <div className={styles.calendarApplyButtons}>
+                <div className={styles.calendarApplyButtons} >
                     <button
                         onClick={() => {
                             setShow(false);
@@ -154,6 +156,7 @@ const GridDateFilterRow = ({
                         Cancel
                     </button>
                     <button
+                        data-testid={"ok-button"}
                         onClick={() => {
                             setNewValue();
                             setShow(false);

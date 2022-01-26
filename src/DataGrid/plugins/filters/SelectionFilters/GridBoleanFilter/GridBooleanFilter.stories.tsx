@@ -1,13 +1,14 @@
 import React from "react";
 
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+
 import { IGridFilter } from "../../../../interfaces/IGridFilter";
 import GridRoot from "../../../../config/GridRoot";
-import GridDateFilter from "./GridDateFilter";
+import GridBooleanFilter from "./GridBooleanFilter";
 
 export default {
-    title: "DataGrid/Plugins/Filters/Input Advanced/Date",
-    component: GridDateFilter,
+    title: "DataGrid/Plugins/Filters/Selection/Boolean",
+    component: GridBooleanFilter,
     argTypes: {
         showCaption: {
             options: [true, false],
@@ -16,28 +17,31 @@ export default {
         onFilterChange: { action: "filter changed" },
         onValueChange: { action: "value changed" },
     },
-} as ComponentMeta<typeof GridDateFilter>;
+} as ComponentMeta<typeof GridBooleanFilter>;
 
 const baseFilter: IGridFilter = {
-    field: "date",
-    caption: "Date",
-    filterType: "date",
-    label: "Date",
+    field: "lastName",
+    caption: "Last name",
+    filterType: "text",
+    label: "Last name",
     isInAdvancedMode: false,
     value: [],
 };
 
 //👇 We create a “template” of how args map to rendering
-const Template: ComponentStory<typeof GridDateFilter> = (args) => (
+const Template: ComponentStory<typeof GridBooleanFilter> = (args) => (
     <GridRoot>
-        <GridDateFilter filter={baseFilter} {...args} />
+        <GridBooleanFilter filter={baseFilter} {...args} />
     </GridRoot>
 );
 
-export const StoryBase = Template.bind({});
-StoryBase.args = { filter: { ...baseFilter, isInAdvancedMode: false } };
-StoryBase.storyName = "Simple";
+export const Story1 = Template.bind({});
+Story1.args = { filter: { ...baseFilter } };
+Story1.storyName = "Simple";
 
+export const StorySelected = Template.bind({});
+StorySelected.args = { filter: { ...baseFilter, value: [{ value: true, condition: "=" }] }, autoFocus: true };
+StorySelected.storyName = "Selected";
 
 export const StoryFocus = Template.bind({});
 StoryFocus.args = { filter: { ...baseFilter }, autoFocus: true };

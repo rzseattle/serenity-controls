@@ -1,10 +1,10 @@
 import React from "react";
 
-import { IGridFilterComponent } from "../../../interfaces/IGridFilter";
+import { IGridFilterComponent } from "../../../../interfaces/IGridFilter";
 
 import styles from "./GridSelectFilter.module.sass";
-import { isSelected, onSelect } from "./Common";
-import GridFilterBody from "../Common/GridFilterBody";
+import { isSelected, onSelect } from "../Common";
+import GridFilterBody from "../../Common/GridFilterBody";
 
 interface IGridSelectFilterOption {
     value: string | number;
@@ -15,7 +15,7 @@ export interface IGridSelectFilterConfig {
     values: IGridSelectFilterOption[];
 }
 
-const GridSelectFilter: IGridFilterComponent = ({ showCaption, onValueChange, filter }) => {
+const GridSelectFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValueChange, filter }) => {
     const filterConfig: IGridSelectFilterConfig = filter.config;
 
     return (

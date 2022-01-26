@@ -18,3 +18,10 @@ test("Should render with focus",  () => {
     jest.advanceTimersByTime(20);
     expect( screen.getByTestId("input")).toHaveFocus();
 });
+test("Modal with calendar should be opened after click",  () => {
+    jest.useFakeTimers();
+    render(<StoryFocus {...StoryFocus.args} />);
+    //focusing after 20ms
+    jest.advanceTimersByTime(20);
+    expect( screen.getByTestId("input")).toHaveFocus();
+});

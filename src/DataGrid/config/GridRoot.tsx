@@ -3,7 +3,6 @@ import React from "react";
 import styles from "../DataGrid.module.sass";
 import { GridContext, IGridConfig } from "./GridContext";
 import locale from "../locale/en";
-import GridBooleanFilter from "../plugins/filters/SelectionFilters/GridBooleanFilter";
 import { BsCalendar3, BsFilter } from "react-icons/bs";
 import {
     AiOutlineArrowDown,
@@ -14,11 +13,12 @@ import {
     AiOutlinePlus,
 } from "react-icons/ai";
 import ShimmerList from "../../Shimmer/ShimmerList";
-import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilter";
-import GridSelectFilter from "../plugins/filters/SelectionFilters/GridSelectFilter";
 import GridTextFilter from "../plugins/filters/InputFilters/GridTextFilter/GridTextFilter";
 import GridDateFilter from "../plugins/filters/InputFilters/GridDateFilter/GridDateFilter";
 import GridNumericFilter from "../plugins/filters/InputFilters/GridNumericFilter/GridNumericFilter";
+import GridBooleanFilter from "../plugins/filters/SelectionFilters/GridBoleanFilter/GridBooleanFilter";
+import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilter/GridSwitchFilter";
+import GridSelectFilter from "../plugins/filters/SelectionFilters/GridSelectFilter/GridSelectFilter";
 
 const GridRoot = ({ children, options }: { children: React.ReactNode; options?: Partial<IGridConfig> }) => {
     return (
