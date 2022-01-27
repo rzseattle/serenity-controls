@@ -4,11 +4,11 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { IGridFilter } from "../../../../interfaces/IGridFilter";
 import GridRoot from "../../../../config/GridRoot";
-import GridSwitchFilter, { IGridSwitchFilterConfig } from "./GridSwitchFilter";
+import GridSelectFilter from "./GridSelectFilter";
 
 export default {
-    title: "DataGrid/Plugins/Filters/Selection/Switch",
-    component: GridSwitchFilter,
+    title: "DataGrid/Plugins/Filters/Selection/Select",
+    component: GridSelectFilter,
     argTypes: {
         showCaption: {
             options: [true, false],
@@ -17,7 +17,7 @@ export default {
         onFilterChange: { action: "filter changed" },
         onValueChange: { action: "value changed" },
     },
-} as ComponentMeta<typeof GridSwitchFilter>;
+} as ComponentMeta<typeof GridSelectFilter>;
 
 const baseFilter: IGridFilter = {
     field: "lastName",
@@ -27,7 +27,6 @@ const baseFilter: IGridFilter = {
     isInAdvancedMode: false,
     value: [],
     config: {
-        multiselect: true,
         values: [
             { value: "Female", label: "Female" },
             { value: "Male", label: "Male" },
@@ -37,15 +36,14 @@ const baseFilter: IGridFilter = {
             { value: "Adelind", label: "Adelind" },
             { value: "119.229.150.501", label: "119.229.150.501" },
         ],
-        columns: 2,
-    } as IGridSwitchFilterConfig,
+    },
 };
 
 //👇 We create a “template” of how args map to rendering
-const Template: ComponentStory<typeof GridSwitchFilter> = (args) => {
+const Template: ComponentStory<typeof GridSelectFilter> = (args) => {
     return (
         <GridRoot>
-            <GridSwitchFilter filter={baseFilter} {...args} />
+            <GridSelectFilter filter={baseFilter} {...args} />
         </GridRoot>
     );
 };
@@ -58,31 +56,12 @@ export const StoryFocus = Template.bind({});
 StoryFocus.args = { filter: { ...baseFilter }, autoFocus: true };
 StoryFocus.storyName = "Auto focus";
 
-export const StoryColumns = Template.bind({});
-StoryColumns.args = { filter: { ...baseFilter, config: { ...baseFilter.config, columns: 3 } } };
-StoryColumns.storyName = "Columns";
-
 export const StorySelected = Template.bind({});
 StorySelected.args = {
     filter: {
         ...baseFilter,
         value: [{ value: "Adelind", condition: "=" }],
-        config: { ...baseFilter.config, multiselect: false },
+        config: { ...baseFilter.config },
     },
 };
 StorySelected.storyName = "Selected";
-
-export const StoryMultipleChoice = Template.bind({});
-StoryMultipleChoice.args = {
-    filter: {
-        ...baseFilter,
-        value: [
-            { value: "Female", condition: "=" },
-            { value: "lcatterick1@so-net.ne.jp", condition: "=" },
-            { value: "Adelind", condition: "=" },
-        ],
-        config: { ...baseFilter.config, multiselect: true },
-    },
-};
-
-StoryMultipleChoice.storyName = "Multiselect";

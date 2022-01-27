@@ -2,7 +2,7 @@ import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react
 import React from "react";
 import styles from "./Pagination.module.sass";
 
-interface IPaginationProps {
+export interface IPaginationProps {
     currentPage: number;
     setCurrentPage: (currentPage: number) => unknown;
     onPage: number;
@@ -28,6 +28,7 @@ const Pagination = ({ currentPage, setCurrentPage, onPage, setOnPage, all }: IPa
         <div className={styles.main}>
             <div>
                 <select
+                    data-testid={"change-on-page"}
                     value={onPage}
                     onChange={(e) => {
                         setCurrentPage(1);
@@ -43,10 +44,10 @@ const Pagination = ({ currentPage, setCurrentPage, onPage, setOnPage, all }: IPa
             </div>
 
             <div className={styles.pager}>
-                <div onClick={() => setCurrentPage(1)}>
+                <div onClick={() => setCurrentPage(1)} data-testid={"first-page"}>
                     <MdFirstPage />
                 </div>
-                <div onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}>
+                <div onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} data-testid={"prev-page"}>
                     <MdNavigateBefore />
                 </div>
                 {arr.map((el, i) => (
@@ -58,10 +59,10 @@ const Pagination = ({ currentPage, setCurrentPage, onPage, setOnPage, all }: IPa
                         {el}
                     </div>
                 ))}
-                <div onClick={() => setCurrentPage(Math.min(currentPage + 1, pages))}>
+                <div onClick={() => setCurrentPage(Math.min(currentPage + 1, pages))} data-testid={"next-page"}>
                     <MdNavigateNext />
                 </div>
-                <div onClick={() => setCurrentPage(pages)}>
+                <div onClick={() => setCurrentPage(pages)} data-testid={"last-page"}>
                     <MdLastPage />
                 </div>
             </div>

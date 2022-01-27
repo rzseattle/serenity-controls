@@ -11,7 +11,7 @@ test("Should render", () => {
     jest.advanceTimersByTime(20);
     expect( screen.getByTestId("input")).not.toHaveFocus();
 });
-test("Should render with focus", async () => {
+test("Should render with focus",  () => {
     jest.useFakeTimers();
     render(<StoryFocus {...StoryFocus.args} />);
     //focusing after 20ms

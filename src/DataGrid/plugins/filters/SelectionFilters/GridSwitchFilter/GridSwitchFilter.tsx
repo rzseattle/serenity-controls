@@ -16,13 +16,11 @@ export interface IGridSwitchFilterConfig {
     columns?: number;
 }
 
-const GridSwitchFilter: IGridFilterComponent = ({  autoFocus, showCaption, onValueChange, filter }) => {
+const GridSwitchFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValueChange, filter }) => {
     const filterConfig: IGridSwitchFilterConfig = filter.config;
-
-
     const columns = filterConfig?.columns !== undefined ? filterConfig.columns : 3;
-
     const ref = useRef<HTMLDivElement>();
+
     useEffect(() => {
         //need to w8 to animation change
         setTimeout(() => {
@@ -34,16 +32,15 @@ const GridSwitchFilter: IGridFilterComponent = ({  autoFocus, showCaption, onVal
 
     return (
         <GridFilterBody filter={filter} showCaption={showCaption}>
-
             <div
                 className={styles.buttons + " " + (columns > 0 ? styles.gridLayout : styles.noGridLayout)}
                 style={columns > 0 ? { gridTemplateColumns: "1fr ".repeat(columns), rowGap: 10 } : {}}
                 ref={ref}
+                data-testid={"button-container"}
             >
                 {filterConfig?.values.map((el: IGridSwitchFilterOption) => {
                     return (
                         <button
-
                             key={el.value}
                             role="radio"
                             className={isSelected(el.value, filter.value) ? styles.selected : ""}
