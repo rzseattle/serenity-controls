@@ -6,7 +6,6 @@ import "./Tooltip.sass";
 import { alertDialog } from "../AlertDialog";
 import { LoadingIndicator } from "../LoadingIndicator";
 
-
 interface ITooltipProps {
     /**
      * Is visible
@@ -110,7 +109,6 @@ export default class Tooltip extends React.PureComponent<ITooltipProps, ITooltip
     }
 
     public mouseOver = () => {
-
         if (this.timeout !== 0) {
             clearTimeout(this.timeout);
             this.timeout = 0;

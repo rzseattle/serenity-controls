@@ -1,13 +1,6 @@
 .gridLayoutCore
     display: grid
 
-    > div
-        display: contents
-
-    \:global
-
-        .w-grid-header-row
-            display: contents
 
 .gridLayout
     display: grid
@@ -16,63 +9,7 @@
     width: calc(100% - 2px)
     margin-left: 1px
     font-family: "Segoe UI", sans-serif
+    *
+        box-sizing: border-box
 
-    > div
-        display: contents
-
-        > div
-
-
-            outline: 1px solid #dcdcdc82
-            padding: 6px
-            font-size: 12px
-            border-collapse: collapse
-
-            &:first-child
-                border-left: none
-
-            &:last-child
-                border-left: none
-
-
-        &:nth-child(odd)
-            > div
-                background-color: #F7F7F7
-
-        &:hover
-            > div
-                background-color: #eaeaea
-
-
-    \:global
-
-        .w-grid-header-row-dragged
-            > div
-                opacity: 0
-
-        .w-grid-header-row-hovered-up
-            > div
-                border-top: solid 1px darkgrey
-
-        .w-grid-header-row-hovered-down
-            > div
-                border-bottom: solid 1px darkgrey
-
-
-        .w-grid-header-row
-            display: contents
-
-            > div
-                background-color: #fafafa !important
-                font-weight: bold
-                position: sticky
-                top: 0
-                padding-right: 0
-                text-align: center
-                font-size: 13px
-                line-height: 1.42857
-                color: #767676
-
-                &:last-child
-                    border-right: solid 1px transparent
 

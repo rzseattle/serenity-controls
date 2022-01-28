@@ -31,7 +31,9 @@ const baseFilter: IGridFilter = {
 //👇 We create a “template” of how args map to rendering
 const Template: ComponentStory<typeof GridFilterBody> = (args) => (
     <GridRoot>
-        <GridFilterBody filter={baseFilter} {...args} ><div>Filter body</div></GridFilterBody>
+        <GridFilterBody filter={baseFilter} {...args}>
+            <div>Filter body</div>
+        </GridFilterBody>
     </GridRoot>
 );
 
@@ -39,16 +41,13 @@ export const Story1 = Template.bind({});
 Story1.args = { filter: { ...baseFilter } };
 Story1.storyName = "Simple";
 
-
 export const StoryWithTitle = Template.bind({});
-StoryWithTitle.args = { filter: { ...baseFilter, description: "test"} , showCaption: true };
+StoryWithTitle.args = { filter: { ...baseFilter, description: "test" }, showCaption: true };
 StoryWithTitle.storyName = "Title";
 
-
 export const StoryWithDescription = Template.bind({});
-StoryWithDescription.args = { filter: { ...baseFilter, description: "test"}, showCaption: false  };
+StoryWithDescription.args = { filter: { ...baseFilter, description: "test" }, showCaption: false };
 StoryWithDescription.storyName = "Description";
-
 
 export const StoryAdvancedModeSwitch = Template.bind({});
 StoryAdvancedModeSwitch.args = { filter: { ...baseFilter }, showAdvancedSwitch: true, showCaption: true };

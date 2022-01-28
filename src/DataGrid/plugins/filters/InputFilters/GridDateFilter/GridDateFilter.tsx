@@ -94,8 +94,6 @@ const GridDateFilterRow = ({
                 console.log(ex);
             }
         }
-
-
     }, []);
     useEffect(() => {
         if (isInitialMount.current) {
@@ -135,7 +133,6 @@ const GridDateFilterRow = ({
             >
                 {value.condition === "BETWEEN" && (
                     <DateRange
-
                         onChange={(item) => setRange([item.selection])}
                         moveRangeOnFirstSelection={false}
                         months={2}
@@ -147,7 +144,7 @@ const GridDateFilterRow = ({
                 {(value.condition === "=" || value.condition === "=") && (
                     <Calendar onChange={(item) => setDate(item)} date={date} locale={pl} />
                 )}
-                <div className={styles.calendarApplyButtons} >
+                <div className={styles.calendarApplyButtons}>
                     <button
                         onClick={() => {
                             setShow(false);

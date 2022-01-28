@@ -6,6 +6,7 @@ module.exports = {
         "@storybook/addon-storysource",
         "@storybook/addon-contexts/register",
         "storybook-addon-pseudo-states",
+        "@storybook/addon-actions",
         //"@storybook/preset-scss",
     ],
     webpackFinal: async (config, { configType }) => {

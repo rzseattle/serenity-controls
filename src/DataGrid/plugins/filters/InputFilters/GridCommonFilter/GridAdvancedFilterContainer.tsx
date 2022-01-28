@@ -156,7 +156,7 @@ const GridAdvancedFilterContainer = ({
                                             value: "",
                                             condition: conditions[0].value,
                                             labelCondition: conditions[0].label,
-                                            operator: "or"
+                                            operator: "or",
                                         });
                                     });
                                 }}

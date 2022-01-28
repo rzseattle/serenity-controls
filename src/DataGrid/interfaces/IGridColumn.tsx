@@ -22,6 +22,7 @@ export interface IGridCellEvents<T> {
 export interface IGridHeaderEvents<T> {
     onClick?: IGridHeaderEventCallback<T>[];
     onMouseUp?: IGridHeaderEventCallback<T>[];
+    onMouseDown?: IGridHeaderEventCallback<T>[];
     onMouseEnter?: IGridHeaderEventCallback<T>[];
     onMouseOut?: IGridHeaderEventCallback<T>[];
     onDoubleClick?: IGridHeaderEventCallback<T>[];

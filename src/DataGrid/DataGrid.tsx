@@ -1,9 +1,6 @@
 import React, { useMemo } from "react";
 import { IGridColumn } from "./interfaces/IGridColumn";
 import { IGridData } from "./interfaces/IGridData";
-import GridHead from "./parts/GridHead";
-import GridBody from "./parts/GridBody";
-import GridFoot from "./parts/GridFoot";
 
 import { IGroupByData } from "./interfaces/IGroupByData";
 import { IGridFilter } from "./interfaces/IGridFilter";
@@ -17,6 +14,9 @@ import { useGridContext } from "./config/GridContext";
 import styles from "./DataGrid.module.sass";
 import { IOrderChange } from "./interfaces/IOrderChangeCallback";
 import { IFiltersChange } from "./interfaces/IFiltersChange";
+import GridHead from "./parts/Head/GridHead/GridHead";
+import GridBody from "./parts/Body/GridBody/GridBody";
+import GridFoot from "./parts/Footer/GridFoot/GridFoot";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 

@@ -1,3 +1,3 @@
 import { IGridOrder } from "./IGridOrder";
 
-export type IOrderChange  =  (order: IGridOrder[]) => void;
+export type IOrderChange = (order: IGridOrder[]) => void;

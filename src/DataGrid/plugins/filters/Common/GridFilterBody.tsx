@@ -10,18 +10,18 @@ const GridFilterBody = ({
     children,
     onFilterChange,
     showAdvancedSwitch = false,
-    showCaption
+    showCaption,
 }: {
     filter: IGridFilter;
     children: JSX.Element | JSX.Element[];
     onFilterChange?: (filter: IGridFilter) => unknown;
     showAdvancedSwitch?: boolean;
-    showCaption?: boolean
+    showCaption?: boolean;
 }) => {
     return (
         <div className={styles.main}>
             <div className={styles.body}>
-                {showCaption && filter.caption  && (
+                {showCaption && filter.caption && (
                     <div className={styles.title}>
                         {showAdvancedSwitch ? (
                             <a

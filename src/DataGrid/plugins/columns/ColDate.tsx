@@ -26,10 +26,12 @@ export class ColDate<Row> extends ColumnTemplate<Row> {
                     return { textAlign: "right" };
                 },
                 events: {
-                    onDoubleClick: [({row}) => {
-                        alert(row[field]);
-                    }]
-                }
+                    onDoubleClick: [
+                        ({ row }) => {
+                            alert(row[field]);
+                        },
+                    ],
+                },
             },
         };
         this.filters = [

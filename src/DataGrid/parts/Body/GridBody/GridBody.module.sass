@@ -1,0 +1,27 @@
+.row
+    display: contents
+
+    > div
+
+
+        outline: 1px solid #dcdcdc82
+        padding: 6px
+        font-size: 12px
+        border-collapse: collapse
+
+        &:first-child
+            border-left: none
+
+        &:last-child
+            border-left: none
+
+
+    &:nth-child(odd)
+        > div
+            background-color: #F7F7F7
+
+    &:hover
+        > div
+            background-color: #eaeaea
+
+

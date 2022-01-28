@@ -38,7 +38,6 @@ export const StoryBase = Template.bind({});
 StoryBase.args = { filter: { ...baseFilter, isInAdvancedMode: false } };
 StoryBase.storyName = "Simple";
 
-
 export const StoryFocus = Template.bind({});
 StoryFocus.args = { filter: { ...baseFilter }, autoFocus: true };
 StoryFocus.storyName = "Auto focus";

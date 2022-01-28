@@ -36,9 +36,9 @@ test("Render in advanced mode", () => {
 test("Can change value", () => {
     const onValueChangeMock = jest.fn((values) => values);
     render(<StorySimple {...StorySimple.args} onValueChange={onValueChangeMock} />);
-    fireEvent.change(screen.getByTestId("input"), {target: {value: '23'}})
+    fireEvent.change(screen.getByTestId("input"), { target: { value: "23" } });
     expect(onValueChangeMock.mock.results[0].value[0].value).toEqual("23");
-})
+});
 
 test("Can remove condition", () => {
     const onValueChangeMock = jest.fn((values) => values);

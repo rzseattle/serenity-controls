@@ -17,7 +17,7 @@ export type IFullGridDataProvider<T> = ({
     page: { current: number; onPage: number };
 }) => Promise<{ rows: T[]; count: number }>;
 
-interface IFullGridProps<T> {
+export interface IFullGridProps<T> {
     columns: ColumnTemplate<T>[];
     dataProvider: IFullGridDataProvider<T>;
 }
@@ -39,7 +39,6 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
         const tmpFilters: IGridFilter[] = [];
         const tmpOrder: IGridOrder[] = [];
         props.columns.forEach((el) => {
-
             tmpColumns.push(el.column);
             el.filters.forEach((filter) => tmpFilters.push(filter));
             el.order.forEach((order) => tmpOrder.push(order));

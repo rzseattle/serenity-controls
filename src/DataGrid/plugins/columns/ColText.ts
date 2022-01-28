@@ -26,7 +26,5 @@ export class ColText<Row> extends ColumnTemplate<Row> {
 
     public static create<Row>(field: Extract<keyof Row, string | number>, caption = ""): ColText<Row> {
         return new ColText<Row>(field, caption);
-   }
-
-
+    }
 }
