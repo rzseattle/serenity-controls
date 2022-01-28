@@ -20,7 +20,7 @@ const GridFiltersModal = ({ relativeTo, onHide, onFiltersChange, editedFilter, f
     return (
         <Modal
             relativeTo={() => relativeTo}
-            relativeSettings={RelativePositionPresets.bottomLeft}
+            relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "min"}}
             show={true}
             shadow={false}
             className=""
