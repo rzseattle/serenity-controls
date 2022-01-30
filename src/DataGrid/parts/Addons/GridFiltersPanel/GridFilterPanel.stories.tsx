@@ -11,7 +11,6 @@ export default {
     title: "DataGrid/Parts/Addons/Grid filters panel",
     component: GridFiltersPanel,
     argTypes: {
-        onOrderChange: { action: "filter changed" },
         onFiltersChange: { action: "value changed" },
     },
 } as ComponentMeta<typeof GridFiltersPanel>;
@@ -46,7 +45,6 @@ const filters: IGridFilter[] = [
         field: "gender",
         caption: "Gender",
         filterType: "numeric",
-        label: "Gender",
         isInAdvancedMode: true,
         value: [
             {
@@ -73,7 +71,6 @@ const filters: IGridFilter[] = [
         field: "gender",
         caption: "Gender",
         filterType: "switch",
-        label: "Gender",
         value: [],
         config: {
             values: [
@@ -88,7 +85,6 @@ const filters: IGridFilter[] = [
         caption: "Gender multi",
         applyTo: "gender",
         filterType: "switch",
-        label: "Gender multi",
         value: [],
         config: {
             multiselect: true,
@@ -109,7 +105,6 @@ const filters: IGridFilter[] = [
         caption: "Gender select",
         applyTo: "gender",
         filterType: "select",
-        label: "Gender multi",
         value: [],
         config: {
             values: [
@@ -122,7 +117,6 @@ const filters: IGridFilter[] = [
         field: "gender",
         caption: "Gender",
         filterType: "date",
-        label: "Gender",
         value: [
             {
                 value: "2022-01-22 / 2022-01-29",

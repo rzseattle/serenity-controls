@@ -33,6 +33,7 @@ const GridConditionsPresenter = ({
                     .map((el) => {
                         return (
                             <div
+                                className={styles.orderElement}
                                 key={el.field + "" + el.applyTo}
                                 onClick={() => {
                                     onOrderChange(
@@ -46,9 +47,8 @@ const GridConditionsPresenter = ({
                                     );
                                 }}
                             >
-                                <div>
-                                    {context.order.icons[el.dir]} {el.field}
-                                </div>
+                                <div className={styles.orderIcon}>{context.order.icons[el.dir]}</div>
+                                <div className={styles.caption}>{el.caption ?? el.field}</div>
                                 <div
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -63,6 +63,7 @@ const GridConditionsPresenter = ({
                                         );
                                     }}
                                     className={styles.gridConditionsClose}
+                                    data-testid={"delete-order"}
                                 >
                                     {context.common.icons.delete}
                                 </div>
@@ -81,20 +82,29 @@ const GridConditionsPresenter = ({
                                     setEditedFilter(filter);
                                     setFiltersVisible(true);
                                 }}
+                                className={styles.filterElement}
                             >
-                                <div>{context.filter.icons.filter}</div>
-                                <div>{filter.caption ?? filter.field}</div>
-                                <div style={{ textAlign: "left" }}>
+                                <div className={styles.filterIcon}>{context.filter.icons.filter}</div>
+                                <div className={styles.caption + " " + styles.filterCaption}>
+                                    {filter.caption ?? filter.field}
+                                </div>
+                                <div className={styles.filterValues}>
                                     {filter.value.map((value, index) => {
                                         return (
-                                            <div key={index + value.value}>
-                                                {value.labelCondition ?? value.condition}{" "}
-                                                {value.labelValue ?? value.value}{" "}
+                                            <div key={value.value + value.operator + value.condition}>
+                                                <div className={styles.operator}>
+                                                    {index > 0 && <>{value.operator ?? "and"}</>}
+                                                </div>
+                                                <div className={styles.condition}>
+                                                    {value.labelCondition ?? value.condition}
+                                                </div>
+                                                <div className={styles.value}>{value.labelValue ?? value.value} </div>
                                             </div>
                                         );
                                     })}
                                 </div>
                                 <div
+                                    data-testid={"delete-filter"}
                                     className={styles.gridConditionsClose}
                                     onClick={(e) => {
                                         e.stopPropagation();

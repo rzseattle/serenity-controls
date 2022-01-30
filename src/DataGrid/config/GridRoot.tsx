@@ -10,6 +10,7 @@ import {
     AiOutlineCheck,
     AiOutlineClose,
     AiOutlineDatabase,
+    AiOutlineMinus,
     AiOutlinePlus,
 } from "react-icons/ai";
 import ShimmerList from "../../Shimmer/ShimmerList";
@@ -68,11 +69,8 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options?: 
                 },
                 filter: {
                     icons: {
-                        advanced: (
-                            <>
-                                <AiOutlinePlus />
-                            </>
-                        ),
+                        advancedEnable: <AiOutlinePlus />,
+                        advancedDisable: <AiOutlineMinus />,
                         filter: (
                             <>
                                 <BsFilter />

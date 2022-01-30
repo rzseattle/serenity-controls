@@ -94,7 +94,7 @@ const GridDateFilterRow = ({
                 console.log(ex);
             }
         }
-    }, []);
+    }, [autoFocus]);
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;

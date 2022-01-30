@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { StorySimple } from "./GridHead.stories";
@@ -36,7 +36,7 @@ test("Should pass filter change", () => {
         <GridRoot>
             <GridHead
                 columns={[{ field: "xxx" }] as IGridColumn<any>[]}
-                filters={[{ field: "xxx", value: [], filterType: "text", label: "" }]}
+                filters={[{ field: "xxx", value: [], filterType: "text" }]}
                 order={[{ field: "xxx" }]}
                 onOrderChange={() => {
                     1 == 1;

@@ -15,7 +15,7 @@ export type IGridFilterComponent = React.ComponentType<{
 }>;
 
 interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedElement {
-    label: string;
+    //label: string;
     caption?: string;
     description?: string;
     config?: any;

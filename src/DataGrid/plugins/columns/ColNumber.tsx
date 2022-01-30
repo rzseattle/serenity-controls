@@ -1,5 +1,4 @@
 import { ColumnTemplate } from "./ColumnTemplate";
-import { BsCalendar3 } from "react-icons/bs";
 import React from "react";
 
 export class ColNumber<Row> extends ColumnTemplate<Row> {
@@ -19,7 +18,6 @@ export class ColNumber<Row> extends ColumnTemplate<Row> {
         this.filters = [
             {
                 caption,
-                label: caption,
                 field,
                 filterType: "numeric",
                 isInAdvancedMode: false,

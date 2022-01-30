@@ -1,6 +1,5 @@
 import { IGridColumn } from "./IGridColumn";
 import React from "react";
-import { IGridCellEventCallback } from "./IGridCellEventCallback";
 
 export type IGridHeaderEventCallback<T> = ({
     column,

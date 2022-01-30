@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { StoryFilter, StorySimple, StorySortable, StoryTemplate } from "./GridHeadColumn.stories";
-import GridHead from "../GridHead/GridHead";
 import GridHeadColumn from "./GridHeadColumn";
 
 test("Should render", () => {

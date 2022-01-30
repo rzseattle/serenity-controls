@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IGridFilter } from "../../../interfaces/IGridFilter";
 import { useGridContext } from "../../../config/GridContext";
 import { IFiltersChange } from "../../../interfaces/IFiltersChange";
@@ -8,12 +8,14 @@ import styles from "./GridFiltersPanel.module.sass";
 export interface IGridFilterProps {
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
+    onCancel: () => any
 }
 
-const GridFiltersPanel = ({ filters, onFiltersChange }: IGridFilterProps) => {
+const GridFiltersPanel = ({ filters, onFiltersChange, onCancel }: IGridFilterProps) => {
     const config = useGridContext();
 
     const [localFilters, setLocalFilters] = useImmer<IGridFilter[]>(filters);
+    const [isInAdvancedMode, setAdvancedMode] = useState(false);
 
     if (filters.length === 0) {
         return <div className={styles.empty}> No filters </div>;
@@ -64,17 +66,21 @@ const GridFiltersPanel = ({ filters, onFiltersChange }: IGridFilterProps) => {
                             className={styles.applyButton + " " + styles.advancedButton}
                             onClick={() => {
                                 setLocalFilters((draft) => {
-                                    draft.forEach((el) => (el.isInAdvancedMode = !el.isInAdvancedMode));
+                                    draft.forEach((el) => (el.isInAdvancedMode = !isInAdvancedMode));
                                 });
+                                setAdvancedMode(!isInAdvancedMode);
                             }}
                         >
-                            {config.filter.icons.advanced}
+                            {isInAdvancedMode
+                                ? config.filter.icons.advancedDisable
+                                : config.filter.icons.advancedEnable}
                         </button>
                     )}
                     <button
+                        data-testid={"cancel-filter"}
                         className={styles.applyButton}
                         onClick={() => {
-                            onFiltersChange(filters);
+                            onCancel();
                         }}
                     >
                         {config.locale.cancel}

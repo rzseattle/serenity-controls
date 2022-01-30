@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { IGridFilterComponent } from "../../../../interfaces/IGridFilter";
 
 import styles from "./GridSelectFilter.module.sass";
-import { isSelected, onSelect } from "../Common";
+import { onSelect } from "../Common";
 import GridFilterBody from "../../Common/GridFilterBody";
 
 interface IGridSelectFilterOption {

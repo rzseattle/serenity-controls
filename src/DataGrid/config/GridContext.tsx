@@ -24,7 +24,8 @@ export interface IGridStore {
     filter: {
         components: Record<string, IGridFilterComponent>;
         icons: {
-            advanced: JSX.Element;
+            advancedEnable: JSX.Element;
+            advancedDisable: JSX.Element;
             filter: JSX.Element;
             checked: JSX.Element;
             unchecked: JSX.Element;

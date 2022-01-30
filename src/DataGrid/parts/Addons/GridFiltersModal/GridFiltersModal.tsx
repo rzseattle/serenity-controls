@@ -8,7 +8,7 @@ import { IFiltersChange } from "../../../interfaces/IFiltersChange";
 import { IGridFilter } from "../../../interfaces/IGridFilter";
 import GridFiltersPanel from "../GridFiltersPanel/GridFiltersPanel";
 
-interface IGridFiltersModalProps {
+export interface IGridFiltersModalProps {
     relativeTo: HTMLElement;
     onHide: () => any;
     onFiltersChange: IFiltersChange;
@@ -20,7 +20,7 @@ const GridFiltersModal = ({ relativeTo, onHide, onFiltersChange, editedFilter, f
     return (
         <Modal
             relativeTo={() => relativeTo}
-            relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "min"}}
+            relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "min" }}
             show={true}
             shadow={false}
             className=""
@@ -28,6 +28,7 @@ const GridFiltersModal = ({ relativeTo, onHide, onFiltersChange, editedFilter, f
         >
             <div onClick={(e) => e.stopPropagation()} className={styles.filtersPanelContainer} style={{}}>
                 <GridFiltersPanel
+                    onCancel={onHide}
                     onFiltersChange={(localFilters) => {
                         onHide();
 
