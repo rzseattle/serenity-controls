@@ -9,6 +9,10 @@ test("Should render empty", () => {
     expect(screen.getByText("No filters")).toBeInTheDocument();
 });
 
+test("Should render unknown filter info", () => {
+    render(<StoryEmpty {...StoryEmpty.args} filters={[{ field: "test", type: "unknown_type" }]} />);
+    expect(screen.getByText("No filter found")).toBeInTheDocument();
+});
 
 test("Should run on cancel when pressed", () => {
     const onCancel = jest.fn();
@@ -56,5 +60,3 @@ test("Should render and change many filters", () => {
     fireEvent.click(screen.getByTestId("apply-filter"));
     expect(onFiltersChange.mock.calls[0][0][0].value.length).toBe(3);
 });
-
-

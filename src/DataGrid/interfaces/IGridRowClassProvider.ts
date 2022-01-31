@@ -1,1 +1,1 @@
-export type IGridRowClassProvider<Row> = (row: Row, index: number) => string[];
+export type IGridRowClassProvider<Row> = ({ row, index }: { row: Row; index: number }) => string[];

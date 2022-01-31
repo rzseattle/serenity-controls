@@ -50,7 +50,10 @@
         "moduleNameMapper": {
             "\\.(css|scss|sass)$": "identity-obj-proxy"
         },
-        "testEnvironment": "jsdom"
+        "testEnvironment": "jsdom",
+        "roots": [
+            "<rootDir>/src"
+        ]
     },
     "eslintConfig": {
         "extends": [

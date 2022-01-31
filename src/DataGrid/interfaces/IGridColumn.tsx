@@ -7,6 +7,7 @@ import React from "react";
 
 export interface IGridCellEvents<T> {
     onClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
+    onMouseDown?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
     onMouseUp?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
     onMouseEnter?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
     onMouseOut?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
@@ -44,16 +45,12 @@ export interface IGridColumn<T> {
         classTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => string[];
         styleTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => React.CSSProperties;
         template?: IGridCellTemplate<T>;
-        toolTip?: IGridCellTemplate<T>;
-        append?: string | JSX.Element;
-        prepend?: string | JSX.Element;
         default?: string;
-        icon?: string;
         events?: IGridCellEvents<T>;
     };
     header?: {
         icon?: string | JSX.Element;
-        tooltip?: string;
+        tooltip?: string | JSX.Element;
         caption?: string;
         events?: IGridHeaderEvents<T>;
         template?: IGridHeaderTemplate<T>;

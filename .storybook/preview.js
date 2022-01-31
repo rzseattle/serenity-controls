@@ -1,5 +1,5 @@
 import React from "react";
-//import "../Stories.sass";
+import "./Stories.sass";
 export const parameters = {
     actions: { argTypesRegex: "^on[A-Z].*" },
     options: {
@@ -11,7 +11,7 @@ export const parameters = {
 
 export const decorators = [
     (Story) => (
-        <div style={{ margin: "2em" }}>
+        <div style={{  }} >
             <Story />
             <div id="modal-root"></div>
         </div>

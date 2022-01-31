@@ -4,7 +4,7 @@ import { IGridCellEventCallback } from "../../../interfaces/IGridCellEventCallba
 import { IGridCellClassProvider } from "../../../interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "../../../interfaces/IGridCellStyleProvider";
 
-interface IRowProps<T> {
+export interface IRowProps<T> {
     row: T;
     columns: IGridColumn<T>[];
     rowProperties: React.HTMLAttributes<HTMLDivElement>;
@@ -22,7 +22,6 @@ const GridRow = <T,>({
     cellStyleTemplate,
 }: IRowProps<T>) => {
     //const ref = useRef<HTMLDivElement>(null);
-
     return (
         <div {...rowProperties}>
             {columns.map((column, columnNumber) => {
@@ -36,11 +35,11 @@ const GridRow = <T,>({
                 }
 
                 if (cellClassTemplate !== undefined && cellClassTemplate !== null) {
-                    cellProperties.className = cellClassTemplate(row, column, coordinates).join(" ");
+                    cellProperties.className = cellClassTemplate({row, column, coordinates})?.join(" ");
                 }
 
                 if (cellStyleTemplate !== undefined && cellStyleTemplate !== null) {
-                    cellProperties.style = cellStyleTemplate(row, column, coordinates);
+                    cellProperties.style = cellStyleTemplate({row, column, coordinates});
                 }
 
                 if (column.cell?.styleTemplate !== undefined) {

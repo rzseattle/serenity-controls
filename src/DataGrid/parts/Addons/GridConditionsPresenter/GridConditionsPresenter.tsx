@@ -127,6 +127,7 @@ const GridConditionsPresenter = ({
                     })}
 
                 <a
+                    data-testid={"delete-all-conditions"}
                     className={styles.deleteAll}
                     onClick={() => {
                         onFiltersChange(

@@ -4,6 +4,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import GridHead from "./GridHead";
 import GridRoot from "../../../config/GridRoot";
 import { IGridColumn } from "../../../interfaces/IGridColumn";
+import { getColumnsWidths } from "../../../helpers/helpers";
 
 export default {
     title: "DataGrid/Parts/GridHead",
@@ -20,7 +21,9 @@ const columns: IGridColumn<any>[] = [{ field: "xxx" }, { field: "yyy" }, { field
 const Template: ComponentStory<typeof GridHead> = (args) => {
     return (
         <GridRoot>
-            <GridHead columns={columns} order={[]} filters={[]} {...args} />
+            <div style={{ display: "grid", gridTemplateColumns: getColumnsWidths(columns) }}>
+                <GridHead columns={columns} order={[]} filters={[]} {...args} />
+            </div>
         </GridRoot>
     );
 };

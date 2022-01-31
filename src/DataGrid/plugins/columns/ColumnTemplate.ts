@@ -1,40 +1,71 @@
-import { IGridColumn } from "../../interfaces/IGridColumn";
+import { IGridCellEvents, IGridColumn, IGridHeaderEvents } from "../../interfaces/IGridColumn";
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
-import { IGridHeaderEventCallback } from "../../interfaces/IGridHeaderEventCallback";
 import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
-import { IGridCellEventCallback } from "../../interfaces/IGridCellEventCallback";
 import * as React from "react";
+import { IGridHeaderTemplate } from "../../interfaces/IGridHeaderTemplate";
+
+//needed to extract type of event from array like Type[]
+type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
+    ? ElementType
+    : never;
 
 export class ColumnTemplate<Row> {
     column: IGridColumn<Row> = {};
     filters: IGridFilter[] = null;
     order: IGridOrder[] = [];
+    parent: ColumnTemplate<Row>;
+
+    constructor() {
+        this.parent = this;
+    }
+
+    public header = {
+        on: <K extends keyof IGridHeaderEvents<Row>>(event: K, callback: ArrayElement<IGridHeaderEvents<Row>[K]>) => {
+            this.column.header = this.column.header ?? {};
+            this.column.header.events = this.column.header.events ?? {};
+            this.column.header.events[event] = this.column.header.events[event] ?? [];
+            this.column.header.events[event].push(callback);
+            return this.parent;
+        },
+        template: (callback: IGridHeaderTemplate<Row>): ColumnTemplate<Row> => {
+            this.column.header = this.column.header ?? {};
+            this.column.header.template = callback;
+            return this.parent;
+        },
+        tooltip: (tooltip: string | JSX.Element) => {
+            this.column.header = this.column.header ?? {};
+            this.column.header.tooltip = tooltip;
+            return this.parent;
+        },
+        icon: (icon: string | JSX.Element) => {
+            this.column.header = this.column.header ?? {};
+            this.column.header.icon = icon;
+            return this.parent;
+        },
+        caption: (caption: string) => {
+            this.column.header = this.column.header ?? {};
+            this.column.header.caption = caption;
+            return this.parent;
+        },
+    };
+    on = <K extends keyof IGridCellEvents<Row>>(event: K, callback: ArrayElement<IGridCellEvents<Row>[K]>) => {
+        this.column.cell = this.column.cell ?? {};
+        this.column.cell.events = this.column.cell.events ?? {};
+        this.column.cell.events[event] = this.column.cell.events[event] ?? [];
+        this.column.cell.events[event].push(callback);
+        return this;
+    };
 
     public className = (names: string[]) => {
         this.column.cell = this.column.cell ?? {};
         this.column.cell.class = names;
+        this.parent = this;
         return this;
     };
-
-    public onHeaderClick(fn: IGridHeaderEventCallback<Row>) {
-        this.column.header.events.onClick.push(fn);
-        return this;
-    }
-
     public template(fn: IGridCellTemplate<Row>) {
         this.column.cell = this.column.cell ?? {};
         this.column.cell.template = fn;
-        return this;
-    }
-
-    public append(x: any) {
-        this.column.cell.append = x;
-        return this;
-    }
-
-    public prepend(x: any) {
-        this.column.cell.prepend = x;
         return this;
     }
 
@@ -48,33 +79,12 @@ export class ColumnTemplate<Row> {
         return this;
     }
 
-    public headerTooltip(text: string) {
-        this.column.header.tooltip = text;
-        return this;
-    }
-
-    public caption = (caption: string) => {
-        this.column.header.caption = caption;
-        return this;
-    };
-
-    public headerIcon(iconName: string) {
-        this.column.header.icon = iconName;
-        return this;
-    }
-
     public addFilter(filter: IGridFilter | false) {
         if (filter !== false) {
             this.filters.push(filter);
         }
         return this;
     }
-
-    /*    public setSortField(field: string){
-            this.column.sortField = field;
-            this.column.isSortable = true;
-            return this;
-        }*/
 
     public noFilter() {
         this.filters = [];
@@ -83,37 +93,6 @@ export class ColumnTemplate<Row> {
 
     public noSorter() {
         this.order = [];
-        return this;
-    }
-
-    private createEventsStruct = (type: "click" | "mouseUp" | "enter" | "leave") => {
-        this.column.cell = this.column.cell ?? {};
-        this.column.cell.events = this.column.cell.events ?? {};
-        this.column.cell.events[type] = this.column.cell.events.click ?? [];
-    };
-
-    public onClick(fn: IGridCellEventCallback<Row>) {
-        this.createEventsStruct("click");
-        this.column.cell.events.click.push(fn);
-
-        return this;
-    }
-
-    public onMouseUp(fn: IGridCellEventCallback<Row>) {
-        this.createEventsStruct("mouseUp");
-        this.column.cell.events.mouseUp.push(fn);
-        return this;
-    }
-
-    public onEnter(fn: IGridCellEventCallback<Row>) {
-        this.createEventsStruct("enter");
-        this.column.cell.events.enter.push(fn);
-        return this;
-    }
-
-    public onLeave(fn: IGridCellEventCallback<Row>) {
-        this.createEventsStruct("leave");
-        this.column.cell.events.leave.push(fn);
         return this;
     }
 

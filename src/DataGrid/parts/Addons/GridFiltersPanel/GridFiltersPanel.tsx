@@ -8,7 +8,7 @@ import styles from "./GridFiltersPanel.module.sass";
 export interface IGridFilterProps {
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
-    onCancel: () => any
+    onCancel: () => any;
 }
 
 const GridFiltersPanel = ({ filters, onFiltersChange, onCancel }: IGridFilterProps) => {
@@ -35,10 +35,11 @@ const GridFiltersPanel = ({ filters, onFiltersChange, onCancel }: IGridFilterPro
                     {localFilters.map((filter, index) => {
                         const Component = filter.component ?? config.filter.components[filter.filterType];
                         return (
-                            <React.Fragment key={filter.field + "" + filter.applyTo + filter.filterType + filter.label}>
+                            <React.Fragment key={filter.field + "" + filter.applyTo + filter.filterType}>
                                 {Component ? (
                                     <Component
                                         showCaption={localFilters.length > 1}
+                                        autoFocus={index === 0}
                                         filter={filter}
                                         onValueChange={(value) => {
                                             setLocalFilters((draft) => {

@@ -12,7 +12,6 @@ export class ColText<Row> extends ColumnTemplate<Row> {
         this.filters = [
             {
                 caption,
-                label: caption,
                 field,
                 filterType: "text",
                 isInAdvancedMode: false,

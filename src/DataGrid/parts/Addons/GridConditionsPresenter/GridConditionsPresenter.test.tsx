@@ -4,6 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { StoryBasic } from "./GridConditionsPresenter.stories";
 import { IGridOrder } from "../../../interfaces/IGridOrder";
 import { IGridFilter } from "../../../interfaces/IGridFilter";
+import { IOrder } from "../../../../Table/Interfaces";
 
 test("Should render with proper labels", () => {
     render(
@@ -42,17 +43,38 @@ test("Should change filter", () => {
         </>,
     );
 
+    fireEvent.click(screen.getByText("Age caption"));
+    fireEvent.change(screen.getAllByTestId("input")[0], { target: { value: 9999 } });
 
-    fireEvent.click(screen.getByText("Age caption"))
-    fireEvent.change(screen.getAllByTestId("input")[0], {target: {value: 9999}});
-    screen.debug(screen.getAllByTestId("input")[0]);
-    fireEvent.click(screen.getByTestId("apply-filter"))
-    expect(onFiltersChange.mock.calls[0][0].filter((el: IGridFilter) => el.field === "age")[0].value[0].value).toBe("9999");
-
+    fireEvent.click(screen.getByTestId("apply-filter"));
+    expect(onFiltersChange.mock.calls[0][0].filter((el: IGridFilter) => el.field === "age")[0].value[0].value).toBe(
+        "9999",
+    );
 });
-test("Should delete filter", () => {
+test("Should delete filter 1", () => {
     const onFiltersChange = jest.fn();
     render(<StoryBasic {...StoryBasic.args} onFiltersChange={onFiltersChange} />);
+
     fireEvent.click(screen.getAllByTestId("delete-filter")[0]);
-    expect(onFiltersChange.mock.calls[0][0].filter((el: IGridFilter) => el.field === "age")[0].value.length).toBe(1);
+    expect(onFiltersChange.mock.calls[0][0].filter((el: IGridFilter) => el.field === "age")[0].value.length).toBe(0);
+
+});
+
+test("Should remove all conditions", () => {
+    const onFiltersChange = jest.fn();
+    const onOrderChange = jest.fn();
+    render(<StoryBasic {...StoryBasic.args} onFiltersChange={onFiltersChange} onOrderChange={onOrderChange} />);
+    fireEvent.click(screen.getByTestId("delete-all-conditions"));
+
+    expect(
+        onFiltersChange.mock.calls[0][0].reduce((p: number, c: IGridFilter) => {
+            return p + c.value.length;
+        }, 0),
+    ).toBe(0);
+
+    expect(
+        onOrderChange.mock.calls[0][0].reduce((p: number, c: IOrder) => {
+            return p + c.dir ? 1 : 0;
+        }, 0),
+    ).toBe(0);
 });
