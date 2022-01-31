@@ -42,8 +42,24 @@ export interface IGridColumn<T> {
 
     cell?: {
         class?: string[];
-        classTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => string[];
-        styleTemplate?: (row: T, column: IGridColumn<T>, cellLookup: ICellCoordinates) => React.CSSProperties;
+        classTemplate?: ({
+            row,
+            column,
+            coordinates,
+        }: {
+            row: T;
+            column: IGridColumn<T>;
+            coordinates: ICellCoordinates;
+        }) => string[];
+        styleTemplate?: ({
+            row,
+            column,
+            coordinates,
+        }: {
+            row: T;
+            column: IGridColumn<T>;
+            coordinates: ICellCoordinates;
+        }) => React.CSSProperties;
         template?: IGridCellTemplate<T>;
         default?: string;
         events?: IGridCellEvents<T>;

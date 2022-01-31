@@ -35,24 +35,24 @@ const GridRow = <T,>({
                 }
 
                 if (cellClassTemplate !== undefined && cellClassTemplate !== null) {
-                    cellProperties.className = cellClassTemplate({row, column, coordinates})?.join(" ");
+                    cellProperties.className = cellClassTemplate({ row, column, coordinates })?.join(" ");
                 }
 
                 if (cellStyleTemplate !== undefined && cellStyleTemplate !== null) {
-                    cellProperties.style = cellStyleTemplate({row, column, coordinates});
+                    cellProperties.style = cellStyleTemplate({ row, column, coordinates });
                 }
 
                 if (column.cell?.styleTemplate !== undefined) {
                     cellProperties.style = {
                         ...cellProperties?.style,
-                        ...column.cell.styleTemplate(row, column, coordinates),
+                        ...column.cell.styleTemplate({ row, column, coordinates }),
                     };
                 }
 
                 if (column.cell?.classTemplate !== undefined) {
                     cellProperties.className =
                         cellProperties.className ??
-                        "" + " " + column.cell.classTemplate(row, column, coordinates).join(" ");
+                        "" + " " + (column.cell.classTemplate({ row, column, coordinates }) ?? []).join(" ");
                 }
 
                 if (column.cell?.events !== undefined) {
