@@ -59,7 +59,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             });
     }, [onPage, currentPage, props.columns, filters, order]);
     return (
-        <div>
+        <>
             <DataGrid
                 showHeader={true}
                 showFooter={true}
@@ -84,7 +84,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                     );
                 }}
             />
-        </div>
+        </>
     );
 };
 

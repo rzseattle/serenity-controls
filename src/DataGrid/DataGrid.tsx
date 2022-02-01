@@ -5,7 +5,6 @@ import { IGridData } from "./interfaces/IGridData";
 import { IGroupByData } from "./interfaces/IGroupByData";
 import { IGridFilter } from "./interfaces/IGridFilter";
 import { IGridRowClassProvider } from "./interfaces/IGridRowClassProvider";
-import { IGridRowStyleProvider } from "./interfaces/IGridRowStyleProvider";
 import { IGridCellClassProvider } from "./interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "./interfaces/IGridCellStyleProvider";
 import { getColumnsWidths } from "./helpers/helpers";
@@ -30,7 +29,6 @@ export interface IGridProps<T> {
     rememberState?: boolean;
 
     rowClassTemplate?: IGridRowClassProvider<T>;
-    rowStyleTemplate?: IGridRowStyleProvider<T>;
     cellClassTemplate?: IGridCellClassProvider<T>;
     cellStyleTemplate?: IGridCellStyleProvider<T>;
 
@@ -121,7 +119,6 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                     columns={props.columns}
                     rows={props.data}
                     rowClassTemplate={props.rowClassTemplate}
-                    rowStyleTemplate={props.rowStyleTemplate}
                     cellClassTemplate={props.cellClassTemplate}
                     cellStyleTemplate={props.cellStyleTemplate}
                 />

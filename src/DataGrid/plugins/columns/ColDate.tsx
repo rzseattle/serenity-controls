@@ -7,26 +7,40 @@ export class ColDate<Row> extends ColumnTemplate<Row> {
         super();
         this.column = {
             field,
-            header: {
-                caption,
-                icon: (
-                    <BsCalendar3
-                        style={{
-                            verticalAlign: "middle",
-                            marginRight: 10,
-                            marginLeft: 5,
-                            float: "left",
-                            height: "100%",
-                        }}
-                    />
-                ),
-            },
-            cell: {
-                styleTemplate: () => {
-                    return { textAlign: "right" };
-                },
-            },
+            // header: {
+            //     caption,
+            //     icon: (
+            //         <BsCalendar3
+            //             style={{
+            //                 verticalAlign: "middle",
+            //                 marginRight: 10,
+            //                 marginLeft: 5,
+            //                 float: "left",
+            //                 height: "100%",
+            //             }}
+            //         />
+            //     ),
+            // },
+            // cell: {
+            //     styleTemplate: () => {
+            //         return { textAlign: "right" };
+            //     },
+            // },
         };
+        this.header
+            .caption(caption)
+            .header.icon(
+                <BsCalendar3
+                    style={{
+                        verticalAlign: "middle",
+                        marginRight: 10,
+                        marginLeft: 5,
+                        float: "left",
+                        height: "100%",
+                    }}
+                />,
+            )
+            .styleTemplate(() => ({ textAlign: "right" }));
         this.filters = [
             {
                 caption,

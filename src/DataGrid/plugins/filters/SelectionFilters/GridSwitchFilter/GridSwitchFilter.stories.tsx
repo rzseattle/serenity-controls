@@ -23,7 +23,6 @@ const baseFilter: IGridFilter = {
     field: "lastName",
     caption: "Last name",
     filterType: "text",
-    label: "Last name",
     isInAdvancedMode: false,
     value: [],
     config: {

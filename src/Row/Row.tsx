@@ -1,12 +1,14 @@
 import * as React from "react";
+import styles from "./Row.module.sass"
 
-interface IRowProps {
+
+export interface IRowProps {
     children?: any;
     md?: number[];
     noGutters?: boolean;
 }
 
-export const Row: React.StatelessComponent<IRowProps> = (props) => {
+const Row = (props: IRowProps) => {
     let children = React.Children.toArray(props.children);
     children = children.filter((el) => el != null && el);
 
@@ -37,16 +39,14 @@ export const Row: React.StatelessComponent<IRowProps> = (props) => {
         style.margin = 0;
     }
     return (
-        <div className="row">
+        <div className={styles.row}>
             {children.map((child, key) => (
-                <div key={key} style={style} className={"col-md-" + colsMd[key]}>
+                <div key={key} style={style} className={"row-el-" + colsMd[key]}>
                     {child}
                 </div>
             ))}
         </div>
     );
 };
+export { Row };
 
-Row.defaultProps = {
-    noGutters: true,
-};
