@@ -1,10 +1,9 @@
 import * as React from "react";
-import styles from "./Row.module.sass"
-
+import styles from "./Row.module.sass";
 
 export interface IRowProps {
     children?: any;
-    md?: number[];
+    cols?: number[];
     noGutters?: boolean;
 }
 
@@ -14,34 +13,35 @@ const Row = (props: IRowProps) => {
 
     let colMd = 0;
     let colsMd: number[] = [];
+
+
+    const childrenLength = Math.min( 12, children.length)
+
     // if detailed width delivered
-    if (props.md) {
-        const sum = props.md.reduce((a, b) => a + b, 0);
+    if (props.cols) {
+        const sum = props.cols.reduce((a, b) => a + b, 0);
         if (sum > 12) {
             throw new Error(`To many columns ${sum}`);
         }
         // calculating width for rest of columns
-        colMd = (12 - sum) / (children.length - props.md.length);
-        colsMd = Object.assign({}, props.md);
+        colMd = (12 - sum) / (childrenLength - props.cols.length);
+        colsMd = Object.assign({}, props.cols);
     } else {
         // equal width for each element
-        colMd = 12 / children.length;
+        colMd = 12 / childrenLength;
     }
+
+
 
     // adding calculated default row width
     for (let i = colsMd.length; i < 12; i++) {
         colsMd[i] = Math.floor(colMd);
     }
 
-    const style: any = {};
-    if (props.noGutters) {
-        style.padding = 0;
-        style.margin = 0;
-    }
     return (
-        <div className={styles.row}>
+        <div className={styles.row + " " + (props.noGutters ? styles.noGutters : "")}>
             {children.map((child, key) => (
-                <div key={key} style={style} className={"row-el-" + colsMd[key]}>
+                <div key={key} className={"row-el-" + colsMd[key]}>
                     {child}
                 </div>
             ))}
@@ -49,4 +49,3 @@ const Row = (props: IRowProps) => {
     );
 };
 export { Row };
-
