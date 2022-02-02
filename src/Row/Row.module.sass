@@ -1,24 +1,80 @@
 @import "../../sass/bootstrap"
 
 
+$screen-sm: 768px
+$screen-md: 992px
+$screen-lg: 1200px
+
+=screen($media)
+
+    @if $media == max-sm
+        @media only screen and (max-width: $screen-md)
+            @content
+    @else if $media == max-md
+        @media only screen and (max-width: $screen-lg)
+            @content
+
+    @else if $media == min-sm
+        @media only screen and (min-width: $screen-sm)
+            @content
+
+    @else if $media == min-md
+        @media only screen and (min-width: $screen-md)
+            @content
+
+    @else if $media == min-lg
+        @media only screen and (min-width: $screen-md)
+            @content
+
+    @else if $media == xs
+        @media only screen and (max-width: $screen-sm)
+            @content
+
+    @else if $media == sm
+        @media only screen and (min-width: $screen-sm) and (max-width: $screen-md)
+            @content
+
+    @else if $media == md
+        @media only screen and (min-width: $screen-md) and (max-width: $screen-lg)
+            @content
+
+    @else if $media == lg
+        @media only screen and (min-width: $screen-lg)
+            @content
+
+
 .row
-    background-color: blue
     display: flex
+    flex-wrap: wrap
+
     \:global
-        .row-el-1
-            width: percentage((1 / 12))
 
-        .row-el-2
-            width: percentage((1 / 6))
+        @for $i from 1 through 12
+            .row-el-#{$i}
+                padding: 0 10px
+                width: percentage($i / 12)
 
-        .row-el-3
-            width: percentage((1 / 4))
+                +screen(sm)
+                    min-width: 50%
 
-        .row-el-4
-            width: percentage((1 / 3))
 
-        .row-el-5
-            width: percentage((1 / 1)) + percentage((1 / 1))
+                    &:nth-child(odd)
+                        padding-left: 0
 
-        .row-el-6
-            width: 50%
+                    &:nth-child(even)
+                        padding-right: 0
+
+                +screen(xs)
+                    min-width: 100%
+                    padding: 0
+
+    >div:nth-child(1)
+        padding-left: 0
+
+    >div:last-child
+        padding-right: 0
+
+
+.noGutters
+    >div
+        padding: 0 !important

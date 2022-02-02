@@ -13,26 +13,65 @@ export default {
 const Template: ComponentStory<typeof Row> = (args) => {
     return (
         <div>
-            <Row>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((el) => (
-                    <div key={el} style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-                ))}
-            </Row>
-            <br />
-            <br />
-            <Row>
-                <div style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-                <div style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-                <div style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-                <div style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-                <div style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-                <div style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-                <div style={{ backgroundColor: "red", border: "solid 1px grey", height: 20 }}></div>
-            </Row>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((el) => (
+                <>
+                    <div style={{ backgroundColor: "lightgray", height: 20 }}>
+                        <Row cols={[el]}>
+                            <div
+                                key={el}
+                                style={{
+                                    backgroundColor: "grey",
+                                    height: 20,
+                                    textAlign: "center",
+                                    color: "white",
+                                    lineHeight: "20px",
+                                }}
+                            >
+                                {el}
+                            </div>
+                        </Row>
+                    </div>
+                    <br />
+                </>
+            ))}
         </div>
     );
 };
 
 export const StoryBasic = Template.bind({});
 StoryBasic.args = {};
-StoryBasic.storyName = "Basic";
+StoryBasic.storyName = "Grid";
+
+//👇 We create a “template” of how args map to rendering
+const Template2: ComponentStory<typeof Row> = (args) => {
+    return (
+        <div>
+            <>
+                <div style={{ backgroundColor: "lightgray", minHeight: 20 }}>
+                    <Row {...args}>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((el) => (
+                            <div key={el} style={{ backgroundColor: "grey", height: 20 }}></div>
+                        ))}
+                    </Row>
+                </div>
+                <br />
+                <Row {...args}>
+                    {[1, 2, 3, 4, 5, 6].map((el) => (
+                        <div key={el} style={{ backgroundColor: "grey", height: 20 }}></div>
+                    ))}
+                </Row>
+                <br />
+                <Row cols={[5, 1, 2, 3, 1]} {...args}>
+                    {[1, 2, 3, 4, 5, 6].map((el) => (
+                        <div key={el} style={{ backgroundColor: "grey", height: 20 }}></div>
+                    ))}
+                </Row>
+                <br />
+            </>
+        </div>
+    );
+};
+
+export const StoryBasic2 = Template2.bind({});
+StoryBasic2.args = { noGutters: true };
+StoryBasic2.storyName = "Grid 2";
