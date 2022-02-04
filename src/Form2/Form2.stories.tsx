@@ -42,7 +42,7 @@ const Example = () => {
             </button>
 
             <div>
-                <input {...register("email")} />
+                <input {...register("email")} onBlur={() => {}} />
                 <input {...register("name")} />
                 <Text label={"Wartość a"} {...field("email")} />
             </div>
