@@ -27,7 +27,7 @@ const Select = (props: ISwitchProps) => {
     const searchFieldRef = useRef<HTMLInputElement>();
     const listRef = useRef<HTMLDivElement>();
 
-    const [filtredOptions, setFilteredOptions] = useState(props.options);
+    const [filteredOptions, setFilteredOptions] = useState(props.options);
 
     useEffect(() => {
         setSearchString("");
@@ -41,7 +41,7 @@ const Select = (props: ISwitchProps) => {
     useEffect(() => {
         setFilteredOptions([
             ...props.options.filter((el) => {
-                return searchString === "" || (el.label + "").indexOf(searchString) !== -1;
+                return searchString === "" || (el.label + "").toLowerCase().indexOf(searchString.toLowerCase()) !== -1;
             }),
         ]);
         setHighlighted(-1);
@@ -56,7 +56,7 @@ const Select = (props: ISwitchProps) => {
 
     const setValue = (index: number) => {
         if (index !== -1) {
-            control.field.onChange({ target: { value: filtredOptions[index].value } });
+            control.field.onChange({ target: { value: filteredOptions[index].value } });
             setDropdownVisible(false);
             selectRef.current.focus();
         }
@@ -121,7 +121,12 @@ const Select = (props: ISwitchProps) => {
                                             setDropdownVisible(false);
                                         },
                                     },
-                                    // { key: Key.Tab, handler: this.onKeyDown },
+                                    {
+                                        key: Key.Tab,
+                                        handler: () => {
+                                            setDropdownVisible(false);
+                                        },
+                                    },
                                 ]}
                                 captureInput={true}
                                 stopPropagation={true}
@@ -135,39 +140,29 @@ const Select = (props: ISwitchProps) => {
                                     onChange={(e) => setSearchString(e.target.value)}
                                 />
                                 <div className={styles.list} ref={listRef}>
-                                    {filtredOptions
-                                        // .filter((el) => {
-                                        //     return searchString === "" || (el.label + "").indexOf(searchString) !== -1;
-                                        // })
-                                        .map((option, index) => {
-                                            if (
-                                                searchString !== "" &&
-                                                (option.label + "").indexOf(searchString) === -1
-                                            ) {
-                                                return null;
-                                            }
-                                            return (
-                                                <div
-                                                    onMouseEnter={() => {
-                                                        setHighlighted(index);
-                                                    }}
-                                                    onMouseOut={() => {
-                                                        setHighlighted(-1);
-                                                    }}
-                                                    className={
-                                                        (option.value === control.field.value ? styles.selected : "") +
-                                                        " " +
-                                                        (highlighted === index ? styles.highlighted : "")
-                                                    }
-                                                    key={option.value as string}
-                                                    onClick={() => {
-                                                        setValue(index);
-                                                    }}
-                                                >
-                                                    {option.label}
-                                                </div>
-                                            );
-                                        })}
+                                    {filteredOptions.map((option, index) => {
+                                        return (
+                                            <div
+                                                onMouseEnter={() => {
+                                                    setHighlighted(index);
+                                                }}
+                                                onMouseOut={() => {
+                                                    setHighlighted(-1);
+                                                }}
+                                                className={
+                                                    (option.value === control.field.value ? styles.selected : "") +
+                                                    " " +
+                                                    (highlighted === index ? styles.highlighted : "")
+                                                }
+                                                key={option.value as string}
+                                                onClick={() => {
+                                                    setValue(index);
+                                                }}
+                                            >
+                                                {option.label}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </HotKeys>
                         </Modal>
