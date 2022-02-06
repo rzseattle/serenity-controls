@@ -7,23 +7,32 @@ export interface ITextProps extends ICommonInputProps {
     name?: string;
     value?: string;
     readonly?: boolean;
-    onChange: (val: any) => any;
-    control: Control;
+    control: Control<any, any>;
 }
 
 const Text = (props: ITextProps) => {
     const control = useController({ name: props.name, control: props.control });
+
     return (
-        <input
-            type="text"
-            readOnly={props.readonly}
-            onChange={(e) => {
-                control.field.onChange({ target: { value: e.target.value } });
-            }}
-            value={control.field.value}
-            style={{ backgroundColor: "yellow" }}
-        />
-        // <CommonInput label={props.label} fieldState={fieldState}>
+        <CommonInput label={props.label} fieldState={control.fieldState}>
+            {props.readonly ? (
+                <div className="w-read-only">{control.field.value}</div>
+            ) : (
+                <input
+                    type="text"
+                    readOnly={props.readonly}
+                    {...props.control.register(props.name)}
+                    onChange={(e) => {
+                        control.field.onChange({ target: { value: e.target.value } });
+                    }}
+                    value={control.field.value}
+                    onBlur={() => {
+                        control.field.onBlur();
+                    }}
+                />
+            )}
+        </CommonInput>
+        //
         //     <input
         //         disabled={props.readonly}
         //         value={field.value ?? ""}
@@ -33,7 +42,7 @@ const Text = (props: ITextProps) => {
         //         }}
         //         {...register(props.name)}
         //     />
-        // </CommonInput>
+        //
     );
 };
 

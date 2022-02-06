@@ -106,6 +106,7 @@ const getRect = (
     itemRect: DOMRect,
     recursionCounter = 0,
 ): [number, number, string | number, string | number] => {
+
     const [vertical, horizontal] = config.relativeToAt;
     const [verticalItem, horizontalItem] = config.itemAt;
     let x: number;
@@ -270,7 +271,7 @@ const Positioner = (inProps: IPositionerProps) => {
                               ...(props.relativeSettings.widthCalc && props.relativeSettings.widthCalc !== "none"
                                   ? {
                                         width: position[2],
-                                        height: position[3],
+                                        //height: position[3],
                                     }
                                   : {}),
                           }
