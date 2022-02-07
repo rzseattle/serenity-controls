@@ -1,3 +1,4 @@
+import React from "react";
 import { ControllerFieldState } from "react-hook-form/dist/types/controller";
 import "./CommonInput.sass";
 
@@ -12,7 +13,7 @@ const CommonInput = ({
 }: { children?: React.ReactElement; fieldState: ControllerFieldState } & ICommonInputProps) => {
     return (
         <div className={"w-common-input" + (fieldState.invalid ? " w-common-input-invalid" : "")}>
-            <label>{label}</label>
+            {label !== undefined && <label>{label}</label>}
             <div>{children}</div>
             {fieldState.invalid && (
                 <div className="w-field-errors">

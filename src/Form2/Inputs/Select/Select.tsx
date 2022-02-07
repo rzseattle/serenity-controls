@@ -9,8 +9,8 @@ import styles from "./Select.module.sass";
 import { CommonIcons } from "../../../lib/CommonIcons";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
-
-export interface ISwitchProps extends ICommonInputProps {
+import React from "react";
+export interface ISelectProps extends ICommonInputProps {
     name?: string;
     value?: string;
     readonly?: boolean;
@@ -18,7 +18,7 @@ export interface ISwitchProps extends ICommonInputProps {
     options: IOption[];
 }
 
-const Select = (props: ISwitchProps) => {
+const Select = (props: ISelectProps) => {
     const control = useController({ name: props.name, control: props.control });
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [searchString, setSearchString] = useState("");
@@ -58,6 +58,7 @@ const Select = (props: ISwitchProps) => {
         if (index !== -1) {
             control.field.onChange({ target: { value: filteredOptions[index].value } });
             setDropdownVisible(false);
+            setHighlighted(-1);
             selectRef.current.focus();
         }
     };

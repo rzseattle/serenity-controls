@@ -42,28 +42,18 @@ test("Should generate proper grid", () => {
         "max-content 1fr 1fr",
     );
 
-    expect(getColumnsWidths([{ field: 1, width: 20 }])).toEqual(
-        "20px",
-    );
-    expect(getColumnsWidths([{ field: 1, width: "20px" }])).toEqual(
-        "20px",
-    );
+    expect(getColumnsWidths([{ field: 1, width: 20 }])).toEqual("20px");
+    expect(getColumnsWidths([{ field: 1, width: "20px" }])).toEqual("20px");
 
-    expect(getColumnsWidths([{ field: 1, maxWidth: "max-content" }])).toEqual(
-        "minmax(0, max-content)",
-    );
+    expect(getColumnsWidths([{ field: 1, maxWidth: "max-content" }])).toEqual("minmax(0, max-content)");
 
-    expect(getColumnsWidths([{ field: 1, minWidth: 20,  maxWidth: "max-content" }])).toEqual(
+    expect(getColumnsWidths([{ field: 1, minWidth: 20, maxWidth: "max-content" }])).toEqual(
         "minmax(20px, max-content)",
     );
-    expect(getColumnsWidths([{ field: 1, minWidth: "20px",  maxWidth: "max-content" }])).toEqual(
+    expect(getColumnsWidths([{ field: 1, minWidth: "20px", maxWidth: "max-content" }])).toEqual(
         "minmax(20px, max-content)",
     );
-    expect(getColumnsWidths([{ field: 1, minWidth: "20px" }])).toEqual(
-        "minmax(20px, 1fr)",
-    );
+    expect(getColumnsWidths([{ field: 1, minWidth: "20px" }])).toEqual("minmax(20px, 1fr)");
 
-    expect(getColumnsWidths([{ field: 1, maxWidth: 20 }])).toEqual(
-        "minmax(0, 20px)",
-    );
+    expect(getColumnsWidths([{ field: 1, maxWidth: 20 }])).toEqual("minmax(0, 20px)");
 });

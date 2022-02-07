@@ -14,8 +14,7 @@ const Row = (props: IRowProps) => {
     let colMd = 0;
     let colsMd: number[] = [];
 
-
-    const childrenLength = Math.min( 12, children.length)
+    const childrenLength = Math.min(12, children.length);
 
     // if detailed width delivered
     if (props.cols) {
@@ -30,8 +29,6 @@ const Row = (props: IRowProps) => {
         // equal width for each element
         colMd = 12 / childrenLength;
     }
-
-
 
     // adding calculated default row width
     for (let i = colsMd.length; i < 12; i++) {

@@ -57,7 +57,6 @@ test("Should delete filter 1", () => {
 
     fireEvent.click(screen.getAllByTestId("delete-filter")[0]);
     expect(onFiltersChange.mock.calls[0][0].filter((el: IGridFilter) => el.field === "age")[0].value.length).toBe(0);
-
 });
 
 test("Should remove all conditions", () => {

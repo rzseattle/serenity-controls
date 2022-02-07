@@ -5,7 +5,9 @@ import {
     StoryBasic,
     StoryCellCassTemplate,
     StoryCellCassTemplateByColumn,
-    StoryCellStyleTemplate, StoryCellStyleTemplateByColumn, StoryCellTemplate,
+    StoryCellStyleTemplate,
+    StoryCellStyleTemplateByColumn,
+    StoryCellTemplate,
 } from "./GridRow.stories";
 import GridRow from "./GridRow";
 
@@ -31,16 +33,14 @@ test("Should render with style template", () => {
 test("Should render with class template added by column", () => {
     render(<StoryCellCassTemplateByColumn {...StoryCellCassTemplateByColumn.args} />);
     expect(screen.getByText("1")).toHaveClass("important");
-})
+});
 
 test("Should render with style template added by column", () => {
     render(<StoryCellStyleTemplateByColumn {...StoryCellStyleTemplateByColumn.args} />);
     expect(screen.getByText("1")).toHaveStyle({ backgroundColor: "red" });
-})
+});
 
 test("Should react for events", () => {
-
-
     const onClick = jest.fn();
     const onMouseUp = jest.fn();
     const onMouseDown = jest.fn();

@@ -6,7 +6,7 @@ import GridBody from "./GridBody";
 import { IMockUser, mockData } from "../../../__mocks__/MockUsers";
 import { getColumnsWidths } from "../../../helpers/helpers";
 import { IGridColumn } from "../../../interfaces/IGridColumn";
-import styles from "./GridBody.stories.module.sass"
+import styles from "./GridBody.stories.module.sass";
 
 export default {
     title: "DataGrid/Parts/GridBody/Grid body",
@@ -20,7 +20,10 @@ const columns: IGridColumn<IMockUser>[] = [{ field: "id" }, { field: "last_name"
 const Template: ComponentStory<typeof GridBody> = (args) => {
     return (
         <GridRoot>
-            <div style={{ display: "grid", gridTemplateColumns: getColumnsWidths(columns) }} className={styles.container}>
+            <div
+                style={{ display: "grid", gridTemplateColumns: getColumnsWidths(columns) }}
+                className={styles.container}
+            >
                 <GridBody {...args} />
             </div>
         </GridRoot>
@@ -45,5 +48,3 @@ StoryClassTemplate.args = {
     },
 };
 StoryClassTemplate.storyName = "Class template";
-
-

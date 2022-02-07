@@ -1,3 +1,4 @@
+import React from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 import { Control } from "react-hook-form/dist/types/form";
 import { IOption } from "../../../fields";
@@ -21,7 +22,7 @@ const Switch = (props: ISwitchProps) => {
                     {props.options.filter((el) => el.value === control.field.value)[0]?.label}
                 </div>
             ) : (
-                <div className={styles.list }>
+                <div className={styles.list}>
                     {props.options.map((option) => {
                         return (
                             <button

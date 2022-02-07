@@ -106,7 +106,6 @@ const getRect = (
     itemRect: DOMRect,
     recursionCounter = 0,
 ): [number, number, string | number, string | number] => {
-
     const [vertical, horizontal] = config.relativeToAt;
     const [verticalItem, horizontalItem] = config.itemAt;
     let x: number;

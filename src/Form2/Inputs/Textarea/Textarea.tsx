@@ -4,14 +4,15 @@ import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 import { useController } from "react-hook-form";
 import { Control } from "react-hook-form/dist/types/form";
 
-export interface ITextProps extends ICommonInputProps {
+export interface ITextareaProps extends ICommonInputProps {
     name?: string;
     value?: string;
     readonly?: boolean;
     control: Control<any, any>;
+    style?: React.CSSProperties
 }
 
-const Text = (props: ITextProps) => {
+const Textarea = (props: ITextareaProps) => {
     const control = useController({ name: props.name, control: props.control });
 
     return (
@@ -19,21 +20,20 @@ const Text = (props: ITextProps) => {
             {props.readonly ? (
                 <div className="w-read-only">{control.field.value}</div>
             ) : (
-                <input
-                    type="text"
-                    readOnly={props.readonly}
+                <textarea
+                    style={props.style}
                     {...props.control.register(props.name)}
                     onChange={(e) => {
                         control.field.onChange({ target: { value: e.target.value } });
                     }}
-                    value={control.field.value}
                     onBlur={() => {
                         control.field.onBlur();
                     }}
+                    value={control.field.value}
                 />
             )}
         </CommonInput>
     );
 };
 
-export default Text;
+export default Textarea;
