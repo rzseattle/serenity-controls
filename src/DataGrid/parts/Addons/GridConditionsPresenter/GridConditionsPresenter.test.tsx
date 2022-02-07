@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { StoryBasic } from "./GridConditionsPresenter.stories";
 import { IGridOrder } from "../../../interfaces/IGridOrder";
 import { IGridFilter } from "../../../interfaces/IGridFilter";
-import { IOrder } from "../../../../Table/Interfaces";
+
 
 test("Should render with proper labels", () => {
     render(
@@ -72,7 +72,7 @@ test("Should remove all conditions", () => {
     ).toBe(0);
 
     expect(
-        onOrderChange.mock.calls[0][0].reduce((p: number, c: IOrder) => {
+        onOrderChange.mock.calls[0][0].reduce((p: number, c: IGridOrder) => {
             return p + c.dir ? 1 : 0;
         }, 0),
     ).toBe(0);

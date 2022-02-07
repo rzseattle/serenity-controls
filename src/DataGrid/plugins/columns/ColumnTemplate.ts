@@ -2,8 +2,10 @@ import { IGridCellEvents, IGridColumn, IGridHeaderEvents } from "../../interface
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
 import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
-import * as React from "react";
+
 import { IGridHeaderTemplate } from "../../interfaces/IGridHeaderTemplate";
+import { IGridCellClassProvider } from "../../interfaces/IGridCellClassProvider";
+import { IGridCellStyleProvider } from "../../interfaces/IGridCellStyleProvider";
 
 //needed to extract type of event from array like Type[]
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
@@ -96,13 +98,13 @@ export class ColumnTemplate<Row> {
         return this;
     }
 
-    public styleTemplate(fn: (row: Row, column: IGridColumn<Row>) => React.CSSProperties) {
+    public styleTemplate(fn: IGridCellStyleProvider<Row>) {
         this.column.cell = this.column.cell ?? {};
         this.column.cell.styleTemplate = fn;
         return this;
     }
 
-    public classTemplate(fn: (row: Row, column: IGridColumn<Row>) => string[]) {
+    public classTemplate(fn: IGridCellClassProvider<Row>) {
         this.column.cell = this.column.cell ?? {};
         this.column.cell.classTemplate = fn;
         return this;

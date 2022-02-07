@@ -78,11 +78,8 @@ const Example = () => {
                     <CheckboxGroup
                         label={"Friends"}
                         {...field("friends")}
-                        options={mockData.slice(0, 30).map((user) => ({ value: user.id, label: user.first_name }))}
+                        options={mockData.slice(0, 5).map((user) => ({ value: user.id, label: user.first_name }))}
                     />
-                </Row>
-                <Row>
-                    <div></div>
                     <Date label={"Birth date"} {...field("date")} />
                 </Row>
                 <Row>

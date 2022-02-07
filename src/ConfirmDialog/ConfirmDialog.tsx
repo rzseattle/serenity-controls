@@ -1,97 +1,94 @@
-import { IModalProps, Modal } from "../Modal";
+import { Modal } from "../Modal";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { fI18n } from "../lib/I18n";
 import "./ConfirmDialog.sass";
-import { RelativePositionPresets } from "../Positioner";
+import { IPositionCalculatorOptions, RelativePositionPresets } from "../Positioner";
+import { CommonIcons } from "../lib/CommonIcons";
+import { IOption } from "../fields";
 
-export interface IConfirmModalProps extends IModalProps {
-    showCancelLing?: boolean;
-    onOk: (value: unknown) => any;
-    cleanup: () => any;
+export interface IConfirmDialogCompProps {
+    title: string;
+    question: string;
+    options: IOption[];
+    onSelect: (value: string | number | boolean) => any;
+    onAbort: () => any;
+    layer?: boolean;
+    relativeTo?: HTMLElement;
+    relativeSettings?: IPositionCalculatorOptions;
 }
+const ConfirmDialogComp = ({
+    title,
+    question,
+    options,
+    onSelect,
+    layer,
+    relativeTo,
+    relativeSettings,
+    onAbort,
+}: IConfirmDialogCompProps) => {
+    relativeSettings = relativeSettings ?? RelativePositionPresets.bottomRight;
 
-class ConfirmDialog extends React.Component<IConfirmModalProps, any> {
-    public promise: Promise<unknown>;
-
-    public static defaultProps: Partial<IConfirmModalProps> = {
-        showCancelLing: true,
-    };
-
-    constructor(props: IConfirmModalProps) {
-        super(props);
-    }
-
-    public handleAbort = () => {
-        this.props.cleanup();
-    };
-
-    public handleConfirm = () => {
-        this.props.onOk(true);
-        this.props.cleanup();
-    };
-
-    public render() {
-        const modalProps: any = Object.assign({}, this.props);
-        delete modalProps.cleanup;
-
-        return (
-            <Modal {...modalProps} className="w-modal-confirm" show={true}>
-                <div
-                    style={{ padding: 15 }}
-                    className={this.props.target !== undefined ? "" : "w-modal-confirm-top-border"}
-                >
-                    {this.props.children}
-                </div>
-                <div style={{ padding: 10, paddingTop: 0, textAlign: "right" }}>
-                    <button onClick={this.handleConfirm} className="btn btn-primary">
-                        {fI18n.t("frontend:yes")}
+    return (
+        <Modal
+            show={true}
+            title={title}
+            showHideLink={title ? true : false}
+            relativeTo={relativeTo ? () => relativeTo : undefined}
+            shadow={relativeTo ? false : true}
+            relativeSettings={relativeSettings}
+            layer={layer ?? true}
+            icon={CommonIcons.info}
+            onHide={() => onAbort()}
+        >
+            <div style={{ padding: 10 }}>{question}</div>
+            <div style={{ padding: 5, textAlign: "right" }}>
+                {options.map((el) => (
+                    <button
+                        key={el.value + ""}
+                        style={{ margin: 4, cursor: "pointer", padding: "3px 6px" }}
+                        onClick={() => {
+                            onSelect(el.value);
+                        }}
+                    >
+                        {el.label}
                     </button>
-                    {this.props.showCancelLing && (
-                        <button onClick={this.handleAbort} className="btn btn-default">
-                            {fI18n.t("frontend:cancel")}
-                        </button>
-                    )}
-                </div>
-            </Modal>
-        );
-    }
-}
-
-export const confirmDialog = async (message: string, options: Partial<IConfirmModalProps> = {}) => {
-    const props = { ...options };
-
-    const parent = options.container ? options.container() : document.body;
-
-    const wrapper = parent.appendChild(document.createElement("div"));
-
-    let resolver: (value: unknown) => any;
-    let rejector: () => any;
-
-    const promise = new Promise((resolve, reject) => {
-        resolver = resolve;
-        rejector = reject;
-    });
-
-    const cleanup = () => {
-        ReactDOM.unmountComponentAtNode(wrapper);
-        wrapper.remove();
-        rejector();
-    };
-
-    if (props.target !== undefined) {
-        props.animation = props.animation || "from-up";
-        props.shadow = props.shadow || false;
-        props.relativePositionConf = props.relativePositionConf || RelativePositionPresets.bottomLeft;
-    }
-
-    const x: any = (
-        <ConfirmDialog {...props} onOk={resolver} cleanup={cleanup}>
-            <div>{message}</div>
-        </ConfirmDialog>
+                ))}
+            </div>
+        </Modal>
     );
+};
 
-    ReactDOM.render(x, wrapper);
+export default ConfirmDialogComp;
 
-    return promise;
+export const confirmDialog = async (message: string, options: Partial<IConfirmDialogCompProps> = {}) => {
+    return new Promise((resolve) => {
+        const wrapper = document.body.appendChild(document.createElement("div"));
+
+        const cleanup = () => {
+            ReactDOM.unmountComponentAtNode(wrapper);
+            wrapper.remove();
+        };
+
+        const x: any = (
+            <ConfirmDialogComp
+                title={undefined}
+                question={message}
+                onSelect={(val) => {
+                    cleanup();
+                    resolve(val);
+                }}
+                onAbort={() => {
+                    cleanup();
+                    resolve(undefined);
+                }}
+                options={[
+                    { value: true, label: "yes" },
+                    { value: false, label: "no" },
+                ]}
+                {...options}
+            />
+        );
+
+        ReactDOM.render(x, wrapper);
+    });
 };

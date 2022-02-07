@@ -22,7 +22,6 @@ const baseFilter: IGridFilter = {
     field: "age",
     caption: "Age",
     filterType: "numeric",
-    label: "Age",
     isInAdvancedMode: false,
     value: [],
 };

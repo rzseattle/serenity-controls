@@ -47,7 +47,6 @@ const filters: IGridFilter[] = [
         field: "age",
         caption: "Age",
         filterType: "numeric",
-        label: "Gender",
         isInAdvancedMode: false,
         value: [
             {
@@ -74,7 +73,6 @@ const filters: IGridFilter[] = [
         field: "gender",
         caption: "Gender",
         filterType: "switch",
-        label: "Gender",
         value: [],
         config: {
             values: [
@@ -89,7 +87,6 @@ const filters: IGridFilter[] = [
         caption: "Gender multi",
         applyTo: "gender",
         filterType: "switch",
-        label: "Gender multi",
         value: [],
         config: {
             multiselect: true,

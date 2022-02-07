@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { ReactElement, StatelessComponent, useMemo } from "react";
 import { IGridColumn } from "./interfaces/IGridColumn";
 import { IGridData } from "./interfaces/IGridData";
 
@@ -16,6 +16,7 @@ import { IFiltersChange } from "./interfaces/IFiltersChange";
 import GridHead from "./parts/Head/GridHead/GridHead";
 import GridBody from "./parts/Body/GridBody/GridBody";
 import GridFoot from "./parts/Footer/GridFoot/GridFoot";
+import { nanoid } from "nanoid";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
@@ -131,3 +132,57 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
 };
 
 export default DataGrid;
+
+//
+// export interface IGroupByData {
+//     field?: string;
+//     equalizer?: (prevRow: any, nextRow: any) => boolean;
+//     labelProvider?: (nextRow: any, prevRow: any) => string | ReactElement<any> | StatelessComponent;
+// }
+//
+//
+// groupBy?: IGroupByData[];
+//
+//
+// public groupByGetInfo = (row1: any, row2: any) => {
+//     const info = [];
+//     for (const group of this.props.groupBy) {
+//         if (group.field !== undefined) {
+//             if (row1 === null || row1[group.field] != row2[group.field]) {
+//                 info.push({ label: row2[group.field] });
+//             }
+//         } else if (group.equalizer !== undefined) {
+//             if (row1 === null || group.equalizer(row1, row2)) {
+//                 info.push({ label: group.labelProvider(row2, row1) });
+//             }
+//         }
+//     }
+//
+//     return info;
+// };
+//
+// if (this.props.groupBy.length > 0) {
+//     const groupData = this.groupByGetInfo(lastRow, row);
+//     if (groupData.length > 0) {
+//         lastRow = row;
+//         return (
+//             <React.Fragment key={key + "_group"}>
+//                 <tr>
+//                     <td
+//                         style={{
+//                             backgroundColor: "grey",
+//                             color: "white",
+//                             width: props.columnWidths[index],
+//                         }}
+//                         colSpan={columns.length + 1}
+//                     >
+//                         {groupData.map((el) => (
+//                             <React.Fragment key={nanoid()}>{el.label}</React.Fragment>
+//                         ))}
+//                     </td>
+//                 </tr>
+//                 {rowToOutput}
+//             </React.Fragment>
+//         );
+//     }
+// }

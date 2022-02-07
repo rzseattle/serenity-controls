@@ -25,7 +25,9 @@ test("Should render in readonly", () => {
 test("Should upgrade form value", () => {
     const { result } = renderHook(() => useSerenityForm<{ test: string }>({ defaultValues: { test: "_string" } }));
     const { container } = render(<Textarea {...result.current.field("test")} />);
-    fireEvent.change(container.getElementsByTagName("textarea")[0] as HTMLTextAreaElement, { target: { value: "_changed" } });
+    fireEvent.change(container.getElementsByTagName("textarea")[0] as HTMLTextAreaElement, {
+        target: { value: "_changed" },
+    });
     expect(result.current.getValues("test")).toBe("_changed");
     expect(result.current.getFieldState("test").isDirty).toBe(true);
 });

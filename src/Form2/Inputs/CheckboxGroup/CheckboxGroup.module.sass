@@ -27,12 +27,15 @@
         padding: 3px 5px
         cursor: pointer
         user-select: none
+        display: flex
+        .label
+            padding-top: 1px
+
         .checkbox
-            display: inline-block
             border: solid 1px grey
             margin-right: 4px
             border-radius: 3px
-            background-color: #005A9D
+            background-color: white
             color: white
             font-weight: bold
             width: 19px
@@ -44,7 +47,9 @@
 
 
 .selected
-    color: red
+    .checkbox
+        background-color: #005A9D !important
+        color: white
 
 .highlighted
     background-color: #cbd5dd

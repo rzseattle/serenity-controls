@@ -2,14 +2,12 @@ import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 import { Control } from "react-hook-form/dist/types/form";
 import { IOption } from "../../../fields";
 import { useController } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
-import { Modal } from "../../../Modal";
-import { RelativePositionPresets } from "../../../Positioner";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./CheckboxGroup.module.sass";
 import { CommonIcons } from "../../../lib/CommonIcons";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
-import React from "react";
+
 export interface ICheckboxgroupProps extends ICommonInputProps {
     name?: string;
     value?: string;
@@ -20,22 +18,13 @@ export interface ICheckboxgroupProps extends ICommonInputProps {
 
 const CheckboxGroup = (props: ICheckboxgroupProps) => {
     const control = useController({ name: props.name, control: props.control });
-    const [isDropdownVisible, setDropdownVisible] = useState(false);
+
     const [searchString, setSearchString] = useState("");
     const [highlighted, setHighlighted] = useState(-1);
     const searchFieldRef = useRef<HTMLInputElement>();
     const listRef = useRef<HTMLDivElement>();
 
     const [filteredOptions, setFilteredOptions] = useState(props.options);
-
-    useEffect(() => {
-        setSearchString("");
-        if (searchFieldRef.current) {
-            setTimeout(() => {
-                searchFieldRef.current.focus();
-            }, 40);
-        }
-    }, [isDropdownVisible]);
 
     useEffect(() => {
         setFilteredOptions([
@@ -55,9 +44,14 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
 
     const elementClicked = (index: number) => {
         if (index !== -1) {
-            control.field.onChange({ target: { value: filteredOptions[index].value } });
-            setDropdownVisible(false);
-            setHighlighted(-1);
+            const found = control.field.value.findIndex((el: string) => el === filteredOptions[index].value);
+            if (found === -1) {
+                control.field.onChange({ target: { value: [...control.field.value, filteredOptions[index].value] } });
+            } else {
+                const tmp = [...control.field.value];
+                tmp.splice(found, 1);
+                control.field.onChange({ target: { value: tmp } });
+            }
         }
     };
 
@@ -82,42 +76,32 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
                                     if (highlighted > -1) elementClicked(highlighted);
                                 },
                             },
-                            {
-                                key: Key.Escape,
-                                handler: () => {
-                                    setDropdownVisible(false);
-                                },
-                            },
-                            {
-                                key: Key.Tab,
-                                handler: () => {
-                                    setDropdownVisible(false);
-                                },
-                            },
                         ]}
                         captureInput={true}
                         stopPropagation={true}
                     >
-                        <input
-                            type={"text"}
-                            autoFocus={true}
-                            placeholder={"Search"}
-                            ref={searchFieldRef}
-                            value={searchString}
-                            onChange={(e) => setSearchString(e.target.value)}
-                        />
+                        {props.options.length > 10 && (
+                            <input
+                                type={"text"}
+                                autoFocus={true}
+                                placeholder={"Search"}
+                                ref={searchFieldRef}
+                                value={searchString}
+                                onChange={(e) => setSearchString(e.target.value)}
+                            />
+                        )}
                         <div className={styles.list} ref={listRef}>
                             {filteredOptions.map((option, index) => {
                                 return (
                                     <div
-                                        onMouseEnter={() => {
+                                        onMouseOver={() => {
                                             setHighlighted(index);
                                         }}
                                         onMouseOut={() => {
                                             setHighlighted(-1);
                                         }}
                                         className={
-                                            ((control.field.value.findIndex(option.value)) !== -1
+                                            (control.field.value.findIndex((el: string) => el === option.value) !== -1
                                                 ? styles.selected
                                                 : "") +
                                             " " +
@@ -131,8 +115,7 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
                                         <div className={styles.checkbox}>
                                             <CommonIcons.check />
                                         </div>
-
-                                        {option.label}
+                                        <div className={styles.label}>{option.label}</div>
                                     </div>
                                 );
                             })}

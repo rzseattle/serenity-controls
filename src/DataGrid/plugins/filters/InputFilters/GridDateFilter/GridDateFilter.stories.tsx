@@ -22,7 +22,6 @@ const baseFilter: IGridFilter = {
     field: "date",
     caption: "Date",
     filterType: "date",
-    label: "Date",
     isInAdvancedMode: false,
     value: [],
 };

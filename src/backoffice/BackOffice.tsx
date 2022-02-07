@@ -6,11 +6,10 @@ import { IMenuElement, IMenuSection, Menu } from "./Menu";
 import * as NProgress from "nprogress/nprogress.js";
 import "nprogress/nprogress.css";
 
-import { IModalProps, Modal } from "../Modal";
-import { Select } from "../fields/Select";
-import { Comm, fI18n } from "../lib";
+import { Modal } from "../Modal";
 
-import { BackOfficeContainer } from "./BackOfficeContainer";
+import { fI18n } from "../lib";
+
 import { PanelComponentLoader } from "./PanelComponentLoader";
 import { configGetAll } from "./Config";
 import { IPanelContext } from "./PanelContext";
@@ -21,9 +20,6 @@ import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 
 import { CommonIcons } from "../lib/CommonIcons";
-
-const DebugTool = React.lazy(() => import("./DebugTool"));
-declare let PRODUCTION: boolean;
 
 NProgress.configure({ parent: ".w-panel-body" });
 
@@ -37,6 +33,7 @@ interface IBackOfficePanelProps {
     parentContext?: IPanelContext;
     topActions?: ICommand[];
     onMenuClick: (element: IMenuElement, inWindow: boolean) => any;
+    logout: () => any;
 }
 
 interface IBackOfficePanelState {
@@ -46,16 +43,7 @@ interface IBackOfficePanelState {
     layout: "mobile" | "normal" | "large";
     loading: boolean;
     onlyBody: boolean;
-    openedWindows: {
-        route: string;
-        input: any;
-        modalProps: any;
-        props: any;
-    }[];
     navigationWindowOpened: boolean;
-    contextMenuCoordinates: { x: number; y: number };
-    contextMenuCommands: ICommand[];
-    contextMenuContext: any;
 }
 
 export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOfficePanelState> {
@@ -83,15 +71,12 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
             layout: "normal",
             loading: false,
             onlyBody: this.props.onlyBody,
-            openedWindows: [],
+
             navigationWindowOpened: false,
-            contextMenuCoordinates: null,
-            contextMenuCommands: [],
-            contextMenuContext: null,
         };
 
-        Comm.onStart.push(this.handleLoadStart);
-        Comm.onFinish.push(this.handleLoadEnd);
+        //Comm.onStart.push(this.handleLoadStart);
+        //Comm.onFinish.push(this.handleLoadEnd);
     }
 
     public adjustToSize() {
@@ -116,69 +101,17 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
 
     public handleNavigateTo = (element: IMenuElement, inWindow = false) => {
         this.props.onMenuClick(element, inWindow);
-        return;
-        if (inWindow) {
-            this.handleOpenWindow(element.route, {}, { title: element.title, showHideLink: true, top: 55 });
-        } else {
-            alert("cliccked" + element.route);
-        }
-        if (this.state.layout == "mobile") {
-            this.setState({ menuVisible: false });
-        }
-    };
-
-    public handleOpenContextMenu = (
-        event: React.MouseEvent<HTMLElement, MouseEvent>,
-        commands: ICommand[],
-        context: any,
-    ) => {
-        this.setState({
-            contextMenuContext: context,
-            contextMenuCoordinates: { x: event.clientX, y: event.clientY },
-            contextMenuCommands: commands,
-        });
     };
 
     public getContext = () => {
         return this.panelLoader.current.getContext();
     };
 
-    public handleOpenWindow = (
-        route: string,
-        input: any = {},
-        modalProps: Partial<IModalProps> = {},
-        props: any = {},
-    ) => {
-        modalProps.show = true;
-        this.setState({
-            openedWindows: this.state.openedWindows.concat({
-                route,
-                input,
-                modalProps,
-                props,
-            }),
-        });
-
-        return route;
-    };
-
-    public handleCloseWindow = (route: string): any => {
-        const target = this.state.openedWindows.filter((el) => el.route == route);
-        if (target.length > 0) {
-            if (target[0].modalProps.onHide) {
-                target[0].modalProps.onHide();
-            }
-        }
-        this.setState({
-            openedWindows: this.state.openedWindows.filter((el) => el.route != route),
-        });
-    };
-
     public componentDidMount() {
         this.adjustToSize();
-        let timeout = null;
+        let timeout: any = null;
         window.addEventListener("resize", () => {
-            // clearTimeout(timeout);
+            clearTimeout(timeout);
             timeout = setTimeout(this.adjustToSize.bind(this), 30);
         });
     }
@@ -190,7 +123,7 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
         this.callbacks.onceAfterUpdate = [];
     }
 
-    public handleChangeView = (input = {}, callback: () => any) => {
+    public handleChangeView = () => {
         this.handleLoadStart();
     };
 
@@ -276,7 +209,6 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
                                         if (action === null) {
                                             return null;
                                         } else if (React.isValidElement(action)) {
-                                            const Component = action as React.ElementType;
                                             return <React.Fragment key={index}>{action}</React.Fragment>;
                                         } else if ((action as ICommand).label !== undefined) {
                                             const command = action as ICommand;
@@ -297,8 +229,7 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
                             <Modal
                                 show={this.state.userMenuVisible}
                                 animation={"perspectiveBounce"}
-                                top={50}
-                                right={0}
+                                position={{ top: 50, right: 0 }}
                                 onHide={() => this.setState({ userMenuVisible: false })}
                             >
                                 <div style={{ width: 200 }} />
@@ -309,7 +240,7 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
                         }}><Icon name="Accounts"/> Twoje konto</a>*/}
                                 </div>
                                 <div style={{ padding: 10 }}>
-                                    <a href={Comm.basePath + "/access/logout"}>
+                                    <a onClick={() => this.props.logout()}>
                                         <CommonIcons.exit style={{ verticalAlign: "middle" }} />{" "}
                                         {fI18n.t("frontend:logout")}
                                     </a>
@@ -330,89 +261,35 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
                             </div>
                         )}
                         <div className="w-panel-body" style={{ position: "relative" }}>
-                            {this.state.openedWindows.map((el, index) => {
-                                return (
-                                    <Modal
-                                        key={index}
-                                        {...el.modalProps}
-                                        onHide={() => {
-                                            if (el.modalProps.onHide !== undefined) {
-                                                el.modalProps.onHide();
-                                            }
-                                            this.handleCloseWindow(el.route);
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                width: el.modalProps.width ? "auto" : "90vw",
-
-                                                backgroundColor: "#ECECEC",
-                                            }}
-                                        >
-                                            <BackOfficeContainer
-                                                route={el.route}
-                                                props={el.props}
-                                                parentContext={this.getContext()}
-                                            />
-                                        </div>
-                                    </Modal>
-                                );
-                            })}
                             {this.props.children}
                         </div>
                     </div>
-                    {this.state.contextMenuCoordinates !== null && (
-                        <Modal
-                            show={true}
-                            top={this.state.contextMenuCoordinates.y}
-                            left={this.state.contextMenuCoordinates.x}
-                            shadow={false}
-                            onHide={() => this.setState({ contextMenuCoordinates: null })}
-                        >
-                            {this.state.contextMenuCommands.map((el) => {
-                                return (
-                                    <div
-                                        className={"w-backoffice-panel-context-action"}
-                                        key={el.key}
-                                        onClick={(e) => {
-                                            el.onClick(e, this.state.contextMenuContext);
-                                            this.setState({
-                                                contextMenuCoordinates: null,
-                                                contextMenuContext: null,
-                                            });
-                                        }}
-                                    >
-                                        {el.icon && <el.icon />} {el.label}
-                                    </div>
-                                );
-                            })}
-                        </Modal>
-                    )}
-                    {this.state.navigationWindowOpened && (
-                        <Modal show={true} onHide={() => this.toggleLayerMenu()} top={200}>
-                            <div style={{ width: 300 }}>
-                                <Select
-                                    onClose={() => this.toggleLayerMenu()}
-                                    options={this.props.menu.reduce((p, c) => {
-                                        return p.concat(
-                                            c.elements.map((el) => {
-                                                return { label: c.title + " -> " + el.title, value: el.route };
-                                            }),
-                                        );
-                                    }, [])}
-                                    value={null}
-                                    autoFocus={true}
-                                    mode="list"
-                                    onChange={(e) => {
-                                        this.toggleLayerMenu();
 
-                                        this.handleNavigateTo({
-                                            title: "---",
-                                            route: e.value,
-                                            icon: null,
-                                        });
-                                    }}
-                                />
+                    {this.state.navigationWindowOpened && (
+                        <Modal show={true} onHide={() => this.toggleLayerMenu()} position={{ top: 200 }}>
+                            <div style={{ width: 300 }}>
+                                Musimy tu TODO wstawić selecta
+                                {/*<Select*/}
+                                {/*    onClose={() => this.toggleLayerMenu()}*/}
+                                {/*    options={this.props.menu.reduce((p, c) => {*/}
+                                {/*        return p.concat(*/}
+                                {/*            c.elements.map((el) => {*/}
+                                {/*                return { label: c.title + " -> " + el.title, value: el.route };*/}
+                                {/*            }),*/}
+                                {/*        );*/}
+                                {/*    }, [])}*/}
+                                {/*    value={null}*/}
+                                {/*    autoFocus={true}*/}
+                                {/*    mode="list"*/}
+                                {/*    onChange={(e) => {*/}
+                                {/*        this.toggleLayerMenu();*/}
+                                {/*        this.handleNavigateTo({*/}
+                                {/*            title: "---",*/}
+                                {/*            route: e.value,*/}
+                                {/*            icon: null,*/}
+                                {/*        });*/}
+                                {/*    }}*/}
+                                {/*/>*/}
                             </div>
                         </Modal>
                     )}

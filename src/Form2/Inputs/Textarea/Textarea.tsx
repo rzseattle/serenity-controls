@@ -9,7 +9,7 @@ export interface ITextareaProps extends ICommonInputProps {
     value?: string;
     readonly?: boolean;
     control: Control<any, any>;
-    style?: React.CSSProperties
+    style?: React.CSSProperties;
 }
 
 const Textarea = (props: ITextareaProps) => {

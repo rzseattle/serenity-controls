@@ -4,7 +4,6 @@ import { useState } from "react";
 import "./DebugTool.sass";
 
 import { Modal } from "../Modal";
-import { Comm } from "../lib";
 import { CgErase } from "react-icons/cg";
 import { GiPlatform } from "react-icons/gi";
 import { FaDropbox } from "react-icons/fa";
@@ -23,9 +22,10 @@ const Cache = () => {
     return (
         <span
             onClick={() => {
-                Comm._post("/utils/developer/cache/remove").then(() => {
-                    console.log("Cache deleted");
-                });
+                alert("todo");
+                // Comm._post("/utils/developer/cache/remove").then(() => {
+                //     console.log("Cache deleted");
+                // });
             }}
         >
             <CgErase />

@@ -1,8 +1,7 @@
 import * as React from "react";
 
-import { confirmDialog, IConfirmModalProps } from "../ConfirmDialog";
+import { confirmDialog, IConfirmDialogCompProps } from "../ConfirmDialog";
 
-export const alertDialog = async (message: string, options: Partial<IConfirmModalProps> = {}) => {
-    options.showCancelLing = false;
+export const alertDialog = async (message: string, options: Partial<IConfirmDialogCompProps> = {}) => {
     return confirmDialog(message, options);
 };

@@ -110,18 +110,16 @@ export class FileListField extends React.Component<IFileListProps, any> {
 
     public handleFileRemove = (index: number, el: HTMLAnchorElement) => {
         confirmDialog(fI18n.t("frontend:file.confirmRemove"), {
-            target: () => el,
-            relativePositionConf: RelativePositionPresets.bottomRight,
-        })
-            .then(() => {
-                const currFiles = this.props.value ? this.props.value.slice() : [];
-                const deleted = this.state.filesDeleted;
-                deleted.push(currFiles[index]);
-                this.setState({ filesDeleted: deleted });
-                currFiles.splice(index, 1);
-                this.handleChange(currFiles);
-            })
-            .catch(() => {});
+            relativeTo: el,
+            relativeSettings: RelativePositionPresets.bottomRight,
+        }).then(() => {
+            const currFiles = this.props.value ? this.props.value.slice() : [];
+            const deleted = this.state.filesDeleted;
+            deleted.push(currFiles[index]);
+            this.setState({ filesDeleted: deleted });
+            currFiles.splice(index, 1);
+            this.handleChange(currFiles);
+        });
     };
 
     public handleChange(currFiles: IFile[]) {
