@@ -9,11 +9,11 @@ import { ColumnTemplate } from "../columns/ColumnTemplate";
 export type IFullGridDataProvider<T> = ({
     filters,
     order,
-    columns,
+    fields,
 }: {
     filters: IGridFilter[];
     order: IGridOrder[];
-    columns: IGridColumn<T>[];
+    fields: Array<string | number>;
     page: { current: number; onPage: number };
 }) => Promise<{ rows: T[]; count: number }>;
 
@@ -34,6 +34,8 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const [rowCount, setRowCount] = useState<number>(0);
     const [isInLoadingState, setLoadingState] = useState(true);
 
+    const [error, setError] = useState("");
+
     useEffect(() => {
         const tmpColumns: IGridColumn<T>[] = [];
         const tmpFilters: IGridFilter[] = [];
@@ -50,13 +52,21 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
 
     useEffect(() => {
         setLoadingState(true);
+        setError("");
         props
-            .dataProvider({ filters, order, columns: columns, page: { current: currentPage, onPage } })
+            .dataProvider({
+                filters,
+                order,
+                fields: columns.map((column) => column.field),
+                page: { current: currentPage, onPage },
+            })
             .then((result) => {
                 setData(result.rows);
                 setRowCount(result.count);
                 setLoadingState(false);
-            });
+            }).catch(e => {
+                setError(e.message);
+        });
     }, [onPage, currentPage, props.columns, filters, order]);
     return (
         <>
@@ -84,6 +94,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                     );
                 }}
             />
+            {error && <div>{error}</div>}
         </>
     );
 };
