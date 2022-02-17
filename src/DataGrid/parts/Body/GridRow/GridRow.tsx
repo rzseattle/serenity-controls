@@ -3,6 +3,7 @@ import { IGridCellEvents, IGridColumn } from "../../../interfaces/IGridColumn";
 import { IGridCellEventCallback } from "../../../interfaces/IGridCellEventCallback";
 import { IGridCellClassProvider } from "../../../interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "../../../interfaces/IGridCellStyleProvider";
+import { get } from "react-hook-form";
 
 export interface IRowProps<T> {
     row: T;
@@ -95,7 +96,11 @@ const GridRow = <T,>({
                         coordinates,
                     });
                 } else {
-                    child = row[column.field];
+                    if (typeof column.field === "string") {
+                        child = get(row, column.field);
+                    } else {
+                        child = row[column.field];
+                    }
                 }
 
                 return (

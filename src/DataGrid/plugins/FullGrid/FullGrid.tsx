@@ -36,19 +36,22 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
 
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        const tmpColumns: IGridColumn<T>[] = [];
-        const tmpFilters: IGridFilter[] = [];
-        const tmpOrder: IGridOrder[] = [];
-        props.columns.forEach((el) => {
-            tmpColumns.push(el.column);
-            el.filters.forEach((filter) => tmpFilters.push(filter));
-            el.order.forEach((order) => tmpOrder.push(order));
-        });
-        setColumns(tmpColumns);
-        setFilters(tmpFilters);
-        setOrder(tmpOrder);
-    }, []);
+    useEffect(
+        () => {
+            const tmpColumns: IGridColumn<T>[] = [];
+            const tmpFilters: IGridFilter[] = [];
+            const tmpOrder: IGridOrder[] = [];
+            props.columns.forEach((el) => {
+                tmpColumns.push(el.column);
+                el.filters.forEach((filter) => tmpFilters.push(filter));
+                el.order.forEach((order) => tmpOrder.push(order));
+            });
+            setColumns(tmpColumns);
+            setFilters(tmpFilters);
+            setOrder(tmpOrder);
+        },
+        process.env.NODE_ENV === "development" ? [props.columns] : [],
+    );
 
     useEffect(() => {
         setLoadingState(true);
@@ -64,10 +67,13 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                 setData(result.rows);
                 setRowCount(result.count);
                 setLoadingState(false);
-            }).catch(e => {
+            })
+            .catch((e) => {
                 setError(e.message);
-        });
-    }, [onPage, currentPage, props.columns, filters, order]);
+            });
+    }, [onPage, currentPage, filters, order]);
+    //props.columns
+
     return (
         <>
             <DataGrid

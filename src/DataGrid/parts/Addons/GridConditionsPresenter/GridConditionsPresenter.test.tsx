@@ -5,7 +5,6 @@ import { StoryBasic } from "./GridConditionsPresenter.stories";
 import { IGridOrder } from "../../../interfaces/IGridOrder";
 import { IGridFilter } from "../../../interfaces/IGridFilter";
 
-
 test("Should render with proper labels", () => {
     render(
         <>
