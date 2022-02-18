@@ -4,6 +4,7 @@ import { IGridHeaderEventCallback } from "./IGridHeaderEventCallback";
 import { ICellCoordinates } from "./ICellCoordinates";
 import { IGridHeaderTemplate } from "./IGridHeaderTemplate";
 import React from "react";
+import { Path } from "react-hook-form";
 
 export interface IGridCellEvents<T> {
     onClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
@@ -30,7 +31,7 @@ export interface IGridHeaderEvents<T> {
 }
 
 export interface IGridColumn<T> {
-    field?: Extract<keyof T, string | number>;
+    field?: Path<T> | number;
     name?: string;
     orderField?: string;
     display?: boolean;

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DataGrid from "../../DataGrid";
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
 import { IGridColumn } from "../../interfaces/IGridColumn";
 import Pagination from "../pagination/Pagination";
 import { ColumnTemplate } from "../columns/ColumnTemplate";
+import { HotKeys } from "../../../HotKeys";
+import { Key } from "ts-key-enum";
 
 export type IFullGridDataProvider<T> = ({
     filters,
@@ -18,11 +20,12 @@ export type IFullGridDataProvider<T> = ({
 }) => Promise<{ rows: T[]; count: number }>;
 
 export interface IFullGridProps<T> {
-    columns: ColumnTemplate<T>[];
     dataProvider: IFullGridDataProvider<T>;
+    columns: ColumnTemplate<T>[];
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
+    const isMounted = useRef(false);
     const [filters, setFilters] = useState<IGridFilter[]>([]);
     const [order, setOrder] = useState<IGridOrder[]>([]);
 
@@ -35,7 +38,6 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const [isInLoadingState, setLoadingState] = useState(true);
 
     const [error, setError] = useState("");
-
     useEffect(
         () => {
             const tmpColumns: IGridColumn<T>[] = [];
@@ -54,54 +56,85 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     );
 
     useEffect(() => {
-        setLoadingState(true);
-        setError("");
-        props
-            .dataProvider({
-                filters,
-                order,
-                fields: columns.map((column) => column.field),
-                page: { current: currentPage, onPage },
-            })
-            .then((result) => {
-                setData(result.rows);
-                setRowCount(result.count);
-                setLoadingState(false);
-            })
-            .catch((e) => {
-                setError(e.message);
-            });
-    }, [onPage, currentPage, filters, order]);
+        if (isMounted.current) {
+            setLoadingState(true);
+            setError("");
+            props
+                .dataProvider({
+                    filters,
+                    order,
+                    fields: columns.map((column) => column.field).filter((field) => field !== undefined),
+                    page: { current: currentPage, onPage },
+                })
+                .then((result) => {
+                    setData(result.rows);
+                    setRowCount(result.count);
+                    setLoadingState(false);
+                })
+                .catch((e) => {
+                    setError(e.message);
+                });
+        }
+    }, [onPage, currentPage, filters, order, columns]);
     //props.columns
 
+    useEffect(() => {
+        isMounted.current = true;
+
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     return (
-        <>
-            <DataGrid
-                showHeader={true}
-                showFooter={true}
-                isInLoadingState={isInLoadingState}
-                columns={columns}
-                filters={filters}
-                order={order}
-                onOrderChange={(order) => {
-                    setOrder(order);
-                }}
-                onFiltersChange={(filter) => setFilters(filter)}
-                data={data}
-                footer={() => {
-                    return (
-                        <Pagination
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            onPage={onPage}
-                            setOnPage={setOnPage}
-                            all={rowCount}
-                        />
-                    );
-                }}
-            />
-            {error && <div>{error}</div>}
-        </>
+        <HotKeys
+            actions={[
+                {
+                    key: Key.ArrowRight,
+                    handler: () => {
+                        if (currentPage < rowCount) {
+                            setCurrentPage((page) => page + 1);
+                        }
+                    },
+                },
+                {
+                    key: Key.ArrowLeft,
+                    handler: () => {
+                        if (currentPage > 1) {
+                            setCurrentPage((page) => page - 1);
+                        }
+                    },
+                },
+            ]}
+        >
+            <div tabIndex={0}>
+                <DataGrid
+                    showHeader={true}
+                    showFooter={true}
+                    isInLoadingState={isInLoadingState}
+                    columns={columns}
+                    filters={filters}
+                    order={order}
+                    onOrderChange={(order) => {
+                        setOrder(order);
+                    }}
+                    onFiltersChange={(filter) => setFilters(filter)}
+                    data={data}
+                    footer={() => {
+                        return (
+                            <Pagination
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                onPage={onPage}
+                                setOnPage={setOnPage}
+                                all={rowCount}
+                            />
+                        );
+                    }}
+                />
+                {error && <div>{error}</div>}
+            </div>
+        </HotKeys>
     );
 };
 

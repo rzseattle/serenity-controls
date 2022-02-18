@@ -8,3 +8,21 @@
     gap: 1px
     width: calc(100% - 2px)
     margin-left: 1px
+
+
+.loadingLayer
+    position: absolute
+    height: 100%
+    width: 100%
+    background-color: gray
+
+
+.loadingLayerFadeIn
+    visibility: visible
+    opacity: 0.1
+    transition: visibility 0s linear 0s, opacity 400ms
+
+.loadingLayerFadeOut
+    visibility: hidden
+    opacity: 0
+    transition: visibility 0s linear 400ms, opacity 400ms

@@ -1,7 +1,8 @@
+import { Path } from "react-hook-form";
 import { ColumnTemplate } from "./ColumnTemplate";
 
 export class ColText<Row> extends ColumnTemplate<Row> {
-    constructor(field: Extract<keyof Row, string | number>, caption: string) {
+    constructor(field: Path<Row>, caption: string) {
         super();
         this.column = {
             field,
@@ -23,7 +24,7 @@ export class ColText<Row> extends ColumnTemplate<Row> {
         this.order = [{ field, caption }];
     }
 
-    public static create<Row>(field: Extract<keyof Row, string | number>, caption = ""): ColText<Row> {
+    public static create<Row>(field: Path<Row>, caption = ""): ColText<Row> {
         return new ColText<Row>(field, caption);
     }
 }

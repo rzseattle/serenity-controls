@@ -50,10 +50,20 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
         }
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: Readonly<ITabsProps>): void {
-        if (nextProps.activeTab != null) {
-            this.setState({ currentTab: nextProps.activeTab });
+    // public UNSAFE_componentWillReceiveProps(nextProps: Readonly<ITabsProps>): void {
+    //     if (nextProps.activeTab != null) {
+    //         this.setState({ currentTab: nextProps.activeTab });
+    //     }
+    // }
+
+    static getDerivedStateFromProps(props: Readonly<ITabsProps>, state: ITabsState) {
+        if (props.activeTab && props.activeTab !== state.currentTab) {
+            return {
+                ...state,
+                currentTab: props.activeTab,
+            };
         }
+        return null;
     }
 
     public render() {
@@ -133,8 +143,9 @@ interface ITabPaneProps {
      * @param index
      */
     onClose?: (index: number) => any;
+    children: JSX.Element | JSX.Element[];
 }
 
-export const TabPane: React.StatelessComponent<ITabPaneProps> = (props) => {
+export const TabPane = (props: ITabPaneProps) => {
     return <div className="tab-pane">{props.children}</div>;
 };

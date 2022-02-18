@@ -99,12 +99,14 @@ const GridRow = <T,>({
                     if (typeof column.field === "string") {
                         child = get(row, column.field);
                     } else {
+                        //todo sprawdzic ts
+                        // @ts-ignore
                         child = row[column.field];
                     }
                 }
 
                 return (
-                    <div key={column.field} {...cellProperties}>
+                    <div key={column.field + column.name ?? ""} {...cellProperties}>
                         {child}
                     </div>
                 );

@@ -46,7 +46,7 @@ test("Should react for events", () => {
     render(
         <GridHeadColumn
             column={{
-                field: "test_field",
+                field: 0,
                 header: {
                     events: {
                         onClick: [onClick],

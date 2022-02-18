@@ -1,4 +1,4 @@
-import React, { ReactElement, StatelessComponent, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { IGridColumn } from "./interfaces/IGridColumn";
 import { IGridData } from "./interfaces/IGridData";
 
@@ -16,7 +16,6 @@ import { IFiltersChange } from "./interfaces/IFiltersChange";
 import GridHead from "./parts/Head/GridHead/GridHead";
 import GridBody from "./parts/Body/GridBody/GridBody";
 import GridFoot from "./parts/Footer/GridFoot/GridFoot";
-import { nanoid } from "nanoid";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
@@ -78,21 +77,18 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
     const className =
         props.className !== undefined ? props.className + " " + styles.gridLayoutCore : config.gridClassName;
 
+    const showLoadingLayer = props.isInLoadingState && props.data.length > 0;
     return (
         <div style={{ position: "relative" }}>
-            {props.isInLoadingState && props.data.length > 0 && (
-                <div
-                    style={{
-                        position: "absolute",
-                        height: "100%",
-                        width: "100%",
-                        backgroundColor: "gray",
-                        opacity: 0.1,
-                    }}
-                >
-                    {config.locale.loading}
-                </div>
-            )}
+            <div
+                className={
+                    styles.loadingLayer +
+                    " " +
+                    (showLoadingLayer ? styles.loadingLayerFadeIn : styles.loadingLayerFadeOut)
+                }
+            >
+                {config.locale.loading}
+            </div>
 
             <div className={className} style={{ display: "grid", gridTemplateColumns: widths }}>
                 {props.showHeader && (
@@ -106,8 +102,8 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                 )}
 
                 {props.data.length === 0 && (
-                    <div>
-                        <div style={{ gridColumn: "1 / " + (props.columns.length + 1), textAlign: "center" }}>
+                    <div style={{ gridColumn: "1 / " + (props.columns.length + 1), textAlign: "center" }}>
+                        <div >
                             {!props.isInLoadingState &&
                                 config.common.components.noData({ communicate: config.locale.noData })}
                             {props.isInLoadingState &&

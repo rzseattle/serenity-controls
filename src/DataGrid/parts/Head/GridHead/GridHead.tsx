@@ -41,7 +41,7 @@ const GridHead = <T,>({
                 {columns.map((column) => {
                     return (
                         <GridHeadColumn
-                            key={column.field}
+                            key={column.field + column.name ?? ""}
                             column={column}
                             isOrderable={order.filter((element) => isColumnAssignedElement(element, column)).length > 0}
                             orderDir={order.filter((element) => isColumnAssignedElement(element, column))[0]?.dir}
