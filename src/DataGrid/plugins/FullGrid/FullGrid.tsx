@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import DataGrid from "../../DataGrid";
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
@@ -22,11 +22,16 @@ export type IFullGridDataProvider<T> = ({
 export interface IFullGridProps<T> {
     dataProvider: IFullGridDataProvider<T>;
     columns: ColumnTemplate<T>[];
+    filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
-    const [filters, setFilters] = useState<IGridFilter[]>([]);
+    let [filters, setFilters] = useState<IGridFilter[]>([]);
+    if (props.filtersState) {
+        [filters, setFilters] = props.filtersState;
+    }
+
     const [order, setOrder] = useState<IGridOrder[]>([]);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +57,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             setFilters(tmpFilters);
             setOrder(tmpOrder);
         },
-        process.env.NODE_ENV === "development" ? [props.columns] : [],
+        process.env.NODE_ENV === "development" && false ? [props.columns] : [],
     );
 
     useEffect(() => {

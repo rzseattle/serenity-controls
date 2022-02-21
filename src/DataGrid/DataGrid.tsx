@@ -103,7 +103,7 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
 
                 {props.data.length === 0 && (
                     <div style={{ gridColumn: "1 / " + (props.columns.length + 1), textAlign: "center" }}>
-                        <div >
+                        <div>
                             {!props.isInLoadingState &&
                                 config.common.components.noData({ communicate: config.locale.noData })}
                             {props.isInLoadingState &&

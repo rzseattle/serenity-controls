@@ -81,11 +81,11 @@ export class Modal extends React.PureComponent<IModalProps> {
         }
     };
 
-    public UNSAFE_componentWillReceiveProps(nextProps: IModalProps) {
-        if (this.props.show == false && nextProps.show == true) {
-            this.handleShow();
-        }
-    }
+    // public UNSAFE_componentWillReceiveProps(nextProps: IModalProps) {
+    //     if (this.props.show == false && nextProps.show == true) {
+    //         this.handleShow();
+    //     }
+    // }
 
     public componentDidMount() {
         if (this.props.show) {
