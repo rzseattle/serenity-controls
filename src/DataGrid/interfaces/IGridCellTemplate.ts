@@ -9,4 +9,3 @@ export type IGridCellTemplate<T> = ({
     column: IGridColumn<T>;
     coordinates: { row: number; column: number };
 }) => string | number | JSX.Element;
-

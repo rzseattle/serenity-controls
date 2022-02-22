@@ -13,7 +13,7 @@ export type IFullGridDataProvider<T> = ({
     order,
     fields,
 }: {
-    filters: IGridFilter[];
+    filters: Partial<IGridFilter>[];
     order: IGridOrder[];
     fields: Array<string | number>;
     page: { current: number; onPage: number };
@@ -23,16 +23,24 @@ export interface IFullGridProps<T> {
     dataProvider: IFullGridDataProvider<T>;
     columns: ColumnTemplate<T>[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
+    orderState?: [IGridOrder[], Dispatch<SetStateAction<IGridOrder[]>>];
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
     let [filters, setFilters] = useState<IGridFilter[]>([]);
+    let [order, setOrder] = useState<IGridOrder[]>([]);
     if (props.filtersState) {
         [filters, setFilters] = props.filtersState;
     }
 
-    const [order, setOrder] = useState<IGridOrder[]>([]);
+    if (props.filtersState) {
+        [filters, setFilters] = props.filtersState;
+    }
+
+    if (props.orderState) {
+        [order, setOrder] = props.orderState;
+    }
 
     const [currentPage, setCurrentPage] = useState(1);
     const [onPage, setOnPage] = useState(10);
@@ -61,12 +69,18 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     );
 
     useEffect(() => {
+        setCurrentPage(1);
+    }, [filters]);
+
+    useEffect(() => {
         if (isMounted.current) {
             setLoadingState(true);
             setError("");
             props
                 .dataProvider({
-                    filters,
+                    filters: filters
+                        .filter((el) => el.value !== undefined && el.value.length > 0)
+                        .map((el) => ({ field: el.field, value: el.value })),
                     order,
                     fields: columns.map((column) => column.field).filter((field) => field !== undefined),
                     page: { current: currentPage, onPage },
@@ -81,6 +95,8 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                 });
         }
     }, [onPage, currentPage, filters, order, columns]);
+    //filters <- dont track filters couse current page is changing
+
     //props.columns
 
     useEffect(() => {

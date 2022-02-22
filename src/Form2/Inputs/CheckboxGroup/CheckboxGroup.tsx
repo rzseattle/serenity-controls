@@ -10,7 +10,7 @@ import { Key } from "ts-key-enum";
 
 export interface ICheckboxgroupProps extends ICommonInputProps {
     name?: string;
-    value?: string;
+    value?: (number | string | boolean)[];
     readonly?: boolean;
     control: Control<any, any>;
     options: IOption[];

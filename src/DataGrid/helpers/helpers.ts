@@ -35,7 +35,11 @@ export const isColumnAssignedElement = (
     element: IGridDataAssignedElement & IGridColumnAssignedElement,
     column: IGridColumn<any>,
 ) => {
-    return (element.applyTo === undefined && element.field === column.field) || element.applyTo === column.field || element.applyTo === column.name;
+    return (
+        (element.applyTo === undefined && element.field === column.field) ||
+        (element.applyTo !== undefined && element.applyTo === column.field) ||
+        (element.applyTo !== undefined && column.name !== undefined && element.applyTo === column.name)
+    );
 };
 
 export const isGridColumnElementEqual = (

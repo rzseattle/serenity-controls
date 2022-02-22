@@ -83,7 +83,7 @@ export class ColumnTemplate<Row> {
 
     public addFilter(filter: IGridFilter | false) {
         if (filter !== false) {
-            this.filters.push({ ...filter, applyTo: this.column.name });
+            this.filters.push({ caption: this.column.header.caption, ...filter, applyTo: this.column.name });
         }
         return this;
     }

@@ -19,9 +19,11 @@ test("Should render", () => {
                 { value: false, label: "No" },
                 { value: true, label: "Yes" },
             ]}
+            value={[false]}
         />,
     );
-    expect((container.getElementsByClassName("select")[0] as HTMLDivElement).textContent).toBe("No");
+    screen.debug();
+    expect(screen.getByText("No")).toBeInTheDocument();
 });
 test("Should render in readonly", () => {
     const { result } = renderHook(() => useSerenityForm<any>({ defaultValues: { test: [] } }));

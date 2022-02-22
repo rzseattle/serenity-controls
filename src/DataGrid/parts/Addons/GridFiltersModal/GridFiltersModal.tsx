@@ -31,13 +31,14 @@ const GridFiltersModal = ({ relativeTo, onHide, onFiltersChange, editedFilter, f
                     onCancel={onHide}
                     onFiltersChange={(localFilters) => {
                         onHide();
-
                         onFiltersChange(
                             produce(filters, (draft) => {
                                 draft.forEach((el) => {
-                                    if (isGridColumnElementEqual(el, localFilters[0])) {
-                                        el.value = localFilters[0].value;
-                                    }
+                                    localFilters.forEach((localFilter) => {
+                                        if (isGridColumnElementEqual(el, localFilter)) {
+                                            el.value = localFilter.value;
+                                        }
+                                    });
                                 });
                             }),
                         );
