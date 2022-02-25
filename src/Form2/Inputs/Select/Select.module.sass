@@ -8,12 +8,23 @@
     background-color: #fff
     border: 1px solid #cbd5dd
     cursor: pointer
+
+    position: relative
+
+    > span
+        display: inline-block
+        white-space: pre
+        text-overflow: ellipsis
+        overflow: hidden
+        width: calc( 100% - 18px )
+
     &:hover
         svg
             color: #005A9D
     svg
-        float: right
-        margin-top: 8px
+        position: absolute
+        top: 8px
+        right: 8px
 
 
 

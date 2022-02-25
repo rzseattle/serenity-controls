@@ -28,6 +28,7 @@ export const useSerenityForm = <T>(props?: UseFormProps<T, any>): ISuperForm<T> 
         setFormErrors: (errors) => {
             setFormErrors(errors);
         },
+
         formErrors,
         setFieldErrors: (name, errors) => {
             form.setError(name, { types: errors.reduce((p, c, index) => ({ ...p, [index]: c }), {}) });

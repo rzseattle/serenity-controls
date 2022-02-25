@@ -173,7 +173,7 @@ const getRect = (
                 draft.itemAt[0] = "top";
             });
         }
-        if (y + itemRect.height > window.innerHeight && config.relativeToAt[1] === "bottom") {
+        if (y + itemRect.height > window.innerHeight && config.relativeToAt[0] === "bottom") {
             newConfig = produce(newConfig ?? config, (draft) => {
                 draft.relativeToAt[0] = "top";
                 draft.itemAt[0] = "bottom";
@@ -273,8 +273,13 @@ const Positioner = (inProps: IPositionerProps) => {
                                         //height: position[3],
                                     }
                                   : {}),
+                              zIndex: 4000, // why needed ?
                           }
-                        : { position: "absolute", ...props.absoluteSettings }
+                        : {
+                              position: "absolute",
+                              ...props.absoluteSettings,
+                              zIndex: 4000, // why needed ?
+                          }
                 }
             >
                 {inProps.children}

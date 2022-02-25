@@ -89,7 +89,7 @@ const Select = (props: ISelectProps) => {
                             onClick={() => setDropdownVisible(true)}
                             tabIndex={0}
                         >
-                            {props.options.filter((el) => el.value === control.field.value)[0]?.label}
+                            <span>{props.options.filter((el) => el.value === control.field.value)[0]?.label}</span>
                             <CommonIcons.chevronDown />
                         </div>
                     </HotKeys>

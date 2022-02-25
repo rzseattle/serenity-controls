@@ -22,11 +22,11 @@ const GridFiltersModal = ({ relativeTo, onHide, onFiltersChange, editedFilter, f
             relativeTo={() => relativeTo}
             relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "min" }}
             show={true}
-            shadow={false}
-            className=""
+            layer={false}
+            hideOnBlur={true}
             onHide={onHide}
         >
-            <div onClick={(e) => e.stopPropagation()} className={styles.filtersPanelContainer} style={{}}>
+            <div onClick={(e) => e.stopPropagation()} className={styles.filtersPanelContainer} >
                 <GridFiltersPanel
                     onCancel={onHide}
                     onFiltersChange={(localFilters) => {

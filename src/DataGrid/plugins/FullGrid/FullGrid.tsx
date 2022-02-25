@@ -24,6 +24,7 @@ export interface IFullGridProps<T> {
     columns: ColumnTemplate<T>[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
     orderState?: [IGridOrder[], Dispatch<SetStateAction<IGridOrder[]>>];
+    onPage?: number
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
@@ -43,7 +44,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     }
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [onPage, setOnPage] = useState(10);
+    const [onPage, setOnPage] = useState(props.onPage ?? 10);
     const [columns, setColumns] = useState<IGridColumn<T>[]>([]);
 
     const [data, setData] = useState<T[]>([]);

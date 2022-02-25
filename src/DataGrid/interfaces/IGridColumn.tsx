@@ -7,18 +7,18 @@ import React from "react";
 import { Path } from "react-hook-form";
 
 export interface IGridCellEvents<T> {
-    onClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
-    onMouseDown?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
-    onMouseUp?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
-    onMouseEnter?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
-    onMouseOut?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
-    onDoubleClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLElement>>[];
-    onDrag?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
-    onDrop?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
-    onDragStart?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
-    onDragOver?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
-    onDragEnter?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
-    onDragLeave?: IGridCellEventCallback<T, React.DragEvent<HTMLElement>>[];
+    onClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
+    onMouseDown?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
+    onMouseUp?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
+    onMouseEnter?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
+    onMouseOut?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
+    onDoubleClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
+    onDrag?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+    onDrop?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+    onDragStart?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+    onDragOver?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+    onDragEnter?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+    onDragLeave?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
 }
 
 export interface IGridHeaderEvents<T> {

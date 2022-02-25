@@ -56,9 +56,9 @@ export class CommandBar extends React.PureComponent<IProps> {
     };
 
     public render() {
-        const zIndex = this.props.zIndex != undefined ? this.props.zIndex : 99;
+
         return (
-            <div className="w-command-bar" style={{ zIndex }}>
+            <div className="w-command-bar" >
                 {this.props.isSearchBoxVisible && (
                     <div className="search-box">
                         <CommonIcons.search />

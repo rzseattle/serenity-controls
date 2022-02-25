@@ -34,6 +34,7 @@ export interface IModalProps {
     relativeTo?(): HTMLElement;
     relativeSettings?: IPositionCalculatorOptions;
     animation?: string;
+    hideOnBlur?: boolean;
 
     onOrientationChange?(type: string): any;
 }
@@ -41,21 +42,34 @@ export interface IModalProps {
 export class Modal extends React.PureComponent<IModalProps> {
     public modalBody: HTMLDivElement;
 
+
     public static defaultProps = {
         show: false,
 
         recalculatePosition: true,
         shadow: true,
         layer: true,
+        hideOnBlur: false,
         animation: "fade-in",
+        relativeSettings: RelativePositionPresets.bottomLeft,
     };
     private modalContainer: HTMLDivElement;
 
     constructor(props: IModalProps) {
         super(props);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
     }
 
-    public handleClose = (e: React.MouseEvent) => {
+    handleClickOutside(event: MouseEvent) {
+        // @ts-ignore
+        if (this.modalBody && !this.modalBody.contains(event.currentTarget)) {
+            // @ts-ignore
+            this.handleClose(event);
+        }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public handleClose = (e: React.MouseEvent ) => {
         if (e) {
             const target = e.target as HTMLDivElement;
             const rect = target.getBoundingClientRect();
@@ -65,7 +79,6 @@ export class Modal extends React.PureComponent<IModalProps> {
             if (!(rect.width - relativeMousePos < scrollbarWidth)) {
                 if (e !== null) {
                     e.stopPropagation();
-                    e.nativeEvent.stopImmediatePropagation();
                 }
             }
         }
@@ -88,9 +101,15 @@ export class Modal extends React.PureComponent<IModalProps> {
     // }
 
     public componentDidMount() {
+        //document.addEventListener('mousedown', this.handleClickOutside);
         if (this.props.show) {
             this.handleShow();
         }
+        document.addEventListener('mousedown', this.handleClickOutside);
+
+    }
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
     }
 
     public render() {
@@ -143,6 +162,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                               }
                             : undefined
                     }
+
                 >
                     <HotKeys
                         actions={[
@@ -165,6 +185,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                             onMouseDown={(e) => {
                                 e.stopPropagation();
                             }}
+
                         >
                             {p.showHideLink && (
                                 <a className="w-modal-close" style={{}} onClick={this.handleClose}>
