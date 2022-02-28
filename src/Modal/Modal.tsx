@@ -120,7 +120,6 @@ export class Modal extends React.PureComponent<IModalProps> {
         let conf: any = {
             left: "50%",
             top: "50%",
-            transform: "translate(-50%, -50%)",
         };
         if (p.position !== undefined) {
             conf = p.position;
@@ -183,11 +182,10 @@ export class Modal extends React.PureComponent<IModalProps> {
                             onMouseDown={(e) => {
                                 e.stopPropagation();
 
-                                const modal = e.currentTarget;
                                 if (this.props.draggable) {
                                     document.onmousemove = (event) => {
                                         event.preventDefault();
-                                        console.log(event.clientY + "px")
+                                        console.log(event.clientY + "px");
                                         //modal.style.top = e.clientY + "px";
                                         //modal.style.bottom = "auto";
                                     };

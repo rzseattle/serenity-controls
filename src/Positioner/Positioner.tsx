@@ -87,8 +87,8 @@ interface IPositionerProps {
     relativeSettings?: IPositionCalculatorOptions;
 
     absoluteSettings?: {
-        left?: number;
-        top?: number;
+        left?: number | string;
+        top?: number | string;
         right?: number;
         bottom?: number;
     };
@@ -208,10 +208,6 @@ const Positioner = (inProps: IPositionerProps) => {
     let lastKnownScrollXPosition = window.scrollX;
 
     useEffect(() => {
-        // @ts-ignore
-        const relativeTo: HTMLElement =
-            typeof inProps.relativeTo === "function" ? inProps.relativeTo() : props.relativeTo;
-
         // if (this.props.trackResize && this.resizeObserver === null) {
         //     this.resizeObserver = new ResizeObserver((entries, observer) => {
         //         for (const entry of entries) {
@@ -221,6 +217,19 @@ const Positioner = (inProps: IPositionerProps) => {
         //     });
         //     this.resizeObserver.observe(this.positionElement.current);
         // }
+
+        if (props.absoluteSettings && Object.entries(props.absoluteSettings).length > 0) {
+            if (props.absoluteSettings.top === "50%" && props.absoluteSettings.left === "50%") {
+                const targetRect = element.current.getBoundingClientRect();
+                props.absoluteSettings.top = `calc( 50% - ${targetRect.height/2}px )`;
+                props.absoluteSettings.left = `calc( 50% - ${targetRect.width/2}px )`;
+            }
+            setVisible(true);
+        }
+
+        // @ts-ignore
+        const relativeTo: HTMLElement =
+            typeof inProps.relativeTo === "function" ? inProps.relativeTo() : props.relativeTo;
 
         if (relativeTo) {
             const sourceRect = relativeTo.getBoundingClientRect();
@@ -277,7 +286,8 @@ const Positioner = (inProps: IPositionerProps) => {
                           }
                         : {
                               position: "absolute",
-                              ...props.absoluteSettings,
+                              ...(visible ? props.absoluteSettings : {}),
+                              visibility: visible ? "visible" : "hidden",
                               zIndex: 4000, // why needed ?
                           }
                 }

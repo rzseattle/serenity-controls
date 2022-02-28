@@ -25,9 +25,7 @@ export const alertDialog = async (message: string, options: Partial<IConfirmDial
                     cleanup();
                     resolve(undefined);
                 }}
-                options={[
-                    { value: true, label: "ok" },
-                ]}
+                options={[{ value: true, label: "ok" }]}
                 {...options}
             />
         );
@@ -35,4 +33,3 @@ export const alertDialog = async (message: string, options: Partial<IConfirmDial
         ReactDOM.render(x, wrapper);
     });
 };
-

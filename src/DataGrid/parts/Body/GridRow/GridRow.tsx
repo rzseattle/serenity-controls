@@ -68,7 +68,6 @@ const GridRow = <T,>({
                         const event = key as keyof IGridCellEvents<T>;
                         cellProperties[event] = (event) => {
                             val.forEach((callback: IGridCellEventCallback<T, any>) => {
-
                                 event.persist();
                                 callback({
                                     row,

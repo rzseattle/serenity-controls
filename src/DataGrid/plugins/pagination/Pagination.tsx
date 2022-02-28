@@ -27,7 +27,11 @@ const Pagination = ({ reload, currentPage, setCurrentPage, onPage, setOnPage, al
     }
     return (
         <div className={styles.main}>
-            {reload !== undefined && <div onClick={() => reload()} className={styles.refresh}><MdRefresh /></div>}
+            {reload !== undefined && (
+                <div onClick={() => reload()} className={styles.refresh}>
+                    <MdRefresh />
+                </div>
+            )}
 
             <div>
                 <select

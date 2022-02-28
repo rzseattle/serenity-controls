@@ -10,18 +10,20 @@ interface IFieldProps<T, TContext extends object = object> {
     readonly: boolean;
 }
 
-interface ISuperForm<T, TContext extends object = object> extends UseFormReturn<T, TContext> {
+export interface ISuperForm<T, TContext extends object = object> extends UseFormReturn<T, TContext> {
     setFormErrors: (errors: string[]) => any;
     setFieldErrors: (name: FieldPath<T>, errors: string[]) => any;
     setReadonly: (readonly: boolean | ((prevState: boolean) => boolean)) => any;
     isReadOnly: boolean;
     field: (name: FieldPath<T>) => IFieldProps<T>;
     formErrors: string[];
+    setSubmitting: (state: boolean) => any;
 }
 export const useSerenityForm = <T>(props?: UseFormProps<T, any>): ISuperForm<T> => {
     const form = useForm<T>(props);
     const [formErrors, setFormErrors] = useState<string[]>([]);
     const [isReadOnly, setReadonly] = useState<boolean>(false);
+    const [isSubmitting, setSubmitting] = useState<boolean>(false);
 
     return {
         ...form,
@@ -42,5 +44,9 @@ export const useSerenityForm = <T>(props?: UseFormProps<T, any>): ISuperForm<T> 
                 readonly: isReadOnly,
             };
         },
+        setSubmitting: (submitting: boolean) => {
+            setSubmitting(submitting);
+        },
+        formState: {...form.formState, isSubmitting}
     };
 };
