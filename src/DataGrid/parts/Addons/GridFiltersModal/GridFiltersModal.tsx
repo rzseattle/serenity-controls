@@ -26,7 +26,7 @@ const GridFiltersModal = ({ relativeTo, onHide, onFiltersChange, editedFilter, f
             hideOnBlur={true}
             onHide={onHide}
         >
-            <div onClick={(e) => e.stopPropagation()} className={styles.filtersPanelContainer} >
+            <div onClick={(e) => e.stopPropagation()} className={styles.filtersPanelContainer}>
                 <GridFiltersPanel
                     onCancel={onHide}
                     onFiltersChange={(localFilters) => {

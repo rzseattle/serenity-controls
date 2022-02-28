@@ -56,9 +56,8 @@ export class CommandBar extends React.PureComponent<IProps> {
     };
 
     public render() {
-
         return (
-            <div className="w-command-bar" >
+            <div className="w-command-bar">
                 {this.props.isSearchBoxVisible && (
                     <div className="search-box">
                         <CommonIcons.search />

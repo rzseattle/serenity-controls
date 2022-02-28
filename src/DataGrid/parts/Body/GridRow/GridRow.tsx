@@ -56,6 +56,10 @@ const GridRow = <T,>({
                         "" + " " + (column.cell.classTemplate({ row, column, coordinates }) ?? []).join(" ");
                 }
 
+                if (column.cell?.class !== undefined) {
+                    cellProperties.className = cellProperties.className ?? "" + " " + column.cell?.class.join(" ");
+                }
+
                 if (column.cell?.events !== undefined) {
                     if (column.cell.events.onDragStart) {
                         cellProperties.draggable = true;
@@ -64,6 +68,8 @@ const GridRow = <T,>({
                         const event = key as keyof IGridCellEvents<T>;
                         cellProperties[event] = (event) => {
                             val.forEach((callback: IGridCellEventCallback<T, any>) => {
+
+                                event.persist();
                                 callback({
                                     row,
                                     column,

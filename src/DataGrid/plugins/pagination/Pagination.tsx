@@ -1,4 +1,4 @@
-import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext, MdRefresh } from "react-icons/md";
 import React from "react";
 import styles from "./Pagination.module.sass";
 
@@ -8,9 +8,10 @@ export interface IPaginationProps {
     onPage: number;
     setOnPage: (onPage: number) => unknown;
     all: number;
+    reload?: () => any;
 }
 
-const Pagination = ({ currentPage, setCurrentPage, onPage, setOnPage, all }: IPaginationProps) => {
+const Pagination = ({ reload, currentPage, setCurrentPage, onPage, setOnPage, all }: IPaginationProps) => {
     const pages = Math.max(Math.ceil(all / onPage), 1);
     const leftRightCount = 0;
 
@@ -26,6 +27,8 @@ const Pagination = ({ currentPage, setCurrentPage, onPage, setOnPage, all }: IPa
     }
     return (
         <div className={styles.main}>
+            {reload !== undefined && <div onClick={() => reload()} className={styles.refresh}><MdRefresh /></div>}
+
             <div>
                 <select
                     data-testid={"change-on-page"}

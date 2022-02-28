@@ -19,12 +19,17 @@ export type IFullGridDataProvider<T> = ({
     page: { current: number; onPage: number };
 }) => Promise<{ rows: T[]; count: number }>;
 
+export interface GridController {
+    reload: () => any;
+}
+
 export interface IFullGridProps<T> {
+    passController: (controller: GridController) => any;
     dataProvider: IFullGridDataProvider<T>;
     columns: ColumnTemplate<T>[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
     orderState?: [IGridOrder[], Dispatch<SetStateAction<IGridOrder[]>>];
-    onPage?: number
+    onPage?: number;
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
@@ -52,6 +57,9 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const [isInLoadingState, setLoadingState] = useState(true);
 
     const [error, setError] = useState("");
+
+    const [rebuild, setRebuild] = useState(0);
+
     useEffect(
         () => {
             const tmpColumns: IGridColumn<T>[] = [];
@@ -66,34 +74,38 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             setFilters(tmpFilters);
             setOrder(tmpOrder);
         },
-        process.env.NODE_ENV === "development" && false ? [props.columns] : [],
+        process.env.NODE_ENV === "development" && false ? [props.columns] : [rebuild],
     );
 
     useEffect(() => {
         setCurrentPage(1);
     }, [filters]);
 
+    const loadDada = () => {
+        setLoadingState(true);
+        setError("");
+        props
+            .dataProvider({
+                filters: filters
+                    .filter((el) => el.value !== undefined && el.value.length > 0)
+                    .map((el) => ({ field: el.field, value: el.value })),
+                order,
+                fields: columns.map((column) => column.field).filter((field) => field !== undefined),
+                page: { current: currentPage, onPage },
+            })
+            .then((result) => {
+                setData(result.rows);
+                setRowCount(result.count);
+                setLoadingState(false);
+            })
+            .catch((e) => {
+                setError(e.message);
+            });
+    };
+
     useEffect(() => {
         if (isMounted.current) {
-            setLoadingState(true);
-            setError("");
-            props
-                .dataProvider({
-                    filters: filters
-                        .filter((el) => el.value !== undefined && el.value.length > 0)
-                        .map((el) => ({ field: el.field, value: el.value })),
-                    order,
-                    fields: columns.map((column) => column.field).filter((field) => field !== undefined),
-                    page: { current: currentPage, onPage },
-                })
-                .then((result) => {
-                    setData(result.rows);
-                    setRowCount(result.count);
-                    setLoadingState(false);
-                })
-                .catch((e) => {
-                    setError(e.message);
-                });
+            loadDada();
         }
     }, [onPage, currentPage, filters, order, columns]);
     //filters <- dont track filters couse current page is changing
@@ -107,6 +119,14 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             isMounted.current = false;
         };
     }, []);
+
+    if (props.passController !== undefined) {
+        props.passController({
+            reload: () => {
+                loadDada();
+            },
+        });
+    }
 
     return (
         <HotKeys
@@ -130,6 +150,13 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             ]}
         >
             <div tabIndex={0}>
+                <button
+                    onClick={() => {
+                        setRebuild((r) => ++r);
+                    }}
+                >
+                    reload
+                </button>
                 <DataGrid
                     showHeader={true}
                     showFooter={true}
@@ -150,6 +177,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                                 onPage={onPage}
                                 setOnPage={setOnPage}
                                 all={rowCount}
+                                reload={() => loadDada()}
                             />
                         );
                     }}

@@ -22,6 +22,7 @@ export interface IModalProps {
     layer?: boolean;
     width?: string | number;
     height?: string | number;
+    draggable?: boolean;
     position?: {
         top?: string | number;
         left?: string | number;
@@ -42,10 +43,9 @@ export interface IModalProps {
 export class Modal extends React.PureComponent<IModalProps> {
     public modalBody: HTMLDivElement;
 
-
     public static defaultProps = {
         show: false,
-
+        draggable: false,
         recalculatePosition: true,
         shadow: true,
         layer: true,
@@ -62,14 +62,14 @@ export class Modal extends React.PureComponent<IModalProps> {
 
     handleClickOutside(event: MouseEvent) {
         // @ts-ignore
-        if (this.modalBody && !this.modalBody.contains(event.currentTarget)) {
+        if (this.props.hideOnBlur && this.modalBody && !this.modalBody.contains(event.currentTarget)) {
             // @ts-ignore
             this.handleClose(event);
         }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public handleClose = (e: React.MouseEvent ) => {
+    public handleClose = (e: React.MouseEvent) => {
         if (e) {
             const target = e.target as HTMLDivElement;
             const rect = target.getBoundingClientRect();
@@ -105,11 +105,10 @@ export class Modal extends React.PureComponent<IModalProps> {
         if (this.props.show) {
             this.handleShow();
         }
-        document.addEventListener('mousedown', this.handleClickOutside);
-
+        document.addEventListener("mousedown", this.handleClickOutside);
     }
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleClickOutside);
+        document.removeEventListener("mousedown", this.handleClickOutside);
     }
 
     public render() {
@@ -162,7 +161,6 @@ export class Modal extends React.PureComponent<IModalProps> {
                               }
                             : undefined
                     }
-
                 >
                     <HotKeys
                         actions={[
@@ -184,14 +182,33 @@ export class Modal extends React.PureComponent<IModalProps> {
                             style={{ width: p.width ? p.width : "auto", height: p.height ? p.height : "auto" }}
                             onMouseDown={(e) => {
                                 e.stopPropagation();
-                            }}
 
+                                const modal = e.currentTarget;
+                                if (this.props.draggable) {
+                                    document.onmousemove = (event) => {
+                                        event.preventDefault();
+                                        console.log(event.clientY + "px")
+                                        //modal.style.top = e.clientY + "px";
+                                        //modal.style.bottom = "auto";
+                                    };
+                                    document.onmouseup = () => {
+                                        document.onmouseup = null;
+                                        document.onmousemove = null;
+                                    };
+                                }
+                            }}
+                            // onMouseUp={(e) => {
+                            //     if (this.props.draggable) {
+                            //         e.currentTarget.style.opacity = "1";
+                            //     }
+                            // }}
                         >
                             {p.showHideLink && (
                                 <a className="w-modal-close" style={{}} onClick={this.handleClose}>
                                     <CommonIcons.close />
                                 </a>
                             )}
+
                             {p.title && (
                                 <div className="w-modal-title">
                                     {p.icon && <p.icon />} {p.title}
