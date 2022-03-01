@@ -7,6 +7,7 @@ import Pagination from "../pagination/Pagination";
 import { ColumnTemplate } from "../columns/ColumnTemplate";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
+import { FullDataGridData } from "./Types";
 
 export type IFullGridDataProvider<T> = ({
     filters,
@@ -17,7 +18,7 @@ export type IFullGridDataProvider<T> = ({
     order: IGridOrder[];
     fields: Array<string | number>;
     page: { current: number; onPage: number };
-}) => Promise<{ rows: T[]; count: number }>;
+}) => Promise<FullDataGridData<T>>;
 
 export interface GridController {
     reload: () => any;
@@ -36,11 +37,11 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
     let [filters, setFilters] = useState<IGridFilter[]>([]);
     let [order, setOrder] = useState<IGridOrder[]>([]);
-    if (props.filtersState) {
+    if (props.filtersState !== undefined) {
         [filters, setFilters] = props.filtersState;
     }
 
-    if (props.filtersState) {
+    if (props.filtersState !== undefined) {
         [filters, setFilters] = props.filtersState;
     }
 
@@ -57,6 +58,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const [isInLoadingState, setLoadingState] = useState(true);
 
     const [error, setError] = useState("");
+    const [debug, setDebug] = useState("");
 
     const [rebuild, setRebuild] = useState(0);
 
@@ -71,10 +73,22 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                 el.order.forEach((order) => tmpOrder.push(order));
             });
             setColumns(tmpColumns);
-            setFilters(tmpFilters);
-            setOrder(tmpOrder);
+
+            /*
+             * If control is provided to parent component we can't refresh the controlled state
+             * because it forces to refresh the component infinitely
+             */
+            if (
+                process.env.NODE_ENV === "production" ||
+                (props.filtersState === undefined && props.orderState === undefined)
+            ) {
+                setFilters(tmpFilters);
+                setOrder(tmpOrder);
+            }else if(process.env.NODE_ENV === "development"){
+                console.log( "Can't refresh in dev mode if filtersState|orderState provided" )
+            }
         },
-        process.env.NODE_ENV === "development" && false ? [props.columns] : [rebuild],
+        process.env.NODE_ENV === "development" ? [props.columns] : [rebuild],
     );
 
     useEffect(() => {
@@ -96,6 +110,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             .then((result) => {
                 setData(result.rows);
                 setRowCount(result.count);
+                setDebug(result.debug);
                 setLoadingState(false);
             })
             .catch((e) => {
@@ -183,6 +198,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                     }}
                 />
                 {error && <div>{error}</div>}
+                {debug && <pre>{debug}</pre>}
             </div>
         </HotKeys>
     );

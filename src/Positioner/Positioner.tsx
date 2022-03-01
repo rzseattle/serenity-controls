@@ -221,8 +221,8 @@ const Positioner = (inProps: IPositionerProps) => {
         if (props.absoluteSettings && Object.entries(props.absoluteSettings).length > 0) {
             if (props.absoluteSettings.top === "50%" && props.absoluteSettings.left === "50%") {
                 const targetRect = element.current.getBoundingClientRect();
-                props.absoluteSettings.top = `calc( 50% - ${targetRect.height/2}px )`;
-                props.absoluteSettings.left = `calc( 50% - ${targetRect.width/2}px )`;
+                props.absoluteSettings.top = `calc( 50% - ${targetRect.height / 2}px )`;
+                props.absoluteSettings.left = `calc( 50% - ${targetRect.width / 2}px )`;
             }
             setVisible(true);
         }

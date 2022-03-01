@@ -47,6 +47,6 @@ export const useSerenityForm = <T>(props?: UseFormProps<T, any>): ISuperForm<T> 
         setSubmitting: (submitting: boolean) => {
             setSubmitting(submitting);
         },
-        formState: {...form.formState, isSubmitting}
+        formState: { ...form.formState, isSubmitting },
     };
 };
