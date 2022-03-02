@@ -84,8 +84,8 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             ) {
                 setFilters(tmpFilters);
                 setOrder(tmpOrder);
-            }else if(process.env.NODE_ENV === "development"){
-                console.log( "Can't refresh in dev mode if filtersState|orderState provided" )
+            } else if (process.env.NODE_ENV === "development") {
+                console.log("Can't refresh in dev mode if filtersState|orderState provided");
             }
         },
         process.env.NODE_ENV === "development" ? [props.columns] : [rebuild],
@@ -165,13 +165,13 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             ]}
         >
             <div tabIndex={0}>
-                <button
-                    onClick={() => {
-                        setRebuild((r) => ++r);
-                    }}
-                >
-                    reload
-                </button>
+                {/*<button*/}
+                {/*    onClick={() => {*/}
+                {/*        setRebuild((r) => ++r);*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    reload*/}
+                {/*</button>*/}
                 <DataGrid
                     showHeader={true}
                     showFooter={true}

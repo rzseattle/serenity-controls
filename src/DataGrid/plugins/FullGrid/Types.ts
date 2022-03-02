@@ -1,5 +1,5 @@
 export interface FullDataGridData<T> {
-    rows: T[]
-    count: number
-    debug?: string
+    rows: T[];
+    count: number;
+    debug?: string;
 }

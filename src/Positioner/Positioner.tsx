@@ -198,7 +198,12 @@ const Positioner = (inProps: IPositionerProps) => {
         ...inProps,
     };
     //const container = useRef<HTMLDivElement>();
-    const [position, setRect] = useState<[number, number, string | number, string | number]>([0, 0, "auto", "auto"]);
+    const [position, setPosition] = useState<[string | number, string | number, string | number, string | number]>([
+        props.absoluteSettings?.top ?? 0,
+        props.absoluteSettings?.left ?? 0,
+        "auto",
+        "auto",
+    ]);
     const [visible, setVisible] = useState(false);
     const [className, setClassName] = useState("");
     const element = useRef<HTMLDivElement>();
@@ -207,22 +212,16 @@ const Positioner = (inProps: IPositionerProps) => {
     let lastKnownScrollYPosition = window.scrollY;
     let lastKnownScrollXPosition = window.scrollX;
 
-    useEffect(() => {
-        // if (this.props.trackResize && this.resizeObserver === null) {
-        //     this.resizeObserver = new ResizeObserver((entries, observer) => {
-        //         for (const entry of entries) {
-        //             const { left, top, width, height } = entry.contentRect;
-        //             calculate();
-        //         }
-        //     });
-        //     this.resizeObserver.observe(this.positionElement.current);
-        // }
-
+    const calculatePosition = () => {
         if (props.absoluteSettings && Object.entries(props.absoluteSettings).length > 0) {
             if (props.absoluteSettings.top === "50%" && props.absoluteSettings.left === "50%") {
                 const targetRect = element.current.getBoundingClientRect();
-                props.absoluteSettings.top = `calc( 50% - ${targetRect.height / 2}px )`;
-                props.absoluteSettings.left = `calc( 50% - ${targetRect.width / 2}px )`;
+                setPosition([
+                    `calc( 50% - ${targetRect.height / 2}px )`,
+                    `calc( 50% - ${targetRect.width / 2}px )`,
+                    0,
+                    0,
+                ]);
             }
             setVisible(true);
         }
@@ -236,10 +235,31 @@ const Positioner = (inProps: IPositionerProps) => {
             const targetRect = element.current.getBoundingClientRect();
 
             const [left, top, width, height] = getRect(props.relativeSettings, sourceRect, targetRect);
-            setRect([left + lastKnownScrollXPosition, top + lastKnownScrollYPosition, width, height]);
+            setPosition([left + lastKnownScrollXPosition, top + lastKnownScrollYPosition, width, height]);
             setVisible(true);
             setClassName("rotate-in-center");
+        }
+    };
 
+    const resizeObserver = useRef<ResizeObserver>(
+        new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.contentBoxSize) {
+                    //console.log(entry);
+                    //calculatePosition();
+                }
+            }
+        }),
+    );
+
+    useEffect(() => {
+        calculatePosition();
+
+        // @ts-ignore
+        const relativeTo: HTMLElement =
+            typeof inProps.relativeTo === "function" ? inProps.relativeTo() : props.relativeTo;
+        const targetRect = element.current.getBoundingClientRect();
+        if (relativeTo) {
             const track = () => {
                 lastKnownScrollYPosition = window.scrollY;
                 lastKnownScrollXPosition = window.scrollX;
@@ -248,7 +268,7 @@ const Positioner = (inProps: IPositionerProps) => {
                     window.requestAnimationFrame(function () {
                         const sourceRect = relativeTo.getBoundingClientRect();
                         const [left, top, width, height] = getRect(props.relativeSettings, sourceRect, targetRect);
-                        setRect([left + lastKnownScrollXPosition, top + lastKnownScrollYPosition, width, height]);
+                        setPosition([left + lastKnownScrollXPosition, top + lastKnownScrollYPosition, width, height]);
                         ticking = false;
                     });
 
@@ -256,10 +276,25 @@ const Positioner = (inProps: IPositionerProps) => {
                 }
             };
             document.addEventListener("scroll", track);
+
             return () => {
                 document.removeEventListener("scroll", track);
             };
+        } else if (true) {
+            console.log("---------");
+            console.log(element.current);
+            if (element.current) {
+                resizeObserver.current.observe(element.current);
+            }
         }
+
+        return () => {
+            if (element.current) {
+                console.log("----X----");
+                console.log(element.current);
+                resizeObserver.current.unobserve(element.current);
+            }
+        };
     }, []);
 
     return (
@@ -286,12 +321,14 @@ const Positioner = (inProps: IPositionerProps) => {
                           }
                         : {
                               position: "absolute",
-                              ...(visible ? props.absoluteSettings : {}),
+                              ...position,
+                              ...(visible ? props.absoluteSettings : { top: 0, left: 0 }),
                               visibility: visible ? "visible" : "hidden",
                               zIndex: 4000, // why needed ?
                           }
                 }
             >
+                t:{position[0]} l:{position[1]}
                 {inProps.children}
             </div>
         </Portal>
