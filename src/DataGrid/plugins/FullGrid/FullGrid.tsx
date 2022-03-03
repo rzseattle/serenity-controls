@@ -74,21 +74,16 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             });
             setColumns(tmpColumns);
 
-            /*
-             * If control is provided to parent component we can't refresh the controlled state
-             * because it forces to refresh the component infinitely
-             */
-            if (
-                process.env.NODE_ENV === "production" ||
-                (props.filtersState === undefined && props.orderState === undefined)
-            ) {
-                setFilters(tmpFilters);
-                setOrder(tmpOrder);
-            } else if (process.env.NODE_ENV === "development") {
-                console.log("Can't refresh in dev mode if filtersState|orderState provided");
-            }
+            setFilters(tmpFilters);
+            setOrder(tmpOrder);
         },
-        process.env.NODE_ENV === "development" ? [props.columns] : [rebuild],
+        /*
+         * If control is provided to parent component we can't refresh the controlled state
+         * because it forces to refresh the component infinitely
+         */
+        process.env.NODE_ENV === "development" && props.filtersState === undefined && props.orderState === undefined
+            ? [props.columns]
+            : [rebuild],
     );
 
     useEffect(() => {

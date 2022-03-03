@@ -143,7 +143,7 @@ interface ITabPaneProps {
      * @param index
      */
     onClose?: (index: number) => any;
-    children: JSX.Element | JSX.Element[];
+    children?: JSX.Element | JSX.Element[];
 }
 
 export const TabPane = (props: ITabPaneProps) => {

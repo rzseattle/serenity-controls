@@ -91,7 +91,7 @@ const GridDateFilterRow = ({
                     setDate(parse(value.value, dateFormat, new Date()));
                 }
             } catch (ex) {
-                console.log(ex);
+                console.error(ex);
             }
         }
     }, [autoFocus]);

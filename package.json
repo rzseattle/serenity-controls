@@ -53,7 +53,8 @@
         "testEnvironment": "jsdom",
         "roots": [
             "<rootDir>/src"
-        ]
+        ],
+        "setupFilesAfterEnv": ["<rootDir>/src/setupTests.js"]
     },
     "eslintConfig": {
         "extends": [

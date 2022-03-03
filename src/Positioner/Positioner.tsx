@@ -188,6 +188,15 @@ const getRect = (
     return [x, y, width, itemRect.height];
 };
 
+interface IRect {
+    top: string | number;
+    left: string | number;
+    bottom: string | number;
+    right: string | number;
+    width: string | number;
+    height: string | number;
+}
+
 const Positioner = (inProps: IPositionerProps) => {
     const props: IPositionerProps = {
         relativeSettings: RelativePositionPresets.bottomMiddle,
@@ -197,13 +206,18 @@ const Positioner = (inProps: IPositionerProps) => {
         absoluteSettings: null,
         ...inProps,
     };
-    //const container = useRef<HTMLDivElement>();
-    const [position, setPosition] = useState<[string | number, string | number, string | number, string | number]>([
-        props.absoluteSettings?.top ?? 0,
-        props.absoluteSettings?.left ?? 0,
-        "auto",
-        "auto",
-    ]);
+
+    //to avoid blink when element is located at bottom for a moment
+    const bottom = props.absoluteSettings?.bottom ?? "auto";
+    const right = props.absoluteSettings?.right ?? "auto";
+    const [position, setPosition] = useState<IRect>({
+        top: props.absoluteSettings?.top ?? bottom === "auto" ? 0 : "auto",
+        left: props.absoluteSettings?.left ?? right === "auto" ? 0 : "auto",
+        bottom,
+        right,
+        width: "auto",
+        height: "auto",
+    });
     const [visible, setVisible] = useState(false);
     const [className, setClassName] = useState("");
     const element = useRef<HTMLDivElement>();
@@ -216,12 +230,13 @@ const Positioner = (inProps: IPositionerProps) => {
         if (props.absoluteSettings && Object.entries(props.absoluteSettings).length > 0) {
             if (props.absoluteSettings.top === "50%" && props.absoluteSettings.left === "50%") {
                 const targetRect = element.current.getBoundingClientRect();
-                setPosition([
-                    `calc( 50% - ${targetRect.height / 2}px )`,
-                    `calc( 50% - ${targetRect.width / 2}px )`,
-                    0,
-                    0,
-                ]);
+                setPosition((pos) => {
+                    return {
+                        ...pos,
+                        top: `calc( 50% - ${targetRect.height / 2}px )`,
+                        left: `calc( 50% - ${targetRect.width / 2}px )`,
+                    };
+                });
             }
             setVisible(true);
         }
@@ -235,18 +250,25 @@ const Positioner = (inProps: IPositionerProps) => {
             const targetRect = element.current.getBoundingClientRect();
 
             const [left, top, width, height] = getRect(props.relativeSettings, sourceRect, targetRect);
-            setPosition([left + lastKnownScrollXPosition, top + lastKnownScrollYPosition, width, height]);
+            setPosition((pos) => ({
+                ...pos,
+                left: left + lastKnownScrollXPosition,
+                top: top + lastKnownScrollYPosition,
+                width,
+                height,
+            }));
             setVisible(true);
             setClassName("rotate-in-center");
         }
     };
 
     const resizeObserver = useRef<ResizeObserver>(
-        new ResizeObserver((entries) => {
+        new window.ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry.contentBoxSize) {
-                    //console.log(entry);
-                    //calculatePosition();
+                    if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+                        calculatePosition();
+                    }
                 }
             }
         }),
@@ -268,7 +290,13 @@ const Positioner = (inProps: IPositionerProps) => {
                     window.requestAnimationFrame(function () {
                         const sourceRect = relativeTo.getBoundingClientRect();
                         const [left, top, width, height] = getRect(props.relativeSettings, sourceRect, targetRect);
-                        setPosition([left + lastKnownScrollXPosition, top + lastKnownScrollYPosition, width, height]);
+                        setPosition((pos) => ({
+                            ...pos,
+                            left: left + lastKnownScrollXPosition,
+                            top: top + lastKnownScrollYPosition,
+                            width,
+                            height,
+                        }));
                         ticking = false;
                     });
 
@@ -281,8 +309,8 @@ const Positioner = (inProps: IPositionerProps) => {
                 document.removeEventListener("scroll", track);
             };
         } else if (true) {
-            console.log("---------");
-            console.log(element.current);
+            //console.log("---------");
+            //console.log(element.current);
             if (element.current) {
                 resizeObserver.current.observe(element.current);
             }
@@ -290,8 +318,8 @@ const Positioner = (inProps: IPositionerProps) => {
 
         return () => {
             if (element.current) {
-                console.log("----X----");
-                console.log(element.current);
+                //console.log("----X----");
+                //console.log(element.current);
                 resizeObserver.current.unobserve(element.current);
             }
         };
@@ -307,13 +335,12 @@ const Positioner = (inProps: IPositionerProps) => {
                         ? {
                               ...{
                                   position: "absolute",
-                                  left: position[0],
-                                  top: position[1],
+                                  ...position,
                                   visibility: visible ? "visible" : "hidden",
                               },
                               ...(props.relativeSettings.widthCalc && props.relativeSettings.widthCalc !== "none"
                                   ? {
-                                        width: position[2],
+                                        width: position.width,
                                         //height: position[3],
                                     }
                                   : {}),
@@ -322,13 +349,11 @@ const Positioner = (inProps: IPositionerProps) => {
                         : {
                               position: "absolute",
                               ...position,
-                              ...(visible ? props.absoluteSettings : { top: 0, left: 0 }),
                               visibility: visible ? "visible" : "hidden",
                               zIndex: 4000, // why needed ?
                           }
                 }
             >
-                t:{position[0]} l:{position[1]}
                 {inProps.children}
             </div>
         </Portal>
