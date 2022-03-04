@@ -27,7 +27,7 @@ export interface ISerenityFormProps<T> extends UseFormProps<T> {
 export const useSerenityForm = <T>(props?: ISerenityFormProps<T>): ISuperForm<T> => {
     const form = useForm<T>(props);
     const [formErrors, setFormErrors] = useState<string[]>([]);
-    const [isReadOnly, setReadonly] = useState<boolean>(props.isReadOnly ?? false);
+    const [isReadOnly, setReadonly] = useState<boolean>(props?.isReadOnly ?? false);
     const [isSubmitting, setSubmitting] = useState<boolean>(false);
 
     return {

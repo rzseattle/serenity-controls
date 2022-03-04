@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import Dropzone from "react-dropzone";
+
 import { IFieldProps } from "../fields/Interfaces";
 
 import { fI18n } from "../lib";
@@ -160,31 +160,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
 
         return (
             <div className="w-file-list">
-                {(!maxLength || (value && value.length < maxLength) || !value) && editable && (
-                    <Dropzone onDrop={this.handleFileAdd}>
-                        {({ getRootProps, getInputProps, isDragActive }) => {
-                            // @ts-ignore
-                            return (
-                                // @ts-ignore
-                                <div {...getRootProps()} className="dropzone">
-                                    {/*
-  // @ts-ignore */}
-                                    <input {...getInputProps()} />
-                                    {isDragActive ? (
-                                        <p>Drop files here...</p>
-                                    ) : (
-                                        <span>
-                                            <CommonIcons.add style={{ verticalAlign: "middle" }} />{" "}
-                                            {this.props.buttonTitle
-                                                ? this.props.buttonTitle
-                                                : fI18n.t("frontend:file.add")}{" "}
-                                        </span>
-                                    )}
-                                </div>
-                            );
-                        }}
-                    </Dropzone>
-                )}
+                {(!maxLength || (value && value.length < maxLength) || !value) && editable && <div>todo</div>}
 
                 <div className={" " + (type == "gallery" ? "w-file-list-gallery" : "w-file-list-files")}>
                     {!editable && value.length == 0 && (
