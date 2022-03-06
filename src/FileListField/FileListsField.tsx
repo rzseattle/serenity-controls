@@ -4,7 +4,6 @@ import { IFieldProps } from "../fields/Interfaces";
 
 import { fI18n } from "../lib";
 
-
 import { formatBytes, getViewer, globalTransformFilePath, isImage } from "./utils";
 import { SortableImageList } from "./SortableImageList";
 import { PreviewModal } from "./PreviewModal";
@@ -205,12 +204,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
                         : null}
                     {type == "gallery" && (
                         <SortableImageList
-
                             files={value}
-
-
-
-                            
                             onDelete={this.handleFileRemove}
                             onClick={this.handleViewRequest}
                             itemStyle={this.props.itemStyle}
