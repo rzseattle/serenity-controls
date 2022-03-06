@@ -1,4 +1,3 @@
-import { SortableContainer } from "react-sortable-hoc";
 import * as React from "react";
 import { ImageBox } from "./ImageBox";
 import { IFile } from "./FileListsField";
@@ -11,7 +10,7 @@ interface ISortableImageList {
     editable: boolean;
     transformFilePath?: (file: IFile) => string;
 }
-export const SortableImageList = SortableContainer((props: ISortableImageList) => {
+export const SortableImageList = (props: ISortableImageList) => {
     return (
         <div className="w-gallery-list">
             {props.files &&
@@ -31,4 +30,4 @@ export const SortableImageList = SortableContainer((props: ISortableImageList) =
                 ))}
         </div>
     );
-});
+};

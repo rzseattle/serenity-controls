@@ -1,4 +1,3 @@
-import { SortableElement, SortableHandle } from "react-sortable-hoc";
 import { IFile } from "./FileListsField";
 import * as React from "react";
 import { isImage } from "./utils";
@@ -20,11 +19,11 @@ interface IImageBoxProps {
     transformFilePath?: (file: IFile) => string;
 }
 
-const DragHandle = SortableHandle(() => (
+const DragHandle = () => (
     <a className="w-gallery-drag">
         <BsArrowsMove />
     </a>
-)); //
+); //
 
 // @ts-ignore
 const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props: IImageBoxProps) => {

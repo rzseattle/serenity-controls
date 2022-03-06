@@ -4,7 +4,7 @@ import { IFieldProps } from "../fields/Interfaces";
 
 import { fI18n } from "../lib";
 
-import { SortEnd } from "react-sortable-hoc";
+
 import { formatBytes, getViewer, globalTransformFilePath, isImage } from "./utils";
 import { SortableImageList } from "./SortableImageList";
 import { PreviewModal } from "./PreviewModal";
@@ -100,7 +100,7 @@ export class FileListField extends React.Component<IFileListProps, any> {
         this.handleViewRequest(index);
     }
 
-    public handleMoveFile = (moveEvent: SortEnd) => {
+    public handleMoveFile = (moveEvent: any) => {
         const { oldIndex, newIndex } = moveEvent;
         const currFiles = this.props.value ? this.props.value.slice() : [];
         currFiles.splice(newIndex, 0, currFiles.splice(oldIndex, 1)[0]);
@@ -205,12 +205,12 @@ export class FileListField extends React.Component<IFileListProps, any> {
                         : null}
                     {type == "gallery" && (
                         <SortableImageList
-                            helperClass={"w-file-list-dragging"}
+
                             files={value}
-                            onSortEnd={this.handleMoveFile}
-                            axis={"xy"}
-                            useDragHandle={true}
-                            lockToContainerEdges={true}
+
+
+
+                            
                             onDelete={this.handleFileRemove}
                             onClick={this.handleViewRequest}
                             itemStyle={this.props.itemStyle}
