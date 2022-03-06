@@ -14,6 +14,8 @@ test("Should render", () => {
             label={"Curr label"}
             fieldState={result.current.getFieldState("test")}
             {...result.current.field("test")}
+            readonly={false}
+            valueForPresenter={() => ({ real: "", presented: "" })}
         >
             <div>child</div>
         </CommonInput>,
@@ -31,6 +33,8 @@ test("Should render errors", () => {
             label={"Curr label"}
             fieldState={result.current.getFieldState("test")}
             {...result.current.field("test")}
+            readonly={false}
+            valueForPresenter={() => ({ real: "", presented: "" })}
         >
             <div>child</div>
         </CommonInput>,

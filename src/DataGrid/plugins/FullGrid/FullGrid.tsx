@@ -25,7 +25,7 @@ export interface GridController {
 }
 
 export interface IFullGridProps<T> {
-    passController: (controller: GridController) => any;
+    passController?: (controller: GridController) => any;
     dataProvider: IFullGridDataProvider<T>;
     columns: ColumnTemplate<T>[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];

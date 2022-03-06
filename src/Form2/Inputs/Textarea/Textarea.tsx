@@ -16,22 +16,24 @@ const Textarea = (props: ITextareaProps) => {
     const control = useController({ name: props.name, control: props.control });
 
     return (
-        <CommonInput label={props.label} fieldState={control.fieldState}>
-            {props.readonly ? (
-                <div className="w-read-only">{control.field.value}</div>
-            ) : (
-                <textarea
-                    style={props.style}
-                    {...props.control.register(props.name)}
-                    onChange={(e) => {
-                        control.field.onChange({ target: { value: e.target.value } });
-                    }}
-                    onBlur={() => {
-                        control.field.onBlur();
-                    }}
-                    value={control.field.value}
-                />
-            )}
+        <CommonInput
+            label={props.label}
+            fieldState={control.fieldState}
+            readonly={props.readonly}
+            readOnlyPresenter={props.readOnlyPresenter}
+            valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
+        >
+            <textarea
+                style={props.style}
+                {...props.control.register(props.name)}
+                onChange={(e) => {
+                    control.field.onChange({ target: { value: e.target.value } });
+                }}
+                onBlur={() => {
+                    control.field.onBlur();
+                }}
+                value={control.field.value}
+            />
         </CommonInput>
     );
 };

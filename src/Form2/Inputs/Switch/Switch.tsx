@@ -16,28 +16,31 @@ const Switch = (props: ISwitchProps) => {
     const control = useController({ name: props.name, control: props.control });
 
     return (
-        <CommonInput label={props.label} fieldState={control.fieldState}>
-            {props.readonly ? (
-                <div className="w-read-only">
-                    {props.options.filter((el) => el.value === control.field.value)[0]?.label}
-                </div>
-            ) : (
-                <div className={styles.list}>
-                    {props.options.map((option) => {
-                        return (
-                            <button
-                                className={option.value === control.field.value ? styles.selected : ""}
-                                key={option.value as string}
-                                onClick={() => {
-                                    control.field.onChange({ target: { value: option.value } });
-                                }}
-                            >
-                                {option.label}
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
+        <CommonInput
+            label={props.label}
+            fieldState={control.fieldState}
+            readonly={props.readonly}
+            readOnlyPresenter={props.readOnlyPresenter}
+            valueForPresenter={() => ({
+                real: control.field.value,
+                presented: props.options.filter((el) => el.value === control.field.value)[0]?.label,
+            })}
+        >
+            <div className={styles.list}>
+                {props.options.map((option) => {
+                    return (
+                        <button
+                            className={option.value === control.field.value ? styles.selected : ""}
+                            key={option.value as string}
+                            onClick={() => {
+                                control.field.onChange({ target: { value: option.value } });
+                            }}
+                        >
+                            {option.label}
+                        </button>
+                    );
+                })}
+            </div>
         </CommonInput>
     );
 };

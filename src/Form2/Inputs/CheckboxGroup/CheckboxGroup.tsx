@@ -56,73 +56,76 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
     };
 
     return (
-        <CommonInput label={props.label} fieldState={control.fieldState}>
-            {props.readonly ? (
-                <div className="w-read-only">
-                    {props.options.filter((el) => el.value === control.field.value)[0]?.label}
-                </div>
-            ) : (
-                <>
-                    <HotKeys
-                        actions={[
-                            { key: Key.ArrowUp, handler: () => setHighlighted(Math.max(-1, highlighted - 1)) },
-                            {
-                                key: Key.ArrowDown,
-                                handler: () => setHighlighted(Math.min(props.options.length - 1, highlighted + 1)),
+        <CommonInput
+            label={props.label}
+            fieldState={control.fieldState}
+            readonly={props.readonly}
+            readOnlyPresenter={props.readOnlyPresenter}
+            valueForPresenter={() => ({
+                real: control.field.value,
+                presented: props.options.filter((el) => el.value === control.field.value)[0]?.label,
+            })}
+        >
+            <>
+                <HotKeys
+                    actions={[
+                        { key: Key.ArrowUp, handler: () => setHighlighted(Math.max(-1, highlighted - 1)) },
+                        {
+                            key: Key.ArrowDown,
+                            handler: () => setHighlighted(Math.min(props.options.length - 1, highlighted + 1)),
+                        },
+                        {
+                            key: Key.Enter,
+                            handler: () => {
+                                if (highlighted > -1) elementClicked(highlighted);
                             },
-                            {
-                                key: Key.Enter,
-                                handler: () => {
-                                    if (highlighted > -1) elementClicked(highlighted);
-                                },
-                            },
-                        ]}
-                        captureInput={true}
-                        stopPropagation={true}
-                    >
-                        {props.options.length > 10 && (
-                            <input
-                                type={"text"}
-                                autoFocus={true}
-                                placeholder={"Search"}
-                                ref={searchFieldRef}
-                                value={searchString}
-                                onChange={(e) => setSearchString(e.target.value)}
-                            />
-                        )}
-                        <div className={styles.list} ref={listRef}>
-                            {filteredOptions.map((option, index) => {
-                                return (
-                                    <div
-                                        onMouseOver={() => {
-                                            setHighlighted(index);
-                                        }}
-                                        onMouseOut={() => {
-                                            setHighlighted(-1);
-                                        }}
-                                        className={
-                                            (control.field.value.findIndex((el: string) => el === option.value) !== -1
-                                                ? styles.selected
-                                                : "") +
-                                            " " +
-                                            (highlighted === index ? styles.highlighted : "")
-                                        }
-                                        key={option.value as string}
-                                        onClick={() => {
-                                            elementClicked(index);
-                                        }}
-                                    >
-                                        <div className={styles.checkbox}>
-                                            <CommonIcons.check />
-                                        </div>
-                                        <div className={styles.label}>{option.label}</div>
+                        },
+                    ]}
+                    captureInput={true}
+                    stopPropagation={true}
+                >
+                    {props.options.length > 10 && (
+                        <input
+                            type={"text"}
+                            autoFocus={true}
+                            placeholder={"Search"}
+                            ref={searchFieldRef}
+                            value={searchString}
+                            onChange={(e) => setSearchString(e.target.value)}
+                        />
+                    )}
+                    <div className={styles.list} ref={listRef}>
+                        {filteredOptions.map((option, index) => {
+                            return (
+                                <div
+                                    onMouseOver={() => {
+                                        setHighlighted(index);
+                                    }}
+                                    onMouseOut={() => {
+                                        setHighlighted(-1);
+                                    }}
+                                    className={
+                                        (control.field.value.findIndex((el: string) => el === option.value) !== -1
+                                            ? styles.selected
+                                            : "") +
+                                        " " +
+                                        (highlighted === index ? styles.highlighted : "")
+                                    }
+                                    key={option.value as string}
+                                    onClick={() => {
+                                        elementClicked(index);
+                                    }}
+                                >
+                                    <div className={styles.checkbox}>
+                                        <CommonIcons.check />
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </HotKeys>
-                </>
-            )}
+                                    <div className={styles.label}>{option.label}</div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </HotKeys>
+            </>
         </CommonInput>
     );
 };

@@ -1,6 +1,5 @@
 import * as React from "react";
 
-
 import { IFieldProps } from "../fields/Interfaces";
 
 import { fI18n } from "../lib";

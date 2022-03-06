@@ -15,23 +15,25 @@ const Text = (props: ITextProps) => {
     const control = useController({ name: props.name, control: props.control });
 
     return (
-        <CommonInput label={props.label} fieldState={control.fieldState}>
-            {props.readonly ? (
-                <div className="w-read-only">{control.field.value}</div>
-            ) : (
-                <input
-                    type="text"
-                    readOnly={props.readonly}
-                    {...props.control.register(props.name)}
-                    onChange={(e) => {
-                        control.field.onChange({ target: { value: e.target.value } });
-                    }}
-                    value={control.field.value}
-                    onBlur={() => {
-                        control.field.onBlur();
-                    }}
-                />
-            )}
+        <CommonInput
+            label={props.label}
+            fieldState={control.fieldState}
+            readonly={props.readonly}
+            readOnlyPresenter={props.readOnlyPresenter}
+            valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
+        >
+            <input
+                type="text"
+                readOnly={props.readonly}
+                {...props.control.register(props.name)}
+                onChange={(e) => {
+                    control.field.onChange({ target: { value: e.target.value } });
+                }}
+                value={control.field.value}
+                onBlur={() => {
+                    control.field.onBlur();
+                }}
+            />
         </CommonInput>
     );
 };

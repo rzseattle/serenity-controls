@@ -64,112 +64,114 @@ const Select = (props: ISelectProps) => {
     };
 
     return (
-        <CommonInput label={props.label} fieldState={control.fieldState}>
-            {props.readonly ? (
-                <div className="w-read-only">
-                    {props.options.filter((el) => el.value === control.field.value)[0]?.label}
-                </div>
-            ) : (
-                <>
-                    <HotKeys
-                        actions={[
-                            {
-                                key: Key.Enter,
-                                handler: () => {
-                                    setDropdownVisible(true);
-                                },
+        <CommonInput
+            label={props.label}
+            fieldState={control.fieldState}
+            readonly={props.readonly}
+            readOnlyPresenter={props.readOnlyPresenter}
+            valueForPresenter={() => ({
+                real: control.field.value,
+                presented: props.options.filter((el) => el.value === control.field.value)[0]?.label,
+            })}
+        >
+            <>
+                <HotKeys
+                    actions={[
+                        {
+                            key: Key.Enter,
+                            handler: () => {
+                                setDropdownVisible(true);
                             },
-                        ]}
-                        captureInput={true}
-                        stopPropagation={true}
+                        },
+                    ]}
+                    captureInput={true}
+                    stopPropagation={true}
+                >
+                    <div
+                        className={styles.select}
+                        ref={selectRef}
+                        onClick={() => setDropdownVisible(true)}
+                        tabIndex={0}
                     >
-                        <div
-                            className={styles.select}
-                            ref={selectRef}
-                            onClick={() => setDropdownVisible(true)}
-                            tabIndex={0}
+                        <span>{props.options.filter((el) => el.value === control.field.value)[0]?.label}</span>
+                        <CommonIcons.chevronDown />
+                    </div>
+                </HotKeys>
+                {isDropdownVisible && (
+                    <Modal
+                        show={true}
+                        relativeTo={() => selectRef.current}
+                        relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
+                        shadow={false}
+                        onHide={() => setDropdownVisible(false)}
+                        className={styles.dropdown}
+                    >
+                        <HotKeys
+                            actions={[
+                                { key: Key.ArrowUp, handler: () => setHighlighted(Math.max(-1, highlighted - 1)) },
+                                {
+                                    key: Key.ArrowDown,
+                                    handler: () => setHighlighted(Math.min(props.options.length - 1, highlighted + 1)),
+                                },
+                                {
+                                    key: Key.Enter,
+                                    handler: () => {
+                                        if (highlighted > -1) setValue(highlighted);
+                                    },
+                                },
+                                {
+                                    key: Key.Escape,
+                                    handler: () => {
+                                        setDropdownVisible(false);
+                                    },
+                                },
+                                {
+                                    key: Key.Tab,
+                                    handler: () => {
+                                        setDropdownVisible(false);
+                                    },
+                                },
+                            ]}
+                            captureInput={true}
+                            stopPropagation={true}
                         >
-                            <span>{props.options.filter((el) => el.value === control.field.value)[0]?.label}</span>
-                            <CommonIcons.chevronDown />
-                        </div>
-                    </HotKeys>
-                    {isDropdownVisible && (
-                        <Modal
-                            show={true}
-                            relativeTo={() => selectRef.current}
-                            relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
-                            shadow={false}
-                            onHide={() => setDropdownVisible(false)}
-                            className={styles.dropdown}
-                        >
-                            <HotKeys
-                                actions={[
-                                    { key: Key.ArrowUp, handler: () => setHighlighted(Math.max(-1, highlighted - 1)) },
-                                    {
-                                        key: Key.ArrowDown,
-                                        handler: () =>
-                                            setHighlighted(Math.min(props.options.length - 1, highlighted + 1)),
-                                    },
-                                    {
-                                        key: Key.Enter,
-                                        handler: () => {
-                                            if (highlighted > -1) setValue(highlighted);
-                                        },
-                                    },
-                                    {
-                                        key: Key.Escape,
-                                        handler: () => {
-                                            setDropdownVisible(false);
-                                        },
-                                    },
-                                    {
-                                        key: Key.Tab,
-                                        handler: () => {
-                                            setDropdownVisible(false);
-                                        },
-                                    },
-                                ]}
-                                captureInput={true}
-                                stopPropagation={true}
-                            >
-                                <input
-                                    type={"text"}
-                                    autoFocus={true}
-                                    placeholder={"Search"}
-                                    ref={searchFieldRef}
-                                    value={searchString}
-                                    onChange={(e) => setSearchString(e.target.value)}
-                                />
-                                <div className={styles.list} ref={listRef}>
-                                    {filteredOptions.map((option, index) => {
-                                        return (
-                                            <div
-                                                onMouseEnter={() => {
-                                                    setHighlighted(index);
-                                                }}
-                                                onMouseOut={() => {
-                                                    setHighlighted(-1);
-                                                }}
-                                                className={
-                                                    (option.value === control.field.value ? styles.selected : "") +
-                                                    " " +
-                                                    (highlighted === index ? styles.highlighted : "")
-                                                }
-                                                key={option.value as string}
-                                                onClick={() => {
-                                                    setValue(index);
-                                                }}
-                                            >
-                                                {option.label}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </HotKeys>
-                        </Modal>
-                    )}
-                </>
-            )}
+                            <input
+                                type={"text"}
+                                autoFocus={true}
+                                placeholder={"Search"}
+                                ref={searchFieldRef}
+                                value={searchString}
+                                onChange={(e) => setSearchString(e.target.value)}
+                            />
+                            <div className={styles.list} ref={listRef}>
+                                {filteredOptions.map((option, index) => {
+                                    return (
+                                        <div
+                                            onMouseEnter={() => {
+                                                setHighlighted(index);
+                                            }}
+                                            onMouseOut={() => {
+                                                setHighlighted(-1);
+                                            }}
+                                            className={
+                                                (option.value === control.field.value ? styles.selected : "") +
+                                                " " +
+                                                (highlighted === index ? styles.highlighted : "")
+                                            }
+                                            key={option.value as string}
+                                            onClick={() => {
+                                                setValue(index);
+                                            }}
+                                        >
+                                            {option.label}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </HotKeys>
+                    </Modal>
+                )}
+            </>
         </CommonInput>
     );
 };

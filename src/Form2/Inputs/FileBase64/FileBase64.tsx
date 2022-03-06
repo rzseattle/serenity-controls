@@ -20,7 +20,13 @@ const FileBase64 = (props: IFileBase64Props) => {
     const control = useController({ name: props.name, control: props.control });
 
     return (
-        <CommonInput label={props.label} fieldState={control.fieldState}>
+        <CommonInput
+            label={props.label}
+            fieldState={control.fieldState}
+            readonly={props.readonly}
+            readOnlyPresenter={props.readOnlyPresenter}
+            valueForPresenter={() => ({ real: control.field.value, presented: "" /*control.field.value*/ })}
+        >
             <input
                 type={"file"}
                 onChange={async (e) => {
