@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import qs from "qs";
 
 type ICleanUpCallback = () => any;
 
@@ -81,7 +80,9 @@ export const download = (
     data: any = null,
     options: IDownloadOptions = {},
 ): Promise<IDownloadSuccessParams> => {
-    const targetUrl = url + (data !== null ? "?" + qs.stringify(data) : "");
+    alert("to implement");
+    return null;
+    const targetUrl = url + (data !== null ? "?" + JSON.stringify(data) : "");
     const simpleURL = url;
 
     const promise = new Promise<IDownloadSuccessParams>((resolve, reject) => {

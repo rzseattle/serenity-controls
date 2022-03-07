@@ -3,8 +3,6 @@ import * as React from "react";
 import { IMenuElement, IMenuSection, Menu } from "./Menu";
 
 // @ts-ignore
-import * as NProgress from "nprogress/nprogress.js";
-import "nprogress/nprogress.css";
 
 import { Modal } from "../Modal";
 
@@ -20,8 +18,6 @@ import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
 
 import { CommonIcons } from "../lib/CommonIcons";
-
-NProgress.configure({ parent: ".w-panel-body" });
 
 interface IBackOfficePanelProps {
     icon?: any;
@@ -128,11 +124,11 @@ export class BackOffice extends React.Component<IBackOfficePanelProps, IBackOffi
     };
 
     public handleLoadStart = () => {
-        NProgress.start();
+        //NProgress.start();
     };
 
     public handleLoadEnd = () => {
-        NProgress.done();
+        //NProgress.done();
     };
 
     public handleSetPanelOption = (name: string, value: any, callback: () => any) => {

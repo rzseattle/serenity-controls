@@ -2,7 +2,7 @@ import * as React from "react";
 import { useContext } from "react";
 
 import { IModalProps } from "../Modal";
-import * as NotificationSystem from "react-notification-system";
+
 import { IRouteElement } from "./interfaces/IRouteElement";
 import { ICommand } from "../CommandBar";
 
@@ -19,7 +19,7 @@ export interface IPanelContext {
 
     basePath: string;
 
-    notification(content: string, title?: string, conf?: NotificationSystem.Notification): any;
+    notification(content: string, title?: string, conf?: any): any;
 
     reloadProps(args?: any, callback?: () => any): any;
 

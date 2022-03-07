@@ -1,5 +1,3 @@
-import NotificationSystem from "react-notification-system";
-
 import * as React from "react";
 import { ErrorInfo } from "react";
 
@@ -33,7 +31,7 @@ export interface IArrowViewComponentProps {
      * @returns {any}
      * @private
      */
-    _notification(content: string, title?: string, conf?: NotificationSystem.Notification): any;
+    _notification(content: string, title?: string, conf?: never): any;
 
     _reloadProps(args?: any, callback?: () => any): any;
 
@@ -87,8 +85,6 @@ interface IState {
 }
 
 export class PanelComponentLoader extends React.Component<IProps, IState> {
-    public notificationSystem: NotificationSystem.System;
-
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -117,13 +113,10 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
         this.props.context.changeView(path, input, callback);
     };
 
-    public handleNotification = (
-        message: string,
-        title = "",
-        options: Partial<NotificationSystem.Notification> = {},
-    ) => {
-        const data: NotificationSystem.Notification = { title, message, ...{ level: "success", ...options } };
-        this.notificationSystem.addNotification(data);
+    public handleNotification = (message: string, title = "", options: never) => {
+        alert("to implement!");
+        console.log(message, title, options);
+        //this.notificationSystem.addNotification(data);
     };
 
     public handleLog = (message: string) => {
@@ -175,7 +168,6 @@ export class PanelComponentLoader extends React.Component<IProps, IState> {
 
         return (
             <div className={RouteElement && RouteElement.componentName}>
-                <NotificationSystem ref={(ns: any) => (this.notificationSystem = ns)} />
                 {this.props.context.viewServerErrors && (
                     <ServerErrorPresenter error={this.props.context.viewServerErrors} />
                 )}
