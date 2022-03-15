@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import {
     StoryBasic,
     StoryCellCassTemplate,
-    StoryCellCassTemplateByColumn,
+    StoryCellCassTemplateByColumn, StoryCellMultipleTemplate, StoryCellMultipleTemplateEvents,
     StoryCellStyleTemplate,
     StoryCellStyleTemplateByColumn,
     StoryCellTemplate,
@@ -23,6 +23,17 @@ test("Should render with class template", () => {
 test("Should render with cell template", () => {
     render(<StoryCellTemplate {...StoryCellTemplate.args} />);
     expect(screen.getByText("x 1 x")).toBeInTheDocument();
+});
+test("Should render with multiple cell templates", () => {
+    render(<StoryCellMultipleTemplate {...StoryCellMultipleTemplate.args} />);
+    expect(screen.getByText("y x 1 x y")).toBeInTheDocument();
+});
+test("Should render with multiple cell templates events", () => {
+    const spy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    render(<StoryCellMultipleTemplate {...StoryCellMultipleTemplateEvents.args} />);
+    fireEvent.click(screen.getByText("y x 1 x y"));
+    expect(window.alert).toBeCalledTimes(2);
+    spy.mockRestore();
 });
 
 test("Should render with style template", () => {

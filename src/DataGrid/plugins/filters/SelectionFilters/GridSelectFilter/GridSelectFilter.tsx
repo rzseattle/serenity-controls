@@ -27,18 +27,28 @@ const GridSelectFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValu
             }
         }, 20);
     }, []);
+
     return (
         <GridFilterBody filter={filter} showCaption={showCaption}>
             <div className={styles.main}>
                 <select
                     data-testid={"select"}
                     ref={ref}
-                    value={filter.value[0]?.value}
+                    value={filter.value && filter.value[0]?.value}
                     onChange={(e) => {
                         const index = e.currentTarget.selectedIndex;
 
                         if (index !== 0) {
-                            onValueChange(onSelect(filterConfig.values[index - 1], filter.value));
+                            const val = filterConfig.values[index - 1];
+                            onValueChange([
+                                {
+                                    value: val.value,
+                                    labelValue: val.label + "",
+                                    condition: "=",
+                                    labelCondition: "",
+                                    operator: "or",
+                                },
+                            ]);
                         } else {
                             //onSelect(filterConfig.values[index - 1]);
                             onValueChange([]);
@@ -47,7 +57,11 @@ const GridSelectFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValu
                 >
                     <option value="-1"> --- </option>
                     {filterConfig.values.map((el: IGridSelectFilterOption) => {
-                        return <option key={el.value}>{el.label}</option>;
+                        return (
+                            <option key={el.value} value={el.value}>
+                                {el.label}
+                            </option>
+                        );
                     })}
                 </select>
             </div>

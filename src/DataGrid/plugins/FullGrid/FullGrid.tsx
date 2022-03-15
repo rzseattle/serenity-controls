@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import DataGrid from "../../DataGrid";
+import DataGrid, { IGridProps } from "../../DataGrid";
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
 import { IGridColumn } from "../../interfaces/IGridColumn";
@@ -31,6 +31,7 @@ export interface IFullGridProps<T> {
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
     orderState?: [IGridOrder[], Dispatch<SetStateAction<IGridOrder[]>>];
     onPage?: number;
+    gridProps?: Partial<IGridProps<T>>
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
@@ -98,7 +99,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                 filters: filters
                     .filter((el) => el.value !== undefined && el.value.length > 0)
                     .map((el) => ({ field: el.field, value: el.value })),
-                order,
+                order: order.filter((el) => el.dir !== undefined),
                 fields: columns.map((column) => column.field).filter((field) => field !== undefined),
                 page: { current: currentPage, onPage },
             })
@@ -191,6 +192,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                             />
                         );
                     }}
+                    {...props.gridProps}
                 />
                 {error && <div>{error}</div>}
                 {debug && <pre>{debug}</pre>}

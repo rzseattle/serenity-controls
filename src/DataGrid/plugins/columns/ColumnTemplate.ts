@@ -65,9 +65,19 @@ export class ColumnTemplate<Row> {
         this.parent = this;
         return this;
     };
+
+    /**
+     * @deprecated ( use add template )
+     * @param fn
+     */
     public template(fn: IGridCellTemplate<Row>) {
+        return this.addTemplate(fn);
+    }
+
+    public addTemplate(fn: IGridCellTemplate<Row>){
         this.column.cell = this.column.cell ?? {};
-        this.column.cell.template = fn;
+        this.column.cell.templates = this.column.cell.templates ?? [];
+        this.column.cell.templates.push(fn);
         return this;
     }
 

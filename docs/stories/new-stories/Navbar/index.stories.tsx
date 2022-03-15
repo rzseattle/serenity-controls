@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar } from "../../../../src/Navbar";
+import { Navbar } from "../../../../src/Breadcrumb";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import { IPanelProps, Panel } from "../../../../src/Panel";
 

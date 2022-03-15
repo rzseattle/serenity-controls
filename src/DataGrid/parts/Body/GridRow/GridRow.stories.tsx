@@ -118,9 +118,11 @@ StoryCellTemplate.args = {
         {
             field: "id",
             cell: {
-                template: ({ row }) => {
-                    return "x " + row.id + " x";
-                },
+                templates: [
+                    ({ row }) => {
+                        return "x " + row.id + " x";
+                    },
+                ],
             },
         },
         { field: "last_name" },
@@ -130,6 +132,75 @@ StoryCellTemplate.args = {
     rowProperties: {},
 };
 StoryCellTemplate.storyName = "Cell template";
+
+export const StoryCellMultipleTemplate = Template.bind({});
+StoryCellMultipleTemplate.args = {
+    row: mockData.slice(0, 1)[0],
+    columns: [
+        {
+            field: "id",
+            cell: {
+                templates: [
+                    ({ row }) => {
+                        return "x " + row.id + " x";
+                    },
+                    ({ prevValue }) => {
+                        return "y " + prevValue + " y";
+                    },
+                ],
+            },
+        },
+        { field: "last_name" },
+        { field: "email" },
+    ] as IGridColumn<IMockUser>[],
+    rowNumber: 0,
+    rowProperties: {},
+};
+StoryCellMultipleTemplate.storyName = "Multiple templates";
+
+export const StoryCellMultipleTemplateEvents = Template.bind({});
+StoryCellMultipleTemplateEvents.args = {
+    row: mockData.slice(0, 1)[0],
+    columns: [
+        {
+            field: "id",
+            cell: {
+                templates: [
+                    ({ row }) => {
+                        return {
+                            content: "x " + row.id + " x",
+                            cellEvents: {
+                                onClick: [
+                                    () => {
+                                        alert("x");
+                                    },
+                                ],
+                            },
+                        };
+                    },
+                    ({ prevValue }) => {
+                        return {
+                            content: "y " + prevValue + " y",
+                            cellEvents: {
+                                onClick: [
+                                    ({ event }) => {
+                                        event.currentTarget.style.backgroundColor = "red";
+                                        alert("y");
+                                    },
+                                ],
+                            },
+                        };
+                    },
+                ],
+            },
+        },
+        { field: "last_name" },
+        { field: "email" },
+    ] as IGridColumn<IMockUser>[],
+    rowNumber: 0,
+    rowProperties: {},
+};
+StoryCellMultipleTemplateEvents.storyName = "Multiple templates with registred events";
 
 const columns2: IGridColumn<IMockUser>[] = [
     { field: "id" },

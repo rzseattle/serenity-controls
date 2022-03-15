@@ -61,7 +61,7 @@ const GridFiltersPanel = ({ filters, onFiltersChange, onCancel }: IGridFilterPro
                 </div>
 
                 <div className={styles.buttonsPanel}>
-                    {filters.filter((el) => el.isInAdvancedMode !== undefined).length > 0 && (
+                    {filters.filter((el) => el.isInAdvancedMode !== undefined && el.isInAdvancedMode).length > 0 && (
                         <button
                             data-testid={"switch-to-advanced"}
                             className={styles.applyButton + " " + styles.advancedButton}

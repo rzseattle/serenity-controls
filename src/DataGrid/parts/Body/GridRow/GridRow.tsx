@@ -23,9 +23,13 @@ const GridRow = <T,>({
     cellStyleTemplate,
 }: IRowProps<T>) => {
     //const ref = useRef<HTMLDivElement>(null);
+
     return (
         <div {...rowProperties}>
             {columns.map((column, columnNumber) => {
+                column.cell = column.cell ?? {};
+                column.cell.events = column.cell.events ?? {};
+
                 const coordinates = { row: rowNumber, column: columnNumber };
                 const cellProperties: React.HTMLAttributes<HTMLDivElement> = {};
 
@@ -43,63 +47,44 @@ const GridRow = <T,>({
                     cellProperties.style = cellStyleTemplate({ row, column, coordinates });
                 }
 
-                if (column.cell?.styleTemplate !== undefined) {
+                if (column.cell.styleTemplate !== undefined) {
                     cellProperties.style = {
                         ...cellProperties?.style,
                         ...column.cell.styleTemplate({ row, column, coordinates }),
                     };
                 }
 
-                if (column.cell?.classTemplate !== undefined) {
+                if (column.cell.classTemplate !== undefined) {
                     cellProperties.className =
                         cellProperties.className ??
                         "" + " " + (column.cell.classTemplate({ row, column, coordinates }) ?? []).join(" ");
                 }
 
-                if (column.cell?.class !== undefined) {
+                if (column.cell.class !== undefined) {
                     cellProperties.className = cellProperties.className ?? "" + " " + column.cell?.class.join(" ");
                 }
 
-                if (column.cell?.events !== undefined) {
-                    if (column.cell.events.onDragStart) {
-                        cellProperties.draggable = true;
-                    }
-                    Object.entries(column.cell.events).map(([key, val]) => {
-                        const event = key as keyof IGridCellEvents<T>;
-                        cellProperties[event] = (event) => {
-                            val.forEach((callback: IGridCellEventCallback<T, any>) => {
-                                event.persist();
-                                callback({
-                                    row,
-                                    column,
-                                    event,
-                                    coordinates,
-                                    // refresh: {
-                                    //     cell: () => {
-                                    //         //to implement
-                                    //         setRefreshState((x) => x + 1);
-                                    //     },
-                                    //     row: () => {
-                                    //         //to implement
-                                    //         setRefreshState((x) => x + 1);
-                                    //     },
-                                    //     grid: () => {
-                                    //         //to implement
-                                    //         setRefreshState((x) => x + 1);
-                                    //     },
-                                    // },
-                                });
-                            });
-                        };
-                    });
-                }
                 let child;
-                if (column.cell?.template !== undefined) {
-                    child = column.cell.template({
-                        row,
-                        column,
-                        coordinates,
-                    });
+                const currentCellEvents: IGridCellEvents<T> = {};
+                if (column.cell?.templates !== undefined && column.cell?.templates.length > 0) {
+                    child = column.cell.templates.reduce((prev: null | string | React.ReactNode, template) => {
+                        const returned = template({
+                            row,
+                            column,
+                            coordinates,
+                            prevValue: prev,
+                        });
+                        if (typeof returned == "object" && "content" in returned) {
+                            Object.entries(returned.cellEvents).map(
+                                ([key, val]: [keyof IGridCellEvents<T>, IGridCellEventCallback<T, any>[]]) => {
+                                    currentCellEvents[key] = [...(currentCellEvents[key] ?? []), ...val];
+                                },
+                            );
+                            return returned.content;
+                        }
+
+                        return returned;
+                    }, null);
                 } else {
                     if (typeof column.field === "string") {
                         child = get(row, column.field);
@@ -109,6 +94,47 @@ const GridRow = <T,>({
                         child = row[column.field];
                     }
                 }
+
+                if (column.cell?.events !== undefined) {
+                    Object.entries(column.cell.events).map(
+                        ([key, val]: [keyof IGridCellEvents<T>, IGridCellEventCallback<T, any>[]]) => {
+                            currentCellEvents[key] = [...(currentCellEvents[key] ?? []), ...val];
+                        },
+                    );
+                }
+
+                if (currentCellEvents.onDragStart) {
+                    cellProperties.draggable = true;
+                }
+                Object.entries(currentCellEvents).map(([key, val]) => {
+                    const event = key as keyof IGridCellEvents<T>;
+
+                    cellProperties[event] = (event) => {
+                        val.forEach((callback: IGridCellEventCallback<T, any>) => {
+                            event.persist();
+                            callback({
+                                row,
+                                column,
+                                event,
+                                coordinates,
+                                // refresh: {
+                                //     cell: () => {
+                                //         //to implement
+                                //         setRefreshState((x) => x + 1);
+                                //     },
+                                //     row: () => {
+                                //         //to implement
+                                //         setRefreshState((x) => x + 1);
+                                //     },
+                                //     grid: () => {
+                                //         //to implement
+                                //         setRefreshState((x) => x + 1);
+                                //     },
+                                // },
+                            });
+                        });
+                    };
+                });
 
                 return (
                     <div key={column.field + column.name ?? ""} {...cellProperties}>

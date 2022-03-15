@@ -61,7 +61,7 @@ export interface IGridColumn<T> {
             column: IGridColumn<T>;
             coordinates: ICellCoordinates;
         }) => React.CSSProperties;
-        template?: IGridCellTemplate<T>;
+        templates?: IGridCellTemplate<T>[];
         default?: string;
         events?: IGridCellEvents<T>;
     };

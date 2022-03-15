@@ -74,6 +74,10 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
         return null;
     }
 
+    if (config === undefined || config === null) {
+        return <>DataGrid: No context found</>;
+    }
+
     const className =
         props.className !== undefined ? props.className + " " + styles.gridLayoutCore : config.gridClassName;
 

@@ -37,7 +37,7 @@ StorySimple.args = { filters: [{ field: "test", filterType: "text" }] as IGridFi
 StorySimple.storyName = "Simple";
 
 export const StoryAdvanced = Template.bind({});
-StoryAdvanced.args = { filters: [{ field: "test", filterType: "text", isInAdvancedMode: false }] as IGridFilter[] };
+StoryAdvanced.args = { filters: [{ field: "test", filterType: "text", isInAdvancedMode: true }] as IGridFilter[] };
 StoryAdvanced.storyName = "Advanced";
 
 const filters: IGridFilter[] = [

@@ -1,4 +1,4 @@
-import { Navbar } from "../../../../src/Navbar";
+import { Navbar } from "../../../../src/Breadcrumb";
 import React, { useRef, useState } from "react";
 import { CommandBar } from "../../../../src/CommandBar";
 import { getPanelContext } from "../../../../src/backoffice/PanelContext";

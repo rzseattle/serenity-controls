@@ -9,7 +9,7 @@ export class ColTemplate<Row> extends ColumnTemplate<Row> {
         this.column = {
             name: "tmp_template_column" + ColTemplate.counter,
             cell: {
-                template,
+                templates: [template],
             },
             header: {
                 caption,

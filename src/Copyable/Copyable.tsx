@@ -81,7 +81,7 @@ export class Copyable extends React.Component<ICopyableProps> {
                     </span>
                 )}{" "}
                 {label ? label + " " : " "}
-                <a onClick={this.handleCopyClick} style={{ cursor: "pointer", marginLeft: 10 }} title={"Skopiuj"}>
+                <a onClick={this.handleCopyClick} style={{ cursor: "pointer" }} title={"Skopiuj"}>
                     {isLoading ? (
                         <div className={"w-copyable-loading-container"}>
                             <LoadingIndicator />
