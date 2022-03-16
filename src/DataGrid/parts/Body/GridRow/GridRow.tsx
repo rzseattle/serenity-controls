@@ -4,6 +4,7 @@ import { IGridCellEventCallback } from "../../../interfaces/IGridCellEventCallba
 import { IGridCellClassProvider } from "../../../interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "../../../interfaces/IGridCellStyleProvider";
 import { get } from "react-hook-form";
+import { IGridController } from "../../../interfaces/IGridController";
 
 export interface IRowProps<T> {
     row: T;
@@ -12,6 +13,7 @@ export interface IRowProps<T> {
     rowNumber: number;
     cellClassTemplate?: IGridCellClassProvider<T>;
     cellStyleTemplate?: IGridCellStyleProvider<T>;
+    controller?: IGridController;
 }
 
 const GridRow = <T,>({
@@ -21,6 +23,7 @@ const GridRow = <T,>({
     row,
     cellClassTemplate,
     cellStyleTemplate,
+    controller,
 }: IRowProps<T>) => {
     //const ref = useRef<HTMLDivElement>(null);
 
@@ -73,6 +76,7 @@ const GridRow = <T,>({
                             column,
                             coordinates,
                             prevValue: prev,
+                            controller,
                         });
                         if (typeof returned == "object" && "content" in returned) {
                             Object.entries(returned.cellEvents).map(
@@ -117,20 +121,7 @@ const GridRow = <T,>({
                                 column,
                                 event,
                                 coordinates,
-                                // refresh: {
-                                //     cell: () => {
-                                //         //to implement
-                                //         setRefreshState((x) => x + 1);
-                                //     },
-                                //     row: () => {
-                                //         //to implement
-                                //         setRefreshState((x) => x + 1);
-                                //     },
-                                //     grid: () => {
-                                //         //to implement
-                                //         setRefreshState((x) => x + 1);
-                                //     },
-                                // },
+                                controller,
                             });
                         });
                     };

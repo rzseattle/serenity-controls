@@ -1,5 +1,6 @@
 import { IGridCellEvents, IGridColumn } from "./IGridColumn";
 import React from "react";
+import { IGridController } from "./IGridController";
 
 type ReturnType<T> =
     | string
@@ -15,9 +16,11 @@ export type IGridCellTemplate<T> = ({
     column,
     coordinates,
     prevValue,
+    controller,
 }: {
     row: T;
     column: IGridColumn<T>;
     coordinates: { row: number; column: number };
     prevValue: null | string | React.ReactNode;
+    controller: IGridController;
 }) => ReturnType<T>;

@@ -7,6 +7,7 @@ import { IFiltersChange } from "../../../interfaces/IFiltersChange";
 import styles from "./GridHeadColumn.module.sass";
 import { IGridOrderDirections } from "../../../interfaces/IGridOrder";
 import GridFiltersModal from "../../Addons/GridFiltersModal/GridFiltersModal";
+import { IGridController } from "../../../interfaces/IGridController";
 
 const GridHeadColumn = <T,>({
     column,
@@ -15,6 +16,7 @@ const GridHeadColumn = <T,>({
     filters,
     onFiltersChange,
     orderDir,
+    controller,
 }: {
     column: IGridColumn<T>;
     isOrderable: boolean;
@@ -22,6 +24,7 @@ const GridHeadColumn = <T,>({
     onOrderChange: (newDir: IGridOrderDirections) => void;
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
+    controller?: IGridController;
 }) => {
     const config = useGridContext();
     const cellProperties: React.HTMLAttributes<HTMLDivElement> = {};
@@ -36,6 +39,7 @@ const GridHeadColumn = <T,>({
                     callback({
                         column,
                         event,
+                        controller,
                     });
                 });
             };
@@ -79,24 +83,25 @@ const GridHeadColumn = <T,>({
                 }
                 ref={filterTrigger}
             >
-                {column.header?.icon && column.header?.icon}
-                {column.header?.caption ?? column.field}
                 {isOrderable && orderDir !== null && (
                     <div className={styles.gridHeaderCellInOrder}>{config.order.icons[orderDir]}</div>
                 )}
+                <div className={styles.title}>
+                    {column.header?.icon && column.header?.icon}
+                    {column.header?.caption ?? column.field}
+                </div>
+
                 {filters?.length > 0 && (
-                    <>
-                        <div
-                            className={styles.gridHeaderCellInFilter}
-                            data-testid={"grid-head-filter-trigger"}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setFiltersVisible(true);
-                            }}
-                        >
-                            {config.filter.icons.filter}
-                        </div>
-                    </>
+                    <div
+                        className={styles.gridHeaderCellInFilter}
+                        data-testid={"grid-head-filter-trigger"}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setFiltersVisible(true);
+                        }}
+                    >
+                        {config.filter.icons.filter}
+                    </div>
                 )}
             </div>
         );

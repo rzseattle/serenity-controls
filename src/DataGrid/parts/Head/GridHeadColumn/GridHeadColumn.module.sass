@@ -10,13 +10,15 @@
     outline: 1px solid rgba(0, 0, 0, .1)
     height: 100%
     user-select: none
+    display: flex
     svg
         font-weight: normal
 
     &:last-child
         border-right: solid 1px transparent
 
-
+.title
+    flex-grow: 1
 
 .gridHeaderCellInClickable
     cursor: pointer
@@ -27,19 +29,20 @@
 
 
 .gridHeaderCellInOrder
-    float: left
+
     height: 100%
-    svg
-        height: 100%
+    padding-right: 5px
+    //svg
+    //    height: 100%
 
 .gridHeaderCellInFilter
     cursor: pointer
-    float: right
+
     border-radius: 2px
     height: 100%
     margin-left: 10px
-    svg
-        height: 100%
+    //svg
+    //    height: 100%
 
     &:hover
         color: white

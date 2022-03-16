@@ -8,6 +8,7 @@ import { ColumnTemplate } from "../columns/ColumnTemplate";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { FullDataGridData } from "./Types";
+import { FullGridContext } from "./FullGridContext";
 
 export type IFullGridDataProvider<T> = ({
     filters,
@@ -31,7 +32,7 @@ export interface IFullGridProps<T> {
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
     orderState?: [IGridOrder[], Dispatch<SetStateAction<IGridOrder[]>>];
     onPage?: number;
-    gridProps?: Partial<IGridProps<T>>
+    gridProps?: Partial<IGridProps<T>>;
 }
 
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
@@ -61,7 +62,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const [error, setError] = useState("");
     const [debug, setDebug] = useState("");
 
-    const [rebuild, setRebuild] = useState(0);
+    const [rebuild, /*setRebuild*/] = useState(0);
 
     useEffect(
         () => {
@@ -161,14 +162,12 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             ]}
         >
             <div tabIndex={0}>
-                {/*<button*/}
-                {/*    onClick={() => {*/}
-                {/*        setRebuild((r) => ++r);*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    reload*/}
-                {/*</button>*/}
                 <DataGrid
+                    controller={{
+                        reload: () => {
+                            loadDada();
+                        },
+                    }}
                     showHeader={true}
                     showFooter={true}
                     isInLoadingState={isInLoadingState}
@@ -194,6 +193,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                     }}
                     {...props.gridProps}
                 />
+
                 {error && <div>{error}</div>}
                 {debug && <pre>{debug}</pre>}
             </div>

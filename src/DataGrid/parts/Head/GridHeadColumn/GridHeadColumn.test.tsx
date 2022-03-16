@@ -77,13 +77,13 @@ test("Should react for events", () => {
     fireEvent.mouseEnter(el);
     fireEvent.mouseOut(el);
 
-    expect(Object.keys(onClick.mock.calls[0][0])).toEqual(["column", "event"]);
-    expect(Object.keys(onMouseUp.mock.calls[0][0])).toEqual(["column", "event"]);
+    expect(Object.keys(onClick.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
+    expect(Object.keys(onMouseUp.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
 
-    expect(Object.keys(onMouseDown.mock.calls[0][0])).toEqual(["column", "event"]);
-    expect(Object.keys(onDoubleClick.mock.calls[0][0])).toEqual(["column", "event"]);
-    expect(Object.keys(onMouseEnter.mock.calls[0][0])).toEqual(["column", "event"]);
-    expect(Object.keys(onMouseOut.mock.calls[0][0])).toEqual(["column", "event"]);
+    expect(Object.keys(onMouseDown.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
+    expect(Object.keys(onDoubleClick.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
+    expect(Object.keys(onMouseEnter.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
+    expect(Object.keys(onMouseOut.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
 
     //expect(screen.getByText("field_name template text")).toBeInTheDocument();
 });

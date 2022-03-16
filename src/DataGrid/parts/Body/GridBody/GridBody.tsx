@@ -5,6 +5,7 @@ import { IGridRowClassProvider } from "../../../interfaces/IGridRowClassProvider
 import { IGridCellClassProvider } from "../../../interfaces/IGridCellClassProvider";
 import { IGridCellStyleProvider } from "../../../interfaces/IGridCellStyleProvider";
 import GridRow from "../GridRow/GridRow";
+import { IGridController } from "../../../interfaces/IGridController";
 
 export interface IGridBodyProps<T> {
     columns: IGridColumn<T>[];
@@ -13,6 +14,7 @@ export interface IGridBodyProps<T> {
     rowClassTemplate?: IGridRowClassProvider<T>;
     cellClassTemplate?: IGridCellClassProvider<T>;
     cellStyleTemplate?: IGridCellStyleProvider<T>;
+    controller?: IGridController
 }
 
 const GridBody = <T,>(props: IGridBodyProps<T>) => {
@@ -50,6 +52,7 @@ const GridBody = <T,>(props: IGridBodyProps<T>) => {
                         columns={props.columns}
                         cellStyleTemplate={props.cellStyleTemplate}
                         cellClassTemplate={props.cellClassTemplate}
+                        controller={props.controller}
                     />
                 );
             })}

@@ -18,6 +18,8 @@ export class ColumnTemplate<Row> {
     order: IGridOrder[] = [];
     parent: ColumnTemplate<Row>;
 
+
+
     constructor() {
         this.parent = this;
     }
@@ -74,7 +76,7 @@ export class ColumnTemplate<Row> {
         return this.addTemplate(fn);
     }
 
-    public addTemplate(fn: IGridCellTemplate<Row>){
+    public addTemplate(fn: IGridCellTemplate<Row>) {
         this.column.cell = this.column.cell ?? {};
         this.column.cell.templates = this.column.cell.templates ?? [];
         this.column.cell.templates.push(fn);

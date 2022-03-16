@@ -4,7 +4,9 @@ import "@testing-library/jest-dom/extend-expect";
 import {
     StoryBasic,
     StoryCellCassTemplate,
-    StoryCellCassTemplateByColumn, StoryCellMultipleTemplate, StoryCellMultipleTemplateEvents,
+    StoryCellCassTemplateByColumn,
+    StoryCellMultipleTemplate,
+    StoryCellMultipleTemplateEvents,
     StoryCellStyleTemplate,
     StoryCellStyleTemplateByColumn,
     StoryCellTemplate,
@@ -29,7 +31,7 @@ test("Should render with multiple cell templates", () => {
     expect(screen.getByText("y x 1 x y")).toBeInTheDocument();
 });
 test("Should render with multiple cell templates events", () => {
-    const spy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const spy = jest.spyOn(window, "alert").mockImplementation(() => {});
     render(<StoryCellMultipleTemplate {...StoryCellMultipleTemplateEvents.args} />);
     fireEvent.click(screen.getByText("y x 1 x y"));
     expect(window.alert).toBeCalledTimes(2);
@@ -107,7 +109,7 @@ test("Should react for events", () => {
     fireEvent.dragEnter(el);
     fireEvent.dragLeave(el);
 
-    const eventArguments = ["row", "column", "event", "coordinates"];
+    const eventArguments = ["row", "column", "event", "coordinates", "controller"];
     expect(Object.keys(onClick.mock.calls[0][0])).toEqual(eventArguments);
     expect(Object.keys(onMouseUp.mock.calls[0][0])).toEqual(eventArguments);
 

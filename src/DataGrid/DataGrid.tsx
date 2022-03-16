@@ -16,6 +16,7 @@ import { IFiltersChange } from "./interfaces/IFiltersChange";
 import GridHead from "./parts/Head/GridHead/GridHead";
 import GridBody from "./parts/Body/GridBody/GridBody";
 import GridFoot from "./parts/Footer/GridFoot/GridFoot";
+import { IGridController } from "./interfaces/IGridController";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
@@ -51,6 +52,7 @@ export interface IGridProps<T> {
 
     footer?: (tableData: IGridProps<T>) => JSX.Element | string;
     isInLoadingState?: boolean;
+    controller?: IGridController
 }
 
 const defaultProps: Partial<IGridProps<any>> = {
@@ -102,6 +104,7 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                         filters={props.filters}
                         onFiltersChange={props.onFiltersChange}
                         columns={props.columns}
+                        controller={props.controller}
                     />
                 )}
 
@@ -122,6 +125,7 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                     rowClassTemplate={props.rowClassTemplate}
                     cellClassTemplate={props.cellClassTemplate}
                     cellStyleTemplate={props.cellStyleTemplate}
+                    controller={props.controller}
                 />
             </div>
             {props.showFooter && <GridFoot>{props.footer && props.footer(props)}</GridFoot>}

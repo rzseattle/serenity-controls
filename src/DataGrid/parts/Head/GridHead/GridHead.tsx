@@ -10,6 +10,7 @@ import produce from "immer";
 import GridHeadColumn from "../GridHeadColumn/GridHeadColumn";
 import styles from "./GridHead.module.sass";
 import GridConditionsPresenter from "../../Addons/GridConditionsPresenter/GridConditionsPresenter";
+import { IGridController } from "../../../interfaces/IGridController";
 
 const GridHead = <T,>({
     columns,
@@ -17,12 +18,14 @@ const GridHead = <T,>({
     onOrderChange,
     filters,
     onFiltersChange,
+    controller
 }: {
     columns: IGridColumn<T>[];
     order: IGridOrder[];
     onOrderChange: IOrderChange;
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
+    controller?: IGridController
 }) => {
     const presenterVisible =
         filters.filter((f) => f.value && f.value.length > 0).length > 0 || order.filter((o) => o.dir).length > 0;
@@ -42,6 +45,7 @@ const GridHead = <T,>({
                     return (
                         <GridHeadColumn
                             key={column.field + column.name ?? ""}
+                            controller={controller}
                             column={column}
                             isOrderable={order.filter((element) => isColumnAssignedElement(element, column)).length > 0}
                             orderDir={order.filter((element) => isColumnAssignedElement(element, column))[0]?.dir}
