@@ -129,6 +129,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
             props: this.props,
             itemsLoading: false,
         };
+
     }
 
     public focus = () => {
@@ -136,6 +137,7 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
     };
 
     public componentDidMount(): void {
+
         if (this.props.value.length > 0 && this.props.fillItems) {
             this.setState({ itemsLoading: true }, () => {
                 this.props
@@ -151,6 +153,10 @@ export class ConnectionsField extends React.Component<IConnectionsFieldProps, IC
                         });
                     });
             });
+        }
+
+        if(this.props.autoFocus === true){
+            setTimeout(this.focus, 10);
         }
     }
 

@@ -15,7 +15,7 @@ import {
     VscChromeClose,
 } from "react-icons/vsc";
 
-export const CommonIcons = {
+export const CommonIcons: Record<string, (props: any) => JSX.Element> = {
     edit: MdModeEdit,
     delete: RiDeleteBin4Line,
     add: RiAddFill,
