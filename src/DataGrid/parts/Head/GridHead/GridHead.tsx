@@ -18,14 +18,14 @@ const GridHead = <T,>({
     onOrderChange,
     filters,
     onFiltersChange,
-    controller
+    controller,
 }: {
     columns: IGridColumn<T>[];
     order: IGridOrder[];
     onOrderChange: IOrderChange;
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
-    controller?: IGridController
+    controller?: IGridController;
 }) => {
     const presenterVisible =
         filters.filter((f) => f.value && f.value.length > 0).length > 0 || order.filter((o) => o.dir).length > 0;

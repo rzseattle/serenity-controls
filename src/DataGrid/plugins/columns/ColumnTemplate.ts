@@ -18,8 +18,6 @@ export class ColumnTemplate<Row> {
     order: IGridOrder[] = [];
     parent: ColumnTemplate<Row>;
 
-
-
     constructor() {
         this.parent = this;
     }

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { Dispatch, forwardRef, SetStateAction, useEffect, useImperativeHandle, useRef, useState } from "react";
 import DataGrid, { IGridProps } from "../../DataGrid";
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
@@ -8,7 +8,7 @@ import { ColumnTemplate } from "../columns/ColumnTemplate";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { FullDataGridData } from "./Types";
-import { FullGridContext } from "./FullGridContext";
+import { IGridController } from "../../interfaces/IGridController";
 
 export type IFullGridDataProvider<T> = ({
     filters,
@@ -27,14 +27,16 @@ export interface GridController {
 
 export interface IFullGridProps<T> {
     passController?: (controller: GridController) => any;
+    controllerRef?: React.Ref<IGridController> | null;
     dataProvider: IFullGridDataProvider<T>;
-    columns: ColumnTemplate<T>[];
+    columns: (ColumnTemplate<T> | false | null)[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
     orderState?: [IGridOrder[], Dispatch<SetStateAction<IGridOrder[]>>];
     onPage?: number;
     gridProps?: Partial<IGridProps<T>>;
 }
 
+// eslint-disable-next-line react/display-name
 const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
     let [filters, setFilters] = useState<IGridFilter[]>([]);
@@ -62,7 +64,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
     const [error, setError] = useState("");
     const [debug, setDebug] = useState("");
 
-    const [rebuild, /*setRebuild*/] = useState(0);
+    const [rebuild /*setRebuild*/] = useState(0);
 
     useEffect(
         () => {
@@ -70,9 +72,11 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             const tmpFilters: IGridFilter[] = [];
             const tmpOrder: IGridOrder[] = [];
             props.columns.forEach((el) => {
-                tmpColumns.push(el.column);
-                el.filters.forEach((filter) => tmpFilters.push(filter));
-                el.order.forEach((order) => tmpOrder.push(order));
+                if (el !== false && el !== null) {
+                    tmpColumns.push(el.column);
+                    el.filters.forEach((filter) => tmpFilters.push(filter));
+                    el.order.forEach((order) => tmpOrder.push(order));
+                }
             });
             setColumns(tmpColumns);
 
@@ -139,6 +143,12 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             },
         });
     }
+
+    useImperativeHandle(props.controllerRef, () => ({
+        reload: () => {
+            loadDada();
+        },
+    }));
 
     return (
         <HotKeys
