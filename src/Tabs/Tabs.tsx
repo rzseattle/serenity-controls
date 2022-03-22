@@ -57,7 +57,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
     // }
 
     static getDerivedStateFromProps(props: Readonly<ITabsProps>, state: ITabsState) {
-        if (props.activeTab && props.activeTab !== state.currentTab) {
+        if (props.activeTab !== undefined && props.activeTab !== state.currentTab) {
             return {
                 ...state,
                 currentTab: props.activeTab,
