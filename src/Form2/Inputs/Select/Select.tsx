@@ -88,6 +88,7 @@ const Select = (props: ISelectProps) => {
                     stopPropagation={true}
                 >
                     <div
+                        data-testid={"select"}
                         className={styles.select}
                         ref={selectRef}
                         onClick={() => setDropdownVisible(true)}

@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, screen, render } from "@testing-library/react";
+import { fireEvent, screen, render, waitFor } from "@testing-library/react";
 
 import { act, renderHook } from "@testing-library/react-hooks";
 import "@testing-library/jest-dom/extend-expect";
@@ -44,10 +44,10 @@ test("Should render in readonly", () => {
     expect(presenter.innerHTML).toEqual("No");
 });
 
-test("Should upgrade form value", () => {
+test("Should upgrade form value", async () => {
     window.HTMLElement.prototype.scrollIntoView = function () {};
     const { result } = renderHook(() => useSerenityForm<{ test: boolean }>({ defaultValues: { test: false } }));
-    const { container } = render(
+    render(
         <>
             <Select
                 {...result.current.field("test")}
@@ -60,25 +60,26 @@ test("Should upgrade form value", () => {
         </>,
     );
     act(() => {
-        fireEvent.click(container.getElementsByClassName("select")[0] as HTMLDivElement);
-        const el = screen.getByPlaceholderText("Search");
-        for (let i = 0; i < 2; i++) {
-            fireEvent.keyDown(el, {
-                key: "ArrowDown",
-            });
-            fireEvent.keyUp(el, {
-                key: "ArrowDown",
-            });
-        }
-
-        fireEvent.keyDown(el, {
-            key: "Enter",
-        });
-
-        expect(result.current.getValues("test")).toBe(true);
-        expect(result.current.getFieldState("test").isDirty).toBe(true);
-        expect((container.getElementsByClassName("select")[0] as HTMLButtonElement).textContent).toBe("Yes");
+        fireEvent.click(screen.getByTestId("select"));
     });
+
+    const el = screen.getByPlaceholderText("Search") as HTMLElement;
+    for (let i = 0; i < 2; i++) {
+        fireEvent.keyDown(el, {
+            key: "ArrowDown",
+        });
+        fireEvent.keyUp(el, {
+            key: "ArrowDown",
+        });
+    }
+
+    fireEvent.keyDown(el, {
+        key: "Enter",
+    });
+
+    expect(result.current.getValues("test")).toBe(true);
+    expect(result.current.getFieldState("test").isDirty).toBe(true);
+    expect((screen.getByTestId("select") as HTMLButtonElement).textContent).toBe("Yes");
 });
 
 test("Should use filter field ", () => {
@@ -95,29 +96,30 @@ test("Should use filter field ", () => {
             <div id="modal-root"></div>
         </>,
     );
+
     act(() => {
-        fireEvent.click(container.getElementsByClassName("select")[0] as HTMLDivElement);
-        const el = screen.getByPlaceholderText("Search");
-        expect(container.querySelector(".list").childElementCount).toBe(50);
-
-        fireEvent.change(el, { target: { value: "age 2" } });
-
-        expect(container.querySelector(".list").childElementCount).toBe(11);
-
-        for (let i = 0; i < 2; i++) {
-            fireEvent.keyDown(el, {
-                key: "ArrowDown",
-            });
-            fireEvent.keyUp(el, {
-                key: "ArrowDown",
-            });
-        }
-
-        fireEvent.keyDown(el, {
-            key: "Enter",
-        });
-
-        expect(result.current.getValues("test")).toBe(20);
-        expect((container.getElementsByClassName("select")[0] as HTMLButtonElement).textContent).toBe("Age 20");
+        fireEvent.click(screen.getByTestId("select") as HTMLDivElement);
     });
+    const el = screen.getByPlaceholderText("Search");
+    expect(container.querySelector(".list").childElementCount).toBe(50);
+
+    fireEvent.change(el, { target: { value: "age 2" } });
+
+    expect(container.querySelector(".list").childElementCount).toBe(11);
+
+    for (let i = 0; i < 2; i++) {
+        fireEvent.keyDown(el, {
+            key: "ArrowDown",
+        });
+        fireEvent.keyUp(el, {
+            key: "ArrowDown",
+        });
+    }
+
+    fireEvent.keyDown(el, {
+        key: "Enter",
+    });
+
+    expect(result.current.getValues("test")).toBe(20);
+    expect((container.getElementsByClassName("select")[0] as HTMLButtonElement).textContent).toBe("Age 20");
 });
