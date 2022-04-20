@@ -1,4 +1,4 @@
-import i18next, { BackendModule } from "i18next";
+import i18next, { BackendModule, i18n } from "i18next";
 import langContainer from "./translation/LangContainer";
 
 import { configGetAll } from "../backoffice/Config";
@@ -52,6 +52,10 @@ i18next.use(XHR).init(
     },
 );
 
-// const fI18n = instance;
+interface QuickI18NFix extends i18n {
+    t: (key: string) => string;
+}
 
-export { i18next as fI18n, langContainer };
+const fI18tmp: QuickI18NFix = i18next;
+
+export { fI18tmp as fI18n, langContainer };

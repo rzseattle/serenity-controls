@@ -6,7 +6,6 @@ import GridAdvancedFilterContainer from "../GridCommonFilter/GridAdvancedFilterC
 import styles from "./GridDateFilter.module.sass";
 import { Calendar, DateRange, Range } from "react-date-range";
 // @ts-ignore
-
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays, format, parse } from "date-fns";
@@ -14,7 +13,6 @@ import { addDays, format, parse } from "date-fns";
 import pl from "date-fns/locale/pl";
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import en from "date-fns/locale/en-GB";
 
 import { Modal } from "../../../../../Modal";
 import { RelativePositionPresets } from "../../../../../Positioner";
@@ -138,6 +136,7 @@ const GridDateFilterRow = ({
                 }}
             >
                 {value.condition === "BETWEEN" && (
+                    // @ts-ignore
                     <DateRange
                         onChange={(item) => setRange([item.selection])}
                         moveRangeOnFirstSelection={false}
@@ -148,6 +147,7 @@ const GridDateFilterRow = ({
                     />
                 )}
                 {(value.condition === "=" || value.condition === "=") && (
+                    // @ts-ignore
                     <Calendar onChange={(item) => setDate(item)} date={date} locale={pl} />
                 )}
                 <div className={styles.calendarApplyButtons}>

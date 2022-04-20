@@ -78,14 +78,17 @@ const Date = (props: IDateProps) => {
                         shadow={false}
                     >
                         <div>
-                            <Calendar
-                                onChange={(item) => {
-                                    setPickerVisible(false);
-                                    control.field.onChange({ target: { value: format(item, dateFormat) } });
-                                }}
-                                date={date}
-                                locale={pl}
-                            />
+                            {
+                                // @ts-ignore
+                                <Calendar
+                                    onChange={(item) => {
+                                        setPickerVisible(false);
+                                        control.field.onChange({ target: { value: format(item, dateFormat) } });
+                                    }}
+                                    date={date}
+                                    locale={pl}
+                                />
+                            }
                         </div>
                     </Modal>
                 )}

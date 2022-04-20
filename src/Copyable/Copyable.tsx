@@ -10,6 +10,7 @@ interface ICopyableProps {
     getToCopyString?: Promise<string>;
     label?: string;
     hideContent?: boolean;
+    children?: React.ReactNode;
 }
 
 export class Copyable extends React.Component<ICopyableProps> {

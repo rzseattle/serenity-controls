@@ -7,9 +7,10 @@ interface ITimelineItemProps {
     user?: string;
     action?: string;
     icon?: string | ((data: ITimelineItemProps) => string | false);
+    children: React.ReactElement[];
 }
 
-const TimelineItem: React.StatelessComponent<ITimelineItemProps> = (props) => {
+const TimelineItem = (props: ITimelineItemProps) => {
     return <div className="tab-pane">{props.children}</div>;
 };
 
@@ -18,7 +19,7 @@ TimelineItem.defaultProps = {
 };
 
 interface ITimelineProps {
-    children?: any;
+    children?: React.Component<ITimelineItemProps>[];
 }
 
 class Timeline extends React.Component<ITimelineProps> {
@@ -31,13 +32,11 @@ class Timeline extends React.Component<ITimelineProps> {
         return (
             <div className="w-timeline">
                 <ul>
-                    {p.children.map((child: Array<React.StatelessComponent<ITimelineItemProps>>, index: number) => {
-                        // todo zmienić struktórę
-                        // @ts-ignore
+                    {p.children.map((child, index) => {
                         const props: ITimelineItemProps = child.props;
                         const icon = typeof props.icon == "function" ? props.icon(props) : props.icon;
                         return (
-                            <li key={index}>
+                            <div key={index}>
                                 {index + 1 < p.children.length && <div className="tail" />}
                                 <div
                                     className={
@@ -50,9 +49,9 @@ class Timeline extends React.Component<ITimelineProps> {
                                         {props.user && <span className="user">[{props.user}]</span>}
                                         {props.action && <span className="action">{props.action}</span>}
                                     </p>
-                                    {child}
+                                    <>{child}</>
                                 </div>
-                            </li>
+                            </div>
                         );
                     })}
                 </ul>

@@ -25,6 +25,8 @@ export interface IPanelProps {
      * Icon
      */
     icon?: React.JSXElementConstructor<any>;
+
+    children: React.ReactNode
 }
 
 export class Panel extends React.PureComponent<IPanelProps> {

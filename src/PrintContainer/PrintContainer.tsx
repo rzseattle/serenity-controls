@@ -13,6 +13,7 @@ interface IPrintContainerProps {
     onHide?: () => any;
     onPrint?: () => any;
     modalProps?: Partial<IModalProps>;
+    children: React.ReactNode;
 }
 
 export class PrintContainer extends React.Component<IPrintContainerProps, any> {
@@ -107,7 +108,7 @@ function copyStyles(sourceDoc: Document, targetDoc: Document) {
     }
 }
 
-class MyWindowPortal extends React.PureComponent<any, any> {
+class MyWindowPortal extends React.Component<any, any> {
     private externalWindow: Window;
     private containerEl: HTMLDivElement;
 
@@ -167,7 +168,6 @@ class MyWindowPortal extends React.PureComponent<any, any> {
     }
 
     public render() {
-        // STEP 2: append props.children to the container <div> that isn't mounted anywhere yet
-        return ReactDOM.createPortal(this.props.children, this.containerEl);
+        return <>{ReactDOM.createPortal(this.props.children, this.containerEl)}</>;
     }
 }

@@ -21,6 +21,7 @@ interface IShadowProps {
      * Custom class name
      */
     customClass?: string;
+    children: React.ReactNode;
 }
 
 export class Shadow extends React.PureComponent<IShadowProps> {

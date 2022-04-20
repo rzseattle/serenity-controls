@@ -1,12 +1,13 @@
 import * as React from "react";
-import { ReactNode } from "react";
+
 import ReactDOM from "react-dom";
 
 interface IPortalProps {
     container?: () => HTMLElement;
+    children: React.ReactNode;
 }
 
-export class Portal extends React.PureComponent<IPortalProps> {
+export class Portal extends React.Component<IPortalProps> {
     public el: HTMLElement;
     private modalRoot: HTMLElement;
 
@@ -35,8 +36,7 @@ export class Portal extends React.PureComponent<IPortalProps> {
         this.modalRoot.removeChild(this.el);
     }
 
-    public render(): ReactNode {
-        const p = this.props;
-        return ReactDOM.createPortal(p.children, this.el);
+    public render() {
+        return <>{ReactDOM.createPortal(this.props.children, this.el)}</>;
     }
 }
