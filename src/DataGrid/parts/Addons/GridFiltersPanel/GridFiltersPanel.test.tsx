@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { StoryAdvanced, StoryEmpty, StoryMultipleFilters, StorySimple } from "./GridFilterPanel.stories";
@@ -21,14 +21,15 @@ test("Should run on cancel when pressed", () => {
     expect(onCancel.mock.calls.length).toBe(1);
 });
 
-test("Should render and change one filter on enter key", () => {
+test("Should render and change one filter on enter key", async () => {
     const onFiltersChange = jest.fn();
-    render(<StorySimple {...StorySimple.args} onFiltersChange={onFiltersChange} />);
+    await act(() => {
+        render(<StorySimple {...StorySimple.args} onFiltersChange={onFiltersChange} />);
+    });
 
     fireEvent.change(screen.getByTestId("input"), { target: { value: "test" } });
-    userEvent.type(screen.getByTestId("input"), "{enter}");
+    await userEvent.type(screen.getByTestId("input"), "{enter}");
 
-    //fireEvent.click(screen.getByTestId("apply-filter"));
     expect(onFiltersChange.mock.calls[0][0][0].value[0].value).toBe("test");
 });
 

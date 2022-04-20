@@ -8,12 +8,10 @@ const GridNumericFilter: IGridFilterComponent = ({ autoFocus, showCaption, onFil
     const ref = useRef<HTMLInputElement>();
     useEffect(() => {
         //need to w8 to animation change
-        setTimeout(() => {
-            if (autoFocus) {
-                ref.current.focus();
-            }
-        }, 20);
-    }, []);
+        if (autoFocus) {
+            ref.current.focus();
+        }
+    }, [ref.current]);
     return (
         <GridAdvancedFilterContainer
             showCaption={showCaption}

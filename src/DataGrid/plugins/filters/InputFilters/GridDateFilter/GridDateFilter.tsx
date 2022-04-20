@@ -74,11 +74,10 @@ const GridDateFilterRow = ({
     };
 
     useEffect(() => {
-        setTimeout(() => {
-            if (autoFocus) {
-                inputRef.current.focus();
-            }
-        }, 20);
+        if (autoFocus && inputRef.current) {
+            inputRef.current.focus();
+        }
+
         if (value.value) {
             try {
                 if (value.value.indexOf(" / ") !== -1) {
@@ -98,7 +97,8 @@ const GridDateFilterRow = ({
                 console.error(ex);
             }
         }
-    }, [autoFocus]);
+    }, [autoFocus, inputRef.current]);
+
     useEffect(() => {
         if (isInitialMount.current) {
             isInitialMount.current = false;
