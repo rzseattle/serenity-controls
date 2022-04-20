@@ -23,7 +23,7 @@ interface ITabsProps {
      */
     mountAllTabs?: boolean;
 
-    children: React.ReactElement<ITabPaneProps>[];
+    children: React.ReactElement[]
 }
 
 interface ITabsState {
@@ -75,7 +75,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
         return (
             <div className="w-tabs">
                 <div className="tabs-links">
-                    {p.children.map((child: any, index) => {
+                    {React.Children.toArray(p.children).map((child: any, index) => {
                         return (
                             <div
                                 key={index}
@@ -108,22 +108,15 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
                 </div>
                 <div className="tabs-links-separator" />
                 <div className="tab-pane-container">
-                    {!this.props.mountAllTabs && p.children[s.currentTab]}
+                    {!this.props.mountAllTabs && React.Children.toArray(p.children)[s.currentTab]}
 
                     {this.props.mountAllTabs && (
                         <div>
-                            {p.children.map((child, index) => {
+                            {React.Children.map(p.children, (child: any, index) => {
                                 if (child == null) {
                                     return;
                                 }
-                                return (
-                                    <div
-                                        key={"child" + index}
-                                        style={{ display: index == s.currentTab ? "block" : "none" }}
-                                    >
-                                        {child}
-                                    </div>
-                                );
+                                return <div style={{ display: index == s.currentTab ? "block" : "none" }}>{child}</div>;
                             })}
                         </div>
                     )}

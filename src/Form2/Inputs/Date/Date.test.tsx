@@ -42,7 +42,6 @@ test("Should upgrade form value from calendar", () => {
 
     act(() => {
         fireEvent.click(container.getElementsByTagName("input")[0] as HTMLInputElement);
-
     });
     fireEvent.mouseUp(screen.getByText(28));
 

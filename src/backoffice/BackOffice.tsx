@@ -30,7 +30,7 @@ interface IBackOfficePanelProps {
     topActions?: ICommand[];
     onMenuClick: (element: IMenuElement, inWindow: boolean) => any;
     logout: () => any;
-    children: React.ReactNode
+    children: React.ReactNode;
 }
 
 interface IBackOfficePanelState {
