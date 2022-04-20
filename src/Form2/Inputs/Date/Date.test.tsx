@@ -42,8 +42,9 @@ test("Should upgrade form value from calendar", () => {
 
     act(() => {
         fireEvent.click(container.getElementsByTagName("input")[0] as HTMLInputElement);
-        fireEvent.mouseUp(screen.getByText(28));
+
     });
+    fireEvent.mouseUp(screen.getByText(28));
 
     expect(result.current.getValues("test")).toBe("1982-11-28");
     expect(result.current.getFieldState("test").isDirty).toBe(true);
