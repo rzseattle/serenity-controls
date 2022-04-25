@@ -34,20 +34,20 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
     constructor(props: IMenuProps) {
         super(props);
         // @ts-ignore
-        // if (window.localStorage.backofficeMenuOpened === undefined) {
-        //     // @ts-ignore
-        //     window.localStorage.backofficeMenuOpened = "1";
-        // }
+        if (window.localStorage.backofficeMenuOpened === undefined) {
+            // @ts-ignore
+            window.localStorage.backofficeMenuOpened = "1";
+        }
 
         this.state = {
             currentMenuOpened: -1,
-            expanded: null,
+            expanded:
             // @ts-ignore
-            // window.localStorage.backofficeMenuOpened !== undefined
-            //     ? // prettier-ignore
-            //       // @ts-ignore
-            //       window.localStorage.backofficeMenuOpened == "1"
-            //     : props.mobile,
+            window.localStorage.backofficeMenuOpened !== undefined
+                ? // prettier-ignore
+                  // @ts-ignore
+                  window.localStorage.backofficeMenuOpened == "1"
+                : props.mobile,
         };
     }
 
