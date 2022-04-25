@@ -23,7 +23,7 @@ interface ITabsProps {
      */
     mountAllTabs?: boolean;
 
-    children: React.ReactElement[]
+    children: React.ReactElement[];
 }
 
 interface ITabsState {
