@@ -124,6 +124,12 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     };
 
     public handleNavigateTo = (element: IMenuElement, inWindow = false) => {
+
+        if (element.route.indexOf("/next") === 0) {
+            window.location.href =  element.route;
+            return;
+        }
+
         if (inWindow) {
             this.handleOpenWindow(element.route, {}, { title: element.title, showHideLink: true, top: 55 });
         } else {
