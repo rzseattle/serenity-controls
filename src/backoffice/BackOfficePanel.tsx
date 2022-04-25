@@ -124,9 +124,8 @@ export class BackOfficePanel extends React.Component<IBackOfficePanelProps, IBac
     };
 
     public handleNavigateTo = (element: IMenuElement, inWindow = false) => {
-
         if (element.route.indexOf("/next") === 0) {
-            window.location.href =  element.route;
+            window.location.href = element.route;
             return;
         }
 

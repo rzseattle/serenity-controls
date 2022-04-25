@@ -42,12 +42,12 @@ export class Menu extends React.PureComponent<IMenuProps, IMenuState> {
         this.state = {
             currentMenuOpened: -1,
             expanded:
-            // @ts-ignore
-            window.localStorage.backofficeMenuOpened !== undefined
-                ? // prettier-ignore
-                  // @ts-ignore
-                  window.localStorage.backofficeMenuOpened == "1"
-                : props.mobile,
+                // @ts-ignore
+                window.localStorage.backofficeMenuOpened !== undefined
+                    ? // prettier-ignore
+                      // @ts-ignore
+                      window.localStorage.backofficeMenuOpened == "1"
+                    : props.mobile,
         };
     }
 
