@@ -135,7 +135,7 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
     );
 };
 
-export default DataGrid;
+export { DataGrid };
 
 //
 // export interface IGroupByData {

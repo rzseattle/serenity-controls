@@ -3,8 +3,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 
 import { act, renderHook } from "@testing-library/react-hooks";
 import "@testing-library/jest-dom/extend-expect";
-import Date from "./Date";
 import { useSerenityForm } from "../../useSerenityForm";
+import { Date } from "./Date";
 
 test("Should render", () => {
     const { result } = renderHook(() => useSerenityForm<{ test: string }>({ defaultValues: { test: "1982-11-20" } }));

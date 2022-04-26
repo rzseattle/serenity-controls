@@ -1,5 +1,5 @@
 import React from "react";
-import Shimmer from "./Shimmer";
+import { Shimmer } from "./Shimmer";
 
 const ShimmerList = ({ rows = 5 }: { rows?: number }) => {
     return (
@@ -11,4 +11,4 @@ const ShimmerList = ({ rows = 5 }: { rows?: number }) => {
     );
 };
 
-export default ShimmerList;
+export { ShimmerList };

@@ -3,8 +3,8 @@ import { fireEvent, render } from "@testing-library/react";
 
 import { act, renderHook } from "@testing-library/react-hooks";
 import "@testing-library/jest-dom/extend-expect";
-import Textarea from "./Textarea";
 import { useSerenityForm } from "../../useSerenityForm";
+import { Textarea } from "./Textarea";
 
 test("Should render", () => {
     const { result } = renderHook(() => useSerenityForm<{ test: string }>({ defaultValues: { test: "_string" } }));

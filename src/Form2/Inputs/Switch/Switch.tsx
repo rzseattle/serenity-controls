@@ -44,4 +44,4 @@ const Switch = (props: ISwitchProps) => {
         </CommonInput>
     );
 };
-export default Switch;
+export { Switch };

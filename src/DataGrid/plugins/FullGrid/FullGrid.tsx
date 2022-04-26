@@ -1,5 +1,5 @@
-import React, { Dispatch, forwardRef, SetStateAction, useEffect, useImperativeHandle, useRef, useState } from "react";
-import DataGrid, { IGridProps } from "../../DataGrid";
+import React, { Dispatch, SetStateAction, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { DataGrid, IGridProps } from "../../DataGrid";
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
 import { IGridColumn } from "../../interfaces/IGridColumn";

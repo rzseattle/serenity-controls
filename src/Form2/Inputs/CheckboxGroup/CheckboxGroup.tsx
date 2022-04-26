@@ -129,4 +129,4 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
         </CommonInput>
     );
 };
-export default CheckboxGroup;
+export { CheckboxGroup };

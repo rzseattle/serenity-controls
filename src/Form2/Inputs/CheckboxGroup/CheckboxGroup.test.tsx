@@ -4,7 +4,7 @@ import { fireEvent, screen, render } from "@testing-library/react";
 import { act, renderHook } from "@testing-library/react-hooks";
 
 import { useSerenityForm } from "../../useSerenityForm";
-import CheckboxGroup from "./CheckboxGroup";
+import { CheckboxGroup } from "./CheckboxGroup";
 
 test("Should render", () => {
     const {

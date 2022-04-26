@@ -176,4 +176,4 @@ const Select = (props: ISelectProps) => {
         </CommonInput>
     );
 };
-export default Select;
+export { Select };

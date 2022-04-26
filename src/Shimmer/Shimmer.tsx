@@ -5,4 +5,4 @@ const Shimmer = ({ style = {} }: { style?: React.CSSProperties }) => {
     return <div className={styles.shimmer} style={style}></div>;
 };
 
-export default Shimmer;
+export { Shimmer };

@@ -38,4 +38,4 @@ const Textarea = (props: ITextareaProps) => {
     );
 };
 
-export default Textarea;
+export { Textarea };

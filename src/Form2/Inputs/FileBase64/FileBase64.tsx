@@ -53,4 +53,4 @@ const FileBase64 = (props: IFileBase64Props) => {
     );
 };
 
-export default FileBase64;
+export { FileBase64 };

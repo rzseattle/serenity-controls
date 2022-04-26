@@ -13,7 +13,7 @@ import {
     AiOutlineMinus,
     AiOutlinePlus,
 } from "react-icons/ai";
-import ShimmerList from "../../Shimmer/ShimmerList";
+import { ShimmerList } from "../../Shimmer/ShimmerList";
 import GridTextFilter from "../plugins/filters/InputFilters/GridTextFilter/GridTextFilter";
 import GridDateFilter from "../plugins/filters/InputFilters/GridDateFilter/GridDateFilter";
 import GridNumericFilter from "../plugins/filters/InputFilters/GridNumericFilter/GridNumericFilter";

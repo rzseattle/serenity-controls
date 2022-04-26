@@ -38,4 +38,4 @@ const Text = (props: ITextProps) => {
     );
 };
 
-export default Text;
+export { Text };
