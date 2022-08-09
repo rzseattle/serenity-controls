@@ -42,6 +42,7 @@ const findHandler = (involvedKeys: any, handlers: IHandler[]): IHandler | null =
             }
         }
     }
+
     return null;
 };
 
@@ -54,6 +55,7 @@ const runHandler = (
     debug: boolean,
 ) => {
     if (stopPropagation) {
+
         event.stopPropagation();
         event.nativeEvent.stopPropagation();
     }
@@ -134,7 +136,8 @@ IHotKeyProps) => {
                     if (debug) {
                         log("[HotKeys:" + name + "] Focusing root element");
                     }
-                    ref.current.focus();
+                    // todo need to consider
+                    ref.current?.focus();
                 }
             }, 20);
         };
