@@ -211,8 +211,8 @@ const Positioner = (inProps: IPositionerProps) => {
     const bottom = props.absoluteSettings?.bottom ?? "auto";
     const right = props.absoluteSettings?.right ?? "auto";
     const [position, setPosition] = useState<IRect>({
-        top: props.absoluteSettings?.top ?? bottom === "auto" ? 0 : "auto",
-        left: props.absoluteSettings?.left ?? right === "auto" ? 0 : "auto",
+        top: props.absoluteSettings?.top ?? "auto",
+        left: props.absoluteSettings?.left ?? "auto",
         bottom,
         right,
         width: "auto",
@@ -345,6 +345,7 @@ const Positioner = (inProps: IPositionerProps) => {
                                     }
                                   : {}),
                               zIndex: 4000, // why needed ?
+                              color: "red",
                           }
                         : {
                               position: "absolute",
