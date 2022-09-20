@@ -5,6 +5,7 @@ import "./ConfirmDialog.sass";
 import { IPositionCalculatorOptions, RelativePositionPresets } from "../Positioner";
 import { CommonIcons } from "../lib/CommonIcons";
 import { IOption } from "../fields";
+import FocusLock from "react-focus-lock";
 
 export interface IConfirmDialogCompProps {
     title: string;
@@ -40,19 +41,22 @@ const ConfirmDialogComp = ({
             icon={CommonIcons.info}
             onHide={() => onAbort()}
         >
-            <div style={{ padding: 10 }}>{question}</div>
-            <div style={{ padding: 5, textAlign: "right" }}>
-                {options.map((el) => (
-                    <button
-                        key={el.value + ""}
-                        style={{ margin: 4, cursor: "pointer", padding: "3px 6px" }}
-                        onClick={() => {
-                            onSelect(el.value);
-                        }}
-                    >
-                        {el.label}
-                    </button>
-                ))}
+            <div className={"w-modal-confirm"}>
+                <div style={{ padding: 10 }}>{question}</div>
+                <FocusLock autoFocus={true}>
+                    <div style={{ padding: 5, textAlign: "right" }}>
+                        {options.map((el, index) => (
+                            <button
+                                key={el.value + ""}
+                                onClick={() => {
+                                    onSelect(el.value);
+                                }}
+                            >
+                                {el.label}
+                            </button>
+                        ))}
+                    </div>
+                </FocusLock>
             </div>
         </Modal>
     );
@@ -79,7 +83,10 @@ export const confirmDialog = async (message: string, options: Partial<IConfirmDi
                 }}
                 onAbort={() => {
                     cleanup();
-                    resolve(undefined);
+                    resolve(false);
+                    if (options.onAbort) {
+                        options.onAbort();
+                    }
                 }}
                 options={[
                     { value: true, label: "yes" },
