@@ -14,6 +14,7 @@ export interface ICheckboxgroupProps extends ICommonInputProps {
     readonly?: boolean;
     control: Control<any, any>;
     options: IOption[];
+    disableSearch?: boolean;
 }
 
 const CheckboxGroup = (props: ICheckboxgroupProps) => {
@@ -84,7 +85,7 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
                     captureInput={true}
                     stopPropagation={true}
                 >
-                    {props.options.length > 10 && (
+                    {props.disableSearch !== true && props.options.length > 10 && (
                         <input
                             type={"text"}
                             autoFocus={true}
@@ -96,6 +97,7 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
                     )}
                     <div className={styles.list} ref={listRef}>
                         {filteredOptions.map((option, index) => {
+
                             return (
                                 <div
                                     onMouseOver={() => {

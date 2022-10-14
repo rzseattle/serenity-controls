@@ -55,7 +55,6 @@ const runHandler = (
     debug: boolean,
 ) => {
     if (stopPropagation) {
-
         event.stopPropagation();
         event.nativeEvent.stopPropagation();
     }
