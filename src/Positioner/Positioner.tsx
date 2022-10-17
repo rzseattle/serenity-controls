@@ -345,7 +345,6 @@ const Positioner = (inProps: IPositionerProps) => {
                                     }
                                   : {}),
                               zIndex: 4000, // why needed ?
-                              color: "red",
                           }
                         : {
                               position: "absolute",

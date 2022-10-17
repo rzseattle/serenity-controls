@@ -23,7 +23,7 @@ export class ColActive<Row> extends ColumnTemplate<Row> {
                                 style={{
                                     textAlign: "center",
                                     color: checked ? "darkgreen" : "darkred",
-                                    fontWeight: "bold"
+                                    fontWeight: "bold",
                                 }}
                             >
                                 {config.filter.icons[checked ? "checked" : "unchecked"]}

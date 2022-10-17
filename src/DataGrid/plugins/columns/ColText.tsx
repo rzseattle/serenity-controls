@@ -11,7 +11,6 @@ export class ColText<Row> extends ColumnTemplate<Row> {
             header: {
                 caption,
             },
-
         };
         this.filters = [
             {

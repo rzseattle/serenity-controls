@@ -16,18 +16,18 @@ const GridBooleanFilter: IGridFilterComponent = ({ autoFocus, showCaption, onVal
             }
         }, 10);
     }, [autoFocus]);
-    const val = filter.value && ( filter.value[0]?.value == 1 || filter.value[0]?.value === true);
-    console.log(filter.value)
+    const val = filter.value && (filter.value[0]?.value == 1 || filter.value[0]?.value === true);
+    console.log(filter.value);
     return (
         <GridFilterBody filter={filter} showCaption={showCaption}>
             <div className={styles.buttons}>
                 <button
                     ref={ref}
                     tabIndex={1}
-                    disabled={filter.value && filter.value.length &&  !val}
+                    disabled={filter.value && filter.value.length && !val}
                     onClick={() =>
                         onValueChange([
-                            { value: false, condition: "=", labelCondition:"", labelValue: "0" }, // labelCondition: config.filter.icons.unchecked,
+                            { value: false, condition: "=", labelCondition: "", labelValue: "0" }, // labelCondition: config.filter.icons.unchecked,
                         ])
                     }
                 >
@@ -38,7 +38,7 @@ const GridBooleanFilter: IGridFilterComponent = ({ autoFocus, showCaption, onVal
                     disabled={val}
                     onClick={() =>
                         onValueChange([
-                            { value: true, condition: "=",  labelCondition:"", labelValue: "1" }, //labelCondition: config.filter.icons.checked
+                            { value: true, condition: "=", labelCondition: "", labelValue: "1" }, //labelCondition: config.filter.icons.checked
                         ])
                     }
                 >

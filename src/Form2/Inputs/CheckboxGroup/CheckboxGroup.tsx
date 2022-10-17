@@ -97,7 +97,6 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
                     )}
                     <div className={styles.list} ref={listRef}>
                         {filteredOptions.map((option, index) => {
-
                             return (
                                 <div
                                     onMouseOver={() => {
