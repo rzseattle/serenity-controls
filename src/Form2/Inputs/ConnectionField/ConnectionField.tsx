@@ -9,8 +9,7 @@ import { RelativePositionPresets } from "../../../Positioner";
 import { Modal } from "../../../Modal";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
-import { PrintJSON } from "../../../PrintJSON";
-import { value } from "../../../DataGrid/parts/Addons/GridConditionsPresenter/GridConditionsPresenter.module.sass";
+import { Shimmer } from "../../../Shimmer";
 
 export interface IConnectionElement {
     value: string | number;
@@ -39,7 +38,18 @@ export interface IConnectionFieldProps extends ICommonInputProps {
     /**
      * Value of the field. Array if maxItems > 1, string | number if maxItems == 1
      */
-    value: string[] | number[];
+    value: string[] | number[] | string;
+
+    /**
+     * Value is kept as string or array
+     */
+    valueFormat: "string" | "array";
+
+    /**
+     * String value divider
+     */
+    valueFormatStringDivider: string;
+
     /**
      * Maximum items selected from list
      */
@@ -63,7 +73,7 @@ export interface IConnectionFieldProps extends ICommonInputProps {
     /**
      * Template applied to selection list
      */
-    itemTemplate?: (element: IConnectionElement) => any;
+    itemRenderer?: (element: IConnectionElement) => any;
 
     /**
      * Template applied to selection list
@@ -101,17 +111,79 @@ export interface IConnectionFieldProps extends ICommonInputProps {
     onItemClick?: (element: IConnectionElement) => any;
 }
 
+const defaultProps: Partial<IConnectionFieldProps> = {
+    maxItems: 5,
+    valueFormat: "string",
+    valueFormatStringDivider: ",",
+};
+
 const ConnectionField = (props: IConnectionFieldProps) => {
+    const options = { ...defaultProps, ...props };
     const control = useController({ name: props.name, control: props.control });
 
+    /**
+     * Currently selected index from search list
+     */
     const [selected, setSelected] = useState<number>(0);
+    /**
+     * Search string
+     */
     const [search, setSearch] = useState<string>("");
+    /**
+     * Elements found by search in ds
+     */
     const [found, setFound] = useState<IConnectionElement[]>([]);
-    const refInput = useRef<HTMLInputElement>();
+    /**
+     * Loading data from values indicator
+     */
+    const [loadingValues, setLoadingValues] = useState<boolean>(false);
 
+    /**
+     * Data witch is selected (from startup value or from list selection )
+     */
     const [selectedData, setSelectedData] = useState<IConnectionElement[]>([]);
+
+    /**
+     * Determines do we see search input
+     */
     const [editMode, setEditMode] = useState<boolean>(false);
 
+    const refInput = useRef<HTMLInputElement>();
+
+    //if value and we don't have item
+    useEffect(() => {
+        if (control.field.value) {
+            const val: string[] | number[] =
+                options.valueFormat === "string"
+                    ? (control.field.value as string).split(options.valueFormatStringDivider)
+                    : control.field.value;
+
+            setLoadingValues(true);
+
+            (async () => {
+                const result = await props.ds({ searchString: search, requestType: "getItems", selected: val });
+                setSelectedData(result.results);
+                setLoadingValues(false);
+            })();
+        }
+    }, [control.field.value]);
+
+    useEffect(() => {
+        const value =
+            options.valueFormat === "string"
+                ? selectedData.map((el) => el.value).join(options.valueFormatStringDivider)
+                : selectedData.map((el) => el.value);
+
+        if (value != control.field.value) {
+            control.field.onChange({
+                target: {
+                    value,
+                },
+            });
+        }
+    }, [selectedData]);
+
+    // search effect
     useEffect(() => {
         (async () => {
             if (search.length > 0) {
@@ -124,6 +196,7 @@ const ConnectionField = (props: IConnectionFieldProps) => {
         })();
     }, [search]);
 
+    // scroll options effect
     useLayoutEffect(() => {
         const element = document.getElementsByClassName(styles.foundItemSelected)[0];
         if (element) {
@@ -132,17 +205,22 @@ const ConnectionField = (props: IConnectionFieldProps) => {
             });
         }
     }, [selected]);
+
+    // focusing input after we enter into search mode
     useLayoutEffect(() => {
-        if(editMode) {
-            refInput.current.focus()
+        if (editMode) {
+            refInput.current.focus();
         }
-    }, [editMode])
+    }, [editMode]);
 
-    const max = props.maxItems ?? 1;
+    const addItem = () => {
+        setSelectedData((data) => {
+            if (options.maxItems === 1) {
+                return [found[selected]];
+            }
+            return [...data, found[selected]];
+        });
 
-    const changeValue = () => {
-        control.field.onChange({ target: { value: max === 1 ? found[selected].value : [found[selected].value] } });
-        setSelectedData([found[selected]]);
         setSearch("");
         setFound([]);
         setEditMode(false);
@@ -158,15 +236,18 @@ const ConnectionField = (props: IConnectionFieldProps) => {
             valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
         >
             <div>
-
                 <div
                     onClick={() => {
                         setEditMode(true);
                     }}
                 >
-                    <PrintJSON json={control.field.value} />
-
-                    {selectedData.map((el) => el.label)}
+                    {/*<PrintJSON json={control.field.value} />*/}
+                    {loadingValues && <Shimmer />}
+                    {selectedData.map((el) => (
+                        <div key={el.value} className={styles.selectedElement}>
+                            {options.itemRenderer ? options.itemRenderer(el) : el.label}
+                        </div>
+                    ))}
                 </div>
                 {editMode && (
                     <>
@@ -187,7 +268,7 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                                 {
                                     key: Key.Enter,
                                     handler: () => {
-                                        changeValue();
+                                        addItem();
                                     },
                                 },
                             ]}
@@ -198,6 +279,12 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 ref={refInput}
+                                onBlur={() => {
+                                    //need timeout couse it works before we are able to click on list
+                                    setTimeout(() => {
+                                        setEditMode(false);
+                                    }, 100);
+                                }}
                             />
                             <Modal
                                 show={found.length > 0}
@@ -210,9 +297,7 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                             >
                                 <div
                                     className={styles.foundItemContainer}
-                                    onFocus={() => {
-                                        console.log("focused");
-                                    }}
+
                                     tabIndex={-1}
                                 >
                                     {found.map((el, index) => (
@@ -224,13 +309,13 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                                                 (selected == index ? styles.foundItemSelected : "")
                                             }
                                             onClick={() => {
-                                                changeValue();
+                                                addItem();
                                             }}
                                             onMouseEnter={() => {
                                                 setSelected(index);
                                             }}
                                         >
-                                            {el.label} <br />
+                                            {options.itemRenderer ? options.itemRenderer(el) : el.label}
                                         </div>
                                     ))}
                                 </div>

@@ -12,7 +12,7 @@ export interface IFieldPresentationValue {
 export interface ICommonInputProps {
     label?: string;
     readOnlyPresenter?: (value: IFieldPresentationValue) => React.ReactNode;
-    help? :string
+    help?: string;
 }
 
 const CommonInput = ({
@@ -22,14 +22,13 @@ const CommonInput = ({
     readonly,
     readOnlyPresenter,
     valueForPresenter,
-    help
+    help,
 }: {
     children?: React.ReactElement;
     fieldState: ControllerFieldState;
     valueForPresenter: () => IFieldPresentationValue;
     readonly: boolean;
 } & ICommonInputProps) => {
-
     return (
         <div className={"w-common-input" + (fieldState.invalid ? " w-common-input-invalid" : "")}>
             {label !== undefined && <label title={label}>{label}</label>}
@@ -49,7 +48,12 @@ const CommonInput = ({
                     ))}
                 </div>
             )}
-            {help && <div className={"w-field-help"}> <MdLiveHelp /> {help}</div>}
+            {help && (
+                <div className={"w-field-help"}>
+                    {" "}
+                    <MdLiveHelp /> {help}
+                </div>
+            )}
         </div>
     );
 };

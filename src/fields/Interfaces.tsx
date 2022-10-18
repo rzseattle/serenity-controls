@@ -1,7 +1,7 @@
 export interface IOption {
     value: string | number | boolean;
     label: string | number;
-    icon?: string
+    icon?: string;
 }
 
 export interface IFieldProps {
