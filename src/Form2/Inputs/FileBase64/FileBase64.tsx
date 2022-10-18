@@ -24,6 +24,7 @@ const FileBase64 = (props: IFileBase64Props) => {
             label={props.label}
             fieldState={control.fieldState}
             readonly={props.readonly}
+            help={props.help}
             readOnlyPresenter={props.readOnlyPresenter}
             valueForPresenter={() => ({ real: control.field.value, presented: "" /*control.field.value*/ })}
         >

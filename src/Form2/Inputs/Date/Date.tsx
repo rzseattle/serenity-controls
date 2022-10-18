@@ -45,6 +45,7 @@ const Date = (props: IDateProps) => {
             label={props.label}
             fieldState={control.fieldState}
             readonly={props.readonly}
+            help={props.help}
             readOnlyPresenter={props.readOnlyPresenter}
             valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
         >

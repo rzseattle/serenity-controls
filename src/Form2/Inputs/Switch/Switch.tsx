@@ -20,6 +20,7 @@ const Switch = (props: ISwitchProps) => {
             label={props.label}
             fieldState={control.fieldState}
             readonly={props.readonly}
+            help={props.help}
             readOnlyPresenter={props.readOnlyPresenter}
             valueForPresenter={() => ({
                 real: control.field.value,

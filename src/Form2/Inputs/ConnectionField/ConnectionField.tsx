@@ -4,12 +4,13 @@ import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 import { useController } from "react-hook-form";
 import { Control } from "react-hook-form/dist/types/form";
 import { IConnectionChangeEvent, IConnectionFieldInput } from "../../../ConnectionsField";
-import styles, { foundItem } from "./ConnectionField.module.sass";
-import { Positioner, RelativePositionPresets } from "../../../Positioner";
+import styles from "./ConnectionField.module.sass";
+import { RelativePositionPresets } from "../../../Positioner";
 import { Modal } from "../../../Modal";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { PrintJSON } from "../../../PrintJSON";
+import { value } from "../../../DataGrid/parts/Addons/GridConditionsPresenter/GridConditionsPresenter.module.sass";
 
 export interface IConnectionElement {
     value: string | number;
@@ -107,6 +108,10 @@ const ConnectionField = (props: IConnectionFieldProps) => {
     const [search, setSearch] = useState<string>("");
     const [found, setFound] = useState<IConnectionElement[]>([]);
     const refInput = useRef<HTMLInputElement>();
+
+    const [selectedData, setSelectedData] = useState<IConnectionElement[]>([]);
+    const [editMode, setEditMode] = useState<boolean>(false);
+
     useEffect(() => {
         (async () => {
             if (search.length > 0) {
@@ -127,11 +132,20 @@ const ConnectionField = (props: IConnectionFieldProps) => {
             });
         }
     }, [selected]);
+    useLayoutEffect(() => {
+        if(editMode) {
+            refInput.current.focus()
+        }
+    }, [editMode])
+
+    const max = props.maxItems ?? 1;
 
     const changeValue = () => {
-        console.log(found[selected], "found")
-        control.field.onChange({ target: { value: found[selected] } });
+        control.field.onChange({ target: { value: max === 1 ? found[selected].value : [found[selected].value] } });
+        setSelectedData([found[selected]]);
+        setSearch("");
         setFound([]);
+        setEditMode(false);
     };
 
     return (
@@ -139,70 +153,91 @@ const ConnectionField = (props: IConnectionFieldProps) => {
             label={props.label}
             fieldState={control.fieldState}
             readonly={props.readonly}
+            help={props.help}
             readOnlyPresenter={props.readOnlyPresenter}
             valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
         >
             <div>
-                <PrintJSON json={control.field.value} />
-                <HotKeys
-                    actions={[
-                        {
-                            key: Key.ArrowDown,
-                            handler: () => {
-                                setSelected((r) => (r < found.length - 1 ? r + 1 : found.length - 1));
-                            },
-                        },
-                        {
-                            key: Key.ArrowUp,
-                            handler: () => {
-                                setSelected((r) => (r - 1 < 0 ? 0 : r - 1));
-                            },
-                        },
-                        {
-                            key: Key.Enter,
-                            handler: () => {
-                                changeValue();
-                            },
-                        },
-                    ]}
-                    observeFromInput={[Key.ArrowDown, Key.ArrowUp, Key.Enter]}
+
+                <div
+                    onClick={() => {
+                        setEditMode(true);
+                    }}
                 >
-                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} ref={refInput} />
-                    <Modal
-                        show={found.length > 0}
-                        relativeTo={() => refInput.current}
-                        relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
-                        shadow={false}
-                        // hideOnBlur={true}
-                        onHide={() => setFound([])}
-                        className={styles.dropdown}
-                    >
-                        <div
-                            className={styles.foundItemContainer}
-                            onFocus={() => {
-                                console.log("focused");
-                            }}
-                            tabIndex={-1}
-                        >
-                            {found.map((el, index) => (
-                                <div
-                                    key={el.value}
-                                    className={
-                                        styles.foundItem + " " + (selected == index ? styles.foundItemSelected : "")
-                                    }
-                                    onClick={() => {
+                    <PrintJSON json={control.field.value} />
+
+                    {selectedData.map((el) => el.label)}
+                </div>
+                {editMode && (
+                    <>
+                        <HotKeys
+                            actions={[
+                                {
+                                    key: Key.ArrowDown,
+                                    handler: () => {
+                                        setSelected((r) => (r < found.length - 1 ? r + 1 : found.length - 1));
+                                    },
+                                },
+                                {
+                                    key: Key.ArrowUp,
+                                    handler: () => {
+                                        setSelected((r) => (r - 1 < 0 ? 0 : r - 1));
+                                    },
+                                },
+                                {
+                                    key: Key.Enter,
+                                    handler: () => {
                                         changeValue();
+                                    },
+                                },
+                            ]}
+                            observeFromInput={[Key.ArrowDown, Key.ArrowUp, Key.Enter]}
+                        >
+                            <input
+                                type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                ref={refInput}
+                            />
+                            <Modal
+                                show={found.length > 0}
+                                relativeTo={() => refInput.current}
+                                relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
+                                shadow={false}
+                                // hideOnBlur={true}
+                                onHide={() => setFound([])}
+                                className={styles.dropdown}
+                            >
+                                <div
+                                    className={styles.foundItemContainer}
+                                    onFocus={() => {
+                                        console.log("focused");
                                     }}
-                                    onMouseEnter={() => {
-                                        setSelected(index);
-                                    }}
+                                    tabIndex={-1}
                                 >
-                                    {el.label} <br />
+                                    {found.map((el, index) => (
+                                        <div
+                                            key={el.value}
+                                            className={
+                                                styles.foundItem +
+                                                " " +
+                                                (selected == index ? styles.foundItemSelected : "")
+                                            }
+                                            onClick={() => {
+                                                changeValue();
+                                            }}
+                                            onMouseEnter={() => {
+                                                setSelected(index);
+                                            }}
+                                        >
+                                            {el.label} <br />
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </Modal>
-                </HotKeys>
+                            </Modal>
+                        </HotKeys>
+                    </>
+                )}
             </div>
 
             {/*<input*/}

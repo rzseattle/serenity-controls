@@ -1,6 +1,8 @@
 import React from "react";
 import { ControllerFieldState } from "react-hook-form/dist/types/controller";
 import "./CommonInput.sass";
+import { IoIosHelp } from "react-icons/io";
+import { MdLiveHelp } from "react-icons/all";
 
 export interface IFieldPresentationValue {
     real: any;
@@ -10,6 +12,7 @@ export interface IFieldPresentationValue {
 export interface ICommonInputProps {
     label?: string;
     readOnlyPresenter?: (value: IFieldPresentationValue) => React.ReactNode;
+    help? :string
 }
 
 const CommonInput = ({
@@ -19,12 +22,14 @@ const CommonInput = ({
     readonly,
     readOnlyPresenter,
     valueForPresenter,
+    help
 }: {
     children?: React.ReactElement;
     fieldState: ControllerFieldState;
     valueForPresenter: () => IFieldPresentationValue;
     readonly: boolean;
 } & ICommonInputProps) => {
+
     return (
         <div className={"w-common-input" + (fieldState.invalid ? " w-common-input-invalid" : "")}>
             {label !== undefined && <label title={label}>{label}</label>}
@@ -44,6 +49,7 @@ const CommonInput = ({
                     ))}
                 </div>
             )}
+            {help && <div className={"w-field-help"}> <MdLiveHelp /> {help}</div>}
         </div>
     );
 };
