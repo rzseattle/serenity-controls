@@ -3,13 +3,14 @@ import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
 import { useController } from "react-hook-form";
 import { Control } from "react-hook-form/dist/types/form";
-import { IConnectionChangeEvent, IConnectionFieldInput } from "../../../ConnectionsField";
+import { IConnectionChangeEvent } from "../../../ConnectionsField";
 import styles from "./ConnectionField.module.sass";
 import { RelativePositionPresets } from "../../../Positioner";
 import { Modal } from "../../../Modal";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { Shimmer } from "../../../Shimmer";
+import { TiDelete } from "react-icons/ti";
 
 export interface IConnectionElement {
     value: string | number;
@@ -38,17 +39,17 @@ export interface IConnectionFieldProps extends ICommonInputProps {
     /**
      * Value of the field. Array if maxItems > 1, string | number if maxItems == 1
      */
-    value: string[] | number[] | string;
+    value?: string[] | number[] | string;
 
     /**
      * Value is kept as string or array
      */
-    valueFormat: "string" | "array";
+    valueFormat?: "string" | "array";
 
     /**
      * String value divider
      */
-    valueFormatStringDivider: string;
+    valueFormatStringDivider?: string;
 
     /**
      * Maximum items selected from list
@@ -58,11 +59,6 @@ export interface IConnectionFieldProps extends ICommonInputProps {
      * Items loaded on init of the  field  ( selected items )
      */
     items?: IConnectionElement[];
-    /**
-     * Search result provider
-     * input.requestType = "search"
-     */
-    searchResultProvider: (input: IConnectionFieldInput) => Promise<IConnectionElement[]>;
 
     /**
      * Using search provider to fill field by items attached to values
@@ -113,7 +109,7 @@ export interface IConnectionFieldProps extends ICommonInputProps {
 
 const defaultProps: Partial<IConnectionFieldProps> = {
     maxItems: 5,
-    valueFormat: "string",
+    valueFormat: "array",
     valueFormatStringDivider: ",",
 };
 
@@ -150,19 +146,44 @@ const ConnectionField = (props: IConnectionFieldProps) => {
 
     const refInput = useRef<HTMLInputElement>();
 
+    const getParsedValue = (): string[] | number[] => {
+        if (options.valueFormat === "string" && control.field.value) {
+            return (control.field.value as string).split(options.valueFormatStringDivider);
+        } else if (options.valueFormat === "array" && Array.isArray(control.field.value)) {
+            return control.field.value;
+        }
+        return [];
+    };
+
+    const doExternalIsEqual = (data: IConnectionElement[]) => {
+        return (
+            getParsedValue().sort().toString() ===
+            data
+                .map((el) => el.value)
+                .sort()
+                .toString()
+        );
+    };
+
     //if value and we don't have item
     useEffect(() => {
-        if (control.field.value) {
-            const val: string[] | number[] =
-                options.valueFormat === "string"
-                    ? (control.field.value as string).split(options.valueFormatStringDivider)
-                    : control.field.value;
+        const val = getParsedValue();
 
+        if (control.field.value && !doExternalIsEqual(selectedData)) {
             setLoadingValues(true);
-
             (async () => {
                 const result = await props.ds({ searchString: search, requestType: "getItems", selected: val });
-                setSelectedData(result.results);
+
+                setSelectedData(
+                    val.map((el) => {
+                        const found = result.results.filter((loaded) => el == loaded.value);
+                        if (found.length > 0) {
+                            return found[0];
+                        }
+                        return { value: el, label: `--- value '${el}' could not be loaded -- ` };
+                    }),
+                );
+
                 setLoadingValues(false);
             })();
         }
@@ -174,7 +195,7 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                 ? selectedData.map((el) => el.value).join(options.valueFormatStringDivider)
                 : selectedData.map((el) => el.value);
 
-        if (value != control.field.value) {
+        if (!doExternalIsEqual(selectedData)) {
             control.field.onChange({
                 target: {
                     value,
@@ -187,7 +208,11 @@ const ConnectionField = (props: IConnectionFieldProps) => {
     useEffect(() => {
         (async () => {
             if (search.length > 0) {
-                const result = await props.ds({ searchString: search, requestType: "search", selected: [] });
+                const result = await props.ds({
+                    searchString: search,
+                    requestType: "search",
+                    selected: selectedData.map((el) => el.value),
+                });
                 setSelected(0);
                 setFound(result.results);
             } else {
@@ -200,6 +225,7 @@ const ConnectionField = (props: IConnectionFieldProps) => {
     useLayoutEffect(() => {
         const element = document.getElementsByClassName(styles.foundItemSelected)[0];
         if (element) {
+            // @ts-ignore this is new browser function
             element.scrollIntoViewIfNeeded({
                 behavior: "smooth",
             });
@@ -226,6 +252,12 @@ const ConnectionField = (props: IConnectionFieldProps) => {
         setEditMode(false);
     };
 
+    const removeItem = (item: IConnectionElement) => {
+        setSelectedData((data) => {
+            return [...data].filter((el) => el.value !== item.value);
+        });
+    };
+
     return (
         <CommonInput
             label={props.label}
@@ -245,9 +277,23 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                     {loadingValues && <Shimmer />}
                     {selectedData.map((el) => (
                         <div key={el.value} className={styles.selectedElement}>
-                            {options.itemRenderer ? options.itemRenderer(el) : el.label}
+                            <div>{options.itemRenderer ? options.itemRenderer(el) : el.label}</div>
+                            <div
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeItem(el);
+                                }}
+                            >
+                                <TiDelete />
+                            </div>
                         </div>
                     ))}
+
+                    {selectedData.length == 0 && !loadingValues && !editMode && (
+                        <div className={styles.selectedElement}>
+                            <div>---</div>
+                        </div>
+                    )}
                 </div>
                 {editMode && (
                     <>
@@ -286,57 +332,36 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                                     }, 100);
                                 }}
                             />
-                            <Modal
-                                show={found.length > 0}
-                                relativeTo={() => refInput.current}
-                                relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
-                                shadow={false}
-                                // hideOnBlur={true}
-                                onHide={() => setFound([])}
-                                className={styles.dropdown}
-                            >
-                                <div
-                                    className={styles.foundItemContainer}
-
-                                    tabIndex={-1}
-                                >
-                                    {found.map((el, index) => (
-                                        <div
-                                            key={el.value}
-                                            className={
-                                                styles.foundItem +
-                                                " " +
-                                                (selected == index ? styles.foundItemSelected : "")
-                                            }
-                                            onClick={() => {
-                                                addItem();
-                                            }}
-                                            onMouseEnter={() => {
-                                                setSelected(index);
-                                            }}
-                                        >
-                                            {options.itemRenderer ? options.itemRenderer(el) : el.label}
-                                        </div>
-                                    ))}
-                                </div>
-                            </Modal>
                         </HotKeys>
                     </>
                 )}
+                <Modal
+                    show={found.length > 0}
+                    relativeTo={() => refInput.current}
+                    relativeSettings={{ ...RelativePositionPresets.bottomLeft, widthCalc: "same" }}
+                    shadow={false}
+                    // hideOnBlur={true}
+                    onHide={() => setFound([])}
+                    className={styles.dropdown}
+                >
+                    <div className={styles.foundItemContainer} tabIndex={-1}>
+                        {found.map((el, index) => (
+                            <div
+                                key={el.value}
+                                className={styles.foundItem + " " + (selected == index ? styles.foundItemSelected : "")}
+                                onClick={() => {
+                                    addItem();
+                                }}
+                                onMouseEnter={() => {
+                                    setSelected(index);
+                                }}
+                            >
+                                {options.itemRenderer ? options.itemRenderer(el) : el.label}
+                            </div>
+                        ))}
+                    </div>
+                </Modal>
             </div>
-
-            {/*<input*/}
-            {/*    type="text"*/}
-            {/*    readOnly={props.readonly}*/}
-            {/*    {...props.control.register(props.name)}*/}
-            {/*    onChange={(e) => {*/}
-            {/*        control.field.onChange({ target: { value: e.target.value } });*/}
-            {/*    }}*/}
-            {/*    value={control.field.value}*/}
-            {/*    onBlur={() => {*/}
-            {/*        control.field.onBlur();*/}
-            {/*    }}*/}
-            {/*/>*/}
         </CommonInput>
     );
 };

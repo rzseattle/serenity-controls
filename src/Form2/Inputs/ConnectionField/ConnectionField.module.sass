@@ -1,29 +1,50 @@
 .foundItemContainer
-  overflow: auto
-  max-height: 400px
+    overflow: auto
+    max-height: 400px
+
 .foundItem
-  background-color: #EFEFEF
-  padding: 5px 5px
-  border: solid 1px lightgrey
-  border-bottom: none
+    background-color: #EFEFEF
+    padding: 5px 5px
+    border: solid 1px lightgrey
+    border-bottom: none
 
-  &:hover
-    cursor: pointer
+    &:hover
+        cursor: pointer
 
 
-  &:last-child
-    border-bottom: solid 1px lightgrey
+    &:last-child
+        border-bottom: solid 1px lightgrey
 
 .foundItemSelected
-  color: white
-  background-color: #005A9D
+    color: white
+    background-color: #005A9D
 
 .dropdown
-  width: 100%
-  border: 1px solid #cbd5dd
+    width: 100%
+    border: 1px solid #cbd5dd
 
 
 .selectedElement
-  background-color: #EFEFEF
-  padding: 5px
-  margin-bottom: 3px
+    display: flex
+    background-color: #EFEFEF
+
+    margin-bottom: 3px
+
+    > div:nth-child(1)
+        flex-grow: 1
+        padding: 5px
+
+    > div:nth-child(2)
+        visibility: hidden
+        color: darkred
+        font-size: 14px
+        padding: 4px 4px
+        svg
+            vertical-align: -3px
+        &:hover
+            background-color: lightgrey
+            cursor: pointer
+
+    &:hover
+        > div:nth-child(2)
+            visibility: visible
