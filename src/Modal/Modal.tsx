@@ -88,8 +88,9 @@ export class Modal extends React.PureComponent<IModalProps> {
     };
 
     public handleShow = () => {
+        document.body.style.overflow = "hidden";
         if (this.props.onShow) {
-            document.body.style.overflow = "hidden";
+
             this.props.onShow();
         }
     };
