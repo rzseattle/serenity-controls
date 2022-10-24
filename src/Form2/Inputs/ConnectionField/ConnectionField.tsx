@@ -22,7 +22,7 @@ export interface IConnectionElement {
 
 export interface IConnectionFieldDSInput {
     searchString: string;
-    selected: string[] | number[];
+    selected: string[] | number[] | Array<string | number>;
     requestType: "search" | "getItems";
 }
 
