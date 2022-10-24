@@ -12,6 +12,8 @@
 
 
 
+
+
 .w-modal-confirm
     z-index: 2040
 
@@ -24,13 +26,18 @@
     right: 0
     position: fixed
 
+
+
 .w-modal
+    display: flex
+    flex-direction: column
     z-index: 2
     background: white
     border: 1px solid rgba(0, 0, 0, 0.3)
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3)
     border-radius: 2px
-    overflow: auto
+    max-height: 100vh
+    overflow: hidden
 
     //margin-bottom: 20px
 
@@ -75,3 +82,5 @@
             margin-right: 3px
             font-size: 16px
 
+    .w-modal-body
+        overflow: auto

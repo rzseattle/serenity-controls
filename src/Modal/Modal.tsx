@@ -90,7 +90,6 @@ export class Modal extends React.PureComponent<IModalProps> {
     public handleShow = () => {
         document.body.style.overflow = "hidden";
         if (this.props.onShow) {
-
             this.props.onShow();
         }
     };
@@ -186,7 +185,6 @@ export class Modal extends React.PureComponent<IModalProps> {
                                 if (this.props.draggable) {
                                     document.onmousemove = (event) => {
                                         event.preventDefault();
-                                        console.log(event.clientY + "px");
                                         //modal.style.top = e.clientY + "px";
                                         //modal.style.bottom = "auto";
                                     };
@@ -213,7 +211,9 @@ export class Modal extends React.PureComponent<IModalProps> {
                                     {p.icon && <p.icon />} {p.title}
                                 </div>
                             )}
-                            {this.props.show ? p.children : null}
+                            <div className="w-modal-body" >
+                                {this.props.show ? p.children : null}
+                            </div>
                         </div>
                     </HotKeys>
                 </Positioner>
