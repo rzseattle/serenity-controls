@@ -30,7 +30,28 @@
             top: 0
 
             .w-command-bar
-                background-color: white
+                background-color: transparent !important
+                .buttons-right
+                    display: none
+                .buttons-left
+                    margin-right: 5px
+                a
+                    //background-color: #eaeaea
+                    color: lightgrey
+                    border: solid 1px grey
+
+                    height: 22px !important
+                    min-height: 22px !important
+                    margin-right: 5px
+                    border-radius: 3px
+                    svg
+                        color: lightgrey
+                    &:hover
+                        background-color: #efefef
+                        color: black
+                        svg
+                            color: black
+
 
 
 
