@@ -11,8 +11,7 @@ import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { Shimmer } from "../../../Shimmer";
 import { TiDelete } from "react-icons/ti";
-import { AiFillPlusCircle } from "react-icons/ai";
-import { BsPlusCircleDotted } from "react-icons/all";
+import { BsPlusCircleDotted } from "react-icons/bs";
 
 export interface IConnectionElement {
     value: string | number;
