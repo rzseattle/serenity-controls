@@ -11,6 +11,8 @@ import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { Shimmer } from "../../../Shimmer";
 import { TiDelete } from "react-icons/ti";
+import { AiFillPlusCircle } from "react-icons/ai";
+import { BsPlusCircleDotted } from "react-icons/all";
 
 export interface IConnectionElement {
     value: string | number;
@@ -69,7 +71,7 @@ export interface IConnectionFieldProps extends ICommonInputProps {
     /**
      * Template applied to selection list
      */
-    itemRenderer?: (element: IConnectionElement) => any;
+    itemRenderer?: (element: IConnectionElement, inPopup: boolean) => any;
 
     /**
      * Template applied to selection list
@@ -268,32 +270,41 @@ const ConnectionField = (props: IConnectionFieldProps) => {
             valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
         >
             <div>
-                <div
-                    onClick={() => {
-                        setEditMode(true);
-                    }}
-                >
-                    {/*<PrintJSON json={control.field.value} />*/}
+                <div className={styles.resultPresenter}>
                     {loadingValues && <Shimmer />}
-                    {selectedData.map((el) => (
-                        <div key={el.value} className={styles.selectedElement}>
-                            <div>{options.itemRenderer ? options.itemRenderer(el) : el.label}</div>
-                            <div
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeItem(el);
-                                }}
-                            >
-                                <TiDelete />
-                            </div>
-                        </div>
-                    ))}
-
-                    {selectedData.length == 0 && !loadingValues && !editMode && (
-                        <div className={styles.selectedElement}>
-                            <div>---</div>
+                    {selectedData.length > 0 && (
+                        <div className={styles.list}>
+                            {selectedData.map((el) => (
+                                <div key={el.value} className={styles.selectedElement}>
+                                    <div>{options.itemRenderer ? options.itemRenderer(el, false) : el.label}</div>
+                                    <div
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            removeItem(el);
+                                        }}
+                                    >
+                                        <TiDelete />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     )}
+                    {!editMode && selectedData.length < options.maxItems && (
+                        <div
+                            onClick={() => {
+                                setEditMode(true);
+                            }}
+                            className={styles.add}
+                        >
+                            <BsPlusCircleDotted />
+                        </div>
+                    )}
+
+                    {/*{selectedData.length == 0 && !loadingValues && !editMode && (*/}
+                    {/*    <div className={styles.selectedElement}>*/}
+                    {/*        <div>---</div>*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                 </div>
                 {editMode && (
                     <>
@@ -356,7 +367,7 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                                     setSelected(index);
                                 }}
                             >
-                                {options.itemRenderer ? options.itemRenderer(el) : el.label}
+                                {options.itemRenderer ? options.itemRenderer(el, true) : el.label}
                             </div>
                         ))}
                     </div>
