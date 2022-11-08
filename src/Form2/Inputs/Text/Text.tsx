@@ -22,7 +22,6 @@ const Text = (props: ITextProps) => {
             help={props.help}
             readOnlyPresenter={props.readOnlyPresenter}
             valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
-
         >
             <input
                 type="text"

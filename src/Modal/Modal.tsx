@@ -211,9 +211,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                                     {p.icon && <p.icon />} {p.title}
                                 </div>
                             )}
-                            <div className="w-modal-body" >
-                                {this.props.show ? p.children : null}
-                            </div>
+                            <div className="w-modal-body">{this.props.show ? p.children : null}</div>
                         </div>
                     </HotKeys>
                 </Positioner>
