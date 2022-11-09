@@ -31,6 +31,8 @@ export type IConnectionFieldDS = (
     input: IConnectionFieldDSInput,
 ) => Promise<{ more: boolean; results: IConnectionElement[] }>;
 
+type ItemRenderer = (element: IConnectionElement, inPopup: boolean) => any;
+
 export interface IConnectionFieldProps extends ICommonInputProps {
     ds: IConnectionFieldDS;
     name?: string;
@@ -70,7 +72,7 @@ export interface IConnectionFieldProps extends ICommonInputProps {
     /**
      * Template applied to selection list
      */
-    itemRenderer?: (element: IConnectionElement, inPopup: boolean) => any;
+    itemRenderer?: ItemRenderer;
 
     /**
      * Template applied to selection list
@@ -265,30 +267,30 @@ const ConnectionField = (props: IConnectionFieldProps) => {
             fieldState={control.fieldState}
             readonly={props.readonly}
             help={props.help}
-            readOnlyPresenter={props.readOnlyPresenter}
+            readOnlyPresenter={
+                props.readOnlyPresenter
+                    ? props.readOnlyPresenter
+                    : () => (
+                          <ResultPresenter
+                              readonly={props.readonly}
+                              selectedData={selectedData}
+                              itemRenderer={options.itemRenderer}
+                              removeItem={removeItem}
+                          />
+                      )
+            }
             valueForPresenter={() => ({ real: control.field.value, presented: control.field.value })}
         >
             <div>
                 <div className={styles.resultPresenter}>
                     {loadingValues && <Shimmer />}
-                    {selectedData.length > 0 && (
-                        <div className={styles.list}>
-                            {selectedData.map((el) => (
-                                <div key={el.value} className={styles.selectedElement}>
-                                    <div>{options.itemRenderer ? options.itemRenderer(el, false) : el.label}</div>
-                                    <div
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            removeItem(el);
-                                        }}
-                                    >
-                                        <TiDelete />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    {!editMode && selectedData.length < options.maxItems && (
+                    <ResultPresenter
+                        readonly={props.readonly}
+                        selectedData={selectedData}
+                        itemRenderer={options.itemRenderer}
+                        removeItem={removeItem}
+                    />
+                    {!props.readonly && !editMode && selectedData.length < options.maxItems && (
                         <div
                             onClick={() => {
                                 setEditMode(true);
@@ -373,6 +375,42 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                 </Modal>
             </div>
         </CommonInput>
+    );
+};
+
+const ResultPresenter = ({
+    selectedData,
+    readonly,
+    itemRenderer,
+    removeItem,
+}: {
+    selectedData: IConnectionElement[];
+    readonly: boolean;
+    itemRenderer: ItemRenderer;
+    removeItem: (value: IConnectionElement) => any;
+}) => {
+    return (
+        <>
+            {selectedData.length > 0 && (
+                <div className={styles.list}>
+                    {selectedData.map((el) => (
+                        <div key={el.value} className={styles.selectedElement}>
+                            <div>{itemRenderer ? itemRenderer(el, false) : el.label}</div>
+                            {!readonly && (
+                                <div
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        removeItem(el);
+                                    }}
+                                >
+                                    <TiDelete />
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </>
     );
 };
 
