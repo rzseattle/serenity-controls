@@ -160,7 +160,7 @@ const ConnectionField = (props: IConnectionFieldProps) => {
 
     const doExternalIsEqual = (data: IConnectionElement[]) => {
         return (
-            getParsedValue().sort().toString() ===
+            [...getParsedValue()].sort().toString() ===
             data
                 .map((el) => el.value)
                 .sort()
