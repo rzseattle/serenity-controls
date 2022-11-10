@@ -16,6 +16,7 @@ export interface ISelectProps extends ICommonInputProps {
     readonly?: boolean;
     control: Control<any, any>;
     options: IOption[];
+    autofocus?: boolean;
 }
 
 const Select = (props: ISelectProps) => {
@@ -28,6 +29,17 @@ const Select = (props: ISelectProps) => {
     const listRef = useRef<HTMLDivElement>();
 
     const [filteredOptions, setFilteredOptions] = useState(props.options);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (props.autofocus === true) {
+                setDropdownVisible(true);
+            }
+        }, 40);
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, []);
 
     useEffect(() => {
         setSearchString("");
