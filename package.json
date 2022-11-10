@@ -1,6 +1,6 @@
 {
     "name": "serenity-controls",
-    "version": "2.0.26",
+    "version": "2.0.27",
     "description": "",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
