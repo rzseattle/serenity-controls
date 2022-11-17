@@ -74,7 +74,11 @@ const shouldBeProcessed = (
     name: string,
 ): boolean => {
     const tag = (event.nativeEvent.target as HTMLElement).tagName.toLowerCase();
-    if (!captureInput && (tag == "input" || tag == "textarea")) {
+
+    if (tag == "input" || tag == "textarea") {
+        if (!captureInput) {
+            return false;
+        }
         if (!observeFromInput.includes(key)) {
             if (debug) {
                 log(
@@ -157,6 +161,7 @@ IHotKeyProps) => {
             onKeyUp={(e) => {
                 e.persist();
                 const key: string = e.nativeEvent.key;
+
                 if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug, name)) {
                     const foundHandler = findHandler(map.current, actions);
                     if (foundHandler !== null && foundHandler.onRelease !== undefined) {
@@ -169,12 +174,16 @@ IHotKeyProps) => {
                             debug,
                         );
                     }
-                    delete map.current[key];
 
                     if (handler !== null) {
                         runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, name, debug);
                     }
                 }
+                /**
+                 * deleting no matter if should be processed or no because if on press focus changed to textarea then this letter will stay in
+                 * map and will causes problems
+                 */
+                delete map.current[key];
             }}
             onKeyDown={(e) => {
                 e.persist();
@@ -187,6 +196,7 @@ IHotKeyProps) => {
                     if (handler !== null) {
                         runHandler(e, handler, Object.keys(map.current).join("+"), stopPropagation, name, debug);
                     }
+
                     const foundHandler = findHandler(map.current, actions);
                     if (foundHandler !== null) {
                         runHandler(
