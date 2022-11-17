@@ -75,10 +75,7 @@ const shouldBeProcessed = (
 ): boolean => {
     const tag = (event.nativeEvent.target as HTMLElement).tagName.toLowerCase();
 
-    if (tag == "input" || tag == "textarea") {
-        if (!captureInput) {
-            return false;
-        }
+    if ((!captureInput && tag == "input") || tag == "textarea") {
         if (!observeFromInput.includes(key)) {
             if (debug) {
                 log(
@@ -164,6 +161,7 @@ IHotKeyProps) => {
 
                 if (shouldBeProcessed(e, key, captureInput, observeFromInput, debug, name)) {
                     const foundHandler = findHandler(map.current, actions);
+
                     if (foundHandler !== null && foundHandler.onRelease !== undefined) {
                         runHandler(
                             e,
@@ -198,6 +196,7 @@ IHotKeyProps) => {
                     }
 
                     const foundHandler = findHandler(map.current, actions);
+
                     if (foundHandler !== null) {
                         runHandler(
                             e,
