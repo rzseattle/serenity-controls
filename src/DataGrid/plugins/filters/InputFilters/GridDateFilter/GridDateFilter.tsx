@@ -5,9 +5,6 @@ import GridAdvancedFilterContainer from "../GridCommonFilter/GridAdvancedFilterC
 
 import styles from "./GridDateFilter.module.sass";
 import { Calendar, DateRange, Range } from "react-date-range";
-// @ts-ignore
-import "react-date-range/dist/styles.css"; // main css file
-import "react-date-range/dist/theme/default.css"; // theme css file
 import { addDays, format, parse } from "date-fns";
 // @ts-ignore
 import pl from "date-fns/locale/pl";
