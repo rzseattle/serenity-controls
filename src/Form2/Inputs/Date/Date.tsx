@@ -4,10 +4,9 @@ import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 import { useController } from "react-hook-form";
 import { Control } from "react-hook-form/dist/types/form";
 import { Calendar } from "react-date-range";
-// @ts-ignore
 
-import "react-date-range/dist/styles.css"; // main css file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import styles from "./Date.module.sass";
+
 import { format, parse } from "date-fns";
 // @ts-ignore
 import pl from "date-fns/locale/pl";
@@ -51,6 +50,7 @@ const Date = (props: IDateProps) => {
         >
             <div ref={inputRef}>
                 <input
+
                     type="text"
                     {...props.control.register(props.name)}
                     onChange={(e) => {
@@ -77,8 +77,9 @@ const Date = (props: IDateProps) => {
                         relativeTo={() => inputRef.current}
                         onHide={() => setPickerVisible(false)}
                         shadow={false}
+
                     >
-                        <div>
+                        <div className={styles.main}>
                             {
                                 // @ts-ignore
                                 <Calendar
