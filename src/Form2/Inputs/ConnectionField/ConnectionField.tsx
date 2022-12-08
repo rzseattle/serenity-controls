@@ -10,8 +10,10 @@ import { Modal } from "../../../Modal";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { Shimmer } from "../../../Shimmer";
-import { TiDelete } from "react-icons/ti";
-import { BsPlusCircleDotted } from "react-icons/bs";
+// @ts-ignore
+import { TiDelete } from "react-icons/index";
+// @ts-ignore
+import { BsPlusCircleDotted } from "react-icons/index";
 
 export interface IConnectionElement {
     value: string | number;

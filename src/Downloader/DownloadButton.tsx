@@ -4,7 +4,8 @@ import "./DownloadButton.sass";
 import { fI18n } from "../lib/I18n";
 import { download, IDownloadSuccessParams } from "./Downloader";
 import { CommonIcons } from "../lib/CommonIcons";
-import { AiOutlineSync } from "react-icons/ai";
+// @ts-ignore
+import { AiOutlineSync } from "react-icons/index";
 
 interface IDownloadButtonProps {
     url: string;

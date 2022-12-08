@@ -1,7 +1,8 @@
 import React from "react";
 import { ControllerFieldState } from "react-hook-form/dist/types/controller";
 import "./CommonInput.sass";
-import { MdLiveHelp } from "react-icons/md";
+// @ts-ignore
+import { MdLiveHelp } from "react-icons/index";
 
 export interface IFieldPresentationValue {
     real: any;

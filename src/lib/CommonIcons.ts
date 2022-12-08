@@ -1,19 +1,32 @@
-import { AiOutlineInfoCircle, AiOutlineMail, AiOutlineSearch } from "react-icons/ai";
-import { BiCopy, BiExport, BiImport, BiPrinter, BiUpload } from "react-icons/bi";
-import { BsCalendar, BsFilter, BsList } from "react-icons/bs";
-import { FiArrowDown, FiArrowUp, FiDownload, FiLogOut } from "react-icons/fi";
-import { HiOutlineDocumentText, HiOutlineFolder, HiOutlineSave } from "react-icons/hi";
-
-import { MdDone, MdModeEdit, MdOpenInNew, MdRefresh } from "react-icons/md";
-import { RiAddFill, RiDeleteBin4Line, RiHistoryFill, RiShoppingCartLine } from "react-icons/ri";
+// @ts-ignore
+import { AiOutlineInfoCircle, AiOutlineMail, AiOutlineSearch } from "react-icons/index";
+// @ts-ignore
+import { BiCopy, BiExport, BiImport, BiPrinter, BiUpload } from "react-icons/index";
+// @ts-ignore
+import { BsCalendar, BsFilter, BsList } from "react-icons/index";
+// @ts-ignore
+import { FiArrowDown, FiArrowUp, FiDownload, FiLogOut } from "react-icons/index";
+// @ts-ignore
+import { HiOutlineDocumentText, HiOutlineFolder, HiOutlineSave } from "react-icons/index";
+// @ts-ignore
+import { MdDone, MdModeEdit, MdOpenInNew, MdRefresh } from "react-icons/index";
+// @ts-ignore
+import { RiAddFill, RiDeleteBin4Line, RiHistoryFill, RiShoppingCartLine } from "react-icons/index";
+// @ts-ignore
 import {
+    // @ts-ignore
     VscAccount,
+    // @ts-ignore
     VscChevronDown,
+    // @ts-ignore
     VscChevronLeft,
+    // @ts-ignore
     VscChevronRight,
+    // @ts-ignore
     VscChevronUp,
+    // @ts-ignore
     VscChromeClose,
-} from "react-icons/vsc";
+} from "react-icons/index";
 
 export const CommonIcons: Record<string, (props: any) => JSX.Element> = {
     edit: MdModeEdit,

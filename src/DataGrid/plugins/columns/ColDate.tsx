@@ -1,5 +1,6 @@
 import { ColumnTemplate } from "./ColumnTemplate";
-import { BsCalendar3 } from "react-icons/bs";
+// @ts-ignore
+import { BsCalendar3 } from "react-icons/index";
 import React from "react";
 import { Path } from "react-hook-form";
 

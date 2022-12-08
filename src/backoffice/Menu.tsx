@@ -2,8 +2,10 @@ import * as React from "react";
 
 import "./Menu.sass";
 import { CommonIcons } from "../lib/CommonIcons";
-import { HiOutlineChevronDoubleLeft } from "react-icons/hi";
-import { BsChevronDoubleRight } from "react-icons/bs";
+// @ts-ignore
+import { HiOutlineChevronDoubleLeft } from "react-icons/index";
+// @ts-ignore
+import { BsChevronDoubleRight } from "react-icons/index";
 
 export interface IMenuSection {
     active: boolean;

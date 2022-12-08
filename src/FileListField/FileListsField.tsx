@@ -15,7 +15,8 @@ import { confirmDialog } from "../ConfirmDialog";
 import { RelativePositionPresets } from "../Positioner";
 
 import { CommonIcons } from "../lib/CommonIcons";
-import { BsImage } from "react-icons/bs";
+// @ts-ignore
+import { BsImage } from "react-icons/index";
 
 export interface IFile {
     key: number;

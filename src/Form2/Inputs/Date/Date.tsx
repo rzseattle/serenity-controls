@@ -50,7 +50,6 @@ const Date = (props: IDateProps) => {
         >
             <div ref={inputRef}>
                 <input
-
                     type="text"
                     {...props.control.register(props.name)}
                     onChange={(e) => {
@@ -77,7 +76,6 @@ const Date = (props: IDateProps) => {
                         relativeTo={() => inputRef.current}
                         onHide={() => setPickerVisible(false)}
                         shadow={false}
-
                     >
                         <div className={styles.main}>
                             {
