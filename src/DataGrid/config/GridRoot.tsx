@@ -3,24 +3,16 @@ import React from "react";
 import styles from "../DataGrid.module.sass";
 import { GridContext, IGridConfig } from "./GridContext";
 import locale from "../locale/en";
-// @ts-ignore
-import { BsCalendar3, BsFilter } from "react-icons/index";
+import { BsCalendar3, BsFilter } from "react-icons/bs";
 import {
-    // @ts-ignore
     AiOutlineArrowDown,
-    // @ts-ignore
     AiOutlineArrowUp,
-    // @ts-ignore
     AiOutlineCheck,
-    // @ts-ignore
     AiOutlineClose,
-    // @ts-ignore
     AiOutlineDatabase,
-    // @ts-ignore
     AiOutlineMinus,
-    // @ts-ignore
     AiOutlinePlus,
-} from "react-icons/index";
+} from "react-icons/ai";
 import { ShimmerList } from "../../Shimmer/ShimmerList";
 import GridTextFilter from "../plugins/filters/InputFilters/GridTextFilter/GridTextFilter";
 import GridDateFilter from "../plugins/filters/InputFilters/GridDateFilter/GridDateFilter";

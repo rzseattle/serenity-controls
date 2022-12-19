@@ -6,10 +6,8 @@ import { FileTooltip } from "./FileTooltip";
 import { RelativePositionPresets } from "../Positioner";
 
 import { CommonIcons } from "../lib/CommonIcons";
-// @ts-ignore
-import { BsArrowsMove } from "react-icons/index";
-// @ts-ignore
-import { HiOutlineDocumentText } from "react-icons/index";
+import { BsArrowsMove } from "react-icons/bs";
+import { HiOutlineDocumentText } from "react-icons/hi";
 
 interface IImageBoxProps {
     file: IFile;

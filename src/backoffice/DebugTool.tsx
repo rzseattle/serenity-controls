@@ -4,12 +4,9 @@ import { useState } from "react";
 import "./DebugTool.sass";
 
 import { Modal } from "../Modal";
-// @ts-ignore
-import { CgErase } from "react-icons/index";
-// @ts-ignore
-import { GiPlatform } from "react-icons/index";
-// @ts-ignore
-import { FaDropbox } from "react-icons/index";
+import { CgErase } from "react-icons/cg";
+import { GiPlatform } from "react-icons/gi";
+import { FaDropbox } from "react-icons/fa";
 
 const DebugTool = () => {
     return (

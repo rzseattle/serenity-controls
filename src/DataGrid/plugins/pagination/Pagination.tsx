@@ -1,5 +1,4 @@
-// @ts-ignore
-import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext, MdRefresh } from "react-icons/index";
+import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext, MdRefresh } from "react-icons/md";
 import React from "react";
 import styles from "./Pagination.module.sass";
 
