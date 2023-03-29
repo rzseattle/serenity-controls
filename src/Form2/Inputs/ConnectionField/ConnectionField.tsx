@@ -1,8 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
-import { useController } from "react-hook-form";
-import { Control } from "react-hook-form/dist/types/form";
+import { useController, Control } from "react-hook-form";
 import { IConnectionChangeEvent } from "../../../ConnectionsField";
 import styles from "./ConnectionField.module.sass";
 import { RelativePositionPresets } from "../../../Positioner";

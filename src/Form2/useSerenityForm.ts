@@ -1,8 +1,7 @@
-import { UseFormProps, UseFormReturn } from "react-hook-form/dist/types";
-import { FieldPath } from "react-hook-form/dist/types/path";
-import { useForm } from "react-hook-form";
+
+import { useForm, Control, FieldPath, UseFormProps, UseFormReturn  } from "react-hook-form";
 import { useState } from "react";
-import { Control } from "react-hook-form/dist/types/form";
+
 
 interface IFieldProps<T, TContext extends object = object> {
     control: Control<T, TContext>;
@@ -35,7 +34,6 @@ export const useSerenityForm = <T>(props?: ISerenityFormProps<T>): ISuperForm<T>
         setFormErrors: (errors) => {
             setFormErrors(errors);
         },
-
         formErrors,
         setFieldErrors: (name, errors) => {
             form.setError(name, { types: errors.reduce((p, c, index) => ({ ...p, [index]: c }), {}) });
@@ -47,6 +45,7 @@ export const useSerenityForm = <T>(props?: ISerenityFormProps<T>): ISuperForm<T>
                 control: form.control,
                 name,
                 readonly: isReadOnly,
+
             };
         },
         setSubmitting: (submitting: boolean) => {

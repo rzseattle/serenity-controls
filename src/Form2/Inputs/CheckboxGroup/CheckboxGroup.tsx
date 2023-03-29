@@ -1,5 +1,5 @@
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
-import { Control } from "react-hook-form/dist/types/form";
+import { Control } from "react-hook-form";
 import { IOption } from "../../../fields";
 import { useController } from "react-hook-form";
 import React, { useEffect, useRef, useState } from "react";

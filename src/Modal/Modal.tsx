@@ -32,7 +32,7 @@ export interface IModalProps {
     className?: string;
     children: any;
     orientation?: string;
-    relativeTo?(): HTMLElement;
+    relativeTo?(): HTMLElement | null | undefined;
     relativeSettings?: IPositionCalculatorOptions;
     animation?: string;
     hideOnBlur?: boolean;

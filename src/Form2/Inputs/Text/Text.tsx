@@ -2,7 +2,7 @@ import React from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
 import { useController } from "react-hook-form";
-import { Control } from "react-hook-form/dist/types/form";
+import { Control } from "react-hook-form";
 
 export interface ITextProps extends ICommonInputProps {
     name?: string;

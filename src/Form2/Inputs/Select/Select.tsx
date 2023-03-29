@@ -1,15 +1,14 @@
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
-import { Control } from "react-hook-form/dist/types/form";
+import { Control, useController } from "react-hook-form";
 import { IOption } from "../../../fields";
-import { useController } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "../../../Modal";
 import { RelativePositionPresets } from "../../../Positioner";
 import styles from "./Select.module.sass";
 import { CommonIcons } from "../../../lib/CommonIcons";
 import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
-import React from "react";
+
 export interface ISelectProps extends ICommonInputProps {
     name?: string;
     value?: string;

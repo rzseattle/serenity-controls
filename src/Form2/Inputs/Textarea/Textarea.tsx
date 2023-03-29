@@ -1,8 +1,8 @@
 import React from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
-import { useController } from "react-hook-form";
-import { Control } from "react-hook-form/dist/types/form";
+import { useController, Control } from "react-hook-form";
+
 
 export interface ITextareaProps extends ICommonInputProps {
     name?: string;

@@ -242,7 +242,7 @@ const Positioner = (inProps: IPositionerProps) => {
         }
 
         // @ts-ignore
-        const relativeTo: HTMLElement =
+        const relativeTo: HTMLElement | undefined | null =
             typeof inProps.relativeTo === "function" ? inProps.relativeTo() : props.relativeTo;
 
         if (relativeTo) {

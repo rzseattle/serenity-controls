@@ -1,5 +1,5 @@
 import React from "react";
-import { ControllerFieldState } from "react-hook-form/dist/types/controller";
+import { ControllerFieldState } from "react-hook-form";
 import "./CommonInput.sass";
 import { MdLiveHelp } from "react-icons/md";
 

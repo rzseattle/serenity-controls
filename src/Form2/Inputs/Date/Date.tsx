@@ -1,8 +1,7 @@
 import React, { useRef, useState } from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
-import { useController } from "react-hook-form";
-import { Control } from "react-hook-form/dist/types/form";
+import { Control, useController } from "react-hook-form";
 import { Calendar } from "react-date-range";
 
 import styles from "./Date.module.sass";
@@ -12,7 +11,6 @@ import { format, parse } from "date-fns";
 import pl from "date-fns/locale/pl";
 // @ts-ignore
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import en from "date-fns/locale/en-GB";
 
 import { Modal } from "../../../Modal";
 import { RelativePositionPresets } from "../../../Positioner";
@@ -50,7 +48,6 @@ const Date = (props: IDateProps) => {
         >
             <div ref={inputRef}>
                 <input
-
                     type="text"
                     {...props.control.register(props.name)}
                     onChange={(e) => {
@@ -77,7 +74,6 @@ const Date = (props: IDateProps) => {
                         relativeTo={() => inputRef.current}
                         onHide={() => setPickerVisible(false)}
                         shadow={false}
-
                     >
                         <div className={styles.main}>
                             {

@@ -1,8 +1,7 @@
 import React from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
-import { Control } from "react-hook-form/dist/types/form";
+import { Control, useController } from "react-hook-form";
 import { IOption } from "../../../fields";
-import { useController } from "react-hook-form";
 import styles from "./Switch.module.sass";
 
 export interface ISwitchProps extends ICommonInputProps {
