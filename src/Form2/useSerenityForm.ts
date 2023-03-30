@@ -1,7 +1,5 @@
-
-import { useForm, Control, FieldPath, UseFormProps, UseFormReturn  } from "react-hook-form";
+import { useForm, Control, FieldPath, UseFormProps, UseFormReturn } from "react-hook-form";
 import { useState } from "react";
-
 
 interface IFieldProps<T, TContext extends object = object> {
     control: Control<T, TContext>;
@@ -45,7 +43,6 @@ export const useSerenityForm = <T>(props?: ISerenityFormProps<T>): ISuperForm<T>
                 control: form.control,
                 name,
                 readonly: isReadOnly,
-
             };
         },
         setSubmitting: (submitting: boolean) => {

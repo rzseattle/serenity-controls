@@ -3,7 +3,6 @@ import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
 import { useController, Control } from "react-hook-form";
 
-
 export interface ITextareaProps extends ICommonInputProps {
     name?: string;
     value?: string;
