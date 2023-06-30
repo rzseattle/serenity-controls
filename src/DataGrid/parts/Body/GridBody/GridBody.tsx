@@ -14,7 +14,7 @@ export interface IGridBodyProps<T> {
     rowClassTemplate?: IGridRowClassProvider<T>;
     cellClassTemplate?: IGridCellClassProvider<T>;
     cellStyleTemplate?: IGridCellStyleProvider<T>;
-    controller?: IGridController;
+    controller?: IGridController<T>;
 }
 
 const GridBody = <T,>(props: IGridBodyProps<T>) => {

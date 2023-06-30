@@ -9,5 +9,5 @@ export type IGridHeaderEventCallback<T> = ({
 }: {
     column: IGridColumn<T>;
     event: React.MouseEvent<HTMLElement>;
-    controller?: IGridController;
+    controller?: IGridController<T>;
 }) => any;

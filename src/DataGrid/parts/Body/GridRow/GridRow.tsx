@@ -13,7 +13,7 @@ export interface IRowProps<T> {
     rowNumber: number;
     cellClassTemplate?: IGridCellClassProvider<T>;
     cellStyleTemplate?: IGridCellStyleProvider<T>;
-    controller?: IGridController;
+    controller?: IGridController<T>;
 }
 
 const GridRow = <T,>({

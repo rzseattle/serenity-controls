@@ -21,13 +21,14 @@ export type IFullGridDataProvider<T> = ({
     page: { current: number; onPage: number };
 }) => Promise<FullDataGridData<T>>;
 
-export interface GridController {
+export interface GridController<T> {
     reload: () => any;
+    getData: () => FullDataGridData<T>
 }
 
 export interface IFullGridProps<T> {
-    passController?: (controller: GridController) => any;
-    controllerRef?: React.Ref<IGridController> | null;
+    passController?: (controller: GridController<T>) => any;
+    controllerRef?: React.Ref<IGridController<T>> | null;
     dataProvider: IFullGridDataProvider<T>;
     columns: (ColumnTemplate<T> | false | null)[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
@@ -141,6 +142,9 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             reload: () => {
                 loadDada();
             },
+            getData: () => {
+                return {rows: data, count: rowCount};
+            }
         });
     }
 
@@ -148,6 +152,12 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
         reload: () => {
             loadDada();
         },
+        getData: () => {
+            return data
+        },
+        getRowsCount: () => {
+            return rowCount;
+        }
     }));
 
     return (
@@ -177,6 +187,12 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                         reload: () => {
                             loadDada();
                         },
+                        getData: () => {
+                            return data
+                        },
+                        getRowsCount: () => {
+                            return rowCount;
+                        }
                     }}
                     showHeader={true}
                     showFooter={true}

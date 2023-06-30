@@ -52,7 +52,7 @@ export interface IGridProps<T> {
 
     footer?: (tableData: IGridProps<T>) => JSX.Element | string;
     isInLoadingState?: boolean;
-    controller?: IGridController;
+    controller?: IGridController<T>;
 }
 
 const defaultProps: Partial<IGridProps<any>> = {

@@ -22,5 +22,5 @@ export type IGridCellTemplate<T> = ({
     column: IGridColumn<T>;
     coordinates: { row: number; column: number };
     prevValue: null | string | React.ReactNode;
-    controller: IGridController;
+    controller: IGridController<T>;
 }) => ReturnType<T>;

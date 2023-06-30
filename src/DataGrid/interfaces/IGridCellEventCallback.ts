@@ -12,5 +12,5 @@ export type IGridCellEventCallback<T, E> = ({
     column: IGridColumn<T>;
     event: E;
     coordinates: { row: number; column: number };
-    controller: IGridController;
+    controller: IGridController<T>;
 }) => unknown;

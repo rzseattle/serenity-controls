@@ -19,6 +19,8 @@ export interface IGridCellEvents<T> {
     onDragOver?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
     onDragEnter?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
     onDragLeave?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+    onMouseOver?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+
 }
 
 export interface IGridHeaderEvents<T> {

@@ -25,7 +25,7 @@ const GridHead = <T,>({
     onOrderChange: IOrderChange;
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
-    controller?: IGridController;
+    controller?: IGridController<T>;
 }) => {
     const presenterVisible =
         filters.filter((f) => f.value && f.value.length > 0).length > 0 || order.filter((o) => o.dir).length > 0;

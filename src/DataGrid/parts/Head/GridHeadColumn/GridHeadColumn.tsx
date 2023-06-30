@@ -24,7 +24,7 @@ const GridHeadColumn = <T,>({
     onOrderChange: (newDir: IGridOrderDirections) => void;
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
-    controller?: IGridController;
+    controller?: IGridController<T>;
 }) => {
     const config = useGridContext();
     const cellProperties: React.HTMLAttributes<HTMLDivElement> = {};
