@@ -3,7 +3,7 @@ import { BsCalendar3 } from "react-icons/bs";
 import React from "react";
 import { Path } from "react-hook-form";
 
-export class ColDate<Row> extends ColumnTemplate<Row> {
+export class ColDate<Row extends object> extends ColumnTemplate<Row> {
     constructor(field: Path<Row>, caption: string) {
         super();
         this.column = {
@@ -36,7 +36,7 @@ export class ColDate<Row> extends ColumnTemplate<Row> {
         this.order = [{ field, caption }];
     }
 
-    public static create<Row>(field: Path<Row>, caption = ""): ColDate<Row> {
+    public static create<Row extends object>(field: Path<Row>, caption = ""): ColDate<Row> {
         return new ColDate<Row>(field, caption);
     }
 }

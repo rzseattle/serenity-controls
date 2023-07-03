@@ -6,7 +6,7 @@ import { IGridCellStyleProvider } from "../../../interfaces/IGridCellStyleProvid
 import { get } from "react-hook-form";
 import { IGridController } from "../../../interfaces/IGridController";
 
-export interface IRowProps<T> {
+export interface IRowProps<T extends object> {
     row: T;
     columns: IGridColumn<T>[];
     rowProperties: React.HTMLAttributes<HTMLDivElement>;
@@ -16,7 +16,7 @@ export interface IRowProps<T> {
     controller?: IGridController<T>;
 }
 
-const GridRow = <T,>({
+const GridRow = <T extends object,>({
     rowProperties,
     columns,
     rowNumber,

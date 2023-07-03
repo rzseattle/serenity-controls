@@ -1,7 +1,7 @@
 import { ColumnTemplate } from "./ColumnTemplate";
 import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
 
-export class ColTemplate<Row> extends ColumnTemplate<Row> {
+export class ColTemplate<Row  extends object> extends ColumnTemplate<Row> {
     static counter = 0;
     constructor(caption: string, template: IGridCellTemplate<Row>) {
         super();
@@ -19,7 +19,7 @@ export class ColTemplate<Row> extends ColumnTemplate<Row> {
         this.order = [];
     }
 
-    public static create<Row>(caption = "", template: IGridCellTemplate<Row>): ColTemplate<Row> {
+    public static create<Row extends object>(caption = "", template: IGridCellTemplate<Row>): ColTemplate<Row> {
         return new ColTemplate<Row>(caption, template);
     }
 }

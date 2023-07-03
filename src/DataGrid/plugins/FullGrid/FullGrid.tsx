@@ -10,25 +10,22 @@ import { Key } from "ts-key-enum";
 import { FullDataGridData } from "./Types";
 import { IGridController } from "../../interfaces/IGridController";
 
-export type IFullGridDataProvider<T> = ({
-    filters,
-    order,
-    fields,
-}: {
+export interface IDataQueryParams {
     filters: Partial<IGridFilter>[];
     order: IGridOrder[];
     fields: Array<string | number>;
     page: { current: number; onPage: number };
-}) => Promise<FullDataGridData<T>>;
-
-export interface GridController<T> {
-    reload: () => any;
-    getData: () => FullDataGridData<T>
 }
 
-export interface IFullGridProps<T> {
-    passController?: (controller: GridController<T>) => any;
-    controllerRef?: React.Ref<IGridController<T>> | null;
+export type IFullGridDataProvider<T> = ({ filters, order, fields }: IDataQueryParams) => Promise<FullDataGridData<T>>;
+
+export interface IFullGridController<T extends object> extends IGridController<T>{
+    getQueryDataParams: () => IDataQueryParams
+}
+
+export interface IFullGridProps<T extends object> {
+    passController?: (controller: IFullGridController<T>) => any;
+    controllerRef?: React.Ref<IFullGridController<T>> | null;
     dataProvider: IFullGridDataProvider<T>;
     columns: (ColumnTemplate<T> | false | null)[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
@@ -38,7 +35,7 @@ export interface IFullGridProps<T> {
 }
 
 // eslint-disable-next-line react/display-name
-const FullGrid = <T,>(props: IFullGridProps<T>) => {
+const FullGrid = <T extends object,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
     let [filters, setFilters] = useState<IGridFilter[]>([]);
     let [order, setOrder] = useState<IGridOrder[]>([]);
@@ -97,18 +94,23 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
         setCurrentPage(1);
     }, [filters]);
 
+
+    const getQueryDataParams = (): IDataQueryParams => {
+        return {
+            filters: filters
+                .filter((el) => el.value !== undefined && el.value.length > 0)
+                .map((el) => ({ field: el.field, value: el.value })),
+                order: order.filter((el) => el.dir !== undefined),
+            fields: columns.map((column) => column.field).filter((field) => field !== undefined),
+            page: { current: currentPage, onPage },
+        }
+    }
+
     const loadDada = () => {
         setLoadingState(true);
         setError("");
         props
-            .dataProvider({
-                filters: filters
-                    .filter((el) => el.value !== undefined && el.value.length > 0)
-                    .map((el) => ({ field: el.field, value: el.value })),
-                order: order.filter((el) => el.dir !== undefined),
-                fields: columns.map((column) => column.field).filter((field) => field !== undefined),
-                page: { current: currentPage, onPage },
-            })
+            .dataProvider(getQueryDataParams())
             .then((result) => {
                 setData(result.rows);
                 setRowCount(result.count);
@@ -125,7 +127,7 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             loadDada();
         }
     }, [onPage, currentPage, filters, order, columns]);
-    //filters <- dont track filters couse current page is changing
+    //filters <- don't track filters because current page is changing
 
     //props.columns
 
@@ -143,7 +145,13 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                 loadDada();
             },
             getData: () => {
-                return {rows: data, count: rowCount};
+                return data;
+            },
+            getRowsCount: () => {
+                return rowCount;
+            },
+            getQueryDataParams: ()=>{
+                return getQueryDataParams();
             }
         });
     }
@@ -153,10 +161,13 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
             loadDada();
         },
         getData: () => {
-            return data
+            return data;
         },
         getRowsCount: () => {
             return rowCount;
+        },
+        getQueryDataParams: ()=>{
+            return getQueryDataParams();
         }
     }));
 
@@ -188,11 +199,11 @@ const FullGrid = <T,>(props: IFullGridProps<T>) => {
                             loadDada();
                         },
                         getData: () => {
-                            return data
+                            return data;
                         },
                         getRowsCount: () => {
                             return rowCount;
-                        }
+                        },
                     }}
                     showHeader={true}
                     showFooter={true}

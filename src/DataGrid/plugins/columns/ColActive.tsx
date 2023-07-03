@@ -2,7 +2,7 @@ import { get, Path } from "react-hook-form";
 import { ColumnTemplate } from "./ColumnTemplate";
 import { useGridContext } from "../../config/GridContext";
 
-export class ColActive<Row> extends ColumnTemplate<Row> {
+export class ColActive<Row  extends object> extends ColumnTemplate<Row> {
     constructor(field: Path<Row>, caption: string) {
         super();
 
@@ -48,7 +48,7 @@ export class ColActive<Row> extends ColumnTemplate<Row> {
         this.width("min-content");
     }
 
-    public static create<Row>(field: Path<Row>, caption = ""): ColActive<Row> {
+    public static create<Row extends object>(field: Path<Row>, caption = ""): ColActive<Row> {
         return new ColActive<Row>(field, caption);
     }
 }

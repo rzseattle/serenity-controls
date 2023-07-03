@@ -12,7 +12,7 @@ import styles from "./GridHead.module.sass";
 import GridConditionsPresenter from "../../Addons/GridConditionsPresenter/GridConditionsPresenter";
 import { IGridController } from "../../../interfaces/IGridController";
 
-const GridHead = <T,>({
+const GridHead = <T extends object,>({
     columns,
     order,
     onOrderChange,

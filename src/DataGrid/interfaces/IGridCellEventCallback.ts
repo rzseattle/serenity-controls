@@ -1,7 +1,7 @@
 import { IGridColumn } from "./IGridColumn";
 import { IGridController } from "./IGridController";
 
-export type IGridCellEventCallback<T, E> = ({
+export type IGridCellEventCallback<T extends object, E> = ({
     row,
     column,
     event,

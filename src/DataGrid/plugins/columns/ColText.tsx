@@ -1,8 +1,7 @@
-import { get, Path } from "react-hook-form";
+import { Path } from "react-hook-form";
 import { ColumnTemplate } from "./ColumnTemplate";
-import { IGridCellTemplate } from "../../interfaces/IGridCellTemplate";
 
-export class ColText<Row> extends ColumnTemplate<Row> {
+export class ColText<Row extends object> extends ColumnTemplate<Row> {
     constructor(field: Path<Row>, caption: string) {
         super();
         this.column = {
@@ -26,7 +25,7 @@ export class ColText<Row> extends ColumnTemplate<Row> {
         this.order = [{ field, caption }];
     }
 
-    public static create<Row>(field: Path<Row>, caption = ""): ColText<Row> {
+    public static create<Row extends object>(field: Path<Row>, caption = ""): ColText<Row> {
         return new ColText<Row>(field, caption);
     }
 }

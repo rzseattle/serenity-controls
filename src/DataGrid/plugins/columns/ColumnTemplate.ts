@@ -12,7 +12,7 @@ type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends read
     ? ElementType
     : never;
 
-export class ColumnTemplate<Row> {
+export class ColumnTemplate<Row extends object> {
     column: IGridColumn<Row> = {};
     filters: IGridFilter[] = null;
     order: IGridOrder[] = [];

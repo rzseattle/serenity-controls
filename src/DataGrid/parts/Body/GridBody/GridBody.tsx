@@ -7,7 +7,7 @@ import { IGridCellStyleProvider } from "../../../interfaces/IGridCellStyleProvid
 import GridRow from "../GridRow/GridRow";
 import { IGridController } from "../../../interfaces/IGridController";
 
-export interface IGridBodyProps<T> {
+export interface IGridBodyProps<T extends object> {
     columns: IGridColumn<T>[];
     keyField?: string | number;
     rows: T[];
@@ -17,7 +17,7 @@ export interface IGridBodyProps<T> {
     controller?: IGridController<T>;
 }
 
-const GridBody = <T,>(props: IGridBodyProps<T>) => {
+const GridBody = <T extends object,>(props: IGridBodyProps<T>) => {
     const rows = props.rows;
 
     let keyField: string | number | null = null;

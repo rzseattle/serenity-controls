@@ -3,7 +3,7 @@ import { ColumnTemplate } from "./ColumnTemplate";
 import { IOption } from "../../../fields";
 import { IGridSelectFilterConfig } from "../filters/SelectionFilters/GridSelectFilter/GridSelectFilter";
 
-export class ColMap<Row> extends ColumnTemplate<Row> {
+export class ColMap<Row  extends object> extends ColumnTemplate<Row> {
     private options: IOption[];
     constructor(field: Path<Row>, options: IOption[], caption: string) {
         super();
@@ -42,7 +42,7 @@ export class ColMap<Row> extends ColumnTemplate<Row> {
         this.order = [{ field, caption }];
     }
 
-    public static create<Row>(field: Path<Row>, options: IOption[], caption = ""): ColMap<Row> {
+    public static create<Row extends object>(field: Path<Row>, options: IOption[], caption = ""): ColMap<Row> {
         return new ColMap<Row>(field, options, caption);
     }
 }

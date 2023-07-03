@@ -2,7 +2,7 @@ import { IGridColumn } from "./IGridColumn";
 import React from "react";
 import { IGridController } from "./IGridController";
 
-export type IGridHeaderEventCallback<T> = ({
+export type IGridHeaderEventCallback<T extends object> = ({
     column,
     event,
     controller,

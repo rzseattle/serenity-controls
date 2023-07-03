@@ -1,8 +1,7 @@
 import { ColumnTemplate } from "./ColumnTemplate";
-import React from "react";
 import { Path } from "react-hook-form";
 
-export class ColNumber<Row> extends ColumnTemplate<Row> {
+export class ColNumber<Row  extends object> extends ColumnTemplate<Row> {
     constructor(field: Path<Row>, caption: string) {
         super();
         this.column = {
@@ -30,7 +29,7 @@ export class ColNumber<Row> extends ColumnTemplate<Row> {
         this.order = [{ field, caption }];
     }
 
-    public static create<Row>(field: Path<Row>, caption = ""): ColNumber<Row> {
+    public static create<Row  extends object>(field: Path<Row>, caption = ""): ColNumber<Row> {
         return new ColNumber<Row>(field, caption);
     }
 }
