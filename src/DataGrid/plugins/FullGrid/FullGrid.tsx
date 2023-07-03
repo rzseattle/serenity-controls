@@ -10,22 +10,26 @@ import { Key } from "ts-key-enum";
 import { FullDataGridData } from "./Types";
 import { IGridController } from "../../interfaces/IGridController";
 
-export interface IDataQueryParams {
+export interface IFullGridDataQueryParams{
     filters: Partial<IGridFilter>[];
     order: IGridOrder[];
     fields: Array<string | number>;
     page: { current: number; onPage: number };
 }
 
-export type IFullGridDataProvider<T> = ({ filters, order, fields }: IDataQueryParams) => Promise<FullDataGridData<T>>;
+export type IFullGridDataProvider<T> = ({
+    filters,
+    order,
+    fields,
+}: IFullGridDataQueryParams) => Promise<FullDataGridData<T>>;
 
-export interface IFullGridController<T extends object> extends IGridController<T>{
-    getQueryDataParams: () => IDataQueryParams
+export interface IFullGridController<T> extends IGridController<T>{
+    getDataQueryParams: () => IFullGridDataQueryParams
 }
 
-export interface IFullGridProps<T extends object> {
+export interface IFullGridProps<T = any> {
     passController?: (controller: IFullGridController<T>) => any;
-    controllerRef?: React.Ref<IFullGridController<T>> | null;
+    controllerRef?: React.Ref<IGridController<T>> | null;
     dataProvider: IFullGridDataProvider<T>;
     columns: (ColumnTemplate<T> | false | null)[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
@@ -35,7 +39,7 @@ export interface IFullGridProps<T extends object> {
 }
 
 // eslint-disable-next-line react/display-name
-const FullGrid = <T extends object,>(props: IFullGridProps<T>) => {
+const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
     let [filters, setFilters] = useState<IGridFilter[]>([]);
     let [order, setOrder] = useState<IGridOrder[]>([]);
@@ -95,22 +99,21 @@ const FullGrid = <T extends object,>(props: IFullGridProps<T>) => {
     }, [filters]);
 
 
-    const getQueryDataParams = (): IDataQueryParams => {
+    const getDataQueryParams =() :IFullGridDataQueryParams => {
         return {
             filters: filters
                 .filter((el) => el.value !== undefined && el.value.length > 0)
                 .map((el) => ({ field: el.field, value: el.value })),
-                order: order.filter((el) => el.dir !== undefined),
+            order: order.filter((el) => el.dir !== undefined),
             fields: columns.map((column) => column.field).filter((field) => field !== undefined),
             page: { current: currentPage, onPage },
         }
     }
-
     const loadDada = () => {
         setLoadingState(true);
         setError("");
         props
-            .dataProvider(getQueryDataParams())
+            .dataProvider(getDataQueryParams())
             .then((result) => {
                 setData(result.rows);
                 setRowCount(result.count);
@@ -127,7 +130,7 @@ const FullGrid = <T extends object,>(props: IFullGridProps<T>) => {
             loadDada();
         }
     }, [onPage, currentPage, filters, order, columns]);
-    //filters <- don't track filters because current page is changing
+    //filters <- dont track filters couse current page is changing
 
     //props.columns
 
@@ -150,9 +153,7 @@ const FullGrid = <T extends object,>(props: IFullGridProps<T>) => {
             getRowsCount: () => {
                 return rowCount;
             },
-            getQueryDataParams: ()=>{
-                return getQueryDataParams();
-            }
+            getDataQueryParams: () => getDataQueryParams()
         });
     }
 
@@ -161,13 +162,10 @@ const FullGrid = <T extends object,>(props: IFullGridProps<T>) => {
             loadDada();
         },
         getData: () => {
-            return data;
+            return data
         },
         getRowsCount: () => {
             return rowCount;
-        },
-        getQueryDataParams: ()=>{
-            return getQueryDataParams();
         }
     }));
 
@@ -199,11 +197,11 @@ const FullGrid = <T extends object,>(props: IFullGridProps<T>) => {
                             loadDada();
                         },
                         getData: () => {
-                            return data;
+                            return data
                         },
                         getRowsCount: () => {
                             return rowCount;
-                        },
+                        }
                     }}
                     showHeader={true}
                     showFooter={true}

@@ -1,5 +1,5 @@
-export interface IGridController<T extends  object = any> {
+export interface IGridController<T = any> {
     reload: () => unknown;
-    getData: () => T[];
-    getRowsCount: () => number;
+    getData: () => T[]
+    getRowsCount: () => number
 }

@@ -6,7 +6,7 @@ import { IGridHeaderTemplate } from "./IGridHeaderTemplate";
 import React from "react";
 import { Path } from "react-hook-form";
 
-export interface IGridCellEvents<T extends object> {
+export interface IGridCellEvents<T = any> {
     onClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
     onMouseDown?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
     onMouseUp?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
@@ -20,9 +20,10 @@ export interface IGridCellEvents<T extends object> {
     onDragEnter?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
     onDragLeave?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
     onMouseOver?: IGridCellEventCallback<T, React.DragEvent<HTMLDivElement>>[];
+
 }
 
-export interface IGridHeaderEvents<T extends object> {
+export interface IGridHeaderEvents<T> {
     onClick?: IGridHeaderEventCallback<T>[];
     onMouseUp?: IGridHeaderEventCallback<T>[];
     onMouseDown?: IGridHeaderEventCallback<T>[];
@@ -31,7 +32,7 @@ export interface IGridHeaderEvents<T extends object> {
     onDoubleClick?: IGridHeaderEventCallback<T>[];
 }
 
-export interface IGridColumn<T extends object> {
+export interface IGridColumn<T> {
     field?: Path<T> | number;
     name?: string;
     orderField?: string;

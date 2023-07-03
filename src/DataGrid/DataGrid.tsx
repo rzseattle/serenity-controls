@@ -20,7 +20,7 @@ import { IGridController } from "./interfaces/IGridController";
 
 type ISelectionChangeEvent = (selected: any[]) => any;
 
-export interface IGridProps<T extends object> {
+export interface IGridProps<T = any> {
     controlKey?: string;
     className?: string;
 
@@ -64,7 +64,7 @@ const defaultProps: Partial<IGridProps<any>> = {
     isInLoadingState: false,
 };
 
-const DataGrid = <T extends object,>(inProps: IGridProps<T>) => {
+const DataGrid = <T,>(inProps: IGridProps<T>) => {
     const config = useGridContext();
     const props = { ...defaultProps, ...inProps };
     const widths = useMemo<string>(() => {
