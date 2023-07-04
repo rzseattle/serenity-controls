@@ -2,7 +2,7 @@ import { IGridCellEvents, IGridColumn } from "./IGridColumn";
 import React from "react";
 import { IGridController } from "./IGridController";
 
-type ReturnType<T extends object> =
+type ReturnType<T = any> =
     | string
     | number
     | JSX.Element
@@ -11,7 +11,7 @@ type ReturnType<T extends object> =
           cellEvents: IGridCellEvents<T>;
       };
 
-export type IGridCellTemplate<T extends object> = ({
+export type IGridCellTemplate<T = any> = ({
     row,
     column,
     coordinates,

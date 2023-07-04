@@ -1,6 +1,6 @@
 import { IGridColumn } from "./IGridColumn";
 
-export type IGridHeaderTemplate<T extends object> = ({
+export type IGridHeaderTemplate<T = any> = ({
     column,
     defaultClassName,
     triggerFiltersShow,

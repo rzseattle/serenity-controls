@@ -1,7 +1,7 @@
 import { Path } from "react-hook-form";
 import { ColumnTemplate } from "./ColumnTemplate";
 
-export class ColText<Row extends object> extends ColumnTemplate<Row> {
+export class ColText<Row = any> extends ColumnTemplate<Row> {
     constructor(field: Path<Row>, caption: string) {
         super();
         this.column = {

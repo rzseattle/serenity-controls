@@ -1,7 +1,7 @@
 import React from "react";
 import { IGridColumn } from "./IGridColumn";
 import { ICellCoordinates } from "./ICellCoordinates";
-export type IGridCellStyleProvider<Row extends object> = ({
+export type IGridCellStyleProvider<Row = any> = ({
     row,
     column,
     coordinates,

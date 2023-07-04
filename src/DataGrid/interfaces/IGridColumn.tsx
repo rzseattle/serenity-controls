@@ -6,7 +6,7 @@ import { IGridHeaderTemplate } from "./IGridHeaderTemplate";
 import React from "react";
 import { Path } from "react-hook-form";
 
-export interface IGridCellEvents<T = any> {
+export interface IGridCellEvents<T> {
     onClick?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
     onMouseDown?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];
     onMouseUp?: IGridCellEventCallback<T, React.MouseEvent<HTMLDivElement>>[];

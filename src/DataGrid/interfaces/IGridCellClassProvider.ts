@@ -1,7 +1,7 @@
 import { IGridColumn } from "./IGridColumn";
 import { ICellCoordinates } from "./ICellCoordinates";
 
-export type IGridCellClassProvider<Row extends object> = ({
+export type IGridCellClassProvider<Row = any> = ({
     row,
     column,
     coordinates,
