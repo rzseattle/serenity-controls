@@ -6,7 +6,7 @@ import { IGridCellStyleProvider } from "../../../interfaces/IGridCellStyleProvid
 import { get } from "react-hook-form";
 import { IGridController } from "../../../interfaces/IGridController";
 
-export interface IRowProps<T extends object> {
+export interface IRowProps<T> {
     row: T;
     columns: IGridColumn<T>[];
     rowProperties: React.HTMLAttributes<HTMLDivElement>;
@@ -16,7 +16,7 @@ export interface IRowProps<T extends object> {
     controller?: IGridController<T>;
 }
 
-const GridRow = <T extends object,>({
+const GridRow = <T,>({
     rowProperties,
     columns,
     rowNumber,
@@ -81,7 +81,8 @@ const GridRow = <T extends object,>({
                         if (typeof returned == "object" && "content" in returned) {
                             Object.entries(returned.cellEvents).map(
                                 ([key, val]: [keyof IGridCellEvents<T>, IGridCellEventCallback<T, any>[]]) => {
-                                    currentCellEvents[key] = [...(currentCellEvents[key] ?? []), ...val];
+                                    // @ts-ignore Rly don't know what causing this error  - probably array merge
+                                    currentCellEvents[key] = (currentCellEvents[key] ?? []).concat(val);
                                 },
                             );
                             return returned.content;
@@ -102,7 +103,8 @@ const GridRow = <T extends object,>({
                 if (column.cell?.events !== undefined) {
                     Object.entries(column.cell.events).map(
                         ([key, val]: [keyof IGridCellEvents<T>, IGridCellEventCallback<T, any>[]]) => {
-                            currentCellEvents[key] = [...(currentCellEvents[key] ?? []), ...val];
+                            // @ts-ignore Rly don't know what causing this error  - probably array merge
+                            currentCellEvents[key] = (currentCellEvents[key] ?? []).concat(val);
                         },
                     );
                 }

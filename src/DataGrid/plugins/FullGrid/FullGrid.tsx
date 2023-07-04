@@ -10,7 +10,7 @@ import { Key } from "ts-key-enum";
 import { FullDataGridData } from "./Types";
 import { IGridController } from "../../interfaces/IGridController";
 
-export interface IFullGridDataQueryParams{
+export interface IFullGridDataQueryParams {
     filters: Partial<IGridFilter>[];
     order: IGridOrder[];
     fields: Array<string | number>;
@@ -23,8 +23,8 @@ export type IFullGridDataProvider<T> = ({
     fields,
 }: IFullGridDataQueryParams) => Promise<FullDataGridData<T>>;
 
-export interface IFullGridController<T> extends IGridController<T>{
-    getDataQueryParams: () => IFullGridDataQueryParams
+export interface IFullGridController<T> extends IGridController<T> {
+    getDataQueryParams: () => IFullGridDataQueryParams;
 }
 
 export interface IFullGridProps<T = any> {
@@ -98,8 +98,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
         setCurrentPage(1);
     }, [filters]);
 
-
-    const getDataQueryParams =() :IFullGridDataQueryParams => {
+    const getDataQueryParams = (): IFullGridDataQueryParams => {
         return {
             filters: filters
                 .filter((el) => el.value !== undefined && el.value.length > 0)
@@ -107,8 +106,8 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
             order: order.filter((el) => el.dir !== undefined),
             fields: columns.map((column) => column.field).filter((field) => field !== undefined),
             page: { current: currentPage, onPage },
-        }
-    }
+        };
+    };
     const loadDada = () => {
         setLoadingState(true);
         setError("");
@@ -153,7 +152,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
             getRowsCount: () => {
                 return rowCount;
             },
-            getDataQueryParams: () => getDataQueryParams()
+            getDataQueryParams: () => getDataQueryParams(),
         });
     }
 
@@ -162,11 +161,11 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
             loadDada();
         },
         getData: () => {
-            return data
+            return data;
         },
         getRowsCount: () => {
             return rowCount;
-        }
+        },
     }));
 
     return (
@@ -197,11 +196,11 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
                             loadDada();
                         },
                         getData: () => {
-                            return data
+                            return data;
                         },
                         getRowsCount: () => {
                             return rowCount;
-                        }
+                        },
                     }}
                     showHeader={true}
                     showFooter={true}

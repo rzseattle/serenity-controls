@@ -17,7 +17,7 @@ export interface IGridBodyProps<T extends object> {
     controller?: IGridController<T>;
 }
 
-const GridBody = <T extends object,>(props: IGridBodyProps<T>) => {
+const GridBody = <T extends object>(props: IGridBodyProps<T>) => {
     const rows = props.rows;
 
     let keyField: string | number | null = null;

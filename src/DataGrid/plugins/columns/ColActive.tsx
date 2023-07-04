@@ -2,7 +2,7 @@ import { get, Path } from "react-hook-form";
 import { ColumnTemplate } from "./ColumnTemplate";
 import { useGridContext } from "../../config/GridContext";
 
-export class ColActive<Row  extends object> extends ColumnTemplate<Row> {
+export class ColActive<Row = any> extends ColumnTemplate<Row> {
     constructor(field: Path<Row>, caption: string) {
         super();
 

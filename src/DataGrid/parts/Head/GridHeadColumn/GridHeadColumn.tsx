@@ -9,7 +9,7 @@ import { IGridOrderDirections } from "../../../interfaces/IGridOrder";
 import GridFiltersModal from "../../Addons/GridFiltersModal/GridFiltersModal";
 import { IGridController } from "../../../interfaces/IGridController";
 
-const GridHeadColumn = <T extends object,>({
+const GridHeadColumn = <T,>({
     column,
     isOrderable,
     onOrderChange,

@@ -12,7 +12,7 @@ import styles from "./GridHead.module.sass";
 import GridConditionsPresenter from "../../Addons/GridConditionsPresenter/GridConditionsPresenter";
 import { IGridController } from "../../../interfaces/IGridController";
 
-const GridHead = <T extends object,>({
+const GridHead = <T,>({
     columns,
     order,
     onOrderChange,
@@ -43,7 +43,7 @@ const GridHead = <T extends object,>({
             <div className={styles.gridHeaderRow} ref={firstRow}>
                 {columns.map((column) => {
                     return (
-                        <GridHeadColumn
+                        <GridHeadColumn<T>
                             key={column.field + column.name ?? ""}
                             controller={controller}
                             column={column}
