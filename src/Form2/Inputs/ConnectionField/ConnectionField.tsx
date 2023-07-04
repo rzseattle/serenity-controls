@@ -11,6 +11,7 @@ import { Key } from "ts-key-enum";
 import { Shimmer } from "../../../Shimmer";
 import { TiDelete } from "react-icons/ti";
 import { BsPlusCircleDotted } from "react-icons/bs";
+import { PrintJSON } from "../../../PrintJSON";
 
 export interface IConnectionElement {
     value: string | number;
@@ -189,6 +190,10 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                 setLoadingValues(false);
             })();
         }
+        if(control.field.value === "" || (Array.isArray(control.field.value) && control.field.value.length === 0)){
+            setSelectedData([]);
+        }
+
     }, [control.field.value]);
 
     useEffect(() => {
