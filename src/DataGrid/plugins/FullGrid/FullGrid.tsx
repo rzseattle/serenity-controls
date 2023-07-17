@@ -29,7 +29,7 @@ export interface IFullGridController<T> extends IGridController<T> {
 
 export interface IFullGridProps<T = any> {
     passController?: (controller: IFullGridController<T>) => any;
-    controllerRef?: React.Ref<IGridController<T>> | null;
+    controllerRef?: React.Ref<IFullGridController<T>> | null;
     dataProvider: IFullGridDataProvider<T>;
     columns: (ColumnTemplate<T> | false | null)[];
     filtersState?: [IGridFilter[], Dispatch<SetStateAction<IGridFilter[]>>];
@@ -167,6 +167,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
         getRowsCount: () => {
             return rowCount;
         },
+        getDataQueryParams: () => getDataQueryParams(),
     }));
 
     return (

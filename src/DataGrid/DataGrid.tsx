@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { IGridColumn } from "./interfaces/IGridColumn";
 import { IGridData } from "./interfaces/IGridData";
 
@@ -72,6 +72,12 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
     const widths = useMemo<string>(() => {
         return getColumnsWidths(props.columns);
     }, [props.columns]);
+
+    useEffect(() => {
+        if (props.onDataChange !== undefined) {
+            props.onDataChange(props.data, props.data.length);
+        }
+    }, [props.data]);
 
     //const [c, sc] = useState<number>(0);
     if (props.columns.length === 0) {
