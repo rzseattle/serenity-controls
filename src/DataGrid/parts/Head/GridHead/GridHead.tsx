@@ -19,6 +19,7 @@ const GridHead = <T,>({
     filters,
     onFiltersChange,
     controller,
+    forceRenderGrid,
 }: {
     columns: IGridColumn<T>[];
     order: IGridOrder[];
@@ -26,6 +27,7 @@ const GridHead = <T,>({
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
     controller?: IGridController<T>;
+    forceRenderGrid?: () => void;
 }) => {
     const presenterVisible =
         filters.filter((f) => f.value && f.value.length > 0).length > 0 || order.filter((o) => o.dir).length > 0;
@@ -85,6 +87,7 @@ const GridHead = <T,>({
                                     }),
                                 ]);
                             }}
+                            forceRenderGrid={forceRenderGrid}
                         />
                     );
                 })}

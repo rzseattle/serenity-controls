@@ -99,6 +99,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
     }, [filters]);
 
     const getDataQueryParams = (): IFullGridDataQueryParams => {
+        console.log("filters");
         return {
             filters: filters
                 .filter((el) => el.value !== undefined && el.value.length > 0)

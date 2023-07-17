@@ -98,7 +98,13 @@ const GridConditionsPresenter = ({
                                                 <div className={styles.condition}>
                                                     {value.labelCondition ?? value.condition}
                                                 </div>
-                                                <div className={styles.value}>{value.labelValue ?? value.value} </div>
+                                                <div className={styles.value}>
+                                                    <span
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: value.labelValue ?? value.value,
+                                                        }}
+                                                    ></span>
+                                                </div>
                                             </div>
                                         );
                                     })}

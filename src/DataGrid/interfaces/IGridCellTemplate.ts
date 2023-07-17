@@ -17,10 +17,12 @@ export type IGridCellTemplate<T = any> = ({
     coordinates,
     prevValue,
     controller,
+    forceRender,
 }: {
     row: T;
     column: IGridColumn<T>;
     coordinates: { row: number; column: number };
     prevValue: null | string | React.ReactNode;
     controller: IGridController<T>;
+    forceRender: () => void;
 }) => ReturnType<T>;

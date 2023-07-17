@@ -17,7 +17,7 @@ import { ShimmerList } from "../../Shimmer/ShimmerList";
 import GridTextFilter from "../plugins/filters/InputFilters/GridTextFilter/GridTextFilter";
 import GridDateFilter from "../plugins/filters/InputFilters/GridDateFilter/GridDateFilter";
 import GridNumericFilter from "../plugins/filters/InputFilters/GridNumericFilter/GridNumericFilter";
-import GridBooleanFilter from "../plugins/filters/SelectionFilters/GridBoo]leanFilter/GridBooleanFilter";
+import GridBooleanFilter from "../plugins/filters/SelectionFilters/GridBooleanFilter/GridBooleanFilter";
 import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilter/GridSwitchFilter";
 import GridSelectFilter from "../plugins/filters/SelectionFilters/GridSelectFilter/GridSelectFilter";
 

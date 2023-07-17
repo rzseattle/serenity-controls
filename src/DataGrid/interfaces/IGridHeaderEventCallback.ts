@@ -6,8 +6,10 @@ export type IGridHeaderEventCallback<T = any> = ({
     column,
     event,
     controller,
+    forceRenderGrid,
 }: {
     column: IGridColumn<T>;
     event: React.MouseEvent<HTMLElement>;
     controller?: IGridController<T>;
+    forceRenderGrid: () => void;
 }) => any;

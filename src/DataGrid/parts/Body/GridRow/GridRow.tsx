@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IGridCellEvents, IGridColumn } from "../../../interfaces/IGridColumn";
 import { IGridCellEventCallback } from "../../../interfaces/IGridCellEventCallback";
 import { IGridCellClassProvider } from "../../../interfaces/IGridCellClassProvider";
@@ -26,6 +26,8 @@ const GridRow = <T,>({
     controller,
 }: IRowProps<T>) => {
     //const ref = useRef<HTMLDivElement>(null);
+
+    const [, setForceRender] = useState(0);
 
     return (
         <div {...rowProperties}>
@@ -77,6 +79,9 @@ const GridRow = <T,>({
                             coordinates,
                             prevValue: prev,
                             controller,
+                            forceRender: () => {
+                                setForceRender((r) => r + 1);
+                            },
                         });
                         if (typeof returned == "object" && "content" in returned) {
                             Object.entries(returned.cellEvents).map(
@@ -124,6 +129,9 @@ const GridRow = <T,>({
                                 event,
                                 coordinates,
                                 controller,
+                                forceRender: () => {
+                                    setForceRender((r) => r + 1);
+                                },
                             });
                         });
                     };

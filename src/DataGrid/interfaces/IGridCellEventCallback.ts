@@ -7,10 +7,12 @@ export type IGridCellEventCallback<T, E> = ({
     event,
     coordinates,
     controller,
+    forceRender,
 }: {
     row: T;
     column: IGridColumn<T>;
     event: E;
     coordinates: { row: number; column: number };
     controller: IGridController<T>;
+    forceRender: () => void;
 }) => unknown;

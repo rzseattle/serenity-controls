@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { IGridColumn } from "./interfaces/IGridColumn";
 import { IGridData } from "./interfaces/IGridData";
 
@@ -67,6 +67,8 @@ const defaultProps: Partial<IGridProps<any>> = {
 const DataGrid = <T,>(inProps: IGridProps<T>) => {
     const config = useGridContext();
     const props = { ...defaultProps, ...inProps };
+
+    const [, setForceRender] = useState(0);
     const widths = useMemo<string>(() => {
         return getColumnsWidths(props.columns);
     }, [props.columns]);
@@ -105,6 +107,9 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
                         onFiltersChange={props.onFiltersChange}
                         columns={props.columns}
                         controller={props.controller}
+                        forceRenderGrid={() => {
+                            setForceRender((r) => r + 1);
+                        }}
                     />
                 )}
 

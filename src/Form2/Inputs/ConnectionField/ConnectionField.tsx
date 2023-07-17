@@ -190,10 +190,9 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                 setLoadingValues(false);
             })();
         }
-        if(control.field.value === "" || (Array.isArray(control.field.value) && control.field.value.length === 0)){
+        if (control.field.value === "" || (Array.isArray(control.field.value) && control.field.value.length === 0)) {
             setSelectedData([]);
         }
-
     }, [control.field.value]);
 
     useEffect(() => {

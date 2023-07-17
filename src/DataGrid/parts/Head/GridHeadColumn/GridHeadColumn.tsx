@@ -17,6 +17,7 @@ const GridHeadColumn = <T,>({
     onFiltersChange,
     orderDir,
     controller,
+    forceRenderGrid,
 }: {
     column: IGridColumn<T>;
     isOrderable: boolean;
@@ -25,6 +26,7 @@ const GridHeadColumn = <T,>({
     filters: IGridFilter[];
     onFiltersChange: IFiltersChange;
     controller?: IGridController<T>;
+    forceRenderGrid?: () => void;
 }) => {
     const config = useGridContext();
     const cellProperties: React.HTMLAttributes<HTMLDivElement> = {};
@@ -40,6 +42,7 @@ const GridHeadColumn = <T,>({
                         column,
                         event,
                         controller,
+                        forceRenderGrid,
                     });
                 });
             };
@@ -71,6 +74,8 @@ const GridHeadColumn = <T,>({
             triggerFiltersShow: () => {
                 setFiltersVisible(true);
             },
+            controller,
+            forceRenderGrid,
         });
     } else {
         child = (
