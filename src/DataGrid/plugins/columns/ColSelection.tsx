@@ -7,15 +7,15 @@ export type IOnSelectionChanged = (selection: Array<any>) => any;
 export class ColSelection<Row = any> extends ColumnTemplate<Row> {
     private selection: any[] = [];
 
-    constructor(field: Path<Row>, private onChange?: IOnSelectionChanged) {
+    constructor(private field: Path<Row>, private onChange?: IOnSelectionChanged) {
         super();
         this.column = {
             header: {
                 caption: "",
 
-                template: ({ controller, forceRenderGrid }) => {
+                template: ({ controller, forceRenderGrid, defaultClassName }) => {
                     return (
-                        <div className={styles.main}>
+                        <div className={styles.main + " " + defaultClassName}>
                             <input
                                 type={"checkbox"}
                                 onClick={(e) => {
@@ -27,6 +27,9 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
                                     this.onChange(this.selection);
                                     forceRenderGrid();
                                 }}
+                                onChange={() => {
+                                    return null;
+                                }}
                             />
                         </div>
                     );
@@ -34,7 +37,7 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
             },
             cell: {
                 templates: [
-                    ({ row, forceRender }) => {
+                    ({ row, forceRender, controller }) => {
                         const val = get(row, field);
                         const checked = this.selection.includes(val);
 
@@ -43,8 +46,11 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
                                 <input
                                     type={"checkbox"}
                                     checked={checked}
-                                    onClick={() => {
-                                        this.click(val);
+                                    onChange={() => {
+                                        return null;
+                                    }}
+                                    onClick={(e) => {
+                                        this.click(val, e.shiftKey, e.shiftKey && controller.getData());
                                         this.onChange(this.selection);
                                         forceRender();
                                     }}
@@ -60,13 +66,50 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
         this.filters = [];
     }
 
-    private click = (val: any) => {
+    private click = (val: any, shiftKeyPressed?: boolean, data?: Row[]) => {
         const index = this.selection.lastIndexOf(val);
+        const last = this.selection[this.selection.length - 1];
+        let checked = false;
         if (index !== -1) {
             this.selection = this.selection.filter((el) => el != val);
         } else {
-            this.selection = [...this.selection, val];
+            checked = true;
+            // will be pressed in loop to place it at end
+            if (!shiftKeyPressed) this.selection = [...this.selection, val];
         }
+
+        if (shiftKeyPressed && last) {
+            const list = data.map((el) => get(el, this.field));
+            const currIndexOnData = list.lastIndexOf(val);
+            const lastIndexOnData = list.lastIndexOf(last);
+
+            const range = list.slice(
+                Math.min(currIndexOnData, lastIndexOnData),
+                Math.max(currIndexOnData, lastIndexOnData) + 1,
+            );
+            // console.log({
+            //     sel: this.selection,
+            //     last,
+            //     checked,
+            //     list,
+            //     currIndexOnData,
+            //     lastIndexOnData,
+            //     range,
+            // });
+            range.forEach((el) => {
+                const index = this.selection.lastIndexOf(el);
+                if (checked) console.log(index);
+                if (checked && index === -1) {
+                    this.click(el);
+                }
+
+                if (!checked && index !== -1) {
+                    this.click(el);
+                }
+            });
+        }
+
+        //console.log(this.selection, "selection");
     };
 
     public static create<Row extends object>(
