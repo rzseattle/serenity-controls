@@ -21,12 +21,32 @@ import GridBooleanFilter from "../plugins/filters/SelectionFilters/GridBooleanFi
 import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilter/GridSwitchFilter";
 import GridSelectFilter from "../plugins/filters/SelectionFilters/GridSelectFilter/GridSelectFilter";
 
+const local = JSON.parse(
+    window.localStorage["serenity-controls-store"] !== undefined
+        ? window.localStorage["serenity-controls-store"]
+        : "{}",
+);
+
+console.log(local);
+
 const GridRoot = ({ children, options }: { children: React.ReactNode; options?: Partial<IGridConfig> }) => {
     return (
         <GridContext.Provider
             value={{
                 locale,
                 gridClassName: styles.gridLayout,
+                persistStore: {
+                    set: (componentName: string, variableName: string, variableValue: string | number | object) => {
+                        console.log(local);
+                        local[componentName] = local[componentName] ? local[componentName] : {};
+                        local[componentName][variableName] = variableValue;
+                        window.localStorage["serenity-controls-store"] = JSON.stringify(local);
+                        return true;
+                    },
+                    get: <T,>(componentName: string, variableName: string): T | null => {
+                        return local?.[componentName]?.[variableName]?.[variableName] ?? null;
+                    },
+                },
                 common: {
                     icons: {
                         delete: (

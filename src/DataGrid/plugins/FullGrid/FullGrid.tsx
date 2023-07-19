@@ -1,4 +1,12 @@
-import React, { Dispatch, SetStateAction, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, {
+    Dispatch,
+    SetStateAction,
+    useEffect,
+    useImperativeHandle,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "react";
 import { DataGrid, IGridProps } from "../../DataGrid";
 import { IGridFilter } from "../../interfaces/IGridFilter";
 import { IGridOrder } from "../../interfaces/IGridOrder";
@@ -9,6 +17,8 @@ import { HotKeys } from "../../../HotKeys";
 import { Key } from "ts-key-enum";
 import { FullDataGridData } from "./Types";
 import { IGridController } from "../../interfaces/IGridController";
+import { useGridContext } from "../../config/GridContext";
+import { Exception } from "sass";
 
 export interface IFullGridDataQueryParams {
     filters: Partial<IGridFilter>[];
@@ -36,11 +46,20 @@ export interface IFullGridProps<T = any> {
     orderState?: [IGridOrder[], Dispatch<SetStateAction<IGridOrder[]>>];
     onPage?: number;
     gridProps?: Partial<IGridProps<T>>;
+    persistState?: boolean;
+    id?: string;
+}
+
+export interface IPersistentState {
+    filters: { field: string; value: string; condition: string }[];
+    order: { field: string; dir: "asc" | "desc" }[];
+    columns: { name: string; enabled: boolean }[];
 }
 
 // eslint-disable-next-line react/display-name
 const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
+
     let [filters, setFilters] = useState<IGridFilter[]>([]);
     let [order, setOrder] = useState<IGridOrder[]>([]);
     if (props.filtersState !== undefined) {
@@ -68,6 +87,22 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
 
     const [rebuild /*setRebuild*/] = useState(0);
 
+    const config = useGridContext();
+
+    useLayoutEffect(() => {
+        if (props.persistState === true) {
+            if (props.id === undefined) {
+                throw new Error("To use persistState id prop is required");
+            }
+            const result = config.persistStore.get<IPersistentState>("grid:" + props.id, "config");
+            if (result !== null) {
+                //setFilters(result.filters ?? []);
+                //setOrder(result.order ?? []);
+                //setColumns(result.order ?? []);
+            }
+        }
+    }, []);
+
     useEffect(
         () => {
             const tmpColumns: IGridColumn<T>[] = [];
@@ -81,7 +116,6 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
                 }
             });
             setColumns(tmpColumns);
-
             setFilters(tmpFilters);
             setOrder(tmpOrder);
         },
@@ -95,11 +129,18 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
     );
 
     useEffect(() => {
+        config.persistStore.set("grid:" + props.id, "config", {
+            order.,
+            filters,
+            columns: [],
+        } as IPersistentState);
+    }, [filters, order]);
+
+    useEffect(() => {
         setCurrentPage(1);
     }, [filters]);
 
     const getDataQueryParams = (): IFullGridDataQueryParams => {
-        console.log("filters");
         return {
             filters: filters
                 .filter((el) => el.value !== undefined && el.value.length > 0)

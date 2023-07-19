@@ -6,6 +6,10 @@ import { ILocale } from "../interfaces/ILocale";
 export interface IGridStore {
     gridClassName: string;
     locale: ILocale;
+    persistStore: {
+        set: (componentName: string, variableName: string, variableValue: string | number | object) => boolean;
+        get: <T>(componentName: string, variableName: string) => T | null;
+    };
     common: {
         icons: {
             delete: JSX.Element;
