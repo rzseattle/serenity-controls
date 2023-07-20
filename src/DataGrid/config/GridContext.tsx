@@ -7,7 +7,7 @@ export interface IGridStore {
     gridClassName: string;
     locale: ILocale;
     persistStore: {
-        set: (componentName: string, variableName: string, variableValue: string | number | object) => boolean;
+        set: <T>(componentName: string, variableName: string, variableValue: T) => boolean;
         get: <T>(componentName: string, variableName: string) => T | null;
     };
     common: {

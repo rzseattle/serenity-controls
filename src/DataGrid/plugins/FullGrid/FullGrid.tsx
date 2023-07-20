@@ -8,8 +8,8 @@ import React, {
     useState,
 } from "react";
 import { DataGrid, IGridProps } from "../../DataGrid";
-import { IGridFilter } from "../../interfaces/IGridFilter";
-import { IGridOrder } from "../../interfaces/IGridOrder";
+import { IGridFilter, IGridFilterValue } from "../../interfaces/IGridFilter";
+import { IGridOrder, IGridOrderDirections } from "../../interfaces/IGridOrder";
 import { IGridColumn } from "../../interfaces/IGridColumn";
 import Pagination from "../pagination/Pagination";
 import { ColumnTemplate } from "../columns/ColumnTemplate";
@@ -18,7 +18,7 @@ import { Key } from "ts-key-enum";
 import { FullDataGridData } from "./Types";
 import { IGridController } from "../../interfaces/IGridController";
 import { useGridContext } from "../../config/GridContext";
-import { Exception } from "sass";
+import Configuration from "./Configuration";
 
 export interface IFullGridDataQueryParams {
     filters: Partial<IGridFilter>[];
@@ -35,6 +35,7 @@ export type IFullGridDataProvider<T> = ({
 
 export interface IFullGridController<T> extends IGridController<T> {
     getDataQueryParams: () => IFullGridDataQueryParams;
+    getPersistentState: () => IPersistentState | null;
 }
 
 export interface IFullGridProps<T = any> {
@@ -50,10 +51,15 @@ export interface IFullGridProps<T = any> {
     id?: string;
 }
 
+export interface IPersistentColumn {
+    applyTo: string | number;
+    enabled: boolean;
+}
+
 export interface IPersistentState {
-    filters: { field: string; value: string; condition: string }[];
-    order: { field: string; dir: "asc" | "desc" }[];
-    columns: { name: string; enabled: boolean }[];
+    filters: { applyTo: string | number; value: IGridFilterValue[] }[];
+    order: { applyTo: string | number; dir: IGridOrderDirections }[];
+    columns: IPersistentColumn[];
 }
 
 // eslint-disable-next-line react/display-name
@@ -84,6 +90,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
 
     const [error, setError] = useState("");
     const [debug, setDebug] = useState("");
+    const [persistentState, setPersistentState] = useState<IPersistentState>(null);
 
     const [rebuild /*setRebuild*/] = useState(0);
 
@@ -95,11 +102,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
                 throw new Error("To use persistState id prop is required");
             }
             const result = config.persistStore.get<IPersistentState>("grid:" + props.id, "config");
-            if (result !== null) {
-                //setFilters(result.filters ?? []);
-                //setOrder(result.order ?? []);
-                //setColumns(result.order ?? []);
-            }
+            setPersistentState(result);
         }
     }, []);
 
@@ -129,11 +132,20 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
     );
 
     useEffect(() => {
-        config.persistStore.set("grid:" + props.id, "config", {
-            order.,
-            filters,
-            columns: [],
-        } as IPersistentState);
+        config.persistStore.set<IPersistentState>("grid:" + props.id, "config", {
+            order: order
+                .filter((el) => el.dir !== undefined)
+                .map((el) => ({ applyTo: el.field ?? el.applyTo, dir: el.dir })),
+            filters: filters
+                .filter((el) => el.value !== undefined && el.value.length > 0)
+                .map((el) => ({ applyTo: el.field ?? el.applyTo, value: el.value })),
+            columns: props.columns
+                .filter((el) => el !== false)
+                .map((el) => {
+                    const x = el as ColumnTemplate<T>;
+                    return { applyTo: x.column.field ?? x.column.name, enabled: x.column.display };
+                }),
+        });
     }, [filters, order]);
 
     useEffect(() => {
@@ -195,6 +207,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
                 return rowCount;
             },
             getDataQueryParams: () => getDataQueryParams(),
+            getPersistentState: () => persistentState,
         });
     }
 
@@ -209,6 +222,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
             return rowCount;
         },
         getDataQueryParams: () => getDataQueryParams(),
+        getPersistentState: () => persistentState,
     }));
 
     return (
@@ -233,6 +247,9 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
             ]}
         >
             <div tabIndex={0}>
+                <div>
+                    <Configuration persistent={persistentState} />
+                </div>
                 <DataGrid
                     controller={{
                         reload: () => {

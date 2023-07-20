@@ -27,8 +27,6 @@ const local = JSON.parse(
         : "{}",
 );
 
-console.log(local);
-
 const GridRoot = ({ children, options }: { children: React.ReactNode; options?: Partial<IGridConfig> }) => {
     return (
         <GridContext.Provider
@@ -36,15 +34,14 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options?: 
                 locale,
                 gridClassName: styles.gridLayout,
                 persistStore: {
-                    set: (componentName: string, variableName: string, variableValue: string | number | object) => {
-                        console.log(local);
+                    set: <T,>(componentName: string, variableName: string, variableValue: T) => {
                         local[componentName] = local[componentName] ? local[componentName] : {};
                         local[componentName][variableName] = variableValue;
                         window.localStorage["serenity-controls-store"] = JSON.stringify(local);
                         return true;
                     },
                     get: <T,>(componentName: string, variableName: string): T | null => {
-                        return local?.[componentName]?.[variableName]?.[variableName] ?? null;
+                        return local?.[componentName]?.[variableName] ?? null;
                     },
                 },
                 common: {
