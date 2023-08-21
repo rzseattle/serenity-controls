@@ -20,8 +20,6 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --watchAll=false --coverage"
-
-
   },
   "husky": {
     "hooks": {
@@ -52,7 +50,7 @@
     "moduleNameMapper": {
       "\\.(css|scss|sass)$": "identity-obj-proxy"
     },
-    "testEnvironment": "jsdom",
+    "testEnvironment": "jest-dom",
     "roots": [
       "<rootDir>/src"
     ],
@@ -96,16 +94,16 @@
     "@storybook/cli": "^7.3.2",
     "@storybook/react": "^7.3.2",
     "@storybook/react-webpack5": "^7.3.2",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^6.0.1",
+    "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/i18next": "^13.0.0",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.2.20",
     "@types/react-date-range": "^1.4.4",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
     "core-js": "^3.32.1",
     "cpx": "^1.5.0",
     "eslint": "^8.47.0",
@@ -115,7 +113,7 @@
     "eslint-plugin-storybook": "^0.6.13",
     "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
-    "jest-cli": "^29.6.2",
+    "jest-cli": "^29.6.3",
     "node-glob": "^1.2.0",
     "npm-run-all": "^4.1.5",
     "prettier": "3.0.2",

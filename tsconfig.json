@@ -28,18 +28,27 @@
             "es2015.iterable",
             "dom.iterable"
         ],
-        "baseUrl": ".",
+        "baseUrl": "."
         //    "paths": {
         //      "frontend/src": ["./src"] // This mapping is relative to "baseUrl"
         //    },
         //    "typeRoots": [
         //      "../../node_modules/@types"
         //    ]
-//        "paths": {
-//            "*": ["types/main.d.ts", "./src/**"]
-//        }
+        //        "paths": {
+        //            "*": ["types/main.d.ts", "./src/**"]
+        //        }
     },
 
-    "exclude": ["resources", "vendor", "assets", "data", "node_modules", "public"],
+    "exclude": [
+        "resources",
+        "vendor",
+        "assets",
+        "data",
+        "node_modules",
+        "public",
+        "./src/**/*.test.tsx",
+        "./src/**/*.test.ts"
+    ],
     "include": ["./src/**/*", "./stories/**/*", "./types/**/*"]
 }

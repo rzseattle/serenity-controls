@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, screen, render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 import { act, renderHook } from "@testing-library/react-hooks";
 import "@testing-library/jest-dom/extend-expect";
