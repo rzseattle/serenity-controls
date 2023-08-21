@@ -53,6 +53,7 @@ export interface IFullGridProps<T = any> {
 
 export interface IPersistentColumn {
     applyTo: string | number;
+    caption: string;
     enabled: boolean;
 }
 
@@ -143,7 +144,11 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
                 .filter((el) => el !== false)
                 .map((el) => {
                     const x = el as ColumnTemplate<T>;
-                    return { applyTo: x.column.field ?? x.column.name, enabled: x.column.display };
+                    return {
+                        caption: x.column.header.caption,
+                        applyTo: x.column.field ?? x.column.name,
+                        enabled: x.column.display,
+                    };
                 }),
         });
     }, [filters, order]);
