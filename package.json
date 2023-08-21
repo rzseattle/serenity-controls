@@ -19,7 +19,9 @@
     "lint": "eslint src/**",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --watchAll=false --coverage"
+    "test:coverage": "jest --watchAll=false --coverage",
+    "build:type-check": "tsc --noEmit"
+
   },
   "husky": {
     "hooks": {
