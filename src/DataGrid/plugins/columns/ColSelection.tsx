@@ -7,7 +7,10 @@ export type IOnSelectionChanged = (selection: Array<any>) => any;
 export class ColSelection<Row = any> extends ColumnTemplate<Row> {
     private selection: any[] = [];
 
-    constructor(private field: Path<Row>, private onChange?: IOnSelectionChanged) {
+    constructor(
+        private field: Path<Row>,
+        private onChange?: IOnSelectionChanged,
+    ) {
         super();
         this.column = {
             header: {
