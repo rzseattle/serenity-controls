@@ -81,7 +81,7 @@ export class ColumnTemplate<Row> {
         return this;
     }
 
-    public width(x: number | string | "min-content" | "max-content" | "auto") {
+    public width(x: number | string | "min-content" | "max-content" | "auto"): ColumnTemplate<Row> {
         this.column.width = x;
         return this;
     }
