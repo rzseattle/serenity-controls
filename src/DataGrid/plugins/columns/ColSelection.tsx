@@ -13,6 +13,7 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
     ) {
         super();
         this.column = {
+            width: "min-content",
             header: {
                 caption: "",
 

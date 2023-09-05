@@ -88,7 +88,6 @@ const CheckboxGroup = (props: ICheckboxgroupProps) => {
             })}
         >
             <>
-                xxxasdasd
                 <HotKeys
                     actions={[
                         { key: Key.ArrowUp, handler: () => setHighlighted(Math.max(-1, highlighted - 1)) },
