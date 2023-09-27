@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "date-fns": "^2.30.0",
+    "dnd-core": "^16.0.1",
     "i18next": "^19.8.4",
     "immer": "^9.0.21",
     "react": "^18.2.0",
@@ -125,6 +126,7 @@
     "sass-loader": "10",
     "storybook": "7.3.2",
     "storybook-addon-pseudo-states": "^2.1.1",
+    "tslib": "^2.6.2",
     "typed-scss-modules": "^3.4.0",
     "typedoc": "^0.24.8",
     "typescript": "^5.1.6"

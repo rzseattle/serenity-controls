@@ -16244,6 +16244,7 @@ __metadata:
     core-js: ^3.32.1
     cpx: ^1.5.0
     date-fns: ^2.30.0
+    dnd-core: ^16.0.1
     eslint: ^8.47.0
     eslint-plugin-import: ^2.28.1
     eslint-plugin-react: ^7.33.2
@@ -16274,6 +16275,7 @@ __metadata:
     storybook: 7.3.2
     storybook-addon-pseudo-states: ^2.1.1
     ts-key-enum: ^2.0.12
+    tslib: ^2.6.2
     typed-scss-modules: ^3.4.0
     typedoc: ^0.24.8
     typescript: ^5.1.6
@@ -17378,7 +17380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.1.0, tslib@npm:^2.4.0":
+"tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
