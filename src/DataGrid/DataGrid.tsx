@@ -69,6 +69,7 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
     const props = { ...defaultProps, ...inProps };
 
     const [, setForceRender] = useState(0);
+
     const widths = useMemo<string>(() => {
         return getColumnsWidths(props.columns);
     }, [props.columns]);
@@ -76,6 +77,11 @@ const DataGrid = <T,>(inProps: IGridProps<T>) => {
     useEffect(() => {
         if (props.onDataChange !== undefined) {
             props.onDataChange(props.data, props.data.length);
+            props.columns.forEach((col) => {
+                col.gridEventsListeners?.onDataChanged?.forEach((callback) => {
+                    callback(props.data);
+                });
+            });
         }
     }, [props.data]);
 

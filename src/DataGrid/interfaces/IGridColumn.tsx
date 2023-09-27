@@ -31,6 +31,10 @@ export interface IGridHeaderEvents<T> {
     onDoubleClick?: IGridHeaderEventCallback<T>[];
 }
 
+export interface IGridEventsListeners<T> {
+    onDataChanged?: Array<(data: T[]) => any>;
+}
+
 export interface IGridColumn<T> {
     field?: Path<T> | number;
     name?: string;
@@ -41,6 +45,8 @@ export interface IGridColumn<T> {
     maxWidth?: number | string | "min-content" | "max-content" | "auto";
     type?: string;
     rowSpan?: number;
+
+    gridEventsListeners?: IGridEventsListeners<T>;
 
     cell?: {
         class?: string[];

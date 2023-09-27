@@ -252,7 +252,7 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
             ]}
         >
             <div tabIndex={0}>
-                <div>
+                <div style={{ display: "none" }}>
                     <Configuration persistent={persistentState} />
                 </div>
                 <DataGrid

@@ -18,6 +18,8 @@ export class ColumnTemplate<Row> {
     order: IGridOrder[] = [];
     parent: ColumnTemplate<Row>;
 
+    dataChangeListeners: Array<(data: Row) => any> = [];
+
     constructor() {
         this.parent = this;
     }
@@ -134,4 +136,10 @@ export class ColumnTemplate<Row> {
     public get = () => {
         return { column: this.column, filters: this.filters, sort: this.order };
     };
+
+    protected onGridDataChange(callback: (data: Row) => any) {
+        this.dataChangeListeners.push(callback);
+    }
+
+    public runDataChanged() {}
 }
