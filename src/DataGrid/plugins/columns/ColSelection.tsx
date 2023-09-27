@@ -16,9 +16,7 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
             gridEventsListeners: {
                 onDataChanged: [
                     (data) => {
-                        console.log("data changed", "i to jest to");
                         this.selection = [];
-                        console.log("data changed 2", "i to jest to");
                     },
                 ],
             },
