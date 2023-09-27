@@ -2,10 +2,11 @@ import React from "react";
 import { ControllerFieldState } from "react-hook-form";
 import "./CommonInput.sass";
 import { MdLiveHelp } from "react-icons/md";
+import { IOption } from "../../../fields";
 
 export interface IFieldPresentationValue {
     real: any;
-    presented: string | number;
+    presented: string | number | string[] | number[] | IOption[];
 }
 
 export interface ICommonInputProps {
@@ -35,7 +36,10 @@ const CommonInput = ({
                 <div className="w-read-only">
                     {readOnlyPresenter !== undefined
                         ? readOnlyPresenter(valueForPresenter())
-                        : valueForPresenter().presented}
+                        : typeof valueForPresenter().presented === "string" ||
+                          typeof valueForPresenter().presented === "number"
+                        ? (valueForPresenter().presented as string)
+                        : "define value presenter for field"}
                 </div>
             ) : (
                 <div>{children}</div>

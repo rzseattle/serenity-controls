@@ -1,5 +1,6 @@
 module.exports = {
     stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(ts|tsx)"],
+
     addons: [
         "@storybook/addon-links",
         "@storybook/addon-essentials",
@@ -9,18 +10,19 @@ module.exports = {
         "@storybook/addon-actions",
         //"@storybook/preset-scss",
     ],
+
     webpackFinal: async (config, { configType }) => {
-        config.devtool = "cheap-module-eval-source-map";
+        config.devtool = "cheap-module-source-map";
 
         config.module.rules.push({
             test: /module\.sass$/,
 
             use: [
                 "style-loader",
-                { loader: "css-loader", query: { sourceMap: true, modules: true } },
+                { loader: "css-loader", options: { sourceMap: true, modules: true } },
                 {
                     loader: "sass-loader",
-                    query: {
+                    options: {
                         sourceMap: true,
                     },
                 },
@@ -38,11 +40,11 @@ module.exports = {
             },
             use: [
                 "style-loader",
-                { loader: "css-loader", query: { sourceMap: true } },
+                { loader: "css-loader", options: { sourceMap: true } },
                 //'postcss-loader',
                 {
                     loader: "sass-loader",
-                    query: {
+                    options: {
                         sourceMap: true,
                         sassOptions: { includePaths: ["node_modules"] },
                     },
@@ -52,5 +54,14 @@ module.exports = {
 
         // Return the altered config
         return config;
+    },
+
+    framework: {
+        name: "@storybook/react-webpack5",
+        options: {},
+    },
+
+    docs: {
+        autodocs: true,
     },
 };

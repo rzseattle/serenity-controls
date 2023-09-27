@@ -5,25 +5,36 @@ import styles from "./ColSelection.module.sass";
 export type IOnSelectionChanged = (selection: Array<any>) => any;
 
 export class ColSelection<Row = any> extends ColumnTemplate<Row> {
-    private selection: any[] = [];
-
     constructor(
         private field: Path<Row>,
+        private selection: Array<number | string>,
         private onChange?: IOnSelectionChanged,
     ) {
         super();
+
         this.column = {
+            gridEventsListeners: {
+                onDataChanged: [
+                    (data) => {
+                        console.log("data changed", "i to jest to");
+                        this.selection = [];
+                        console.log("data changed 2", "i to jest to");
+                    },
+                ],
+            },
+            width: "min-content",
             header: {
                 caption: "",
 
                 template: ({ controller, forceRenderGrid, defaultClassName }) => {
+                    const data = controller.getData();
                     return (
                         <div className={styles.main + " " + defaultClassName}>
                             <input
                                 type={"checkbox"}
                                 onClick={(e) => {
                                     if (e.currentTarget.checked) {
-                                        this.selection = controller.getData().map((el) => get(el, field));
+                                        this.selection = data.map((el) => get(el, field));
                                     } else {
                                         this.selection = [];
                                     }
@@ -33,6 +44,7 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
                                 onChange={() => {
                                     return null;
                                 }}
+                                checked={this.selection.length == data.length}
                             />
                         </div>
                     );
@@ -117,8 +129,9 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
 
     public static create<Row extends object>(
         field: Path<Row>,
+        selection: Array<number | string>,
         onSelectionChange: IOnSelectionChanged,
     ): ColSelection<Row> {
-        return new ColSelection<Row>(field, onSelectionChange);
+        return new ColSelection<Row>(field, [...selection], onSelectionChange);
     }
 }
