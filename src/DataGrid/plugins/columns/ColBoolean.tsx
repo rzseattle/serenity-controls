@@ -3,7 +3,7 @@ import { ColumnTemplate } from "./ColumnTemplate";
 import { CommonIcons } from "../../../lib/CommonIcons";
 import styles from "./ColBoolean.module.sass";
 
-export type IOnBooleanChanged<Row> = (newVal: boolean, row: Row) => any;
+export type IOnBooleanChanged<Row> = (newVal: boolean, row: Row) => Promise<boolean>;
 
 export class ColBoolean<Row = any> extends ColumnTemplate<Row> {
     constructor(field: Path<Row>, caption: string, onChange?: IOnBooleanChanged<Row>) {
@@ -28,10 +28,13 @@ export class ColBoolean<Row = any> extends ColumnTemplate<Row> {
                 ],
                 events: {
                     onClick: [
-                        ({ row }) => {
+                        async ({ row, forceRender }) => {
                             const val = get(row, field);
                             const ok = val === true || val === "1";
-                            onChange(!ok, row);
+                            const result = await onChange(!ok, row);
+                            if (result === true) {
+                                forceRender();
+                            }
                         },
                     ],
                 },
