@@ -24,5 +24,5 @@ export const onSelect = (
 };
 
 export const isSelected = (value: string | number, values: IGridFilterValue[]) => {
-    return values.filter((el) => el.value === value).length > 0;
+    return values?.filter((el) => el.value === value).length > 0;
 };

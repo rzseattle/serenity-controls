@@ -48,6 +48,7 @@ export class ColBoolean<Row = any> extends ColumnTemplate<Row> {
                 field,
                 filterType: "boolean",
                 isInAdvancedMode: false,
+                selfManagedSubmission: true,
                 config: {
                     showFilterOptions: false,
                 },

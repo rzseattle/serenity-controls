@@ -45,4 +45,14 @@ export class ColMap<Row extends object> extends ColumnTemplate<Row> {
     public static create<Row extends object>(field: Path<Row>, options: IOption[], caption = ""): ColMap<Row> {
         return new ColMap<Row>(field, options, caption);
     }
+
+    public setSwitchFilter(): ColMap<Row> {
+        this.filters[0].filterType = "switch";
+        this.filters[0].selfManagedSubmission = true;
+        return this;
+    }
+    public setSelectFilter(): ColMap<Row> {
+        this.filters[0].filterType = "select";
+        return this;
+    }
 }

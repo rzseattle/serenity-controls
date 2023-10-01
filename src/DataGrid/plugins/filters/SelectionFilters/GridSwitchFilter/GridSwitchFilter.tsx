@@ -16,9 +16,9 @@ export interface IGridSwitchFilterConfig {
     columns?: number;
 }
 
-const GridSwitchFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValueChange, filter }) => {
+const GridSwitchFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValueChange, filter, apply }) => {
     const filterConfig: IGridSwitchFilterConfig = filter.config;
-    const columns = filterConfig?.columns !== undefined ? filterConfig.columns : 3;
+    const columns = filterConfig?.columns !== undefined ? filterConfig.columns : Math.min(3, filterConfig.values.length);
     const ref = useRef<HTMLDivElement>();
 
     useEffect(() => {
@@ -43,8 +43,15 @@ const GridSwitchFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValu
                         <button
                             key={el.value}
                             role="radio"
-                            className={isSelected(el.value, filter.value) ? styles.selected : ""}
-                            onClick={() => onValueChange(onSelect(el, filter.value, filter.config.multiselect))}
+                            className={isSelected(el.value, filter?.value) ? styles.selected : ""}
+                            onClick={() => {
+                                const value = onSelect(el, filter.value, filter.config.multiselect);
+                                onValueChange(value);
+
+                                if (apply) {
+                                    apply(value);
+                                }
+                            }}
                         >
                             {el.label}
                         </button>

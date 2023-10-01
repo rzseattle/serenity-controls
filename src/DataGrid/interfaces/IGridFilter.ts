@@ -12,6 +12,8 @@ export type IGridFilterComponent = React.ComponentType<{
     onFilterChange: (filter: IGridFilter) => unknown;
     showCaption?: boolean;
     autoFocus?: boolean;
+    apply?: (value: IGridFilterValue[]) => any
+    cancel?: () => any
 }>;
 
 interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedElement {
@@ -21,6 +23,7 @@ interface IGridFilterBase extends IGridColumnAssignedElement, IGridDataAssignedE
     config?: any;
     isInAdvancedMode?: boolean;
     value?: IGridFilterValue[];
+    selfManagedSubmission?: boolean
 }
 
 interface IGridFilterWithComponent extends IGridFilterBase {
