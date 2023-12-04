@@ -6,7 +6,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "watch": "npm-run-all -p 'build:* -- --watch'",
-    "dev": "npm-run-all -p storybook 'build:modules -- --watch'",
+    "dev": "npm-run-all -p storybook 'build:* -- --watch'",
     "build": "npm-run-all 'build:*'",
     "build:prettier": "prettier --write src",
     "build:modules": "tsm \"src/**/*.module.sass\" ",
@@ -19,7 +19,10 @@
     "lint": "eslint src/**",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --watchAll=false --coverage"
+    "test:coverage": "jest --watchAll=false --coverage",
+    "docker:build": "docker build -t serenity-controls .",
+    "docker:run": "docker run -v $(pwd):/app -p 6006:6006 serenity-controls",
+    "docker:build-run": "npm-run-all docker:build docker:run"
   },
   "husky": {
     "hooks": {
@@ -95,6 +98,7 @@
     "@storybook/cli": "^7.3.2",
     "@storybook/react": "^7.3.2",
     "@storybook/react-webpack5": "^7.3.2",
+    "@storybook/source-loader": "^7.6.3",
     "@testing-library/jest-dom": "^6.1.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
