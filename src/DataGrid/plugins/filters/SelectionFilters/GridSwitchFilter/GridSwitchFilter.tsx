@@ -18,7 +18,8 @@ export interface IGridSwitchFilterConfig {
 
 const GridSwitchFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValueChange, filter, apply }) => {
     const filterConfig: IGridSwitchFilterConfig = filter.config;
-    const columns = filterConfig?.columns !== undefined ? filterConfig.columns : Math.min(3, filterConfig.values.length);
+    const columns =
+        filterConfig?.columns !== undefined ? filterConfig.columns : Math.min(3, filterConfig.values.length);
     const ref = useRef<HTMLDivElement>();
 
     useEffect(() => {

@@ -37,9 +37,9 @@ const CommonInput = ({
                     {readOnlyPresenter !== undefined
                         ? readOnlyPresenter(valueForPresenter())
                         : typeof valueForPresenter().presented === "string" ||
-                          typeof valueForPresenter().presented === "number"
-                        ? (valueForPresenter().presented as string)
-                        : "define value presenter for field"}
+                            typeof valueForPresenter().presented === "number"
+                          ? (valueForPresenter().presented as string)
+                          : "define value presenter for field"}
                 </div>
             ) : (
                 <div>{children}</div>
