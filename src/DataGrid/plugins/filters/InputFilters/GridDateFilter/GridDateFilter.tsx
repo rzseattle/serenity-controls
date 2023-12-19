@@ -6,10 +6,8 @@ import GridAdvancedFilterContainer from "../GridCommonFilter/GridAdvancedFilterC
 import styles from "./GridDateFilter.module.sass";
 import { Calendar, DateRange, Range } from "react-date-range";
 import { addDays, format, parse } from "date-fns";
-// @ts-ignore
-import pl from "date-fns/locale/pl";
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+import { pl } from "date-fns/locale";
 
 import { Modal } from "../../../../../Modal";
 import { RelativePositionPresets } from "../../../../../Positioner";

@@ -7,11 +7,7 @@ import { Calendar } from "react-date-range";
 import styles from "./Date.module.sass";
 
 import { format, parse } from "date-fns";
-// @ts-ignore
-import pl from "date-fns/locale/pl";
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
+import { pl } from "date-fns/locale";
 import { Modal } from "../../../Modal";
 import { RelativePositionPresets } from "../../../Positioner";
 import { Key } from "ts-key-enum";
