@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import GridRoot from "../../../config/GridRoot";
+import { GridRoot } from "../../../config/GridRoot";
 import { IGridColumn } from "../../../interfaces/IGridColumn";
 import GridHeadColumn from "./GridHeadColumn";
 

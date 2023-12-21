@@ -3,7 +3,7 @@ import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { IGridFilter } from "../../../../interfaces/IGridFilter";
-import GridRoot from "../../../../config/GridRoot";
+import { GridRoot } from "../../../../config/GridRoot";
 import GridSwitchFilter, { IGridSwitchFilterConfig } from "./GridSwitchFilter";
 
 export default {

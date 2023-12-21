@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { StorySimple } from "./GridHead.stories";
 import GridHead from "./GridHead";
 import { IGridColumn } from "../../../interfaces/IGridColumn";
-import GridRoot from "../../../config/GridRoot";
+import { GridRoot } from "../../../config/GridRoot";
 
 test("Should render", () => {
     render(<StorySimple {...StorySimple.args} />);

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import GridRoot from "../../../config/GridRoot";
+import { GridRoot } from "../../../config/GridRoot";
 import GridBody from "./GridBody";
 import { IMockUser, mockData } from "../../../__mocks__/MockUsers";
 import { getColumnsWidths } from "../../../helpers/helpers";

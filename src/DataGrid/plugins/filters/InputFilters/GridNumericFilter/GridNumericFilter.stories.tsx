@@ -3,7 +3,7 @@ import React from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import GridNumericFilter from "./GridNumericFilter";
 import { IGridFilter } from "../../../../interfaces/IGridFilter";
-import GridRoot from "../../../../config/GridRoot";
+import { GridRoot } from "../../../../config/GridRoot";
 
 export default {
     title: "DataGrid/Plugins/Filters/Input Advanced/Numeric",

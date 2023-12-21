@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import GridRoot from "../../../config/GridRoot";
+import { GridRoot } from "../../../config/GridRoot";
 import { IGridFilter } from "../../../interfaces/IGridFilter";
 import GridFiltersModal, { IGridFiltersModalProps } from "./GridFiltersModal";
 import { IGridSwitchFilterConfig } from "../../../plugins/filters/SelectionFilters/GridSwitchFilter/GridSwitchFilter";

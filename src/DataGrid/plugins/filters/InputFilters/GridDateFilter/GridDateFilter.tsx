@@ -4,7 +4,7 @@ import { useGridContext } from "../../../../config/GridContext";
 import GridAdvancedFilterContainer from "../GridCommonFilter/GridAdvancedFilterContainer";
 
 import styles from "./GridDateFilter.module.sass";
-import { Calendar, DateRange, Range } from "react-date-range";
+//import { Calendar, DateRange, Range } from "react-date-range";
 import { addDays, format, parse } from "date-fns";
 
 import { pl } from "date-fns/locale";
@@ -49,13 +49,13 @@ const GridDateFilterRow = ({
     const isInitialMount = useRef(true);
     const dateFormat = "yyyy-MM-dd";
     const [show, setShow] = useState(false);
-    const [range, setRange] = useState<Range[]>([
-        {
-            startDate: new Date(),
-            endDate: addDays(new Date(), 7),
-            key: "selection",
-        },
-    ]);
+    // const [range, setRange] = useState<Range[]>([
+    //     {
+    //         startDate: new Date(),
+    //         endDate: addDays(new Date(), 7),
+    //         key: "selection",
+    //     },
+    // ]);
     const [date, setDate] = useState(new Date());
 
     const setNewValue = () => {
@@ -63,7 +63,8 @@ const GridDateFilterRow = ({
         if (value.condition === "=" || value.condition === "!=") {
             fieldValue = format(date, dateFormat);
         } else {
-            fieldValue = format(range[0].startDate, dateFormat) + " / " + format(range[0].endDate, dateFormat);
+            //todo this line is needed
+            //fieldValue = format(range[0].startDate, dateFormat) + " / " + format(range[0].endDate, dateFormat);
         }
         onchange(fieldValue, null);
     };
@@ -77,14 +78,14 @@ const GridDateFilterRow = ({
             try {
                 if (value.value.indexOf(" / ") !== -1) {
                     const tmp = value.value.split(" / ");
-
-                    setRange([
-                        {
-                            key: "selection",
-                            startDate: parse(tmp[0], dateFormat, new Date()),
-                            endDate: parse(tmp[1], dateFormat, new Date()),
-                        },
-                    ]);
+                    //todo this line is needed
+                    // setRange([
+                    //     {
+                    //         key: "selection",
+                    //         startDate: parse(tmp[0], dateFormat, new Date()),
+                    //         endDate: parse(tmp[1], dateFormat, new Date()),
+                    //     },
+                    // ]);
                 } else {
                     setDate(parse(value.value, dateFormat, new Date()));
                 }
@@ -132,18 +133,20 @@ const GridDateFilterRow = ({
             >
                 {value.condition === "BETWEEN" && (
                     // @ts-ignore
-                    <DateRange
-                        onChange={(item) => setRange([item.selection])}
-                        moveRangeOnFirstSelection={false}
-                        months={2}
-                        ranges={range}
-                        direction="horizontal"
-                        locale={pl}
-                    />
+                    // <DateRange
+                    //     onChange={(item) => setRange([item.selection])}
+                    //     moveRangeOnFirstSelection={false}
+                    //     months={2}
+                    //     ranges={range}
+                    //     direction="horizontal"
+                    //     locale={pl}
+                    // />
+                    <div>use date range</div>
                 )}
                 {(value.condition === "=" || value.condition === "=") && (
                     // @ts-ignore
-                    <Calendar onChange={(item) => setDate(item)} date={date} locale={pl} />
+                    // <Calendar onChange={(item) => setDate(item)} date={date} locale={pl} />
+                    <div>use calendar </div>
                 )}
                 <div className={styles.calendarApplyButtons}>
                     <button

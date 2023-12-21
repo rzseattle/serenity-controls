@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
 import { Control, useController } from "react-hook-form";
-import { Calendar } from "react-date-range";
+//import { Calendar } from "react-date-range";
 
 import styles from "./Date.module.sass";
 
@@ -74,14 +74,14 @@ const Date = (props: IDateProps) => {
                         <div className={styles.main}>
                             {
                                 // @ts-ignore
-                                <Calendar
-                                    onChange={(item) => {
-                                        setPickerVisible(false);
-                                        control.field.onChange({ target: { value: format(item, dateFormat) } });
-                                    }}
-                                    date={date}
-                                    locale={pl}
-                                />
+                                // <Calendar
+                                //     onChange={(item) => {
+                                //         setPickerVisible(false);
+                                //         control.field.onChange({ target: { value: format(item, dateFormat) } });
+                                //     }}
+                                //     date={date}
+                                //     locale={pl}
+                                // />
                             }
                         </div>
                     </Modal>

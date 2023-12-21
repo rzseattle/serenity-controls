@@ -125,4 +125,4 @@ const GridRoot = ({ children, options }: { children: React.ReactNode; options?: 
     );
 };
 
-export default GridRoot;
+export {  GridRoot };
