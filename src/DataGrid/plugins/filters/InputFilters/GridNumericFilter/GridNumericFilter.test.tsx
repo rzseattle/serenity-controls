@@ -1,8 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import React from "react";
 import { Story1, StoryFocus } from "./GridNumericFilter.stories";
-import "@testing-library/jest-dom/extend-expect";
-
 afterEach(cleanup);
 test("Should render", () => {
     jest.useFakeTimers();

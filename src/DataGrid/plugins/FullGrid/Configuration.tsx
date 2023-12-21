@@ -1,9 +1,13 @@
+import React from "react";
 import { IPersistentColumn, IPersistentState } from "./FullGrid";
-import { PrintJSON } from "../../../PrintJSON";
-import { DndProvider } from "react-dnd";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useCallback, useEffect, useState } from "react";
+import type { FC } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CommonIcons } from "../../../lib/CommonIcons";
+import type { Identifier, XYCoord } from "dnd-core";
+import produce from "immer";
+import { Modal } from "../../../Modal";
 
 const Configuration = ({ persistent }: { persistent: IPersistentState }) => {
     const [columns, setColumns] = useState(persistent?.columns);
@@ -72,13 +76,6 @@ const Configuration = ({ persistent }: { persistent: IPersistentState }) => {
         </>
     );
 };
-
-import type { Identifier, XYCoord } from "dnd-core";
-import type { FC } from "react";
-import { useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
-import produce from "immer";
-import { Modal } from "../../../Modal";
 
 const style = {
     border: "1px dashed gray",

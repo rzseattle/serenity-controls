@@ -46,7 +46,7 @@ export class CommandMenu extends React.PureComponent<IProps, IState> {
                     template={(data) => {
                         return (
                             <>
-                                {data.map((item: ICommand | false, index: number) => {
+                                {data.map((item: ICommand | false) => {
                                     if (item !== null && item !== false) {
                                         return (
                                             <div

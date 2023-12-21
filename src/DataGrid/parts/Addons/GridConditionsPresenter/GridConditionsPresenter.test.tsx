@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 import { StoryBasic } from "./GridConditionsPresenter.stories";
 import { IGridOrder } from "../../../interfaces/IGridOrder";
 import { IGridFilter } from "../../../interfaces/IGridFilter";

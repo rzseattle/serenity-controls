@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 
 import "./Tree.sass";
 
@@ -77,12 +76,12 @@ export const Tree = (props: ICheckboxProps) => {
         }
     });
 
-    const [expanded, setExpanded] = useState(tmpExpanded);
+    //const [expanded, setExpanded] = useState(tmpExpanded);
 
-    let icons = {};
-    if (props.icons !== undefined) {
-        icons = { ...icons, ...props.icons };
-    }
+    // let icons = {};
+    // if (props.icons !== undefined) {
+    //     icons = { ...icons, ...props.icons };
+    // }
 
     return (
         <div className="w-tree">

@@ -1,8 +1,6 @@
 import React from "react";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, act, renderHook } from "@testing-library/react";
 
-import { act, renderHook } from "@testing-library/react-hooks";
-import "@testing-library/jest-dom/extend-expect";
 import { useSerenityForm } from "../../useSerenityForm";
 import { Text } from "./Text";
 

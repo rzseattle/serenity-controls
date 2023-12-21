@@ -308,7 +308,7 @@ const Positioner = (inProps: IPositionerProps) => {
             return () => {
                 document.removeEventListener("scroll", track);
             };
-        } else if (true) {
+        } else {
             //console.log("---------");
             //console.log(element.current);
             if (element.current) {

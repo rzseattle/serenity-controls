@@ -3,16 +3,9 @@ import { useContext } from "react";
 
 import { IModalProps } from "../Modal";
 
-import { IRouteElement } from "./interfaces/IRouteElement";
 import { ICommand } from "../CommandBar";
 
 export interface IPanelContext {
-    /**
-     * Url without last action part
-     */
-
-    routeData: IRouteElement;
-
     baseURL: string;
 
     URL: string;
@@ -46,4 +39,5 @@ export interface IPanelContext {
 
 export const PanelContext = React.createContext(null);
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 export const getPanelContext = () => useContext<IPanelContext>(PanelContext);

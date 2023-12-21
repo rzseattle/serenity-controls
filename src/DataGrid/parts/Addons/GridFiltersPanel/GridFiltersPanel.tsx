@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { IGridFilter, IGridFilterValue } from "../../../interfaces/IGridFilter";
 import { useGridContext } from "../../../config/GridContext";
 import { IFiltersChange } from "../../../interfaces/IFiltersChange";
 import { useImmer } from "use-immer";
 import styles from "./GridFiltersPanel.module.sass";
-import { PrintJSON } from "../../../../PrintJSON";
 import produce from "immer";
 
 export interface IGridFilterProps {
@@ -42,7 +41,7 @@ const GridFiltersPanel = ({ filters, onFiltersChange, onCancel }: IGridFilterPro
                         displayBottomButtons = displayBottomButtons || filter.selfManagedSubmission !== true;
                         if (filter.selfManagedSubmission === true) {
                             additionalProps.apply = (value: IGridFilterValue[]) => {
-                                let fastChange = produce(localFilters, (draft) => {
+                                const fastChange = produce(localFilters, (draft) => {
                                     draft[index].value = value;
                                 });
                                 onFiltersChange(fastChange);

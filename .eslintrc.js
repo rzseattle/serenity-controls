@@ -10,12 +10,18 @@ module.exports = {
         "plugin:storybook/recommended",
     ],
     rules: {
-        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                argsIgnorePattern: "^_",
+            },
+        ],
         //"@typescript-eslint/no-explicit-any": "error",
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/ban-ts-comment": "off",
+        "react-hooks/exhaustive-deps": "off",
     },
     settings: {
         react: {

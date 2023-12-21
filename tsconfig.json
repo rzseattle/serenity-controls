@@ -50,5 +50,10 @@
         "./src/**/*.test.tsx",
         "./src/**/*.test.ts"
     ],
+    "types": [
+        "jest",
+        "@testing-library/jest-dom",
+        "node"
+    ],
     "include": ["./src/**/*", "./stories/**/*", "./types/**/*"]
 }

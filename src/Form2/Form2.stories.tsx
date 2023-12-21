@@ -28,22 +28,19 @@ interface IUser {
 }
 
 const Example = () => {
-    const { field, setReadonly, reset, isReadOnly, setFieldErrors, setFormErrors, formErrors } = useSerenityForm<IUser>(
-        {
-            defaultValues: {
-                name: "Super name",
-                age: 11,
-                email: "email@op.com",
-                canEdit: true,
-                description: "a very long text",
-                date: "1982-11-20",
-                friends: [],
-            },
+    const { field, setFieldErrors, reset, formErrors } = useSerenityForm<IUser>({
+        defaultValues: {
+            name: "Super name",
+            age: 11,
+            email: "email@op.com",
+            canEdit: true,
+            description: "a very long text",
+            date: "1982-11-20",
+            friends: [],
         },
-    );
+    });
     useEffect(() => {}, []);
 
-    //console.log(register("name"));
     return (
         <div>
             <div style={{ width: 500 }}>
@@ -108,7 +105,7 @@ const Example = () => {
 };
 
 //👇 We create a “template” of how args map to rendering
-const Template: ComponentStory<any> = (args) => {
+const Template: ComponentStory<any> = () => {
     return <Example />;
 };
 

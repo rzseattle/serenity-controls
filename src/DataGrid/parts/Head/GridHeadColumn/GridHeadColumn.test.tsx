@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 import { StoryFilter, StorySimple, StorySortable, StoryTemplate } from "./GridHeadColumn.stories";
 import GridHeadColumn from "./GridHeadColumn";
 
@@ -77,13 +76,13 @@ test("Should react for events", () => {
     fireEvent.mouseEnter(el);
     fireEvent.mouseOut(el);
 
-    expect(Object.keys(onClick.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
-    expect(Object.keys(onMouseUp.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
+    expect(Object.keys(onClick.mock.calls[0][0])).toEqual(["column", "event", "controller", "forceRenderGrid"]);
+    expect(Object.keys(onMouseUp.mock.calls[0][0])).toEqual(["column", "event", "controller", "forceRenderGrid"]);
 
-    expect(Object.keys(onMouseDown.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
-    expect(Object.keys(onDoubleClick.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
-    expect(Object.keys(onMouseEnter.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
-    expect(Object.keys(onMouseOut.mock.calls[0][0])).toEqual(["column", "event", "controller"]);
+    expect(Object.keys(onMouseDown.mock.calls[0][0])).toEqual(["column", "event", "controller", "forceRenderGrid"]);
+    expect(Object.keys(onDoubleClick.mock.calls[0][0])).toEqual(["column", "event", "controller", "forceRenderGrid"]);
+    expect(Object.keys(onMouseEnter.mock.calls[0][0])).toEqual(["column", "event", "controller", "forceRenderGrid"]);
+    expect(Object.keys(onMouseOut.mock.calls[0][0])).toEqual(["column", "event", "controller", "forceRenderGrid"]);
 
     //expect(screen.getByText("field_name template text")).toBeInTheDocument();
 });

@@ -11,7 +11,7 @@ export default {
 } as ComponentMeta<typeof Breadcrumb>;
 
 //👇 We create a “template” of how args map to rendering
-const Template: ComponentStory<typeof Breadcrumb> = (args) => {
+const Template: ComponentStory<typeof Breadcrumb> = () => {
     return (
         <Breadcrumb>
             <BreadcrumbItem>Home</BreadcrumbItem>

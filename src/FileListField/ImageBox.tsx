@@ -39,7 +39,7 @@ const ImageBoxComponent: React.FunctionComponentElement<IImageBoxProps> = (props
             <Tooltip
                 relativeSettings={{ ...RelativePositionPresets.bottomLeft, offsetX: -5, widthCalc: "min" }}
                 content={file}
-                template={(data) => <FileTooltip file={file} transformFilePath={props.transformFilePath} />}
+                template={() => <FileTooltip file={file} transformFilePath={props.transformFilePath} />}
             >
                 <div onClick={() => props.onClick(props._index)} className={"w-image-box"}>
                     <span>

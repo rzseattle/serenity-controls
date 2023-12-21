@@ -1,9 +1,8 @@
 // Hook
-import { getPanelContext } from "../PanelContext";
 import { useState } from "react";
 
 export function usePanelStorage<T>(key: string, initialValue: T): [T, (x: T) => any] {
-    const subStoreKey = getPanelContext().routeData.routePath;
+    const subStoreKey = window.location.pathname;
     const panelStorageKey = "frontend-panel-storage";
     // State to store our value
     // Pass initial state function to useState so logic is only executed once

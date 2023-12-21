@@ -1,8 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-
-import { act, renderHook } from "@testing-library/react-hooks";
-import "@testing-library/jest-dom/extend-expect";
+import { render, screen, act, renderHook } from "@testing-library/react";
 
 import { useSerenityForm } from "../../useSerenityForm";
 import CommonInput from "./CommonInput";

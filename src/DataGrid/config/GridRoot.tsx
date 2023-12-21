@@ -27,7 +27,7 @@ const local = JSON.parse(
         : "{}",
 );
 
-const GridRoot = ({ children, options }: { children: React.ReactNode; options?: Partial<IGridConfig> }) => {
+const GridRoot = ({ children }: { children: React.ReactNode; options?: Partial<IGridConfig> }) => {
     return (
         <GridContext.Provider
             value={{

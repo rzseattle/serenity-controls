@@ -4,7 +4,6 @@ import { IGridFilterComponent } from "../../../../interfaces/IGridFilter";
 import { useGridContext } from "../../../../config/GridContext";
 import styles from "./GridBoleanFilter.module.sass";
 import GridFilterBody from "../../Common/GridFilterBody";
-import { PrintJSON } from "../../../../../PrintJSON";
 
 const GridBooleanFilter: IGridFilterComponent = ({ autoFocus, showCaption, onValueChange, filter, apply }) => {
     const config = useGridContext();
@@ -27,7 +26,7 @@ const GridBooleanFilter: IGridFilterComponent = ({ autoFocus, showCaption, onVal
                     tabIndex={1}
                     disabled={filter.value && filter.value.length && !val}
                     onClick={() => {
-                        var value = [
+                        const value = [
                             {
                                 value: false,
                                 condition: "=",

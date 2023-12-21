@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 import { StoryBasic } from "./GridFilterModal.stories";
 
 test("Should render on proper position", () => {

@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 import {
     StoryBasic,
     StoryCellCassTemplate,
@@ -109,7 +108,7 @@ test("Should react for events", () => {
     fireEvent.dragEnter(el);
     fireEvent.dragLeave(el);
 
-    const eventArguments = ["row", "column", "event", "coordinates", "controller"];
+    const eventArguments = ["row", "column", "event", "coordinates", "controller", "forceRender"];
     expect(Object.keys(onClick.mock.calls[0][0])).toEqual(eventArguments);
     expect(Object.keys(onMouseUp.mock.calls[0][0])).toEqual(eventArguments);
 

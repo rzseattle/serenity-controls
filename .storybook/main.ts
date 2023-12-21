@@ -1,4 +1,11 @@
-module.exports = {
+// .storybook/main.ts
+import type { StorybookConfig } from "@storybook/react-webpack5";
+
+const config: StorybookConfig = {
+    framework: {
+        name: "@storybook/react-webpack5", // react-webpack5|next|vue-webpack5|etc
+        options: { builder: { useSWC: true } },
+    },
     stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(ts|tsx)"],
 
     addons: [
@@ -56,12 +63,9 @@ module.exports = {
         return config;
     },
 
-    framework: {
-        name: "@storybook/react-webpack5",
-        options: {},
-    },
-
     docs: {
         autodocs: true,
     },
 };
+
+export default config;

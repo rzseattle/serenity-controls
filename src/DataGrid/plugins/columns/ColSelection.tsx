@@ -15,7 +15,7 @@ export class ColSelection<Row = any> extends ColumnTemplate<Row> {
         this.column = {
             gridEventsListeners: {
                 onDataChanged: [
-                    (data) => {
+                    (_data) => {
                         this.selection = [];
                     },
                 ],

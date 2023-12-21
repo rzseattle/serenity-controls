@@ -19,6 +19,7 @@ interface IHelpAdjusterProps {
     offsetTopCorrection?: number;
 }
 
+// eslint-disable-next-line react/display-name
 const HeightAdjuster = React.memo((props: IHelpAdjusterProps) => {
     const divRef = useRef<HTMLDivElement>();
 

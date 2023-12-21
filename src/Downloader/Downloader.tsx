@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 type ICleanUpCallback = () => any;
 
@@ -51,7 +51,7 @@ class Downloader extends React.PureComponent<IDownloaderProps> {
                 <textarea name="payload">{JSON.stringify(this.props.data)}</textarea>
 
                 {Object.entries(this.props.data).map(([key, val]) => (
-                    <input type="hidden" name={key} value={val as string} />
+                    <input type="hidden" name={key} value={val as string} key={key} />
                 ))}
             </form>
         );
@@ -143,7 +143,8 @@ export const downloadOld = (url: string, data: any = null): any => {
 
     const wrapper = parent.appendChild(document.createElement("div"));
     const cleanup = () => {
-        ReactDOM.unmountComponentAtNode(wrapper);
+        const root = createRoot(wrapper);
+        root.unmount();
         wrapper.remove();
     };
     const props = {
@@ -151,6 +152,6 @@ export const downloadOld = (url: string, data: any = null): any => {
         data,
     };
 
-    // @ts-ignore
-    const component = ReactDOM.render(<Downloader {...props} cleanup={cleanup} />, wrapper);
+    const root = createRoot(wrapper);
+    root.render(<Downloader {...props} cleanup={cleanup} />);
 };

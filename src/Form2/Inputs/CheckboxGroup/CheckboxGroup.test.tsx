@@ -1,7 +1,5 @@
 import React from "react";
-import { fireEvent, screen, render } from "@testing-library/react";
-
-import { act, renderHook } from "@testing-library/react-hooks";
+import { render, screen, act, renderHook } from "@testing-library/react";
 
 import { useSerenityForm } from "../../useSerenityForm";
 import { CheckboxGroup } from "./CheckboxGroup";
@@ -12,7 +10,7 @@ test("Should render", () => {
             current: { field },
         },
     } = renderHook(() => useSerenityForm<{ test: string[] }>({ defaultValues: { test: [] } }));
-    const { container } = render(
+    render(
         <CheckboxGroup
             {...field("test")}
             options={[
@@ -22,11 +20,10 @@ test("Should render", () => {
             value={[false]}
         />,
     );
-    screen.debug();
     expect(screen.getByText("No")).toBeInTheDocument();
 });
 test("Should render in readonly", () => {
-    const { result } = renderHook(() => useSerenityForm<any>({ defaultValues: { test: [] } }));
+    const { result } = renderHook(() => useSerenityForm<any>({ defaultValues: { test: ["no"] } }));
 
     act(() => {
         result.current.setReadonly(true);
@@ -43,7 +40,7 @@ test("Should render in readonly", () => {
     const presenter = container.getElementsByClassName("w-read-only")[0] as HTMLDivElement;
 
     expect(presenter).toBeInTheDocument();
-    expect(presenter.innerHTML).toEqual("No");
+    expect(presenter.innerHTML).toEqual("<ul><li>No</li></ul>");
 });
 //
 // test("Should upgrade form value", () => {

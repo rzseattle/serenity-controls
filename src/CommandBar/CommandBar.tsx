@@ -38,7 +38,7 @@ export class CommandBar extends React.PureComponent<IProps> {
         };
     }
 
-    public handleExpandMenu = (item: ICommand, event: React.MouseEvent) => {};
+    public handleExpandMenu = (_item: ICommand, _event: React.MouseEvent) => {};
 
     public handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ searchedText: event.target.value });

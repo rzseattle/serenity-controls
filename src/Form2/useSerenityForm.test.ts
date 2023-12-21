@@ -1,6 +1,5 @@
 import { useSerenityForm } from "./useSerenityForm";
-import "@testing-library/jest-dom/extend-expect";
-import { renderHook, act } from "@testing-library/react-hooks";
+import { renderHook, act } from "@testing-library/react";
 
 test("Should use readonly", () => {
     const { result } = renderHook(() => useSerenityForm<any>());

@@ -10,7 +10,7 @@ export default {
 } as ComponentMeta<typeof Row>;
 
 //👇 We create a “template” of how args map to rendering
-const Template: ComponentStory<typeof Row> = (args) => {
+const Template: ComponentStory<typeof Row> = () => {
     return (
         <div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((el) => (

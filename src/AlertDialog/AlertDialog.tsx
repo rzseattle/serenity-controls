@@ -1,15 +1,16 @@
 import * as React from "react";
-import ReactDOM from "react-dom";
 
-import { confirmDialog, IConfirmDialogCompProps } from "../ConfirmDialog";
+import { IConfirmDialogCompProps } from "../ConfirmDialog";
 import ConfirmDialogComp from "../ConfirmDialog/ConfirmDialog";
+import { createRoot } from "react-dom/client";
 
 export const alertDialog = async (message: string, options: Partial<IConfirmDialogCompProps> = {}) => {
     return new Promise((resolve) => {
         const wrapper = document.body.appendChild(document.createElement("div"));
 
         const cleanup = () => {
-            ReactDOM.unmountComponentAtNode(wrapper);
+            const root = createRoot(wrapper);
+            root.unmount();
             wrapper.remove();
         };
 
@@ -30,6 +31,7 @@ export const alertDialog = async (message: string, options: Partial<IConfirmDial
             />
         );
 
-        ReactDOM.render(x, wrapper);
+        const root = createRoot(wrapper);
+        root.render(x);
     });
 };

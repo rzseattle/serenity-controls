@@ -21,7 +21,7 @@ let config: IConfig = {
         defaultLanguage: "pl",
         currentLanguage: "pl",
         languages: [],
-        langChanged: (langCode) => {
+        langChanged: (_langCode) => {
             console.error("provide lang change action");
         },
     },

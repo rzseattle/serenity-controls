@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CommonInput, { ICommonInputProps } from "../CommonInput/CommonInput";
 
-import { useController, Control } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 import { IConnectionChangeEvent } from "../../../ConnectionsField";
 import styles from "./ConnectionField.module.sass";
 import { RelativePositionPresets } from "../../../Positioner";
@@ -11,7 +11,6 @@ import { Key } from "ts-key-enum";
 import { Shimmer } from "../../../Shimmer";
 import { TiDelete } from "react-icons/ti";
 import { BsPlusCircleDotted } from "react-icons/bs";
-import { PrintJSON } from "../../../PrintJSON";
 
 export interface IConnectionElement {
     value: string | number;

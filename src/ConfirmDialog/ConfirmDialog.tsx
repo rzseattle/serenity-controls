@@ -1,6 +1,6 @@
 import { Modal } from "../Modal";
 import * as React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./ConfirmDialog.sass";
 import { IPositionCalculatorOptions, RelativePositionPresets } from "../Positioner";
 import { CommonIcons } from "../lib/CommonIcons";
@@ -45,7 +45,7 @@ const ConfirmDialogComp = ({
                 <div style={{ padding: 10 }}>{question}</div>
                 <FocusLock autoFocus={true}>
                     <div style={{ padding: 5, textAlign: "right" }}>
-                        {options.map((el, index) => (
+                        {options.map((el) => (
                             <button
                                 key={el.value + ""}
                                 onClick={() => {
@@ -69,7 +69,8 @@ export const confirmDialog = async (message: string, options: Partial<IConfirmDi
         const wrapper = document.body.appendChild(document.createElement("div"));
 
         const cleanup = () => {
-            ReactDOM.unmountComponentAtNode(wrapper);
+            const root = createRoot(wrapper);
+            root.unmount();
             wrapper.remove();
         };
 
@@ -95,7 +96,7 @@ export const confirmDialog = async (message: string, options: Partial<IConfirmDi
                 {...options}
             />
         );
-
-        ReactDOM.render(x, wrapper);
+        const root = createRoot(wrapper);
+        root.render(x);
     });
 };
