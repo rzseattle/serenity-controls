@@ -64,7 +64,7 @@ const GridRoot = ({ children }: { children: React.ReactNode; options?: Partial<I
                         loading: () => {
                             return (
                                 <div style={{ opacity: 0.4 }}>
-                                    <ShimmerList rows={10} />
+                                    <ShimmerList items={10} />
                                 </div>
                             );
                         },

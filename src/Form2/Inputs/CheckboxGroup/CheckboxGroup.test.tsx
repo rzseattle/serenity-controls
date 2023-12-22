@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen, act, renderHook } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
 import { useSerenityForm } from "../../useSerenityForm";
 import { CheckboxGroup } from "./CheckboxGroup";

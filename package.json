@@ -15,11 +15,8 @@
     "husky-run": "echo 1",
     "lint": "eslint src/**",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --watchAll=false --coverage",
-    "docker:build": "docker build -t serenity-controls .",
-    "docker:run": "docker run -v $(pwd):/app -p 6006:6006 serenity-controls",
-    "docker:build-run": "npm-run-all docker:build docker:run"
+    "test:watch": "jest --watch --coverage",
+    "test:coverage": "jest --watchAll=false --coverage"
   },
   "husky": {
     "hooks": {
@@ -37,9 +34,7 @@
     "trailingComma": "all"
   },
   "files": [
-    "lib/**/*",
-    "sass/**/*",
-    "src/**/*"
+    "lib/**/*"
   ],
   "eslintConfig": {
     "extends": [
@@ -84,7 +79,7 @@
     "@types/jest": "^29.5.11",
     "@types/react": "^18.2.45",
     "@types/react-date-range": "^1.4.9",
-    "@types/react-dom": "^18.2.7",
+    "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "core-js": "^3.34.0",
