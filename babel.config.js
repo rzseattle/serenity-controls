@@ -6,7 +6,7 @@ module.exports = {
                 useBuiltIns: "usage",
                 corejs: 3,
                 modules: "commonjs",
-                loose: true,
+                loose: false,
             },
         ],
         "@babel/preset-react",
@@ -14,9 +14,9 @@ module.exports = {
     ],
     plugins: [
         ["@babel/plugin-proposal-class-properties", { loose: false }],
-        ["@babel/plugin-proposal-private-methods", { loose: false }],
+        ["@babel/plugin-transform-class-properties", { loose: false }],
 
-        ["@babel/plugin-proposal-private-property-in-object", { loose: false }],
+        ["@babel/plugin-transform-private-property-in-object", { loose: false }],
         ["@babel/plugin-transform-modules-commonjs"],
     ],
 };

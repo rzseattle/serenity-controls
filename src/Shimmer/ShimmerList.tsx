@@ -8,7 +8,7 @@ const ShimmerList = ({
     shimmerProps = {},
 }: {
     items?: number;
-    columns: number;
+    columns?: number;
     shimmerProps?: IShimmerProps;
 }) => {
     return (
