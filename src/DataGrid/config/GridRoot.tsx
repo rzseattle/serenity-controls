@@ -22,7 +22,7 @@ import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilt
 import GridSelectFilter from "../plugins/filters/SelectionFilters/GridSelectFilter/GridSelectFilter";
 
 const local = JSON.parse(
-    window.localStorage["serenity-controls-store"] !== undefined
+    window?.localStorage["serenity-controls-store"] !== undefined
         ? window.localStorage["serenity-controls-store"]
         : "{}",
 );

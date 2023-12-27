@@ -55,7 +55,7 @@ export class Panel extends React.PureComponent<IPanelProps> {
                         {props.title}
                         {props.toolbar.length > 0 && (
                             <div className="panel-toolbar">
-                                <CommandBar items={props.toolbar} />{" "}
+                                <CommandBar items={props.toolbar} />
                             </div>
                         )}
                     </div>
