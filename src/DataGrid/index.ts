@@ -5,3 +5,4 @@ export * from "./plugins/filters";
 
 export * from "./config/GridContext";
 export * from "./config/GridRoot";
+export * from "./interfaces/IGridController";

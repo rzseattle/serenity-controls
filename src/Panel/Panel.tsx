@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "./Panel.sass";
+import s from "./Panel.module.sass";
 import { CommandBar, ICommand } from "../CommandBar";
 
 export interface IPanelProps {
@@ -40,27 +40,28 @@ export class Panel extends React.PureComponent<IPanelProps> {
 
     public render() {
         const props = this.props;
-        const classes = ["w-panel"];
+        const classes = [s.panel];
         if (this.props.noPadding) {
-            classes.push("panel-no-padding");
+            classes.push(s.panelNoPadding);
         }
         if (this.props.noBottomMargin) {
-            classes.push("panel-no-bottom-margin");
+            classes.push(s.panelNoNottomMargin);
         }
         return (
             <div className={classes.join(" ")}>
                 {props.title && (
-                    <div className="title ">
+                    <div className={s.title + " title"}>
                         {props.icon && <props.icon />}
                         {props.title}
+
                         {props.toolbar.length > 0 && (
-                            <div className="panel-toolbar">
+                            <div className={s.panelToolbar}>
                                 <CommandBar items={props.toolbar} />
                             </div>
                         )}
                     </div>
                 )}
-                <div className="panel-body ">{props.children}</div>
+                <div className={s.panelBody}>{props.children}</div>
             </div>
         );
     }

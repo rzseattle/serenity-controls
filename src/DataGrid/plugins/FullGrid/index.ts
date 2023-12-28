@@ -1,3 +1,4 @@
-import FullGrid from "./FullGrid";
+export * from "./FullGrid";
 
-export { FullGrid };
+import { IGridFilter } from "../../interfaces/IGridFilter";
+export { IGridFilter };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import styles from "../DataGrid.module.sass";
 import { GridContext, IGridConfig } from "./GridContext";
@@ -13,7 +13,7 @@ import {
     AiOutlineMinus,
     AiOutlinePlus,
 } from "react-icons/ai";
-import { ShimmerList } from "../../Shimmer/ShimmerList";
+import { ShimmerList } from "../../Shimmer";
 import GridTextFilter from "../plugins/filters/InputFilters/GridTextFilter/GridTextFilter";
 import GridDateFilter from "../plugins/filters/InputFilters/GridDateFilter/GridDateFilter";
 import GridNumericFilter from "../plugins/filters/InputFilters/GridNumericFilter/GridNumericFilter";
@@ -21,13 +21,12 @@ import GridBooleanFilter from "../plugins/filters/SelectionFilters/GridBooleanFi
 import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilter/GridSwitchFilter";
 import GridSelectFilter from "../plugins/filters/SelectionFilters/GridSelectFilter/GridSelectFilter";
 
-const local = JSON.parse(
-    window?.localStorage["serenity-controls-store"] !== undefined
-        ? window.localStorage["serenity-controls-store"]
-        : "{}",
-);
-
 const GridRoot = ({ children }: { children: React.ReactNode; options?: Partial<IGridConfig> }) => {
+    const local = useRef<Record<string, Record<string, unknown>>>();
+    useEffect(() => {
+        local.current = JSON.parse(window.localStorage["serenity-controls-store"] || "{}");
+    }, []);
+
     return (
         <GridContext.Provider
             value={{
@@ -35,13 +34,13 @@ const GridRoot = ({ children }: { children: React.ReactNode; options?: Partial<I
                 gridClassName: styles.gridLayout,
                 persistStore: {
                     set: <T,>(componentName: string, variableName: string, variableValue: T) => {
-                        local[componentName] = local[componentName] ? local[componentName] : {};
-                        local[componentName][variableName] = variableValue;
+                        local.current[componentName] = local.current[componentName] ? local.current[componentName] : {};
+                        local.current[componentName][variableName] = variableValue;
                         window.localStorage["serenity-controls-store"] = JSON.stringify(local);
                         return true;
                     },
                     get: <T,>(componentName: string, variableName: string): T | null => {
-                        return local?.[componentName]?.[variableName] ?? null;
+                        return (local.current?.[componentName]?.[variableName] as T) ?? null;
                     },
                 },
                 common: {

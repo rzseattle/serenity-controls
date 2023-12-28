@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { Text } from "./Inputs/Text/Text";
 import { Row } from "../Row";
-import FormErrors from "./FormErrors/FormErrors";
+import { FormErrors } from "./FormErrors/FormErrors";
 import { Switch } from "./Inputs/Switch/Switch";
 import { Select } from "./Inputs/Select/Select";
 import { useSerenityForm } from "./useSerenityForm";
@@ -12,7 +12,7 @@ import { Date } from "./Inputs/Date/Date";
 import { CheckboxGroup } from "./Inputs/CheckboxGroup/CheckboxGroup";
 import { mockData } from "../DataGrid/__mocks__/MockUsers";
 export default {
-    title: "Form/Form 1",
+    title: "Form/Form",
     component: undefined,
     argTypes: {},
 } as ComponentMeta<any>;

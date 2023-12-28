@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./Tabs.sass";
+import styles from "./Tabs.module.sass";
 import { CommonIcons } from "../lib/CommonIcons";
 
 type ITabsCallback = (index: number, e: any) => any;
@@ -73,23 +73,23 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
         const s = this.state;
 
         return (
-            <div className="w-tabs">
-                <div className="tabs-links">
+            <div className={styles.wTabs}>
+                <div className={styles.tabsLinks}>
                     {React.Children.toArray(p.children).map((child: any, index) => {
                         return (
                             <div
                                 key={index}
                                 className={
-                                    (index == s.currentTab ? "active" : "") +
+                                    (index == s.currentTab ? styles.active : "") +
                                     " " +
-                                    (child.props.badge ? "with-badge" : "")
+                                    (child.props.badge ? styles.withBadge : "")
                                 }
                                 onClick={this.handleTabChange.bind(this, index)}
                             >
                                 {child.props.icon ? <child.props.icon /> : null}
                                 {child.props.title}
                                 {child.props.badge != undefined ? (
-                                    <div className="w-tabs-badge">{child.props.badge}</div>
+                                    <div className={styles.wTabsBadge}>{child.props.badge}</div>
                                 ) : null}
                                 {child.props.onClose && (
                                     <a
@@ -97,7 +97,7 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
                                             e.stopPropagation();
                                             child.props.onClose(index);
                                         }}
-                                        className={"tabs-close"}
+                                        className={styles.tabsClose}
                                     >
                                         <CommonIcons.close />
                                     </a>
@@ -106,8 +106,8 @@ export class Tabs extends React.Component<ITabsProps, ITabsState> {
                         );
                     })}
                 </div>
-                <div className="tabs-links-separator" />
-                <div className="tab-pane-container">
+                <div className={styles.tabsLinksSeparator} />
+                <div className={styles.tabPaneContainer}>
                     {!this.props.mountAllTabs && React.Children.toArray(p.children)[s.currentTab]}
 
                     {this.props.mountAllTabs && (

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { fI18n } from "../lib";
 import { CommandMenu } from "../CommandMenu";
-import "./CommandBar.sass";
+import s from "./CommandBar.module.sass";
 
 import { CommonIcons } from "../lib/CommonIcons";
 
@@ -57,9 +57,9 @@ export class CommandBar extends React.PureComponent<IProps> {
 
     public render() {
         return (
-            <div className="w-command-bar">
+            <div className={s.wCommandBar}>
                 {this.props.isSearchBoxVisible && (
-                    <div className="search-box">
+                    <div className={s.searchBox}>
                         <CommonIcons.search />
                         <input
                             type="text"
@@ -74,8 +74,8 @@ export class CommandBar extends React.PureComponent<IProps> {
                         />
                     </div>
                 )}
-                <div className="menu-bar">
-                    <div className="buttons-left">
+                <div className={s.menuBar}>
+                    <div className={s.buttonsLeft}>
                         {this.props.items.map((item: ICommand | false) => {
                             if (item !== null && item !== false) {
                                 return (
@@ -89,7 +89,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                                 ? this.handleExpandMenu(item, event)
                                                                 : item.onClick(event, null)
                                                         }
-                                                        className={opened ? "w-command-bar-element-opened" : ""}
+                                                        className={opened ? s.elementOpened : ""}
                                                     >
                                                         {item.icon && <item.icon />} {item.label}
                                                         {item.subItems && <CommonIcons.chevronDown />}
@@ -103,7 +103,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                             return null;
                         })}
                     </div>
-                    <div className="buttons-right">
+                    <div className={s.buttonsRight}>
                         {this.props.rightItems.map((item: ICommand | false) => {
                             if (item !== null && item !== false) {
                                 return (
@@ -117,7 +117,7 @@ export class CommandBar extends React.PureComponent<IProps> {
                                                                 ? this.handleExpandMenu(item, event)
                                                                 : item.onClick(event, null)
                                                         }
-                                                        className={opened ? "w-command-bar-element-opened" : ""}
+                                                        className={opened ? s.elementOpened : ""}
                                                     >
                                                         {item.icon && <item.icon />} {item.label}
                                                         {item.subItems && <CommonIcons.chevronDown />}

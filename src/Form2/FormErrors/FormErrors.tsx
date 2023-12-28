@@ -7,4 +7,4 @@ const FormErrors = ({ errors }: { errors: string[] }) => {
         </div>
     );
 };
-export default FormErrors;
+export { FormErrors };

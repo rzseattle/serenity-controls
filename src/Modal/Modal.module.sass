@@ -1,4 +1,4 @@
-.w-modal-container
+.container
     z-index: 4000
     top: 0
     bottom: 0
@@ -14,10 +14,10 @@
 
 
 
-.w-modal-confirm
+.confirm
     z-index: 2040
 
-.w-modal-shadow
+.shadow
     z-index: auto
     opacity: 0.15
     top: 0
@@ -28,7 +28,7 @@
 
 
 
-.w-modal
+.wModal
     display: flex
     flex-direction: column
     z-index: 2
@@ -46,7 +46,7 @@
     &:focus
         outline: solid 1px transparent
 
-    .w-modal-close
+    .close
         background-color: rgba(255, 255, 255, 1)
         position: absolute
         height: 20px
@@ -68,7 +68,7 @@
 
             background-color: #127eda
 
-    .w-modal-title
+    .title
         padding: 0px 50px 0px 10px
         height: 31px
         line-height: 28px
@@ -82,5 +82,5 @@
             margin-right: 3px
             font-size: 16px
 
-    .w-modal-body
+    .body
         overflow: auto

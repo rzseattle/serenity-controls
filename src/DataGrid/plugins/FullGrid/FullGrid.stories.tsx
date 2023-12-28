@@ -1,8 +1,7 @@
 import React from "react";
-
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { GridRoot } from "../../config/GridRoot";
-import FullGrid from "./FullGrid";
+import { FullGrid } from "./FullGrid";
 import { IMockUser, mockData } from "../../__mocks__/MockUsers";
 import { ColumnTemplate } from "../columns/ColumnTemplate";
 import { ColNumber } from "../columns/ColNumber";

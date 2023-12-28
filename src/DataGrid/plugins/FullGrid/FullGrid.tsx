@@ -64,7 +64,7 @@ export interface IPersistentState {
 }
 
 // eslint-disable-next-line react/display-name
-const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
+export const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
     const isMounted = useRef(false);
 
     let [filters, setFilters] = useState<IGridFilter[]>([]);
@@ -299,5 +299,3 @@ const FullGrid = <T = any,>(props: IFullGridProps<T>) => {
         </HotKeys>
     );
 };
-
-export default FullGrid;

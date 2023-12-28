@@ -1,5 +1,5 @@
 import React from "react";
-import "./Modal.sass";
+import s from "./Modal.module.sass";
 import { IPositionCalculatorOptions, Positioner, RelativePositionPresets } from "../Positioner";
 import { HotKeys } from "../HotKeys";
 import { Key } from "ts-key-enum";
@@ -140,7 +140,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                                 backgroundColor: p.shadow ? "rgba(0, 0, 0, 0.15)" : "transparent",
                             }}
                             ref={(el) => (this.modalContainer = el)}
-                            className="w-modal-container"
+                            className={s.container}
                             onMouseDown={this.handleClose}
                             onClick={(e) => e.stopPropagation()}
                         />
@@ -175,7 +175,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                         autofocus={true}
                     >
                         <div
-                            className={p.className === undefined ? "w-modal" : p.className}
+                            className={p.className === undefined ? s.wModal : p.className}
                             ref={(el) => (this.modalBody = el)}
                             onClick={(e) => e.stopPropagation()}
                             style={{ width: p.width ? p.width : "auto", height: p.height ? p.height : "auto" }}
@@ -201,17 +201,17 @@ export class Modal extends React.PureComponent<IModalProps> {
                             // }}
                         >
                             {p.showHideLink && (
-                                <a className="w-modal-close" style={{}} onClick={this.handleClose}>
+                                <a className={s.close} onClick={this.handleClose}>
                                     <CommonIcons.close />
                                 </a>
                             )}
 
                             {p.title && (
-                                <div className="w-modal-title">
+                                <div className={s.title}>
                                     {p.icon && <p.icon />} {p.title}
                                 </div>
                             )}
-                            <div className="w-modal-body">{this.props.show ? p.children : null}</div>
+                            <div className={s.body}>{this.props.show ? p.children : null}</div>
                         </div>
                     </HotKeys>
                 </Positioner>

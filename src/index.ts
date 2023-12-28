@@ -17,3 +17,5 @@ export * from "./lib/CommonIcons";
 export * from "./Positioner";
 
 export * from "./PrintJSON";
+export * from "./Tabs";
+export * from "./Shadow";
