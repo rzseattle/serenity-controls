@@ -53,7 +53,6 @@ export class Panel extends React.PureComponent<IPanelProps> {
                     <div className={s.title + " title"}>
                         {props.icon && <props.icon />}
                         {props.title}
-
                         {props.toolbar.length > 0 && (
                             <div className={s.panelToolbar}>
                                 <CommandBar items={props.toolbar} />
