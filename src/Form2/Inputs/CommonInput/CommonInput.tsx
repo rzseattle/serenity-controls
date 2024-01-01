@@ -1,6 +1,6 @@
 import React from "react";
 import { ControllerFieldState } from "react-hook-form";
-import "./CommonInput.sass";
+import s from "./CommonInput.module.sass";
 import { MdLiveHelp } from "react-icons/md";
 import { IOption } from "../../../fields";
 
@@ -30,10 +30,10 @@ const CommonInput = ({
     readonly: boolean;
 } & ICommonInputProps) => {
     return (
-        <div className={"w-common-input" + (fieldState.invalid ? " w-common-input-invalid" : "")}>
+        <div className={s.wCommonInput + (fieldState.invalid ? " " + s.inputInvalid : "")}>
             {label !== undefined && <label title={label}>{label}</label>}
             {readonly === true ? (
-                <div className="w-read-only">
+                <div className={s.wReadOnly}>
                     {readOnlyPresenter !== undefined
                         ? readOnlyPresenter(valueForPresenter())
                         : typeof valueForPresenter().presented === "string" ||
@@ -45,15 +45,14 @@ const CommonInput = ({
                 <div>{children}</div>
             )}
             {fieldState.invalid && (
-                <div className="w-field-errors">
+                <div className={s.wFormErrors}>
                     {Object.values(fieldState.error.types).map((el, index) => (
                         <div key={index}>{el}</div>
                     ))}
                 </div>
             )}
             {help && (
-                <div className={"w-field-help"}>
-                    {" "}
+                <div className={s.wFieldHelp}>
                     <MdLiveHelp /> {help}
                 </div>
             )}

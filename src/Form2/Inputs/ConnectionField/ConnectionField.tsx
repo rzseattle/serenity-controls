@@ -210,6 +210,13 @@ const ConnectionField = (props: IConnectionFieldProps) => {
                     value,
                 },
             });
+            if (props.onChange) {
+                props.onChange({
+                    name: props.name,
+                    items: selectedData,
+                    value: value,
+                });
+            }
         }
     }, [selectedData]);
 
