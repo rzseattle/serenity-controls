@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, act, renderHook, screen } from "@testing-library/react";
+import { act, fireEvent, render, renderHook, screen } from "@testing-library/react";
 
 import { useSerenityForm } from "../../useSerenityForm";
 import { Text } from "./Text";
@@ -15,7 +15,7 @@ test("Should render in readonly", () => {
     act(() => {
         result.current.setReadonly(true);
     });
-    const { container } = render(<Text {...result.current.field("test")} />);
+    render(<Text {...result.current.field("test")} />);
 
     expect(screen.getByTestId("read-only")).toBeInTheDocument();
 });

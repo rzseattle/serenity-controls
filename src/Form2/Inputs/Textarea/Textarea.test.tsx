@@ -1,4 +1,5 @@
 import React from "react";
+import "@testing-library/jest-dom";
 import { fireEvent, render, act, renderHook, screen } from "@testing-library/react";
 
 import { useSerenityForm } from "../../useSerenityForm";
@@ -15,7 +16,7 @@ test("Should render in readonly", () => {
     act(() => {
         result.current.setReadonly(true);
     });
-    const { container } = render(<Textarea {...result.current.field("test")} />);
+    render(<Textarea {...result.current.field("test")} />);
 
     expect(screen.getByTestId("read-only")).toBeInTheDocument();
 });

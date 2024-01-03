@@ -53,6 +53,7 @@
     "types": [
         "jest",
         "@testing-library/jest-dom",
+        "@testing-library/jest-dom/extend-expect",
         "node"
     ],
     "include": ["./src/**/*", "./stories/**/*", "./types/**/*"]
