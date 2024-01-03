@@ -9,7 +9,6 @@ export const alertDialog = async (message: string, options: Partial<IConfirmDial
         const wrapper = document.body.appendChild(document.createElement("div"));
 
         const cleanup = () => {
-            const root = createRoot(wrapper);
             root.unmount();
             wrapper.remove();
         };
@@ -21,10 +20,6 @@ export const alertDialog = async (message: string, options: Partial<IConfirmDial
                 onSelect={(val) => {
                     cleanup();
                     resolve(val);
-                }}
-                onAbort={() => {
-                    cleanup();
-                    resolve(undefined);
                 }}
                 options={[{ value: true, label: "ok" }]}
                 {...options}

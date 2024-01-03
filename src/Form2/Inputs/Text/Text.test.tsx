@@ -1,6 +1,6 @@
 import React from "react";
 import { act, fireEvent, render, renderHook, screen } from "@testing-library/react";
-
+import "@testing-library/jest-dom";
 import { useSerenityForm } from "../../useSerenityForm";
 import { Text } from "./Text";
 

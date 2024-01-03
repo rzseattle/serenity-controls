@@ -31,3 +31,13 @@ test("Should process field errors", () => {
     expect(result.current.getFieldState("test_field").invalid).toBe(true);
     expect(result.current.getFieldState("test_field").error.types[0]).toBe("error");
 });
+
+test("Should be in submiting state", () => {
+    const { result } = renderHook(() => useSerenityForm<{ test_field: string }>());
+
+    act(() => {
+        result.current.register("test_field");
+        result.current.setSubmitting(true);
+    });
+    expect(result.current.formState.isSubmitting).toBe(true);
+});

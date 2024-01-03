@@ -12,7 +12,7 @@ export interface IConfirmDialogCompProps {
     question: string;
     options: IOption[];
     onSelect: (value: string | number | boolean) => any;
-    onAbort: () => any;
+    onAbort?: () => any;
     layer?: boolean;
     relativeTo?: HTMLElement;
     relativeSettings?: IPositionCalculatorOptions;
@@ -39,7 +39,10 @@ const ConfirmDialogComp = ({
             relativeSettings={relativeSettings}
             layer={layer ?? true}
             icon={CommonIcons.info}
-            onHide={() => onAbort()}
+            onHide={() => {
+                console.log(onAbort, "abort 1");
+                onAbort && onAbort();
+            }}
         >
             <div className={"w-modal-confirm"}>
                 <div style={{ padding: 10 }}>{question}</div>
@@ -65,11 +68,12 @@ const ConfirmDialogComp = ({
 export default ConfirmDialogComp;
 
 export const confirmDialog = async (message: string, options: Partial<IConfirmDialogCompProps> = {}) => {
+    console.log(options.onAbort, "abort 0");
     return new Promise((resolve) => {
+        console.log(options.onAbort, "abort 0.1");
         const wrapper = document.body.appendChild(document.createElement("div"));
 
         const cleanup = () => {
-            const root = createRoot(wrapper);
             root.unmount();
             wrapper.remove();
         };
@@ -79,15 +83,18 @@ export const confirmDialog = async (message: string, options: Partial<IConfirmDi
                 title={undefined}
                 question={message}
                 onSelect={(val) => {
+                    console.log(options.onAbort, "abort 3");
+                    console.log("selected");
                     cleanup();
                     resolve(val);
                 }}
                 onAbort={() => {
-                    cleanup();
-                    resolve(false);
+                    console.log(options.onAbort, "abort 2");
                     if (options.onAbort) {
                         options.onAbort();
                     }
+                    cleanup();
+                    resolve(null);
                 }}
                 options={[
                     { value: true, label: "yes" },
