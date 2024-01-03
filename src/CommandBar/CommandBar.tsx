@@ -103,34 +103,36 @@ export class CommandBar extends React.PureComponent<IProps> {
                             return null;
                         })}
                     </div>
-                    <div className={s.buttonsRight}>
-                        {this.props.rightItems.map((item: ICommand | false) => {
-                            if (item !== null && item !== false) {
-                                return (
-                                    <React.Fragment key={item.key}>
-                                        <CommandMenu items={item.subItems} activation={"hover"}>
-                                            {(opened) => {
-                                                return (
-                                                    <a
-                                                        onClick={(event) =>
-                                                            item.subItems
-                                                                ? this.handleExpandMenu(item, event)
-                                                                : item.onClick(event, null)
-                                                        }
-                                                        className={opened ? s.elementOpened : ""}
-                                                    >
-                                                        {item.icon && <item.icon />} {item.label}
-                                                        {item.subItems && <CommonIcons.chevronDown />}
-                                                    </a>
-                                                );
-                                            }}
-                                        </CommandMenu>
-                                    </React.Fragment>
-                                );
-                            }
-                            return null;
-                        })}
-                    </div>
+                    {this.props.rightItems.length > 0 ? (
+                        <div className={s.buttonsRight}>
+                            {this.props.rightItems.map((item: ICommand | false) => {
+                                if (item !== null && item !== false) {
+                                    return (
+                                        <React.Fragment key={item.key}>
+                                            <CommandMenu items={item.subItems} activation={"hover"}>
+                                                {(opened) => {
+                                                    return (
+                                                        <a
+                                                            onClick={(event) =>
+                                                                item.subItems
+                                                                    ? this.handleExpandMenu(item, event)
+                                                                    : item.onClick(event, null)
+                                                            }
+                                                            className={opened ? s.elementOpened : ""}
+                                                        >
+                                                            {item.icon && <item.icon />} {item.label}
+                                                            {item.subItems && <CommonIcons.chevronDown />}
+                                                        </a>
+                                                    );
+                                                }}
+                                            </CommandMenu>
+                                        </React.Fragment>
+                                    );
+                                }
+                                return null;
+                            })}
+                        </div>
+                    ) : null}
                 </div>
             </div>
         );

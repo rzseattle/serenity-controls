@@ -31,7 +31,7 @@ node_modules
 /lib/
 /css/
 .idea/
-dist/
+
 docs/stories/form/uploaded/
 website-build/
 

@@ -5,3 +5,5 @@ export * from "./ColText";
 export * from "./ColTemplate";
 export * from "./ColActive";
 export * from "./ColumnTemplate";
+export * from "./ColBoolean";
+export * from "./ColSelection";

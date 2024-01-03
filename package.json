@@ -1,9 +1,9 @@
 {
   "name": "serenity-controls",
-  "version": "2.0.60",
+  "version": "2.0.61",
   "description": "",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "watch": "rollup -c -w",
     "dev": "npm-run-all -p storybook 'build:modules -- --watch'",
@@ -23,8 +23,13 @@
       "pre-commit": "yarn run build"
     }
   },
+  "files": [
+    "lib",
+    "src",
+    "sass"
+  ],
   "keywords": [],
-  "author": "",
+  "author": "artur.kmera@3code.pl",
   "license": "ISC",
   "prettier": {
     "useTabs": false,
@@ -33,11 +38,7 @@
     "arrowParens": "always",
     "trailingComma": "all"
   },
-  "files": [
-    "lib/**/*",
-    "src/**/*",
-    "sass/**/*"
-  ],
+
   "eslintConfig": {
     "extends": [
       "react-app",
