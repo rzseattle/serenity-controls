@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, act, renderHook } from "@testing-library/react";
+import { fireEvent, render, act, renderHook, screen } from "@testing-library/react";
 
 import { useSerenityForm } from "../../useSerenityForm";
 import { Text } from "./Text";
@@ -17,7 +17,7 @@ test("Should render in readonly", () => {
     });
     const { container } = render(<Text {...result.current.field("test")} />);
 
-    expect(container.getElementsByClassName("w-read-only")[0]).toBeInTheDocument();
+    expect(screen.getByTestId("read-only")).toBeInTheDocument();
 });
 
 test("Should upgrade form value", () => {

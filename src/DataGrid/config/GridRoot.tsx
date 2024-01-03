@@ -22,7 +22,7 @@ import GridSwitchFilter from "../plugins/filters/SelectionFilters/GridSwitchFilt
 import GridSelectFilter from "../plugins/filters/SelectionFilters/GridSelectFilter/GridSelectFilter";
 
 const GridRoot = ({ children }: { children: React.ReactNode; options?: Partial<IGridConfig> }) => {
-    const local = useRef<Record<string, Record<string, unknown>>>();
+    const local = useRef<Record<string, Record<string, unknown>>>({});
     useEffect(() => {
         local.current = JSON.parse(window.localStorage["serenity-controls-store"] || "{}");
     }, []);

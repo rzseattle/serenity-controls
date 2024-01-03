@@ -38,7 +38,7 @@ test("Should render in readonly", () => {
             ]}
         />,
     );
-    const presenter = container.getElementsByClassName("w-read-only")[0] as HTMLDivElement;
+    const presenter = screen.getByTestId("read-only") as HTMLDivElement;
 
     expect(presenter).toBeInTheDocument();
     expect(presenter.innerHTML).toEqual("<ul><li>No</li></ul>");

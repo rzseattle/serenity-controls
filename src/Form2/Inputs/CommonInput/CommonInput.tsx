@@ -33,7 +33,7 @@ const CommonInput = ({
         <div className={s.wCommonInput + (fieldState.invalid ? " " + s.inputInvalid : "")}>
             {label !== undefined && <label title={label}>{label}</label>}
             {readonly === true ? (
-                <div className={s.wReadOnly}>
+                <div className={s.wReadOnly} data-testid={"read-only"}>
                     {readOnlyPresenter !== undefined
                         ? readOnlyPresenter(valueForPresenter())
                         : typeof valueForPresenter().presented === "string" ||

@@ -41,7 +41,7 @@ test("Should render", async () => {
 //     });
 //     const { container } = render(<ConnectionField {...result.current.field("test")} />);
 //
-//     expect(container.getElementsByClassName("w-read-only")[0]).toBeInTheDocument();
+//     expect(screen.getByTestId("read-only")[0]).toBeInTheDocument();
 // });
 //
 // test("Should upgrade form value", () => {

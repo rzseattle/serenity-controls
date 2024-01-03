@@ -21,6 +21,14 @@ module.exports = {
     coverageDirectory: process.env.DEV_COVERAGE_DIR,
     transformIgnorePatterns: ["/node_modules/(?!react-dnd|dnd-core|@react-dnd)"],
     collectCoverageFrom: ["<rootDir>/src/**/*.{ts,tsx}", "!**/node_modules/**", "!**/*.stories.{ts,tsx}"],
+    coverageThreshold: {
+        global: {
+            branches: 80,
+            functions: 80,
+            lines: 80,
+            statements: -10,
+        },
+    },
 };
 
 //  "jest": {

@@ -17,7 +17,7 @@ test("Should render in readonly", () => {
     });
     const { container } = render(<Date {...result.current.field("test")} />);
 
-    expect(container.getElementsByClassName("w-read-only")[0]).toBeInTheDocument();
+    expect(screen.getByTestId("read-only")).toBeInTheDocument();
 });
 
 test("Should upgrade form value", () => {
