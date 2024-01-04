@@ -70,7 +70,7 @@ export default ConfirmDialogComp;
 export const confirmDialog = async (message: string, options: Partial<IConfirmDialogCompProps> = {}) => {
     console.log(options.onAbort, "abort 0");
     return new Promise((resolve) => {
-        console.log(options.onAbort, "abort 0.1");
+        console.log(options.onAbort, "abort 0.6");
         const wrapper = document.body.appendChild(document.createElement("div"));
 
         const cleanup = () => {
