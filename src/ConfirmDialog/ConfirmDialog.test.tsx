@@ -1,75 +1,72 @@
 import React from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { confirmDialog } from "./ConfirmDialog";
 
-// test("Should render", async () => {
-//     render(
-//         <div>
-//             <button
-//                 data-testid="fire-alert"
-//                 onClick={() => {
-//                     confirmDialog("This is message").then(() => {});
-//                 }}
-//             >
-//                 click
-//             </button>
-//             <div id="modal-root"></div>
-//         </div>,
-//     );
-//
-//     await act(async () => {
-//         screen.getByTestId("fire-alert").click();
-//     });
-//     await waitFor(() => screen.getByText("This is message"));
-//     expect(screen.getByText("This is message")).toBeInTheDocument();
-// });
-//
-// test("Should hide after click", async () => {
-//     const yesFn = jest.fn();
-//     render(
-//         <div>
-//             <button
-//                 data-testid="fire-alert"
-//                 onClick={async () => {
-//                     const result = await confirmDialog("This is message", { title: "Test title" });
-//                     if (result === true) {
-//                         yesFn();
-//                     }
-//                 }}
-//             >
-//                 click
-//             </button>
-//             <div id="modal-root"></div>
-//         </div>,
-//     );
-//
-//     await act(async () => {
-//         screen.getByTestId("fire-alert").click();
-//     });
-//     await waitFor(() => screen.getByText("This is message"));
-//
-//     await act(async () => {
-//         screen.getByText("yes").click();
-//     });
-//
-//     expect(screen.queryByText("This is message")).not.toBeInTheDocument();
-//     expect(yesFn).toBeCalledTimes(1);
-// });
+test("Should render", async () => {
+    render(
+        <div>
+            <button
+                data-testid="fire-alert"
+                onClick={() => {
+                    confirmDialog("This is message").then(() => {});
+                }}
+            >
+                click
+            </button>
+            <div id="modal-root"></div>
+        </div>,
+    );
 
-test("Should hide on abort", async () => {
-    const abortFn = jest.fn();
-    const { container } = render(
+    await act(async () => {
+        screen.getByTestId("fire-alert").click();
+    });
+    await waitFor(() => screen.getByText("This is message"));
+    expect(screen.getByText("This is message")).toBeInTheDocument();
+});
+
+test("Should hide after click", async () => {
+    const yesFn = jest.fn();
+    render(
         <div>
             <button
                 data-testid="fire-alert"
                 onClick={async () => {
-                    console.log("ustaiwam");
-                    await confirmDialog("This is message", {
+                    const result = await confirmDialog("This is message", { title: "Test title" });
+                    if (result === true) {
+                        yesFn();
+                    }
+                }}
+            >
+                click
+            </button>
+            <div id="modal-root"></div>
+        </div>,
+    );
+
+    await act(async () => {
+        screen.getByTestId("fire-alert").click();
+    });
+    await waitFor(() => screen.getByText("This is message"));
+
+    await act(async () => {
+        screen.getByText("yes").click();
+    });
+
+    expect(screen.queryByText("This is message")).not.toBeInTheDocument();
+    expect(yesFn).toBeCalledTimes(1);
+});
+
+test("Should hide on abort", async () => {
+    const abortFn = jest.fn();
+    let result: unknown = false;
+    render(
+        <div>
+            <button
+                data-testid="fire-alert"
+                onClick={async () => {
+                    result = await confirmDialog("This is message", {
                         title: "Test title",
-                        onAbort: () => {
-                            abortFn();
-                        },
                     });
                 }}
             >
@@ -83,15 +80,13 @@ test("Should hide on abort", async () => {
         screen.getByTestId("fire-alert").click();
     });
 
-    fireEvent(
-        container.querySelector("#modal-root>div>div"),
-        new MouseEvent("click", {
-            bubbles: false,
-            cancelable: false,
-        }),
-    );
+    await act(async () => {
+        fireEvent.mouseDown(screen.getByTestId("modal-layer"));
+    });
 
-    expect(abortFn).toBeCalledTimes(1);
+    expect(screen.queryByText("This is message")).not.toBeInTheDocument();
+
+    expect(result).toBe(undefined);
 });
 
 // test("Should render in readonly", () => {

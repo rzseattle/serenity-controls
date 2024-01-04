@@ -40,8 +40,7 @@ const ConfirmDialogComp = ({
             layer={layer ?? true}
             icon={CommonIcons.info}
             onHide={() => {
-                console.log(onAbort, "abort 1");
-                onAbort && onAbort();
+                onAbort();
             }}
         >
             <div className={"w-modal-confirm"}>
@@ -67,10 +66,11 @@ const ConfirmDialogComp = ({
 
 export default ConfirmDialogComp;
 
-export const confirmDialog = async (message: string, options: Partial<IConfirmDialogCompProps> = {}) => {
-    console.log(options.onAbort, "abort 0");
+export const confirmDialog = async (
+    message: string,
+    options: Partial<Omit<IConfirmDialogCompProps, "onAbort">> = {},
+) => {
     return new Promise((resolve) => {
-        console.log(options.onAbort, "abort 0.6");
         const wrapper = document.body.appendChild(document.createElement("div"));
 
         const cleanup = () => {
@@ -83,18 +83,12 @@ export const confirmDialog = async (message: string, options: Partial<IConfirmDi
                 title={undefined}
                 question={message}
                 onSelect={(val) => {
-                    console.log(options.onAbort, "abort 3");
-                    console.log("selected");
                     cleanup();
                     resolve(val);
                 }}
                 onAbort={() => {
-                    console.log(options.onAbort, "abort 2");
-                    if (options.onAbort) {
-                        options.onAbort();
-                    }
                     cleanup();
-                    resolve(null);
+                    resolve(undefined);
                 }}
                 options={[
                     { value: true, label: "yes" },
