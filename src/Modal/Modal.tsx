@@ -143,6 +143,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                             className={s.container}
                             onMouseDown={this.handleClose}
                             onClick={(e) => e.stopPropagation()}
+                            data-testid="modal-layer"
                         />
                     </Positioner>
                 )}
